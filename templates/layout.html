@@ -4,15 +4,24 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <!-- <link rel="stylesheet" type="text/css" href="../static/style.css"> -->
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <title>Premier League</title>
+    {% if team == "None" %}
+      <title>Premier League</title>
+    {% else %}
+      <title>{{ team.replace('-', ' ').title() }}</title>
+    {% endif %}
   </head>
   <body>
-    <div class="title">
-      <a class="title" href="/">Premier League</a>
-    </div>
+    {% if team == "None" %}
+      <div class="title">
+        <a class="title" href="/">Premier League</a>
+      </div>
+    {% else %}
+      <div class="title {{team}}">
+        <a class="title" href="/">{{ team.replace('-', ' ').title() }}</a>
+      </div>
+    {% endif %}
     <main>
       {% block content %}{% endblock %}
-     
     </main>
   </body>
 </html>
