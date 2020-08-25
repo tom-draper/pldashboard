@@ -1,0 +1,99 @@
+
+.title {
+  margin: 40px;
+  font-size: 34px;
+  text-align: center;
+  color: black;
+}
+
+body {
+  background: #fafafa;
+  color: #333333;
+}
+
+.teams {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  background-color: #000000;
+  margin: 40px;
+  height: 75vh;
+}
+.team-button {
+  border: 3px solid rgb(0, 0, 0);
+  text-align: center;
+  font-size: 20px;
+  padding: auto 20px;
+  position: relative;
+}
+
+a {
+  text-decoration: none;
+  position: relative;
+  top: 40%;
+  color: white;
+}
+
+.manchester-united
+.liverpool {
+  background-color: red;
+}
+.sheffield-united {
+  background-color: rgb(238,39,55);
+}
+.leeds-united {
+  background-color: rgb(255,205,0);
+}
+.aston-villa {
+  background-color: rgb(103,14,54);
+}
+.fulham {
+  background-color: rgb(204,0,0);
+}
+.wolves {
+  background-color: rgb(253,185,19);
+}
+.west-ham {
+  background-color: rgb(122,38,58);
+}
+.west-brom {
+  background-color: rgb(18,47,103);
+}
+.spurs {
+  background-color: rgb(19,34,87);
+}
+.southampton {
+  background-color: rgb(215,25,32);
+}
+.newcastle-united {
+  background-color: rgb(45 41 38);
+}
+.manchester-united {
+  background-color: rgb(218 41 28);
+}
+.manchester-city {
+  background-color: rgb(108,171,221);
+}
+.liverpool {
+  background-color: rgb(200,16,46);
+}
+.leicester-city {
+  background-color: rgb(0,83,160);
+}
+.everton {
+  background-color: rgb(39,68,136);
+}
+.crystal-palace {
+  background-color: rgb(27, 69, 143);
+}
+.chelsea {
+  background-color: rgb(3, 70, 148);
+}
+.burnley {
+  background-color: rgb(108,29,69);
+}
+.brighton {
+  background-color: rgb(0,87,184);
+}
+.arsenal {
+  background-color: rgb(239,1,7);
+}

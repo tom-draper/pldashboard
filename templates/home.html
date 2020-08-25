@@ -1,4 +1,26 @@
-{% extends "layout.html" %}
-{% block content %}
-    Hello
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+
+{% extends "layout.html" %} {% block content %}
+<div class="teams">
+  <div class="team-button liverpool"><a href="/liverpool">Liverpool</a></div>
+  <div class="team-button manchester-city"><a href="/manchester-city">Manchester City</a></div>
+  <div class="team-button manchester-united"><a href="/manchester-united">Manchester United</a></div>
+  <div class="team-button chelsea"><a href="/chelsea">Chelsea</a></div>
+  <div class="team-button leicester-city"><a href="/leicester">Leicester</a></div>
+  <div class="team-button spurs"><a href="/spurs">Spurs</a></div>
+  <div class="team-button wolves"><a href="/wolves">Wolves</a></div>
+  <div class="team-button arsenal"><a href="/arsenal">Arsenal</a></div>
+  <div class="team-button sheffield-united"><a href="/sheffield-united">Sheffield United</a></div>
+  <div class="team-button burnley"><a href="/burnley">Burnley</a></div>
+  <div class="team-button southampton"><a href="/southampton">Southampton</a></div>
+  <div class="team-button everton"><a href="/everton">Everton</a></div>
+  <div class="team-button newcastle-united"><a href="/newcastle-united">Newcastle</a></div>
+  <div class="team-button crystal-palace"><a href="/crystal-palace">Crystal Palace</a></div>
+  <div class="team-button brighton"><a href="/brighton">Brighton</a></div>
+  <div class="team-button west-ham"><a href="/west-ham">West Ham</a></div>
+  <div class="team-button aston-villa"><a href="/aston-villa">Aston Villa</a></div>
+  <div class="team-button leeds-united"><a href="/leeds-united">Leeds United</a></div>
+  <div class="team-button west-brom"><a href="/west-brom">West Brom</a></div>
+  <div class="team-button fulham"><a href="/fulham">Fulham</a></div>
+</div>
 {% endblock content %}
