@@ -6,9 +6,17 @@
   color: black;
 }
 
+.page-content {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin: 30px 60px;
+}
+
 body {
   background: #fafafa;
   color: #333333;
+  margin: 0px;
 }
 
 .teams {
@@ -17,9 +25,10 @@ body {
   background-color: #000000;
   margin: 40px;
   height: 75vh;
+  border: 4px solid rgb(46, 46, 46);
 }
 .team-button {
-  border: 3px solid rgb(0, 0, 0);
+  border: 4px solid rgb(46, 46, 46);
   text-align: center;
   font-size: 20px;
   padding: auto 20px;
@@ -31,6 +40,10 @@ a {
   position: relative;
   top: 40%;
   color: white;
+}
+
+.graph {
+  width: 50%;
 }
 
 .sheffield-united {
