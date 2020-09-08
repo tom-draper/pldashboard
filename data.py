@@ -57,7 +57,7 @@ class Data:
         return lastThreeStandings
     
     def calcRating(self, position, points, gd):
-        rating = (20 - position)
+        rating = (20 - position) / 2
         if gd != 0:
             rating *= gd
         if points != 0:
@@ -78,9 +78,6 @@ class Data:
         self.teams['Rating Two Seasons Ago'] = np.nan
         
         for idx, row in self.lastThreeStandings.iterrows():
-            # print(row['Team'])
-            # print(self.teams.loc[self.teams['Team'] == row['Team']])
-            
             rating_current = self.calcRating(row['Position'], row['Points'], row['GD'])
             self.teams.loc[self.teams.loc[self.teams['Team'] == row['Team']].index, 'Rating Current'] = rating_current
             
@@ -91,6 +88,11 @@ class Data:
             self.teams.loc[self.teams.loc[self.teams['Team'] == row['Team']].index, 'Rating Two Seasons Ago'] = rating_two_seasons_ago
             
             # self.teams.at['Current Rating', self.teams.loc[self.teams['Team'] == row['Team']].index] = rating_current
+            
+        self.teams['Normalised Rating Current'] = (self.teams['Rating Current']-self.teams['Rating Current'].min()) / (self.teams['Rating Current'].max()-self.teams['Rating Current'].min())
+        self.teams['Normalised Rating Last Season'] = (self.teams['Rating Last Season']-self.teams['Rating Last Season'].min()) / (self.teams['Rating Last Season'].max()-self.teams['Rating Last Season'].min())
+        self.teams['Normalised Rating Two Seasons Ago'] = (self.teams['Rating Two Seasons Ago']-self.teams['Rating Two Seasons Ago'].min()) / (self.teams['Rating Two Seasons Ago'].max()-self.teams['Rating Two Seasons Ago'].min())
+
         
         gdv = GenDataVis()
         gdv.genFixturesGraph(self.teams)
