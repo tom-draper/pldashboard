@@ -39,16 +39,17 @@ class Data:
             
             # Rename columns to standardised names
             df.rename(columns={'position': 'Position', 'team': 'Team', 
-                              'playedGames': 'Played', 'form': 'Form',
-                              'won': 'Won', 'draw': 'Draw', 'lost': 'Lost',
-                              'points': 'Points', 'goalsFor': 'GF',
-                              'goalsAgainst': 'GA', 'goalDifference': 'GD'}, inplace=True)
+                                'playedGames': 'Played', 'form': 'Form',
+                                'won': 'Won', 'draw': 'Draw', 'lost': 'Lost',
+                                'points': 'Points', 'goalsFor': 'GF',
+                                'goalsAgainst': 'GA', 'goalDifference': 'GD'}, inplace=True)
             
             lastThreeStandings = lastThreeStandings.append(df, ignore_index=True)
         
         # Drop teams that are no longer in the current season
-        print(~df['Team'].isin(lastThreeStandings.head(20)['Team']))
-        lastThreeStandings = lastThreeStandings.drop(df[~df['Team'].isin(lastThreeStandings.head(20)['Team'])].index)
+        print(lastThreeStandings[~lastThreeStandings['Team'].isin(lastThreeStandings.head(20)['Team'])])
+        lastThreeStandings = lastThreeStandings.drop(lastThreeStandings[~lastThreeStandings['Team'].isin(lastThreeStandings.head(20)['Team'])].index)
+        lastThreeStandings.reset_index(drop=True, inplace=True)
 
         self.lastThreeStandings = lastThreeStandings
         
