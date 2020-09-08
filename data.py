@@ -44,22 +44,33 @@ class Data:
                                 'points': 'Points', 'goalsFor': 'GF',
                                 'goalsAgainst': 'GA', 'goalDifference': 'GD'}, inplace=True)
             
-            lastThreeStandings = lastThreeStandings.append(df, ignore_index=True)
-        
-        # Drop teams that are no longer in the current season
-        print(lastThreeStandings[~lastThreeStandings['Team'].isin(lastThreeStandings.head(20)['Team'])])
-        lastThreeStandings = lastThreeStandings.drop(lastThreeStandings[~lastThreeStandings['Team'].isin(lastThreeStandings.head(20)['Team'])].index)
-        lastThreeStandings.reset_index(drop=True, inplace=True)
+            if i == 0:
+                lastThreeStandings = lastThreeStandings.append(df)
+            else:
+                # Drop teams that are no longer in the current season
+                df = df.drop(lastThreeStandings[~df['Team'].isin(lastThreeStandings.head(20)['Team'])].index)
+                lastThreeStandings = df.merge(lastThreeStandings, on='Team', how="outer", suffixes=(f"_{self.season-i}", None))
 
-        self.lastThreeStandings = lastThreeStandings
+        lastThreeStandings.sort_values(by=['Position', f'Position_{self.season-1}', f'Position_{self.season-2}'], inplace=True)
+        lastThreeStandings.reset_index(drop=True, inplace=True)
         
+        return lastThreeStandings
+    
+    def calcRating(self, position, points, gd):
+        rating = (20 - position)
+        if gd != 0:
+            rating *= gd
+        if points != 0:
+            rating *= points
+        
+        return rating
         
     def updateFixtures(self):
-        self.calcLastThreeStandings()
+        self.lastThreeStandings = self.calcLastThreeStandings()
         
         print(self.lastThreeStandings)
         # Add current season team names to the object team dataframe
-        self.teams['Team'] = self.lastThreeStandings.head(20)
+        self.teams['Team'] = self.lastThreeStandings['Team']
         
         # Calculate a rating for each team in the current season
         self.teams['Rating Current'] = np.nan
@@ -67,8 +78,19 @@ class Data:
         self.teams['Rating Two Seasons Ago'] = np.nan
         
         for idx, row in self.lastThreeStandings.iterrows():
-            print(idx, row)
-        print(self.teams)
+            # print(row['Team'])
+            # print(self.teams.loc[self.teams['Team'] == row['Team']])
+            
+            rating_current = self.calcRating(row['Position'], row['Points'], row['GD'])
+            self.teams.loc[self.teams.loc[self.teams['Team'] == row['Team']].index, 'Rating Current'] = rating_current
+            
+            rating_last_season = self.calcRating(row[f'Position_{self.season-1}'], row[f'Points_{self.season-1}'], row[f'GD_{self.season-1}'])
+            self.teams.loc[self.teams.loc[self.teams['Team'] == row['Team']].index, 'Rating Last Season'] = rating_last_season
+
+            rating_two_seasons_ago = self.calcRating(row[f'Position_{self.season-2}'], row[f'Points_{self.season-2}'], row[f'GD_{self.season-2}'])
+            self.teams.loc[self.teams.loc[self.teams['Team'] == row['Team']].index, 'Rating Two Seasons Ago'] = rating_two_seasons_ago
+            
+            # self.teams.at['Current Rating', self.teams.loc[self.teams['Team'] == row['Team']].index] = rating_current
         
         gdv = GenDataVis()
         gdv.genFixturesGraph(self.teams)
