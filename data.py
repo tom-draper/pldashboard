@@ -14,9 +14,24 @@ class Data:
 
     def __init__(self, current_season):
         self.season = current_season
-        self.lastStandings = pd.DataFrame()
+        self.last_standings = pd.DataFrame()
         self.team_ratings = pd.DataFrame()
         self.fixtures = pd.DataFrame()
+    
+    def standingsData(self, season, request_new=True):
+        if request_new:
+            response = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(season), 
+                                    headers=self.headers)
+            print(response.status_code)
+            response = response.json()['standings'][0]['table']
+            
+            with open(f'data/standings_{season}.json', 'w') as json_file:
+                json.dump(response, json_file)
+                
+            return response
+        else:
+            with open(f'data/standings_{season}.json', 'r') as json_file:
+                return json.load(json_file)
 
     def getLastStandings(self, no_seasons):
         """Get the Premier League table standings from the last specified number of 
@@ -36,11 +51,11 @@ class Data:
 
         # Loop from current season to the season 2 years ago
         for i in range(no_seasons):
-            response = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(self.season-i), 
-                                    headers=self.headers)
-            response = response.json()['standings'][0]['table']
-            # pprint.pprint(response)
-            df = pd.DataFrame(response)
+            
+            data = self.standingsData(self.season-i, request_new=False)
+            
+            # pprint.pprint(data)
+            df = pd.DataFrame(data)
 
             # Rename teams to their team name
             team_names = pd.Series([df['team'][x]['name']
@@ -79,14 +94,29 @@ class Data:
         standings.reset_index(drop=True, inplace=True)
 
         return standings
+    
+    def fixturesData(self, request_new=True):
+        if request_new:
+            response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(self.season),
+                                        headers=self.headers)
+            print("Code:", response.status_code)
+            response = response.json()['matches']
+            
+            # Save new data
+            with open(f'data/fixtures.json', 'w') as json_file:
+                json.dump(response, json_file)
+            
+            return response
+        else:
+            with open('data/fixtures.json', 'r') as json_file:
+                return json.load(json_file)
+        
 
     def getFixtures(self):
-        response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(self.season),
-                                    headers=self.headers)
-        response = response.json()['matches']
+        data = self.fixturesData(request_new=False)
         
         d = {}
-        for match in response:
+        for match in data:
             home_game = {'Matchday': match['matchday'],
                          'Date': datetime.datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
                          'HomeAway': 'Home',
@@ -124,21 +154,24 @@ class Data:
         return [current_weight] + [0.25, 0.05]
         
         
-    def updateFixtures(self, no_seasons):
-        self.lastStandings = self.getLastStandings(no_seasons)
+    def updateFixtures(self, no_seasons, team=None):
+        self.last_standings = self.getLastStandings(no_seasons)
         self.fixtures = self.getFixtures()
 
         # Add current season team names to the object team dataframe
-        self.team_ratings['Team'] = self.lastStandings['Team']
+        self.team_ratings['Team'] = self.last_standings['Team']
 
         # Create column for each included season
         for i in range(0, no_seasons):
             self.team_ratings[f'Rating {i}Y Ago'] = np.nan
         
         # Insert rating values for each row
-        for idx, row in self.lastStandings.iterrows():
+        for idx, row in self.last_standings.iterrows():
             for i in range(no_seasons):
-                rating = self.calcRating(row[f'Position_{self.season-i}'], row[f'Points_{self.season-i}'], row[f'GD_{self.season-i}'])
+                if i == 0: # TODO: REMOVE ONCE SEASON STARTED
+                    rating = (20 - row[f'Position_{self.season-1}']) / 2
+                else:
+                    rating = self.calcRating(row[f'Position_{self.season-i}'], row[f'Points_{self.season-i}'], row[f'GD_{self.season-i}'])
                 self.team_ratings.loc[self.team_ratings.loc[self.team_ratings['Team'] == row['Team']].index, 'Rating {}Y Ago'.format(i)] = rating
 
         # Replace any NaN with the lowest rating in the same column
@@ -150,7 +183,6 @@ class Data:
             self.team_ratings[f'Normalised Rating {i}Y Ago'] = (self.team_ratings[f'Rating {i}Y Ago'] - self.team_ratings[f'Rating {i}Y Ago'].min()) / (self.team_ratings[f'Rating {i}Y Ago'].max() - self.team_ratings[f'Rating {i}Y Ago'].min())
 
         w = self.getSeasonWeightings(no_seasons) # Column weights
-        print("Weights:", w)
         self.team_ratings['Total Rating'] = 0
         for i in range(0, no_seasons):
             self.team_ratings['Total Rating'] += w[i] * self.team_ratings[f'Normalised Rating {i}Y Ago']
@@ -160,7 +192,14 @@ class Data:
 
         # Input team rating dataframe to grade upcoming fixtures
         gdv = GenDataVis()
-        gdv.genFixturesGraph(self.fixtures, self.team_ratings)
+        if team == None:
+            for team_name in self.last_standings['Team']:
+                gdv.genFixturesGraph(team_name, self.fixtures, self.team_ratings)
+        else:
+            gdv.genFixturesGraph(team, self.fixtures, self.team_ratings)
+    
+    def updateAll(self, fixtures_no_seasons):
+        data.updateFixtures(fixtures_no_seasons)
 
 
 if __name__ == "__main__":
