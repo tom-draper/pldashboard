@@ -18,8 +18,16 @@ class Data:
         self.fixtures = pd.DataFrame()
 
     def getLastStandings(self, no_seasons):
-        # response = requests.get(self.url + 'competitions/PL/standings', headers=self.headers)
-        # response = response.json()['standings'][0]['table']
+        """Get the Premier League table standings from the last specified number of 
+           seasons. Compile each of these standings into a single dataframe to return.
+           Dataframe contains only teams that are members of the current season.
+
+        Args:
+            no_seasons (int): number of previous seasons to fetch and include. 
+
+        Returns:
+            DataFrame: dataframe containing all standings.
+        """
 
         standings = pd.DataFrame(columns=['Position', 'Team', 'Played', 
                                                    'Form', 'Won', 'Draw', 'Lost', 
@@ -71,6 +79,12 @@ class Data:
 
         return standings
 
+    def getFixtures(self):
+        response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(self.season),
+                                    headers=self.headers)
+        response = response.json()
+        pprint.pprint(response)
+
     def calcRating(self, position, points, gd):
         rating = (20 - position) / 2
         if gd != 0:
@@ -81,12 +95,12 @@ class Data:
         return rating
 
     def getSeasonWeightings(self, no_seasons, current_weight=0.7):
-        return [current_weight] + [(0.3) for i in range(1, no_seasons)]
+        return [current_weight] + [0.25, 0.05]
         
         
     def updateFixtures(self, no_seasons):
         self.lastStandings = self.getLastStandings(no_seasons)
-        # self.fixtures = self.getFixtures()
+        self.fixtures = self.getFixtures()
 
         # Add current season team names to the object team dataframe
         self.team_ratings['Team'] = self.lastStandings['Team']
@@ -108,8 +122,6 @@ class Data:
         # Create normalised versions of the three ratings columns
         for i in range(0, no_seasons):
             self.team_ratings[f'Normalised Rating {i}Y Ago'] = (self.team_ratings[f'Rating {i}Y Ago'] - self.team_ratings[f'Rating {i}Y Ago'].min()) / (self.team_ratings[f'Rating {i}Y Ago'].max() - self.team_ratings[f'Rating {i}Y Ago'].min())
-        # self.team_ratings['Normalised Rating Two Seasons Ago'] = (self.team_ratings['Rating Two Seasons Ago'] - self.team_ratings['Rating Two Seasons Ago'].min()) / (
-        #     self.team_ratings['Rating Two Seasons Ago'].max() - self.team_ratings['Rating Two Seasons Ago'].min())
 
         w = self.getSeasonWeightings(no_seasons) # Column weights
         print("Weights:", w)
@@ -128,4 +140,5 @@ class Data:
 if __name__ == "__main__":
     data = Data(2020)
 
-    data.updateFixtures(2)
+    data.updateFixtures(3)
+

@@ -3,7 +3,7 @@ import plotly.express as px
 import pandas as pd
 
 class GenDataVis:
-    def genFixturesGraph(self, df):
-        print(df)
+    def genFixturesGraph(self, fixtures, team_ratings):
+        print(team_ratings)
         # fig = px.line(df, x="year", y="lifeExp", color='country')
         # plotly.offline.plot(fig, filename='./data/fixtures.html', auto_open=False)
