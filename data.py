@@ -4,6 +4,7 @@ import numpy as np
 import requests
 import json
 import pprint
+import datetime
 
 
 class Data:
@@ -30,8 +31,8 @@ class Data:
         """
 
         standings = pd.DataFrame(columns=['Position', 'Team', 'Played', 
-                                                   'Form', 'Won', 'Draw', 'Lost', 
-                                                   'Points', 'GF', 'GA', 'GD'])
+                                          'Form', 'Won', 'Draw', 'Lost', 
+                                          'Points', 'GF', 'GA', 'GD'])
 
         # Loop from current season to the season 2 years ago
         for i in range(no_seasons):
@@ -82,9 +83,34 @@ class Data:
     def getFixtures(self):
         response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(self.season),
                                     headers=self.headers)
-        response = response.json()
-        pprint.pprint(response)
-
+        response = response.json()['matches']
+        
+        d = {}
+        for match in response:
+            home_game = {'Matchday': match['matchday'],
+                         'Date': datetime.datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
+                         'HomeAway': 'Home',
+                         'Team': match['awayTeam']['name'],
+                         'Status': match['status'],
+                         'Score': match['score']['fullTime']}
+            away_game = {'Matchday': match['matchday'],
+                         'Date': datetime.datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
+                         'HomeAway': 'Away',
+                         'Team': match['homeTeam']['name'],
+                         'Status': match['status'],
+                         'Score': match['score']['fullTime']}
+            
+            if match['homeTeam']['name'] not in d.keys():
+                d[match['homeTeam']['name']] = []
+            d[match['homeTeam']['name']].append(home_game)
+            if match['awayTeam']['name'] not in d.keys():
+                d[match['awayTeam']['name']] = []
+            d[match['awayTeam']['name']].append(away_game)
+        
+        fixtures = pd.DataFrame(d)
+        
+        return fixtures
+                   
     def calcRating(self, position, points, gd):
         rating = (20 - position) / 2
         if gd != 0:
@@ -139,6 +165,7 @@ class Data:
 
 if __name__ == "__main__":
     data = Data(2020)
+    fixtures = data.getFixtures()
 
-    data.updateFixtures(3)
+    # data.updateFixtures(3)
 
