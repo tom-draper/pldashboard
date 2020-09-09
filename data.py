@@ -160,12 +160,11 @@ class Data:
 
         # Input team rating dataframe to grade upcoming fixtures
         gdv = GenDataVis()
-        gdv.genFixturesGraph(self.team_ratings)
+        gdv.genFixturesGraph(self.fixtures, self.team_ratings)
 
 
 if __name__ == "__main__":
     data = Data(2020)
-    fixtures = data.getFixtures()
-
-    # data.updateFixtures(3)
+    
+    data.updateFixtures(3)
 
