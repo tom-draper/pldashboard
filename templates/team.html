@@ -2,6 +2,6 @@
 {% extends 'layout.html' %} {% block content %}
 <h1>Fixtures</h1>
 <div class="graph">
-  {% include 'lifeExp.html' %}
+  {% include 'graphs/{}/fixtures_{}.html'.format(team, team) %}
 </div>
 {% endblock content %}
