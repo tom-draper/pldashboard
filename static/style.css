@@ -3,6 +3,10 @@
   font-family: "Radikal Medium";
 }
 
+h1 {
+  margin: 20px 0px 0px 0px;
+}
+
 .title {
   padding: 40px;
   font-size: 34px;
