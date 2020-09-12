@@ -15,10 +15,11 @@ class Data:
     def __init__(self, current_season):
         self.season = current_season
         
-        self.team_names = []
+        # List of current season teams, updated when updating standings 
+        self.team_names = None  
         
-        self.standings = pd.DataFrame()
         self.fixtures = pd.DataFrame()
+        self.standings = pd.DataFrame()
         self.team_ratings = pd.DataFrame()
         self.home_advantages = pd.DataFrame()
     
@@ -28,13 +29,50 @@ class Data:
     
     def getHomeAdvantages(self, no_seasons):
         print("Creating home advantages dataframe...")
+        
         home_advantages = pd.DataFrame()
         
         for i in range(no_seasons):
-            response = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(self.season-i), 
-                                    headers=self.headers)
-            print(response.status_code)
+            data = self.fixturesData(self.season-i)
+            
+            d = {}
+            for match in data:
+                if match['homeTeam']['name'] not in d.keys():
+                    d[match['homeTeam']['name']] = {f'Home Wins {self.season-i}': 0, 
+                                                    f'Home Draws {self.season-i}': 0,
+                                                    f'Home Loses {self.season-i}': 0,
+                                                    f'Away Wins {self.season-i}': 0,
+                                                    f'Away Draws {self.season-i}': 0,
+                                                    f'Away Loses {self.season-i}': 0}                
+                if match['awayTeam']['name'] not in d.keys():
+                    d[match['awayTeam']['name']] = {f'Home Wins {self.season-i}': 0, 
+                                                    f'Home Draws {self.season-i}': 0,
+                                                    f'Home Loses {self.season-i}': 0,
+                                                    f'Away Wins {self.season-i}': 0,
+                                                    f'Away Draws {self.season-i}': 0,
+                                                    f'Away Loses {self.season-i}': 0}
+                
+                if match['score']['winner'] != None:
+                    if match['score']['fullTime']['homeTeam'] > match['score']['fullTime']['awayTeam']:
+                        # Home team wins
+                        d[match['homeTeam']['name']][f'Home Wins {self.season-i}'] += 1
+                        d[match['awayTeam']['name']][f'Away Loses {self.season-i}'] += 1
+                    elif match['score']['fullTime']['homeTeam'] < match['score']['fullTime']['awayTeam']:
+                        # Away team wins
+                        d[match['homeTeam']['name']][f'Home Loses {self.season-i}'] += 1
+                        d[match['awayTeam']['name']][f'Away Wins {self.season-i}'] += 1
+                    else:  # Draw
+                        d[match['homeTeam']['name']][f'Home Draws {self.season-i}'] += 1
+                        d[match['awayTeam']['name']][f'Away Draws {self.season-i}'] += 1
+                        
+            df = pd.DataFrame(d).T
+            df.index.name = "Team"
+            df = df[df.index.isin(self.team_names)]
+            home_advantages = home_advantages.join(df, how="outer")
+            
+        # home_advantages = home_advantages.T
         
+        print(home_advantages)
         
         # TODO : Caculate home advantage percentage for each team from last n seasons
         # https://help.smarkets.com/hc/en-gb/articles/115000647291-Why-you-should-consider-home-advantage-for-football-trading
@@ -47,9 +85,9 @@ class Data:
 
     def standingsData(self, season, request_new=True):
         if request_new:
-            response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(season), 
+            response = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(season), 
                                     headers=self.headers)
-            print(response.status_code)
+            print("Code:", response.status_code)
             response = response.json()['standings'][0]['table']
             
             with open(f'data/standings_{season}.json', 'w') as json_file:
@@ -73,47 +111,50 @@ class Data:
         """
 
         print("Creating standings dataframe...")
-        standings = pd.DataFrame(columns=['Position', 'Team', 'Played', 
-                                          'Form', 'Won', 'Draw', 'Lost', 
-                                          'Points', 'GF', 'GA', 'GD'])
-
+        standings = pd.DataFrame()
+        
         # Loop from current season to the season 2 years ago
         for i in range(no_seasons):
-            data = self.standingsData(self.season-i, request_new=False)
+            data = self.standingsData(self.season-i)
             # pprint.pprint(data)
             df = pd.DataFrame(data)
-
+            
             # Rename teams to their team name
-            team_names = pd.Series([df['team'][x]['name']
-                                    for x in range(len(df))])
+            team_names = pd.Series([df['team'][x]['name'] for x in range(len(df))])
             df['team'] = team_names
+            
+            if i == 0:
+                self.team_names = team_names
+
 
             # Rename columns to standardised names
-            df.rename(columns={'position': f'Position_{self.season-i}', 
+            df.rename(columns={'position': f'Position {self.season-i}', 
                                'team': 'Team',
-                               'playedGames': f'Played_{self.season-i}', 
-                               'form': f'Form_{self.season-i}',
-                               'won': f'Won_{self.season-i}',
-                               'draw': f'Draw_{self.season-i}',
-                               'lost': f'Lost_{self.season-i}',
-                               'points': f'Points_{self.season-i}', 
-                               'goalsFor': f'GF_{self.season-i}',
-                               'goalsAgainst': f'GA_{self.season-i}', 
-                               'goalDifference': f'GD_{self.season-i}'}, 
+                               'playedGames': f'Played {self.season-i}', 
+                               'form': f'Form {self.season-i}',
+                               'won': f'Won {self.season-i}',
+                               'draw': f'Draw {self.season-i}',
+                               'lost': f'Lost {self.season-i}',
+                               'points': f'Points {self.season-i}', 
+                               'goalsFor': f'GF {self.season-i}',
+                               'goalsAgainst': f'GA {self.season-i}', 
+                               'goalDifference': f'GD {self.season-i}'}, 
                       inplace=True)
+
+            
 
             if i == 0:
                 standings = standings.append(df)
             else:
                 # Drop teams that are no longer in the current season
-                df = df.drop(standings[~df['Team'].isin(standings.head(20)['Team'])].index)
-                standings = df.merge(standings, on='Team', how="outer", 
-                                              suffixes=(f"_{self.season-i}", None))
-        
+                df.drop(standings[~df['Team'].isin(standings.head(20)['Team'])].index, inplace=True)
+                
+                standings = standings.merge(df, on='Team', how="outer")
+            
+        standings.set_index("Team", inplace=True)
         # Sort by position in most recent season
-        standings.sort_values(by=([f'Position_{self.season-i}' for i in range(no_seasons)]), 
+        standings.sort_values(by=([f'Position {self.season-i}' for i in range(no_seasons)]), 
                                        inplace=True)
-        standings.reset_index(drop=True, inplace=True)
         
         print(standings)
         return standings
@@ -122,25 +163,25 @@ class Data:
 
     # ------------ Fixtures Data -------------
 
-    def fixturesData(self, request_new=True):
+    def fixturesData(self, season, request_new=True):
         if request_new:
-            response = requests.get(self.url + 'competitions/PL/matches'.format(self.season),
+            response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(season),
                                         headers=self.headers)
             print("Code:", response.status_code)
             response = response.json()['matches']
             
             # Save new data
-            with open(f'data/fixtures.json', 'w') as json_file:
+            with open(f'data/fixtures_{season}.json', 'w') as json_file:
                 json.dump(response, json_file)
             
             return response
         else:
-            with open('data/fixtures.json', 'r') as json_file:
+            with open(f'data/fixtures_{season}.json', 'r') as json_file:
                 return json.load(json_file)
 
     def getFixtures(self):
         print("Creating fixtures dataframe...")
-        data = self.fixturesData(request_new=False)
+        data = self.fixturesData(self.season)
         
         d = {}
         for match in data:
@@ -165,6 +206,12 @@ class Data:
             d[match['awayTeam']['name']].append(away_game)
         
         fixtures = pd.DataFrame(d)
+        fixtures.set_index(pd.Series([f"Matchday {i}" for i in range(1, fixtures.shape[0] + 1)]), inplace=True)
+        # Transpose to give "Matchday n" as columns, and team names as indexes
+        fixtures = fixtures.T
+        fixtures.index.name = "Team"
+        
+        fixtures.sort_index(inplace=True)
         
         print(fixtures)
         return fixtures
@@ -191,22 +238,18 @@ class Data:
         if standings.empty:
             standings = self.getStandings(no_seasons)
         
-        team_ratings = pd.DataFrame()
         # Add current season team names to the object team dataframe
-        team_ratings['Team'] = standings['Team']
+        team_ratings = pd.DataFrame(index=standings.index)
 
         # Create column for each included season
         for i in range(0, no_seasons):
             team_ratings[f'Rating {i}Y Ago'] = np.nan
-        
+                
         # Insert rating values for each row
-        for idx, row in standings.iterrows():
+        for team_name, row in standings.iterrows():
             for i in range(no_seasons):
-                if i == 0: # TODO: REMOVE ONCE SEASON STARTED
-                    rating = (20 - row[f'Position_{self.season-1}']) / 2
-                else:
-                    rating = self.calcRating(row[f'Position_{self.season-i}'], row[f'Points_{self.season-i}'], row[f'GD_{self.season-i}'])
-                team_ratings.loc[team_ratings.loc[team_ratings['Team'] == row['Team']].index, 'Rating {}Y Ago'.format(i)] = rating
+                rating = self.calcRating(row[f'Position {self.season-i}'], row[f'Points {self.season-i}'], row[f'GD {self.season-i}'])
+                team_ratings.loc[team_name, 'Rating {}Y Ago'.format(i)] = rating
 
         # Replace any NaN with the lowest rating in the same column
         for col in team_ratings.columns:
@@ -232,7 +275,7 @@ class Data:
     
     # ----------- Update Plotly Graph HTML Files ------------    
     
-    def updateFixtures(self, no_seasons, standings, fixtures, team_ratings, home_advantages, team='Liverpool FC'):
+    def updateFixtures(self, no_seasons, standings, fixtures, team_ratings, home_advantages, team=None):
         print("Updating fixtures graph...")
         if standings.empty:
             standings = self.getStandings(no_seasons)
@@ -240,13 +283,13 @@ class Data:
             fixtures = self.getFixtures()
         if team_ratings.empty:
             team_ratings = self.getTeamRatings(no_seasons, standings)
-        if home_advantages.empty:
-            home_advantages = self.getHomeAdvantages(no_seasons)
+        # if home_advantages.empty:
+        #     home_advantages = self.getHomeAdvantages(no_seasons)
 
         # Input team rating dataframe to grade upcoming fixtures
         gdv = GenDataVis()
         if team == None:
-            for team_name in self.standings['Team']:
+            for team_name in self.standings.index.values.tolist():
                 gdv.genFixturesGraph(team_name, fixtures, team_ratings, home_advantages)
         else:
             gdv.genFixturesGraph(team, fixtures, team_ratings, home_advantages)
@@ -257,16 +300,18 @@ class Data:
         Args:
             no_seasons (int): number of seasons of data to include.
         """
-        # Fill dataframes
-        # Fixtures for each team
-        self.fixtures = self.getFixtures() 
+        # ------ Update Dataframes -------
         # Standings for the last "n_seasons" seasons
         self.standings = self.getStandings(no_seasons)
+        # Fixtures for each team
+        self.fixtures = self.getFixtures()
+
         # Ratings for each team, based on last "no_seasons" seasons standings table
         self.team_ratings = self.getTeamRatings(no_seasons, self.standings)
+
         self.home_advantages = self.getHomeAdvantages(no_seasons)
-        
-        # Update graphs
+
+        # ----- Update Graphs ------
         self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages)
 
 
@@ -274,6 +319,6 @@ class Data:
 
 if __name__ == "__main__":
     data = Data(2020)
-    
+        
     data.updateAll(3)
 

@@ -6,14 +6,15 @@ from datetime import datetime
 
 class GenDataVis:
     def genFixturesGraph(self, team_name, fixtures, team_ratings, home_advantage):
-        team_fixtures = fixtures[team_name]
+        team_fixtures = fixtures.loc[team_name]  # Get row of fixtures dataframe
             
         now = datetime.now()
         sizes = [15] * len(fixtures)
         x, y, teams = [], [], []
         for i, match in enumerate(team_fixtures):
             x.append(match['Date'])
-            rating = team_ratings.loc[team_ratings['Team'] == match['Team']].iloc[0]['Total Rating']
+            # Get rating of the opposition team
+            rating = team_ratings.loc[match['Team'], 'Total Rating']
             # Decrease other team's rating if you're playing at home
             if match['HomeAway'] == 'Home':
                 rating *= (1 - home_advantage)
