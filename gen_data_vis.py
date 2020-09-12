@@ -5,19 +5,19 @@ import pandas as pd
 from datetime import datetime 
 
 class GenDataVis:
-    def genFixturesGraph(self, team_name, fixtures, team_ratings, home_advantage):
+    def genFixturesGraph(self, team_name, fixtures, team_ratings, home_advantage, display=False):
         team_fixtures = fixtures.loc[team_name]  # Get row of fixtures dataframe
-            
+                
         now = datetime.now()
-        sizes = [15] * len(fixtures)
+        sizes = [15] * len(team_fixtures)
         x, y, teams = [], [], []
         for i, match in enumerate(team_fixtures):
             x.append(match['Date'])
             # Get rating of the opposition team
             rating = team_ratings.loc[match['Team'], 'Total Rating']
             # Decrease other team's rating if you're playing at home
-            if match['HomeAway'] == 'Home':
-                rating *= (1 - home_advantage)
+            # if match['HomeAway'] == 'Home':
+            #     rating *= (1 - home_advantage)
             y.append(rating)
             teams.append(match['Team'] + " (" + match['HomeAway'] + ")")
             
@@ -29,7 +29,7 @@ class GenDataVis:
             if i == 0:
                 if now < match['Date']:
                     sizes[i] = 30
-            elif i != len(team_fixtures) and x[-2] < now < match['Date']:
+            elif i != len(team_fixtures) and x[-2] < now <= match['Date']:
                 sizes[i] = 30
             
         y = list(map(lambda x : x*100, y))  # Convert to percentages
@@ -103,8 +103,8 @@ class GenDataVis:
         
         # fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='gray')
         # fig.update_xaxes(showgrid=False)
-
-        # fig.show()
+        if display:
+            fig.show()
         # Convert team name into suitable use for filename
         file_team_name = '_'.join(team_name.lower().split()[:-1])
         plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/fixtures_{file_team_name}.html', auto_open=False)

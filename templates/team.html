@@ -2,6 +2,6 @@
 {% extends 'layout.html' %} {% block content %}
 <h1>Fixtures</h1>
 <div class="graph">
-  {% include 'graphs/{}/fixtures_{}.html'.format(team, team) %}
+  {% include 'graphs/{}/fixtures_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
 </div>
 {% endblock content %}
