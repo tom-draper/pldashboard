@@ -1,7 +1,21 @@
 
 {% extends 'layout.html' %} {% block content %}
-<h1>Fixtures</h1>
-<div class="graph">
-  {% include 'graphs/{}/fixtures_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
+
+<div class="row">
+  <div class="position-and-badge">
+    <div class="position">{{ position }}</div>
+  </div>
+  <div class="fixtures-graph">
+    <h1>Fixtures</h1>
+    <div class="graph">
+      {% include 'graphs/{}/fixtures_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="form-graph">
+    <h1>Form</h1>
+    Graph Coming Soon
+  </div>
 </div>
 {% endblock content %}

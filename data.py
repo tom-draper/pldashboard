@@ -70,6 +70,27 @@ class Data:
             df = df[df.index.isin(self.team_names)]
             home_advantages = home_advantages.join(df, how="outer")
         
+        # Clean up
+        home_advantages.fillna(0, inplace=True)
+        home_advantages = home_advantages.astype(int)
+        
+        # Create home advantage column
+        for i in range(no_seasons):
+            # Wins / Total Games Played
+            home_advantages[f'Wins {self.season-i} %'] = (home_advantages[f'Home Wins {self.season-i}'] + home_advantages[f'Away Wins {self.season-i}']) / (home_advantages[f'Home Wins {self.season-i}'] + home_advantages[f'Home Draws {self.season-i}'] + home_advantages[f'Home Loses {self.season-i}'] + home_advantages[f'Away Wins {self.season-i}'] + home_advantages[f'Away Draws {self.season-i}'] + home_advantages[f'Away Loses {self.season-i}'])
+            # Wins at Home / Total Games Played at Home 
+            home_advantages[f'Home Wins {self.season-i} %'] = home_advantages[f'Home Wins {self.season-i}'] / (home_advantages[f'Home Wins {self.season-i}'] + home_advantages[f'Home Draws {self.season-i}'] + home_advantages[f'Home Loses {self.season-i}'])
+            home_advantages[f'Home Advantage {self.season-i}'] = home_advantages[f'Home Wins {self.season-i} %'] - home_advantages[f'Wins {self.season-i} %']
+
+        
+        home_advantage_cols = [f"Home Advantage {self.season-i}" for i in range(1, no_seasons)]
+        home_advantages['Home Advantage'] = home_advantages[home_advantage_cols].mean(axis=1)
+        
+        
+        home_advantages.sort_values(by='Home Advantage', inplace=True)
+
+        home_advantages['Home Advantage'].fillna(0, inplace=True)
+        
         if display:
             print(home_advantages)
 
@@ -231,7 +252,7 @@ class Data:
     
     def getSeasonWeightings(self, no_seasons, current_weight=0.7):
         # TODO : generate list of appropriate size
-        return [0.5, 0.4, 0.1]
+        return [current_weight, 0.25, 0.05]
     
     def getTeamRatings(self, no_seasons, standings, display=True):
         print("Creating team ratings dataframe...")
@@ -248,7 +269,11 @@ class Data:
         # Insert rating values for each row
         for team_name, row in standings.iterrows():
             for i in range(no_seasons):
-                rating = self.calcRating(row[f'Position {self.season-i}'], row[f'Points {self.season-i}'], row[f'GD {self.season-i}'])
+                if i == 0 and (standings[f'Played {self.season}'] < 5).all():  # If current season hasn't played enough games
+                    # Use previous seasons final positions
+                    rating = (20 - row[f'Position {self.season-1}'])
+                else:
+                    rating = self.calcRating(row[f'Position {self.season-i}'], row[f'Points {self.season-i}'], row[f'GD {self.season-i}'])
                 team_ratings.loc[team_name, 'Rating {}Y Ago'.format(i)] = rating
 
         # Replace any NaN with the lowest rating in the same column
@@ -265,7 +290,7 @@ class Data:
             team_ratings['Total Rating'] += w[i] * team_ratings[f'Normalised Rating {i}Y Ago']
 
         team_ratings.sort_values(by="Total Rating", ascending=False, inplace=True)
-        team_ratings.rename(columns={'Rating 0Y Ago': 'Rating Current', 'Normalised Rating 0Y Ago': 'Normalised Rating Current'})
+        team_ratings.rename(columns={'Rating 0Y Ago': 'Rating Current', 'Normalised Rating 0Y Ago': 'Normalised Rating Current'}, inplace=True)
         
         if display:
             print(team_ratings)
@@ -296,7 +321,7 @@ class Data:
         else:
             gdv.genFixturesGraph(team, fixtures, team_ratings, home_advantages, display=display)
     
-    def updateAll(self, no_seasons, display=True, request_new=True):
+    def updateAll(self, no_seasons, team=None, display=True, request_new=True):
         """Update all graph files at once.
 
         Args:
@@ -314,7 +339,7 @@ class Data:
         self.home_advantages = self.getHomeAdvantages(no_seasons, display=display, request_new=request_new)
 
         # ----- Update Graphs ------
-        self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display)
+        self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display, team=team)
 
 
 
@@ -322,5 +347,5 @@ class Data:
 if __name__ == "__main__":
     data = Data(2020)
         
-    data.updateAll(3, display=False, request_new=False)
+    data.updateAll(3, team=None, display=False, request_new=False)
 

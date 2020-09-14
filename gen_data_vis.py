@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import datetime 
 
 class GenDataVis:
-    def genFixturesGraph(self, team_name, fixtures, team_ratings, home_advantage, display=False):
+    def genFixturesGraph(self, team_name, fixtures, team_ratings, home_advantages, display=False):
         team_fixtures = fixtures.loc[team_name]  # Get row of fixtures dataframe
                 
         now = datetime.now()
@@ -16,16 +16,12 @@ class GenDataVis:
             # Get rating of the opposition team
             rating = team_ratings.loc[match['Team'], 'Total Rating']
             # Decrease other team's rating if you're playing at home
-            # if match['HomeAway'] == 'Home':
-            #     rating *= (1 - home_advantage)
+            if match['HomeAway'] == 'Home':
+                rating *= (1 - home_advantages.loc[match['Team'], 'Home Advantage'])
             y.append(rating)
             teams.append(match['Team'] + " (" + match['HomeAway'] + ")")
             
-
-            
             # Increase size of point marker if it's the current upcoming match
-            # now = datetime(2020, 11, 6)
-            # now = datetime(2021, 5, 23)
             if i == 0:
                 if now < match['Date']:
                     sizes[i] = 30
@@ -59,31 +55,9 @@ class GenDataVis:
                                                 width=1,
                                                 dash="dot")))
         
-        # fig = px.scatter(df, x='Date', y='Ratings', labels={'x':'Date', 'y':'Team Rating'},
-        #                   color=y, color_continuous_scale=colour_scale, 
-        #                   hover_name=teams)
-        # fig = px.line(x=x, y=y)
-        
-        # Annotations
-        # annotations = []
-        # Title
-        # annotations.append(dict(xref='paper', yref='paper', x=0.0, y=1.03,
-        #                       xanchor='left', yanchor='bottom',
-        #                       text=f'{team_name} Fixtures',
-        #                       font=dict(family='Arial',
-        #                                 size=32,
-        #                                 color='rgb(37,37,37)'),
-        #                       showarrow=False))
-        
-        
-        # fig.update_layout(annotations=annotations)
-        # fig.update_layout({
-        #     'plot_bgcolor': '#fafafa',
-        #     'paper_bgcolor': '#fafafa',
-        # })
         fig.update_layout(
             yaxis=dict(
-                title_text="Team Rating %",
+                title_text="Calculated Team Rating %",
                 ticktext=[str(i) + "%" for i in range(0, 101, 10)],
                 tickvals=[i for i in range(0, 101, 10)],
                 gridcolor='gray',
@@ -97,6 +71,13 @@ class GenDataVis:
                 showgrid=False,
                 showline=False,
             ),
+            margin=dict(
+                l=50,
+                r=50,
+                b=10,
+                t=10,
+                pad=4
+            ),
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
         )
@@ -106,5 +87,5 @@ class GenDataVis:
         if display:
             fig.show()
         # Convert team name into suitable use for filename
-        file_team_name = '_'.join(team_name.lower().split()[:-1])
+        file_team_name = '_'.join(team_name.lower().split()[:-1]).replace('&', 'and')
         plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/fixtures_{file_team_name}.html', auto_open=False)

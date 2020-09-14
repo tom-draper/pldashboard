@@ -20,11 +20,11 @@
   </head>
   <body>
     {% if team == "None" %}
-      <div class="title">
+      <div class="header">
         <a class="title" href="/">Premier League</a>
       </div>
     {% else %}
-      <div class="title {{team}}">
+      <div class="header {{team}}">
         <a class="title" href="/">{{ team.replace('-', ' ').title() }}</a>
       </div>
     {% endif %}
