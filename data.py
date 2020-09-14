@@ -15,6 +15,9 @@ class Data:
     def __init__(self, current_season):
         self.season = current_season
         
+        # Number of games played in a season for season data to be used
+        self.games_threshold = 5
+                
         # List of current season teams, updated when updating standings 
         self.team_names = None  
         
@@ -27,7 +30,7 @@ class Data:
     
     # ---------- Home Advantage Data ------------
     
-    def getHomeAdvantages(self, no_seasons, display=True, request_new=True):
+    def getHomeAdvantages(self, no_seasons, display=False, request_new=True):
         print("Creating home advantages dataframe...")
         
         home_advantages = pd.DataFrame()
@@ -76,16 +79,23 @@ class Data:
         
         # Create home advantage column
         for i in range(no_seasons):
+            home_advantages[f'Played {self.season-i}'] = home_advantages[f'Home Wins {self.season-i}'] + home_advantages[f'Home Draws {self.season-i}'] + home_advantages[f'Home Loses {self.season-i}'] + home_advantages[f'Away Wins {self.season-i}'] + home_advantages[f'Away Draws {self.season-i}'] + home_advantages[f'Away Loses {self.season-i}']
+            home_advantages[f'Played at Home {self.season-i}'] = home_advantages[f'Home Wins {self.season-i}'] + home_advantages[f'Home Draws {self.season-i}'] + home_advantages[f'Home Loses {self.season-i}']
             # Wins / Total Games Played
-            home_advantages[f'Wins {self.season-i} %'] = (home_advantages[f'Home Wins {self.season-i}'] + home_advantages[f'Away Wins {self.season-i}']) / (home_advantages[f'Home Wins {self.season-i}'] + home_advantages[f'Home Draws {self.season-i}'] + home_advantages[f'Home Loses {self.season-i}'] + home_advantages[f'Away Wins {self.season-i}'] + home_advantages[f'Away Draws {self.season-i}'] + home_advantages[f'Away Loses {self.season-i}'])
+            home_advantages[f'Wins {self.season-i} %'] = (home_advantages[f'Home Wins {self.season-i}'] + home_advantages[f'Away Wins {self.season-i}']) / home_advantages[f'Played {self.season-i}']
             # Wins at Home / Total Games Played at Home 
-            home_advantages[f'Home Wins {self.season-i} %'] = home_advantages[f'Home Wins {self.season-i}'] / (home_advantages[f'Home Wins {self.season-i}'] + home_advantages[f'Home Draws {self.season-i}'] + home_advantages[f'Home Loses {self.season-i}'])
+            home_advantages[f'Home Wins {self.season-i} %'] = home_advantages[f'Home Wins {self.season-i}'] / home_advantages[f'Played at Home {self.season-i}']
             home_advantages[f'Home Advantage {self.season-i}'] = home_advantages[f'Home Wins {self.season-i} %'] - home_advantages[f'Wins {self.season-i} %']
 
-        
-        home_advantage_cols = [f"Home Advantage {self.season-i}" for i in range(1, no_seasons)]
+        # Check whether all teams in current season have played enough home games to meet threshold for use
+        if (home_advantages[f'Played at Home {self.season}'] > self.games_threshold).all():
+            start_n = 0  # Include current season
+        else:
+            print("Current season excluded from home advantages calculation -> haven't played enough games.")
+            start_n = 1  # Start from previous season
+        # List of all home advantege column names that will be used to calculate final column
+        home_advantage_cols = [f"Home Advantage {self.season-i}" for i in range(start_n, no_seasons)]
         home_advantages['Home Advantage'] = home_advantages[home_advantage_cols].mean(axis=1)
-        
         
         home_advantages.sort_values(by='Home Advantage', inplace=True)
 
@@ -115,7 +125,7 @@ class Data:
             with open(f'data/standings_{season}.json', 'r') as json_file:
                 return json.load(json_file)
 
-    def getStandings(self, no_seasons, display=True, request_new=True):
+    def getStandings(self, no_seasons, display=False, request_new=True):
         """Get the Premier League table standings from the last specified number of 
            seasons. Compile each of these standings into a single dataframe to return.
            Dataframe contains only teams that are members of the current season.
@@ -198,7 +208,7 @@ class Data:
             with open(f'data/fixtures_{season}.json', 'r') as json_file:
                 return json.load(json_file)
 
-    def getFixtures(self, display=True, request_new=True):
+    def getFixtures(self, display=False, request_new=True):
         print("Creating fixtures dataframe...")
         data = self.fixturesData(self.season, request_new=request_new)
         
@@ -254,8 +264,9 @@ class Data:
         # TODO : generate list of appropriate size
         return [current_weight, 0.25, 0.05]
     
-    def getTeamRatings(self, no_seasons, standings, display=True):
+    def getTeamRatings(self, no_seasons, standings, display=False):
         print("Creating team ratings dataframe...")
+        # If standings table not calculated, calculate
         if standings.empty:
             standings = self.getStandings(no_seasons)
         
@@ -269,11 +280,7 @@ class Data:
         # Insert rating values for each row
         for team_name, row in standings.iterrows():
             for i in range(no_seasons):
-                if i == 0 and (standings[f'Played {self.season}'] < 5).all():  # If current season hasn't played enough games
-                    # Use previous seasons final positions
-                    rating = (20 - row[f'Position {self.season-1}'])
-                else:
-                    rating = self.calcRating(row[f'Position {self.season-i}'], row[f'Points {self.season-i}'], row[f'GD {self.season-i}'])
+                rating = self.calcRating(row[f'Position {self.season-i}'], row[f'Points {self.season-i}'], row[f'GD {self.season-i}'])
                 team_ratings.loc[team_name, 'Rating {}Y Ago'.format(i)] = rating
 
         # Replace any NaN with the lowest rating in the same column
@@ -284,11 +291,24 @@ class Data:
         for i in range(0, no_seasons):
             team_ratings[f'Normalised Rating {i}Y Ago'] = (team_ratings[f'Rating {i}Y Ago'] - team_ratings[f'Rating {i}Y Ago'].min()) / (team_ratings[f'Rating {i}Y Ago'].max() - team_ratings[f'Rating {i}Y Ago'].min())
 
+        # Check whether current season data should be included in each team's total rating
+        if (standings[f'Played {self.season}'] < self.games_threshold).all():  # If current season hasn't played enough games
+            print("Current season excluded from team ratings calculation -> haven't played enough games.")
+            include_current_season = False
+        else:
+            include_current_season = True
+
+        # Calculate total rating column
         w = self.getSeasonWeightings(no_seasons) # Column weights
         team_ratings['Total Rating'] = 0
-        for i in range(0, no_seasons):
+        if include_current_season:
+            start_n = 0  # Include current season when calculating total rating
+        else:
+            start_n = 1  # Exclude current season when calculating total rating
+        for i in range(start_n, no_seasons):
             team_ratings['Total Rating'] += w[i] * team_ratings[f'Normalised Rating {i}Y Ago']
 
+        # Tidy dataframe
         team_ratings.sort_values(by="Total Rating", ascending=False, inplace=True)
         team_ratings.rename(columns={'Rating 0Y Ago': 'Rating Current', 'Normalised Rating 0Y Ago': 'Normalised Rating Current'}, inplace=True)
         
@@ -304,14 +324,15 @@ class Data:
     
     def updateFixtures(self, no_seasons, standings, fixtures, team_ratings, home_advantages, display=False, team=None):
         print("Updating fixtures graph...")
+        # If required tables not calculated, calculate
         if standings.empty:
             standings = self.getStandings(no_seasons)
         if fixtures.empty:
             fixtures = self.getFixtures()
         if team_ratings.empty:
             team_ratings = self.getTeamRatings(no_seasons, standings)
-        # if home_advantages.empty:
-        #     home_advantages = self.getHomeAdvantages(no_seasons)
+        if home_advantages.empty:
+            home_advantages = self.getHomeAdvantages(no_seasons)
 
         # Input team rating dataframe to grade upcoming fixtures
         gdv = GenDataVis()
@@ -321,7 +342,7 @@ class Data:
         else:
             gdv.genFixturesGraph(team, fixtures, team_ratings, home_advantages, display=display)
     
-    def updateAll(self, no_seasons, team=None, display=True, request_new=True):
+    def updateAll(self, no_seasons, team=None, display_tables=False, display_graphs=False, request_new=True):
         """Update all graph files at once.
 
         Args:
@@ -329,23 +350,23 @@ class Data:
         """
         # ------ Update Dataframes -------
         # Standings for the last "n_seasons" seasons
-        self.standings = self.getStandings(no_seasons, display=display, request_new=request_new)
+        self.standings = self.getStandings(no_seasons, display=display_tables, request_new=request_new)
         # Fixtures for each team
-        self.fixtures = self.getFixtures(display=display, request_new=request_new)
+        self.fixtures = self.getFixtures(display=display_tables, request_new=request_new)
 
         # Ratings for each team, based on last "no_seasons" seasons standings table
-        self.team_ratings = self.getTeamRatings(no_seasons, self.standings, display=display)
+        self.team_ratings = self.getTeamRatings(no_seasons, self.standings, display=display_tables)
 
-        self.home_advantages = self.getHomeAdvantages(no_seasons, display=display, request_new=request_new)
+        self.home_advantages = self.getHomeAdvantages(no_seasons, display=display_tables, request_new=request_new)
 
         # ----- Update Graphs ------
-        self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display, team=team)
+        self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display_graphs, team=team)
 
 
 
 
 if __name__ == "__main__":
     data = Data(2020)
-        
-    data.updateAll(3, team=None, display=False, request_new=False)
+    
+    data.updateAll(3, team=None, display_tables=True, display_graphs=False, request_new=False)
 
