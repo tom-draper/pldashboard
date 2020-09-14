@@ -214,14 +214,12 @@ class Data:
         
         d = {}
         for match in data:
-            home_game = {'Matchday': match['matchday'],
-                         'Date': datetime.datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
+            home_game = {'Date': datetime.datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
                          'HomeAway': 'Home',
                          'Team': match['awayTeam']['name'],
                          'Status': match['status'],
                          'Score': match['score']['fullTime']}
-            away_game = {'Matchday': match['matchday'],
-                         'Date': datetime.datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
+            away_game = {'Date': datetime.datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
                          'HomeAway': 'Away',
                          'Team': match['homeTeam']['name'],
                          'Status': match['status'],
