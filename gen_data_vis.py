@@ -7,12 +7,16 @@ from datetime import datetime
 class GenDataVis:
     def genFixturesGraph(self, team_name, fixtures, team_ratings, home_advantages, display=False):
         team_fixtures = fixtures.loc[team_name]  # Get row of fixtures dataframe
-                
+        
+        n_matches = len(team_fixtures.index.levels[0])
         now = datetime.now()
-        sizes = [15] * len(team_fixtures)
+        sizes = [14] * n_matches
+        
         x, y, teams = [], [], []
-        for i, match in enumerate(team_fixtures):
-            x.append(match['Date'])
+        for i in range(n_matches):
+            match = team_fixtures[f'Matchday {i+1}']
+            
+            x.append(datetime.utcfromtimestamp(match['Date'].tolist()/1e9))
             # Get rating of the opposition team
             rating = team_ratings.loc[match['Team'], 'Total Rating']
             # Decrease other team's rating if you're playing at home
@@ -23,11 +27,11 @@ class GenDataVis:
             
             # Increase size of point marker if it's the current upcoming match
             if i == 0:
-                if now < match['Date']:
-                    sizes[i] = 30
-            elif i != len(team_fixtures) and x[-2] < now <= match['Date']:
-                sizes[i] = 30
-            
+                if now < x[-1]:
+                    sizes[i] = 26
+            elif i != len(team_fixtures) and x[-2] < now <= x[-1]:
+                sizes[i] = 26
+                
         y = list(map(lambda x : x*100, y))  # Convert to percentages
         df = pd.DataFrame({'Date': x, 'Ratings': y, 'Teams': teams})
         

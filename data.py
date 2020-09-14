@@ -4,7 +4,7 @@ import numpy as np
 import requests
 import json
 import pprint
-import datetime
+from datetime import datetime
 
 
 class Data:
@@ -16,7 +16,7 @@ class Data:
         self.season = current_season
         
         # Number of games played in a season for season data to be used
-        self.games_threshold = 5
+        self.games_threshold = 3
                 
         # List of current season teams, updated when updating standings 
         self.team_names = None  
@@ -40,15 +40,18 @@ class Data:
             
             d = {}
             for match in data:
-                if match['homeTeam']['name'] not in d.keys():
-                    d[match['homeTeam']['name']] = {f'Home Wins {self.season-i}': 0, 
+                home_team = match['homeTeam']['name'].replace('&', 'and')
+                away_team = match['awayTeam']['name'].replace('&', 'and')
+
+                if home_team not in d.keys():
+                    d[home_team] = {f'Home Wins {self.season-i}': 0, 
                                                     f'Home Draws {self.season-i}': 0,
                                                     f'Home Loses {self.season-i}': 0,
                                                     f'Away Wins {self.season-i}': 0,
                                                     f'Away Draws {self.season-i}': 0,
                                                     f'Away Loses {self.season-i}': 0}                
-                if match['awayTeam']['name'] not in d.keys():
-                    d[match['awayTeam']['name']] = {f'Home Wins {self.season-i}': 0, 
+                if away_team not in d.keys():
+                    d[away_team] = {f'Home Wins {self.season-i}': 0, 
                                                     f'Home Draws {self.season-i}': 0,
                                                     f'Home Loses {self.season-i}': 0,
                                                     f'Away Wins {self.season-i}': 0,
@@ -58,16 +61,16 @@ class Data:
                 if match['score']['winner'] != None:
                     if match['score']['fullTime']['homeTeam'] > match['score']['fullTime']['awayTeam']:
                         # Home team wins
-                        d[match['homeTeam']['name']][f'Home Wins {self.season-i}'] += 1
-                        d[match['awayTeam']['name']][f'Away Loses {self.season-i}'] += 1
+                        d[home_team][f'Home Wins {self.season-i}'] += 1
+                        d[away_team][f'Away Loses {self.season-i}'] += 1
                     elif match['score']['fullTime']['homeTeam'] < match['score']['fullTime']['awayTeam']:
                         # Away team wins
-                        d[match['homeTeam']['name']][f'Home Loses {self.season-i}'] += 1
-                        d[match['awayTeam']['name']][f'Away Wins {self.season-i}'] += 1
+                        d[home_team][f'Home Loses {self.season-i}'] += 1
+                        d[away_team][f'Away Wins {self.season-i}'] += 1
                     else:  # Draw
-                        d[match['homeTeam']['name']][f'Home Draws {self.season-i}'] += 1
-                        d[match['awayTeam']['name']][f'Away Draws {self.season-i}'] += 1
-                        
+                        d[home_team][f'Home Draws {self.season-i}'] += 1
+                        d[away_team][f'Away Draws {self.season-i}'] += 1
+
             df = pd.DataFrame(d).T
             df.index.name = "Team"
             df = df[df.index.isin(self.team_names)]
@@ -88,16 +91,17 @@ class Data:
             home_advantages[f'Home Advantage {self.season-i}'] = home_advantages[f'Home Wins {self.season-i} %'] - home_advantages[f'Wins {self.season-i} %']
 
         # Check whether all teams in current season have played enough home games to meet threshold for use
-        if (home_advantages[f'Played at Home {self.season}'] > self.games_threshold).all():
-            start_n = 0  # Include current season
-        else:
+        if (home_advantages[f'Played at Home {self.season}'] <= self.games_threshold).all():
             print("Current season excluded from home advantages calculation -> haven't played enough games.")
             start_n = 1  # Start from previous season
+        else:
+            start_n = 0  # Include current season
+            
         # List of all home advantege column names that will be used to calculate final column
         home_advantage_cols = [f"Home Advantage {self.season-i}" for i in range(start_n, no_seasons)]
         home_advantages['Home Advantage'] = home_advantages[home_advantage_cols].mean(axis=1)
         
-        home_advantages.sort_values(by='Home Advantage', inplace=True)
+        home_advantages.sort_values(by='Home Advantage', ascending=False, inplace=True)
 
         home_advantages['Home Advantage'].fillna(0, inplace=True)
         
@@ -147,7 +151,7 @@ class Data:
             df = pd.DataFrame(data)
             
             # Rename teams to their team name
-            team_names = pd.Series([df['team'][x]['name'] for x in range(len(df))])
+            team_names = pd.Series([name.replace('&', 'and') for name in [df['team'][x]['name'] for x in range(len(df))]])
             df['team'] = team_names
             
             if i == 0:
@@ -167,8 +171,6 @@ class Data:
                                'goalsAgainst': f'GA {self.season-i}', 
                                'goalDifference': f'GD {self.season-i}'}, 
                       inplace=True)
-
-            
 
             if i == 0:
                 standings = standings.append(df)
@@ -212,34 +214,33 @@ class Data:
         print("Creating fixtures dataframe...")
         data = self.fixturesData(self.season, request_new=request_new)
         
+        fixtures = pd.DataFrame()
+        
         d = {}
+        matchday = pd.DataFrame()
+        prev_match_matchday = 1
         for match in data:
-            home_game = {'Date': datetime.datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
-                         'HomeAway': 'Home',
-                         'Team': match['awayTeam']['name'],
-                         'Status': match['status'],
-                         'Score': match['score']['fullTime']}
-            away_game = {'Date': datetime.datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
-                         'HomeAway': 'Away',
-                         'Team': match['homeTeam']['name'],
-                         'Status': match['status'],
-                         'Score': match['score']['fullTime']}
+            df_home = {(f'Matchday {match["matchday"]}', 'Date'): datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
+                       (f'Matchday {match["matchday"]}', 'HomeAway'): 'Home',
+                       (f'Matchday {match["matchday"]}', 'Team'): match['awayTeam']['name'].replace('&', 'and'),
+                       (f'Matchday {match["matchday"]}', 'Status'): match['status'],
+                       (f'Matchday {match["matchday"]}', 'Score'): f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}",}
+            df_away = {(f'Matchday {match["matchday"]}', 'Date'): datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
+                       (f'Matchday {match["matchday"]}', 'HomeAway'): 'Away',
+                       (f'Matchday {match["matchday"]}', 'Team'): match['homeTeam']['name'].replace('&', 'and'),
+                       (f'Matchday {match["matchday"]}', 'Status'): match['status'],
+                       (f'Matchday {match["matchday"]}', 'Score'): f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}",}
             
-            if match['homeTeam']['name'] not in d.keys():
-                d[match['homeTeam']['name']] = []
-            d[match['homeTeam']['name']].append(home_game)
-            if match['awayTeam']['name'] not in d.keys():
-                d[match['awayTeam']['name']] = []
-            d[match['awayTeam']['name']].append(away_game)
-        
-        fixtures = pd.DataFrame(d)
-        fixtures.set_index(pd.Series([f"Matchday {i}" for i in range(1, fixtures.shape[0] + 1)]), inplace=True)
-        # Transpose to give "Matchday n" as columns, and team names as indexes
-        fixtures = fixtures.T
-        fixtures.index.name = "Team"
-        
-        fixtures.sort_index(inplace=True)
-        
+            # If moved on to next matchday, reset matchday dataframe
+            if prev_match_matchday < match['matchday']:
+                fixtures = pd.concat([fixtures, matchday], axis=1)
+                matchday = pd.DataFrame()
+                prev_match_matchday = match['matchday']
+
+            home_row = pd.Series(data=df_home, name=match['homeTeam']['name'].replace('&', 'and'))
+            away_row = pd.Series(data=df_away, name=match['awayTeam']['name'].replace('&', 'and'))
+            matchday = matchday.append([home_row, away_row])
+                
         if display:
             print(fixtures)
             
@@ -258,9 +259,13 @@ class Data:
             rating *= points
         return rating
     
-    def getSeasonWeightings(self, no_seasons, current_weight=0.7):
-        # TODO : generate list of appropriate size
-        return [current_weight, 0.25, 0.05]
+    def getSeasonWeightings(self, no_seasons):
+        weights = [0.7, 0.25, 0.05]
+        weights = np.array(weights[:no_seasons])
+        # Normalise list
+        weights = list(weights / sum(weights))
+        return weights
+        
     
     def getTeamRatings(self, no_seasons, standings, display=False):
         print("Creating team ratings dataframe...")
@@ -290,21 +295,23 @@ class Data:
             team_ratings[f'Normalised Rating {i}Y Ago'] = (team_ratings[f'Rating {i}Y Ago'] - team_ratings[f'Rating {i}Y Ago'].min()) / (team_ratings[f'Rating {i}Y Ago'].max() - team_ratings[f'Rating {i}Y Ago'].min())
 
         # Check whether current season data should be included in each team's total rating
-        if (standings[f'Played {self.season}'] < self.games_threshold).all():  # If current season hasn't played enough games
+        if (standings[f'Played {self.season}'] <= self.games_threshold).all():  # If current season hasn't played enough games
             print("Current season excluded from team ratings calculation -> haven't played enough games.")
             include_current_season = False
         else:
             include_current_season = True
 
         # Calculate total rating column
-        w = self.getSeasonWeightings(no_seasons) # Column weights
         team_ratings['Total Rating'] = 0
         if include_current_season:
             start_n = 0  # Include current season when calculating total rating
+            w = self.getSeasonWeightings(no_seasons) # Column weights
         else:
             start_n = 1  # Exclude current season when calculating total rating
+            w = self.getSeasonWeightings(no_seasons-1) # Column weights
+
         for i in range(start_n, no_seasons):
-            team_ratings['Total Rating'] += w[i] * team_ratings[f'Normalised Rating {i}Y Ago']
+            team_ratings['Total Rating'] += w[i-start_n] * team_ratings[f'Normalised Rating {i}Y Ago']
 
         # Tidy dataframe
         team_ratings.sort_values(by="Total Rating", ascending=False, inplace=True)
@@ -321,7 +328,6 @@ class Data:
     # ----------- Update Plotly Graph HTML Files ------------    
     
     def updateFixtures(self, no_seasons, standings, fixtures, team_ratings, home_advantages, display=False, team=None):
-        print("Updating fixtures graph...")
         # If required tables not calculated, calculate
         if standings.empty:
             standings = self.getStandings(no_seasons)
@@ -335,9 +341,11 @@ class Data:
         # Input team rating dataframe to grade upcoming fixtures
         gdv = GenDataVis()
         if team == None:
+            print("Updating all team fixtures graphs...")
             for team_name in self.standings.index.values.tolist():
                 gdv.genFixturesGraph(team_name, fixtures, team_ratings, home_advantages, display=display)
         else:
+            print(f"Updating all {team} fixture graph...")
             gdv.genFixturesGraph(team, fixtures, team_ratings, home_advantages, display=display)
     
     def updateAll(self, no_seasons, team=None, display_tables=False, display_graphs=False, request_new=True):

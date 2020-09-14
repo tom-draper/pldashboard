@@ -10,6 +10,12 @@
         font-family: "Radikal Medium";
         src: url("/static/fonts/Radikal-Medium.ttf");
       }
+      .position-and-badge {
+        background-image: url("static/club_badges/{{team}}.png");
+        background-repeat: no-repeat;
+        background-size: auto 450px;
+        background-position: right center;
+      }
     </style>
 
     {% if team == "None" %}
@@ -25,7 +31,7 @@
       </div>
     {% else %}
       <div class="header {{team}}">
-        <a class="title" href="/">{{ team.replace('-', ' ').title() }}</a>
+        <a class="title {{team.replace(' ', '-') + '-secondary'}}" href="/">{{ team.replace('-', ' ').title() }}</a>
       </div>
     {% endif %}
     <div class="page-content">

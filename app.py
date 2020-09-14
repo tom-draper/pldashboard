@@ -33,13 +33,13 @@ def hello():
 def team():
     rule = request.url_rule
     team_name = rule.rule[1:]
-    position = data.standings.loc['Liverpool FC', f'Position {season}']
+    position = data.standings.loc[team_name.replace('-', ' ').title().replace('And', 'and') + ' FC', f'Position {season}']
     
     return render_template('team.html', team=team_name, position=position)
 
 
 if __name__ == '__main__':
-    data.updateAll(3, team="Liverpool FC", display=False, request_new=False)
+    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=False)
     app.run(debug=False)
 
     
