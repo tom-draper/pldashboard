@@ -45,18 +45,18 @@ class Data:
 
                 if home_team not in d.keys():
                     d[home_team] = {f'Home Wins {self.season-i}': 0, 
-                                                    f'Home Draws {self.season-i}': 0,
-                                                    f'Home Loses {self.season-i}': 0,
-                                                    f'Away Wins {self.season-i}': 0,
-                                                    f'Away Draws {self.season-i}': 0,
-                                                    f'Away Loses {self.season-i}': 0}                
+                                    f'Home Draws {self.season-i}': 0,
+                                    f'Home Loses {self.season-i}': 0,
+                                    f'Away Wins {self.season-i}': 0,
+                                    f'Away Draws {self.season-i}': 0,
+                                    f'Away Loses {self.season-i}': 0}                
                 if away_team not in d.keys():
                     d[away_team] = {f'Home Wins {self.season-i}': 0, 
-                                                    f'Home Draws {self.season-i}': 0,
-                                                    f'Home Loses {self.season-i}': 0,
-                                                    f'Away Wins {self.season-i}': 0,
-                                                    f'Away Draws {self.season-i}': 0,
-                                                    f'Away Loses {self.season-i}': 0}
+                                    f'Home Draws {self.season-i}': 0,
+                                    f'Home Loses {self.season-i}': 0,
+                                    f'Away Wins {self.season-i}': 0,
+                                    f'Away Draws {self.season-i}': 0,
+                                    f'Away Loses {self.season-i}': 0}
                 
                 if match['score']['winner'] != None:
                     if match['score']['fullTime']['homeTeam'] > match['score']['fullTime']['awayTeam']:
@@ -153,37 +153,39 @@ class Data:
             # Rename teams to their team name
             team_names = pd.Series([name.replace('&', 'and') for name in [df['team'][x]['name'] for x in range(len(df))]])
             df['team'] = team_names
+
+
+            df.columns = pd.MultiIndex.from_tuples(((f'{self.season-i}', 'Position'), 
+                                                   (f'{self.season-i}', 'Team'),
+                                                   (f'{self.season-i}', 'Played'),
+                                                   (f'{self.season-i}', 'Form'),
+                                                   (f'{self.season-i}', 'Won'),
+                                                   (f'{self.season-i}', 'Draw'),
+                                                   (f'{self.season-i}', 'Lost'),
+                                                   (f'{self.season-i}', 'Points'),
+                                                   (f'{self.season-i}', 'GF'),
+                                                   (f'{self.season-i}', 'GA'), 
+                                                   (f'{self.season-i}', 'GD'),))
+
+            df.index = df[f'{self.season-i}']['Team']
+            df.drop(columns=['Team'], level=1, inplace=True)
             
-            if i == 0:
-                self.team_names = team_names
-
-
-            # Rename columns to standardised names
-            df.rename(columns={'position': f'Position {self.season-i}', 
-                               'team': 'Team',
-                               'playedGames': f'Played {self.season-i}', 
-                               'form': f'Form {self.season-i}',
-                               'won': f'Won {self.season-i}',
-                               'draw': f'Draw {self.season-i}',
-                               'lost': f'Lost {self.season-i}',
-                               'points': f'Points {self.season-i}', 
-                               'goalsFor': f'GF {self.season-i}',
-                               'goalsAgainst': f'GA {self.season-i}', 
-                               'goalDifference': f'GD {self.season-i}'}, 
-                      inplace=True)
-
-            if i == 0:
+            if i == 0:  # If building current season table
                 standings = standings.append(df)
+                self.team_names = team_names
             else:
-                # Drop teams that are no longer in the current season
-                df.drop(standings[~df['Team'].isin(standings.head(20)['Team'])].index, inplace=True)
-                
-                standings = standings.merge(df, on='Team', how="outer")
+                # Drop team rows that are no longer in the current season
+                df.drop(df[~df.index.isin(standings.index)].index, inplace=True)
+                # Drop the Form column from previous seasons
+                df.drop(columns=['Form'], level=1, inplace=True)
+                # Add season standings to main standings dataframe 
+                standings = pd.concat([standings, df], axis=1)
+                # standings = standings.merge(df, on=f"({self.season-i+1}, Team)", how="outer")
             
-        standings.set_index("Team", inplace=True)
+        standings.index.name = "Team"
         # Sort by position in most recent season
-        standings.sort_values(by=([f'Position {self.season-i}' for i in range(no_seasons)]), 
-                                       inplace=True)
+        # standings.sort_values(by=([f'Position {self.season-i}' for i in range(no_seasons)]), 
+        #                                inplace=True)
         
         if display:
             print(standings)
@@ -283,7 +285,7 @@ class Data:
         # Insert rating values for each row
         for team_name, row in standings.iterrows():
             for i in range(no_seasons):
-                rating = self.calcRating(row[f'Position {self.season-i}'], row[f'Points {self.season-i}'], row[f'GD {self.season-i}'])
+                rating = self.calcRating(row[f'{self.season-i}']['Position'], row[f'{self.season-i}']['Points'], row[f'{self.season-i}']['GD'])
                 team_ratings.loc[team_name, 'Rating {}Y Ago'.format(i)] = rating
 
         # Replace any NaN with the lowest rating in the same column
@@ -295,7 +297,7 @@ class Data:
             team_ratings[f'Normalised Rating {i}Y Ago'] = (team_ratings[f'Rating {i}Y Ago'] - team_ratings[f'Rating {i}Y Ago'].min()) / (team_ratings[f'Rating {i}Y Ago'].max() - team_ratings[f'Rating {i}Y Ago'].min())
 
         # Check whether current season data should be included in each team's total rating
-        if (standings[f'Played {self.season}'] <= self.games_threshold).all():  # If current season hasn't played enough games
+        if (standings[f'{self.season}']['Played'] <= self.games_threshold).all():  # If current season hasn't played enough games
             print("Current season excluded from team ratings calculation -> haven't played enough games.")
             include_current_season = False
         else:

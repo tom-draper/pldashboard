@@ -34,8 +34,9 @@ def team():
     rule = request.url_rule
     team_name = rule.rule[1:]
     position = data.standings.loc[team_name.replace('-', ' ').title().replace('And', 'and') + ' FC', f'Position {season}']
+    form = 
     
-    return render_template('team.html', team=team_name, position=position)
+    return render_template('team.html', team=team_name, position=position, form=form)
 
 
 if __name__ == '__main__':
