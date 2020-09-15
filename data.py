@@ -16,7 +16,7 @@ class Data:
         self.season = current_season
         
         # Number of games played in a season for season data to be used
-        self.games_threshold = 3
+        self.games_threshold = 0
                 
         # List of current season teams, updated when updating standings 
         self.team_names = None  
@@ -44,66 +44,67 @@ class Data:
                 away_team = match['awayTeam']['name'].replace('&', 'and')
 
                 if home_team not in d.keys():
-                    d[home_team] = {f'Home Wins {self.season-i}': 0, 
-                                    f'Home Draws {self.season-i}': 0,
-                                    f'Home Loses {self.season-i}': 0,
-                                    f'Away Wins {self.season-i}': 0,
-                                    f'Away Draws {self.season-i}': 0,
-                                    f'Away Loses {self.season-i}': 0}                
+                    d[home_team] = {(f'{self.season-i}', 'Home Wins'): 0, 
+                                    (f'{self.season-i}', 'Home Draws'): 0,
+                                    (f'{self.season-i}', 'Home Loses'): 0,
+                                    (f'{self.season-i}', 'Away Wins'): 0,
+                                    (f'{self.season-i}', 'Away Draws'): 0,
+                                    (f'{self.season-i}', 'Away Loses'): 0}                
                 if away_team not in d.keys():
-                    d[away_team] = {f'Home Wins {self.season-i}': 0, 
-                                    f'Home Draws {self.season-i}': 0,
-                                    f'Home Loses {self.season-i}': 0,
-                                    f'Away Wins {self.season-i}': 0,
-                                    f'Away Draws {self.season-i}': 0,
-                                    f'Away Loses {self.season-i}': 0}
+                    d[away_team] = {(f'{self.season-i}', 'Home Wins'): 0, 
+                                    (f'{self.season-i}', 'Home Draws'): 0,
+                                    (f'{self.season-i}', 'Home Loses'): 0,
+                                    (f'{self.season-i}', 'Away Wins'): 0,
+                                    (f'{self.season-i}', 'Away Draws'): 0,
+                                    (f'{self.season-i}', 'Away Loses'): 0}   
                 
                 if match['score']['winner'] != None:
                     if match['score']['fullTime']['homeTeam'] > match['score']['fullTime']['awayTeam']:
                         # Home team wins
-                        d[home_team][f'Home Wins {self.season-i}'] += 1
-                        d[away_team][f'Away Loses {self.season-i}'] += 1
+                        d[home_team][(f'{self.season-i}', 'Home Wins')] += 1
+                        d[away_team][(f'{self.season-i}', 'Away Loses')] += 1
                     elif match['score']['fullTime']['homeTeam'] < match['score']['fullTime']['awayTeam']:
                         # Away team wins
-                        d[home_team][f'Home Loses {self.season-i}'] += 1
-                        d[away_team][f'Away Wins {self.season-i}'] += 1
+                        d[home_team][(f'{self.season-i}', 'Home Loses')] += 1
+                        d[away_team][(f'{self.season-i}', 'Away Wins')] += 1
                     else:  # Draw
-                        d[home_team][f'Home Draws {self.season-i}'] += 1
-                        d[away_team][f'Away Draws {self.season-i}'] += 1
+                        d[home_team][(f'{self.season-i}', 'Home Draws')] += 1
+                        d[away_team][(f'{self.season-i}', 'Away Draws')] += 1
 
             df = pd.DataFrame(d).T
             df.index.name = "Team"
             df = df[df.index.isin(self.team_names)]
-            home_advantages = home_advantages.join(df, how="outer")
+            home_advantages = pd.concat([home_advantages, df], axis=1)
+            # home_advantages = home_advantages.join(df, how="outer")
         
         # Clean up
         home_advantages.fillna(0, inplace=True)
         home_advantages = home_advantages.astype(int)
         
+        
         # Create home advantage column
         for i in range(no_seasons):
-            home_advantages[f'Played {self.season-i}'] = home_advantages[f'Home Wins {self.season-i}'] + home_advantages[f'Home Draws {self.season-i}'] + home_advantages[f'Home Loses {self.season-i}'] + home_advantages[f'Away Wins {self.season-i}'] + home_advantages[f'Away Draws {self.season-i}'] + home_advantages[f'Away Loses {self.season-i}']
-            home_advantages[f'Played at Home {self.season-i}'] = home_advantages[f'Home Wins {self.season-i}'] + home_advantages[f'Home Draws {self.season-i}'] + home_advantages[f'Home Loses {self.season-i}']
+            home_advantages[f'{self.season-i}', 'Played'] = home_advantages[f'{self.season-i}']['Home Wins'] + home_advantages[f'{self.season-i}']['Home Draws'] + home_advantages[f'{self.season-i}']['Home Loses'] + home_advantages[f'{self.season-i}']['Away Wins'] + home_advantages[f'{self.season-i}']['Away Draws'] + home_advantages[f'{self.season-i}']['Away Loses']
+            home_advantages[f'{self.season-i}', 'Played at Home'] = home_advantages[f'{self.season-i}']['Home Wins'] + home_advantages[f'{self.season-i}']['Home Draws'] + home_advantages[f'{self.season-i}']['Home Loses']
             # Wins / Total Games Played
-            home_advantages[f'Wins {self.season-i} %'] = (home_advantages[f'Home Wins {self.season-i}'] + home_advantages[f'Away Wins {self.season-i}']) / home_advantages[f'Played {self.season-i}']
+            home_advantages[f'{self.season-i}', 'Wins %'] = (home_advantages[f'{self.season-i}']['Home Wins'] + home_advantages[f'{self.season-i}']['Away Wins']) / home_advantages[f'{self.season-i}']['Played']
             # Wins at Home / Total Games Played at Home 
-            home_advantages[f'Home Wins {self.season-i} %'] = home_advantages[f'Home Wins {self.season-i}'] / home_advantages[f'Played at Home {self.season-i}']
-            home_advantages[f'Home Advantage {self.season-i}'] = home_advantages[f'Home Wins {self.season-i} %'] - home_advantages[f'Wins {self.season-i} %']
+            home_advantages[f'{self.season-i}', 'Home Wins %'] = home_advantages[f'{self.season-i}']['Home Wins'] / home_advantages[f'{self.season-i}']['Played at Home']
+            home_advantages[f'{self.season-i}', 'Home Advantage'] = home_advantages[f'{self.season-i}']['Home Wins %'] - home_advantages[f'{self.season-i}']['Wins %']
+        
+        home_advantages = home_advantages.sort_index(axis=1)
 
         # Check whether all teams in current season have played enough home games to meet threshold for use
-        if (home_advantages[f'Played at Home {self.season}'] <= self.games_threshold).all():
+        if (home_advantages[f'{self.season}']['Played at Home'] <= self.games_threshold).all():
             print("Current season excluded from home advantages calculation -> haven't played enough games.")
             start_n = 1  # Start from previous season
         else:
             start_n = 0  # Include current season
             
         # List of all home advantege column names that will be used to calculate final column
-        home_advantage_cols = [f"Home Advantage {self.season-i}" for i in range(start_n, no_seasons)]
-        home_advantages['Home Advantage'] = home_advantages[home_advantage_cols].mean(axis=1)
-        
-        home_advantages.sort_values(by='Home Advantage', ascending=False, inplace=True)
-
-        home_advantages['Home Advantage'].fillna(0, inplace=True)
+        home_advantages['Total Home Advantage'] = home_advantages.iloc[:, home_advantages.columns.get_level_values(1)=='Home Advantage'].mean(axis=1).fillna(0)
+        home_advantages.sort_values(by='Total Home Advantage', ascending=False, inplace=True)
+        home_advantages.index.name = "Team"
         
         if display:
             print(home_advantages)
@@ -376,5 +377,5 @@ class Data:
 if __name__ == "__main__":
     data = Data(2020)
     
-    data.updateAll(3, team=None, display_tables=True, display_graphs=False, request_new=False)
+    data.updateAll(3, team='Liverpool FC', display_tables=True, display_graphs=True, request_new=False)
 

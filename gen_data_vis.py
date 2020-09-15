@@ -12,28 +12,34 @@ class GenDataVis:
         now = datetime.now()
         sizes = [14] * n_matches
         
-        x, y, teams = [], [], []
+        x, y, details = [], [], []
         for i in range(n_matches):
             match = team_fixtures[f'Matchday {i+1}']
             
             x.append(datetime.utcfromtimestamp(match['Date'].tolist()/1e9))
+            
             # Get rating of the opposition team
             rating = team_ratings.loc[match['Team'], 'Total Rating']
             # Decrease other team's rating if you're playing at home
             if match['HomeAway'] == 'Home':
-                rating *= (1 - home_advantages.loc[match['Team'], 'Home Advantage'])
+                rating *= (1 - home_advantages.loc[match['Team'], 'Total Home Advantage'][0])
             y.append(rating)
-            teams.append(match['Team'] + " (" + match['HomeAway'] + ")")
             
+            # Add team played, home or away and the final score if game has already happened
+            match_detail = f"{match['Team']} ({match['HomeAway']})"
+            if match['Score'] != "None - None":
+                match_detail += f"  {match['Score']}"
+            details.append(match_detail)
             # Increase size of point marker if it's the current upcoming match
             if i == 0:
                 if now < x[-1]:
                     sizes[i] = 26
             elif i != len(team_fixtures) and x[-2] < now <= x[-1]:
                 sizes[i] = 26
-                
+                                
         y = list(map(lambda x : x*100, y))  # Convert to percentages
-        df = pd.DataFrame({'Date': x, 'Ratings': y, 'Teams': teams})
+        
+        df = pd.DataFrame({'Date': x, 'Ratings': y, 'Teams': details})
         
         # fig = px.line(df, x="Date", y="Match", color='country')
         colour_scale = ['#01c626', '#08a825',  '#0b7c20', '#0a661b', '#064411', '#000000', '#85160f', '#5b1d15', '#ad1a10', '#db1a0d', '#fc1303']
@@ -42,7 +48,7 @@ class GenDataVis:
                                                     color=y,
                                                     colorscale=colour_scale),
                                         line=dict(color='#737373'),
-                                        text=teams,
+                                        text=details,
                                         hovertemplate="<b>%{text}</b> <br>%{x|%d %B, %Y}<br>Rating: %{y:.2f}%<extra></extra>",
                                         hoverinfo=('x+y+text'),
                                         ))
