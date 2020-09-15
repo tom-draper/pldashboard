@@ -2,8 +2,8 @@
 {% extends 'layout.html' %} {% block content %}
 
 <div class="row">
-  <div class="position-and-badge">
-    <h2 class="position">{{ position }}</h2>
+  <div class="row-left position-and-badge">
+    <div class="position">{{ position }}</div>
     <!-- <img src='../static/club_badges/{{team}}.png'/ alt=""> -->
   </div>
   <div class="fixtures-graph">
@@ -14,6 +14,26 @@
   </div>
 </div>
 <div class="row">
+  <div class="row-left form-details">
+    <div class="current-form-row">
+      <div class="icon pos-0 {{ form[0] }}"></div>
+      <div class="icon pos-1 {{ form[1] }}"></div>
+      <div class="icon pos-2 {{ form[2] }}"></div>
+      <div class="icon pos-3 {{ form[3] }}"></div>
+      <div class="icon pos-4 {{ form[4] }}"></div>
+    </div>
+    <div class="current-form-row">
+      <div class="icon-name pos-0">LIV</div>
+      <div class="icon-name pos-1">MCI</div>
+      <div class="icon-name pos-2">WHU</div>
+      <div class="icon-name pos-3">NEW</div>
+      <div class="icon-name pos-4">CRY</div>
+    </div>
+    <div class="current-form">
+      Current Form: 75%
+    </div>
+    <!-- <img src='../static/club_badges/{{team}}.png'/ alt=""> -->
+  </div>
   <div class="form-graph">
     <h1>Form</h1>
     Graph Coming Soon

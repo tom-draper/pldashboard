@@ -90,6 +90,7 @@ class GenDataVis:
             ),
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
+            hovermode='x',
         )
         
         # fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='gray')

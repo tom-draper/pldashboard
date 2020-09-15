@@ -2,7 +2,7 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <!-- <link rel="stylesheet" type="text/css" href="../static/style.css"> -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='club-colours.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
     <style>
@@ -16,6 +16,18 @@
         background-size: auto 450px;
         background-position: right center;
       }
+      .W {
+        background-image: url("static/form_img/win.png"); 
+        /* background: linear-gradient( rgba(250, 250, 250, 0.5), rgba(250, 250, 250, 0.5) ), url("static/form_img/win.png"); */
+      }
+      .L {
+        background-image: url("static/form_img/lose.png");
+
+      }
+      .None {
+        background-image: url("static/form_img/none.png");
+      }
+      
     </style>
 
     {% if team == "None" %}
