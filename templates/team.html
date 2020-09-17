@@ -23,14 +23,14 @@
       <div class="icon pos-4 {{ form[4] }}"></div>
     </div>
     <div class="current-form-row">
-      <div class="icon-name pos-0">LIV</div>
-      <div class="icon-name pos-1">MCI</div>
-      <div class="icon-name pos-2">WHU</div>
-      <div class="icon-name pos-3">NEW</div>
-      <div class="icon-name pos-4">CRY</div>
+      <div class="icon-name pos-0">{{ recent_teams_played[0] }}</div>
+      <div class="icon-name pos-1">{{ recent_teams_played[1] }}</div>
+      <div class="icon-name pos-2">{{ recent_teams_played[2] }}</div>
+      <div class="icon-name pos-3">{{ recent_teams_played[3] }}</div>
+      <div class="icon-name pos-4">{{ recent_teams_played[4] }}</div>
     </div>
     <div class="current-form">
-      Current Form: 75%
+      Current Form: {{ form_rating }}%
     </div>
     <!-- <img src='../static/club_badges/{{team}}.png'/ alt=""> -->
   </div>

@@ -26,7 +26,7 @@ class GenDataVis:
             y.append(rating)
             
             # Add team played, home or away and the final score if game has already happened
-            match_detail = f"{match['Team']} ({match['HomeAway']})"
+            match_detail = f"Matchday {i+1}<br>{match['Team']} ({match['HomeAway']})"
             if match['Score'] != "None - None":
                 match_detail += f"  {match['Score']}"
             details.append(match_detail)
@@ -90,7 +90,6 @@ class GenDataVis:
             ),
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
-            hovermode='x',
         )
         
         # fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='gray')

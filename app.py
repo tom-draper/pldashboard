@@ -36,16 +36,20 @@ def team():
     
     position = data.standings.loc[team_name.replace('-', ' ').title().replace('And', 'and') + ' FC', f'{season}']['Position']
     
-    form = data.standings.loc[team_name.replace('-', ' ').title().replace('And', 'and') + ' FC', f'{season}']['Form']
+    form = data.form.loc[team_name.replace('-', ' ').title().replace('And', 'and') + ' FC']['Form']
     if form == None:
         form = []
     form = list(form) + ['None'] * (5 - len(form))  # Pad list
+    
+    recent_teams_played = data.form.loc[team_name.replace('-', ' ').title().replace('And', 'and') + ' FC']['Teams Played']
+    
+    form_rating = data.form.loc[team_name.replace('-', ' ').title().replace('And', 'and') + ' FC']['Current Form Rating %'].round(1)
 
-    return render_template('team.html', team=team_name, position=position, form=form)
+    return render_template('team.html', team=team_name, position=position, form=form, recent_teams_played=recent_teams_played, form_rating=form_rating)
 
 
 if __name__ == '__main__':
-    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=False)
+    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=True)
     app.run(debug=False)
 
     

@@ -147,7 +147,7 @@ img {
 
 .current-form {
   font-size: 30px;
-  margin: 25px 10px;
+  margin: 20px 10px;
 }
 
 
@@ -177,7 +177,6 @@ img {
     min-width: 150px;
     padding-right: 35%;
     padding-left: 10%;
-    margin: 0px auto;
   }
   .icon {
     width: 20vw;
