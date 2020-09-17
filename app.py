@@ -33,23 +33,27 @@ def hello():
 def team():
     rule = request.url_rule
     team_name = rule.rule[1:]
+    full_team_name = team_name.replace('-', ' ').title().replace('And', 'and') + ' FC'
     
-    position = data.standings.loc[team_name.replace('-', ' ').title().replace('And', 'and') + ' FC', f'{season}']['Position']
+    position = data.standings.loc[full_team_name, f'{season}']['Position']
     
-    form = data.form.loc[team_name.replace('-', ' ').title().replace('And', 'and') + ' FC']['Form']
+    form = data.form.loc[full_team_name]['Form']
     if form == None:
         form = []
     form = list(form) + ['None'] * (5 - len(form))  # Pad list
     
-    recent_teams_played = data.form.loc[team_name.replace('-', ' ').title().replace('And', 'and') + ' FC']['Teams Played']
+    recent_teams_played = data.form.loc[full_team_name]['Teams Played']
     
-    form_rating = data.form.loc[team_name.replace('-', ' ').title().replace('And', 'and') + ' FC']['Current Form Rating %'].round(1)
+    form_rating = data.form.loc[full_team_name]['Current Form Rating %'].round(1)
+    
+    won_against_star_team = data.form.loc[full_team_name]['Won Against Star Team']
+    won_against_star_team[0] = 'star-team'
+    # Replace boolean values with CSS tag for super win image
+    won_against_star_team = ["star-team" if x else "not-star-team" for x in won_against_star_team]
 
-    return render_template('team.html', team=team_name, position=position, form=form, recent_teams_played=recent_teams_played, form_rating=form_rating)
+    return render_template('team.html', team=team_name, position=position, form=form, recent_teams_played=recent_teams_played, won_against_star_team=won_against_star_team, form_rating=form_rating)
 
 
 if __name__ == '__main__':
-    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=True)
+    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=False)
     app.run(debug=False)
-
-    

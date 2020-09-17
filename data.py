@@ -58,10 +58,16 @@ class Data:
             'WOL': 'Wolverhampton Wanderers FC',
             
         }
-        
+    
+    def starTeam(self, team_name, team_ratings):
+        if team_name in team_ratings.index:
+            if team_ratings.loc[team_name]['Total Rating'] > 0.8:
+                return True
+        return False
     
     def initialsToTeamNames(self, initials):
-        return self.initials_to_name[initials]    
+        if initials in self.initials_to_name.keys():
+            return self.initials_to_name[initials]
     
     def teamNameToInitials(self, team_name):
         if team_name in self.name_to_initials.keys():
@@ -105,25 +111,26 @@ class Data:
         df_home_aways.sort_index(inplace=True)
         form.sort_index(inplace=True)
                         
-        team_names = df_team_names.values.tolist()
-        scorelines = df_scores.values.tolist()
-        home_aways = df_home_aways.values.tolist()
-        for idx, team_played_list in enumerate(team_names):
+        team_initials_col = df_team_names.values.tolist()
+        scorelines_col = df_scores.values.tolist()
+        home_aways_col = df_home_aways.values.tolist()
+        
+        for idx, team_played_list in enumerate(team_initials_col):
             # Convert all team names to initials
-            team_names[idx] = list(map(self.teamNameToInitials, team_played_list))
+            team_initials_col[idx] = list(map(self.teamNameToInitials, team_played_list))
             # Only keep 5 most recent teams played
             if len(team_played_list) > 5:
-                team_names[idx] = team_played_list[:-5]
-                scorelines[idx] = scorelines[:-5]
-                home_aways[idx] = home_aways[:-5]
+                team_initials_col[idx] = team_played_list[:-5]
+                scorelines_col[idx] = scorelines_col[:-5]
+                home_aways_col[idx] = home_aways_col[:-5]
             else:
                 # Pad list with blank strings to length of 5
-                team_names[idx] += [''] * (5 - len(team_played_list))
-                scorelines[idx] += [''] * (5 - len(team_played_list))
-                home_aways[idx] += [''] * (5 - len(team_played_list))
-        form['Teams Played'] = team_names
-        form['Scorelines'] = scorelines
-        form['HomeAways'] = home_aways
+                team_initials_col[idx] += [''] * (5 - len(team_played_list))
+                scorelines_col[idx] += [''] * (5 - len(team_played_list))
+                home_aways_col[idx] += [''] * (5 - len(team_played_list))
+        form['Teams Played'] = team_initials_col
+        form['Scorelines'] = scorelines_col
+        form['HomeAways'] = home_aways_col
         
         # Goal difference column
         goal_differences_col = []
@@ -142,9 +149,25 @@ class Data:
             goal_differences_col.append(goal_differences)
         form['GDs'] = goal_differences_col
         
+        #Played star team column  (list of booleans for whether the team played was rated over 80%)
+        played_star_team_col = []
+        for row in form['Teams Played']:
+            played_star_team_col.append([self.starTeam(team_name, team_ratings) for team_name in list(map(self.initialsToTeamNames, row))])
+        form['Played Star Team'] = played_star_team_col
+
+        # Won against star team column (list of booleans for whether the team won against a team rated over 80%)
+        won_against_star_team_col = []
+        for row_idx, row in enumerate(form['Played Star Team']):
+            if form['Form'][row_idx] != None:  # Team has played games this season
+                won_against_star_team_col.append([result == 'W' and pst == True for result in form['Form'][row_idx] for pst in form['Played Star Team'][row_idx]])
+            else:
+                won_against_star_team_col.append([False] * 5)
+            
+        form['Won Against Star Team'] = won_against_star_team_col
+        
         # Current form column (difficuily rating of teams played)
         current_forms = []
-        for row_idx, teams_played_list in enumerate(team_names):
+        for row_idx, teams_played_list in enumerate(team_initials_col):
             form_percentage = 0
             for list_idx, team_initials in enumerate(teams_played_list):
                 if team_initials != '':
@@ -159,6 +182,7 @@ class Data:
                 form_percentage = 100
             current_forms.append(form_percentage)
         form['Current Form Rating %'] = current_forms
+                       
         
         if display:
             print(form)
