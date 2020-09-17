@@ -47,7 +47,6 @@ def team():
     form_rating = data.form.loc[full_team_name]['Current Form Rating %'].round(1)
     
     won_against_star_team = data.form.loc[full_team_name]['Won Against Star Team']
-    won_against_star_team[0] = 'star-team'
     # Replace boolean values with CSS tag for super win image
     won_against_star_team = ["star-team" if x else "not-star-team" for x in won_against_star_team]
 
