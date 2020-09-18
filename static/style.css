@@ -82,10 +82,14 @@ img {
   /* transform: translate(-100px, 0px); */
 }
 
-.fixtures-graph {
-  padding-right: 10px;
+.row-graph {
   height: 100%;
   width: 100%;
+}
+
+.fixtures-graph {
+  padding-right: 10px;
+
   display: flex;
   flex-direction: column;
 }
@@ -96,11 +100,6 @@ img {
   font-weight: 800;
   font-size: 450px;
   text-align: left;
-}
-
-.form-graph {
-  height: 100%;
-  width: 100%;
 }
 
 .graph {

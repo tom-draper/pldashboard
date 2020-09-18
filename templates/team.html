@@ -6,7 +6,7 @@
     <div class="position">{{ position }}</div>
     <!-- <img src='../static/club_badges/{{team}}.png'/ alt=""> -->
   </div>
-  <div class="fixtures-graph">
+  <div class="fixtures-graph row-graph">
     <h1>Fixtures</h1>
     <div class="graph">
       {% include 'graphs/{}/fixtures_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
@@ -32,11 +32,25 @@
     <div class="current-form">
       Current Form: {{ form_rating }}%
     </div>
+    <div>[Table Snippet]</div>
     <!-- <img src='../static/club_badges/{{team}}.png'/ alt=""> -->
   </div>
-  <div class="form-graph">
+  <div class="form-graph row-graph">
     <h1>Form</h1>
-    Graph Coming Soon
+    <div class="graph">Graph Coming Soon</div>
+  </div>
+</div>
+<div class="row">
+  <div class="position-graph row-graph">
+    <h1>Position Over Time</h1>
+    <div class="graph">Graph Coming Soon</div>
+    
+  </div>
+</div>
+<div class="row">
+  <div class="goals-scored-vs-conceeded-graph row-graph">
+    <h1>Goals Scorerd vs Goals Conceded</h1>
+    <div class="graph">Graph Coming Soon</div>
   </div>
 </div>
 {% endblock content %}
