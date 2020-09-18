@@ -34,6 +34,40 @@
     </div>
     <div class="table-snippet">
       <div class="divider"></div>
+        <div class="table-row">
+          <div class="table-element table-position column-title"></div>
+          <div class="table-element table-team-name column-title">Team</div>
+          <div class="table-element table-gd column-title">GD</div>
+          <div class="table-element table-points column-title">Points</div>
+        </div>
+        {% for i in range(table_snippet|length) %}
+          {% if i == 0 or i == 6 %}
+            {% if 'this-team' in table_css_styles[i].split(' ') %}
+              <div id="big-divider"></div>
+            {% else %}
+              <div id="divider"></div>
+            {% endif %}
+          {% else %}
+            {% if 'this-team' in table_css_styles[i-1].split(' ') + table_css_styles[i].split(' ') %}
+              <div id="big-divider"></div>
+            {% else %}
+              <div id="divider"></div>
+            {% endif %}
+          {% endif %}
+          <div class="table-row {{ table_css_styles[i] }}">
+            <div class="table-element table-position {{ table_css_styles[i] }}-secondary">{{ table_snippet[i][0] }}</div>
+            <div class="table-element table-team-name {{ table_css_styles[i] }}-secondary">{{ table_snippet[i][1] }}</div>
+            <div class="table-element table-gd {{ table_css_styles[i] }}-secondary">{{ table_snippet[i][2] }}</div>
+            <div class="table-element table-points {{ table_css_styles[i] }}-secondary">{{ table_snippet[i][3] }}</div>
+          </div>
+        {% endfor %}
+        {% if 'this-team' in table_css_styles[6].split(' ') %}
+          <div id="big-divider"></div>
+        {% else %}
+          <div id="divider"></div>
+        {% endif %}
+
+      <!-- <div class="divider"></div>
       <div class="table-row">
         <div class="table-element table-position column-title"></div>
         <div class="table-element table-team-name column-title">Team</div>
@@ -89,7 +123,7 @@
         <div class="table-element table-gd {{ table_css_styles[6] }}-secondary">{{ table_snippet[6][2] }}</div>
         <div class="table-element table-points {{ table_css_styles[6] }}-secondary">{{ table_snippet[6][3] }}</div>
       </div>
-      <div id="divider" class="{{ table_css_styles[6] }}"></div>
+      <div id="divider" class="{{ table_css_styles[6] }}"></div> -->
 
     </div>
     <!-- <img src='../static/club_badges/{{team}}.png'/ alt=""> -->

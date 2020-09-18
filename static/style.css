@@ -174,12 +174,21 @@ img {
   padding: 5px 5%;
   /* text-align: left; */
 }
-#divider {
+/* #divider {
   align-self: center;
   border-bottom: 1px solid grey;
   width: 90%;
 }
 #divider.this-team {
+  border-bottom: 2px solid rgb(29, 29, 29);
+  width: 100%;
+} */
+#divider {
+  align-self: center;
+  border-bottom: 1px solid grey;
+  width: 90%;
+}
+#big-divider{
   border-bottom: 2px solid rgb(29, 29, 29);
   width: 100%;
 }

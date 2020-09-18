@@ -98,9 +98,9 @@ class Data:
             low_idx = 0
         if high_idx > self.standings.shape[0] - 1:
             # Subtract overflow amount from the low_idx to ensure 7 teams
-            overflow = high_idx - (self.standings.shape[0] - 1)
+            overflow = high_idx - (self.standings.shape[0])
             low_idx -= overflow
-            high_idx = self.standings.shape[0] - 1
+            high_idx = self.standings.shape[0]
             
         rows = self.standings.iloc[low_idx:high_idx]
         # Get new index of this team, relative to section of rows dataframe
@@ -121,7 +121,6 @@ class Data:
         # Make CSS styles lists for team row background colour
         table_css_styles = [''] * 7
         table_css_styles[team_idx] = f"this-team {team_names[team_idx].lower().replace(' ', '-')}"
-        print(table_css_styles)
             
         return table_snippet, table_css_styles
     
