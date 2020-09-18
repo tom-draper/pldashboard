@@ -5,10 +5,12 @@ app = Flask(__name__)
 season = 2020
 data = Data(season)
 
+
 @app.route("/")
 @app.route("/home")
 def hello():
     return render_template('home.html', team="None")
+
 
 @app.route("/liverpool")
 @app.route("/manchester-city")
@@ -34,23 +36,24 @@ def team():
     rule = request.url_rule
     team_name = rule.rule[1:]
     full_team_name = team_name.replace('-', ' ').title().replace('And', 'and') + ' FC'
-    
-    position = data.standings.loc[full_team_name, f'{season}']['Position']
-    
-    form = data.form.loc[full_team_name]['Form']
-    if form == None:
-        form = []
-    form = list(form) + ['None'] * (5 - len(form))  # Pad list
-    
-    recent_teams_played = data.form.loc[full_team_name]['Teams Played']
-    
-    form_rating = data.form.loc[full_team_name]['Current Form Rating %'].round(1)
-    
-    won_against_star_team = data.form.loc[full_team_name]['Won Against Star Team']
-    # Replace boolean values with CSS tag for super win image
-    won_against_star_team = ["star-team" if x else "not-star-team" for x in won_against_star_team]
 
-    return render_template('team.html', team=team_name, position=position, form=form, recent_teams_played=recent_teams_played, won_against_star_team=won_against_star_team, form_rating=form_rating)
+    # Get data values to display on team webpage
+    position = data.getPosition(full_team_name)
+    form = data.getForm(full_team_name)
+    recent_teams_played = data.getRecentTeamsPlayed(full_team_name)
+    form_rating = data.getCurrentFormRating(full_team_name)
+    won_against_star_team = data.getWonAgainstStarTeam(full_team_name)
+    table_snippet, table_css_styles = data.getTableSnippet(full_team_name)
+
+    return render_template('team.html', 
+                           team=team_name,
+                           position=position, 
+                           form=form,
+                           recent_teams_played=recent_teams_played,
+                           won_against_star_team=won_against_star_team,
+                           form_rating=form_rating,
+                           table_snippet=table_snippet,
+                           table_css_styles=table_css_styles)
 
 
 if __name__ == '__main__':

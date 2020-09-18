@@ -59,6 +59,75 @@ class Data:
             
         }
     
+    # -------- Functions For Page Load ------------
+    # Functions that are called inside Flask page load functions
+    # Returns data to used to display information on webpage
+    # Functions require all dataframes to be filled first
+    
+    def getPosition(self, team_name):
+        return self.standings.loc[team_name, f'{self.season}']['Position']
+
+    def getForm(self, team_name):
+        form = self.form.loc[team_name]['Form']
+        if form == None:
+            form = []
+        form = list(form) + ['None'] * (5 - len(form))  # Pad list
+        return form
+
+    def getRecentTeamsPlayed(self, team_name):
+        return self.form.loc[team_name]['Teams Played']
+    
+    def getCurrentFormRating(self, team_name):
+        return self.form.loc[team_name]['Current Form Rating %'].round(1)
+    
+    def getWonAgainstStarTeam(self, team_name):
+        won_against_star_team = self.form.loc[team_name]['Won Against Star Team']
+        # Replace boolean values with CSS tag for super win image
+        won_against_star_team = ["star-team" if x else "not-star-team" for x in won_against_star_team]
+        return won_against_star_team
+    
+    def getTableSnippet(self, team_name):
+        team_df_idx = self.standings.index.get_loc(team_name)
+        
+        low_idx = team_df_idx-3
+        high_idx = team_df_idx+4
+        if low_idx < 0:
+            # Add overflow amount to the high_idx to ensure 7 teams 
+            overflow = low_idx
+            high_idx -= low_idx  # Subtracting a negative
+            low_idx = 0
+        if high_idx > self.standings.shape[0] - 1:
+            # Subtract overflow amount from the low_idx to ensure 7 teams
+            overflow = high_idx - (self.standings.shape[0] - 1)
+            low_idx -= overflow
+            high_idx = self.standings.shape[0] - 1
+            
+        rows = self.standings.iloc[low_idx:high_idx]
+        # Get new index of this team, relative to section of rows dataframe
+        team_idx = rows.index.get_loc(team_name)
+
+        team_names = self.standings.index.values.tolist()[low_idx:high_idx]
+        # Remove 'FC' from end of each team name
+        team_names = list(map(lambda name: ' '.join(name.split(' ')[:-1]), team_names))
+        
+        # Discard irrelevant columns
+        columns = ['Position', 'GD', 'Points']
+        rows = rows[f'{self.season}'][columns]
+        
+        table_snippet = rows.values.tolist()
+        for row_list, team_name in zip(table_snippet, team_names):
+            row_list.insert(1, team_name)
+            
+        # Make CSS styles lists for team row background colour
+        table_css_styles = [''] * 7
+        table_css_styles[team_idx] = f"this-team {team_names[team_idx].lower().replace(' ', '-')}"
+        print(table_css_styles)
+            
+        return table_snippet, table_css_styles
+    
+    
+    # ------------- Form Dataframe ------------
+    
     def starTeam(self, team_name, team_ratings):
         if team_name in team_ratings.index:
             if team_ratings.loc[team_name]['Total Rating'] > 0.8:
@@ -76,7 +145,7 @@ class Data:
             return team_name[:3].upper()
         
     
-    def getForm(self, fixtures, standings, team_ratings, display=False):
+    def createForm(self, fixtures, standings, team_ratings, display=False):
         print("Creating form dataframe...")
         
         form = pd.DataFrame()
@@ -192,7 +261,7 @@ class Data:
     
     # ---------- Home Advantage Data ------------
     
-    def getHomeAdvantages(self, no_seasons, display=False, request_new=True):
+    def createHomeAdvantages(self, no_seasons, display=False, request_new=True):
         print("Creating home advantages dataframe...")
         
         home_advantages = pd.DataFrame()
@@ -291,7 +360,7 @@ class Data:
             with open(f'data/standings_{season}.json', 'r') as json_file:
                 return json.load(json_file)
 
-    def getStandings(self, no_seasons, display=False, request_new=True):
+    def createStandings(self, no_seasons, display=False, request_new=True):
         """Get the Premier League table standings from the last specified number of 
            seasons. Compile each of these standings into a single dataframe to return.
            Dataframe contains only teams that are members of the current season.
@@ -373,7 +442,7 @@ class Data:
             with open(f'data/fixtures_{season}.json', 'r') as json_file:
                 return json.load(json_file)
 
-    def getFixtures(self, display=False, request_new=True):
+    def createFixtures(self, display=False, request_new=True):
         print("Creating fixtures dataframe...")
         data = self.fixturesData(self.season, request_new=request_new)
         
@@ -429,7 +498,7 @@ class Data:
         return weights
         
     
-    def getTeamRatings(self, no_seasons, standings, display=False):
+    def createTeamRatings(self, no_seasons, standings, display=False):
         print("Creating team ratings dataframe...")
         # If standings table not calculated, calculate
         if standings.empty:
@@ -515,19 +584,19 @@ class Data:
         Args:
             no_seasons (int): number of seasons of data to include.
         """
-        # ------ Update Dataframes -------
+        # ------ Create Dataframes -------
         # Standings for the last "n_seasons" seasons
-        self.standings = self.getStandings(no_seasons, display=display_tables, request_new=request_new)
+        self.standings = self.createStandings(no_seasons, display=display_tables, request_new=request_new)
         
         # Fixtures for each team
-        self.fixtures = self.getFixtures(display=display_tables, request_new=request_new)
+        self.fixtures = self.createFixtures(display=display_tables, request_new=request_new)
 
         # Ratings for each team, based on last "no_seasons" seasons standings table
-        self.team_ratings = self.getTeamRatings(no_seasons, self.standings, display=display_tables)
+        self.team_ratings = self.createTeamRatings(no_seasons, self.standings, display=display_tables)
 
-        self.home_advantages = self.getHomeAdvantages(no_seasons, display=display_tables, request_new=request_new)
+        self.home_advantages = self.createHomeAdvantages(no_seasons, display=display_tables, request_new=request_new)
         
-        self.form = self.getForm(self.fixtures, self.standings, self.team_ratings, display=display_tables)
+        self.form = self.createForm(self.fixtures, self.standings, self.team_ratings, display=display_tables)
 
         # ----- Update Graphs ------
         self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display_graphs, team=team)

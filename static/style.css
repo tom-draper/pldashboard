@@ -71,8 +71,12 @@ body {
   padding-right: auto;
   margin-right: 40px;
   padding-left: 40px;
-  height: 500px;
+  height: auto;
   text-justify: center;
+}
+
+.position-and-badge {
+  height: 500px;
 }
 
 img {
@@ -100,6 +104,13 @@ img {
   font-weight: 800;
   font-size: 450px;
   text-align: left;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .graph {
@@ -150,6 +161,53 @@ img {
   margin: 20px 10px;
 }
 
+.table-snippet {
+  position: relative;
+  margin: 20px 0px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+}
+.table-row {
+  display: flex;
+  padding: 5px 5%;
+  /* text-align: left; */
+}
+#divider {
+  align-self: center;
+  border-bottom: 1px solid grey;
+  width: 90%;
+}
+#divider.this-team {
+  border-bottom: 2px solid rgb(29, 29, 29);
+  width: 100%;
+}
+.column-title {
+  font-weight: 700;
+}
+.table-element {
+  font-size: 17px;
+}
+.table-position {
+  width: 7%;
+  /* text-align: left; */
+}
+.table-team-name {
+  width: 63%;
+  text-align: left;
+}
+.table-gd {
+  width: 15%;
+}
+.table-points {
+  width: 15%;
+}
+.table-row .this-team {
+  font-size: 20px;
+  margin: 5px 0px;
+}
+
 
 .debug {
   border: 4px solid rgb(46, 46, 46);
@@ -170,6 +228,7 @@ img {
   }
   .row-left {
     align-self: center;
+    height: auto;
   }
   .position-and-badge {
     width: 25%;
