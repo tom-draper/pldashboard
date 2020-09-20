@@ -224,10 +224,10 @@ img {
 
 
 
-.plotly .modebar-btn svg {
+/* .plotly .modebar-btn svg {
   height: 1em!important;
   width: 1em!important;
-}
+} */
 
 
 @media only screen and (max-width: 1200px) {

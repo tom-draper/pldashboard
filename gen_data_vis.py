@@ -98,4 +98,4 @@ class GenDataVis:
             fig.show()
         # Convert team name into suitable use for filename
         file_team_name = '_'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/fixtures_{file_team_name}.html', auto_open=False)
+        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/fixtures_{file_team_name}.html', auto_open=False, config={'displayModeBar': False})

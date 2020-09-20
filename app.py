@@ -57,5 +57,5 @@ def team():
 
 
 if __name__ == '__main__':
-    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=False)
+    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=True)
     app.run(debug=False)

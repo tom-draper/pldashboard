@@ -71,7 +71,9 @@ class Data:
         form = self.form.loc[team_name]['Form']
         if form == None:
             form = []
-        form = list(form) + ['None'] * (5 - len(form))  # Pad list
+        else:
+            form = list(form.replace(',', ''))
+        form = form + ['None'] * (5 - len(form))  # Pad list
         return form
 
     def getRecentTeamsPlayed(self, team_name):
@@ -182,23 +184,29 @@ class Data:
         team_initials_col = df_team_names.values.tolist()
         scorelines_col = df_scores.values.tolist()
         home_aways_col = df_home_aways.values.tolist()
-        
+                
         for idx, team_played_list in enumerate(team_initials_col):
             # Convert all team names to initials
             team_initials_col[idx] = list(map(self.teamNameToInitials, team_played_list))
+            # Reverse lists to get most recent game on the left hand side
+            team_initials_col[idx].reverse()
+            scorelines_col[idx].reverse()
+            home_aways_col[idx].reverse()
             # Only keep 5 most recent teams played
             if len(team_played_list) > 5:
-                team_initials_col[idx] = team_played_list[:-5]
-                scorelines_col[idx] = scorelines_col[:-5]
-                home_aways_col[idx] = home_aways_col[:-5]
+                team_initials_col[idx] = team_played_list[:5]
+                scorelines_col[idx] = scorelines_col[:5]
+                home_aways_col[idx] = home_aways_col[:5]
             else:
-                # Pad list with blank strings to length of 5
-                team_initials_col[idx] += [''] * (5 - len(team_played_list))
-                scorelines_col[idx] += [''] * (5 - len(team_played_list))
-                home_aways_col[idx] += [''] * (5 - len(team_played_list))
+                # Remove empty values
+                team_initials_col[idx] = list(filter(lambda x : x != '', team_initials_col[idx]))
+                scorelines_col[idx] = list(filter(lambda x : x != '', scorelines_col[idx]))
+                home_aways_col[idx] = list(filter(lambda x : x != '', home_aways_col[idx]))
+
         form['Teams Played'] = team_initials_col
         form['Scorelines'] = scorelines_col
         form['HomeAways'] = home_aways_col
+        
         
         # Goal difference column
         goal_differences_col = []
@@ -214,6 +222,7 @@ class Data:
                     goal_differences.append(gd)
                 else:
                     goal_differences.append(0)
+            # Reverse for most recent game on the left
             goal_differences_col.append(goal_differences)
         form['GDs'] = goal_differences_col
         
@@ -226,31 +235,49 @@ class Data:
         # Won against star team column (list of booleans for whether the team won against a team rated over 80%)
         won_against_star_team_col = []
         for row_idx, row in enumerate(form['Played Star Team']):
+            won_against_star_team = []
             if form['Form'][row_idx] != None:  # Team has played games this season
-                won_against_star_team_col.append([result == 'W' and pst == True for result in form['Form'][row_idx] for pst in form['Played Star Team'][row_idx]])
-            else:
-                won_against_star_team_col.append([False] * 5)
-            
+                won_against_star_team = [(result == 'W' and pst == True) for result, pst in zip(form['Form'][row_idx].replace(',', ''), form['Played Star Team'][row_idx])]
+            won_against_star_team_col.append(won_against_star_team)
         form['Won Against Star Team'] = won_against_star_team_col
         
         # Current form column (difficuily rating of teams played)
         current_forms = []
+        print(form)
         for row_idx, teams_played_list in enumerate(team_initials_col):
+            print("\n-------------", form.index.values.tolist()[row_idx], "-------------")
             form_percentage = 0
-            for list_idx, team_initials in enumerate(teams_played_list):
-                if team_initials != '':
-                    team_played_name = self.initialsToTeamNames(team_initials)
+            # String of upt to 5 W, D or Ls
+            form_str = form['Form'][row_idx]
+                        
+            print(row_idx, teams_played_list)
+            
+            if form_str != None:  # If games have been played this season
+                form_str = form_str.replace(',', '')
+                for form_idx, result in enumerate(form_str):
+                    # Convert opposition team initials to their name 
+                    team_name = self.initialsToTeamNames(teams_played_list[form_idx])
+                    print(result, form_str, team_name)
                     # Increament form score based on rating of the team they've won or drawn against
-                    if form['Form'][row_idx][list_idx] == 'W':
-                        form_percentage += (team_ratings.loc[team_played_name]['Total Rating']) * 100 / len(list(filter(lambda x: x != '', teams_played_list))) * form['GDs'][row_idx][list_idx]
-                    elif form['Form'][row_idx][list_idx] == 'D':
-                        form_percentage += (team_ratings.loc[team_played_name]['Total Rating']) * 100 / len(list(filter(lambda x: x != '', teams_played_list))) * 0.5 * form['GDs'][row_idx][list_idx]
+                    # Increase by team's rating as a percentage, over the number 
+                    # of recent games played (5 except for in early season) 
+                    # If a draw, half the amount added
+                    if result == 'W':
+                        print("PLUS", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)), "  X  ", form['GDs'][row_idx][form_idx])
+                        form_percentage += ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx]
+                    elif result == 'D':
+                        form_percentage += ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * 0.5
+                        print("PLUS", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * 0.5)
             # Cap at 100% rating
             if form_percentage > 100:
                 form_percentage = 100
+
+            print("= ", form_percentage)
             current_forms.append(form_percentage)
+            
         form['Current Form Rating %'] = current_forms
-                       
+        
+        print(form['Current Form Rating %'])
         
         if display:
             print(form)
@@ -490,7 +517,7 @@ class Data:
         return rating
     
     def getSeasonWeightings(self, no_seasons):
-        weights = [0.7, 0.25, 0.05]
+        weights = [0.6, 0.30, 0.1]
         weights = np.array(weights[:no_seasons])
         # Normalise list
         weights = list(weights / sum(weights))
@@ -606,5 +633,5 @@ class Data:
 if __name__ == "__main__":
     data = Data(2020)
     
-    data.updateAll(3, team='Liverpool FC', display_tables=True, display_graphs=True, request_new=False)
+    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=True, request_new=False)
 
