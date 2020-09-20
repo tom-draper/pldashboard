@@ -127,6 +127,84 @@ class Data:
         return table_snippet, table_css_styles
     
     
+    # ------------ Position Over Time Dataframe ------------
+    
+    def getGDAndPts(self, score, home_away):
+        if type(score) == str:  # If scoreline exists
+            home, _, away = score.split(' ')
+            home, away = int(home), int(away)
+            
+            pts = 0
+            gd = 0
+            if home == away:
+                pts = 1
+            if home_away == 'Home':
+                gd = home - away
+                if home > away:
+                    pts = 3
+            elif home_away == 'Away':
+                gd = away - home
+                if home < away:
+                    pts = 3
+            return gd, pts
+        return 0, 0
+    
+    def createPositionOverTime(self, fixtures, display=False, request_new=True):
+        print("Creating position over time dataframe...")
+
+        if fixtures.empty:
+            fixtures = self.createFixtures(display=display, request_new=request_new)
+        
+        position_over_time = pd.DataFrame()
+        score = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='Score']
+        home_away = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='HomeAway']
+        
+        score.replace("None - None", np.nan, inplace=True)
+        score.dropna(axis=1, how='all', inplace=True)
+        no_cols = score.shape[1]
+        # Drop the same columns
+        home_away.drop(home_away.iloc[:, no_cols:], axis=1, inplace=True) 
+        
+        position_over_time = pd.concat([score, home_away], axis=1).sort_index(axis=1)
+                
+        for col_idx in range(no_cols):
+            gd_col = []
+            pts_col = []
+            
+            col_data = position_over_time[f'Matchday {col_idx+1}']
+            for row_idx, row in col_data.iterrows():
+                gd = 0
+                pts = 0
+                if col_idx != 0:
+                    # Add previous weejs cumulative gd 
+                    new_gd, new_pts = self.getGDAndPts(position_over_time.loc[row_idx][f'Matchday {col_idx}', 'Score'], position_over_time.loc[row_idx][f'Matchday {col_idx}', 'HomeAway'])
+                    gd += new_gd
+                    pts += new_pts
+                new_gd, new_pts = self.getGDAndPts(row['Score'], row['HomeAway'])
+                gd += new_gd
+                pts += new_pts
+                
+                gd_col.append(gd)
+                pts_col.append(pts)
+            
+            position_over_time[f'Matchday {col_idx+1}', 'GD'] = gd_col
+            position_over_time[f'Matchday {col_idx+1}', 'Points'] = pts_col
+            
+            position_over_time.sort_values(by=[(f'Matchday {col_idx+1}', 'Points'), (f'Matchday {col_idx+1}', 'GD')], ascending=False, inplace=True)
+            position_over_time[f'Matchday {col_idx+1}', 'Position'] = np.arange(1, 21)
+            
+            position_over_time.sort_index(axis=1, inplace=True)
+                
+            print(position_over_time)
+
+        
+        if display:
+            print(position_over_time)
+        return position_over_time
+        
+    
+    
+    
     # ------------- Form Dataframe ------------
     
     def starTeam(self, team_name, team_ratings):
@@ -144,10 +222,16 @@ class Data:
             return self.name_to_initials[team_name]
         else:
             return team_name[:3].upper()
-        
     
-    def createForm(self, fixtures, standings, team_ratings, display=False):
+    def createForm(self, no_seasons, fixtures, standings, team_ratings, display=False):
         print("Creating form dataframe...")
+        
+        if standings.empty:
+            standings = self.getStandings(no_seasons)
+        if fixtures.empty:
+            fixtures = self.getFixtures()
+        if team_ratings.empty:
+            team_ratings = self.getTeamRatings(no_seasons, standings)
         
         form = pd.DataFrame()
         
@@ -243,41 +327,41 @@ class Data:
         
         # Current form column (difficuily rating of teams played)
         current_forms = []
-        print(form)
+        # print(form)
         for row_idx, teams_played_list in enumerate(team_initials_col):
-            print("\n-------------", form.index.values.tolist()[row_idx], "-------------")
+            # print("\n-------------", form.index.values.tolist()[row_idx], "-------------")
             form_percentage = 0
             # String of upt to 5 W, D or Ls
             form_str = form['Form'][row_idx]
                         
-            print(row_idx, teams_played_list)
+            # print(row_idx, teams_played_list)
             
             if form_str != None:  # If games have been played this season
                 form_str = form_str.replace(',', '')
                 for form_idx, result in enumerate(form_str):
                     # Convert opposition team initials to their name 
                     team_name = self.initialsToTeamNames(teams_played_list[form_idx])
-                    print(result, form_str, team_name)
+                    # print(result, form_str, team_name)
                     # Increament form score based on rating of the team they've won or drawn against
                     # Increase by team's rating as a percentage, over the number 
                     # of recent games played (5 except for in early season) 
                     # If a draw, half the amount added
                     if result == 'W':
-                        print("PLUS", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)), "  X  ", form['GDs'][row_idx][form_idx])
+                        # print("PLUS", (team_ratings.loc[team_name]['Total Rating']) * 100,  "/", len(form_str), "  X  ", form['GDs'][row_idx][form_idx])
                         form_percentage += ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx]
                     elif result == 'D':
+                        # print("PLUS", (team_ratings.loc[team_name]['Total Rating']) * 100, "/", len(form_str), * 0.5)
                         form_percentage += ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * 0.5
-                        print("PLUS", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * 0.5)
             # Cap at 100% rating
             if form_percentage > 100:
                 form_percentage = 100
 
-            print("= ", form_percentage)
+            # print("= ", form_percentage)
             current_forms.append(form_percentage)
             
         form['Current Form Rating %'] = current_forms
         
-        print(form['Current Form Rating %'])
+        # print(form['Current Form Rating %'])
         
         if display:
             print(form)
@@ -285,7 +369,7 @@ class Data:
     
     
     
-    # ---------- Home Advantage Data ------------
+    # ---------- Home Advantage Dataframe ------------
     
     def createHomeAdvantages(self, no_seasons, display=False, request_new=True):
         print("Creating home advantages dataframe...")
@@ -369,7 +453,7 @@ class Data:
 
 
 
-    # ---------- Standings Data ------------
+    # ---------- Standings Dataframe ------------
 
     def standingsData(self, season, request_new=True):
         if request_new:
@@ -450,7 +534,7 @@ class Data:
 
 
 
-    # ------------ Fixtures Data -------------
+    # ------------ Fixtures Dataframe -------------
 
     def fixturesData(self, season, request_new=True):
         if request_new:
@@ -506,7 +590,7 @@ class Data:
 
 
 
-    # ----------- Team Ratings Data -----------
+    # ----------- Team Ratings Dataframe -----------
     
     def calcRating(self, position, points, gd):
         rating = (20 - position) / 2
@@ -613,16 +697,13 @@ class Data:
         # ------ Create Dataframes -------
         # Standings for the last "n_seasons" seasons
         self.standings = self.createStandings(no_seasons, display=display_tables, request_new=request_new)
-        
         # Fixtures for each team
         self.fixtures = self.createFixtures(display=display_tables, request_new=request_new)
-
         # Ratings for each team, based on last "no_seasons" seasons standings table
         self.team_ratings = self.createTeamRatings(no_seasons, self.standings, display=display_tables)
-
         self.home_advantages = self.createHomeAdvantages(no_seasons, display=display_tables, request_new=request_new)
-        
-        self.form = self.createForm(self.fixtures, self.standings, self.team_ratings, display=display_tables)
+        self.form = self.createForm(no_seasons, self.fixtures, self.standings, self.team_ratings, display=display_tables)
+        self.position_over_time = self.createPositionOverTime(self.fixtures, display=display_tables, request_new=request_new)
 
         # ----- Update Graphs ------
         self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display_graphs, team=team)
@@ -633,5 +714,5 @@ class Data:
 if __name__ == "__main__":
     data = Data(2020)
     
-    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=True, request_new=False)
+    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=False, request_new=False)
 
