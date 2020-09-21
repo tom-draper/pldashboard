@@ -149,7 +149,7 @@ class Data:
             return gd, pts
         return 0, 0
     
-    def createPositionOverTime(self, fixtures, display=False, request_new=True):
+    def createPositionOverTime(self, fixtures, standings, display=False, request_new=True):
         print("Creating position over time dataframe...")
 
         if fixtures.empty:
@@ -194,6 +194,12 @@ class Data:
             position_over_time[f'Matchday {col_idx+1}', 'Points'] = pts_col
             
             position_over_time.sort_values(by=[(f'Matchday {col_idx+1}', 'Points'), (f'Matchday {col_idx+1}', 'GD')], ascending=False, inplace=True)
+            # If on the last and most recent column, ensure matchday positions is 
+            # exactly the same order as from API standings data 
+            if col_idx == no_cols-1:
+                # Reorder to the order as standings data
+                position_over_time = position_over_time.reindex(standings.index)
+
             position_over_time[f'Matchday {col_idx+1}', 'Position'] = np.arange(1, 21)
             
             position_over_time.sort_index(axis=1, inplace=True)
@@ -696,17 +702,29 @@ class Data:
         if fixtures.empty:
             fixtures = self.createFixtures()
         if position_over_time.empty:
-            position_over_time = self.createPositionOverTime(fixtures)
+            position_over_time = self.createPositionOverTime(fixtures, standings)
             
         gdv = GenDataVis()
         if team == None:
-            print("Updating all team positions over time graphs...")
+            print("Updating all teams positions over time graphs...")
             for team_name in position_over_time.index.values.tolist():
                 gdv.genPositionOverTimeGraph(team_name, position_over_time, display=display)
         else:
             print(f"Updating {team} positions over time graph...")
             gdv.genPositionOverTimeGraph(team, position_over_time, display=display)
 
+    def updateGoalsScoredAndConceded(self, position_over_time, display=False, team=None):
+        if position_over_time.empty:
+            position_over_time = self.createPositionOverTime(fixtures, standings)
+            
+        gdv = GenDataVis()
+        if team == None:
+            print("Updating all teams goals scored and conceded over time graphs...")
+            for team_name in position_over_time.index.values.tolist():
+                gdv.genGoalsScoredAndConceded(team_name, position_over_time, display=display)
+        else:
+            print(f"Updating {team} goals scored and conceded over time graph...")
+            gdv.genGoalsScoredAndConceded(team, position_over_time, display=display)
         
         
     
@@ -725,11 +743,12 @@ class Data:
         self.team_ratings = self.createTeamRatings(no_seasons, self.standings, display=display_tables)
         self.home_advantages = self.createHomeAdvantages(no_seasons, display=display_tables, request_new=request_new)
         self.form = self.createForm(no_seasons, self.fixtures, self.standings, self.team_ratings, display=display_tables)
-        self.position_over_time = self.createPositionOverTime(self.fixtures, display=display_tables, request_new=request_new)
+        self.position_over_time = self.createPositionOverTime(self.fixtures, self.standings, display=display_tables, request_new=request_new)
 
         # ----- Update Graphs ------
         self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display_graphs, team=team)
         self.updatePositionOverTime(self.position_over_time, self.fixtures, display=display_graphs, team=team)
+        self.updateGoalsScoredAndConceded(self.position_over_time, display=display_graphs, team=team)
 
 
 

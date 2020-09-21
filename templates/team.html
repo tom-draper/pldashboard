@@ -144,7 +144,9 @@
 <div class="row">
   <div class="goals-scored-vs-conceded-graph row-graph">
     <h1>Goals Scored vs Goals Conceded</h1>
-    <div class="graph">Graph Coming Soon</div>
+    <div class="graph">
+      {% include 'graphs/{}/goals_scored_and_conceded_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
+    </div>
   </div>
 </div>
 {% endblock content %}
