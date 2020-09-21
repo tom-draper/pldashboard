@@ -154,18 +154,21 @@ class Data:
 
         if fixtures.empty:
             fixtures = self.createFixtures(display=display, request_new=request_new)
-        
+                
         position_over_time = pd.DataFrame()
         score = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='Score']
         home_away = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='HomeAway']
+        date = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='Date']
         
-        score.replace("None - None", np.nan, inplace=True)
-        score.dropna(axis=1, how='all', inplace=True)
+        # Remove cols for matchdays that haven't played yet
+        score = score.replace("None - None", np.nan)
+        score = score.dropna(axis=1, how='all')
         no_cols = score.shape[1]
         # Drop the same columns
-        home_away.drop(home_away.iloc[:, no_cols:], axis=1, inplace=True) 
+        home_away = home_away.drop(home_away.iloc[:, no_cols:], axis=1) 
+        date = date.drop(date.iloc[:, no_cols:], axis=1)
         
-        position_over_time = pd.concat([score, home_away], axis=1).sort_index(axis=1)
+        position_over_time = pd.concat([score, home_away, date], axis=1).sort_index(axis=1)
                 
         for col_idx in range(no_cols):
             gd_col = []
@@ -194,9 +197,6 @@ class Data:
             position_over_time[f'Matchday {col_idx+1}', 'Position'] = np.arange(1, 21)
             
             position_over_time.sort_index(axis=1, inplace=True)
-                
-            print(position_over_time)
-
         
         if display:
             print(position_over_time)
@@ -310,11 +310,13 @@ class Data:
             goal_differences_col.append(goal_differences)
         form['GDs'] = goal_differences_col
         
+        
         #Played star team column  (list of booleans for whether the team played was rated over 80%)
         played_star_team_col = []
         for row in form['Teams Played']:
             played_star_team_col.append([self.starTeam(team_name, team_ratings) for team_name in list(map(self.initialsToTeamNames, row))])
         form['Played Star Team'] = played_star_team_col
+
 
         # Won against star team column (list of booleans for whether the team won against a team rated over 80%)
         won_against_star_team_col = []
@@ -324,6 +326,7 @@ class Data:
                 won_against_star_team = [(result == 'W' and pst == True) for result, pst in zip(form['Form'][row_idx].replace(',', ''), form['Played Star Team'][row_idx])]
             won_against_star_team_col.append(won_against_star_team)
         form['Won Against Star Team'] = won_against_star_team_col
+        
         
         # Current form column (difficuily rating of teams played)
         current_forms = []
@@ -483,6 +486,7 @@ class Data:
         """
 
         print("Creating standings dataframe...")
+        
         standings = pd.DataFrame()
         
         # Loop from current season to the season 2 years ago
@@ -554,6 +558,7 @@ class Data:
 
     def createFixtures(self, display=False, request_new=True):
         print("Creating fixtures dataframe...")
+        
         data = self.fixturesData(self.season, request_new=request_new)
         
         fixtures = pd.DataFrame()
@@ -610,7 +615,7 @@ class Data:
     
     def createTeamRatings(self, no_seasons, standings, display=False):
         print("Creating team ratings dataframe...")
-        # If standings table not calculated, calculate
+        
         if standings.empty:
             standings = self.getStandings(no_seasons)
         
@@ -668,25 +673,42 @@ class Data:
     # ----------- Update Plotly Graph HTML Files ------------    
     
     def updateFixtures(self, no_seasons, standings, fixtures, team_ratings, home_advantages, display=False, team=None):
-        # If required tables not calculated, calculate
         if standings.empty:
-            standings = self.getStandings(no_seasons)
+            standings = self.createStandings(no_seasons)
         if fixtures.empty:
-            fixtures = self.getFixtures()
+            fixtures = self.createFixtures()
         if team_ratings.empty:
-            team_ratings = self.getTeamRatings(no_seasons, standings)
+            team_ratings = self.createTeamRatings(no_seasons, standings)
         if home_advantages.empty:
-            home_advantages = self.getHomeAdvantages(no_seasons)
+            home_advantages = self.createHomeAdvantages(no_seasons)
 
         # Input team rating dataframe to grade upcoming fixtures
         gdv = GenDataVis()
         if team == None:
             print("Updating all team fixtures graphs...")
-            for team_name in self.standings.index.values.tolist():
+            for team_name in fixtures.index.values.tolist():
                 gdv.genFixturesGraph(team_name, fixtures, team_ratings, home_advantages, display=display)
         else:
             print(f"Updating {team} fixture graph...")
             gdv.genFixturesGraph(team, fixtures, team_ratings, home_advantages, display=display)
+    
+    def updatePositionOverTime(self, position_over_time, fixtures, display=False, team=None):
+        if fixtures.empty:
+            fixtures = self.createFixtures()
+        if position_over_time.empty:
+            position_over_time = self.createPositionOverTime(fixtures)
+            
+        gdv = GenDataVis()
+        if team == None:
+            print("Updating all team positions over time graphs...")
+            for team_name in position_over_time.index.values.tolist():
+                gdv.genPositionOverTimeGraph(team_name, position_over_time, display=display)
+        else:
+            print(f"Updating {team} positions over time graph...")
+            gdv.genPositionOverTimeGraph(team, position_over_time, display=display)
+
+        
+        
     
     def updateAll(self, no_seasons, team=None, display_tables=False, display_graphs=False, request_new=True):
         """Update all graph files at once.
@@ -707,6 +729,7 @@ class Data:
 
         # ----- Update Graphs ------
         self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display_graphs, team=team)
+        self.updatePositionOverTime(self.position_over_time, self.fixtures, display=display_graphs, team=team)
 
 
 

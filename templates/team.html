@@ -134,10 +134,11 @@
   </div>
 </div>
 <div class="row">
-  <div class="position-graph row-graph">
+  <div class="position-over-time-graph row-graph">
     <h1>Position Over Time</h1>
-    <div class="graph">Graph Coming Soon</div>
-    
+    <div class="graph">
+      {% include 'graphs/{}/position_over_time_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
+    </div>
   </div>
 </div>
 <div class="row">

@@ -89,10 +89,11 @@ img {
 .row-graph {
   height: 100%;
   width: 100%;
+  margin: 0px 15px;
 }
 
 .fixtures-graph {
-  padding-right: 10px;
+  /* padding-right: 10px; */
 
   display: flex;
   flex-direction: column;
@@ -117,6 +118,7 @@ img {
   width: 100%;
   height: 100%;
   align-self: center;
+  
 }
 
 
@@ -252,6 +254,9 @@ img {
   .form-details {
     width: 80%;
   }
+  /* .fixtures-graph {
+    margin: 0px 15px;
+  } */
 }
 
 /* Reduce size of position and logo */
