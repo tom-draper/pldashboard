@@ -133,24 +133,24 @@ class GenDataVis:
             if names[idx] != team_name:
                 fig.add_trace(go.Scatter(x=x, 
                                          y=y, 
+                                         name=names[idx],
                                          mode='lines',
                                          line=dict(color='#d3d3d3'),
                                          showlegend=False,
-                                         text=names,
-                                         hovertemplate="<b>%{text}</b> <br>Matchday %{x}<br>%{y}th<extra></extra>",
-                                         hoverinfo=('x+y+text'),
+                                         hovertemplate=f"<b>{names[idx]}</b><br>" + "Matchday %{x}<br>%{y}th<extra></extra>",
+                                         hoverinfo=('x+y'),
                                          ))
-        # Add this teams name last
+        # Add this as teams name last to have this line on top
         for idx, y in enumerate(ys):
             if names[idx] == team_name:
                 fig.add_trace(go.Scatter(x=x,
                                          y=y,
+                                         name=names[idx],
                                          mode='lines',
                                          line=dict(color='#080808'),
                                          showlegend=False,
-                                         text=names,
-                                         hovertemplate="<b>%{text}</b> <br>Matchday %{x}<br>%{y}th<extra></extra>",
-                                         hoverinfo=('x+y+text'),
+                                         hovertemplate=f"<b>{names[idx]}</b><br>" + "Matchday %{x}<br>%{y}th<extra></extra>",
+                                         hoverinfo=('x+y'),
                                          ))
                 break
 
