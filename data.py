@@ -91,7 +91,6 @@ class Data:
     
     def getTableSnippet(self, team_name):
         team_df_idx = self.standings.index.get_loc(team_name)
-        
         low_idx = team_df_idx-3
         high_idx = team_df_idx+4
         if low_idx < 0:
@@ -106,16 +105,14 @@ class Data:
             high_idx = self.standings.shape[0]
             
         rows = self.standings.iloc[low_idx:high_idx]
+        team_names = rows.index.values.tolist()
+        # Remove 'FC' from end of each team name
+        team_names = list(map(lambda name: ' '.join(name.split(' ')[:-1]), ))
         # Get new index of this team, relative to section of rows dataframe
         team_idx = rows.index.get_loc(team_name)
 
-        team_names = self.standings.index.values.tolist()[low_idx:high_idx]
-        # Remove 'FC' from end of each team name
-        team_names = list(map(lambda name: ' '.join(name.split(' ')[:-1]), team_names))
-        
-        # Discard irrelevant columns
-        columns = ['Position', 'GD', 'Points']
-        rows = rows[f'{self.season}'][columns]
+        # Only keep relevant columns
+        rows = rows[f'{self.season}'][['Position', 'GD', 'Points']]
         
         table_snippet = rows.values.tolist()
         for row_list, team_name in zip(table_snippet, team_names):
@@ -135,8 +132,7 @@ class Data:
             home, _, away = score.split(' ')
             home, away = int(home), int(away)
             
-            pts = 0
-            gd = 0
+            pts, gd = 0, 0
             if home == away:
                 pts = 1
             if home_away == 'Home':
@@ -157,6 +153,7 @@ class Data:
             fixtures = self.createFixtures(display=display, request_new=request_new)
                 
         position_over_time = pd.DataFrame()
+        
         score = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='Score']
         home_away = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='HomeAway']
         date = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='Date']
@@ -169,8 +166,8 @@ class Data:
         home_away = home_away.drop(home_away.iloc[:, no_cols:], axis=1) 
         date = date.drop(date.iloc[:, no_cols:], axis=1)
         
-        position_over_time = pd.concat([score, home_away, date], axis=1).sort_index(axis=1)
-                
+        position_over_time = pd.concat([score, home_away, date], axis=1)
+                        
         for col_idx in range(no_cols):
             gd_col = []
             pts_col = []
@@ -204,7 +201,7 @@ class Data:
             position_over_time[f'Matchday {col_idx+1}', 'Position'] = np.arange(1, 21)
             
             position_over_time.sort_index(axis=1, inplace=True)
-        
+                
         if display:
             print(position_over_time)
         return position_over_time
@@ -443,7 +440,7 @@ class Data:
             home_advantages[f'{self.season-i}', 'Home Wins %'] = (home_advantages[f'{self.season-i}']['Home Wins'] / home_advantages[f'{self.season-i}']['Played at Home']) * 100
             home_advantages[f'{self.season-i}', 'Home Advantage'] = (home_advantages[f'{self.season-i}']['Home Wins %'] - home_advantages[f'{self.season-i}']['Wins %']) / 100
         
-        home_advantages = home_advantages.sort_index(axis=1)
+        home_advantages.sort_index(axis=1, inplace=True)
 
         # Check whether all teams in current season have played enough home games to meet threshold for use
         if (home_advantages[f'{self.season}']['Played at Home'] <= self.games_threshold).all():
@@ -569,33 +566,77 @@ class Data:
         data = self.fixturesData(self.season, request_new=request_new)
         
         fixtures = pd.DataFrame()
-        
-        d = {}
-        matchday = pd.DataFrame()
-        prev_match_matchday = 1
+        team_names = []
+        matchday = {}
+        prev_matchday = 0
         for match in data:
-            df_home = {(f'Matchday {match["matchday"]}', 'Date'): datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
-                       (f'Matchday {match["matchday"]}', 'HomeAway'): 'Home',
-                       (f'Matchday {match["matchday"]}', 'Team'): match['awayTeam']['name'].replace('&', 'and'),
-                       (f'Matchday {match["matchday"]}', 'Status'): match['status'],
-                       (f'Matchday {match["matchday"]}', 'Score'): f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}",}
-            df_away = {(f'Matchday {match["matchday"]}', 'Date'): datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
-                       (f'Matchday {match["matchday"]}', 'HomeAway'): 'Away',
-                       (f'Matchday {match["matchday"]}', 'Team'): match['homeTeam']['name'].replace('&', 'and'),
-                       (f'Matchday {match["matchday"]}', 'Status'): match['status'],
-                       (f'Matchday {match["matchday"]}', 'Score'): f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}",}
-            # If moved on to next matchday, reset matchday dataframe
-            if prev_match_matchday < match['matchday']:
-                fixtures = pd.concat([fixtures, matchday], axis=1)
-                matchday = pd.DataFrame()
-                prev_match_matchday = match['matchday']
-
-            home_row = pd.Series(data=df_home, name=match['homeTeam']['name'].replace('&', 'and'))
-            away_row = pd.Series(data=df_away, name=match['awayTeam']['name'].replace('&', 'and'))
-            matchday = matchday.append([home_row, away_row])
+            # If moved on to data for the next matchday 
+            if prev_matchday < match['matchday']:
+                # Package matchday dictionary into dataframe to concatenate into main fixtures dataframe
+                df_matchday= pd.DataFrame(matchday)
+                df_matchday.index = team_names
+                fixtures = pd.concat([fixtures, df_matchday], axis=1)
+                
+                # If just finished matchday 1 data, take team name list order as main fixtures dataframe index
+                if prev_matchday == 1:
+                    fixtures.index = team_names[:]
+                    fixtures.index.name = "Team"
+                
+                # Reset for next matchday
+                matchday = {(f'Matchday {match["matchday"]}', 'Date'): [],
+                            (f'Matchday {match["matchday"]}', 'HomeAway'): [],
+                            (f'Matchday {match["matchday"]}', 'Team'): [],
+                            (f'Matchday {match["matchday"]}', 'Status'): [],
+                            (f'Matchday {match["matchday"]}', 'Score'): []}
+                prev_matchday = match['matchday']
+                team_names = []
+            
+            # Home team row
+            matchday[(f'Matchday {match["matchday"]}', 'Date')].append(datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"))
+            matchday[(f'Matchday {match["matchday"]}', 'HomeAway')].append('Home')
+            matchday[(f'Matchday {match["matchday"]}', 'Team')].append(match['awayTeam']['name'].replace('&', 'and'))
+            matchday[(f'Matchday {match["matchday"]}', 'Status')].append(match['status']),
+            matchday[(f'Matchday {match["matchday"]}', 'Score')].append(f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}")
+            team_names.append(match['homeTeam']['name'].replace('&', 'and'))
+            # Away team row
+            matchday[(f'Matchday {match["matchday"]}', 'Date')].append(datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"))
+            matchday[(f'Matchday {match["matchday"]}', 'HomeAway')].append('Away')
+            matchday[(f'Matchday {match["matchday"]}', 'Team')].append(match['homeTeam']['name'].replace('&', 'and'))
+            matchday[(f'Matchday {match["matchday"]}', 'Status')].append(match['status']),
+            matchday[(f'Matchday {match["matchday"]}', 'Score')].append(f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}")
+            team_names.append(match['awayTeam']['name'].replace('&', 'and'))
+        # Add matchday 38 to fixtures
+        df_matchday= pd.DataFrame(matchday)
+        df_matchday.index = team_names
+        fixtures = pd.concat([fixtures, df_matchday], axis=1)
         
-        # Append matchday 38
-        fixtures = pd.concat([fixtures, matchday], axis=1)
+        
+        # d = {}
+        # matchday = pd.DataFrame()
+        # prev_match_matchday = 1
+        # for match in data:
+        #     df_home = {(f'Matchday {match["matchday"]}', 'Date'): datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
+        #                (f'Matchday {match["matchday"]}', 'HomeAway'): 'Home',
+        #                (f'Matchday {match["matchday"]}', 'Team'): match['awayTeam']['name'].replace('&', 'and'),
+        #                (f'Matchday {match["matchday"]}', 'Status'): match['status'],
+        #                (f'Matchday {match["matchday"]}', 'Score'): f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}",}
+        #     df_away = {(f'Matchday {match["matchday"]}', 'Date'): datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
+        #                (f'Matchday {match["matchday"]}', 'HomeAway'): 'Away',
+        #                (f'Matchday {match["matchday"]}', 'Team'): match['homeTeam']['name'].replace('&', 'and'),
+        #                (f'Matchday {match["matchday"]}', 'Status'): match['status'],
+        #                (f'Matchday {match["matchday"]}', 'Score'): f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}",}
+        #     # If moved on to next matchday, reset matchday dataframe
+        #     if prev_match_matchday < match['matchday']:
+        #         fixtures = pd.concat([fixtures, matchday], axis=1)
+        #         matchday = pd.DataFrame()
+        #         prev_match_matchday = match['matchday']
+
+        #     home_row = pd.Series(data=df_home, name=match['homeTeam']['name'].replace('&', 'and'))
+        #     away_row = pd.Series(data=df_away, name=match['awayTeam']['name'].replace('&', 'and'))
+        #     matchday = matchday.append([home_row, away_row])
+        
+        # # Append matchday 38
+        # fixtures = pd.concat([fixtures, matchday], axis=1)
                 
         if display:
             print(fixtures)
@@ -758,5 +799,5 @@ class Data:
 
 if __name__ == "__main__":
     data = Data(2020)
-    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=False, request_new=False)
+    data.updateAll(3, team='Liverpool FC', display_tables=True, display_graphs=False, request_new=False)
 
