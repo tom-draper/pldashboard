@@ -1,5 +1,6 @@
 from gen_data_vis import GenDataVis
 import pandas as pd
+from timebudget import timebudget
 import numpy as np
 import requests
 import json
@@ -727,7 +728,7 @@ class Data:
             gdv.genGoalsScoredAndConceded(team, position_over_time, display=display)
         
         
-    
+    @timebudget
     def updateAll(self, no_seasons, team=None, display_tables=False, display_graphs=False, request_new=True):
         """Update all graph files at once.
 
@@ -755,6 +756,5 @@ class Data:
 
 if __name__ == "__main__":
     data = Data(2020)
-    
     data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=False, request_new=False)
 

@@ -38,6 +38,21 @@ class GenDataVis:
     }
     
     def genFixturesGraph(self, team_name, fixtures, team_ratings, home_advantages, display=False):
+        """Creates and saves a plotly scatter graph that displays the teams past
+           and future fixtures for the current season. The graph is produced using
+           filled values from the fixtures, team_ratings and home_advantages 
+           dataframes. Home advantages are taken into account, and any team, when
+           playing away, have the other teams home advantage subtracted from their 
+           rating.
+           Graph: calculated team ratings (%) vs matchday number
+
+        Args:
+            team_name ([type]): [description]
+            fixtures ([type]): [description]
+            team_ratings ([type]): [description]
+            home_advantages ([type]): [description]
+            display (bool, optional): [description]. Defaults to False.
+        """
         # Get row of fixtures dataframe
         team_fixtures = fixtures.loc[team_name]
 
@@ -138,6 +153,20 @@ class GenDataVis:
             fig, filename=f'./templates/graphs/{file_team_name}/fixtures_{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
 
     def genPositionOverTimeGraph(self, team_name, position_over_time, display=False):
+        """Creates and saves a plotly line graph displaying the Premier League 
+           table position a team has been in at the end of each matchday that has 
+           played at the time of creation. The graph is produced using the 
+           position_over_time dataframe. The graph displays a faint light grey
+           line for each other team in the Premier League, with the final line plotted 
+           for the input team, coloured in the teams brand colours.
+           The y axis has been reversed and moves from 20 (at the x-axis) to 1.
+           Graph: position in Premier League table vs matchday number
+
+        Args:
+            team_name ([type]): [description]
+            position_over_time ([type]): [description]
+            display (bool, optional): [description]. Defaults to False.
+        """
         x_cols = position_over_time.iloc[:, position_over_time.columns.get_level_values(1) == 'Date']
         y_cols = position_over_time.iloc[:, position_over_time.columns.get_level_values(1) == 'Position']
 
@@ -169,19 +198,20 @@ class GenDataVis:
                                          hovertemplate=f"<b>{names[idx]}</b><br>" + "Matchday %{x}<br>%{y}th<extra></extra>",
                                          hoverinfo=('x+y'),
                                          ))
+            else:
+                # Save index the input teams is found for plotting the final line
+                team_idx = idx
         # Add this as teams name last to have this line on top
-        for idx, y in enumerate(ys):
-            if names[idx] == team_name:
-                fig.add_trace(go.Scatter(x=x,
-                                         y=y,
-                                         name=names[idx],
-                                         mode='lines',
-                                         line=dict(color=self.team_colours[names[idx]]),
-                                         showlegend=False,
-                                         hovertemplate=f"<b>{names[idx]}</b><br>" + "Matchday %{x}<br>%{y}th<extra></extra>",
-                                         hoverinfo=('x+y'),
-                                         ))
-                break
+        fig.add_trace(go.Scatter(x=x,
+                                 y=ys[team_idx],
+                                 name=names[team_idx],
+                                 mode='lines',
+                                 line=dict(color=self.team_colours[names[team_idx]],
+                                           width=4),
+                                 showlegend=False,
+                                 hovertemplate=f"<b>{names[team_idx]}</b><br>" + "Matchday %{x}<br>%{y}th<extra></extra>",
+                                 hoverinfo=('x+y'),
+                                 ))
 
         fig.update_layout(
             yaxis=dict(
@@ -222,6 +252,17 @@ class GenDataVis:
             fig, filename=f'./templates/graphs/{file_team_name}/position_over_time_{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
     
     def genGoalsScoredAndConceded(self, team_name, position_over_time, display=False):
+        """Creates and saves a plotly bar graph displaying the goals scored and 
+           goals conceded in each game played so far. The graph is produced using 
+           the position_over_time dataframe. For each matchday there is a pair 
+           of bars coloured green and the other red.
+           Graph: number of goals vs matchday number
+
+        Args:
+            team_name ([type]): [description]
+            position_over_time ([type]): [description]
+            display (bool, optional): [description]. Defaults to False.
+        """
         x_cols = position_over_time.iloc[:, position_over_time.columns.get_level_values(1) == 'Date']
         x_cols = x_cols.loc[team_name]
         
@@ -229,22 +270,30 @@ class GenDataVis:
         x = [datetime.utcfromtimestamp(date/1e9) for date in x_cols.values.tolist()]
         
         team_position_over_time = position_over_time.loc[team_name]
-                
+                     
         y_goals_scored = []
         y_goals_conceded = []
-        
+        y_avg = []
         no_matchdays = len(set([x[0] for x in team_position_over_time.index]))
-        y_goals_scored = []
-        y_goals_conceded = []
         for i in range(no_matchdays):
-            matchday = team_position_over_time[f'Matchday {i+1}']
+            # Create the average goals line data
+            matchday_scorelines = position_over_time[f'Matchday {i+1}']['Score']
+            goals_scored = []
+            for scoreline in matchday_scorelines.values.tolist():
+                if type(scoreline) is str:
+                    home, _, away = scoreline.split(' ')
+                    goals_scored.extend([int(home), int(away)])
+            y_avg.append(sum(goals_scored) / len(goals_scored))
+                       
+            # Create the goals scored and goals conceded bar data     
+            team_matchday = team_position_over_time[f'Matchday {i+1}']
             
-            if type(matchday['Score']) is str:
-                home, _, away = matchday['Score'].split(' ')
-                if matchday['HomeAway'] == 'Home':
+            if type(team_matchday['Score']) is str:
+                home, _, away = team_matchday['Score'].split(' ')
+                if team_matchday['HomeAway'] == 'Home':
                     goals_scored = int(home)
                     goals_conceded = int(away)
-                elif matchday['HomeAway'] == 'Away':
+                elif team_matchday['HomeAway'] == 'Away':
                     goals_scored = int(away)
                     goals_conceded = int(home)
                 y_goals_scored.append(goals_scored)
@@ -252,6 +301,9 @@ class GenDataVis:
             else:
                 y_goals_scored.append(0)
                 y_goals_conceded.append(0)
+        
+        print(y_avg)
+
         
         fig = go.Figure(data=[
             go.Bar(name='Goals Scored', x=x, y=y_goals_scored,
@@ -265,7 +317,9 @@ class GenDataVis:
                     marker_line_color='#8B0000',
                     marker_line_width=2,
                     hovertemplate="Matchday %{x}<br>%{y} goals conceded<extra></extra>",
-                    hoverinfo=('x+y'))
+                    hoverinfo=('x+y')),
+            go.Scatter(name='Avg', x=x, y=y_avg, mode='lines',
+                       line=dict(color='##0080FF', width=2))
         ])
         
         max_y = max([max(y_goals_scored), max(y_goals_conceded)])
@@ -302,6 +356,12 @@ class GenDataVis:
             ),
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
+            legend=dict(
+                yanchor="top",
+                y=0.99,
+                xanchor="left",
+                x=0.01
+            ),
         )
         fig.update_layout(barmode='group')
         
