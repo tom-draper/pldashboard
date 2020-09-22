@@ -57,6 +57,7 @@ class GenDataVis:
         team_fixtures = fixtures.loc[team_name]
 
         n_matches = len(team_fixtures.index.levels[0])
+
         now = datetime.now()
         sizes = [14] * n_matches
 
@@ -129,8 +130,8 @@ class GenDataVis:
                 linecolor="black",
                 showgrid=False,
                 showline=False,
-                ticktext=[i for i in range(1, len(x)+1, 2)],
-                tickvals=[x[i] for i in range(0, len(x), 2)],
+                ticktext=[i for i in range(2, len(x)+2, 2)],
+                tickvals=[x[i] for i in range(1, len(x)+1, 2)],
             ),
             margin=dict(
                 l=50,
@@ -302,8 +303,6 @@ class GenDataVis:
                 y_goals_scored.append(0)
                 y_goals_conceded.append(0)
         
-        print(y_avg)
-
         
         fig = go.Figure(data=[
             go.Bar(name='Goals Scored', x=x, y=y_goals_scored,
@@ -319,7 +318,7 @@ class GenDataVis:
                     hovertemplate="Matchday %{x}<br>%{y} goals conceded<extra></extra>",
                     hoverinfo=('x+y')),
             go.Scatter(name='Avg', x=x, y=y_avg, mode='lines',
-                       line=dict(color='##0080FF', width=2))
+                       line=dict(color='#0080FF', width=2))
         ])
         
         max_y = max([max(y_goals_scored), max(y_goals_conceded)])

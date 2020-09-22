@@ -584,7 +584,6 @@ class Data:
                        (f'Matchday {match["matchday"]}', 'Team'): match['homeTeam']['name'].replace('&', 'and'),
                        (f'Matchday {match["matchday"]}', 'Status'): match['status'],
                        (f'Matchday {match["matchday"]}', 'Score'): f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}",}
-            
             # If moved on to next matchday, reset matchday dataframe
             if prev_match_matchday < match['matchday']:
                 fixtures = pd.concat([fixtures, matchday], axis=1)
@@ -594,6 +593,9 @@ class Data:
             home_row = pd.Series(data=df_home, name=match['homeTeam']['name'].replace('&', 'and'))
             away_row = pd.Series(data=df_away, name=match['awayTeam']['name'].replace('&', 'and'))
             matchday = matchday.append([home_row, away_row])
+        
+        # Append matchday 38
+        fixtures = pd.concat([fixtures, matchday], axis=1)
                 
         if display:
             print(fixtures)
