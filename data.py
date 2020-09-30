@@ -17,7 +17,7 @@ class Data:
         self.season = current_season
         
         # Number of games played in a season for season data to be used
-        self.games_threshold = 0
+        self.games_threshold = 3
                 
         # List of current season teams, updated when updating standings 
         self.team_names = None  
@@ -107,7 +107,7 @@ class Data:
         rows = self.standings.iloc[low_idx:high_idx]
         team_names = rows.index.values.tolist()
         # Remove 'FC' from end of each team name
-        team_names = list(map(lambda name: ' '.join(name.split(' ')[:-1]), ))
+        team_names = list(map(lambda name: ' '.join(name.split(' ')[:-1]), team_names))
         # Get new index of this team, relative to section of rows dataframe
         team_idx = rows.index.get_loc(team_name)
 
@@ -442,17 +442,19 @@ class Data:
         
         home_advantages.sort_index(axis=1, inplace=True)
 
+
+        home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(1)=='Home Advantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
         if (home_advantages[f'{self.season}']['Played at Home'] <= self.games_threshold).all():
             print("Current season excluded from home advantages calculation -> haven't played enough games.")
-            start_n = 1  # Start from previous season
-        else:
-            start_n = 0  # Include current season
-            
+            # Drop this seasons column, start from previous season
+            home_advantages_cols = home_advantages_cols.iloc[:, :-1]
+                    
         # List of all home advantege column names that will be used to calculate final column
-        home_advantages['Total Home Advantage'] = home_advantages.iloc[:, home_advantages.columns.get_level_values(1)=='Home Advantage'].mean(axis=1).fillna(0)
+        home_advantages['Total Home Advantage'] = home_advantages_cols.mean(axis=1).fillna(0)
         home_advantages.sort_values(by='Total Home Advantage', ascending=False, inplace=True)
         home_advantages.index.name = "Team"
+        
         
         if display:
             print(home_advantages)
@@ -529,12 +531,7 @@ class Data:
                 df.drop(columns=['Form'], level=1, inplace=True)
                 # Add season standings to main standings dataframe 
                 standings = pd.concat([standings, df], axis=1)
-                # standings = standings.merge(df, on=f"({self.season-i+1}, Team)", how="outer")
-            
         standings.index.name = "Team"
-        # Sort by position in most recent season
-        # standings.sort_values(by=([f'Position {self.season-i}' for i in range(no_seasons)]), 
-        #                                inplace=True)
         
         if display:
             print(standings)
@@ -610,34 +607,6 @@ class Data:
         df_matchday.index = team_names
         fixtures = pd.concat([fixtures, df_matchday], axis=1)
         
-        
-        # d = {}
-        # matchday = pd.DataFrame()
-        # prev_match_matchday = 1
-        # for match in data:
-        #     df_home = {(f'Matchday {match["matchday"]}', 'Date'): datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
-        #                (f'Matchday {match["matchday"]}', 'HomeAway'): 'Home',
-        #                (f'Matchday {match["matchday"]}', 'Team'): match['awayTeam']['name'].replace('&', 'and'),
-        #                (f'Matchday {match["matchday"]}', 'Status'): match['status'],
-        #                (f'Matchday {match["matchday"]}', 'Score'): f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}",}
-        #     df_away = {(f'Matchday {match["matchday"]}', 'Date'): datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"),
-        #                (f'Matchday {match["matchday"]}', 'HomeAway'): 'Away',
-        #                (f'Matchday {match["matchday"]}', 'Team'): match['homeTeam']['name'].replace('&', 'and'),
-        #                (f'Matchday {match["matchday"]}', 'Status'): match['status'],
-        #                (f'Matchday {match["matchday"]}', 'Score'): f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}",}
-        #     # If moved on to next matchday, reset matchday dataframe
-        #     if prev_match_matchday < match['matchday']:
-        #         fixtures = pd.concat([fixtures, matchday], axis=1)
-        #         matchday = pd.DataFrame()
-        #         prev_match_matchday = match['matchday']
-
-        #     home_row = pd.Series(data=df_home, name=match['homeTeam']['name'].replace('&', 'and'))
-        #     away_row = pd.Series(data=df_away, name=match['awayTeam']['name'].replace('&', 'and'))
-        #     matchday = matchday.append([home_row, away_row])
-        
-        # # Append matchday 38
-        # fixtures = pd.concat([fixtures, matchday], axis=1)
-                
         if display:
             print(fixtures)
         return fixtures
@@ -662,7 +631,6 @@ class Data:
         weights = list(weights / sum(weights))
         return weights
         
-    
     def createTeamRatings(self, no_seasons, standings, display=False):
         print("Creating team ratings dataframe...")
         
@@ -742,7 +710,7 @@ class Data:
             print(f"Updating {team} fixture graph...")
             gdv.genFixturesGraph(team, fixtures, team_ratings, home_advantages, display=display)
     
-    def updatePositionOverTime(self, position_over_time, fixtures, display=False, team=None):
+    def updatePositionOverTime(self, position_over_time, fixtures, standings, display=False, team=None):
         if fixtures.empty:
             fixtures = self.createFixtures()
         if position_over_time.empty:
@@ -757,7 +725,7 @@ class Data:
             print(f"Updating {team} positions over time graph...")
             gdv.genPositionOverTimeGraph(team, position_over_time, display=display)
 
-    def updateGoalsScoredAndConceded(self, position_over_time, display=False, team=None):
+    def updateGoalsScoredAndConceded(self, position_over_time, fixtures, standings, display=False, team=None):
         if position_over_time.empty:
             position_over_time = self.createPositionOverTime(fixtures, standings)
             
@@ -769,7 +737,6 @@ class Data:
         else:
             print(f"Updating {team} goals scored and conceded over time graph...")
             gdv.genGoalsScoredAndConceded(team, position_over_time, display=display)
-        
         
     @timebudget
     def updateAll(self, no_seasons, team=None, display_tables=False, display_graphs=False, request_new=True):
@@ -791,8 +758,8 @@ class Data:
 
         # ----- Update Graphs ------
         self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display_graphs, team=team)
-        self.updatePositionOverTime(self.position_over_time, self.fixtures, display=display_graphs, team=team)
-        self.updateGoalsScoredAndConceded(self.position_over_time, display=display_graphs, team=team)
+        self.updatePositionOverTime(self.position_over_time, self.fixtures, self.standings, display=display_graphs, team=team)
+        self.updateGoalsScoredAndConceded(self.position_over_time, self.fixtures, self.standings, display=display_graphs, team=team)
 
 
 

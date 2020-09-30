@@ -181,7 +181,7 @@ class GenDataVis:
             x.append(datetime.utcfromtimestamp(mean_date/1e9))
 
         ys = []
-        for row_name, row_data in y_cols.iterrows():
+        for _, row_data in y_cols.iterrows():
             y = row_data.values.tolist()
             ys.append(y)
 
@@ -265,45 +265,45 @@ class GenDataVis:
             display (bool, optional): [description]. Defaults to False.
         """
         x_cols = position_over_time.iloc[:, position_over_time.columns.get_level_values(1) == 'Date']
-        x_cols = x_cols.loc[team_name]
-        
         # All ys have the same x date values
-        x = [datetime.utcfromtimestamp(date/1e9) for date in x_cols.values.tolist()]
+        x = [datetime.utcfromtimestamp(date/1e9) for date in x_cols.loc[team_name].values.tolist()]
         
+        
+        # Create chart y values (2 bar charts, and the average line)
+        y_goals_scored, y_goals_conceded, y_avg = [], [], []
         team_position_over_time = position_over_time.loc[team_name]
-                     
-        y_goals_scored = []
-        y_goals_conceded = []
-        y_avg = []
         no_matchdays = len(set([x[0] for x in team_position_over_time.index]))
         for i in range(no_matchdays):
-            # Create the average goals line data
+            # Append the average goals for this matchday to average goals list
             matchday_scorelines = position_over_time[f'Matchday {i+1}']['Score']
             goals_scored = []
             for scoreline in matchday_scorelines.values.tolist():
                 if type(scoreline) is str:
                     home, _, away = scoreline.split(' ')
                     goals_scored.extend([int(home), int(away)])
+            # Append the mean goals scored (equal to mean goals conceded) this gameweek
             y_avg.append(sum(goals_scored) / len(goals_scored))
                        
-            # Create the goals scored and goals conceded bar data     
-            team_matchday = team_position_over_time[f'Matchday {i+1}']
             
-            if type(team_matchday['Score']) is str:
+            # Append the teams number of goals scored and cocneded this matchday
+            team_matchday = team_position_over_time[f'Matchday {i+1}']
+            if type(team_matchday['Score']) is str:  # If match has been played
                 home, _, away = team_matchday['Score'].split(' ')
+                no_goals_scored, no_goals_conceded = 0, 0
                 if team_matchday['HomeAway'] == 'Home':
-                    goals_scored = int(home)
-                    goals_conceded = int(away)
+                    no_goals_scored = int(home)
+                    no_goals_conceded = int(away)
                 elif team_matchday['HomeAway'] == 'Away':
-                    goals_scored = int(away)
-                    goals_conceded = int(home)
-                y_goals_scored.append(goals_scored)
-                y_goals_conceded.append(goals_conceded)
+                    no_goals_scored = int(away)
+                    no_goals_conceded = int(home)
             else:
-                y_goals_scored.append(0)
-                y_goals_conceded.append(0)
+                no_goals_scored = 0
+                no_goals_conceded = 0
+            y_goals_scored.append(no_goals_scored)
+            y_goals_conceded.append(no_goals_conceded)
         
         
+        # Plot graph
         fig = go.Figure(data=[
             go.Bar(name='Goals Scored', x=x, y=y_goals_scored,
                     marker_color='#77DD77',
@@ -321,10 +321,12 @@ class GenDataVis:
                        line=dict(color='#0080FF', width=2))
         ])
         
+        # Get the maximum y-axis value (6 goals unless a higher value found)
         max_y = max([max(y_goals_scored), max(y_goals_conceded)])
         if max_y < 6:
             max_y = 6
         
+        # Config graph layout
         fig.update_layout(
             barmode='group',
             yaxis=dict(
@@ -363,6 +365,7 @@ class GenDataVis:
             ),
         )
         fig.update_layout(barmode='group')
+        
         
         if display:
             fig.show()
