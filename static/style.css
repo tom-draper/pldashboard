@@ -93,10 +93,10 @@ img {
 }
 
 .fixtures-graph {
-  /* padding-right: 10px; */
-
   display: flex;
   flex-direction: column;
+  /* Smaller margin than other graphs because not taking up whole width */
+  margin: 0px 10px;
 }
 
 .position {
@@ -254,9 +254,10 @@ img {
   .form-details {
     width: 80%;
   }
-  /* .fixtures-graph {
-    margin: 0px 15px;
-  } */
+  .fixtures-graph {
+    /* Reset margin to match other graphs as no longer on row with other items */
+    margin: 0px 20px;
+  }
 }
 
 /* Reduce size of position and logo */
