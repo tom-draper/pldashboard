@@ -239,6 +239,33 @@ class Data:
         else:
             return team_name[:3].upper()
     
+    def calcFormPercentage(self, team_name, form_str, teams_played_list, form, team_ratings):
+        form_percentage = 50
+        if form_str != None:  # If games have been played this season
+            form_str = form_str.replace(',', '')
+            for form_idx, result in enumerate(form_str):
+                # Convert opposition team initials to their name 
+                team_name = self.initialsToTeamNames(teams_played_list[form_idx])
+                # Increament form score based on rating of the team they've won, drawn or lost against
+                if result == 'W':
+                    #print("W PLUS", (team_ratings.loc[team_name]['Total Rating']) * 100,  "/", len(form_str), "  X  ", form['GDs'][row_idx][form_idx], "=", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx])
+                    form_percentage += ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * abs(form['GDs'][team_name][form_idx])
+                elif result == 'D':
+                    # print("D PLUS", team_ratings.loc[form.index.values.tolist()[row_idx]]['Total Rating'], "-", (team_ratings.loc[team_name]['Total Rating']), "=", ((team_ratings.loc[form.index.values.tolist()[row_idx]]['Total Rating'] - (team_ratings.loc[team_name]['Total Rating'])) * 100) / len(form_str))
+                    form_percentage +=  ((team_ratings.loc[team_name]['Total Rating'] - (team_ratings.loc[team_name]['Total Rating'])) * 100) / len(form_str)
+                elif result == 'L':
+                    # print("L MINUS", (team_ratings.iloc[0]['Total Rating'] * 100), "-", (team_ratings.loc[team_name]['Total Rating']) * 100, "/", len(form_str), " X ", form['GDs'][row_idx][form_idx], "=", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx])
+                    form_percentage -= ((team_ratings.iloc[0]['Total Rating'] - team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * abs(form['GDs'][team_name][form_idx])
+                #print(form_percentage)
+                    
+        # Cap rating
+        if form_percentage > 100:
+            form_percentage = 100
+        elif form_percentage < 0:
+            form_percentage = 0;
+            
+        return form_percentage
+    
     @timebudget
     def createForm(self, no_seasons, fixtures, standings, team_ratings, display=False):
         print("Creating form dataframe...")
@@ -251,7 +278,6 @@ class Data:
             team_ratings = self.getTeamRatings(no_seasons, standings)
         
         form = pd.DataFrame()
-        
         # Form column (string of W, L or D)
         form['Form'] = standings[f'{self.season}']['Form']
         
@@ -311,14 +337,14 @@ class Data:
         
         # Goal difference column
         goal_differences_col = []
-        for row_idx, scorelines in enumerate(form['Scorelines']):
+        for team_name, scorelines in form['Scorelines'].iteritems():
             goal_differences = []
             for list_idx, scoreline in enumerate(scorelines):
                 if scoreline != '':
                     home, _, away = scoreline.split(' ')
-                    if form['HomeAways'][row_idx][list_idx] == 'Home':
+                    if form['HomeAways'][team_name][list_idx] == 'Home':
                         gd = int(home) - int(away)
-                    elif form['HomeAways'][row_idx][list_idx] == 'Away':
+                    elif form['HomeAways'][team_name][list_idx] == 'Away':
                         gd = int(away) - int(home)
                     goal_differences.append(gd)
                 else:
@@ -328,72 +354,43 @@ class Data:
         form['GDs'] = goal_differences_col
         
         
-        #Played star team column  (list of booleans for whether the team played was rated over 80%)
+        # Played star team column (list of booleans for whether the team 
+        # played against a team rated over 80%)
+        # and current form column (based on result and difficulty rating of each 
+        # team played)
         played_star_team_col = []
-        for row in form['Teams Played']:
-            played_star_team_col.append([self.starTeam(team_name, team_ratings) for team_name in list(map(self.initialsToTeamNames, row))])
+        current_forms = []
+        for team_name, teams_played in form['Teams Played'].iteritems():
+            # ---- Build played star team column ----
+            played_star_team_col.append([self.starTeam(team_name, team_ratings) for team_name in list(map(self.initialsToTeamNames, teams_played))])
+            
+            # ---- Build current form column -----
+            form_str = form['Form'][team_name]
+            form_percentage = self.calcFormPercentage(team_name, form_str, teams_played, form, team_ratings)
+            current_forms.append(form_percentage)
         form['Played Star Team'] = played_star_team_col
+        form['Current Form Rating %'] = current_forms
 
 
-        # Won against star team column (list of booleans for whether the team won against a team rated over 80%)
+        # Won against star team column (list of booleans for whether the team 
+        # won against a team rated over 80%)
         won_against_star_team_col = []
-        for row_idx, row in enumerate(form['Played Star Team']):
+        for team_name in form.index:
             won_against_star_team = []
-            if form['Form'][row_idx] != None:  # Team has played games this season
-                won_against_star_team = [(result == 'W' and pst == True) for result, pst in zip(form['Form'][row_idx].replace(',', ''), form['Played Star Team'][row_idx])]
+            if form['Form'][team_name] != None:  # Team has played games this season
+                won_against_star_team = [(result == 'W' and pst == True) for result, pst in zip(form['Form'][team_name].replace(',', ''), form['Played Star Team'][team_name])]
             won_against_star_team_col.append(won_against_star_team)
         form['Won Against Star Team'] = won_against_star_team_col
         
-        
-        # Current form column (difficuily rating of teams played)
-        current_forms = []
-        for row_idx, teams_played_list in enumerate(team_initials_col):
-            #print("\n-------------", form.index.values.tolist()[row_idx], "-------------")
-            # String of upt to 5 W, D or Ls
-            form_str = form['Form'][row_idx]
-                        
-            #print(row_idx, teams_played_list)
-            
-            form_percentage = 50
-            if form_str != None:  # If games have been played this season
-                form_str = form_str.replace(',', '')
-                for form_idx, result in enumerate(form_str):
-                    # Convert opposition team initials to their name 
-                    team_name = self.initialsToTeamNames(teams_played_list[form_idx])
-                    # Increament form score based on rating of the team they've won, drawn or lost against
-                    if result == 'W':
-                        #print("W PLUS", (team_ratings.loc[team_name]['Total Rating']) * 100,  "/", len(form_str), "  X  ", form['GDs'][row_idx][form_idx], "=", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx])
-                        form_percentage += ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * abs(form['GDs'][row_idx][form_idx])
-                    elif result == 'D':
-                        # print("D PLUS", team_ratings.loc[form.index.values.tolist()[row_idx]]['Total Rating'], "-", (team_ratings.loc[team_name]['Total Rating']), "=", ((team_ratings.loc[form.index.values.tolist()[row_idx]]['Total Rating'] - (team_ratings.loc[team_name]['Total Rating'])) * 100) / len(form_str))
-                        form_percentage +=  ((team_ratings.loc[form.index.values.tolist()[row_idx]]['Total Rating'] - (team_ratings.loc[team_name]['Total Rating'])) * 100) / len(form_str)
-                    elif result == 'L':
-                        # print("L MINUS", (team_ratings.iloc[0]['Total Rating'] * 100), "-", (team_ratings.loc[team_name]['Total Rating']) * 100, "/", len(form_str), " X ", form['GDs'][row_idx][form_idx], "=", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx])
-                        form_percentage -= ((team_ratings.iloc[0]['Total Rating'] - team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * abs(form['GDs'][row_idx][form_idx])
-                    #print(form_percentage)
-                        
-            # Cap rating
-            if form_percentage > 100:
-                form_percentage = 100
-            elif form_percentage < 0:
-                form_percentage = 0;
-
-            #print("= ", form_percentage)
-            current_forms.append(form_percentage)
-            
-        form['Current Form Rating %'] = current_forms
-        
         form.sort_values(by='Current Form Rating %', ascending=False, inplace=True)
-        
-        # print(form['Current Form Rating %'])
-        
+                
         if display:
             print(form)
         return form
     
     
     
-    # ---------- Home Advantage Dataframe ------------
+    # ------------- Home Advantage Dataframe ---------------
     
     @timebudget
     def createHomeAdvantages(self, no_seasons, display=False, request_new=True):
@@ -401,6 +398,7 @@ class Data:
         
         home_advantages = pd.DataFrame()
         
+        dfs = []
         for i in range(no_seasons):
             data = self.fixturesData(self.season-i, request_new=request_new)
             
@@ -436,13 +434,14 @@ class Data:
                     else:  # Draw
                         d[home_team][(f'{self.season-i}', 'Home Draws')] += 1
                         d[away_team][(f'{self.season-i}', 'Away Draws')] += 1
-
-            df = pd.DataFrame(d).T
-            df.index.name = "Team"
-            df = df[df.index.isin(self.team_names)]
-            home_advantages = pd.concat([home_advantages, df], axis=1)
-            # home_advantages = home_advantages.join(df, how="outer")
+            
+            df = pd.DataFrame(d)
+            # Drop teams that are not in current season
+            df.drop(df.columns[~df.columns.isin(self.team_names)].values.tolist(), axis=1, inplace=True)
+            dfs.append(df)
         
+        home_advantages = pd.concat(dfs).T
+        home_advantages.index.name = "Team"
         # Clean up
         home_advantages.fillna(0, inplace=True)
         home_advantages = home_advantages.astype(int)
@@ -452,10 +451,11 @@ class Data:
         for i in range(no_seasons):
             home_advantages[f'{self.season-i}', 'Played'] = home_advantages[f'{self.season-i}']['Home Wins'] + home_advantages[f'{self.season-i}']['Home Draws'] + home_advantages[f'{self.season-i}']['Home Loses'] + home_advantages[f'{self.season-i}']['Away Wins'] + home_advantages[f'{self.season-i}']['Away Draws'] + home_advantages[f'{self.season-i}']['Away Loses']
             home_advantages[f'{self.season-i}', 'Played at Home'] = home_advantages[f'{self.season-i}']['Home Wins'] + home_advantages[f'{self.season-i}']['Home Draws'] + home_advantages[f'{self.season-i}']['Home Loses']
-            # Wins / Total Games Played
+            # Percentage wins = total wins / total games played
             home_advantages[f'{self.season-i}', 'Wins %'] = ((home_advantages[f'{self.season-i}']['Home Wins'] + home_advantages[f'{self.season-i}']['Away Wins']) / home_advantages[f'{self.season-i}']['Played']) * 100
-            # Wins at Home / Total Games Played at Home 
+            # Percentage wins at home = total wins at home / total games played at home 
             home_advantages[f'{self.season-i}', 'Home Wins %'] = (home_advantages[f'{self.season-i}']['Home Wins'] / home_advantages[f'{self.season-i}']['Played at Home']) * 100
+            # Home advantage = percentage wins at home - percentage wins 
             home_advantages[f'{self.season-i}', 'Home Advantage'] = (home_advantages[f'{self.season-i}']['Home Wins %'] - home_advantages[f'{self.season-i}']['Wins %']) / 100
         
         home_advantages.sort_index(axis=1, inplace=True)
@@ -473,6 +473,7 @@ class Data:
         home_advantages.sort_values(by='Total Home Advantage', ascending=False, inplace=True)
         home_advantages.index.name = "Team"
         
+        print(home_advantages)
         
         if display:
             print(home_advantages)
@@ -480,7 +481,7 @@ class Data:
 
 
 
-    # ---------- Standings Dataframe ------------
+    # ------------- Standings Dataframe ---------------
     
     def standingsData(self, season, request_new=True):
         if request_new:
@@ -790,5 +791,5 @@ class Data:
 
 if __name__ == "__main__":
     data = Data(2020)
-    data.updateAll(3, team='Liverpool FC', display_tables=True, display_graphs=False, request_new=False)
+    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=False, request_new=False)
 

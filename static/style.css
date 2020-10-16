@@ -231,7 +231,7 @@ img {
   width: 1em!important;
 } */
 
-
+/* Mobile view, turn every multielement row into a single column. */
 @media only screen and (max-width: 1200px) {
   .row {
     flex-direction: column;

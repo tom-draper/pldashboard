@@ -34,16 +34,16 @@ def hello():
 @app.route("/fulham")
 def team():
     rule = request.url_rule
-    team_name = rule.rule[1:]
-    full_team_name = team_name.replace('-', ' ').title().replace('And', 'and') + ' FC'
-
+    # Get team name from current URL
+    team_name = rule.rule[1:].replace('-', ' ').title().replace('And', 'and') + ' FC'
+    
     # Get data values to display on team webpage
-    position = data.getPosition(full_team_name)
-    form = data.getForm(full_team_name)
-    recent_teams_played = data.getRecentTeamsPlayed(full_team_name)
-    form_rating = data.getCurrentFormRating(full_team_name)
-    won_against_star_team = data.getWonAgainstStarTeam(full_team_name)
-    table_snippet, table_css_styles = data.getTableSnippet(full_team_name)
+    position = data.getPosition(team_name)
+    form = data.getForm(team_name)
+    recent_teams_played = data.getRecentTeamsPlayed(team_name)
+    form_rating = data.getCurrentFormRating(team_name)
+    won_against_star_team = data.getWonAgainstStarTeam(team_name)
+    table_snippet, table_css_styles = data.getTableSnippet(team_name)
     
     return render_template('team.html', 
                            team=team_name,
@@ -57,5 +57,5 @@ def team():
 
 
 if __name__ == '__main__':
-    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=False)
+    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=True)
     app.run(debug=False)
