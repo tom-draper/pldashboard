@@ -1,5 +1,6 @@
-from gen_data_vis import GenDataVis
+from graph_data import GraphData
 import pandas as pd
+from collections import deque
 from timebudget import timebudget
 import numpy as np
 import requests
@@ -16,7 +17,8 @@ class Data:
         self.season = current_season
         
         # Number of games played in a season for season data to be used
-        self.games_threshold = 3
+        self.games_threshold = 4
+        self.home_games_threshold = 5
         self.star_team_threshold = 0.75
                 
         # List of current season teams, updated when updating standings 
@@ -64,11 +66,9 @@ class Data:
     # Functions that are called inside Flask page load functions
     # Returns data to used to display information on webpage
     # Functions require all dataframes to be filled first
-    @timebudget
     def getPosition(self, team_name):
         return self.standings.loc[team_name, f'{self.season}']['Position']
 
-    @timebudget
     def getForm(self, team_name):
         form = self.form.loc[team_name]['Form']
         if form == None:
@@ -78,22 +78,18 @@ class Data:
         form = form + ['None'] * (5 - len(form))  # Pad list
         return form
 
-    @timebudget
     def getRecentTeamsPlayed(self, team_name):
         return self.form.loc[team_name]['Teams Played']
     
-    @timebudget
     def getCurrentFormRating(self, team_name):
         return self.form.loc[team_name]['Current Form Rating %'].round(1)
     
-    @timebudget
     def getWonAgainstStarTeam(self, team_name):
         won_against_star_team = self.form.loc[team_name]['Won Against Star Team']
         # Replace boolean values with CSS tag for super win image
         won_against_star_team = ["star-team" if x else "not-star-team" for x in won_against_star_team]
         return won_against_star_team
     
-    @timebudget
     def getTableSnippet(self, team_name):
         team_df_idx = self.standings.index.get_loc(team_name)
         
@@ -134,12 +130,167 @@ class Data:
         table_css_styles[team_idx] = f"this-team {team_names[team_idx].lower().replace(' ', '-')}"
             
         return table_snippet, table_css_styles
+
+    
+    # ------------ Form Over Time Dataframe --------------
+    
+    def lastNGames(self, n_games, matchday_no, fixtures):
+        teams_played_col = []
+        scores_col = []
+        home_away_col = []
+                
+        for _, row in fixtures.iterrows():
+            teams_played = deque([])
+            scores = deque([])
+            home_away = deque([])
+            # At each column, group previous 5 columns
+            for n in range(matchday_no-n_games+1, matchday_no+1):
+                if n > 0:
+                    matchday_result = row[f'Matchday {n}']
+                    if matchday_result['Score'] != "None - None":
+                        teams_played.appendleft(matchday_result['Team'])
+                        scores.appendleft(matchday_result['Score'])
+                        home_away.appendleft(matchday_result['HomeAway'])
+            teams_played_col.append(teams_played)
+            scores_col.append(scores)
+            home_away_col.append(home_away)
+
+        # Convert full team names to team initials
+        teams_played_col = [list(map(lambda team_name : self.teamNameToInitials(team_name), teams_played))
+                                 for teams_played in teams_played_col]
+        
+        # Convert queues back to lists
+        teams_played_col = list(map(list, teams_played_col))
+        scores_col = list(map(list, scores_col))
+        home_away_col = list(map(list, home_away_col))
+        
+        return teams_played_col, scores_col, home_away_col
+    
+    def formString(self, scores, home_aways):
+        form_str = []
+        
+        for score, homeAway in zip(scores, home_aways):
+            home, _, away = score.split(' ')
+            if home != 'None' and away != 'None':
+                if int(home) == int(away):
+                    form_str.append('D')
+                elif int(home) > int(away) and homeAway == 'Home' or int(home) < int(away) and homeAway == 'Away':
+                    form_str.append('W')
+                else:
+                    form_str.append('L')
+                    
+        form_str = ','.join(form_str)  # Convert to string
+        return form_str
+
+    def calcFormRating(self, teams_played, form_str, gds, team_ratings):
+        form_percentage = 50  # Default percentage, moves up or down based on performance
+        
+        if form_str != None:  # If games have been played this season
+            form_str = form_str.replace(',', '')
+            for form_idx, result in enumerate(form_str):
+                # Convert opposition team initials to their name 
+                team_name = self.initialsToTeamNames(teams_played[form_idx])
+                # Increament form score based on rating of the team they've won, drawn or lost against
+                if result == 'W':
+                    # print("W PLUS", (team_ratings.loc[team_name]['Total Rating']) * 100,  "/", len(form_str), "  X  ", form['GDs'][row_idx][form_idx], "=", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx])
+                    form_percentage += ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * abs(gds[form_idx])
+                elif result == 'D':
+                    # print("D PLUS", team_ratings.loc[form.index.values.tolist()[row_idx]]['Total Rating'], "-", (team_ratings.loc[team_name]['Total Rating']), "=", ((team_ratings.loc[form.index.values.tolist()[row_idx]]['Total Rating'] - (team_ratings.loc[team_name]['Total Rating'])) * 100) / len(form_str))
+                    form_percentage +=  ((team_ratings.loc[team_name]['Total Rating'] - (team_ratings.loc[team_name]['Total Rating'])) * 100) / len(form_str)
+                elif result == 'L':
+                    # print("L MINUS", (team_ratings.iloc[0]['Total Rating'] * 100), "-", (team_ratings.loc[team_name]['Total Rating']) * 100, "/", len(form_str), " X ", form['GDs'][row_idx][form_idx], "=", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx])
+                    form_percentage -= ((team_ratings.iloc[0]['Total Rating'] - team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str) * abs(gds[form_idx]))
+                #print(form_percentage)
+                    
+        # Cap rating
+        if form_percentage > 100:
+            form_percentage = 100
+        elif form_percentage < 0:
+            form_percentage = 0
+            
+        return form_percentage
+    
+    @timebudget
+    def createFormOverTime(self, no_seasons, fixtures, standings, team_ratings, display=False):
+        print("Creating form over time dataframe...")
+        
+        form_over_time = pd.DataFrame()
+        
+        if standings.empty:
+            standings = self.getStandings(no_seasons)
+        if fixtures.empty:
+            fixtures = self.getFixtures()
+        if team_ratings.empty:
+            team_ratings = self.getTeamRatings(no_seasons, standings)
+            
+        score = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='Score']
+        date = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='Date']
+        
+        # Remove cols for matchdays that haven't played yet
+        score = score.replace("None - None", np.nan)
+        score = score.dropna(axis=1, how='all')
+        no_cols = score.shape[1]
+        # Drop those same columns
+        form_over_time = date.drop(date.iloc[:, no_cols:], axis=1)
+                    
+        for col_idx in range(no_cols):
+            teams_played_col, scores_col, home_aways_col = self.lastNGames(5, col_idx+1, fixtures)
+            form_over_time[f'Matchday {col_idx+1}', 'Teams Played'] = teams_played_col
+            form_over_time[f'Matchday {col_idx+1}', 'Scores'] = scores_col
+            form_over_time[f'Matchday {col_idx+1}', 'HomeAway'] = home_aways_col
+            
+            # Form string and goal differences column
+            form_str_col = []
+            goal_differences_col = []
+            for scores, home_aways in zip(scores_col, home_aways_col):
+                form_str_col.append(self.formString(scores, home_aways))
+                
+                # Build goal differences of last games played from perspective of current team
+                goal_differences = []
+                for score, home_away in zip(scores, home_aways):
+                    home, _, away = score.split(' ')
+                    if home != 'None' and away != 'None':
+                        diff = int(home) - int(away)
+                        if diff > 0 and home_away == 'Home' or diff < 0 and home_away == 'Home':
+                            goal_differences.append(diff)
+                        elif diff < 0 and home_away == 'Away' or diff > 0 and home_away == 'Away':
+                            goal_differences.append(diff*-1)
+                        else:
+                            goal_differences.append(0)
+                goal_differences_col.append(goal_differences)
+            form_over_time[f'Matchday {col_idx+1}', 'Form'] = form_str_col
+            form_over_time[f'Matchday {col_idx+1}', 'GDs'] = goal_differences_col
+
+            form_rating_col = []
+            for teams_played, form_str, gds in zip(teams_played_col, form_str_col, goal_differences_col):
+                rating = self.calcFormRating(teams_played, form_str, gds, team_ratings)
+                form_rating_col.append(rating)
+            form_over_time[f'Matchday {col_idx+1}', 'Form Rating %'] = form_rating_col
+            
+            played_star_team_col = []
+            for teams_played in teams_played_col:
+                ratings = [form_over_time[f'Matchday {col_idx+1}', 'Form Rating %'][team_name] for team_name in list(map(self.initialsToTeamNames, teams_played))]
+                played_star_team_col.append([team_rating > 70 for team_rating in ratings])
+            form_over_time[f'Matchday {col_idx+1}', 'Played Star Team'] = played_star_team_col
+            
+            won_against_star_team_col = []
+            for played_star_team, form_str in zip(played_star_team_col, form_str_col):  # Team has played games this season
+                won_against_star_team_col.append([(result == 'W' and pst == True) for result, pst in zip(form_str.replace(',', ''), played_star_team)])
+            form_over_time[f'Matchday {col_idx+1}', 'Won Against Star Team'] = won_against_star_team_col
+            
+            
+        form_over_time.sort_index(axis=1, inplace=True)
+        form_over_time.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False, inplace=True)
+
+            
+        if display: 
+            print(form_over_time)
     
     
     # ------------ Position Over Time Dataframe ------------
     
     def getGDAndPts(self, score, home_away):
-        if type(score) == str:  # If scoreline exists
+        if type(score) == str:  # If score exists and game has been played
             home, _, away = score.split(' ')
             home, away = int(home), int(away)
             
@@ -174,7 +325,7 @@ class Data:
         score = score.replace("None - None", np.nan)
         score = score.dropna(axis=1, how='all')
         no_cols = score.shape[1]
-        # Drop the same columns
+        # Drop those same columns
         home_away = home_away.drop(home_away.iloc[:, no_cols:], axis=1) 
         date = date.drop(date.iloc[:, no_cols:], axis=1)
         
@@ -206,13 +357,13 @@ class Data:
             position_over_time.sort_values(by=[(f'Matchday {col_idx+1}', 'Points'), (f'Matchday {col_idx+1}', 'GD')], ascending=False, inplace=True)
             # If on the last and most recent column, ensure matchday positions is 
             # exactly the same order as from API standings data 
-            if col_idx == no_cols-1:
+            if col_idx == no_cols - 1:
                 # Reorder to the order as standings data
                 position_over_time = position_over_time.reindex(standings.index)
 
             position_over_time[f'Matchday {col_idx+1}', 'Position'] = np.arange(1, 21)
             
-            position_over_time.sort_index(axis=1, inplace=True)
+        position_over_time.sort_index(axis=1, inplace=True)
                 
         if display:
             print(position_over_time)
@@ -239,8 +390,10 @@ class Data:
         else:
             return team_name[:3].upper()
     
-    def calcFormPercentage(self, team_name, form_str, teams_played_list, form, team_ratings):
-        form_percentage = 50
+    def calcCurrentFormPercentage(self, team_name, teams_played_list, form, team_ratings):
+        form_percentage = 50  # Default percentage, moves up or down based on performance
+        form_str = form['Form'][team_name]
+        
         if form_str != None:  # If games have been played this season
             form_str = form_str.replace(',', '')
             for form_idx, result in enumerate(form_str):
@@ -248,21 +401,21 @@ class Data:
                 team_name = self.initialsToTeamNames(teams_played_list[form_idx])
                 # Increament form score based on rating of the team they've won, drawn or lost against
                 if result == 'W':
-                    #print("W PLUS", (team_ratings.loc[team_name]['Total Rating']) * 100,  "/", len(form_str), "  X  ", form['GDs'][row_idx][form_idx], "=", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx])
+                    # print("W PLUS", (team_ratings.loc[team_name]['Total Rating']) * 100,  "/", len(form_str), "  X  ", form['GDs'][row_idx][form_idx], "=", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx])
                     form_percentage += ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * abs(form['GDs'][team_name][form_idx])
                 elif result == 'D':
                     # print("D PLUS", team_ratings.loc[form.index.values.tolist()[row_idx]]['Total Rating'], "-", (team_ratings.loc[team_name]['Total Rating']), "=", ((team_ratings.loc[form.index.values.tolist()[row_idx]]['Total Rating'] - (team_ratings.loc[team_name]['Total Rating'])) * 100) / len(form_str))
                     form_percentage +=  ((team_ratings.loc[team_name]['Total Rating'] - (team_ratings.loc[team_name]['Total Rating'])) * 100) / len(form_str)
                 elif result == 'L':
                     # print("L MINUS", (team_ratings.iloc[0]['Total Rating'] * 100), "-", (team_ratings.loc[team_name]['Total Rating']) * 100, "/", len(form_str), " X ", form['GDs'][row_idx][form_idx], "=", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx])
-                    form_percentage -= ((team_ratings.iloc[0]['Total Rating'] - team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * abs(form['GDs'][team_name][form_idx])
+                    form_percentage -= ((team_ratings.iloc[0]['Total Rating'] - team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str) * abs(form['GDs'][team_name][form_idx]))
                 #print(form_percentage)
                     
         # Cap rating
         if form_percentage > 100:
             form_percentage = 100
         elif form_percentage < 0:
-            form_percentage = 0;
+            form_percentage = 0
             
         return form_percentage
     
@@ -309,7 +462,7 @@ class Data:
         form.sort_index(inplace=True)
                         
         team_initials_col = df_team_names.values.tolist()
-        scorelines_col = df_scores.values.tolist()
+        scores_col = df_scores.values.tolist()
         home_aways_col = df_home_aways.values.tolist()
                 
         for idx, team_played_list in enumerate(team_initials_col):
@@ -317,31 +470,31 @@ class Data:
             team_initials_col[idx] = list(map(self.teamNameToInitials, team_played_list))
             # Reverse lists to get most recent game on the left hand side
             team_initials_col[idx].reverse()
-            scorelines_col[idx].reverse()
+            scores_col[idx].reverse()
             home_aways_col[idx].reverse()
             # Only keep 5 most recent teams played
             if len(team_played_list) > 5:
                 team_initials_col[idx] = team_played_list[:5]
-                scorelines_col[idx] = scorelines_col[:5]
+                scores_col[idx] = scores_col[:5]
                 home_aways_col[idx] = home_aways_col[:5]
             else:
                 # Remove empty values
                 team_initials_col[idx] = list(filter(lambda x : x != '', team_initials_col[idx]))
-                scorelines_col[idx] = list(filter(lambda x : x != '', scorelines_col[idx]))
+                scores_col[idx] = list(filter(lambda x : x != '', scores_col[idx]))
                 home_aways_col[idx] = list(filter(lambda x : x != '', home_aways_col[idx]))
 
         form['Teams Played'] = team_initials_col
-        form['Scorelines'] = scorelines_col
+        form['Scores'] = scores_col
         form['HomeAways'] = home_aways_col
         
         
         # Goal difference column
         goal_differences_col = []
-        for team_name, scorelines in form['Scorelines'].iteritems():
+        for team_name, scores in form['Scores'].iteritems():
             goal_differences = []
-            for list_idx, scoreline in enumerate(scorelines):
-                if scoreline != '':
-                    home, _, away = scoreline.split(' ')
+            for list_idx, score in enumerate(scores):
+                if score != '':
+                    home, _, away = score.split(' ')
                     if form['HomeAways'][team_name][list_idx] == 'Home':
                         gd = int(home) - int(away)
                     elif form['HomeAways'][team_name][list_idx] == 'Away':
@@ -362,14 +515,16 @@ class Data:
         current_forms = []
         for team_name, teams_played in form['Teams Played'].iteritems():
             # ---- Build played star team column ----
-            played_star_team_col.append([self.starTeam(team_name, team_ratings) for team_name in list(map(self.initialsToTeamNames, teams_played))])
+            # Append list of booleans as to whether each of the last 5 teams played were a star team
+            played_star_team_col.append([self.starTeam(name, team_ratings) 
+                                         for name in list(map(self.initialsToTeamNames, teams_played))])
             
             # ---- Build current form column -----
-            form_str = form['Form'][team_name]
-            form_percentage = self.calcFormPercentage(team_name, form_str, teams_played, form, team_ratings)
+            # Append form rating percentage based on last 5 teams played
+            form_percentage = self.calcCurrentFormPercentage(team_name, teams_played, form, team_ratings)
             current_forms.append(form_percentage)
-        form['Played Star Team'] = played_star_team_col
         form['Current Form Rating %'] = current_forms
+        form['Played Star Team'] = played_star_team_col
 
 
         # Won against star team column (list of booleans for whether the team 
@@ -463,8 +618,8 @@ class Data:
 
         home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(1)=='Home Advantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
-        if (home_advantages[f'{self.season}']['Played at Home'] <= self.games_threshold).all():
-            print("Current season excluded from home advantages calculation -> haven't played enough games.")
+        if (home_advantages[f'{self.season}']['Played at Home'] <= self.home_games_threshold).all():
+            print(f"Current season excluded from home advantages calculation -> haven't all played {self.home_games_threshold} home games.")
             # Drop this seasons column, start from previous season
             home_advantages_cols = home_advantages_cols.iloc[:, :-1]
                     
@@ -472,9 +627,7 @@ class Data:
         home_advantages['Total Home Advantage'] = home_advantages_cols.mean(axis=1).fillna(0)
         home_advantages.sort_values(by='Total Home Advantage', ascending=False, inplace=True)
         home_advantages.index.name = "Team"
-        
-        print(home_advantages)
-        
+                
         if display:
             print(home_advantages)
         return home_advantages
@@ -646,7 +799,7 @@ class Data:
         return rating
     
     def getSeasonWeightings(self, no_seasons):
-        weights = [0.6, 0.30, 0.1]
+        weights = [0.75, 0.20, 0.05]
         weights = np.array(weights[:no_seasons])
         # Normalise list
         weights = list(weights / sum(weights))
@@ -682,7 +835,7 @@ class Data:
 
         # Check whether current season data should be included in each team's total rating
         if (standings[f'{self.season}']['Played'] <= self.games_threshold).all():  # If current season hasn't played enough games
-            print("Current season excluded from team ratings calculation -> haven't played enough games.")
+            print(f"Current season excluded from team ratings calculation -> haven't all played {self.games_threshold} games.")
             include_current_season = False
         else:
             include_current_season = True
@@ -724,14 +877,14 @@ class Data:
             home_advantages = self.createHomeAdvantages(no_seasons)
 
         # Input team rating dataframe to grade upcoming fixtures
-        gdv = GenDataVis()
+        graph = GraphData()
         if team == None:
             print("Updating all team fixtures graphs...")
             for team_name in fixtures.index.values.tolist():
-                gdv.genFixturesGraph(team_name, fixtures, team_ratings, home_advantages, display=display)
+                graph.genFixturesGraph(team_name, fixtures, team_ratings, home_advantages, display=display)
         else:
             print(f"Updating {team} fixture graph...")
-            gdv.genFixturesGraph(team, fixtures, team_ratings, home_advantages, display=display)
+            graph.genFixturesGraph(team, fixtures, team_ratings, home_advantages, display=display)
     
     @timebudget
     def updatePositionOverTime(self, position_over_time, fixtures, standings, display=False, team=None):
@@ -740,28 +893,28 @@ class Data:
         if position_over_time.empty:
             position_over_time = self.createPositionOverTime(fixtures, standings)
             
-        gdv = GenDataVis()
+        graph = GraphData()
         if team == None:
             print("Updating all teams positions over time graphs...")
             for team_name in position_over_time.index.values.tolist():
-                gdv.genPositionOverTimeGraph(team_name, position_over_time, display=display)
+                graph.genPositionOverTimeGraph(team_name, position_over_time, display=display)
         else:
             print(f"Updating {team} positions over time graph...")
-            gdv.genPositionOverTimeGraph(team, position_over_time, display=display)
+            graph.genPositionOverTimeGraph(team, position_over_time, display=display)
 
     @timebudget
     def updateGoalsScoredAndConceded(self, position_over_time, fixtures, standings, display=False, team=None):
         if position_over_time.empty:
             position_over_time = self.createPositionOverTime(fixtures, standings)
             
-        gdv = GenDataVis()
+        graph = GraphData()
         if team == None:
             print("Updating all teams goals scored and conceded over time graphs...")
             for team_name in position_over_time.index.values.tolist():
-                gdv.genGoalsScoredAndConceded(team_name, position_over_time, display=display)
+                graph.genGoalsScoredAndConceded(team_name, position_over_time, display=display)
         else:
             print(f"Updating {team} goals scored and conceded over time graph...")
-            gdv.genGoalsScoredAndConceded(team, position_over_time, display=display)
+            graph.genGoalsScoredAndConceded(team, position_over_time, display=display)
         
     @timebudget
     def updateAll(self, no_seasons, team=None, display_tables=False, display_graphs=False, request_new=True):
@@ -780,6 +933,7 @@ class Data:
         self.home_advantages = self.createHomeAdvantages(no_seasons, display=display_tables, request_new=request_new)
         self.form = self.createForm(no_seasons, self.fixtures, self.standings, self.team_ratings, display=display_tables)
         self.position_over_time = self.createPositionOverTime(self.fixtures, self.standings, display=display_tables, request_new=request_new)
+        self.form_over_time = self.createFormOverTime(no_seasons, self.fixtures, self.standings, self.team_ratings, display=display_tables)
 
         # ----- Update Graphs ------
         self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display_graphs, team=team)
@@ -791,5 +945,5 @@ class Data:
 
 if __name__ == "__main__":
     data = Data(2020)
-    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=False, request_new=False)
+    data.updateAll(3, team='Liverpool FC', display_tables=True, display_graphs=False, request_new=False)
 

@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import datetime
 
 
-class GenDataVis:
+class GraphData:
     
     team_colours = {
         'Sheffield United FC': 'rgb(238, 39, 55)',
