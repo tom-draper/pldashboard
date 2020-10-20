@@ -20,7 +20,7 @@ class Data:
         self.games_threshold = 4
         self.home_games_threshold = 5
         self.star_team_threshold = 0.75
-                
+                        
         # List of current season teams, updated when updating standings 
         self.team_names = None  
         
@@ -70,7 +70,8 @@ class Data:
         return self.standings.loc[team_name, f'{self.season}']['Position']
 
     def getForm(self, team_name):
-        form = self.form.loc[team_name]['Form']
+        latest_matchday = list(self.form.columns.unique(level=0))[-1]
+        form = self.form[latest_matchday].loc[team_name]['Form']
         if form == None:
             form = []
         else:
@@ -79,13 +80,16 @@ class Data:
         return form
 
     def getRecentTeamsPlayed(self, team_name):
-        return self.form.loc[team_name]['Teams Played']
+        latest_matchday = list(self.form.columns.unique(level=0))[-1]
+        return self.form[latest_matchday].loc[team_name]['Teams Played']
     
     def getCurrentFormRating(self, team_name):
-        return self.form.loc[team_name]['Current Form Rating %'].round(1)
+        latest_matchday = list(self.form.columns.unique(level=0))[-1]
+        return self.form[latest_matchday].loc[team_name]['Form Rating %'].round(1)
     
     def getWonAgainstStarTeam(self, team_name):
-        won_against_star_team = self.form.loc[team_name]['Won Against Star Team']
+        latest_matchday = list(self.form.columns.unique(level=0))[-1]
+        won_against_star_team = self.form[latest_matchday].loc[team_name]['Won Against Star Team']
         # Replace boolean values with CSS tag for super win image
         won_against_star_team = ["star-team" if x else "not-star-team" for x in won_against_star_team]
         return won_against_star_team
@@ -213,13 +217,11 @@ class Data:
     @timebudget
     def createFormOverTime(self, no_seasons, fixtures, standings, team_ratings, display=False):
         print("Creating form over time dataframe...")
-        
-        form_over_time = pd.DataFrame()
-        
-        if standings.empty:
-            standings = self.getStandings(no_seasons)
+                
         if fixtures.empty:
             fixtures = self.getFixtures()
+        if standings.empty:
+            standings = self.getStandings(no_seasons)
         if team_ratings.empty:
             team_ratings = self.getTeamRatings(no_seasons, standings)
             
@@ -278,13 +280,13 @@ class Data:
                 won_against_star_team_col.append([(result == 'W' and pst == True) for result, pst in zip(form_str.replace(',', ''), played_star_team)])
             form_over_time[f'Matchday {col_idx+1}', 'Won Against Star Team'] = won_against_star_team_col
             
-            
         form_over_time.sort_index(axis=1, inplace=True)
         form_over_time.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False, inplace=True)
-
             
         if display: 
             print(form_over_time)
+        
+        return form_over_time
     
     
     # ------------ Position Over Time Dataframe ------------
@@ -931,9 +933,9 @@ class Data:
         # Ratings for each team, based on last "no_seasons" seasons standings table
         self.team_ratings = self.createTeamRatings(no_seasons, self.standings, display=display_tables)
         self.home_advantages = self.createHomeAdvantages(no_seasons, display=display_tables, request_new=request_new)
-        self.form = self.createForm(no_seasons, self.fixtures, self.standings, self.team_ratings, display=display_tables)
+        #self.form = self.createForm(no_seasons, self.fixtures, self.standings, self.team_ratings, display=display_tables)
+        self.form = self.createFormOverTime(no_seasons, self.fixtures, self.standings, self.team_ratings, display=display_tables)
         self.position_over_time = self.createPositionOverTime(self.fixtures, self.standings, display=display_tables, request_new=request_new)
-        self.form_over_time = self.createFormOverTime(no_seasons, self.fixtures, self.standings, self.team_ratings, display=display_tables)
 
         # ----- Update Graphs ------
         self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display_graphs, team=team)
