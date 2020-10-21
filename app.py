@@ -34,8 +34,8 @@ def hello():
 @app.route("/fulham")
 def team():
     rule = request.url_rule
-    # Get team name from current URL
-    team_name = rule.rule[1:]
+    
+    team_name = rule.rule[1:]  # Get hypehenated team name from current URL
     full_team_name = team_name.replace('-', ' ').title().replace('And', 'and') + ' FC'
 
     # Get data values to display on team webpage
@@ -59,5 +59,5 @@ def team():
 
 
 if __name__ == '__main__':
-    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=True)
+    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=False)
     app.run(debug=False)

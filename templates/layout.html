@@ -45,7 +45,7 @@
     {% if team == "None" %}
       <title>Premier League</title>
     {% else %}
-      <title>{{ team.replace('-', ' ').title() }}</title>
+      <title>{{ team.replace('-', ' ').title().replace('And', 'and')  }}</title>
     {% endif %}
   </head>
   <body>
@@ -56,7 +56,7 @@
     {% else %}
       <div class="header {{team}}">
         <a id="back-button" href="/"></a>
-        <a class="title {{team.replace(' ', '-') + '-secondary'}}" href="/{{team}}">{{ team.replace('-', ' ').title() }}</a>
+        <a class="title {{team.replace(' ', '-') + '-secondary'}}" href="/{{team}}">{{ team.replace('-', ' ').title().replace('And', 'and') }}</a>
       </div>
     {% endif %}
     <div class="page-content">
