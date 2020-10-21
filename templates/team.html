@@ -70,8 +70,10 @@
     <!-- <img src='../static/club_badges/{{team}}.png'/ alt=""> -->
   </div>
   <div class="form-graph row-graph">
-    <h1>Form</h1>
-    <div class="graph">Graph Coming Soon</div>
+    <h1>Form Over Time</h1>
+    <div class="graph">
+      {% include 'graphs/{}/form_over_time_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
+    </div>
   </div>
 </div>
 <div class="row">

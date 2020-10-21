@@ -19,15 +19,18 @@ class Data:
         # Number of games played in a season for season data to be used
         self.games_threshold = 4
         self.home_games_threshold = 5
-        self.star_team_threshold = 0.75
+        self.star_team_threshold = 75
                         
         # List of current season teams, updated when updating standings 
         self.team_names = None  
         
+        # Dataframes to build
         self.fixtures = pd.DataFrame()
         self.standings = pd.DataFrame()
         self.team_ratings = pd.DataFrame()
         self.home_advantages = pd.DataFrame()
+        self.form = pd.DataFrame()
+        self.position_over_time = pd.DataFrame()
         
         self.name_to_initials = {
             'Brighton and Hove Albion FC': 'BHA',
@@ -283,7 +286,7 @@ class Data:
             played_star_team_col = []
             for teams_played in teams_played_col:
                 ratings = [form_over_time[f'Matchday {col_idx+1}', 'Form Rating %'][team_name] for team_name in list(map(self.initialsToTeamNames, teams_played))]
-                played_star_team_col.append([team_rating > 70 for team_rating in ratings])
+                played_star_team_col.append([team_rating > self.star_team_threshold for team_rating in ratings])
             form_over_time[f'Matchday {col_idx+1}', 'Played Star Team'] = played_star_team_col
             
             won_against_star_team_col = []
@@ -730,6 +733,26 @@ class Data:
             graph.genFixturesGraph(team, fixtures, team_ratings, home_advantages, display=display)
     
     @timebudget
+    def updateFormOverTime(self, no_seasons, form, fixtures, standings, team_ratings, star_team_threshold, display=False, team=None):
+        if standings.empty:
+            standings = self.createStandings(no_seasons)
+        if fixtures.empty:
+            fixtures = self.createFixtures()
+        if team_ratings.empty:
+            team_ratings = self.createTeamRatings(no_seasons, standings)
+        if form.empty:
+            form = self.createForm(fixtures, standings, team_ratings)
+            
+        graph = GraphData()
+        if team == None:
+            print("Updating all teams form over time graphs...")
+            for team_name in form.index.values.tolist():
+                graph.genFormOverTimeGraph(team_name, form, star_team_threshold, display=display)
+        else:
+            print(f"Updating {team} form over time graph...")
+            graph.genFormOverTimeGraph(team, form, star_team_threshold, display=display)
+    
+    @timebudget
     def updatePositionOverTime(self, position_over_time, fixtures, standings, display=False, team=None):
         if fixtures.empty:
             fixtures = self.createFixtures()
@@ -780,6 +803,7 @@ class Data:
 
         # ----- Update Graphs ------
         self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display_graphs, team=team)
+        self.updateFormOverTime(no_seasons, self.form, self.fixtures, self.standings, self.team_ratings, self.star_team_threshold, display=display_graphs, team=team)
         self.updatePositionOverTime(self.position_over_time, self.fixtures, self.standings, display=display_graphs, team=team)
         self.updateGoalsScoredAndConceded(self.position_over_time, self.fixtures, self.standings, display=display_graphs, team=team)
 
@@ -788,5 +812,5 @@ class Data:
 
 if __name__ == "__main__":
     data = Data(2020)
-    data.updateAll(3, team='Liverpool FC', display_tables=True, display_graphs=False, request_new=False)
+    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=True, request_new=False)
 

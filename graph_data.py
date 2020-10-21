@@ -115,6 +115,7 @@ class GraphData:
                                       line=dict(color="black",
                                                 width=1,
                                                 dash="dot")))
+        
         fig.update_layout(
             yaxis=dict(
                 title_text="Calculated Team Rating %",
@@ -152,6 +153,114 @@ class GraphData:
         file_team_name = '_'.join(team_name.lower().split()[:-1]).replace('&', 'and')
         plotly.offline.plot(
             fig, filename=f'./templates/graphs/{file_team_name}/fixtures_{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
+        
+    def genFormOverTimeGraph(self, team_name, form, star_team_threshold, display=False):
+        """
+
+        Args:
+            team_name ([type]): [description]
+            position_over_time ([type]): [description]
+            display (bool, optional): [description]. Defaults to False.
+        """
+        x_cols = form.iloc[:, form.columns.get_level_values(1) == 'Date']
+        y_cols = form.iloc[:, form.columns.get_level_values(1) == 'Form Rating %']
+
+        # All ys have the same x date values
+        x = []
+        for _, col_data in x_cols.iteritems():
+            # Take the mean date for that matchday
+            # Convert from numpy date to datetime format
+            mean_date = sum(col_data.values.tolist()) / \
+                len(col_data.values.tolist())
+            x.append(datetime.utcfromtimestamp(mean_date/1e9))
+
+        ys = []
+        for _, row_data in y_cols.iterrows():
+            y = row_data.values.tolist()
+            ys.append(y)
+
+        names = form.index.values.tolist()
+        
+        fig = go.Figure()
+        
+        for idx, y in enumerate(ys):
+            if names[idx] != team_name:
+                fig.add_trace(go.Scatter(x=x, 
+                                         y=y, 
+                                         name=names[idx],
+                                         mode='lines',
+                                         line=dict(color='#d3d3d3'),
+                                         showlegend=False,
+                                         hovertemplate=f"<b>{names[idx]}</b><br>" + "Matchday %{x}<br>%{y}%<extra></extra>",
+                                         hoverinfo=('x+y'),
+                                         ))
+            else:
+                # Save index the input teams is found for plotting the final line
+                team_idx = idx
+        # Add this as teams name last to have this line on top
+        fig.add_trace(go.Scatter(x=x,
+                                 y=ys[team_idx],
+                                 name=names[team_idx],
+                                 mode='lines',
+                                 line=dict(color=self.team_colours[names[team_idx]],
+                                           width=4),
+                                 showlegend=False,
+                                 hovertemplate=f"<b>{names[team_idx]}</b><br>" + "Matchday %{x}<br>%{y}%<extra></extra>",
+                                 hoverinfo=('x+y'),
+                                 ))
+        
+        # Add background yellow zone for star teams zone
+        # fig.add_shape(type="rect",
+        #             x0=x[0],
+        #             y0=star_team_threshold,
+        #             x1=x[-1],
+        #             y1=100,
+        #             line=dict(
+        #                 width=0,
+        #             ),
+        #             fillcolor="#FFDA03",
+        #             opacity=0.3,
+        #             layer="below",
+        # )
+        
+
+        fig.update_layout(
+            yaxis=dict(
+                title_text="Form Rating %",
+                ticktext=([i for i in range(0, 101, 10)]),
+                tickvals=([i for i in range(0, 101, 10)]),
+                # autorange="reversed",
+                showgrid=False,
+                showline=False,
+                zeroline=False,
+            ),
+            xaxis=dict(
+                title_text="Matchday",
+                linecolor="black",
+                tickmode="array",
+                dtick=1,
+                ticktext=[str(i) for i in range(1, len(x)+1)],
+                tickvals=x,
+                showgrid=False,
+                showline=False,
+            ),
+            margin=dict(
+                l=50,
+                r=50,
+                b=10,
+                t=10,
+                pad=4
+            ),
+            plot_bgcolor='#fafafa',
+            paper_bgcolor='#fafafa',
+        )
+        
+
+        if display:
+            fig.show()
+        
+        file_team_name = '_'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/form_over_time_{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
 
     def genPositionOverTimeGraph(self, team_name, position_over_time, display=False):
         """Creates and saves a plotly line graph displaying the Premier League 
@@ -213,6 +322,44 @@ class GraphData:
                                  hovertemplate=f"<b>{names[team_idx]}</b><br>" + "Matchday %{x}<br>%{y}th<extra></extra>",
                                  hoverinfo=('x+y'),
                                  ))
+        
+        # Add background yellow zone for star teams zone
+        fig.add_shape(type="rect",
+                    x0=x[0],
+                    y0=4,
+                    x1=x[-1],
+                    y1=1,
+                    line=dict(
+                        width=0,
+                    ),
+                    fillcolor="#03AC13",
+                    opacity=0.3,
+                    layer="below",
+        )
+        fig.add_shape(type="rect",
+                    x0=x[0],
+                    y0=6,
+                    x1=x[-1],
+                    y1=4,
+                    line=dict(
+                        width=0,
+                    ),
+                    fillcolor="#008080",
+                    opacity=0.3,
+                    layer="below",
+        )
+        fig.add_shape(type="rect",
+                    x0=x[0],
+                    y0=20,
+                    x1=x[-1],
+                    y1=17,
+                    line=dict(
+                        width=0,
+                    ),
+                    fillcolor="#800000",
+                    opacity=0.3,
+                    layer="below",
+        )
 
         fig.update_layout(
             yaxis=dict(
