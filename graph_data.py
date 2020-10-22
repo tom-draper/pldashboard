@@ -100,7 +100,7 @@ class GraphData:
                                                     colorscale=colour_scale),
                                         line=dict(color='#737373'),
                                         text=details,
-                                        hovertemplate="<b>%{text}</b> <br>%{x|%d %B, %Y}<br>Rating: %{y:.2f}%<extra></extra>",
+                                        hovertemplate="<b>%{text}</b> <br>%{x|%d %b, %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
                                         hoverinfo=('x+y+text'),
                                         ))
 
@@ -191,7 +191,7 @@ class GraphData:
                                          mode='lines',
                                          line=dict(color='#d3d3d3'),
                                          showlegend=False,
-                                         hovertemplate=f"<b>{names[idx]}</b><br>" + "Matchday %{x}<br>%{y}%<extra></extra>",
+                                         hovertemplate=f"<b>{names[idx]}</b><br>" + "Matchday %{x}<br>Form: <b>%{y:.1f}%</b><extra></extra>",
                                          hoverinfo=('x+y'),
                                          ))
             else:
@@ -205,7 +205,7 @@ class GraphData:
                                  line=dict(color=self.team_colours[names[team_idx]],
                                            width=4),
                                  showlegend=False,
-                                 hovertemplate=f"<b>{names[team_idx]}</b><br>" + "Matchday %{x}<br>%{y}%<extra></extra>",
+                                 hovertemplate=f"<b>{names[team_idx]}</b><br>" + "Matchday %{x}<br>Form: <b>%{y:.1f}%</b><extra></extra>",
                                  hoverinfo=('x+y'),
                                  ))
         
