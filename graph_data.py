@@ -100,7 +100,7 @@ class GraphData:
                                                     colorscale=colour_scale),
                                         line=dict(color='#737373'),
                                         text=details,
-                                        hovertemplate="<b>%{text}</b> <br>%{x|%d %b, %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
+                                        hovertemplate="<b>%{text}</b> <br>%{x|%d %b %Y}, Matchday %{x}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
                                         hoverinfo=('x+y+text'),
                                         ))
 
@@ -131,8 +131,10 @@ class GraphData:
                 linecolor="black",
                 showgrid=False,
                 showline=False,
-                ticktext=[i for i in range(2, len(x)+2, 2)],
-                tickvals=[x[i] for i in range(1, len(x)+1, 2)],
+                ticktext=[i for i in range(1, len(x)+1)],
+                tickvals=[x[i] for i in range(0, len(x))],
+                # ticktext=[i for i in range(2, len(x)+2, 2)],
+                # tickvals=[x[i] for i in range(1, len(x)+1, 2)],
             ),
             margin=dict(
                 l=50,

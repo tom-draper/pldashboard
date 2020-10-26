@@ -218,6 +218,17 @@ img {
 }
 
 
+.next-game-prediction {
+  margin: 0px 10px;
+}
+
+.prediction {
+  margin-top: 20px;
+  font-size: 70px;
+  font-weight: 800;
+}
+
+
 .debug {
   border: 4px solid rgb(46, 46, 46);
 }

@@ -248,7 +248,7 @@ class Data:
         no_cols = score.shape[1]
         # Drop those same columns
         form_over_time = date.drop(date.iloc[:, no_cols:], axis=1)
-                    
+                            
         for col_idx in range(no_cols):
             teams_played_col, scores_col, home_aways_col = self.lastNGames(5, col_idx+1, fixtures)
             form_over_time[f'Matchday {col_idx+1}', 'Teams Played'] = teams_played_col
@@ -283,12 +283,16 @@ class Data:
                 form_rating_col.append(rating)
             form_over_time[f'Matchday {col_idx+1}', 'Form Rating %'] = form_rating_col
             
+            # Column (list of booleans) for whether last 5 games have been against 
+            # a team with a long term (multiple season) rating over a certain 
+            # threshold (a star team)
             played_star_team_col = []
             for teams_played in teams_played_col:
-                ratings = [form_over_time[f'Matchday {col_idx+1}', 'Form Rating %'][team_name] for team_name in list(map(self.initialsToTeamNames, teams_played))]
+                ratings = [team_ratings['Total Rating'][team_name] for team_name in list(map(self.initialsToTeamNames, teams_played))]
                 played_star_team_col.append([team_rating > self.star_team_threshold for team_rating in ratings])
             form_over_time[f'Matchday {col_idx+1}', 'Played Star Team'] = played_star_team_col
             
+            # Column (list of booleans) for whether last 5 games have won against a star team
             won_against_star_team_col = []
             for played_star_team, form_str in zip(played_star_team_col, form_str_col):  # Team has played games this season
                 won_against_star_team_col.append([(result == 'W' and pst == True) for result, pst in zip(form_str.replace(',', ''), played_star_team)])
@@ -812,5 +816,5 @@ class Data:
 
 if __name__ == "__main__":
     data = Data(2020)
-    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=True, request_new=False)
+    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=False, request_new=False)
 
