@@ -247,9 +247,9 @@ img {
   align-items: center;
 }
 .donation {
-  width: 38px;
-  height: 38px;
-  margin: 0px 2px;
+  width: 30px;
+  height: 30px;
+  margin-right: 8px;
   align-self: center;
 }
 .donation-text {
