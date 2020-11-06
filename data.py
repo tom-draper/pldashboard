@@ -75,6 +75,12 @@ class Data:
     def getForm(self, team_name):
         latest_matchday = list(self.form.columns.unique(level=0))[-1]
         form = self.form[latest_matchday].loc[team_name]['Form']
+        
+        # If team hasn't yet played in current matchday, use previous matchday's form
+        if len(form) != 5:
+            previous_matchday = list(self.form.columns.unique(level=0))[-2]
+            form = self.form[previous_matchday].loc[team_name]['Form']
+        
         if form == None:
             form = []
         else:
@@ -84,15 +90,35 @@ class Data:
 
     def getRecentTeamsPlayed(self, team_name):
         latest_matchday = list(self.form.columns.unique(level=0))[-1]
-        return self.form[latest_matchday].loc[team_name]['Teams Played']
+        latest_teams_played = self.form[latest_matchday].loc[team_name]['Teams Played']
+        
+        if len(latest_teams_played) == 5:
+            # If team has already played this game week
+            return latest_teams_played
+        else:
+            # Use previous matchday's games played list
+            previous_matchday = list(self.form.columns.unique(level=0))[-2]
+            return self.form[previous_matchday].loc[team_name]['Teams Played']
     
     def getCurrentFormRating(self, team_name):
-        latest_matchday = list(self.form.columns.unique(level=0))[-1]
-        return self.form[latest_matchday].loc[team_name]['Form Rating %'].round(1)
+        matchday = list(self.form.columns.unique(level=0))[-1]  # Latest matchday
+        latest_teams_played = self.form[matchday].loc[team_name]['Teams Played']
+        
+        # If team hasn't yet played this matchday use previous matchday data
+        if len(latest_teams_played) != 5:
+            matchday = list(self.form.columns.unique(level=0))[-2]
+        
+        return self.form[matchday].loc[team_name]['Form Rating %'].round(1)
     
     def getWonAgainstStarTeam(self, team_name):
         latest_matchday = list(self.form.columns.unique(level=0))[-1]
         won_against_star_team = self.form[latest_matchday].loc[team_name]['Won Against Star Team']
+        
+        # If team hasn't yet played this matchday use previous matchday data
+        if len(won_against_star_team) != 5:
+            previous_matchday = list(self.form.columns.unique(level=0))[-2]
+            won_against_star_team = self.form[previous_matchday].loc[team_name]['Won Against Star Team']
+            
         # Replace boolean values with CSS tag for super win image
         won_against_star_team = ["star-team" if x else "not-star-team" for x in won_against_star_team]
         return won_against_star_team
@@ -204,28 +230,32 @@ class Data:
         form_percentage = 50  # Default percentage, moves up or down based on performance
         
         if form_str != None:  # If games have been played this season
+            #print(form_str)
+            #print(teams_played)
             form_str = form_str.replace(',', '')
             for form_idx, result in enumerate(form_str):
                 # Convert opposition team initials to their name 
                 team_name = self.initialsToTeamNames(teams_played[form_idx])
+
+                #print("ON ", form_percentage)
                 # Increament form score based on rating of the team they've won, drawn or lost against
                 if result == 'W':
-                    # print("W PLUS", (team_ratings.loc[team_name]['Total Rating']) * 100,  "/", len(form_str), "  X  ", form['GDs'][row_idx][form_idx], "=", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx])
+                    #print("W PLUS", (team_ratings.loc[team_name]['Total Rating']) * 100,  "/", len(form_str), "  X  ", abs(gds[form_idx]), "=", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * abs(gds[form_idx]))
                     form_percentage += ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * abs(gds[form_idx])
                 elif result == 'D':
-                    # print("D PLUS", team_ratings.loc[form.index.values.tolist()[row_idx]]['Total Rating'], "-", (team_ratings.loc[team_name]['Total Rating']), "=", ((team_ratings.loc[form.index.values.tolist()[row_idx]]['Total Rating'] - (team_ratings.loc[team_name]['Total Rating'])) * 100) / len(form_str))
+                    #print("D PLUS", team_ratings.loc[team_name]['Total Rating'], "-", (team_ratings.loc[team_name]['Total Rating']), "=", ((team_ratings.loc[team_name]['Total Rating'] - (team_ratings.loc[team_name]['Total Rating'])) * 100) / len(form_str))
                     form_percentage +=  ((team_ratings.loc[team_name]['Total Rating'] - (team_ratings.loc[team_name]['Total Rating'])) * 100) / len(form_str)
                 elif result == 'L':
-                    # print("L MINUS", (team_ratings.iloc[0]['Total Rating'] * 100), "-", (team_ratings.loc[team_name]['Total Rating']) * 100, "/", len(form_str), " X ", form['GDs'][row_idx][form_idx], "=", ((team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str)) * form['GDs'][row_idx][form_idx])
+                    #print("L MINUS", (team_ratings.iloc[0]['Total Rating'] * 100), "-", (team_ratings.loc[team_name]['Total Rating']) * 100, "/", len(form_str), " X ", abs(gds[form_idx]), "= -", ((team_ratings.iloc[0]['Total Rating'] - team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str) * abs(gds[form_idx])))
                     form_percentage -= ((team_ratings.iloc[0]['Total Rating'] - team_ratings.loc[team_name]['Total Rating']) * 100 / len(form_str) * abs(gds[form_idx]))
-                #print(form_percentage)
                     
         # Cap rating
         if form_percentage > 100:
             form_percentage = 100
         elif form_percentage < 0:
             form_percentage = 0
-            
+        
+        #print(form_percentage)
         return form_percentage
     
     @timebudget

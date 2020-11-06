@@ -100,7 +100,7 @@ class GraphData:
                                                     colorscale=colour_scale),
                                         line=dict(color='#737373'),
                                         text=details,
-                                        hovertemplate="<b>%{text}</b>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
+                                        hovertemplate="<b>%{text}</b><br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
                                         hoverinfo=('x+y+text'),
                                         ))
 

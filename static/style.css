@@ -1,4 +1,13 @@
 
+@font-face {
+  font-family: "Radikal Medium";
+  src: url("/static/fonts/Radikal-Medium.ttf");
+}
+@font-face {
+  font-family: "VT323";
+  src: url("/static/fonts/VT323-Regular.ttf");
+}
+
 * {
   font-family: "Radikal Medium";
 }
@@ -13,7 +22,7 @@ h1 {
   margin-bottom: 20px;
 }
 
-a {
+.main-link {
   font-size: 30px;
   text-decoration: none;
   position: relative;
@@ -231,17 +240,17 @@ img {
 
 /* Footer */
 .main-page-footer {
-  padding: 40px 0px;
+  padding: 1% 0%;
   height: auto;
-  margin-top: 20px;
+  margin-top: 2%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .footer {
-  padding: 40px 0px;
+  padding: 80px 0px;
   height: auto;
-  margin-top: 50px;
+  margin-top: 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -256,19 +265,22 @@ img {
   align-self: center;
   font-family: "VT323";
 }
-a.donation-link {
+.footer-link {
   display: flex;
-  font-size: 23px;
+  text-decoration: none;
   font-weight: 500;
-
-  top: 0%;
-  position: initial;
+}
+.donation-link {
+  font-size: 23px;
+}
+.data-link {
+  text-decoration: underline;
 }
 .footer-item {
-  margin: 10px 0px;
+  margin: 15px 0px;
 }
 .footer-text {
-  color: rgb(96, 96, 96);
+  color: rgba(0, 0, 0, 0.37);
 }
 
 
