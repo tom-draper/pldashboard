@@ -65,6 +65,11 @@ class Data:
             
         }
     
+    def getCurrentMatchday(self):
+        # Returns "Matchday X"
+        return list(self.form.columns.unique(level=0))[-1]
+
+    
     # -------- Functions for loading pages ------------
     # Functions that are called inside Flask page load functions
     # Returns data to used to display information on webpage
@@ -73,7 +78,7 @@ class Data:
         return self.standings.loc[team_name, f'{self.season}']['Position']
 
     def getForm(self, team_name):
-        latest_matchday = list(self.form.columns.unique(level=0))[-1]
+        latest_matchday = self.getCurrentMatchday()
         form = self.form[latest_matchday].loc[team_name]['Form']
         
         # If team hasn't yet played in current matchday, use previous matchday's form
@@ -89,7 +94,7 @@ class Data:
         return form
 
     def getRecentTeamsPlayed(self, team_name):
-        latest_matchday = list(self.form.columns.unique(level=0))[-1]
+        latest_matchday = self.getCurrentMatchday()
         latest_teams_played = self.form[latest_matchday].loc[team_name]['Teams Played']
         
         if len(latest_teams_played) == 5:
@@ -101,7 +106,7 @@ class Data:
             return self.form[previous_matchday].loc[team_name]['Teams Played']
     
     def getCurrentFormRating(self, team_name):
-        matchday = list(self.form.columns.unique(level=0))[-1]  # Latest matchday
+        matchday = self.getCurrentMatchday()# Latest matchday
         latest_teams_played = self.form[matchday].loc[team_name]['Teams Played']
         
         # If team hasn't yet played this matchday use previous matchday data
@@ -111,7 +116,7 @@ class Data:
         return self.form[matchday].loc[team_name]['Form Rating %'].round(1)
     
     def getWonAgainstStarTeam(self, team_name):
-        latest_matchday = list(self.form.columns.unique(level=0))[-1]
+        latest_matchday = self.getCurrentMatchday()
         won_against_star_team = self.form[latest_matchday].loc[team_name]['Won Against Star Team']
         
         # If team hasn't yet played this matchday use previous matchday data
@@ -164,6 +169,42 @@ class Data:
             
         return table_snippet, table_css_styles
 
+    def getNextTeamToPlay(self, team_name):
+        team_name = self.next_games['Next Game'].loc[team_name]
+        team_name = ' '.join(team_name.split(' ')[:-1])  # Remove 'FC' from end
+        return team_name
+    
+    
+    
+    # ---------------------- Next games dataframe ---------------------------
+    
+    def createNextGames(self, display=False):
+        if self.fixtures.empty:
+            raise ValueError('Error when creating next_games dataframe: fixtures dataframe empty')
+        if self.form.empty:
+            raise ValueError('Error when creating next_games dataframe: form dataframe empty')
+        
+        next_games = pd.DataFrame()
+        
+        matchday = self.getCurrentMatchday()
+        matchday_no = int(matchday.split(' ')[-1])
+        
+        next_team_col = []
+        for idx, row in self.fixtures[matchday].iterrows():
+            if row['Status'] == 'SCHEDULED':  # If not yet played matchday game
+                team_name = row['Team']
+            else:
+                team_name = self.fixtures[f'Matchday {matchday_no+1}'].loc[idx]['Team']
+            next_team_col.append(team_name)
+        
+        next_games['Next Game'] = next_team_col
+        
+        next_games.index = self.fixtures.index
+                
+        if display:
+            print(next_games)
+        
+        return next_games
     
     
     # ------------------------- Form dataframe -------------------------------
@@ -255,35 +296,34 @@ class Data:
         elif form_percentage < 0:
             form_percentage = 0
         
-        #print(form_percentage)
         return form_percentage
     
     @timebudget
-    def createForm(self, no_seasons, fixtures, standings, team_ratings, display=False):
+    def createForm(self, no_seasons, display=False):
         print("Creating form over time dataframe...")
                 
-        if fixtures.empty:
-            fixtures = self.getFixtures()
-        if standings.empty:
-            standings = self.getStandings(no_seasons)
-        if team_ratings.empty:
-            team_ratings = self.getTeamRatings(no_seasons, standings)
+        if self.fixtures.empty:
+            raise ValueError('Error when creating form dataframe: fixtures dataframe empty')
+        if self.standings.empty:
+            raise ValueError('Error when creating form dataframe: standings dataframe empty')
+        if self.team_ratings.empty:
+            raise ValueError('Error when creating form dataframe: team_ratings dataframe empty')
             
-        score = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='Score']
-        date = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='Date']
+        score = self.fixtures.iloc[:, self.fixtures.columns.get_level_values(1)=='Score']
+        date = self.fixtures.iloc[:, self.fixtures.columns.get_level_values(1)=='Date']
         
         # Remove cols for matchdays that haven't played yet
         score = score.replace("None - None", np.nan)
         score = score.dropna(axis=1, how='all')
         no_cols = score.shape[1]
         # Drop those same columns
-        form_over_time = date.drop(date.iloc[:, no_cols:], axis=1)
+        form = date.drop(date.iloc[:, no_cols:], axis=1)
                             
         for col_idx in range(no_cols):
-            teams_played_col, scores_col, home_aways_col = self.lastNGames(5, col_idx+1, fixtures)
-            form_over_time[f'Matchday {col_idx+1}', 'Teams Played'] = teams_played_col
-            form_over_time[f'Matchday {col_idx+1}', 'Scores'] = scores_col
-            form_over_time[f'Matchday {col_idx+1}', 'HomeAway'] = home_aways_col
+            teams_played_col, scores_col, home_aways_col = self.lastNGames(5, col_idx+1, self.fixtures)
+            form[f'Matchday {col_idx+1}', 'Teams Played'] = teams_played_col
+            form[f'Matchday {col_idx+1}', 'Scores'] = scores_col
+            form[f'Matchday {col_idx+1}', 'HomeAway'] = home_aways_col
             
             # Form string and goal differences column
             form_str_col = []
@@ -304,37 +344,37 @@ class Data:
                         else:
                             goal_differences.append(0)
                 goal_differences_col.append(goal_differences)
-            form_over_time[f'Matchday {col_idx+1}', 'Form'] = form_str_col
-            form_over_time[f'Matchday {col_idx+1}', 'GDs'] = goal_differences_col
+            form[f'Matchday {col_idx+1}', 'Form'] = form_str_col
+            form[f'Matchday {col_idx+1}', 'GDs'] = goal_differences_col
 
             form_rating_col = []
             for teams_played, form_str, gds in zip(teams_played_col, form_str_col, goal_differences_col):
-                rating = self.calcFormRating(teams_played, form_str, gds, team_ratings)
+                rating = self.calcFormRating(teams_played, form_str, gds, self.team_ratings)
                 form_rating_col.append(rating)
-            form_over_time[f'Matchday {col_idx+1}', 'Form Rating %'] = form_rating_col
+            form[f'Matchday {col_idx+1}', 'Form Rating %'] = form_rating_col
             
             # Column (list of booleans) for whether last 5 games have been against 
             # a team with a long term (multiple season) rating over a certain 
             # threshold (a star team)
             played_star_team_col = []
             for teams_played in teams_played_col:
-                ratings = [team_ratings['Total Rating'][team_name] for team_name in list(map(self.initialsToTeamNames, teams_played))]
+                ratings = [self.team_ratings['Total Rating'][team_name] for team_name in list(map(self.initialsToTeamNames, teams_played))]
                 played_star_team_col.append([team_rating > self.star_team_threshold for team_rating in ratings])
-            form_over_time[f'Matchday {col_idx+1}', 'Played Star Team'] = played_star_team_col
+            form[f'Matchday {col_idx+1}', 'Played Star Team'] = played_star_team_col
             
             # Column (list of booleans) for whether last 5 games have won against a star team
             won_against_star_team_col = []
             for played_star_team, form_str in zip(played_star_team_col, form_str_col):  # Team has played games this season
                 won_against_star_team_col.append([(result == 'W' and pst == True) for result, pst in zip(form_str.replace(',', ''), played_star_team)])
-            form_over_time[f'Matchday {col_idx+1}', 'Won Against Star Team'] = won_against_star_team_col
+            form[f'Matchday {col_idx+1}', 'Won Against Star Team'] = won_against_star_team_col
             
-        form_over_time.sort_index(axis=1, inplace=True)
-        form_over_time.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False, inplace=True)
+        form = form.sort_index(axis=1)
+        form = form.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False)
             
         if display: 
-            print(form_over_time)
+            print(form)
         
-        return form_over_time
+        return form
     
     
     
@@ -361,21 +401,22 @@ class Data:
         return 0, 0
     
     @timebudget
-    def createPositionOverTime(self, fixtures, standings, display=False, request_new=True):
+    def createPositionOverTime(self, display=False):
         print("Creating position over time dataframe...")
 
-        if fixtures.empty:
-            fixtures = self.createFixtures(display=display, request_new=request_new)
+        if self.fixtures.empty:
+            raise ValueError('Error when creating position_over_time dataframe: fixtures dataframe empty')
+        if self.standings.empty:
+            raise ValueError('Error when creating position_over_time dataframe: standings dataframe empty')
                 
         position_over_time = pd.DataFrame()
         
-        score = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='Score']
-        home_away = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='HomeAway']
-        date = fixtures.iloc[:, fixtures.columns.get_level_values(1)=='Date']
+        score = self.fixtures.iloc[:, self.fixtures.columns.get_level_values(1)=='Score']
+        home_away = self.fixtures.iloc[:, self.fixtures.columns.get_level_values(1)=='HomeAway']
+        date = self.fixtures.iloc[:, self.fixtures.columns.get_level_values(1)=='Date']
         
         # Remove cols for matchdays that haven't played yet
-        score = score.replace("None - None", np.nan)
-        score = score.dropna(axis=1, how='all')
+        score = score.replace("None - None", np.nan).dropna(axis=1, how='all')
         no_cols = score.shape[1]
         # Drop those same columns
         home_away = home_away.drop(home_away.iloc[:, no_cols:], axis=1) 
@@ -411,11 +452,11 @@ class Data:
             # exactly the same order as from API standings data 
             if col_idx == no_cols - 1:
                 # Reorder to the order as standings data
-                position_over_time = position_over_time.reindex(standings.index)
+                position_over_time = position_over_time.reindex(self.standings.index)
 
             position_over_time[f'Matchday {col_idx+1}', 'Position'] = np.arange(1, 21)
             
-        position_over_time.sort_index(axis=1, inplace=True)
+        position_over_time = position_over_time.sort_index(axis=1)
                 
         if display:
             print(position_over_time)
@@ -472,13 +513,13 @@ class Data:
             
             df = pd.DataFrame(d)
             # Drop teams that are not in current season
-            df.drop(df.columns[~df.columns.isin(self.team_names)].values.tolist(), axis=1, inplace=True)
+            df = df.drop(df.columns[~df.columns.isin(self.team_names)].values.tolist(), axis=1)
             dfs.append(df)
         
         home_advantages = pd.concat(dfs).T
         home_advantages.index.name = "Team"
         # Clean up
-        home_advantages.fillna(0, inplace=True)
+        home_advantages = home_advantages.fillna(0)
         home_advantages = home_advantages.astype(int)
         
         
@@ -493,7 +534,7 @@ class Data:
             # Home advantage = percentage wins at home - percentage wins 
             home_advantages[f'{self.season-i}', 'Home Advantage'] = (home_advantages[f'{self.season-i}']['Home Wins %'] - home_advantages[f'{self.season-i}']['Wins %']) / 100
         
-        home_advantages.sort_index(axis=1, inplace=True)
+        home_advantages = home_advantages.sort_index(axis=1)
 
 
         home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(1)=='Home Advantage']
@@ -505,7 +546,7 @@ class Data:
                     
         # List of all home advantege column names that will be used to calculate final column
         home_advantages['Total Home Advantage'] = home_advantages_cols.mean(axis=1).fillna(0)
-        home_advantages.sort_values(by='Total Home Advantage', ascending=False, inplace=True)
+        home_advantages = home_advantages.sort_values(by='Total Home Advantage', ascending=False)
         home_advantages.index.name = "Team"
                 
         if display:
@@ -572,16 +613,16 @@ class Data:
                                                    (f'{self.season-i}', 'GD'),))
 
             df.index = df[f'{self.season-i}']['Team']
-            df.drop(columns=['Team'], level=1, inplace=True)
+            df = df.drop(columns=['Team'], level=1)
             
             if i == 0:  # If building current season table
                 standings = standings.append(df)
                 self.team_names = team_names
             else:
                 # Drop team rows that are no longer in the current season
-                df.drop(df[~df.index.isin(standings.index)].index, inplace=True)
+                df = df.drop(df[~df.index.isin(standings.index)].index)
                 # Drop the Form column from previous seasons
-                df.drop(columns=['Form'], level=1, inplace=True)
+                df = df.drop(columns=['Form'], level=1)
                 # Add season standings to main standings dataframe 
                 standings = pd.concat([standings, df], axis=1)
         standings.index.name = "Team"
@@ -686,21 +727,21 @@ class Data:
         return weights
     
     @timebudget
-    def createTeamRatings(self, no_seasons, standings, display=False):
+    def createTeamRatings(self, no_seasons, display=False):
         print("Creating team ratings dataframe...")
         
-        if standings.empty:
-            standings = self.getStandings(no_seasons)
+        if self.standings.empty:
+            raise ValueError('Error when creating team_ratings dataframe: standings dataframe empty')
         
         # Add current season team names to the object team dataframe
-        team_ratings = pd.DataFrame(index=standings.index)
+        team_ratings = pd.DataFrame(index=self.standings.index)
 
         # Create column for each included season
         for i in range(0, no_seasons):
             team_ratings[f'Rating {i}Y Ago'] = np.nan
                 
         # Insert rating values for each row
-        for team_name, row in standings.iterrows():
+        for team_name, row in self.standings.iterrows():
             for i in range(no_seasons):
                 rating = self.calcRating(row[f'{self.season-i}']['Position'], row[f'{self.season-i}']['Points'], row[f'{self.season-i}']['GD'])
                 team_ratings.loc[team_name, 'Rating {}Y Ago'.format(i)] = rating
@@ -714,7 +755,7 @@ class Data:
             team_ratings[f'Normalised Rating {i}Y Ago'] = (team_ratings[f'Rating {i}Y Ago'] - team_ratings[f'Rating {i}Y Ago'].min()) / (team_ratings[f'Rating {i}Y Ago'].max() - team_ratings[f'Rating {i}Y Ago'].min())
 
         # Check whether current season data should be included in each team's total rating
-        if (standings[f'{self.season}']['Played'] <= self.games_threshold).all():  # If current season hasn't played enough games
+        if (self.standings[f'{self.season}']['Played'] <= self.games_threshold).all():  # If current season hasn't played enough games
             print(f"Current season excluded from team ratings calculation -> haven't all played {self.games_threshold} games.")
             include_current_season = False
         else:
@@ -733,8 +774,8 @@ class Data:
             team_ratings['Total Rating'] += w[i-start_n] * team_ratings[f'Normalised Rating {i}Y Ago']
 
         # Tidy dataframe
-        team_ratings.sort_values(by="Total Rating", ascending=False, inplace=True)
-        team_ratings.rename(columns={'Rating 0Y Ago': 'Rating Current', 'Normalised Rating 0Y Ago': 'Normalised Rating Current'}, inplace=True)
+        team_ratings = team_ratings.sort_values(by="Total Rating", ascending=False)
+        team_ratings = team_ratings.rename(columns={'Rating 0Y Ago': 'Rating Current', 'Normalised Rating 0Y Ago': 'Normalised Rating Current'})
         
         if display:
             print(team_ratings)
@@ -746,75 +787,75 @@ class Data:
     # ----------- Update Plotly graph HTML files ------------    
     
     @timebudget
-    def updateFixtures(self, no_seasons, standings, fixtures, team_ratings, home_advantages, display=False, team=None):
-        if standings.empty:
-            standings = self.createStandings(no_seasons)
-        if fixtures.empty:
-            fixtures = self.createFixtures()
-        if team_ratings.empty:
-            team_ratings = self.createTeamRatings(no_seasons, standings)
-        if home_advantages.empty:
-            home_advantages = self.createHomeAdvantages(no_seasons)
+    def updateFixtures(self, display=False, team=None):
+        if self.standings.empty:
+            raise ValueError('Error when creating fixtures dataframe: standings dataframe empty')
+        if self.fixtures.empty:
+            raise ValueError('Error when creating fixtures dataframe: fixtures dataframe empty')
+        if self.team_ratings.empty:
+            raise ValueError('Error when creating fixtures dataframe: team_ratings dataframe empty')
+        if self.home_advantages.empty:
+            raise ValueError('Error when creating fixtures dataframe: home_advantages dataframe empty')
 
         # Input team rating dataframe to grade upcoming fixtures
         graph = GraphData()
         if team == None:
             print("Updating all team fixtures graphs...")
-            for team_name in fixtures.index.values.tolist():
-                graph.genFixturesGraph(team_name, fixtures, team_ratings, home_advantages, display=display)
+            for team_name in self.fixtures.index.values.tolist():
+                graph.genFixturesGraph(team_name, self.fixtures, self.team_ratings, self.home_advantages, display=display)
         else:
             print(f"Updating {team} fixture graph...")
-            graph.genFixturesGraph(team, fixtures, team_ratings, home_advantages, display=display)
+            graph.genFixturesGraph(team, self.fixtures, self.team_ratings, self.home_advantages, display=display)
     
     @timebudget
-    def updateFormOverTime(self, no_seasons, form, fixtures, standings, team_ratings, star_team_threshold, display=False, team=None):
-        if standings.empty:
-            standings = self.createStandings(no_seasons)
-        if fixtures.empty:
-            fixtures = self.createFixtures()
-        if team_ratings.empty:
-            team_ratings = self.createTeamRatings(no_seasons, standings)
-        if form.empty:
-            form = self.createForm(fixtures, standings, team_ratings)
+    def updateFormOverTime(self, star_team_threshold, display=False, team=None):
+        if self.standings.empty:
+            raise ValueError('Error when creating form_over_time dataframe: standings dataframe empty')
+        if self.fixtures.empty:
+            raise ValueError('Error when creating form_over_time dataframe: fixtures dataframe empty')
+        if self.team_ratings.empty:
+            raise ValueError('Error when creating form_over_time dataframe: team_ratings dataframe empty')
+        if self.form.empty:
+            raise ValueError('Error when creating form_over_time dataframe: form dataframe empty')
             
         graph = GraphData()
         if team == None:
             print("Updating all teams form over time graphs...")
-            for team_name in form.index.values.tolist():
-                graph.genFormOverTimeGraph(team_name, form, star_team_threshold, display=display)
+            for team_name in self.form.index.values.tolist():
+                graph.genFormOverTimeGraph(team_name, self.form, star_team_threshold, display=display)
         else:
             print(f"Updating {team} form over time graph...")
-            graph.genFormOverTimeGraph(team, form, star_team_threshold, display=display)
+            graph.genFormOverTimeGraph(team, self.form, star_team_threshold, display=display)
     
     @timebudget
-    def updatePositionOverTime(self, position_over_time, fixtures, standings, display=False, team=None):
-        if fixtures.empty:
-            fixtures = self.createFixtures()
-        if position_over_time.empty:
-            position_over_time = self.createPositionOverTime(fixtures, standings)
-            
+    def updatePositionOverTime(self, display=False, team=None):
+        if self.fixtures.empty:
+            raise ValueError('Error when creating position_over_time dataframe: fixtures dataframe empty')
+        if self.position_over_time.empty:
+            raise ValueError('Error when creating position_over_time dataframe: position_over_time dataframe empty')
+                        
         graph = GraphData()
         if team == None:
             print("Updating all teams positions over time graphs...")
-            for team_name in position_over_time.index.values.tolist():
-                graph.genPositionOverTimeGraph(team_name, position_over_time, display=display)
+            for team_name in self.position_over_time.index.values.tolist():
+                graph.genPositionOverTimeGraph(team_name, self.position_over_time, display=display)
         else:
             print(f"Updating {team} positions over time graph...")
-            graph.genPositionOverTimeGraph(team, position_over_time, display=display)
+            graph.genPositionOverTimeGraph(team, self.position_over_time, display=display)
 
     @timebudget
-    def updateGoalsScoredAndConceded(self, position_over_time, fixtures, standings, display=False, team=None):
-        if position_over_time.empty:
-            position_over_time = self.createPositionOverTime(fixtures, standings)
+    def updateGoalsScoredAndConceded(self, display=False, team=None):
+        if self.position_over_time.empty:
+            print("Error")
             
         graph = GraphData()
         if team == None:
             print("Updating all teams goals scored and conceded over time graphs...")
-            for team_name in position_over_time.index.values.tolist():
-                graph.genGoalsScoredAndConceded(team_name, position_over_time, display=display)
+            for team_name in self.position_over_time.index.values.tolist():
+                graph.genGoalsScoredAndConceded(team_name, self.position_over_time, display=display)
         else:
             print(f"Updating {team} goals scored and conceded over time graph...")
-            graph.genGoalsScoredAndConceded(team, position_over_time, display=display)
+            graph.genGoalsScoredAndConceded(team, self.position_over_time, display=display)
         
     @timebudget
     def updateAll(self, no_seasons, team=None, display_tables=False, display_graphs=False, request_new=True):
@@ -829,17 +870,18 @@ class Data:
         # Fixtures for each team
         self.fixtures = self.createFixtures(display=display_tables, request_new=request_new)
         # Ratings for each team, based on last "no_seasons" seasons standings table
-        self.team_ratings = self.createTeamRatings(no_seasons, self.standings, display=display_tables)
+        self.team_ratings = self.createTeamRatings(no_seasons, display=display_tables)
         self.home_advantages = self.createHomeAdvantages(no_seasons, display=display_tables, request_new=request_new)
         #self.form = self.createForm(no_seasons, self.fixtures, self.standings, self.team_ratings, display=display_tables)
-        self.form = self.createForm(no_seasons, self.fixtures, self.standings, self.team_ratings, display=display_tables)
-        self.position_over_time = self.createPositionOverTime(self.fixtures, self.standings, display=display_tables, request_new=request_new)
+        self.form = self.createForm(no_seasons, display=display_tables)
+        self.position_over_time = self.createPositionOverTime(display=display_tables)
+        self.next_games = self.createNextGames(display=display_tables)
 
         # ----- Update Graphs ------
-        self.updateFixtures(no_seasons, self.standings, self.fixtures, self.team_ratings, self.home_advantages, display=display_graphs, team=team)
-        self.updateFormOverTime(no_seasons, self.form, self.fixtures, self.standings, self.team_ratings, self.star_team_threshold, display=display_graphs, team=team)
-        self.updatePositionOverTime(self.position_over_time, self.fixtures, self.standings, display=display_graphs, team=team)
-        self.updateGoalsScoredAndConceded(self.position_over_time, self.fixtures, self.standings, display=display_graphs, team=team)
+        self.updateFixtures(display=display_graphs, team=team)
+        self.updateFormOverTime(self.star_team_threshold, display=display_graphs, team=team)
+        self.updatePositionOverTime(display=display_graphs, team=team)
+        self.updateGoalsScoredAndConceded(display=display_graphs, team=team)
 
 
 

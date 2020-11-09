@@ -29,9 +29,7 @@
       <div class="icon-name pos-3">{{ recent_teams_played[3] }}</div>
       <div class="icon-name pos-4">{{ recent_teams_played[4] }}</div>
     </div>
-    <div class="current-form">
-      Current Form: {{ form_rating }}%
-    </div>
+    <div class="current-form">Current Form: {{ form_rating }}%</div>
     <div class="table-snippet">
       <div class="divider"></div>
         <div class="table-row">
@@ -70,8 +68,25 @@
     <!-- <img src='../static/club_badges/{{team}}.png'/ alt=""> -->
   </div>
   <div class="next-game-prediction row-graph">
-    <h1>Next Game</h1>
-    <div class="prediction">2-1</div>
+    <div class="next-game-title {{ next_team_to_play.lower().replace(' ', '-') }}">
+      <h1 class="next-game-title-text {{ next_team_to_play.lower().replace(' ', '-') }}-secondary">Next Game: {{next_team_to_play}}</h1>
+    </div>
+    <!-- <div class="next-game-underline {{ next_team_to_play.lower().replace(' ', '-') }}"></div> -->
+    <div class="next-game-values">
+      <div class="next-game-logo">
+        Logo
+      </div>
+      <div class="predictions-and-past-results">
+        <div class="predictions">
+          <div class="next-game-item">Score prediction: 2-1</div>
+          <div class="next-game-item">Clean sheet probability: 34%</div>
+        </div>
+        <div class="past-results">
+          <div class="next-game-item">Past Results</div>
+          <div class="next-game-divider {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <div class="row">
@@ -99,12 +114,18 @@
   </div>
 </div>
 <div class="footer">
-  <div class="footer-item footer-text">
-    Data provided by <a class="data-link footer-text" href="https://www.football-data.org/">football-data.org</a>
+  <div class="footer-item-gap footer-text-colour">
+    Data provided by <a class="footer-text-colour underline" href="https://www.football-data.org/">football-data.org</a>
   </div>
-  <a class="footer-link donation-link footer-item" href="https://www.paypal.me/TomDraper">
+  <div class="footer-item-gap footer-text-colour">
+    Graphs created using <a class="footer-text-colour underline" href="https://plotly.com/">Plotly</a>
+  </div>
+  <div class="footer-item-gap footer-text-colour">
+    Font made from <a class="footer-text-colour" href="http://www.onlinewebfonts.com">oNline Web Fonts</a> is licensed by CC BY 3.0
+  </div>
+  <a class="footer-item-gap-large footer-link donation-fontsize" href="https://www.paypal.me/TomDraper">
     <img class="donation" src="static/coin.png">
-    <div class="donation-text footer-text">Donate!</div>
+    <div class="donation-text footer-text-colour">Donate!</div>
   </a>
 </div>
 {% endblock content %}

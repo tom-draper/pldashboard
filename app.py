@@ -42,16 +42,17 @@ def team():
     position = data.getPosition(full_team_name)
     form = data.getForm(full_team_name)
     recent_teams_played = data.getRecentTeamsPlayed(full_team_name)
+    next_team_to_play = data.getNextTeamToPlay(full_team_name)
     form_rating = data.getCurrentFormRating(full_team_name)
     won_against_star_team = data.getWonAgainstStarTeam(full_team_name)
     table_snippet, table_css_styles = data.getTableSnippet(full_team_name)
-    
-    
+        
     return render_template('team.html', 
                            team=team_name,
                            position=position, 
                            form=form,
                            recent_teams_played=recent_teams_played,
+                           next_team_to_play=next_team_to_play,
                            won_against_star_team=won_against_star_team,
                            form_rating=form_rating,
                            table_snippet=table_snippet,
