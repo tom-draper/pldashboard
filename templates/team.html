@@ -73,39 +73,79 @@
     </div>
     <!-- <div class="next-game-underline {{ next_team_to_play.lower().replace(' ', '-') }}"></div> -->
     <div class="next-game-values">
-      <div class="next-game-logo opposition-badge"
-           style="background-image: url('static/club_badges/{{ next_team_to_play.lower().replace(''' ''', '''-''') }}.png');
-                   background-repeat: no-repeat;
-                   background-size: contain;
-                   background-position: center;">
-      </div>
-      <div class="predictions-and-past-results">
+      <div class="predictions-and-logo">
         <div class="predictions">
-          <div class="next-game-item">Score prediction: 2-1</div>
-          <div class="next-game-item">Clean sheet probability: 34%</div>
+          <div class="next-game-item">Score prediction: <b>2 - 1</b></div>
+          <div class="next-game-item">Clean sheet probability: <b>34%</b></div>
         </div>
-        <div class="past-results">
-          <div class="next-game-item">Past Results</div>
-          <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
-          <div class="next-game-item">
-            <div class="past-result">Chelsea 0 - 0 Newcastle United</div>
-            <div class="past-result-date">14th February 2020</div>
+        <div class="next-game-logo opposition-badge"
+            style="background-image: url('static/club_badges/{{ next_team_to_play.lower().replace(''' ''', '''-''') }}.png');
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    background-position: center;">
+        </div>
+      </div>
+      <div class="past-results">
+        <div class="next-game-item" style="font-weight:700;">Previous Results</div>
+        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        <div class="next-game-item">
+          <div class="past-result">
+            <div class="home-team">West Bromwich Albion</div>
+            <div class="score" style="font-weight:800">0 - 0</div>
+            <div class="away-team">Newcastle United</div>
           </div>
-          <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
-          <div class="next-game-item">
-            <div class="past-result">Chelsea 0 - 0 Newcastle United</div>
-            <div class="past-result-date">14th February 2020</div>
+          <div style="clear: both;"></div>
+          <div class="past-result-date">14th February 2020</div>
+        </div>
+        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        <div class="next-game-item">
+          <div class="past-result">
+            <div class="home-team">Newcastle United</div>
+            <div class="score" style="font-weight:800">0 - 0</div>
+            <div class="away-team">West Bromwich Albion</div>
           </div>
-          <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
-          <div class="next-game-item">
-            <div class="past-result">Chelsea 0 - 0 Newcastle United</div>
-            <div class="past-result-date">14th February 2020</div>
+          <div style="clear: both;"></div>
+          <div class="past-result-date">14th March 2020</div>
+        </div>
+        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        <div class="next-game-item">
+          <div class="past-result">
+            <div class="home-team">West Bromwich Albion</div>
+            <div class="score" style="font-weight:800">0 - 0</div>
+            <div class="away-team">Newcastle United</div>
           </div>
-          <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
-          <div class="next-game-item">
-            <div class="past-result">Chelsea 0 - 0 Newcastle United</div>
-            <div class="past-result-date">14th February 2020</div>
+          <div style="clear: both;"></div>
+          <div class="past-result-date">1st April 2020</div>
+        </div>
+        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        <div class="next-game-item">
+          <div class="past-result">
+            <div class="home-team">Newcastle United</div>
+            <div class="score" style="font-weight:800">0 - 0</div>
+            <div class="away-team">West Bromwich Albion</div>
           </div>
+          <div style="clear: both;"></div>
+          <div class="past-result-date">14th October 2020</div>
+        </div>
+        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        <div class="next-game-item">
+          <div class="past-result">
+            <div class="home-team">West Bromwich Albion</div>
+            <div class="score" style="font-weight:800">0 - 0</div>
+            <div class="away-team">Newcastle United</div>
+          </div>
+          <div style="clear: both;"></div>
+          <div class="past-result-date">14th November 2020</div>
+        </div>
+        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        <div class="next-game-item">
+          <div class="past-result">
+            <div class="home-team">Newcastle United</div>
+            <div class="score" style="font-weight:800">0 - 3</div>
+            <div class="away-team">West Bromwich Albion</div>
+          </div>
+          <div style="clear: both;"></div>
+          <div class="past-result-date">2nd May 2011</div>
         </div>
       </div>
     </div>
