@@ -254,6 +254,15 @@ img {
 }
 .past-results {
   margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+}
+.past-result {
+  font-size: 17px;
+}
+.past-result-date {
+  font-size: 14px;
+  color: grey;
 }
 .next-game-item {
   margin: 8px 0px;

@@ -73,8 +73,11 @@
     </div>
     <!-- <div class="next-game-underline {{ next_team_to_play.lower().replace(' ', '-') }}"></div> -->
     <div class="next-game-values">
-      <div class="next-game-logo">
-        Logo
+      <div class="next-game-logo opposition-badge"
+           style="background-image: url('static/club_badges/{{ next_team_to_play.lower().replace(''' ''', '''-''') }}.png');
+                   background-repeat: no-repeat;
+                   background-size: contain;
+                   background-position: center;">
       </div>
       <div class="predictions-and-past-results">
         <div class="predictions">
@@ -83,7 +86,26 @@
         </div>
         <div class="past-results">
           <div class="next-game-item">Past Results</div>
-          <div class="next-game-divider {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+          <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+          <div class="next-game-item">
+            <div class="past-result">Chelsea 0 - 0 Newcastle United</div>
+            <div class="past-result-date">14th February 2020</div>
+          </div>
+          <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+          <div class="next-game-item">
+            <div class="past-result">Chelsea 0 - 0 Newcastle United</div>
+            <div class="past-result-date">14th February 2020</div>
+          </div>
+          <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+          <div class="next-game-item">
+            <div class="past-result">Chelsea 0 - 0 Newcastle United</div>
+            <div class="past-result-date">14th February 2020</div>
+          </div>
+          <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+          <div class="next-game-item">
+            <div class="past-result">Chelsea 0 - 0 Newcastle United</div>
+            <div class="past-result-date">14th February 2020</div>
+          </div>
         </div>
       </div>
     </div>
