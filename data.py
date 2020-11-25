@@ -888,5 +888,5 @@ class Data:
 
 if __name__ == "__main__":
     data = Data(2020)
-    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=False, request_new=False)
+    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=True, request_new=True)
 

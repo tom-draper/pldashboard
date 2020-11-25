@@ -172,7 +172,7 @@ img {
 
 .table-snippet {
   position: relative;
-  margin: 20px 0px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -294,7 +294,7 @@ img {
 }
 .score {
   float: left;
-  min-width: 36px;
+  min-width: 37px;
   text-align: center;
 }
 .away-team {
@@ -402,6 +402,9 @@ img {
   }
   .next-game-prediction {
     margin: 0px 10px;
+  }
+  .next-game-prediction {
+    margin-top: 40px;
   }
 }
 

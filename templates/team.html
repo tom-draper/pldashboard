@@ -77,6 +77,7 @@
         <div class="predictions">
           <div class="next-game-item">Score prediction: <b>2 - 1</b></div>
           <div class="next-game-item">Clean sheet probability: <b>34%</b></div>
+          <div class="next-game-item">Current form: <b>63.2%</b></div>
         </div>
         <div class="next-game-logo opposition-badge"
             style="background-image: url('static/club_badges/{{ next_team_to_play.lower().replace(''' ''', '''-''') }}.png');
@@ -147,6 +148,7 @@
           <div style="clear: both;"></div>
           <div class="past-result-date">2nd May 2011</div>
         </div>
+        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
       </div>
     </div>
   </div>
@@ -184,6 +186,12 @@
   </div>
   <div class="footer-item-gap footer-text-colour">
     Font made from <a class="footer-text-colour" href="http://www.onlinewebfonts.com">oNline Web Fonts</a> is licensed by CC BY 3.0
+  </div>
+  <div class="footer-item-gap footer-text-colour">
+    Created by Tom Draper
+  </div>
+  <div class="footer-text-colour">
+    v1.0
   </div>
   <a class="footer-item-gap-large footer-link donation-fontsize" href="https://www.paypal.me/TomDraper">
     <img class="donation" src="static/coin.png">
