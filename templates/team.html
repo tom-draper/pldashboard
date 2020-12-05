@@ -8,7 +8,7 @@
   </div>
   <div class="fixtures-graph row-graph">
     <h1>Fixtures</h1>
-    <div class="graph">
+    <div class="graph mini-graph">
       {% include 'graphs/{}/fixtures_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
     </div>
   </div>
@@ -92,7 +92,7 @@
       <div class="predictions-and-logo">
         <div class="predictions">
           <div class="next-game-item">Score prediction: <b>2 - 1</b></div>
-          <div class="next-game-item">Clean sheet probability: <b>34%</b></div>
+          <div class="next-game-item">Clean sheet: <b>34%</b></div>
           <div class="next-game-item">Current form: <b>63.2%</b></div>
         </div>
         <div class="next-game-logo opposition-badge"
@@ -171,7 +171,7 @@
 <div class="row">
   <div class="form-graph row-graph">
     <h1>Form Over Time</h1>
-    <div class="graph">
+    <div class="graph full-row-graph">
       {% include 'graphs/{}/form_over_time_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
     </div>
   </div>
@@ -179,7 +179,7 @@
 <div class="row">
   <div class="position-over-time-graph row-graph">
     <h1>Position Over Time</h1>
-    <div class="graph">
+    <div class="graph full-row-graph">
       {% include 'graphs/{}/position_over_time_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
     </div>
   </div>
@@ -187,7 +187,7 @@
 <div class="row">
   <div class="goals-scored-vs-conceded-graph row-graph">
     <h1>Goals Scored vs Goals Conceded</h1>
-    <div class="graph">
+    <div class="graph full-row-graph">
       {% include 'graphs/{}/goals_scored_and_conceded_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
     </div>
   </div>

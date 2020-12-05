@@ -75,7 +75,7 @@ body {
 .row-left {
   display: flex;
   flex-direction: column;
-  width: 720px;
+  width: 800px;
   padding-right: auto;
   margin-right: 40px;
   padding-left: 40px;
@@ -100,11 +100,15 @@ img {
   /* margin: 0px 20px; */
 }
 
+.full-row-graph {
+  margin-left: 10px;
+}
+
 .fixtures-graph {
   display: flex;
   flex-direction: column;
   /* Smaller margin than other graphs because not taking up whole width */
-  margin: 0px 10px;
+  /* margin: 0px 10px; */
 }
 
 .position {
@@ -122,11 +126,11 @@ img {
   user-select: none;
 }
 
-.graph {
+/* .graph {
   width: 100%;
   height: 100%;
   align-self: center;
-}
+} */
 
 
 .current-form-row {
@@ -400,9 +404,9 @@ img {
   .form-details {
     width: 80%;
   }
-  .fixtures-graph {
+  .mini-graph {
     /* Reset margin to match other graphs as no longer on row with other items */
-    margin: 0px 20px;
+    margin-left: 10px;
   }
   .next-game-prediction {
     margin: 0px 10px;
