@@ -3,8 +3,7 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 season = 2020
-data = Data(season)
-
+data = Data(season) 
 
 @app.route("/")
 @app.route("/home")
@@ -45,7 +44,7 @@ def team():
     next_team_to_play = data.getNextTeamToPlay(full_team_name)
     form_rating = data.getCurrentFormRating(full_team_name)
     won_against_star_team = data.getWonAgainstStarTeam(full_team_name)
-    table_snippet, table_css_styles = data.getTableSnippet(full_team_name)
+    table_snippet, table_index_of_this_team = data.getTableSnippet(full_team_name)
         
     return render_template('team.html', 
                            team=team_name,
@@ -56,9 +55,9 @@ def team():
                            won_against_star_team=won_against_star_team,
                            form_rating=form_rating,
                            table_snippet=table_snippet,
-                           table_css_styles=table_css_styles)
+                           table_index_of_this_team=table_index_of_this_team)
 
 
 if __name__ == '__main__':
-    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=True)
+    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=False)
     app.run(debug=False)

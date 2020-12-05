@@ -38,28 +38,44 @@
           <div class="table-element table-gd column-title">GD</div>
           <div class="table-element table-points column-title">Points</div>
         </div>
+
         {% for i in range(table_snippet|length) %}
+          <!-- Divider -->
           {% if i == 0 %}
-            {% if 'this-team' in table_css_styles[i].split(' ') %}
+            {% if (i == table_index_of_this_team) %}
               <div id="big-divider"></div>
             {% else %}
               <div id="divider"></div>
             {% endif %}
           {% else %}
-            {% if 'this-team' in table_css_styles[i-1].split(' ') + table_css_styles[i].split(' ') %}
+            {% if (i-1 == table_index_of_this_team) or (i == table_index_of_this_team) %}
               <div id="big-divider"></div>
             {% else %}
               <div id="divider"></div>
             {% endif %}
           {% endif %}
-          <div class="table-row {{ table_css_styles[i] }}">
-            <div class="table-element table-position {{ table_css_styles[i] }}-secondary">{{ table_snippet[i][0] }}</div>
-            <div class="table-element table-team-name {{ table_css_styles[i] }}-secondary">{{ table_snippet[i][1] }}</div>
-            <div class="table-element table-gd {{ table_css_styles[i] }}-secondary">{{ table_snippet[i][2] }}</div>
-            <div class="table-element table-points {{ table_css_styles[i] }}-secondary">{{ table_snippet[i][3] }}</div>
-          </div>
+
+          <!-- Row of table -->
+          {% if i == table_index_of_this_team %}
+            <!-- Highlight this row as it is the team of the current page -->
+            <div class="table-row this-team" style="background-color: var(--{{ team }});">
+              <div class="table-element table-position this-team" style="color: var(--{{ team }}-secondary);">{{ table_snippet[i][0] }}</div>
+              <div class="table-element table-team-name this-team" style="color: var(--{{ team }}-secondary);">{{ table_snippet[i][1] }}</div>
+              <div class="table-element table-gd this-team" style="color: var(--{{ team }}-secondary);">{{ table_snippet[i][2] }}</div>
+              <div class="table-element table-points this-team" style="color: var(--{{ team }}-secondary);">{{ table_snippet[i][3] }}</div>
+            </div>
+          {% else %}
+            <!-- Generic row -->
+            <div class="table-row">
+              <div class="table-element table-position">{{ table_snippet[i][0] }}</div>
+              <div class="table-element table-team-name">{{ table_snippet[i][1] }}</div>
+              <div class="table-element table-gd">{{ table_snippet[i][2] }}</div>
+              <div class="table-element table-points">{{ table_snippet[i][3] }}</div>
+            </div>
+          {% endif %}
         {% endfor %}
-        {% if 'this-team' in table_css_styles[6].split(' ') %}
+
+        {% if table_index_of_this_team == 6 %}
           <div id="big-divider"></div>
         {% else %}
           <div id="divider"></div>
@@ -67,9 +83,9 @@
     </div>
     <!-- <img src='../static/club_badges/{{team}}.png'/ alt=""> -->
   </div>
-  <div class="next-game-prediction row-graph">
-    <div class="next-game-title {{ next_team_to_play.lower().replace(' ', '-') }}">
-      <h1 class="next-game-title-text {{ next_team_to_play.lower().replace(' ', '-') }}-secondary">Next Game: {{next_team_to_play}}</h1>
+  <div class="next-game-prediction row-graph" style="border: 5px solid var(--{{ next_team_to_play.lower().replace(' ', '-') }});">
+    <div class="next-game-title" style="background-color: var(--{{ next_team_to_play.lower().replace(' ', '-') }});">
+      <h1 class="next-game-title-text" style="color: var(--{{ next_team_to_play.lower().replace(' ', '-') }}-secondary);">Next Game: {{next_team_to_play}}</h1>
     </div>
     <!-- <div class="next-game-underline {{ next_team_to_play.lower().replace(' ', '-') }}"></div> -->
     <div class="next-game-values">
@@ -88,7 +104,7 @@
       </div>
       <div class="past-results">
         <div class="next-game-item" style="font-weight:700;">Previous Results</div>
-        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        <div class="next-game-divider"></div>
         <div class="next-game-item">
           <div class="past-result">
             <div class="home-team">West Bromwich Albion</div>
@@ -98,7 +114,7 @@
           <div style="clear: both;"></div>
           <div class="past-result-date">14th February 2020</div>
         </div>
-        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        <div class="next-game-divider"></div>
         <div class="next-game-item">
           <div class="past-result">
             <div class="home-team">Newcastle United</div>
@@ -108,7 +124,7 @@
           <div style="clear: both;"></div>
           <div class="past-result-date">14th March 2020</div>
         </div>
-        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        <div class="next-game-divider"></div>
         <div class="next-game-item">
           <div class="past-result">
             <div class="home-team">West Bromwich Albion</div>
@@ -118,7 +134,7 @@
           <div style="clear: both;"></div>
           <div class="past-result-date">1st April 2020</div>
         </div>
-        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        <div class="next-game-divider"></div>
         <div class="next-game-item">
           <div class="past-result">
             <div class="home-team">Newcastle United</div>
@@ -128,7 +144,7 @@
           <div style="clear: both;"></div>
           <div class="past-result-date">14th October 2020</div>
         </div>
-        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        <div class="next-game-divider"></div>
         <div class="next-game-item">
           <div class="past-result">
             <div class="home-team">West Bromwich Albion</div>
@@ -138,7 +154,7 @@
           <div style="clear: both;"></div>
           <div class="past-result-date">14th November 2020</div>
         </div>
-        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
+        <div class="next-game-divider"></div>
         <div class="next-game-item">
           <div class="past-result">
             <div class="home-team">Newcastle United</div>
@@ -148,7 +164,6 @@
           <div style="clear: both;"></div>
           <div class="past-result-date">2nd May 2011</div>
         </div>
-        <div class="next-game-divider past-result {{ next_team_to_play.lower().replace(' ', '-') }}"></div>
       </div>
     </div>
   </div>

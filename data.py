@@ -156,18 +156,18 @@ class Data:
         # Only keep relevant columns
         rows = rows[f'{self.season}'][['Position', 'GD', 'Points']]
         
-        # Add the team name into position 1 of each table row
-        # Table row: [pos, name, gd, points]
+        # List of table rows: [ [pos, name, gd, points] ... ]
         table_snippet = rows.values.tolist()
+        # Add the team name into position 1 of each table row
         for row_list, team_name in zip(table_snippet, team_names):
             row_list.insert(1, team_name)
             
         # Make CSS styles lists for team row background colour
-        table_css_styles = [''] * 7
+        # table_css_styles = [''] * 7
         # Make current team the table focus when using css styles 
-        table_css_styles[team_idx] = f"this-team {team_names[team_idx].lower().replace(' ', '-')}"
+        # table_css_styles[team_idx] = f"this-team var(--{team_names[team_idx].lower().replace(' ', '-')})"
             
-        return table_snippet, table_css_styles
+        return table_snippet, team_idx
 
     def getNextTeamToPlay(self, team_name):
         team_name = self.next_games['Next Game'].loc[team_name]
@@ -225,17 +225,17 @@ class Data:
         home_away_col = []
                 
         for _, row in fixtures.iterrows():
-            teams_played = deque([])
-            scores = deque([])
-            home_away = deque([])
+            teams_played = []
+            scores = []
+            home_away = []
             # At each column, group previous 5 columns
             for n in range(matchday_no-n_games+1, matchday_no+1):
                 if n > 0:
                     matchday_result = row[f'Matchday {n}']
                     if matchday_result['Score'] != "None - None":
-                        teams_played.appendleft(matchday_result['Team'])
-                        scores.appendleft(matchday_result['Score'])
-                        home_away.appendleft(matchday_result['HomeAway'])
+                        teams_played.append(matchday_result['Team'])
+                        scores.append(matchday_result['Score'])
+                        home_away.append(matchday_result['HomeAway'])
             teams_played_col.append(teams_played)
             scores_col.append(scores)
             home_away_col.append(home_away)
@@ -368,9 +368,9 @@ class Data:
                 won_against_star_team_col.append([(result == 'W' and pst == True) for result, pst in zip(form_str.replace(',', ''), played_star_team)])
             form[f'Matchday {col_idx+1}', 'Won Against Star Team'] = won_against_star_team_col
             
-        form = form.sort_index(axis=1)
         form = form.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False)
-            
+        form = form.sort_index(level=1)
+                            
         if display: 
             print(form)
         
@@ -456,7 +456,7 @@ class Data:
 
             position_over_time[f'Matchday {col_idx+1}', 'Position'] = np.arange(1, 21)
             
-        position_over_time = position_over_time.sort_index(axis=1)
+        position_over_time = position_over_time.sort_index(level=1)
                 
         if display:
             print(position_over_time)
@@ -656,7 +656,7 @@ class Data:
         print("Creating fixtures dataframe...")
         
         data = self.fixturesData(self.season, request_new=request_new)
-        
+                
         fixtures = pd.DataFrame()
         team_names = []
         matchday = {}
@@ -701,7 +701,7 @@ class Data:
         df_matchday= pd.DataFrame(matchday)
         df_matchday.index = team_names
         fixtures = pd.concat([fixtures, df_matchday], axis=1)
-        
+                
         if display:
             print(fixtures)
         return fixtures
@@ -888,5 +888,5 @@ class Data:
 
 if __name__ == "__main__":
     data = Data(2020)
-    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=True, request_new=True)
+    data.updateAll(3, team='Liverpool FC', display_tables=False, display_graphs=False, request_new=False)
 

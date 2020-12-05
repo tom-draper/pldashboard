@@ -93,7 +93,7 @@ class GraphData:
         
         # fig = px.line(df, x="Date", y="Match", color='country')
         colour_scale = ['#01c626', '#08a825',  '#0b7c20', '#0a661b', '#064411',
-                        '#000000', '#85160f', '#5b1d15', '#ad1a10', '#db1a0d', '#fc1303']
+                        '#000000', '#5b1d15', '#85160f', '#ad1a10', '#db1a0d', '#fc1303']
         fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers',
                                         marker=dict(size=sizes,
                                                     color=y,
@@ -170,7 +170,7 @@ class GraphData:
         """
         x_cols = form.iloc[:, form.columns.get_level_values(1) == 'Date']
         y_cols = form.iloc[:, form.columns.get_level_values(1) == 'Form Rating %']
-
+        
         # All ys have the same x date values
         x = []
         for _, col_data in x_cols.iteritems():
@@ -203,6 +203,7 @@ class GraphData:
             else:
                 # Save index the input teams is found for plotting the final line
                 team_idx = idx
+        
         # Add this as teams name last to have this line on top
         fig.add_trace(go.Scatter(x=x,
                                  y=ys[team_idx],
