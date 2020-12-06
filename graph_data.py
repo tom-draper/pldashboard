@@ -156,9 +156,9 @@ class GraphData:
         if display:
             fig.show()
         # Convert team name into suitable use for filename
-        file_team_name = '_'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+        file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
         plotly.offline.plot(
-            fig, filename=f'./templates/graphs/{file_team_name}/fixtures_{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
+            fig, filename=f'./templates/graphs/{file_team_name}/fixtures-{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
         
     def genFormOverTimeGraph(self, team_name, form, star_team_threshold, display=False):
         """
@@ -266,8 +266,8 @@ class GraphData:
         if display:
             fig.show()
         
-        file_team_name = '_'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/form_over_time_{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
+        file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/form-over-time-{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
 
     def genPositionOverTimeGraph(self, team_name, position_over_time, display=False):
         """Creates and saves a plotly line graph displaying the Premier League 
@@ -402,9 +402,9 @@ class GraphData:
         if display:
             fig.show()
         
-        file_team_name = '_'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+        file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
         plotly.offline.plot(
-            fig, filename=f'./templates/graphs/{file_team_name}/position_over_time_{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
+            fig, filename=f'./templates/graphs/{file_team_name}/position-over-time-{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
     
     def genGoalsScoredAndConceded(self, team_name, position_over_time, display=False):
         """Creates and saves a plotly bar graph displaying the goals scored and 
@@ -524,7 +524,7 @@ class GraphData:
         if display:
             fig.show()
         
-        file_team_name = '_'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/goals_scored_and_conceded_{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
+        file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
         
         

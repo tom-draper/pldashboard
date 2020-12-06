@@ -257,7 +257,7 @@ img {
   flex-direction: column;
 }
 .next-game-prediction {
-  margin: 0px 10px 0px 0px;
+  margin: 0px 20px 0px 0px;
 }
 .next-game-values {
   display: flex;
@@ -409,10 +409,7 @@ img {
     margin-left: 10px;
   }
   .next-game-prediction {
-    margin: 0px 10px;
-  }
-  .next-game-prediction {
-    margin-top: 40px;
+    margin: 40px 10px 0px 10px;
   }
 }
 

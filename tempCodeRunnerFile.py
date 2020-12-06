@@ -1,1 +1,0 @@
-print(form.iloc[:, form.columns.get_level_values(1) == 'Date'])

@@ -9,7 +9,7 @@
   <div class="fixtures-graph row-graph">
     <h1>Fixtures</h1>
     <div class="graph mini-graph">
-      {% include 'graphs/{}/fixtures_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
+      {% include 'graphs/{}/fixtures-{}.html'.format(team, team) %}
     </div>
   </div>
 </div>
@@ -83,20 +83,19 @@
     </div>
     <!-- <img src='../static/club_badges/{{team}}.png'/ alt=""> -->
   </div>
-  <div class="next-game-prediction row-graph" style="border: 5px solid var(--{{ next_team_to_play.lower().replace(' ', '-') }});">
-    <div class="next-game-title" style="background-color: var(--{{ next_team_to_play.lower().replace(' ', '-') }});">
-      <h1 class="next-game-title-text" style="color: var(--{{ next_team_to_play.lower().replace(' ', '-') }}-secondary);">Next Game: {{next_team_to_play}}</h1>
+  <div class="next-game-prediction row-graph" style="border: 5px solid var(--{{ team_playing_next_name_hypenated }});">
+    <div class="next-game-title" style="background-color: var(--{{ team_playing_next_name_hypenated }});">
+      <h1 class="next-game-title-text" style="color: var(--{{ team_playing_next_name_hypenated }}-secondary);">Next Game: {{ team_playing_next_name_hypenated.replace('-', ' ').title().replace('And', 'and') + ' FC' }}</h1>
     </div>
-    <!-- <div class="next-game-underline {{ next_team_to_play.lower().replace(' ', '-') }}"></div> -->
     <div class="next-game-values">
       <div class="predictions-and-logo">
         <div class="predictions">
           <div class="next-game-item">Score prediction: <b>2 - 1</b></div>
-          <div class="next-game-item">Clean sheet: <b>34%</b></div>
-          <div class="next-game-item">Current form: <b>63.2%</b></div>
+          <div class="next-game-item">Clean sheet: <b>35%</b></div>
+          <div class="next-game-item">Current form: <b>{{ team_playing_next_form_rating }}%</b></div>
         </div>
         <div class="next-game-logo opposition-badge"
-            style="background-image: url('static/club_badges/{{ next_team_to_play.lower().replace(''' ''', '''-''') }}.png');
+            style="background-image: url('static/club_badges/{{ team_playing_next_name_hypenated }}.png');
                     background-repeat: no-repeat;
                     background-size: contain;
                     background-position: center;">
@@ -172,7 +171,7 @@
   <div class="form-graph row-graph">
     <h1>Form Over Time</h1>
     <div class="graph full-row-graph">
-      {% include 'graphs/{}/form_over_time_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
+      {% include 'graphs/{}/form-over-time-{}.html'.format(team, team) %}
     </div>
   </div>
 </div>
@@ -180,7 +179,7 @@
   <div class="position-over-time-graph row-graph">
     <h1>Position Over Time</h1>
     <div class="graph full-row-graph">
-      {% include 'graphs/{}/position_over_time_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
+      {% include 'graphs/{}/position-over-time-{}.html'.format(team, team) %}
     </div>
   </div>
 </div>
@@ -188,7 +187,7 @@
   <div class="goals-scored-vs-conceded-graph row-graph">
     <h1>Goals Scored vs Goals Conceded</h1>
     <div class="graph full-row-graph">
-      {% include 'graphs/{}/goals_scored_and_conceded_{}.html'.format(team.replace('-', '_'), team.replace('-', '_')) %}
+      {% include 'graphs/{}/goals-scored-and-conceded-{}.html'.format(team, team) %}
     </div>
   </div>
 </div>

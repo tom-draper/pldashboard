@@ -171,7 +171,6 @@ class Data:
 
     def getNextTeamToPlay(self, team_name):
         team_name = self.next_games['Next Game'].loc[team_name]
-        team_name = ' '.join(team_name.split(' ')[:-1])  # Remove 'FC' from end
         return team_name
     
     
