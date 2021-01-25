@@ -79,7 +79,7 @@ body {
   padding-right: auto;
   margin-right: 40px;
   padding-left: 40px;
-  height: auto;
+  /* height: auto; */
   text-justify: center;
 }
 
@@ -97,7 +97,7 @@ img {
 .row-graph {
   /* height: 100%; */
   width: 100%;
-  /* margin: 0px 20px; */
+  margin: 0px 20px;
 }
 
 .full-row-graph {
@@ -170,7 +170,7 @@ img {
 }
 
 .current-form {
-  font-size: 30px;
+  font-size: 34px;
   margin: 20px 10px;
 }
 
@@ -241,14 +241,12 @@ img {
   margin: auto;
 }
 .next-game-logo {
-  height: 100%;
+  height: 280px;
   margin: 10px;
 }
 .predictions-and-logo {
   font-size: 22px;
   width: 45%;
-  display: flex;
-  flex-direction: column;
 }
 .past-results {
   font-size: 22px;
@@ -261,34 +259,35 @@ img {
 }
 .next-game-values {
   display: flex;
-  margin: 14px 30px 0px 0px;
-
+  margin: 25px 5% 0px 0px;
 }
 .past-result {
   font-size: 17px;
   display: flex;
   margin: 0px 5% 2px 5%;
 }
-/* .home-team {
-  align-self: left;
+
+.Drew {
+  background-color: #e1ae2d60;
 }
-.score {
-  align-self: center;
+.Won {
+  background-color:#4ee1253a
 }
-.away-team {
-  align-self: right;
-} */
+.Lost {
+  background-color: #d3232345
+}
+
 .past-result-date {
   font-size: 14px;
   color: grey;
 }
 .next-game-item {
-  margin-bottom: 8px;
+  padding: 8px 0px;
 }
 .next-game-divider {
   height: 2px;
   width: 100%;
-  margin: 0px auto 8px auto;
+  margin: 0px auto;
   background-color: black;
 }
 
@@ -389,7 +388,7 @@ img {
   }
   .row-left {
     align-self: center;
-    height: auto;
+    /* height: auto; */
   }
   .position-and-badge {
     width: 25%;
@@ -409,7 +408,7 @@ img {
     margin-left: 10px;
   }
   .next-game-prediction {
-    margin: 40px 10px 0px 10px;
+    margin: 50px 20px 0px 20px;
   }
 }
 

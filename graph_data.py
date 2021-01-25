@@ -1,7 +1,6 @@
 import plotly
-import plotly.express as px
 import plotly.graph_objects as go
-import pandas as pd
+import numpy as np
 from datetime import datetime
 
 
@@ -53,26 +52,28 @@ class GraphData:
             home_advantages ([type]): [description]
             display (bool, optional): [description]. Defaults to False.
         """
+        DEFAULT_MARKER_SIZE = 14
+        BIG_MARKER_SIZE = 26  # Used to highlight next game
+        
         # Get row of fixtures dataframe
         team_fixtures = fixtures.loc[team_name]
 
         n_matches = len(team_fixtures.index.levels[0])
 
         now = datetime.now()
-        sizes = [14] * n_matches
+        sizes = [DEFAULT_MARKER_SIZE] * n_matches  # Sizes of each data point marker
 
         x, y, details = [], [], []
         for i in range(n_matches):
             match = team_fixtures[f'Matchday {i+1}']
 
             x.append(datetime.utcfromtimestamp(match['Date'].tolist()/1e9))
-
+            
             # Get rating of the opposition team
             rating = team_ratings.loc[match['Team'], 'Total Rating']
             # Decrease other team's rating if you're playing at home
             if match['HomeAway'] == 'Home':
-                rating *= (1 -
-                           home_advantages.loc[match['Team'], 'Total Home Advantage'][0])
+                rating *= (1 -home_advantages.loc[match['Team'], 'Total Home Advantage'][0])
             y.append(rating)
 
             # Add team played, home or away and the final score if game has already happened
@@ -80,18 +81,17 @@ class GraphData:
             if match['Score'] != "None - None":
                 match_detail += f"  {match['Score']}"
             details.append(match_detail)
+            
             # Increase size of point marker if it's the current upcoming match
-            if i == 0:
+            if i == 0: 
+                # If we haven't played first game of season
                 if now < x[-1]:
-                    sizes[i] = 26
-            elif i != len(team_fixtures) and x[-2] < now <= x[-1]:
-                sizes[i] = 26
+                    sizes[i] = BIG_MARKER_SIZE
+            elif i != n_matches and x[-2] < now <= x[-1]:
+                sizes[i] = BIG_MARKER_SIZE
 
         y = list(map(lambda x: x*100, y))  # Convert to percentages
-
-        df = pd.DataFrame({'Date': x, 'Ratings': y, 'Teams': details})
         
-        # fig = px.line(df, x="Date", y="Match", color='country')
         colour_scale = ['#01c626', '#08a825',  '#0b7c20', '#0a661b', '#064411',
                         '#000000', '#5b1d15', '#85160f', '#ad1a10', '#db1a0d', '#fc1303']
         fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers',
@@ -111,7 +111,6 @@ class GraphData:
                                       y0=0.04,
                                       x1=now,
                                       y1=1.01,
-                                      # line=dict(color="RoyalBlue", width=3),),
                                       line=dict(color="black",
                                                 width=1,
                                                 dash="dot")))
@@ -123,7 +122,6 @@ class GraphData:
                 tickvals=[i for i in range(0, 101, 10)],
                 gridcolor='gray',
                 showline=False,
-                # color="black"
                 zeroline=False,
                 
             ),
@@ -132,13 +130,9 @@ class GraphData:
                 linecolor="black",
                 showgrid=False,
                 showline=False,
-                # ticktext=[i for i in range(1, len(x)+1)],
-                # tickvals=[x[i] for i in range(0, len(x))],
+
                 ticktext=[i for i in range(2, len(x)+2, 2)],
                 tickvals=[x[i] for i in range(1, len(x)+1, 2)],
-                # tickfont = dict(
-                #     size = 10,
-                # ),
             ),
             margin=dict(
                 l=50,
@@ -151,16 +145,14 @@ class GraphData:
             paper_bgcolor='#fafafa',
         )
 
-        # fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='gray')
-        # fig.update_xaxes(showgrid=False)
         if display:
             fig.show()
         # Convert team name into suitable use for filename
         file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
         plotly.offline.plot(
-            fig, filename=f'./templates/graphs/{file_team_name}/fixtures-{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
+            fig, filename=f'./templates/graphs/{file_team_name}/fixtures-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
         
-    def genFormOverTimeGraph(self, team_name, form, star_team_threshold, display=False):
+    def genFormOverTimeGraph(self, team_name, form, display=False):
         """
 
         Args:
@@ -171,14 +163,14 @@ class GraphData:
         x_cols = form.iloc[:, form.columns.get_level_values(1) == 'Date']
         y_cols = form.iloc[:, form.columns.get_level_values(1) == 'Form Rating %']
         
+                        
         # All ys have the same x date values
         x = []
         for _, col_data in x_cols.iteritems():
-            # Take the mean date for that matchday
+            # Take the median date for that matchday
+            median_date = np.median(col_data.values.tolist())
             # Convert from numpy date to datetime format
-            mean_date = sum(col_data.values.tolist()) / \
-                len(col_data.values.tolist())
-            x.append(datetime.utcfromtimestamp(mean_date/1e9))
+            x.append(datetime.utcfromtimestamp(median_date/1e9))
 
         ys = []
         for _, row_data in y_cols.iterrows():
@@ -215,28 +207,12 @@ class GraphData:
                                  hovertemplate=f"<b>{names[team_idx]}</b><br>" + "Matchday %{x}<br>Form: <b>%{y:.1f}%</b><extra></extra>",
                                  hoverinfo=('x+y'),
                                  ))
-        
-        # Add background yellow zone for star teams zone
-        # fig.add_shape(type="rect",
-        #             x0=x[0],
-        #             y0=star_team_threshold,
-        #             x1=x[-1],
-        #             y1=100,
-        #             line=dict(
-        #                 width=0,
-        #             ),
-        #             fillcolor="#FFDA03",
-        #             opacity=0.3,
-        #             layer="below",
-        # )
-        
 
         fig.update_layout(
             yaxis=dict(
                 title_text="Form Rating %",
                 ticktext=([i for i in range(0, 101, 10)]),
                 tickvals=([i for i in range(0, 101, 10)]),
-                # autorange="reversed",
                 showgrid=False,
                 showline=False,
                 zeroline=False,
@@ -267,7 +243,7 @@ class GraphData:
             fig.show()
         
         file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/form-over-time-{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
+        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/form-over-time-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
 
     def genPositionOverTimeGraph(self, team_name, position_over_time, display=False):
         """Creates and saves a plotly line graph displaying the Premier League 
@@ -290,11 +266,10 @@ class GraphData:
         # All ys have the same x date values
         x = []
         for _, col_data in x_cols.iteritems():
-            # Take the mean date for that matchday
+            # Take the median date for that matchday
+            median_date = np.median(col_data.values.tolist())
             # Convert from numpy date to datetime format
-            mean_date = sum(col_data.values.tolist()) / \
-                len(col_data.values.tolist())
-            x.append(datetime.utcfromtimestamp(mean_date/1e9))
+            x.append(datetime.utcfromtimestamp(median_date/1e9))
 
         ys = []
         for _, row_data in y_cols.iterrows():
@@ -404,7 +379,7 @@ class GraphData:
         
         file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
         plotly.offline.plot(
-            fig, filename=f'./templates/graphs/{file_team_name}/position-over-time-{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
+            fig, filename=f'./templates/graphs/{file_team_name}/position-over-time-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
     
     def genGoalsScoredAndConceded(self, team_name, position_over_time, display=False):
         """Creates and saves a plotly bar graph displaying the goals scored and 
@@ -491,8 +466,6 @@ class GraphData:
                 showline=False,
                 zeroline=False,
                 dtick=1,
-                # ticktext=[str(i) for i in range(0, 6)],
-                # tickvals=[i for i in range(0, 6)],
             ),
             xaxis=dict(
                 title_text="Matchday",
@@ -525,6 +498,6 @@ class GraphData:
             fig.show()
         
         file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False})
+        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
         
         

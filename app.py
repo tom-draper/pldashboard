@@ -43,10 +43,12 @@ def team():
     recent_teams_played = data.getRecentTeamsPlayed(full_team_name)
     form_rating = data.getCurrentFormRating(full_team_name)
     won_against_star_team = data.getWonAgainstStarTeam(full_team_name)
-    
+        
     team_playing_next_name = data.getNextTeamToPlay(full_team_name)
-    team_playing_next_form_rating = data.getCurrentFormRating(team_playing_next_name)
     team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
+    team_playing_next_form_rating = data.getCurrentFormRating(team_playing_next_name)
+    team_playing_prev_meetings = data.getPreviousMeetings(full_team_name)
+    print(team_playing_prev_meetings)
     
     table_snippet, table_index_of_this_team = data.getTableSnippet(full_team_name)
         
@@ -57,6 +59,7 @@ def team():
                            recent_teams_played=recent_teams_played,
                            team_playing_next_name_hypenated=team_playing_next_name_hypenated,
                            team_playing_next_form_rating=team_playing_next_form_rating,
+                           team_playing_prev_meetings=team_playing_prev_meetings,
                            won_against_star_team=won_against_star_team,
                            form_rating=form_rating,
                            table_snippet=table_snippet,
@@ -65,4 +68,4 @@ def team():
 
 if __name__ == '__main__':
     data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=False)
-    app.run(debug=False)
+    app.run(host='0.0.0.0', debug=False)
