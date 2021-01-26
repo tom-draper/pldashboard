@@ -1,6 +1,7 @@
 from graph_data import GraphData
 import pandas as pd
 from collections import deque
+from collections import defaultdict
 from timebudget import timebudget
 import numpy as np
 import requests
@@ -161,11 +162,6 @@ class Data:
         # Add the team name into position 1 of each table row
         for row_list, team_name in zip(table_snippet, team_names):
             row_list.insert(1, team_name)
-            
-        # Make CSS styles lists for team row background colour
-        # table_css_styles = [''] * 7
-        # Make current team the table focus when using css styles 
-        # table_css_styles[team_idx] = f"this-team var(--{team_names[team_idx].lower().replace(' ', '-')})"
             
         return table_snippet, team_idx
 
@@ -352,7 +348,7 @@ class Data:
     
     @timebudget
     def createForm(self, display=False):
-        print("Creating form over time dataframe...")
+        print("Creating form dataframe...")
         
         if self.fixtures.empty:
             raise ValueError('Error when creating form dataframe: fixtures dataframe empty')
@@ -569,7 +565,6 @@ class Data:
         
         home_advantages = pd.concat(dfs).T
         home_advantages.index.name = "Team"
-        # Clean up
         home_advantages = home_advantages.fillna(0)
         home_advantages = home_advantages.astype(int)
         
@@ -615,11 +610,13 @@ class Data:
             print("Code:", response.status_code)
             response = response.json()['standings'][0]['table']
             
+            # Save new standings data
             with open(f'data/standings_{season}.json', 'w') as json_file:
                 json.dump(response, json_file)
                 
             return response
         else:
+            # Read standings data
             with open(f'data/standings_{season}.json', 'r') as json_file:
                 return json.load(json_file)
 
@@ -693,26 +690,28 @@ class Data:
             print("Code:", response.status_code)
             response = response.json()['matches']
             
-            # Save new data
+            # Save new fixtures data
             with open(f'data/fixtures_{season}.json', 'w') as json_file:
                 json.dump(response, json_file)
             
             return response
         else:
+            # Read saved fixtures data
             with open(f'data/fixtures_{season}.json', 'r') as json_file:
                 return json.load(json_file)
 
     @timebudget
-    def createFixtures(self, display=False, request_new=True):
+    def createFixtures2(self, display=False, request_new=True):
         print("Creating fixtures dataframe...")
         
+        # Get json fixtures data
         data = self.fixturesData(self.season, request_new=request_new)
                 
         fixtures = pd.DataFrame()
         team_names = []
         matchday = {}
         prev_matchday = 0
-        for match in sorted(data, key = lambda x : x['matchday']):
+        for match in sorted(data, key=lambda x: x['matchday']):
             # If moved on to data for the next matchday 
             if prev_matchday < match['matchday']:
                 # Package matchday dictionary into dataframe to concatenate into main fixtures dataframe
@@ -754,6 +753,62 @@ class Data:
         df_matchday= pd.DataFrame(matchday)
         df_matchday.index = team_names
         fixtures = pd.concat([fixtures, df_matchday], axis=1)
+        fixtures.index.name = "Team"
+                        
+        if display:
+            print(fixtures)
+        return fixtures
+
+    @timebudget
+    def createFixtures(self, display=False, request_new=True):
+        print("Creating fixtures dataframe...")
+        
+        # Get json fixtures data
+        data = self.fixturesData(self.season, request_new=request_new)
+                
+        team_names = []  # List of all team names mentioned in fixtures
+        team_names_index = []  # Specific order of team names to be dataframe index
+        matchday = defaultdict(lambda: [])
+        matchdays = []
+        prev_matchday = 0
+        for match in sorted(data, key=lambda x: x['matchday']):
+            # If moved on to data for the next matchday, or 
+            if prev_matchday < match['matchday']:
+                # Package matchday dictionary into dataframe to concatenate into main fixtures dataframe
+                df_matchday = pd.DataFrame(matchday)
+                df_matchday.index = team_names
+                
+                matchday = defaultdict(lambda: [])
+                # If just finished matchday 1 data, take team name list order as main fixtures dataframe index
+                if prev_matchday == 1:
+                    team_names_index = team_names[:]
+                matchdays.append(df_matchday)
+                
+                prev_matchday = match['matchday']
+                team_names = []
+                
+            # Home team row
+            matchday[(f'Matchday {match["matchday"]}', 'Date')].append(datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"))
+            matchday[(f'Matchday {match["matchday"]}', 'HomeAway')].append('Home')
+            matchday[(f'Matchday {match["matchday"]}', 'Team')].append(match['awayTeam']['name'].replace('&', 'and'))
+            matchday[(f'Matchday {match["matchday"]}', 'Status')].append(match['status']),
+            matchday[(f'Matchday {match["matchday"]}', 'Score')].append(f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}")
+            team_names.append(match['homeTeam']['name'].replace('&', 'and'))
+            # Away team row
+            matchday[(f'Matchday {match["matchday"]}', 'Date')].append(datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"))
+            matchday[(f'Matchday {match["matchday"]}', 'HomeAway')].append('Away')
+            matchday[(f'Matchday {match["matchday"]}', 'Team')].append(match['homeTeam']['name'].replace('&', 'and'))
+            matchday[(f'Matchday {match["matchday"]}', 'Status')].append(match['status']),
+            matchday[(f'Matchday {match["matchday"]}', 'Score')].append(f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}")
+            team_names.append(match['awayTeam']['name'].replace('&', 'and'))
+        
+        # Add last matchday (38) dataframe to list
+        df_matchday = pd.DataFrame(matchday)
+        df_matchday.index = team_names
+        matchdays.append(df_matchday)
+        
+        fixtures = pd.concat(matchdays, axis=1)
+        fixtures.index = team_names_index
                 
         if display:
             print(fixtures)
@@ -783,6 +838,7 @@ class Data:
     def createTeamRatings(self, no_seasons, display=False):
         print("Creating team ratings dataframe...")
         
+        # Ensure dependencies have been built
         if self.standings.empty:
             raise ValueError('Error when creating team_ratings dataframe: standings dataframe empty')
         
@@ -826,9 +882,7 @@ class Data:
         for i in range(start_n, no_seasons):
             team_ratings['Total Rating'] += w[i-start_n] * team_ratings[f'Normalised Rating {i}Y Ago']
 
-        # Tidy dataframe
-        team_ratings = team_ratings.sort_values(by="Total Rating", ascending=False)
-        team_ratings = team_ratings.rename(columns={'Rating 0Y Ago': 'Rating Current', 'Normalised Rating 0Y Ago': 'Normalised Rating Current'})
+        team_ratings = team_ratings.sort_values(by="Total Rating", ascending=False).rename(columns={'Rating 0Y Ago': 'Rating Current', 'Normalised Rating 0Y Ago': 'Normalised Rating Current'})
         
         if display:
             print(team_ratings)
@@ -841,6 +895,7 @@ class Data:
     
     @timebudget
     def updateFixtures(self, graph, display=False, team=None):
+        # Ensure dependencies have been built
         if self.standings.empty:
             raise ValueError('Error when creating fixtures dataframe: standings dataframe empty')
         if self.fixtures.empty:
@@ -860,6 +915,7 @@ class Data:
     
     @timebudget
     def updateFormOverTime(self, graph, display=False, team=None):
+        # Ensure dependencies have been built
         if self.standings.empty:
             raise ValueError('Error when creating form_over_time dataframe: standings dataframe empty')
         if self.fixtures.empty:
@@ -879,6 +935,7 @@ class Data:
     
     @timebudget
     def updatePositionOverTime(self, graph, display=False, team=None):
+        # Ensure dependencies have been built
         if self.fixtures.empty:
             raise ValueError('Error when creating position_over_time dataframe: fixtures dataframe empty')
         if self.position_over_time.empty:
@@ -894,6 +951,7 @@ class Data:
 
     @timebudget
     def updateGoalsScoredAndConceded(self, graph, display=False, team=None):
+        # Ensure dependencies have been built
         if self.position_over_time.empty:
             print("Error")
             
@@ -916,13 +974,14 @@ class Data:
         # Standings for the last "n_seasons" seasons
         self.standings = self.createStandings(no_seasons, display=display_tables, request_new=request_new)
         # Fixtures for each team
+        # self.fixtures = self.createFixtures2(display=display_tables, request_new=request_new)
         self.fixtures = self.createFixtures(display=display_tables, request_new=request_new)
         # Ratings for each team, based on last "no_seasons" seasons standings table
         self.team_ratings = self.createTeamRatings(no_seasons, display=display_tables)
         self.home_advantages = self.createHomeAdvantages(no_seasons, display=display_tables, request_new=request_new)
         self.form = self.createForm(display=display_tables)
         self.position_over_time = self.createPositionOverTime(display=display_tables)
-        self.next_games = self.createNextGames(display=display_tables)
+        self.next_games = self.createNextGames(display=display_tables, request_new=request_new)
                 
         # ----- Update Graphs ------
         graph = GraphData()

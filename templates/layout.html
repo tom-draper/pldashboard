@@ -52,7 +52,7 @@
     {% else %}
       <div class="header" style="background-color: var(--{{team}});">
         <a id="back-button" class="main-link" href="/"></a>
-        <a class="main-link title" style="color: var(--{{team.replace(' ', '-') + '-secondary'}});" href="/{{team}}">{{ team.replace('-', ' ').title().replace('And', 'and') }}</a>
+        <a class="main-link title" style="color: var(--{{team.replace(' ', '-') + '-secondary'}}); text-decoration: none;" href="/{{team}}">{{ team.replace('-', ' ').title().replace('And', 'and') }}</a>
       </div>
     {% endif %}
     <div class="page-content">

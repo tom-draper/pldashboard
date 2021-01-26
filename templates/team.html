@@ -81,7 +81,6 @@
           <div id="divider"></div>
         {% endif %}
     </div>
-    <!-- <img src='../static/club_badges/{{team}}.png'/ alt=""> -->
   </div>
   <div class="next-game-prediction row-graph" style="border: 5px solid var(--{{ team_playing_next_name_hypenated }});">
     <div class="next-game-title" style="background-color: var(--{{ team_playing_next_name_hypenated }});">
@@ -103,7 +102,8 @@
       </div>
       <div class="past-results">
         <div class="next-game-item" style="font-weight:700;">Previous Results</div>
-
+        
+        <!-- Display table of previous results against the next team this team is playing -->
         {% for prev_meeting in team_playing_prev_meetings %}
           <div class="next-game-divider"></div>
           <div class="next-game-item {{ prev_meeting[5] }}">
@@ -116,58 +116,8 @@
             <div class="past-result-date">{{ prev_meeting[0] }}</div>
           </div>
         {% endfor %}
+        <div class="next-game-divider"></div>
 
-
-
-        <!-- <div class="next-game-item">
-          <div class="past-result">
-            <div class="home-team">Newcastle United</div>
-            <div class="score" style="font-weight:800">0 - 0</div>
-            <div class="away-team">West Bromwich Albion</div>
-          </div>
-          <div style="clear: both;"></div>
-          <div class="past-result-date">14th March 2020</div>
-        </div>
-        <div class="next-game-divider"></div>
-        <div class="next-game-item">
-          <div class="past-result">
-            <div class="home-team">West Bromwich Albion</div>
-            <div class="score" style="font-weight:800">0 - 0</div>
-            <div class="away-team">Newcastle United</div>
-          </div>
-          <div style="clear: both;"></div>
-          <div class="past-result-date">1st April 2020</div>
-        </div>
-        <div class="next-game-divider"></div>
-        <div class="next-game-item">
-          <div class="past-result">
-            <div class="home-team">Newcastle United</div>
-            <div class="score" style="font-weight:800">0 - 0</div>
-            <div class="away-team">West Bromwich Albion</div>
-          </div>
-          <div style="clear: both;"></div>
-          <div class="past-result-date">14th October 2020</div>
-        </div>
-        <div class="next-game-divider"></div>
-        <div class="next-game-item">
-          <div class="past-result">
-            <div class="home-team">West Bromwich Albion</div>
-            <div class="score" style="font-weight:800">0 - 0</div>
-            <div class="away-team">Newcastle United</div>
-          </div>
-          <div style="clear: both;"></div>
-          <div class="past-result-date">14th November 2020</div>
-        </div>
-        <div class="next-game-divider"></div>
-        <div class="next-game-item">
-          <div class="past-result">
-            <div class="home-team">Newcastle United</div>
-            <div class="score" style="font-weight:800">0 - 3</div>
-            <div class="away-team">West Bromwich Albion</div>
-          </div>
-          <div style="clear: both;"></div>
-          <div class="past-result-date">2nd May 2011</div>
-        </div> -->
       </div>
     </div>
   </div>
