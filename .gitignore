@@ -1,5 +1,7 @@
 
 tempCodeRunnerFile.py
+data/fixtures_2019.json
+data/standings_2019.json
 data/fixtures_2020.json
 data/standings_2020.json
 __pycache__/graph_data.cpython-38.pyc
