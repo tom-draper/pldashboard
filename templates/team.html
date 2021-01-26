@@ -82,9 +82,9 @@
         {% endif %}
     </div>
   </div>
-  <div class="next-game-prediction row-graph" style="border: 5px solid var(--{{ team_playing_next_name_hypenated }});">
+  <div class="next-game-prediction row-graph" style="border: 6px solid var(--{{ team_playing_next_name_hypenated }});">
     <div class="next-game-title" style="background-color: var(--{{ team_playing_next_name_hypenated }});">
-      <h1 class="next-game-title-text" style="color: var(--{{ team_playing_next_name_hypenated }}-secondary);">Next Game: {{ team_playing_next_name_hypenated.replace('-', ' ').title().replace('And', 'and') + ' FC' }}</h1>
+      <h1 class="next-game-title-text" style="color: var(--{{ team_playing_next_name_hypenated }}-secondary);">Next Game: {{ team_playing_next_name_hypenated.replace('-', ' ').title().replace('And', 'and') }} ({{ team_playing_next_home_away }})</h1>
     </div>
     <div class="next-game-values">
       <div class="predictions-and-logo">

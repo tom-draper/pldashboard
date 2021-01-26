@@ -173,6 +173,10 @@ class Data:
         prev_meetings = self.next_games.loc[team_name]['Previous Meetings']
         return prev_meetings
     
+    def getNextGameHomeAway(self, team_name):
+        home_away = self.next_games['HomeAway'].loc[team_name]
+        return home_away
+    
     
     # ---------------------- Next games dataframe ---------------------------
     
@@ -196,10 +200,12 @@ class Data:
             next_team_col.append(team_name)
         
         next_games['Next Game'] = next_team_col
-        
+        # Config index now as there are a correct number of rows, and allow to 
+        # insert the HomeAway fixtures column (with same indices)
         next_games.index = self.fixtures.index
+        next_games['HomeAway'] = self.fixtures[f'Matchday {matchday_no+1}']['HomeAway']
         next_games['Previous Meetings'] = [[] for _ in range(len(next_games.index))]
-        
+                
         # Add any previous meetings that have been played this season
         # Loop through the columns of matchdays that have been played
         for matchday_no in range(len(self.form.columns.unique(level=0))):
@@ -347,7 +353,7 @@ class Data:
         return form_percentage
     
     @timebudget
-    def createForm(self, display=False):
+    def createForm2(self, display=False):
         print("Creating form dataframe...")
         
         if self.fixtures.empty:
@@ -361,8 +367,7 @@ class Data:
         date = self.fixtures.loc[:, (slice(None), 'Date')]
         
         # Remove cols for matchdays that haven't played yet
-        score = score.replace("None - None", np.nan)
-        score = score.dropna(axis=1, how='all')
+        score = score.replace("None - None", np.nan).dropna(axis=1, how='all')
         no_cols = score.shape[1]
         # Drop those same columns
         form = date.drop(date.iloc[:, no_cols:], axis=1)
@@ -420,8 +425,169 @@ class Data:
             form[f'Matchday {col_idx+1}', 'Won Against Star Team'] = won_against_star_team_col
             
         form = form.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False)
-        form = form.sort_index(level=1)
+                        
+        if display: 
+            print(form)
+        return form
+    
+    @timebudget
+    def createForm(self, display=False):
+        print("Creating form dataframe...")
         
+        if self.fixtures.empty:
+            raise ValueError('Error when creating form dataframe: fixtures dataframe empty')
+        if self.standings.empty:
+            raise ValueError('Error when creating form dataframe: standings dataframe empty')
+        if self.team_ratings.empty:
+            raise ValueError('Error when creating form dataframe: team_ratings dataframe empty')
+        
+        # Get number of matchdays that have had all teams played
+        score = self.fixtures.loc[:, (slice(None), 'Score')]
+        # Remove cols for matchdays that haven't played yet
+        score = score.replace("None - None", np.nan).dropna(axis=1, how='all')
+        no_cols = score.shape[1]
+        
+        form = {}
+        # Loop through each matchday number played so far
+        for matchday_no in range(no_cols):
+            form[(f'Matchday {matchday_no+1}', 'Date')] = self.fixtures[f'Matchday {matchday_no+1}', 'Date']
+            
+            # Get data about last 5 matchdays
+            teams_played_col, scores_col, home_aways_col = self.lastNGames(5, matchday_no+1, self.fixtures)
+            form[(f'Matchday {matchday_no+1}', 'Teams Played')] = teams_played_col
+            form[(f'Matchday {matchday_no+1}', 'Scores')] = scores_col
+            form[(f'Matchday {matchday_no+1}', 'HomeAway')] = home_aways_col
+            
+            # Form string and goal differences column
+            form_str_col, goal_differences_col = [], []
+            # Loop through each matchday and record the goal different for each team
+            for scores, home_aways in zip(scores_col, home_aways_col):
+                # Append 'W', 'L' or 'D' depending on result
+                form_str_col.append(self.formString(scores, home_aways))
+                
+                # Build goal differences of last games played from perspective of current team
+                goal_differences = []
+                for score, home_away in zip(scores, home_aways):
+                    home, _, away = score.split(' ')
+                    if home != 'None' and away != 'None':
+                        diff = int(home) - int(away)
+                        if diff > 0 and home_away == 'Home' or diff < 0 and home_away == 'Home':
+                            goal_differences.append(diff)
+                        elif diff < 0 and home_away == 'Away' or diff > 0 and home_away == 'Away':
+                            goal_differences.append(diff*-1)
+                        else:
+                            goal_differences.append(0)
+                goal_differences_col.append(goal_differences)
+            form[(f'Matchday {matchday_no+1}', 'Form')] = form_str_col
+            form[(f'Matchday {matchday_no+1}', 'GDs')] = goal_differences_col
+
+            form_rating_col = []
+            for teams_played, form_str, gds in zip(teams_played_col, form_str_col, goal_differences_col):
+                rating = self.calcFormRating(teams_played, form_str, gds, self.team_ratings)
+                form_rating_col.append(rating)
+            form[(f'Matchday {matchday_no+1}', 'Form Rating %')] = form_rating_col
+            
+            # Column (list of booleans) for whether last 5 games have been against 
+            # a team with a long term (multiple season) rating over a certain 
+            # threshold (a star team)
+            played_star_team_col = []
+            for teams_played in teams_played_col:
+                ratings = [self.team_ratings['Total Rating'][team_name] for team_name in list(map(self.initialsToTeamNames, teams_played))]
+                played_star_team_col.append([team_rating > self.star_team_threshold for team_rating in ratings])
+            form[(f'Matchday {matchday_no+1}', 'Played Star Team')] = played_star_team_col
+            
+            # Column (list of booleans) for whether last 5 games have won against 
+            # a star team
+            won_against_star_team_col = []
+            for played_star_team, form_str in zip(played_star_team_col, form_str_col):  # Team has played games this season
+                won_against_star_team_col.append([(result == 'W' and pst == True) for result, pst in zip(form_str.replace(',', ''), played_star_team)])
+            form[(f'Matchday {matchday_no+1}', 'Won Against Star Team')] = won_against_star_team_col
+                    
+        form = pd.DataFrame(form)
+        form = form.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False)
+                
+        if display: 
+            print(form)
+        return form
+    
+    @timebudget
+    def createForm3(self, display=False):
+        print("Creating form dataframe...")
+        
+        if self.fixtures.empty:
+            raise ValueError('Error when creating form dataframe: fixtures dataframe empty')
+        if self.standings.empty:
+            raise ValueError('Error when creating form dataframe: standings dataframe empty')
+        if self.team_ratings.empty:
+            raise ValueError('Error when creating form dataframe: team_ratings dataframe empty')
+        
+        # Get number of matchdays that have had all teams played
+        score = self.fixtures.loc[:, (slice(None), 'Score')]
+        # Remove cols for matchdays that haven't played yet
+        score = score.replace("None - None", np.nan).dropna(axis=1, how='all')
+        no_cols = score.shape[1]
+        
+        forms = []
+        # Loop through each matchday number played so far
+        for matchday_no in range(no_cols):
+            form = {}
+            form[(f'Matchday {matchday_no+1}', 'Date')] = self.fixtures[f'Matchday {matchday_no+1}', 'Date']
+            
+            # Get data about last 5 matchdays
+            teams_played_col, scores_col, home_aways_col = self.lastNGames(5, matchday_no+1, self.fixtures)
+            form[(f'Matchday {matchday_no+1}', 'Teams Played')] = teams_played_col
+            form[(f'Matchday {matchday_no+1}', 'Scores')] = scores_col
+            form[(f'Matchday {matchday_no+1}', 'HomeAway')] = home_aways_col
+            
+            # Form string and goal differences column
+            form_str_col, goal_differences_col = [], []
+            # Loop through each matchday and record the goal different for each team
+            for scores, home_aways in zip(scores_col, home_aways_col):
+                # Append 'W', 'L' or 'D' depending on result
+                form_str_col.append(self.formString(scores, home_aways))
+                
+                # Build goal differences of last games played from perspective of current team
+                goal_differences = []
+                for score, home_away in zip(scores, home_aways):
+                    home, _, away = score.split(' ')
+                    if home != 'None' and away != 'None':
+                        diff = int(home) - int(away)
+                        if diff > 0 and home_away == 'Home' or diff < 0 and home_away == 'Home':
+                            goal_differences.append(diff)
+                        elif diff < 0 and home_away == 'Away' or diff > 0 and home_away == 'Away':
+                            goal_differences.append(diff*-1)
+                        else:
+                            goal_differences.append(0)
+                goal_differences_col.append(goal_differences)
+            form[(f'Matchday {matchday_no+1}', 'Form')] = form_str_col
+            form[(f'Matchday {matchday_no+1}', 'GDs')] = goal_differences_col
+
+            form_rating_col = []
+            for teams_played, form_str, gds in zip(teams_played_col, form_str_col, goal_differences_col):
+                rating = self.calcFormRating(teams_played, form_str, gds, self.team_ratings)
+                form_rating_col.append(rating)
+            form[(f'Matchday {matchday_no+1}', 'Form Rating %')] = form_rating_col
+            
+            # Column (list of booleans) for whether last 5 games have been against 
+            # a team with a long term (multiple season) rating over a certain 
+            # threshold (a star team)
+            played_star_team_col = []
+            for teams_played in teams_played_col:
+                ratings = [self.team_ratings['Total Rating'][team_name] for team_name in list(map(self.initialsToTeamNames, teams_played))]
+                played_star_team_col.append([team_rating > self.star_team_threshold for team_rating in ratings])
+            form[(f'Matchday {matchday_no+1}', 'Played Star Team')] = played_star_team_col
+            
+            # Column (list of booleans) for whether last 5 games have won against a star team
+            won_against_star_team_col = []
+            for played_star_team, form_str in zip(played_star_team_col, form_str_col):  # Team has played games this season
+                won_against_star_team_col.append([(result == 'W' and pst == True) for result, pst in zip(form_str.replace(',', ''), played_star_team)])
+            form[(f'Matchday {matchday_no+1}', 'Won Against Star Team')] = won_against_star_team_col
+            
+            forms.append(pd.DataFrame(form))
+        
+        form = pd.concat(forms, axis=1)
+        form = form.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False)
+                
         if display: 
             print(form)
         return form
@@ -571,14 +737,25 @@ class Data:
         
         # Create home advantage column
         for i in range(no_seasons):
-            home_advantages[f'{self.season-i}', 'Played'] = home_advantages[f'{self.season-i}']['Home Wins'] + home_advantages[f'{self.season-i}']['Home Draws'] + home_advantages[f'{self.season-i}']['Home Loses'] + home_advantages[f'{self.season-i}']['Away Wins'] + home_advantages[f'{self.season-i}']['Away Draws'] + home_advantages[f'{self.season-i}']['Away Loses']
-            home_advantages[f'{self.season-i}', 'Played at Home'] = home_advantages[f'{self.season-i}']['Home Wins'] + home_advantages[f'{self.season-i}']['Home Draws'] + home_advantages[f'{self.season-i}']['Home Loses']
+            home_advantages[f'{self.season-i}', 'Played'] = home_advantages[f'{self.season-i}']['Home Wins'] \
+                                                            + home_advantages[f'{self.season-i}']['Home Draws'] \
+                                                            + home_advantages[f'{self.season-i}']['Home Loses'] \
+                                                            + home_advantages[f'{self.season-i}']['Away Wins'] \
+                                                            + home_advantages[f'{self.season-i}']['Away Draws'] \
+                                                            + home_advantages[f'{self.season-i}']['Away Loses']
+            home_advantages[f'{self.season-i}', 'Played at Home'] = home_advantages[f'{self.season-i}']['Home Wins'] \
+                                                                    + home_advantages[f'{self.season-i}']['Home Draws'] \
+                                                                    + home_advantages[f'{self.season-i}']['Home Loses']
             # Percentage wins = total wins / total games played
-            home_advantages[f'{self.season-i}', 'Wins %'] = ((home_advantages[f'{self.season-i}']['Home Wins'] + home_advantages[f'{self.season-i}']['Away Wins']) / home_advantages[f'{self.season-i}']['Played']) * 100
+            home_advantages[f'{self.season-i}', 'Wins %'] = ((home_advantages[f'{self.season-i}']['Home Wins'] 
+                                                              + home_advantages[f'{self.season-i}']['Away Wins']) 
+                                                             / home_advantages[f'{self.season-i}']['Played']) * 100
             # Percentage wins at home = total wins at home / total games played at home 
-            home_advantages[f'{self.season-i}', 'Home Wins %'] = (home_advantages[f'{self.season-i}']['Home Wins'] / home_advantages[f'{self.season-i}']['Played at Home']) * 100
+            home_advantages[f'{self.season-i}', 'Home Wins %'] = (home_advantages[f'{self.season-i}']['Home Wins'] 
+                                                                  / home_advantages[f'{self.season-i}']['Played at Home']) * 100
             # Home advantage = percentage wins at home - percentage wins 
-            home_advantages[f'{self.season-i}', 'Home Advantage'] = (home_advantages[f'{self.season-i}']['Home Wins %'] - home_advantages[f'{self.season-i}']['Wins %']) / 100
+            home_advantages[f'{self.season-i}', 'Home Advantage'] = (home_advantages[f'{self.season-i}']['Home Wins %'] 
+                                                                     - home_advantages[f'{self.season-i}']['Wins %']) / 100
         
         home_advantages = home_advantages.sort_index(axis=1)
 
@@ -861,7 +1038,10 @@ class Data:
 
         # Create normalised versions of the three ratings columns
         for i in range(0, no_seasons):
-            team_ratings[f'Normalised Rating {i}Y Ago'] = (team_ratings[f'Rating {i}Y Ago'] - team_ratings[f'Rating {i}Y Ago'].min()) / (team_ratings[f'Rating {i}Y Ago'].max() - team_ratings[f'Rating {i}Y Ago'].min())
+            team_ratings[f'Normalised Rating {i}Y Ago'] = (team_ratings[f'Rating {i}Y Ago']
+                                                           - team_ratings[f'Rating {i}Y Ago'].min()) \
+                                                          / (team_ratings[f'Rating {i}Y Ago'].max() 
+                                                           - team_ratings[f'Rating {i}Y Ago'].min())
 
         # Check whether current season data should be included in each team's total rating
         if (self.standings[f'{self.season}']['Played'] <= self.games_threshold).all():  # If current season hasn't played enough games
@@ -974,7 +1154,6 @@ class Data:
         # Standings for the last "n_seasons" seasons
         self.standings = self.createStandings(no_seasons, display=display_tables, request_new=request_new)
         # Fixtures for each team
-        # self.fixtures = self.createFixtures2(display=display_tables, request_new=request_new)
         self.fixtures = self.createFixtures(display=display_tables, request_new=request_new)
         # Ratings for each team, based on last "no_seasons" seasons standings table
         self.team_ratings = self.createTeamRatings(no_seasons, display=display_tables)

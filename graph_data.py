@@ -73,7 +73,7 @@ class GraphData:
             rating = team_ratings.loc[match['Team'], 'Total Rating']
             # Decrease other team's rating if you're playing at home
             if match['HomeAway'] == 'Home':
-                rating *= (1 -home_advantages.loc[match['Team'], 'Total Home Advantage'][0])
+                rating *= (1 - home_advantages.loc[match['Team'], 'Total Home Advantage'][0])
             y.append(rating)
 
             # Add team played, home or away and the final score if game has already happened
@@ -117,7 +117,7 @@ class GraphData:
         
         fig.update_layout(
             yaxis=dict(
-                title_text="Calculated Team Rating %",
+                title_text="Calculated Team Rating",
                 ticktext=[str(i) + "%" for i in range(0, 101, 10)],
                 tickvals=[i for i in range(0, 101, 10)],
                 gridcolor='gray',
