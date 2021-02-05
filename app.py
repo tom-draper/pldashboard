@@ -10,6 +10,10 @@ data = Data(season)
 def home():
     return render_template('home.html', team="None")
 
+def goals_scored_vs_goals_condeded():
+    rule = request.url_rule
+    team_name = rule.rule[1:]  # Get hypehenated team name from current URL
+    return render_template(f'graphs/{team_name}/goals-scored-and-conceded-{team_name}.html')
 
 @app.route("/liverpool")
 @app.route("/manchester-city")

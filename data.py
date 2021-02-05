@@ -1161,13 +1161,14 @@ class Data:
         self.form = self.createForm(display=display_tables)
         self.position_over_time = self.createPositionOverTime(display=display_tables)
         self.next_games = self.createNextGames(display=display_tables, request_new=request_new)
-                
-        # ----- Update Graphs ------
-        graph = GraphData()
-        self.updateFixtures(graph, display=display_graphs, team=team)
-        self.updateFormOverTime(graph, display=display_graphs, team=team)
-        self.updatePositionOverTime(graph, display=display_graphs, team=team)
-        self.updateGoalsScoredAndConceded(graph, display=display_graphs, team=team)
+        
+        if request_new:
+            # ----- Update Graphs ------
+            graph = GraphData()
+            self.updateFixtures(graph, display=display_graphs, team=team)
+            self.updateFormOverTime(graph, display=display_graphs, team=team)
+            self.updatePositionOverTime(graph, display=display_graphs, team=team)
+            self.updateGoalsScoredAndConceded(graph, display=display_graphs, team=team)
 
 
 

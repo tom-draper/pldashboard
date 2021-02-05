@@ -2,14 +2,13 @@
 {% extends 'layout.html' %} {% block content %}
 
 <div class="row">
-  <div class="row-left position-and-badge">
+  <div class="row-left position-and-badge" style="background-image: url('static/club_badges/{{team}}.png'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;">
     <div class="position">{{ position }}</div>
-    <!-- <img src='../static/club_badges/{{team}}.png'/ alt=""> -->
   </div>
   <div class="fixtures-graph row-graph">
     <h1>Fixtures</h1>
     <div class="graph mini-graph">
-      {% include 'graphs/{}/fixtures-{}.html'.format(team, team) %}
+      {% include 'graphs/%s/fixtures-%s.html' % (team, team) %}
     </div>
   </div>
 </div>
@@ -126,7 +125,7 @@
   <div class="form-graph row-graph">
     <h1>Form Over Time</h1>
     <div class="graph full-row-graph">
-      {% include 'graphs/{}/form-over-time-{}.html'.format(team, team) %}
+      {% include 'graphs/%s/form-over-time-%s.html' % (team, team) %}
     </div>
   </div>
 </div>
@@ -134,7 +133,7 @@
   <div class="position-over-time-graph row-graph">
     <h1>Position Over Time</h1>
     <div class="graph full-row-graph">
-      {% include 'graphs/{}/position-over-time-{}.html'.format(team, team) %}
+      {% include 'graphs/%s/position-over-time-%s.html' % (team, team) %}
     </div>
   </div>
 </div>
@@ -142,7 +141,7 @@
   <div class="goals-scored-vs-conceded-graph row-graph">
     <h1>Goals Scored vs Goals Conceded</h1>
     <div class="graph full-row-graph">
-      {% include 'graphs/{}/goals-scored-and-conceded-{}.html'.format(team, team) %}
+      {% include 'graphs/%s/goals-scored-and-conceded-%s.html' % (team, team) %}
     </div>
   </div>
 </div>

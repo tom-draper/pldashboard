@@ -6,35 +6,40 @@ from datetime import datetime
 
 class GraphData:
     
-    team_colours = {
-        'Sheffield United FC': 'rgb(238, 39, 55)',
-        'Leeds United FC': 'rgb(255, 205, 0)',
-        'Aston Villa FC': 'rgb(103, 14, 54)',
-        'Fulham FC': 'rgb(204, 0, 0)',
-        'Wolverhampton Wanderers FC': 'rgb(253, 185, 19)',
-        'West Ham United FC': 'rgb(122, 38, 58)',
-        'West Bromwich Albion FC': 'rgb(18, 47, 103)',
-        'Tottenham Hotspur FC': 'rgb(19, 34, 87)',
-        'Southampton FC': 'rgb(215, 25, 32)',
-        'Newcastle United FC': 'rgb(45, 41, 38)',
-        'Manchester United FC':  'rgb(218, 41, 28)',
-        'Manchester City FC': 'rgb(108, 171, 221)',
-        'Liverpool FC': 'rgb(200, 16, 46)',
-        'Leicester City FC': 'rgb(0, 83, 160)',
-        'Everton FC': 'rgb(39, 68, 136)',
-        'Crystal Palace FC': ' rgb(27, 69, 143)',
-        'Chelsea FC': 'rgb(3, 70, 148)',
-        'Burnley FC': 'rgb(108, 29, 69)',
-        'Brighton and Hove Albion FC': 'rgb(0, 87, 184)',
-        'Arsenal FC': 'rgb(239, 1, 7)',
-        'Norwich City FC': 'rgb(0, 166, 80)',
-        'Cardiff City FC': 'rgb(0, 112, 181)',
-        'Watford FC': 'rgb(237, 33, 39)',
-        'Swansea City FC': 'rgb(18, 18, 18)',
-        'Stoke City FC': 'rgb(224, 58, 62)',
-        'Huddersfield FC': 'rgb(14, 99, 173)',
-        'Bournemouth FC': 'rgb(218, 41, 28)',
-    }
+    def __init__(self):
+        # Fixture graph
+        self.fixtures_colour_scale = ['#01c626', '#08a825',  '#0b7c20', '#0a661b', '#064411',
+                                      '#000000', '#5b1d15', '#85160f', '#ad1a10', '#db1a0d', '#fc1303']
+    
+        self.team_colours = {
+            'Sheffield United FC': 'rgb(238, 39, 55)',
+            'Leeds United FC': 'rgb(255, 205, 0)',
+            'Aston Villa FC': 'rgb(103, 14, 54)',
+            'Fulham FC': 'rgb(204, 0, 0)',
+            'Wolverhampton Wanderers FC': 'rgb(253, 185, 19)',
+            'West Ham United FC': 'rgb(122, 38, 58)',
+            'West Bromwich Albion FC': 'rgb(18, 47, 103)',
+            'Tottenham Hotspur FC': 'rgb(19, 34, 87)',
+            'Southampton FC': 'rgb(215, 25, 32)',
+            'Newcastle United FC': 'rgb(45, 41, 38)',
+            'Manchester United FC':  'rgb(218, 41, 28)',
+            'Manchester City FC': 'rgb(108, 171, 221)',
+            'Liverpool FC': 'rgb(200, 16, 46)',
+            'Leicester City FC': 'rgb(0, 83, 160)',
+            'Everton FC': 'rgb(39, 68, 136)',
+            'Crystal Palace FC': ' rgb(27, 69, 143)',
+            'Chelsea FC': 'rgb(3, 70, 148)',
+            'Burnley FC': 'rgb(108, 29, 69)',
+            'Brighton and Hove Albion FC': 'rgb(0, 87, 184)',
+            'Arsenal FC': 'rgb(239, 1, 7)',
+            'Norwich City FC': 'rgb(0, 166, 80)',
+            'Cardiff City FC': 'rgb(0, 112, 181)',
+            'Watford FC': 'rgb(237, 33, 39)',
+            'Swansea City FC': 'rgb(18, 18, 18)',
+            'Stoke City FC': 'rgb(224, 58, 62)',
+            'Huddersfield FC': 'rgb(14, 99, 173)',
+            'Bournemouth FC': 'rgb(218, 41, 28)',
+        }
     
     def genFixturesGraph(self, team_name, fixtures, team_ratings, home_advantages, display=False):
         """Creates and saves a plotly scatter graph that displays the teams past
@@ -66,7 +71,8 @@ class GraphData:
         x, y, details = [], [], []
         for i in range(n_matches):
             match = team_fixtures[f'Matchday {i+1}']
-
+            
+            # Append single datetime value of matchday to x-axis 
             x.append(datetime.utcfromtimestamp(match['Date'].tolist()/1e9))
             
             # Get rating of the opposition team
@@ -74,12 +80,14 @@ class GraphData:
             # Decrease other team's rating if you're playing at home
             if match['HomeAway'] == 'Home':
                 rating *= (1 - home_advantages.loc[match['Team'], 'Total Home Advantage'][0])
-            y.append(rating)
+            # Append percentage rating value of opposition team playing on this matchday
+            y.append(rating*100)
 
             # Add team played, home or away and the final score if game has already happened
-            match_detail = f"{match['Team']} ({match['HomeAway']})"
             if match['Score'] != "None - None":
-                match_detail += f"  {match['Score']}"
+                match_detail = f"{match['Team']} ({match['HomeAway']})  {match['Score']}"
+            else:
+                match_detail = f"{match['Team']} ({match['HomeAway']})"
             details.append(match_detail)
             
             # Increase size of point marker if it's the current upcoming match
@@ -89,20 +97,18 @@ class GraphData:
                     sizes[i] = BIG_MARKER_SIZE
             elif i != n_matches and x[-2] < now <= x[-1]:
                 sizes[i] = BIG_MARKER_SIZE
-
-        y = list(map(lambda x: x*100, y))  # Convert to percentages
         
-        colour_scale = ['#01c626', '#08a825',  '#0b7c20', '#0a661b', '#064411',
-                        '#000000', '#5b1d15', '#85160f', '#ad1a10', '#db1a0d', '#fc1303']
+
         fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers',
                                         marker=dict(size=sizes,
                                                     color=y,
-                                                    colorscale=colour_scale),
+                                                    colorscale=self.fixtures_colour_scale),
                                         line=dict(color='#737373'),
                                         text=details,
                                         hovertemplate="<b>%{text}</b><br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
                                         hoverinfo=('x+y+text'),
-                                        ))
+                                        ),
+                        )
 
         fig.add_shape(go.layout.Shape(type="line",
                                       yref="paper",
@@ -242,6 +248,7 @@ class GraphData:
         if display:
             fig.show()
         
+        # Format and save team name
         file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
         plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/form-over-time-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
 
