@@ -7,6 +7,7 @@
   </div>
   <div class="fixtures-graph row-graph">
     <h1>Fixtures</h1>
+    <!-- Not included in an iframe to ensure it loads before page is rendered -->
     <div class="graph mini-graph">
       {% include 'graphs/%s/fixtures-%s.html' % (team, team) %}
     </div>
@@ -125,7 +126,9 @@
   <div class="form-graph row-graph">
     <h1>Form Over Time</h1>
     <div class="graph full-row-graph">
-      {% include 'graphs/%s/form-over-time-%s.html' % (team, team) %}
+      <iframe src="{{ 'static/graphs/{}/form-over-time-{}.html'.format(team, team) }}" style="border: none;" height=450px width=100%>
+        Sorry your browser does not support inline frames.
+     </iframe>
     </div>
   </div>
 </div>
@@ -133,7 +136,9 @@
   <div class="position-over-time-graph row-graph">
     <h1>Position Over Time</h1>
     <div class="graph full-row-graph">
-      {% include 'graphs/%s/position-over-time-%s.html' % (team, team) %}
+      <iframe src="{{ 'static/graphs/{}/position-over-time-{}.html'.format(team, team) }}" style="border: none;" height=450px width=100%>
+        Sorry your browser does not support inline frames.
+     </iframe>
     </div>
   </div>
 </div>
@@ -141,10 +146,20 @@
   <div class="goals-scored-vs-conceded-graph row-graph">
     <h1>Goals Scored vs Goals Conceded</h1>
     <div class="graph full-row-graph">
-      {% include 'graphs/%s/goals-scored-and-conceded-%s.html' % (team, team) %}
+      <iframe src="{{ 'static/graphs/{}/goals-scored-and-conceded-{}.html'.format(team, team) }}" style="border: none;" height=450px width=100%>
+        Sorry your browser does not support inline frames.
+     </iframe>
     </div>
   </div>
 </div>
+<!-- <div class="row">
+  <div class="goals-scored-vs-conceded-graph row-graph">
+    <h1>Goals Scored vs Goals Conceded</h1>
+    <div class="graph full-row-graph">
+      {% include 'graphs/%s/goals-scored-and-conceded-%s.html' % (team, team) %}
+    </div>
+  </div>
+</div> -->
 <div class="footer">
   <div class="footer-item-gap footer-text-colour">
     Data provided by <a class="footer-text-colour underline" href="https://www.football-data.org/">football-data.org</a>
