@@ -2,10 +2,9 @@ import plotly
 import plotly.graph_objects as go
 import numpy as np
 from datetime import datetime
-
+from timebudget import timebudget
 
 class GraphData:
-    
     def __init__(self):
         # Fixture graph
         self.fixtures_colour_scale = ['#01c626', '#08a825',  '#0b7c20', '#0a661b', '#064411',
@@ -40,6 +39,21 @@ class GraphData:
             'Huddersfield FC': 'rgb(14, 99, 173)',
             'Bournemouth FC': 'rgb(218, 41, 28)',
         }
+    
+    
+    
+    
+    # ------------ FIXTURES GRAPHS -------------
+    
+    @timebudget
+    def updateFixtures(self, fixtures, team_ratings, home_advantages, display=False, team_name=None):
+        if team_name == None:
+            print("Updating all team fixtures graphs...")
+            for team in fixtures.index.values.tolist():
+                self.genFixturesGraph(team, fixtures, team_ratings, home_advantages, display=display)
+        else:
+            print(f"Updating {team_name} fixture graph...")
+            self.genFixturesGraph(team_name, fixtures, team_ratings, home_advantages, display=display)
     
     def genFixturesGraph(self, team_name, fixtures, team_ratings, home_advantages, display=False):
         """Creates and saves a plotly scatter graph that displays the teams past
@@ -98,6 +112,8 @@ class GraphData:
             elif i != n_matches and x[-2] < now <= x[-1]:
                 sizes[i] = BIG_MARKER_SIZE
         
+        # Sort the data by date to remove errors due to match rescheduling
+        x, y, details = zip(*sorted(zip(x, y, details)))
 
         fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers',
                                         marker=dict(size=sizes,
@@ -156,16 +172,22 @@ class GraphData:
         # Convert team name into suitable use for filename
         file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
         plotly.offline.plot(
-            fig, filename=f'./templates/graphs/{file_team_name}/fixtures-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
-        
+            fig, filename=f'./static/graphs/{file_team_name}/fixtures-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+    
+    
+    # ------------- FORM OVER TIME GRAPHS -------------
+    
+    @timebudget
+    def updateFormOverTime(self, form, display=False, team_name=None):
+        if team_name == None:
+            print("Updating all teams form over time graphs...")
+            for team in form.index.values.tolist():
+                self.genFormOverTimeGraph(team, form, display=display)
+        else:
+            print(f"Updating {team_name} form over time graph...")
+            self.genFormOverTimeGraph(team_name, form, display=display)
+    
     def genFormOverTimeGraph(self, team_name, form, display=False):
-        """
-
-        Args:
-            team_name ([type]): [description]
-            position_over_time ([type]): [description]
-            display (bool, optional): [description]. Defaults to False.
-        """
         x_cols = form.iloc[:, form.columns.get_level_values(1) == 'Date']
         y_cols = form.iloc[:, form.columns.get_level_values(1) == 'Form Rating %']
         
@@ -187,6 +209,9 @@ class GraphData:
         
         fig = go.Figure()
         
+        # Sort the x-axis data by date to remove errors due to match rescheduling
+        # x, *ys = zip(*sorted(zip(x, *ys)))
+                
         for idx, y in enumerate(ys):
             if names[idx] != team_name:
                 fig.add_trace(go.Scatter(x=x, 
@@ -250,8 +275,23 @@ class GraphData:
         
         # Format and save team name
         file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/form-over-time-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+        plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/form-over-time-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
 
+
+
+    
+    # ---------- POSITION OVER TIME GRAPHS ----------
+    
+    @timebudget
+    def updatePositionOverTime(self, position_over_time, display=False, team_name=None):
+        if team_name == None:
+            print("Updating all teams positions over time graphs...")
+            for team in position_over_time.index.values.tolist():
+                self.genPositionOverTimeGraph(team, position_over_time, display=display)
+        else:
+            print(f"Updating {team_name} positions over time graph...")
+            self.genPositionOverTimeGraph(team_name, position_over_time, display=display)
+        
     def genPositionOverTimeGraph(self, team_name, position_over_time, display=False):
         """Creates and saves a plotly line graph displaying the Premier League 
            table position a team has been in at the end of each matchday that has 
@@ -284,6 +324,9 @@ class GraphData:
             ys.append(y)
 
         names = position_over_time.index.values.tolist()
+        
+        # Sort the x-axis data by date to remove errors due to match rescheduling
+        # x, *ys = zip(*sorted(zip(x, *ys)))
         
         fig = go.Figure()
         for idx, y in enumerate(ys):
@@ -386,7 +429,22 @@ class GraphData:
         
         file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
         plotly.offline.plot(
-            fig, filename=f'./templates/graphs/{file_team_name}/position-over-time-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+            fig, filename=f'./static/graphs/{file_team_name}/position-over-time-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+    
+    
+    
+    
+    # -------------- GOALS SCORED AND CONCEDED GRAPHS -------------
+    
+    @timebudget
+    def updateGoalsScoredAndConceded(self, position_over_time, display=False, team_name=None):
+        if team_name == None:
+            print("Updating all teams goals scored and conceded over time graphs...")
+            for team in position_over_time.index.values.tolist():
+                self.genGoalsScoredAndConceded(team, position_over_time, display=display)
+        else:
+            print(f"Updating {team_name} goals scored and conceded over time graph...")
+            self.genGoalsScoredAndConceded(team_name, position_over_time, display=display)
     
     def genGoalsScoredAndConceded(self, team_name, position_over_time, display=False):
         """Creates and saves a plotly bar graph displaying the goals scored and 
@@ -437,8 +495,9 @@ class GraphData:
                 no_goals_conceded = 0
             y_goals_scored.append(no_goals_scored)
             y_goals_conceded.append(no_goals_conceded)
-        
-        
+            
+        x, y_goals_scored, y_goals_conceded, y_avg = map(list, zip(*sorted(zip(x, y_goals_scored, y_goals_conceded, y_avg))))
+
         # Plot graph
         fig = go.Figure(data=[
             go.Bar(name='Goals Scored', x=x, y=y_goals_scored,
@@ -454,6 +513,7 @@ class GraphData:
                     hovertemplate="Matchday %{x}<br>%{y} goals conceded<extra></extra>",
                     hoverinfo=('x+y')),
             go.Scatter(name='Avg', x=x, y=y_avg, mode='lines',
+                       hovertemplate="Matchday %{x}<br>%{y} goals scored on average<extra></extra>",
                        line=dict(color='#0080FF', width=2))
         ])
         
@@ -505,6 +565,11 @@ class GraphData:
             fig.show()
         
         file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-        plotly.offline.plot(fig, filename=f'./templates/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+        plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
         
         
+    def updateAll(self, fixtures, team_ratings, home_advantages, form, position_over_time, team_name=None, display_graphs=False):
+        self.updateFixtures(fixtures, team_ratings, home_advantages, display=display_graphs, team_name=team_name)
+        self.updateFormOverTime(form, display=display_graphs, team_name=team_name)
+        self.updatePositionOverTime(position_over_time, display=display_graphs, team_name=team_name)
+        self.updateGoalsScoredAndConceded(position_over_time, display=display_graphs, team_name=team_name)

@@ -1,9 +1,7 @@
-from data import Data
+from refresh import DataRefresh
 from flask import Flask, render_template, request
 app = Flask(__name__)
 
-season = 2020
-data = Data(season) 
 
 @app.route("/")
 @app.route("/home")
@@ -33,26 +31,26 @@ def home():
 def team():
     rule = request.url_rule
     
-    team_name = rule.rule[1:]  # Get hypehenated team name from current URL
-    full_team_name = team_name.replace('-', ' ').title().replace('And', 'and') + ' FC'
+    team_name_hyphenated = rule.rule[1:]  # Get hypehenated team name from current URL
+    team_name = team_name_hyphenated.replace('-', ' ').title().replace('And', 'and') + ' FC'
 
     # Get data values to display on team webpage
-    position = data.getPosition(full_team_name)
-    form = data.getForm(full_team_name)
-    recent_teams_played = data.getRecentTeamsPlayed(full_team_name)
-    form_rating = data.getCurrentFormRating(full_team_name)
-    won_against_star_team = data.getWonAgainstStarTeam(full_team_name)
+    position = r.data.getPosition(team_name)
+    form = r.data.getForm(team_name)
+    recent_teams_played = r.data.getRecentTeamsPlayed(team_name)
+    form_rating = r.data.getCurrentFormRating(team_name)
+    won_against_star_team = r.data.getWonAgainstStarTeam(team_name)
         
-    team_playing_next_name = data.getNextTeamToPlay(full_team_name)
+    team_playing_next_name = r.data.getNextTeamToPlay(team_name)
     team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
-    team_playing_next_form_rating = data.getCurrentFormRating(team_playing_next_name)
-    team_playing_next_home_away = data.getNextGameHomeAway(full_team_name)
-    team_playing_prev_meetings = data.getPreviousMeetings(full_team_name)
+    team_playing_next_form_rating = r.data.getCurrentFormRating(team_playing_next_name)
+    team_playing_next_home_away = r.data.getNextGameHomeAway(team_name)
+    team_playing_prev_meetings = r.data.getPreviousMeetings(team_name)
     
-    table_snippet, table_index_of_this_team = data.getTableSnippet(full_team_name)
+    table_snippet, table_index_of_this_team = r.data.getTableSnippet(team_name)
         
     return render_template('team.html', 
-                           team=team_name,
+                           team_name_hyphenated=team_name_hyphenated,
                            position=position, 
                            form=form,
                            recent_teams_played=recent_teams_played,
@@ -67,5 +65,7 @@ def team():
 
 
 if __name__ == '__main__':
-    data.updateAll(3, team=None, display_tables=False, display_graphs=False, request_new=False)
+    # Refresh data and graphs
+    r = DataRefresh(2020)
+    r.updateAll(3, team_name=None, display_tables=False, display_graphs=False, request_new=True)
     app.run(host='0.0.0.0', debug=False)

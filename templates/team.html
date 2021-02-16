@@ -2,14 +2,14 @@
 {% extends 'layout.html' %} {% block content %}
 
 <div class="row">
-  <div class="row-left position-and-badge" style="background-image: url('static/club_badges/{{team}}.png'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;">
+  <div class="row-left position-and-badge" style="background-image: url('static/club_badges/{{team_name_hyphenated}}.png'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;">
     <div class="position">{{ position }}</div>
   </div>
   <div class="fixtures-graph row-graph">
     <h1>Fixtures</h1>
     <!-- Not included in an iframe to ensure it loads before page is rendered -->
     <div class="graph mini-graph">
-      {% include 'graphs/%s/fixtures-%s.html' % (team, team) %}
+      {% include 'graphs/%s/fixtures-%s.html' % (team_name_hyphenated, team_name_hyphenated) %}
     </div>
   </div>
 </div>
@@ -58,11 +58,11 @@
           <!-- Row of table -->
           {% if i == table_index_of_this_team %}
             <!-- Highlight this row as it is the team of the current page -->
-            <div class="table-row this-team" style="background-color: var(--{{ team }});">
-              <div class="table-element table-position this-team" style="color: var(--{{ team }}-secondary);">{{ table_snippet[i][0] }}</div>
-              <div class="table-element table-team-name this-team" style="color: var(--{{ team }}-secondary);">{{ table_snippet[i][1] }}</div>
-              <div class="table-element table-gd this-team" style="color: var(--{{ team }}-secondary);">{{ table_snippet[i][2] }}</div>
-              <div class="table-element table-points this-team" style="color: var(--{{ team }}-secondary);">{{ table_snippet[i][3] }}</div>
+            <div class="table-row this-team" style="background-color: var(--{{ team_name_hyphenated }});">
+              <div class="table-element table-position this-team" style="color: var(--{{ team_name_hyphenated }}-secondary);">{{ table_snippet[i][0] }}</div>
+              <div class="table-element table-team-name this-team" style="color: var(--{{ team_name_hyphenated }}-secondary);">{{ table_snippet[i][1] }}</div>
+              <div class="table-element table-gd this-team" style="color: var(--{{ team_name_hyphenated }}-secondary);">{{ table_snippet[i][2] }}</div>
+              <div class="table-element table-points this-team" style="color: var(--{{ team_name_hyphenated }}-secondary);">{{ table_snippet[i][3] }}</div>
             </div>
           {% else %}
             <!-- Generic row -->
@@ -126,7 +126,7 @@
   <div class="form-graph row-graph">
     <h1>Form Over Time</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/form-over-time-{}.html'.format(team, team) }}" style="border: none;" height=450px width=100%>
+      <iframe src="{{ 'static/graphs/{}/form-over-time-{}.html'.format(team_name_hyphenated, team_name_hyphenated) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
     </div>
@@ -136,7 +136,7 @@
   <div class="position-over-time-graph row-graph">
     <h1>Position Over Time</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/position-over-time-{}.html'.format(team, team) }}" style="border: none;" height=450px width=100%>
+      <iframe src="{{ 'static/graphs/{}/position-over-time-{}.html'.format(team_name_hyphenated, team_name_hyphenated) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
     </div>
@@ -146,20 +146,12 @@
   <div class="goals-scored-vs-conceded-graph row-graph">
     <h1>Goals Scored vs Goals Conceded</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/goals-scored-and-conceded-{}.html'.format(team, team) }}" style="border: none;" height=450px width=100%>
+      <iframe src="{{ 'static/graphs/{}/goals-scored-and-conceded-{}.html'.format(team_name_hyphenated, team_name_hyphenated) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
     </div>
   </div>
 </div>
-<!-- <div class="row">
-  <div class="goals-scored-vs-conceded-graph row-graph">
-    <h1>Goals Scored vs Goals Conceded</h1>
-    <div class="graph full-row-graph">
-      {% include 'graphs/%s/goals-scored-and-conceded-%s.html' % (team, team) %}
-    </div>
-  </div>
-</div> -->
 <div class="footer">
   <div class="footer-item-gap footer-text-colour">
     Data provided by <a class="footer-text-colour underline" href="https://www.football-data.org/">football-data.org</a>
