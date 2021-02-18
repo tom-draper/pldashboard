@@ -6,7 +6,7 @@ app = Flask(__name__)
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html', team="None")
+    return render_template('home.html', team_name_hyphenated="None")
 
 @app.route("/liverpool")
 @app.route("/manchester-city")
@@ -68,4 +68,5 @@ if __name__ == '__main__':
     # Refresh data and graphs
     r = DataRefresh(2020)
     r.updateAll(3, team_name=None, display_tables=False, display_graphs=False, request_new=True)
+    # Begin web app
     app.run(host='0.0.0.0', debug=False)

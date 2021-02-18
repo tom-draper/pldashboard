@@ -28,5 +28,5 @@ class DataRefresh:
 
 if __name__ == "__main__":
     r = DataRefresh(2020)
-    r.updateAll(3, team_name='Liverpool FC', display_tables=True, display_graphs=False, request_new=False)
+    r.updateAll(3, team_name='Liverpool FC', display_tables=False, display_graphs=False, request_new=False)
 

@@ -2,7 +2,7 @@
 {% extends 'layout.html' %} {% block content %}
 
 <div class="row">
-  <div class="row-left position-and-badge" style="background-image: url('static/club_badges/{{team_name_hyphenated}}.png'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;">
+  <div class="row-left position-and-badge" style="background-image: url('static/img/club_badges/{{team_name_hyphenated}}.png'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;">
     <div class="position">{{ position }}</div>
   </div>
   <div class="fixtures-graph row-graph">
@@ -94,7 +94,7 @@
           <div class="next-game-item">Score prediction: <b>{{ team_playing_prev_meetings[0][3] }} - {{ team_playing_prev_meetings[0][4] }}</b></div>
         </div>
         <div class="next-game-logo opposition-badge"
-            style="background-image: url('static/club_badges/{{ team_playing_next_name_hypenated }}.png');
+            style="background-image: url('static/img/club_badges/{{ team_playing_next_name_hypenated }}.png');
                     background-repeat: no-repeat;
                     background-size: contain;
                     background-position: center;">
@@ -146,7 +146,7 @@
   <div class="goals-scored-vs-conceded-graph row-graph">
     <h1>Goals Scored vs Goals Conceded</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/goals-scored-and-conceded-{}.html'.format(team_name_hyphenated, team_name_hyphenated) }}" style="border: none;" height=450px width=100%>
+      <iframe src="{{ 'static/graphs/manchester-city/goals-scored-and-conceded-manchester-city.html' }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
     </div>
@@ -169,7 +169,7 @@
     v1.0
   </div>
   <a class="footer-item-gap-large footer-link donation-fontsize" href="https://www.paypal.me/TomDraper">
-    <img class="donation" src="static/coin.png">
+    <img class="donation" src="static/img/coin.png">
     <div class="donation-text footer-text-colour">Donate!</div>
   </a>
 </div>

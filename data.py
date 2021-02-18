@@ -1,3 +1,6 @@
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
 import pandas as pd
 from collections import deque
 from collections import defaultdict
@@ -7,14 +10,42 @@ import requests
 import json
 from datetime import datetime
 
+class TwoWayDict(dict):
+    def __init__(self, dict):
+        super().__init__()
+        for key, value in dict.items():
+            self.__setitem__(key, value)
+    
+    def __setitem__(self, key, value):
+        # Remove any previous connections with these values
+        if key in self:
+            del self[key]
+        if value in self:
+            del self[value]
+        dict.__setitem__(self, key, value)
+        dict.__setitem__(self, value, key)
+
+    def __delitem__(self, key):
+        dict.__delitem__(self, self[key])
+        dict.__delitem__(self, key)
+
+    def __len__(self):
+        """Returns the number of connections"""
+        return dict.__len__(self) // 2
+
 
 class Data:
-    url = "https://api.football-data.org/v2/"
-    api = "f6cead2f1c47791235586c2887a3e624599b62862b339749cfc0b10fcc83167c"
-    headers = {'X-Auth-Token': 'cb159edc83824c21b6704e7ca18c2920'}
-
     def __init__(self, current_season):
         self.season = current_season
+        
+        # Import environment variables
+        dotenv_path = join(dirname(__file__), '.env')
+        load_dotenv(dotenv_path)
+        self.url = os.getenv('URL')
+        self.api = os.getenv('API')
+        auth_token = os.getenv('X_AUTH_TOKEN')
+        self.headers = {'X-Auth-Token': auth_token}
+        
                 
         # Number of games played in a season for season data to be used
         self.games_threshold = 4
@@ -33,17 +64,39 @@ class Data:
         self.position_over_time = None
         self.next_games = None
         
-        self.name_to_initials = {
-            'Brighton and Hove Albion FC': 'BHA',
-            'West Ham United FC': 'WHU',
-            'Manchester City FC': 'MCI',
-            'Manchester United FC': 'MUN',
-            'Sheffield United FC': 'SHU',
-            'Aston Villa FC': 'AVL',
-            'West Bromwich Albion FC': 'WBA',
-        }
+        # self.name_to_initials = {
+        #     'Brighton and Hove Albion FC': 'BHA',
+        #     'West Ham United FC': 'WHU',
+        #     'Manchester City FC': 'MCI',
+        #     'Manchester United FC': 'MUN',
+        #     'Sheffield United FC': 'SHU',
+        #     'Aston Villa FC': 'AVL',
+        #     'West Bromwich Albion FC': 'WBA',
+        # }
         
-        self.initials_to_name = {
+        # self.names_and_initials = {
+        #     'ARS': 'Arsenal FC',
+        #     'AVL': 'Aston Villa FC',
+        #     'BHA': 'Brighton and Hove Albion FC',
+        #     'BUR': 'Burnley FC',
+        #     'CHE': 'Chelsea FC',
+        #     'CRY': 'Crystal Palace FC',
+        #     'EVE': 'Everton FC',
+        #     'FUL': 'Fulham FC',
+        #     'LEE': 'Leeds United FC',
+        #     'LEI': 'Leicester City FC',
+        #     'LIV': 'Liverpool FC',
+        #     'MCI': 'Manchester City FC',
+        #     'MUN': 'Manchester United FC',
+        #     'NEW': 'Newcastle United FC',
+        #     'SHU': 'Sheffield United FC',
+        #     'SOU': 'Southampton FC',
+        #     'TOT': 'Tottenham Hotspur FC',
+        #     'WBA': 'West Bromwich Albion FC',
+        #     'WHU': 'West Ham United FC',
+        #     'WOL': 'Wolverhampton Wanderers FC',
+        # }
+        self.names_and_initials = TwoWayDict({
             'ARS': 'Arsenal FC',
             'AVL': 'Aston Villa FC',
             'BHA': 'Brighton and Hove Albion FC',
@@ -64,7 +117,7 @@ class Data:
             'WBA': 'West Bromwich Albion FC',
             'WHU': 'West Ham United FC',
             'WOL': 'Wolverhampton Wanderers FC',
-        }
+        })
     
     def getCurrentMatchday(self):
         # Returns "Matchday X"
@@ -290,14 +343,14 @@ class Data:
     
     # ------------------------- FORM DATAFRAME -------------------------------
     
-    def initialsToTeamNames(self, initials):
-        if initials in self.initials_to_name.keys():
-            return self.initials_to_name[initials]
-    
-    def teamNameToInitials(self, team_name):
-        if team_name in self.name_to_initials.keys():
-            return self.name_to_initials[team_name]
+    def convertTeamNameOrInitials(self, team_name):
+        if team_name in self.names_and_initials.keys():
+            return self.names_and_initials[team_name]
+        elif len(team_name) == 3:
+            # If no match found and input is initials
+            raise KeyError("Team name does not exist")
         else:
+            # If no match found and input is team name, shorten team name
             return team_name[:3].upper()
     
     def lastNGames(self, n_games, matchday_no, fixtures):
@@ -327,7 +380,7 @@ class Data:
             home_away_col.append(home_away)
 
         # Convert full team names to team initials
-        teams_played_col = [list(map(lambda team_name : self.teamNameToInitials(team_name), teams_played))
+        teams_played_col = [list(map(lambda team_name : self.convertTeamNameOrInitials(team_name), teams_played))
                                  for teams_played in teams_played_col]
         
         # Convert queues back to lists
@@ -362,7 +415,7 @@ class Data:
             form_str = form_str.replace(',', '')
             for form_idx, result in enumerate(form_str):
                 # Convert opposition team initials to their name 
-                team_name = self.initialsToTeamNames(teams_played[form_idx])
+                team_name = self.convertTeamNameOrInitials(teams_played[form_idx])
 
                 #print("ON ", form_percentage)
                 # Increament form score based on rating of the team they've won, drawn or lost against
@@ -481,7 +534,7 @@ class Data:
             # threshold (a star team)
             played_star_team_col = []
             for teams_played in teams_played_col:
-                ratings = [self.team_ratings['Total Rating'][team_name] for team_name in list(map(self.initialsToTeamNames, teams_played))]
+                ratings = [self.team_ratings['Total Rating'][team_name] for team_name in list(map(self.convertTeamNameOrInitials, teams_played))]
                 played_star_team_col.append([team_rating > self.star_team_threshold for team_rating in ratings])
             form[(f'Matchday {matchday_no+1}', 'Played Star Team')] = played_star_team_col
             
@@ -744,7 +797,7 @@ class Data:
         home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(1)=='Home Advantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
         if (home_advantages[f'{self.season}']['Played at Home'] <= self.home_games_threshold).all():
-            print(f"Current season excluded from home advantages calculation -> haven't all played {self.home_games_threshold} home games.")
+            print(f"Current season excluded from home advantages calculation -> all teams haven't played {self.home_games_threshold} home games.")
             # Drop this seasons column, start from previous season
             home_advantages_cols = home_advantages_cols.iloc[:, :-1]
                     
@@ -1054,7 +1107,7 @@ class Data:
 
         # Check whether current season data should be included in each team's total rating
         if (self.standings[f'{self.season}']['Played'] <= self.games_threshold).all():  # If current season hasn't played enough games
-            print(f"Current season excluded from team ratings calculation -> haven't all played {self.games_threshold} games.")
+            print(f"Current season excluded from team ratings calculation -> all teams played {self.games_threshold} games.")
             include_current_season = False
         else:
             include_current_season = True

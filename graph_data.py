@@ -172,7 +172,7 @@ class GraphData:
         # Convert team name into suitable use for filename
         file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
         plotly.offline.plot(
-            fig, filename=f'./static/graphs/{file_team_name}/fixtures-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+            fig, filename=f'./templates/graphs/{file_team_name}/fixtures-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
     
     
     # ------------- FORM OVER TIME GRAPHS -------------
