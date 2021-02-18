@@ -4,4 +4,4 @@ data/
 __pycache__/
 templates/graphs/
 static/graphs/
-
+.env
