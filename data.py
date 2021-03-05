@@ -9,6 +9,7 @@ import numpy as np
 import requests
 import json
 from datetime import datetime
+from data_vis import DataVis
 
 class TwoWayDict(dict):
     def __init__(self, dict):
@@ -620,34 +621,39 @@ class Data:
         print("Creating position over time dataframe... ")
                 
         position_over_time = pd.DataFrame()
-        
+
         score = self.fixtures.loc[:, (slice(None), 'Score')]
         home_away = self.fixtures.loc[:, (slice(None), 'HomeAway')]
         date = self.fixtures.loc[:, (slice(None), 'Date')]
         
-        # Remove cols for matchdays that haven't played yet
-        score = score.replace("None - None", np.nan).dropna(axis=1, how='all')
+        # Remove cols for matchdays that haven't played any games yet
+        score = score.replace("None - None", np.nan).dropna(axis=1, how='any')
         no_cols = score.shape[1]
         # Drop those same columns from other two dataframe
         home_away = home_away.drop(home_away.iloc[:, no_cols:], axis=1) 
         date = date.drop(date.iloc[:, no_cols:], axis=1)
         
         position_over_time = pd.concat([score, home_away, date], axis=1)
+        
+        column_headings = list(score.columns.get_level_values(0))
                         
         for col_idx in range(no_cols):
             gd_col, pts_col = [], []
-            
             col_data = position_over_time[f'Matchday {col_idx+1}']
             for row_idx, row in col_data.iterrows():
                 gd, pts = 0, 0
                 if col_idx != 0:
-                    # Add previous weeks cumulative gd 
-                    new_gd, new_pts = self.getGDAndPts(position_over_time.loc[row_idx][f'Matchday {col_idx}', 'Score'], position_over_time.loc[row_idx][f'Matchday {col_idx}', 'HomeAway'])
+                    if f'Matchday {col_idx}' in column_headings:
+                        # First add previous weeks cumulative gd
+                        new_gd, new_pts = self.getGDAndPts(position_over_time.loc[row_idx][f'Matchday {col_idx}', 'Score'], position_over_time.loc[row_idx][f'Matchday {col_idx}', 'HomeAway'])
+                        gd += new_gd
+                        pts += new_pts
+                if f'Matchday {col_idx+1}' in column_headings:
+                    # If this matchday has had all games played and is in score table
+                    # Add this weeks gd
+                    new_gd, new_pts = self.getGDAndPts(row['Score'], row['HomeAway'])
                     gd += new_gd
                     pts += new_pts
-                new_gd, new_pts = self.getGDAndPts(row['Score'], row['HomeAway'])
-                gd += new_gd
-                pts += new_pts
                 
                 gd_col.append(gd)
                 pts_col.append(pts)
@@ -1132,7 +1138,7 @@ class Data:
         
     
     @timebudget
-    def updateAll(self, no_seasons, display_tables=False, request_new=True):
+    def updateAll(self, no_seasons, team_name=None, display_tables=False, display_graphs=False, request_new=True):
         # Standings for the last [n_seasons] seasons
         self.standings = self.buildStandings(no_seasons, display=display_tables, request_new=request_new)
         # Fixtures for the whole season for each team
@@ -1148,3 +1154,17 @@ class Data:
         # Data about the opponent in each team's next game 
         self.next_games = self.buildNextGames(display=display_tables, request_new=request_new)
         
+        if request_new:
+            vis = DataVis()
+            vis.updateAllGraphs(self.fixtures, 
+                                self.team_ratings, 
+                                self.home_advantages, 
+                                self.form, 
+                                self.position_over_time, 
+                                display_graphs=display_graphs, team_name=team_name)
+
+
+
+if __name__ == "__main__":
+    d = Data(2020)
+    d.updateAll(3, team_name='Liverpool FC', display_tables=False, display_graphs=False, request_new=False)

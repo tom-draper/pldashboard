@@ -1,5 +1,7 @@
-from refresh import DataRefresh
+from data import Data
 from flask import Flask, render_template, request
+import time
+from threading import Thread, Lock
 app = Flask(__name__)
 
 
@@ -33,21 +35,8 @@ def team():
     
     team_name_hyphenated = rule.rule[1:]  # Get hypehenated team name from current URL
     team_name = team_name_hyphenated.replace('-', ' ').title().replace('And', 'and') + ' FC'
-
-    # Get data values to display on team webpage
-    position = r.data.getPosition(team_name)
-    form = r.data.getForm(team_name)
-    recent_teams_played = r.data.getRecentTeamsPlayed(team_name)
-    form_rating = r.data.getCurrentFormRating(team_name)
-    won_against_star_team = r.data.getWonAgainstStarTeam(team_name)
-        
-    team_playing_next_name = r.data.getNextTeamToPlay(team_name)
-    team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
-    team_playing_next_form_rating = r.data.getCurrentFormRating(team_playing_next_name)
-    team_playing_next_home_away = r.data.getNextGameHomeAway(team_name)
-    team_playing_prev_meetings = r.data.getPreviousMeetings(team_name)
     
-    table_snippet, table_index_of_this_team = r.data.getTableSnippet(team_name)
+    position, form, recent_teams_played, form_rating, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, table_snippet, table_index_of_this_team = data.get_team_page_data(team_name)
         
     return render_template('team.html', 
                            team_name_hyphenated=team_name_hyphenated,
@@ -64,9 +53,53 @@ def team():
                            table_index_of_this_team=table_index_of_this_team)
 
 
+class SharedData:
+    def __init__(self, season):
+        self.data = Data(season)
+        self.lock = Lock()
+    
+    def get_team_page_data(self, team_name):
+        self.lock.acquire()
+        # Get data values to display on team webpage
+        position = self.data.getPosition(team_name)
+        form = self.data.getForm(team_name)
+        recent_teams_played = self.data.getRecentTeamsPlayed(team_name)
+        form_rating = self.data.getCurrentFormRating(team_name)
+        won_against_star_team = self.data.getWonAgainstStarTeam(team_name)
+            
+        team_playing_next_name = self.data.getNextTeamToPlay(team_name)
+        team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
+        team_playing_next_form_rating = self.data.getCurrentFormRating(team_playing_next_name)
+        team_playing_next_home_away = self.data.getNextGameHomeAway(team_name)
+        team_playing_prev_meetings = self.data.getPreviousMeetings(team_name)
+        
+        table_snippet, table_index_of_this_team = self.data.getTableSnippet(team_name)
+        self.lock.release()
+        return position, form, recent_teams_played, form_rating, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, table_snippet, table_index_of_this_team
+
+    def updateAll(self):
+        self.lock.acquire()
+        self.data.updateAll(3, team_name=None, display_tables=False, display_graphs=False, request_new=False)
+        self.lock.release()
+
+
+def data_updater(data, time_interval):
+    while True:
+        time.sleep(time_interval)
+        print("Updating data...")
+        data.updateAll()
+
+
+
 if __name__ == '__main__':
     # Refresh data and graphs
-    r = DataRefresh(2020)
-    r.updateAll(3, team_name=None, display_tables=False, display_graphs=False, request_new=True)
+    data = SharedData(2020)
+    data.updateAll()
+    
+    updater = Thread(target=data_updater, kwargs={'data': data, 'time_interval': 3600})
+    updater.start()
+    
     # Begin web app
     app.run(host='0.0.0.0', debug=False)
+    
+    updater.join()
