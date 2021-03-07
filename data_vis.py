@@ -466,10 +466,13 @@ class DataVis:
         # Create chart y values (2 bar charts, and the average line)
         y_goals_scored, y_goals_conceded, y_avg = [], [], []
         team_position_over_time = position_over_time.loc[team_name]
-        no_matchdays = len(set([x[0] for x in team_position_over_time.index]))
-        for i in range(no_matchdays):
+        # no_matchdays = len(set([x[0] for x in team_position_over_time.index]))
+        
+        # List of matchday strings that have had all games play
+        column_headings = list(position_over_time.columns.get_level_values(0))
+        for matchday_str in range(column_headings):
             # Append the average goals for this matchday to average goals list
-            matchday_scorelines = position_over_time[f'Matchday {i+1}']['Score']
+            matchday_scorelines = position_over_time[matchday_str]['Score']
             goals_scored = []
             for scoreline in matchday_scorelines.values.tolist():
                 if type(scoreline) is str:
@@ -480,7 +483,7 @@ class DataVis:
                        
             
             # Append the teams number of goals scored and cocneded this matchday
-            team_matchday = team_position_over_time[f'Matchday {i+1}']
+            team_matchday = team_position_over_time[matchday_str]
             if type(team_matchday['Score']) is str:  # If match has been played
                 home, _, away = team_matchday['Score'].split(' ')
                 no_goals_scored, no_goals_conceded = 0, 0

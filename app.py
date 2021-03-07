@@ -37,6 +37,7 @@ def team():
     team_name = team_name_hyphenated.replace('-', ' ').title().replace('And', 'and') + ' FC'
     
     position, form, recent_teams_played, form_rating, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, table_snippet, table_index_of_this_team = data.get_team_page_data(team_name)
+    print(position, form, recent_teams_played, form_rating, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, table_snippet, table_index_of_this_team)
         
     return render_template('team.html', 
                            team_name_hyphenated=team_name_hyphenated,
@@ -62,17 +63,9 @@ class SharedData:
         self.lock.acquire()
         # Get data values to display on team webpage
         position = self.data.getPosition(team_name)
-        form = self.data.getForm(team_name)
-        recent_teams_played = self.data.getRecentTeamsPlayed(team_name)
-        form_rating = self.data.getCurrentFormRating(team_name)
-        won_against_star_team = self.data.getWonAgainstStarTeam(team_name)
-            
-        team_playing_next_name = self.data.getNextTeamToPlay(team_name)
+        form, recent_teams_played, form_rating, won_against_star_team = self.data.getRecentForm(team_name)
+        team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings = self.data.getNextGame(team_name)
         team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
-        team_playing_next_form_rating = self.data.getCurrentFormRating(team_playing_next_name)
-        team_playing_next_home_away = self.data.getNextGameHomeAway(team_name)
-        team_playing_prev_meetings = self.data.getPreviousMeetings(team_name)
-        
         table_snippet, table_index_of_this_team = self.data.getTableSnippet(team_name)
         self.lock.release()
         return position, form, recent_teams_played, form_rating, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, table_snippet, table_index_of_this_team
@@ -97,9 +90,9 @@ if __name__ == '__main__':
     data.updateAll()
     
     updater = Thread(target=data_updater, kwargs={'data': data, 'time_interval': 3600})
-    updater.start()
+    # updater.start()
     
     # Begin web app
     app.run(host='0.0.0.0', debug=False)
     
-    updater.join()
+    # updater.join()

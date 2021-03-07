@@ -51,7 +51,7 @@ class Data:
         # Number of games played in a season for season data to be used
         self.games_threshold = 4
         self.home_games_threshold = 5
-        self.star_team_threshold = 75
+        self.star_team_threshold = 0.75  # Rating over 75% to be a star team
                         
         # List of current season teams, updated when updating standings 
         self.team_names = None  
@@ -131,10 +131,12 @@ class Data:
     def getPosition(self, team_name):
         return self.standings.loc[team_name, f'{self.season}']['Position']
 
+    # ------- RECENT FORM --------
+
     def getForm(self, team_name):
         latest_matchday = self.getCurrentMatchday()
         form = self.form[latest_matchday].loc[team_name]['Form']
-        
+                
         # If team hasn't yet played in current matchday, use previous matchday's form
         if len(form.replace(',', '')) != 5:
             previous_matchday = list(self.form.columns.unique(level=0))[-2]
@@ -181,6 +183,36 @@ class Data:
         # Replace boolean values with CSS tag for super win image
         won_against_star_team = ["star-team" if x else "not-star-team" for x in won_against_star_team]
         return won_against_star_team
+
+    def getRecentForm(self, team_name):
+        form = self.getForm(team_name)  # List of five 'W', 'D' or 'L'
+        recent_teams_played = self.getRecentTeamsPlayed(team_name)
+        form_rating = self.getCurrentFormRating(team_name)
+        won_against_star_team = self.getWonAgainstStarTeam(team_name)
+        return form, recent_teams_played, form_rating, won_against_star_team
+    
+    # ------- NEXT GAME --------
+
+    def getNextTeamToPlay(self, team_name):
+        team_name = self.next_games['Next Game'].loc[team_name]
+        return team_name
+    
+    def getPreviousMeetings(self, team_name):
+        prev_meetings = self.next_games.loc[team_name]['Previous Meetings']
+        return prev_meetings
+    
+    def getNextGameHomeAway(self, team_name):
+        home_away = self.next_games['HomeAway'].loc[team_name]
+        return home_away
+
+    def getNextGame(self, team_name):
+        team_playing_next_name = self.getNextTeamToPlay(team_name)
+        team_playing_next_form_rating = self.getCurrentFormRating(team_playing_next_name)
+        team_playing_next_home_away = self.getNextGameHomeAway(team_name)
+        team_playing_prev_meetings = self.getPreviousMeetings(team_name)
+        return team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings
+    
+    # -------- TABLE SNIPPET ---------
     
     def getTableSnippet(self, team_name):
         team_df_idx = self.standings.index.get_loc(team_name)
@@ -217,20 +249,6 @@ class Data:
             row_list.insert(1, team_name)
             
         return table_snippet, team_idx
-
-    def getNextTeamToPlay(self, team_name):
-        team_name = self.next_games['Next Game'].loc[team_name]
-        return team_name
-    
-    def getPreviousMeetings(self, team_name):
-        prev_meetings = self.next_games.loc[team_name]['Previous Meetings']
-        return prev_meetings
-    
-    def getNextGameHomeAway(self, team_name):
-        home_away = self.next_games['HomeAway'].loc[team_name]
-        return home_away
-    
-    
     
     
     # ---------------------- NEXT GAMES DATAFRAME ---------------------------
@@ -354,28 +372,46 @@ class Data:
             # If no match found and input is team name, shorten team name
             return team_name[:3].upper()
     
-    def lastNGames(self, n_games, matchday_no, fixtures):
+    def lastNGames(self, fixtures, n_games, team_name, cur_matchday_no):
+        dates = fixtures.loc[team_name, (slice(None), 'Date')]
+        teams_played = fixtures.loc[team_name, (slice(None), 'Team')]
+        scores = fixtures.loc[team_name, (slice(None), 'Score')]
+        home_aways = fixtures.loc[team_name, (slice(None), 'HomeAway')]
+
+        data = list(zip(dates.values, teams_played.values, scores.values, home_aways.values))
+        # Remove matchdays without a score
+        data = [d for d in data if d[2] != 'None - None']
+        # Sort by date
+        data = sorted(data, key=lambda x: x[0])
+        # Unzip tuples
+        dates, teams_played, scores, home_aways = list(zip(*data))
+        
+        matchday_date = fixtures[f'Matchday {cur_matchday_no}']['Date'][0].asm8
+                
+        # Default to latest game
+        index = len(dates)-1
+        # Find index of dates where this matchday would fit
+        for idx in range(len(dates)-2):
+            if matchday_date < dates[idx+1]:
+                index = idx
+                break
+        
+        # Get the last n_games matchday values from this index
+        if len(dates) > n_games:
+            # Find date of current matchday
+            teams_played = teams_played[index-n_games+1:index+1]
+            scores = scores[index-n_games+1:index+1]
+            home_aways = home_aways[index-n_games+1:index+1]
+        
+        return teams_played, scores, home_aways
+
+    def lastNGamesCols(self, fixtures, n_games, matchday_no):
         teams_played_col = []
         scores_col = []
         home_away_col = []
                 
-        for _, row in fixtures.iterrows():
-            teams_played = deque([])
-            scores = deque([])
-            home_away = deque([])
-            # At each column, group previous 5 columns
-            # for n in range(matchday_no-n_games+1, matchday_no+1):
-            for n in range(matchday_no, 0, -1):
-                # If reached first matchday of season or reached the number of 
-                # games required
-                if n <= 0 or (len(teams_played) >= n_games):
-                    break
-                    
-                matchday_result = row[f'Matchday {n}']
-                if matchday_result['Score'] != "None - None":
-                    teams_played.appendleft(matchday_result['Team'])
-                    scores.appendleft(matchday_result['Score'])
-                    home_away.appendleft(matchday_result['HomeAway'])
+        for team_name, _ in fixtures.iterrows():
+            teams_played, scores, home_away = self.lastNGames(fixtures, n_games, team_name, matchday_no)
             teams_played_col.append(teams_played)
             scores_col.append(scores)
             home_away_col.append(home_away)
@@ -496,13 +532,14 @@ class Data:
             form[(f'Matchday {matchday_no+1}', 'Date')] = self.fixtures[f'Matchday {matchday_no+1}', 'Date']
             
             # Get data about last 5 matchdays
-            teams_played_col, scores_col, home_aways_col = self.lastNGames(5, matchday_no+1, self.fixtures)
+            teams_played_col, scores_col, home_aways_col = self.lastNGamesCols(self.fixtures, 5, matchday_no+1)
             form[(f'Matchday {matchday_no+1}', 'Teams Played')] = teams_played_col
             form[(f'Matchday {matchday_no+1}', 'Scores')] = scores_col
             form[(f'Matchday {matchday_no+1}', 'HomeAway')] = home_aways_col
             
             # Form string and goal differences column
-            form_str_col, goal_differences_col = [], []
+            form_str_col = []
+            goal_differences_col = []
             # Loop through each matchday and record the goal different for each team
             for scores, home_aways in zip(scores_col, home_aways_col):
                 # Append 'W', 'L' or 'D' depending on result
@@ -548,6 +585,8 @@ class Data:
                     
         form = pd.DataFrame(form)
         form = form.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False)
+        # Remove useless columns
+        del form[(f'Matchday {matchday_no+1}', 'Played Star Team')]
                 
         if display: 
             print(form)
@@ -559,11 +598,12 @@ class Data:
     # ------------ POSITION OVER TIME DATAFRAME ------------
     
     def getGDAndPts(self, score, home_away):
+        pts = 0
+        gd = 0
         if type(score) == str:  # If score exists and game has been played
             home, _, away = score.split(' ')
             home, away = int(home), int(away)
             
-            pts, gd = 0, 0
             if home == away:
                 pts = 1
             if home_away == 'Home':
@@ -574,8 +614,9 @@ class Data:
                 gd = away - home
                 if home < away:
                     pts = 3
-            return gd, pts
-        return 0, 0
+                    
+        return gd, pts
+
     
     @timebudget
     def buildPositionOverTime(self, display=False):
@@ -641,7 +682,8 @@ class Data:
             gd_col, pts_col = [], []
             col_data = position_over_time[f'Matchday {col_idx+1}']
             for row_idx, row in col_data.iterrows():
-                gd, pts = 0, 0
+                gd = 0
+                pts = 0
                 if col_idx != 0:
                     if f'Matchday {col_idx}' in column_headings:
                         # First add previous weeks cumulative gd

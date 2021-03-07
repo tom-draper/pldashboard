@@ -91,7 +91,11 @@
         <div class="predictions">
           <div class="next-game-item">Current form: <b>{{ team_playing_next_form_rating }}%</b></div>
           <!-- <div class="next-game-item">Clean sheet: <b>35%</b></div> -->
-          <div class="next-game-item">Score prediction: <b>{{ team_playing_prev_meetings[0][3] }} - {{ team_playing_prev_meetings[0][4] }}</b></div>
+          {% if (team_playing_prev_meetings|length) > 0 %}
+            <div class="next-game-item">Score prediction: <b>{{ team_playing_prev_meetings[0][3] }} - {{ team_playing_prev_meetings[0][4] }}</b></div>
+          {% else %}
+            <div class="next-game-item">Score prediction: <b>0 - 0</b></div>
+          {% endif %}
         </div>
         <div class="next-game-logo opposition-badge"
             style="background-image: url('static/img/club_badges/{{ team_playing_next_name_hypenated }}.png');
