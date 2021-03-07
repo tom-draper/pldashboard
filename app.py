@@ -64,7 +64,7 @@ class SharedData:
         # Get data values to display on team webpage
         position = self.data.getPosition(team_name)
         form, recent_teams_played, form_rating, won_against_star_team = self.data.getRecentForm(team_name)
-        team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings = self.data.getNextGame(team_name)
+        team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings = self.data.getNextGameDetails(team_name)
         team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
         table_snippet, table_index_of_this_team = self.data.getTableSnippet(team_name)
         self.lock.release()

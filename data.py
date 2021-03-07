@@ -205,7 +205,7 @@ class Data:
         home_away = self.next_games['HomeAway'].loc[team_name]
         return home_away
 
-    def getNextGame(self, team_name):
+    def getNextGameDetails(self, team_name):
         team_playing_next_name = self.getNextTeamToPlay(team_name)
         team_playing_next_form_rating = self.getCurrentFormRating(team_playing_next_name)
         team_playing_next_home_away = self.getNextGameHomeAway(team_name)
@@ -252,6 +252,17 @@ class Data:
     
     
     # ---------------------- NEXT GAMES DATAFRAME ---------------------------
+
+    def getNextGame(self, team_name, fixtures):
+        # Scan through list of fixtures to find the first that is 'scheduled' 
+        next_matchday_no, next_team = None, None
+        for matchday_no in range(len(fixtures.columns.unique(level=0))):
+            if fixtures.loc[team_name][f'Matchday {matchday_no+1}', 'Status'] == 'SCHEDULED':
+                next_team = fixtures.loc[team_name][f'Matchday {matchday_no+1}', 'Team']
+                next_matchday_no = matchday_no
+                break
+
+        return next_matchday_no, next_team
     
     @timebudget
     def buildNextGames(self, display=False, request_new=True):
@@ -289,16 +300,13 @@ class Data:
         
         next_games = pd.DataFrame()
         
-        matchday = self.getCurrentMatchday()
-        matchday_no = int(matchday.split(' ')[-1])
+        # matchday = self.getCurrentMatchday()
+        # matchday_no = int(matchday.split(' ')[-1])
         
         next_team_col = []
-        for idx, row in self.fixtures[matchday].iterrows():
-            if row['Status'] == 'SCHEDULED':  # If not yet played matchday game
-                team_name = row['Team']
-            else:
-                team_name = self.fixtures[f'Matchday {matchday_no+1}'].loc[idx]['Team']
-            next_team_col.append(team_name)
+        for team_name, _ in self.fixtures.iterrows():
+            matchday_no, next_team = self.getNextGame(team_name, self.fixtures)
+            next_team_col.append(next_team)
         
         next_games['Next Game'] = next_team_col
         # Config index now as there are a correct number of rows, and allow to 
@@ -349,9 +357,10 @@ class Data:
                         next_games.loc[match['awayTeam']['name']]['Previous Meetings'].append(tuple((date, match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[1])))
         
         # Sort each list of tuple previous meeting to be descending by date
-        for idx, row in next_games.iterrows():
+        for _, row in next_games.iterrows():
             row['Previous Meetings'].sort(key=lambda x: datetime.strptime(x[0], '%d %B %Y'), reverse=True)
-                
+        
+        
         if display:
             print(next_games)
         
@@ -670,49 +679,47 @@ class Data:
         # Remove cols for matchdays that haven't played any games yet
         score = score.replace("None - None", np.nan).dropna(axis=1, how='any')
         no_cols = score.shape[1]
-        # Drop those same columns from other two dataframe
-        home_away = home_away.drop(home_away.iloc[:, no_cols:], axis=1) 
-        date = date.drop(date.iloc[:, no_cols:], axis=1)
+        # Only keep the same columns that remain in the score dataframe
+        date = date[list(score.columns.unique(level=0))]
+        home_away = home_away[list(score.columns.unique(level=0))]
         
         position_over_time = pd.concat([score, home_away, date], axis=1)
         
         column_headings = list(score.columns.get_level_values(0))
-                        
-        for col_idx in range(no_cols):
+        for idx, matchday_str in enumerate(column_headings):
             gd_col, pts_col = [], []
-            col_data = position_over_time[f'Matchday {col_idx+1}']
+            col_data = position_over_time[matchday_str]
             for row_idx, row in col_data.iterrows():
                 gd = 0
                 pts = 0
-                if col_idx != 0:
-                    if f'Matchday {col_idx}' in column_headings:
-                        # First add previous weeks cumulative gd
-                        new_gd, new_pts = self.getGDAndPts(position_over_time.loc[row_idx][f'Matchday {col_idx}', 'Score'], position_over_time.loc[row_idx][f'Matchday {col_idx}', 'HomeAway'])
-                        gd += new_gd
-                        pts += new_pts
-                if f'Matchday {col_idx+1}' in column_headings:
-                    # If this matchday has had all games played and is in score table
-                    # Add this weeks gd
-                    new_gd, new_pts = self.getGDAndPts(row['Score'], row['HomeAway'])
+                if matchday_str != 'Matchday 1':
+                    # First add previous weeks cumulative gd
+                    new_gd, new_pts = self.getGDAndPts(position_over_time.loc[row_idx][matchday_str, 'Score'], position_over_time.loc[row_idx][matchday_str, 'HomeAway'])
                     gd += new_gd
                     pts += new_pts
+                # If this matchday has had all games played and is in score table
+                # Add this weeks gd
+                new_gd, new_pts = self.getGDAndPts(row['Score'], row['HomeAway'])
+                gd += new_gd
+                pts += new_pts
                 
                 gd_col.append(gd)
                 pts_col.append(pts)
             
-            position_over_time[f'Matchday {col_idx+1}', 'GD'] = gd_col
-            position_over_time[f'Matchday {col_idx+1}', 'Points'] = pts_col
+            position_over_time[matchday_str, 'GD'] = gd_col
+            position_over_time[matchday_str, 'Points'] = pts_col
             
-            position_over_time.sort_values(by=[(f'Matchday {col_idx+1}', 'Points'), (f'Matchday {col_idx+1}', 'GD')], ascending=False, inplace=True)
+            position_over_time.sort_values(by=[(matchday_str, 'Points'), (matchday_str, 'GD')], ascending=False, inplace=True)
             # If on the last and most recent column, ensure matchday positions is 
             # exactly the same order as from API standings data 
-            if col_idx == no_cols - 1:
+            if idx == no_cols - 1:
                 # Reorder to the order as standings data
                 position_over_time = position_over_time.reindex(self.standings.index)
 
-            position_over_time[f'Matchday {col_idx+1}', 'Position'] = np.arange(1, 21)
-            
-        position_over_time.sort_index(level=1, inplace=True)
+            position_over_time[matchday_str, 'Position'] = np.arange(1, 21)
+               
+        sorted_index = sorted(position_over_time.columns.values.tolist(), key=lambda x: int(x[0].split(' ')[-1]))
+        position_over_time = position_over_time.reindex(sorted_index, axis=1)
                 
         if display:
             print(position_over_time)
@@ -1196,9 +1203,9 @@ class Data:
         # Data about the opponent in each team's next game 
         self.next_games = self.buildNextGames(display=display_tables, request_new=request_new)
         
-        if request_new:
-            vis = DataVis()
-            vis.updateAllGraphs(self.fixtures, 
+        # if request_new:
+        vis = DataVis()
+        vis.updateAllGraphs(self.fixtures, 
                                 self.team_ratings, 
                                 self.home_advantages, 
                                 self.form, 

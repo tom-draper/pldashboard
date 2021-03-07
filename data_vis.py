@@ -462,15 +462,13 @@ class DataVis:
         # All ys have the same x date values
         x = [datetime.utcfromtimestamp(date/1e9) for date in x_cols.loc[team_name].values.tolist()]
         
-        
         # Create chart y values (2 bar charts, and the average line)
         y_goals_scored, y_goals_conceded, y_avg = [], [], []
         team_position_over_time = position_over_time.loc[team_name]
         # no_matchdays = len(set([x[0] for x in team_position_over_time.index]))
-        
+                
         # List of matchday strings that have had all games play
-        column_headings = list(position_over_time.columns.get_level_values(0))
-        for matchday_str in range(column_headings):
+        for matchday_str in list(position_over_time.columns.unique(level=0)):
             # Append the average goals for this matchday to average goals list
             matchday_scorelines = position_over_time[matchday_str]['Score']
             goals_scored = []
