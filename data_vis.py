@@ -569,7 +569,7 @@ class DataVis:
         plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
         
         
-    def updateAllGraphs(self, fixtures, team_ratings, home_advantages, form, position_over_time, team_name=None, display_graphs=False):
+    def updateAll(self, fixtures, team_ratings, home_advantages, form, position_over_time, team_name=None, display_graphs=False):
         self.updateFixtures(fixtures, team_ratings, home_advantages, display=display_graphs, team_name=team_name)
         self.updateFormOverTime(form, display=display_graphs, team_name=team_name)
         self.updatePositionOverTime(position_over_time, display=display_graphs, team_name=team_name)

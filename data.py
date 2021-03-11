@@ -381,46 +381,64 @@ class Data:
             # If no match found and input is team name, shorten team name
             return team_name[:3].upper()
     
-    def lastNGames(self, fixtures, n_games, team_name, cur_matchday_no):
-        dates = fixtures.loc[team_name, (slice(None), 'Date')]
-        teams_played = fixtures.loc[team_name, (slice(None), 'Team')]
-        scores = fixtures.loc[team_name, (slice(None), 'Score')]
-        home_aways = fixtures.loc[team_name, (slice(None), 'HomeAway')]
-
-        data = list(zip(dates.values, teams_played.values, scores.values, home_aways.values))
-        # Remove matchdays without a score
-        data = [d for d in data if d[2] != 'None - None']
-        # Sort by date
-        data = sorted(data, key=lambda x: x[0])
+    def lastNGames(self, games_played, n_games, date):
+        """ Slice games played data to return only the last 'n_games' games from 
+            the given date """
+            
         # Unzip tuples
-        dates, teams_played, scores, home_aways = list(zip(*data))
-        
-        matchday_date = fixtures[f'Matchday {cur_matchday_no}']['Date'][0].asm8
-                
+        dates, teams_played, scores, home_aways = list(zip(*games_played))
+           
         # Default to latest game
         index = len(dates)-1
         # Find index of dates where this matchday would fit
         for idx in range(len(dates)-2):
-            if matchday_date < dates[idx+1]:
+            if dates[idx+1] > date:
                 index = idx
                 break
         
         # Get the last n_games matchday values from this index
         if len(dates) > n_games:
+            low = index - n_games+1
+            if low < 0:
+                low = 0
+            high = index + 1
             # Find date of current matchday
-            teams_played = teams_played[index-n_games+1:index+1]
-            scores = scores[index-n_games+1:index+1]
-            home_aways = home_aways[index-n_games+1:index+1]
-        
-        return teams_played, scores, home_aways
+            teams_played = teams_played[low:high]
+            scores = scores[low:high]
+            home_aways = home_aways[low:high]
+                
+        return list(teams_played), list(scores), list(home_aways)
 
     def lastNGamesCols(self, fixtures, n_games, matchday_no):
         teams_played_col = []
         scores_col = []
         home_away_col = []
+        
+        matchday_dates = fixtures[f'Matchday {matchday_no}', 'Date']
+        median_matchday_date = matchday_dates[len(matchday_dates)//2].asm8
                 
-        for team_name, _ in fixtures.iterrows():
-            teams_played, scores, home_away = self.lastNGames(fixtures, n_games, team_name, matchday_no)
+        for team_name, row in fixtures.iterrows():
+            dates = fixtures.loc[team_name, (slice(None), 'Date')]
+            teams_played = fixtures.loc[team_name, (slice(None), 'Team')]
+            scores = fixtures.loc[team_name, (slice(None), 'Score')]
+            home_aways = fixtures.loc[team_name, (slice(None), 'HomeAway')]
+            
+            # List containing a tuple for each game
+            games_played = list(zip(dates.values, teams_played.values, scores.values, home_aways.values))
+            # Remove matchdays that haven't played yet and don't have a score
+            games_played = [game for game in games_played if game[2] != 'None - None']
+            # Sort by date
+            games_played = sorted(games_played, key=lambda x: x[0])
+            
+            matchday_date = row[f'Matchday {matchday_no}']['Date'].asm8
+            
+            # If matchday date is far away from the mean and this matchday has 
+            # been rescheduled, use the mean matchday date insead
+            # Check within 2 weeks either side
+            if not (median_matchday_date - np.timedelta64(14,'D') < matchday_date < median_matchday_date + np.timedelta64(14,'D')):
+                matchday_date = median_matchday_date
+            
+            teams_played, scores, home_away = self.lastNGames(games_played, n_games, matchday_date)
             teams_played_col.append(teams_played)
             scores_col.append(scores)
             home_away_col.append(home_away)
@@ -428,11 +446,6 @@ class Data:
         # Convert full team names to team initials
         teams_played_col = [list(map(lambda team_name : self.convertTeamNameOrInitials(team_name), teams_played))
                                  for teams_played in teams_played_col]
-        
-        # Convert queues back to lists
-        teams_played_col = list(map(list, teams_played_col))
-        scores_col = list(map(list, scores_col))
-        home_away_col = list(map(list, home_away_col))
         
         return teams_played_col, scores_col, home_away_col
     
@@ -591,11 +604,14 @@ class Data:
             for played_star_team, form_str in zip(played_star_team_col, form_str_col):  # Team has played games this season
                 won_against_star_team_col.append([(result == 'W' and pst == True) for result, pst in zip(form_str.replace(',', ''), played_star_team)])
             form[(f'Matchday {matchday_no+1}', 'Won Against Star Team')] = won_against_star_team_col
+            
+            # Remove column after use, data is not that useful to keep
+            del form[(f'Matchday {matchday_no+1}', 'Played Star Team')]
                     
         form = pd.DataFrame(form)
         form = form.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False)
-        # Remove useless columns
-        del form[(f'Matchday {matchday_no+1}', 'Played Star Team')]
+        
+        print(form)
                 
         if display: 
             print(form)
@@ -1187,7 +1203,7 @@ class Data:
         
     
     @timebudget
-    def updateAll(self, no_seasons, team_name=None, display_tables=False, display_graphs=False, request_new=True):
+    def updateAll(self, no_seasons, display_tables=False, request_new=True):
         # Standings for the last [n_seasons] seasons
         self.standings = self.buildStandings(no_seasons, display=display_tables, request_new=request_new)
         # Fixtures for the whole season for each team
@@ -1202,18 +1218,20 @@ class Data:
         self.position_over_time = self.buildPositionOverTime(display=display_tables)
         # Data about the opponent in each team's next game 
         self.next_games = self.buildNextGames(display=display_tables, request_new=request_new)
-        
-        # if request_new:
-        vis = DataVis()
-        vis.updateAllGraphs(self.fixtures, 
-                                self.team_ratings, 
-                                self.home_advantages, 
-                                self.form, 
-                                self.position_over_time, 
-                                display_graphs=display_graphs, team_name=team_name)
 
 
 
 if __name__ == "__main__":
-    d = Data(2020)
-    d.updateAll(3, team_name='Liverpool FC', display_tables=False, display_graphs=False, request_new=False)
+    # Update all dataframes
+    data = Data(2020)
+    data.updateAll(3, display_tables=False, request_new=False)
+    
+    # Use dataframes to update all graph HTML files
+    vis = DataVis()
+    vis.updateAll(data.fixtures, 
+                  data.team_ratings, 
+                  data.home_advantages, 
+                  data.form, 
+                  data.position_over_time, 
+                  display_graphs=False, 
+                  team_name='Liverpool FC')

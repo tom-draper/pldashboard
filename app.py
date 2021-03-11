@@ -1,9 +1,10 @@
 from data import Data
+from data_vis import DataVis
 from flask import Flask, render_template, request
 import time
 from threading import Thread, Lock
-app = Flask(__name__)
 
+app = Flask(__name__)
 
 @app.route("/")
 @app.route("/home")
@@ -37,7 +38,6 @@ def team():
     team_name = team_name_hyphenated.replace('-', ' ').title().replace('And', 'and') + ' FC'
     
     position, form, recent_teams_played, form_rating, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, table_snippet, table_index_of_this_team = data.get_team_page_data(team_name)
-    print(position, form, recent_teams_played, form_rating, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, table_snippet, table_index_of_this_team)
         
     return render_template('team.html', 
                            team_name_hyphenated=team_name_hyphenated,
@@ -57,22 +57,32 @@ def team():
 class SharedData:
     def __init__(self, season):
         self.data = Data(season)
+        self.vis = DataVis()
         self.lock = Lock()
     
     def get_team_page_data(self, team_name):
         self.lock.acquire()
         # Get data values to display on team webpage
         position = self.data.getPosition(team_name)
+        
         form, recent_teams_played, form_rating, won_against_star_team = self.data.getRecentForm(team_name)
+        
         team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings = self.data.getNextGameDetails(team_name)
-        team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
+        
         table_snippet, table_index_of_this_team = self.data.getTableSnippet(team_name)
+        
+        team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
         self.lock.release()
         return position, form, recent_teams_played, form_rating, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, table_snippet, table_index_of_this_team
 
     def updateAll(self):
         self.lock.acquire()
-        self.data.updateAll(3, team_name=None, display_tables=False, display_graphs=False, request_new=False)
+        self.data.updateAll(3, request_new=False)
+        self.vis.updateAll(self.data.fixtures,
+                           self.data.team_ratings,
+                           self.data.home_advantages,
+                           self.data.form,
+                           self.data.position_over_time)
         self.lock.release()
 
 
