@@ -1,3 +1,4 @@
+from numpy.core.numeric import NaN
 import plotly
 import plotly.graph_objects as go
 import numpy as np
@@ -209,7 +210,6 @@ class DataVis:
         
         fig = go.Figure()
         
-        # Sort the x-axis data by date to remove errors due to match rescheduling
         # Sort the x-axis data by date to remove errors due to match rescheduling
         cols = list(form.columns.unique(level=0))
         # Remove 'Matchday' prefix and just store sorted integers
@@ -473,11 +473,15 @@ class DataVis:
         y_goals_scored, y_goals_conceded, y_avg = [], [], []
         team_position_over_time = position_over_time.loc[team_name]
         # no_matchdays = len(set([x[0] for x in team_position_over_time.index]))
-                
+        
+        cols = list(position_over_time.columns.unique(level=0))
+        # Remove 'Matchday' prefix and just store sorted integers
+        matchday_labels = sorted(map(lambda x: int(x.split(' ')[-1]), cols))
+        
         # List of matchday strings that have had all games play
-        for matchday_str in list(position_over_time.columns.unique(level=0)):
+        for matchday_no in matchday_labels:
             # Append the average goals for this matchday to average goals list
-            matchday_scorelines = position_over_time[matchday_str]['Score']
+            matchday_scorelines = position_over_time[f'Matchday {matchday_no}']['Score']
             goals_scored = []
             for scoreline in matchday_scorelines.values.tolist():
                 if type(scoreline) is str:
@@ -486,9 +490,8 @@ class DataVis:
             # Append the mean goals scored (equal to mean goals conceded) this gameweek
             y_avg.append(sum(goals_scored) / len(goals_scored))
                        
-            
             # Append the teams number of goals scored and cocneded this matchday
-            team_matchday = team_position_over_time[matchday_str]
+            team_matchday = team_position_over_time[f'Matchday {matchday_no}']
             if type(team_matchday['Score']) is str:  # If match has been played
                 home, _, away = team_matchday['Score'].split(' ')
                 no_goals_scored, no_goals_conceded = 0, 0
@@ -545,7 +548,7 @@ class DataVis:
             xaxis=dict(
                 title_text="Matchday",
                 tickmode="array",
-                ticktext=[str(i) for i in range(1, len(x)+1)],
+                ticktext=[str(i) for i in matchday_labels],
                 tickvals=x,
                 showgrid=False,
                 showline=False,

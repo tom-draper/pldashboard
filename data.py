@@ -584,7 +584,6 @@ class Data:
         form = pd.DataFrame(form)
         form = form.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False)
         
-        print(form)
                 
         if display: 
             print(form)
@@ -677,7 +676,6 @@ class Data:
         cols = list(score.columns.get_level_values(0))
         # Remove 'Matchday' prefix and just store sorted integers
         matchday_nos = sorted(map(lambda x: int(x.split(' ')[-1]), cols))
-        print(matchday_nos)
         for idx, matchday_no in enumerate(matchday_nos):
             gd_col, pts_col = [], []
             col_data = position_over_time[f'Matchday {matchday_no}']
