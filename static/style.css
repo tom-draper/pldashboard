@@ -312,7 +312,7 @@ img {
 }
 .donation-text {
   align-self: center;
-  font-family: "VT323";
+  /* font-family: "VT323"; */
 }
 .footer-link {
   display: flex;

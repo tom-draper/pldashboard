@@ -46,7 +46,6 @@ class Data:
         self.api = os.getenv('API')
         auth_token = os.getenv('X_AUTH_TOKEN')
         self.headers = {'X-Auth-Token': auth_token}
-        
                 
         # Number of games played in a season for season data to be used
         self.games_threshold = 4
@@ -64,39 +63,7 @@ class Data:
         self.form = None
         self.position_over_time = None
         self.next_games = None
-        
-        # self.name_to_initials = {
-        #     'Brighton and Hove Albion FC': 'BHA',
-        #     'West Ham United FC': 'WHU',
-        #     'Manchester City FC': 'MCI',
-        #     'Manchester United FC': 'MUN',
-        #     'Sheffield United FC': 'SHU',
-        #     'Aston Villa FC': 'AVL',
-        #     'West Bromwich Albion FC': 'WBA',
-        # }
-        
-        # self.names_and_initials = {
-        #     'ARS': 'Arsenal FC',
-        #     'AVL': 'Aston Villa FC',
-        #     'BHA': 'Brighton and Hove Albion FC',
-        #     'BUR': 'Burnley FC',
-        #     'CHE': 'Chelsea FC',
-        #     'CRY': 'Crystal Palace FC',
-        #     'EVE': 'Everton FC',
-        #     'FUL': 'Fulham FC',
-        #     'LEE': 'Leeds United FC',
-        #     'LEI': 'Leicester City FC',
-        #     'LIV': 'Liverpool FC',
-        #     'MCI': 'Manchester City FC',
-        #     'MUN': 'Manchester United FC',
-        #     'NEW': 'Newcastle United FC',
-        #     'SHU': 'Sheffield United FC',
-        #     'SOU': 'Southampton FC',
-        #     'TOT': 'Tottenham Hotspur FC',
-        #     'WBA': 'West Bromwich Albion FC',
-        #     'WHU': 'West Ham United FC',
-        #     'WOL': 'Wolverhampton Wanderers FC',
-        # }
+
         self.names_and_initials = TwoWayDict({
             'ARS': 'Arsenal FC',
             'AVL': 'Aston Villa FC',
@@ -263,6 +230,48 @@ class Data:
                 break
 
         return next_matchday_no, next_team
+
+    
+    def include_current_seasons_meetings(self, next_games):
+        # Loop through the columns of matchdays that have been played
+        for matchday_no in range(len(self.form.columns.unique(level=0))):
+            matchday = f"Matchday {matchday_no+1}"
+            matchday_data = self.fixtures[matchday]
+            for team, row in matchday_data.iterrows():
+                if row['HomeAway'] == 'Home':  # From the perspective of the home team
+                    # If the teams next game is this team AND the game has been played
+                    if next_games.loc[team]['Next Game'] == row['Team'] and row['Score'] != 'None - None':
+                        date = row['Date'].strftime('%d %B %Y')
+                        split_score = row['Score'].split(' ')
+                        home_score, away_score = int(split_score[0]), int(split_score[2])
+                        # Record overall result for home and away team
+                        if home_score == away_score:
+                            result = ('Drew', 'Drew')
+                        elif home_score > away_score:
+                            result = ('Won', 'Lost')
+                        else:
+                            result = ('Lost', 'Won')
+                        next_games.loc[team]['Previous Meetings'].append(tuple((date, team, row['Team'], home_score, away_score, result[0])))
+                        next_games.loc[row['Team']]['Previous Meetings'].append(tuple((date, team, row['Team'], home_score, away_score, result[1])))
+    
+    def include_prev_seasons_meetings(self, next_games, no_seasons, request_new):
+        for season in range(self.season-1, self.season-1-no_seasons, -1):
+            data = self.fixturesData(season, request_new=request_new)
+            for match in sorted(data, key=lambda x: x['matchday']):
+                if match['homeTeam']['name'] in next_games.index:  # From the perspective from the home team
+                    if next_games.loc[match['homeTeam']['name']]['Next Game'] == match['awayTeam']['name']:
+                        date = datetime.strptime(match['utcDate'][:10], "%Y-%m-%d").date().strftime('%d %B %Y')
+                        home_score = match['score']['fullTime']['homeTeam']
+                        away_score = match['score']['fullTime']['awayTeam']
+                        # Record overall result for home and away team
+                        if home_score == away_score:
+                            result = ('Drew', 'Drew')
+                        elif home_score > away_score:
+                            result = ('Won', 'Lost')
+                        else:
+                            result = ('Lost', 'Won')
+                        next_games.loc[match['homeTeam']['name']]['Previous Meetings'].append(tuple((date, match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[0])))
+                        next_games.loc[match['awayTeam']['name']]['Previous Meetings'].append(tuple((date, match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[1])))
     
     @timebudget
     def buildNextGames(self, display=False, request_new=True):
@@ -300,9 +309,6 @@ class Data:
         
         next_games = pd.DataFrame()
         
-        # matchday = self.getCurrentMatchday()
-        # matchday_no = int(matchday.split(' ')[-1])
-        
         next_team_col = []
         for team_name, _ in self.fixtures.iterrows():
             matchday_no, next_team = self.getNextGame(team_name, self.fixtures)
@@ -316,50 +322,13 @@ class Data:
         next_games['Previous Meetings'] = [[] for _ in range(len(next_games.index))]
                 
         # Add any previous meetings that have been played this season
-        # Loop through the columns of matchdays that have been played
-        for matchday_no in range(len(self.form.columns.unique(level=0))):
-            matchday = f"Matchday {matchday_no+1}"
-            matchday_data = self.fixtures[matchday]
-            for team, row in matchday_data.iterrows():
-                if row['HomeAway'] == 'Home':  # From the perspective of the home team
-                    # If the teams next game is this team AND the game has been played
-                    if next_games.loc[team]['Next Game'] == row['Team'] and row['Score'] != 'None - None':
-                        date = row['Date'].strftime('%d %B %Y')
-                        split_score = row['Score'].split(' ')
-                        home_score, away_score = int(split_score[0]), int(split_score[2])
-                        # Record overall result for home and away team
-                        if home_score == away_score:
-                            result = ('Drew', 'Drew')
-                        elif home_score > away_score:
-                            result = ('Won', 'Lost')
-                        else:
-                            result = ('Lost', 'Won')
-                        next_games.loc[team]['Previous Meetings'].append(tuple((date, team, row['Team'], home_score, away_score, result[0])))
-                        next_games.loc[row['Team']]['Previous Meetings'].append(tuple((date, team, row['Team'], home_score, away_score, result[1])))
-                        
+        self.include_current_seasons_meetings(next_games)
         # Add any previous meetings from last 2 sesaons
-        for season in range(self.season-1, self.season-3, -1):
-            data = self.fixturesData(season, request_new=request_new)
-            for match in sorted(data, key=lambda x: x['matchday']):
-                if match['homeTeam']['name'] in next_games.index:  # From the perspective from the home team
-                    if next_games.loc[match['homeTeam']['name']]['Next Game'] == match['awayTeam']['name']:
-                        date = datetime.strptime(match['utcDate'][:10], "%Y-%m-%d").date().strftime('%d %B %Y')
-                        home_score = match['score']['fullTime']['homeTeam']
-                        away_score = match['score']['fullTime']['awayTeam']
-                        # Record overall result for home and away team
-                        if home_score == away_score:
-                            result = ('Drew', 'Drew')
-                        elif home_score > away_score:
-                            result = ('Won', 'Lost')
-                        else:
-                            result = ('Lost', 'Won')
-                        next_games.loc[match['homeTeam']['name']]['Previous Meetings'].append(tuple((date, match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[0])))
-                        next_games.loc[match['awayTeam']['name']]['Previous Meetings'].append(tuple((date, match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[1])))
+        self.include_prev_seasons_meetings(next_games, 2, request_new)
         
         # Sort each list of tuple previous meeting to be descending by date
         for _, row in next_games.iterrows():
             row['Previous Meetings'].sort(key=lambda x: datetime.strptime(x[0], '%d %B %Y'), reverse=True)
-        
         
         if display:
             print(next_games)
@@ -547,17 +516,21 @@ class Data:
         # Remove cols for matchdays that haven't played yet
         score = score.replace("None - None", np.nan).dropna(axis=1, how='all')
         no_cols = score.shape[1]
-        
+
         form = {}
+        
         # Loop through each matchday number played so far
-        for matchday_no in range(no_cols):
-            form[(f'Matchday {matchday_no+1}', 'Date')] = self.fixtures[f'Matchday {matchday_no+1}', 'Date']
+        cols = list(score.columns.get_level_values(0))
+        # Remove 'Matchday' prefix and just store sorted integers
+        matchday_nos = sorted(map(lambda x: int(x.split(' ')[-1]), cols))
+        for matchday_no in matchday_nos:
+            form[(f'Matchday {matchday_no}', 'Date')] = self.fixtures[f'Matchday {matchday_no}', 'Date']
             
             # Get data about last 5 matchdays
             teams_played_col, scores_col, home_aways_col = self.lastNGamesCols(self.fixtures, 5, matchday_no+1)
-            form[(f'Matchday {matchday_no+1}', 'Teams Played')] = teams_played_col
-            form[(f'Matchday {matchday_no+1}', 'Scores')] = scores_col
-            form[(f'Matchday {matchday_no+1}', 'HomeAway')] = home_aways_col
+            form[(f'Matchday {matchday_no}', 'Teams Played')] = teams_played_col
+            form[(f'Matchday {matchday_no}', 'Scores')] = scores_col
+            form[(f'Matchday {matchday_no}', 'HomeAway')] = home_aways_col
             
             # Form string and goal differences column
             form_str_col = []
@@ -580,14 +553,14 @@ class Data:
                         else:
                             goal_differences.append(0)
                 goal_differences_col.append(goal_differences)
-            form[(f'Matchday {matchday_no+1}', 'Form')] = form_str_col
-            form[(f'Matchday {matchday_no+1}', 'GDs')] = goal_differences_col
+            form[(f'Matchday {matchday_no}', 'Form')] = form_str_col
+            form[(f'Matchday {matchday_no}', 'GDs')] = goal_differences_col
 
             form_rating_col = []
             for teams_played, form_str, gds in zip(teams_played_col, form_str_col, goal_differences_col):
                 rating = self.calcFormRating(teams_played, form_str, gds, self.team_ratings)
                 form_rating_col.append(rating)
-            form[(f'Matchday {matchday_no+1}', 'Form Rating %')] = form_rating_col
+            form[(f'Matchday {matchday_no}', 'Form Rating %')] = form_rating_col
             
             # Column (list of booleans) for whether last 5 games have been against 
             # a team with a long term (multiple season) rating over a certain 
@@ -596,17 +569,17 @@ class Data:
             for teams_played in teams_played_col:
                 ratings = [self.team_ratings['Total Rating'][team_name] for team_name in list(map(self.convertTeamNameOrInitials, teams_played))]
                 played_star_team_col.append([team_rating > self.star_team_threshold for team_rating in ratings])
-            form[(f'Matchday {matchday_no+1}', 'Played Star Team')] = played_star_team_col
+            form[(f'Matchday {matchday_no}', 'Played Star Team')] = played_star_team_col
             
             # Column (list of booleans) for whether last 5 games have won against 
             # a star team
             won_against_star_team_col = []
             for played_star_team, form_str in zip(played_star_team_col, form_str_col):  # Team has played games this season
                 won_against_star_team_col.append([(result == 'W' and pst == True) for result, pst in zip(form_str.replace(',', ''), played_star_team)])
-            form[(f'Matchday {matchday_no+1}', 'Won Against Star Team')] = won_against_star_team_col
+            form[(f'Matchday {matchday_no}', 'Won Against Star Team')] = won_against_star_team_col
             
             # Remove column after use, data is not that useful to keep
-            del form[(f'Matchday {matchday_no+1}', 'Played Star Team')]
+            del form[(f'Matchday {matchday_no}', 'Played Star Team')]
                     
         form = pd.DataFrame(form)
         form = form.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False)
@@ -693,7 +666,7 @@ class Data:
         date = self.fixtures.loc[:, (slice(None), 'Date')]
         
         # Remove cols for matchdays that haven't played any games yet
-        score = score.replace("None - None", np.nan).dropna(axis=1, how='any')
+        score = score.replace("None - None", np.nan).dropna(axis=1, how='all')
         no_cols = score.shape[1]
         # Only keep the same columns that remain in the score dataframe
         date = date[list(score.columns.unique(level=0))]
@@ -701,18 +674,24 @@ class Data:
         
         position_over_time = pd.concat([score, home_away, date], axis=1)
         
-        column_headings = list(score.columns.get_level_values(0))
-        for idx, matchday_str in enumerate(column_headings):
+        cols = list(score.columns.get_level_values(0))
+        # Remove 'Matchday' prefix and just store sorted integers
+        matchday_nos = sorted(map(lambda x: int(x.split(' ')[-1]), cols))
+        print(matchday_nos)
+        for idx, matchday_no in enumerate(matchday_nos):
             gd_col, pts_col = [], []
-            col_data = position_over_time[matchday_str]
-            for row_idx, row in col_data.iterrows():
+            col_data = position_over_time[f'Matchday {matchday_no}']
+            for team_name, row in col_data.iterrows():
                 gd = 0
                 pts = 0
-                if matchday_str != 'Matchday 1':
-                    # First add previous weeks cumulative gd
-                    new_gd, new_pts = self.getGDAndPts(position_over_time.loc[row_idx][matchday_str, 'Score'], position_over_time.loc[row_idx][matchday_str, 'HomeAway'])
-                    gd += new_gd
-                    pts += new_pts
+                if idx != 0:
+                    # Add previous weeks cumulative gd
+                    prev_matchday_no_idx = idx-1
+                    previous_matchday_no = matchday_nos[prev_matchday_no_idx]
+                    prev_gd = position_over_time.loc[team_name][f'Matchday {previous_matchday_no}', 'GD']
+                    prev_pts = position_over_time.loc[team_name][f'Matchday {previous_matchday_no}', 'Points']
+                    gd += prev_gd
+                    pts += prev_pts
                 # If this matchday has had all games played and is in score table
                 # Add this weeks gd
                 new_gd, new_pts = self.getGDAndPts(row['Score'], row['HomeAway'])
@@ -722,17 +701,20 @@ class Data:
                 gd_col.append(gd)
                 pts_col.append(pts)
             
-            position_over_time[matchday_str, 'GD'] = gd_col
-            position_over_time[matchday_str, 'Points'] = pts_col
+            position_over_time[f'Matchday {matchday_no}', 'GD'] = gd_col
+            position_over_time[f'Matchday {matchday_no}', 'Points'] = pts_col
             
-            position_over_time.sort_values(by=[(matchday_str, 'Points'), (matchday_str, 'GD')], ascending=False, inplace=True)
+            position_over_time.sort_values(by=[(f'Matchday {matchday_no}', 'Points'), (f'Matchday {matchday_no}', 'GD')], ascending=False, inplace=True)
+            # if matchday_no != 0:
+            #     print(position_over_time[f'Matchday {matchday_no}'])
+            # print(position_over_time[f'Matchday {matchday_no+1}'])
             # If on the last and most recent column, ensure matchday positions is 
             # exactly the same order as from API standings data 
             if idx == no_cols - 1:
                 # Reorder to the order as standings data
                 position_over_time = position_over_time.reindex(self.standings.index)
 
-            position_over_time[matchday_str, 'Position'] = np.arange(1, 21)
+            position_over_time[f'Matchday {matchday_no}', 'Position'] = np.arange(1, 21)
                
         sorted_index = sorted(position_over_time.columns.values.tolist(), key=lambda x: int(x[0].split(' ')[-1]))
         position_over_time = position_over_time.reindex(sorted_index, axis=1)

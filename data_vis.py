@@ -210,7 +210,11 @@ class DataVis:
         fig = go.Figure()
         
         # Sort the x-axis data by date to remove errors due to match rescheduling
-        # x, *ys = zip(*sorted(zip(x, *ys)))
+        # Sort the x-axis data by date to remove errors due to match rescheduling
+        cols = list(form.columns.unique(level=0))
+        # Remove 'Matchday' prefix and just store sorted integers
+        matchday_labels = sorted(map(lambda x: int(x.split(' ')[-1]), cols))
+        x, matchday_labels, *ys = zip(*sorted(zip(x, matchday_labels, *ys)))
                 
         for idx, y in enumerate(ys):
             if names[idx] != team_name:
@@ -238,7 +242,6 @@ class DataVis:
                                  hovertemplate=f"<b>{names[team_idx]}</b><br>" + "Matchday %{x}<br>Form: <b>%{y:.1f}%</b><extra></extra>",
                                  hoverinfo=('x+y'),
                                  ))
-
         fig.update_layout(
             yaxis=dict(
                 title_text="Form Rating %",
@@ -253,7 +256,7 @@ class DataVis:
                 linecolor="black",
                 tickmode="array",
                 dtick=1,
-                ticktext=[str(i) for i in range(1, len(x)+1)],
+                ticktext=[str(i) for i in matchday_labels],
                 tickvals=x,
                 showgrid=False,
                 showline=False,
@@ -326,7 +329,11 @@ class DataVis:
         names = position_over_time.index.values.tolist()
         
         # Sort the x-axis data by date to remove errors due to match rescheduling
-        # x, *ys = zip(*sorted(zip(x, *ys)))
+        cols = list(position_over_time.columns.unique(level=0))
+        # Remove 'Matchday' prefix and just store sorted integers
+        matchday_labels = sorted(map(lambda x: int(x.split(' ')[-1]), cols))
+        x, matchday_labels, *ys = zip(*sorted(zip(x, matchday_labels, *ys)))
+        
         
         fig = go.Figure()
         for idx, y in enumerate(ys):
@@ -392,7 +399,7 @@ class DataVis:
                     opacity=0.3,
                     layer="below",
         )
-
+        
         fig.update_layout(
             yaxis=dict(
                 title_text="League Position",
@@ -408,7 +415,7 @@ class DataVis:
                 linecolor="black",
                 tickmode="array",
                 dtick=1,
-                ticktext=[str(i) for i in range(1, len(x)+1)],
+                ticktext=[str(i) for i in matchday_labels],
                 tickvals=x,
                 showgrid=False,
                 showline=False,
