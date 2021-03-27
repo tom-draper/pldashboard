@@ -474,25 +474,28 @@ class DataVis:
         team_position_over_time = position_over_time.loc[team_name]
         # no_matchdays = len(set([x[0] for x in team_position_over_time.index]))
         
+        # List of 'Matchday X' for all matchdays where at least one game has played
         cols = list(position_over_time.columns.unique(level=0))
         # Remove 'Matchday' prefix and just store sorted integers
         matchday_labels = sorted(map(lambda x: int(x.split(' ')[-1]), cols))
         
         # List of matchday strings that have had all games play
-        for matchday_no in matchday_labels:
-            # Append the average goals for this matchday to average goals list
-            matchday_scorelines = position_over_time[f'Matchday {matchday_no}']['Score']
-            goals_scored = []
-            for scoreline in matchday_scorelines.values.tolist():
-                if type(scoreline) is str:
-                    home, _, away = scoreline.split(' ')
-                    goals_scored.extend([int(home), int(away)])
-            # Append the mean goals scored (equal to mean goals conceded) this gameweek
-            y_avg.append(sum(goals_scored) / len(goals_scored))
-                       
+        for idx, matchday_no in enumerate(matchday_labels):
             # Append the teams number of goals scored and cocneded this matchday
             team_matchday = team_position_over_time[f'Matchday {matchday_no}']
-            if type(team_matchday['Score']) is str:  # If match has been played
+            # If match has been played
+            if type(team_matchday['Score']) is str:
+                # Append the average goals for this matchday to average goals list
+                matchday_scorelines = position_over_time[f'Matchday {matchday_no}']['Score']
+                goals_scored = []
+                for scoreline in matchday_scorelines.values.tolist():
+                    if type(scoreline) is str:
+                        home, _, away = scoreline.split(' ')
+                        goals_scored.extend([int(home), int(away)])
+                # Append the mean goals scored (equal to mean goals conceded) this gameweek
+                y_avg.append(sum(goals_scored) / len(goals_scored))
+                
+                
                 home, _, away = team_matchday['Score'].split(' ')
                 no_goals_scored, no_goals_conceded = 0, 0
                 if team_matchday['HomeAway'] == 'Home':
@@ -501,11 +504,14 @@ class DataVis:
                 elif team_matchday['HomeAway'] == 'Away':
                     no_goals_scored = int(away)
                     no_goals_conceded = int(home)
+                y_goals_scored.append(no_goals_scored)
+                y_goals_conceded.append(no_goals_conceded)
             else:
-                no_goals_scored = 0
-                no_goals_conceded = 0
-            y_goals_scored.append(no_goals_scored)
-            y_goals_conceded.append(no_goals_conceded)
+                # Do not add goals scored, goals condeded or average goals graph points
+                # Remove elements from other lists to ensure all lists will be same length
+                del x[idx]
+                del matchday_labels[idx]
+
             
         x, y_goals_scored, y_goals_conceded, y_avg = map(list, zip(*sorted(zip(x, y_goals_scored, y_goals_conceded, y_avg))))
 

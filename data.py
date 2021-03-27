@@ -582,7 +582,9 @@ class Data:
             del form[(f'Matchday {matchday_no}', 'Played Star Team')]
                     
         form = pd.DataFrame(form)
-        form = form.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False)
+        # print(form)
+        # print(form['Matchday 30'])
+        # form = form.sort_values((f'Matchday {no_cols}','Form Rating %'), ascending=False)
         
                 
         if display: 
@@ -1183,7 +1185,7 @@ class Data:
         
     
     @timebudget
-    def updateAll(self, no_seasons, display_tables=False, request_new=True):
+    def updateAll(self, no_seasons=3, display_tables=False, display_graphs=False, request_new=True):
         # Standings for the last [n_seasons] seasons
         self.standings = self.buildStandings(no_seasons, display=display_tables, request_new=request_new)
         # Fixtures for the whole season for each team
@@ -1198,20 +1200,22 @@ class Data:
         self.position_over_time = self.buildPositionOverTime(display=display_tables)
         # Data about the opponent in each team's next game 
         self.next_games = self.buildNextGames(display=display_tables, request_new=request_new)
+        
+        # Use dataframes to update all graph HTML files
+        vis = DataVis()
+        vis.updateAll(self.fixtures, 
+                      self.team_ratings, 
+                      self.home_advantages, 
+                      self.form, 
+                      self.position_over_time, 
+                      display_graphs=display_graphs, 
+                      team_name='Liverpool FC')
 
 
 
 if __name__ == "__main__":
     # Update all dataframes
     data = Data(2020)
-    data.updateAll(3, display_tables=False, request_new=False)
+    data.updateAll(request_new=False)
     
-    # Use dataframes to update all graph HTML files
-    vis = DataVis()
-    vis.updateAll(data.fixtures, 
-                  data.team_ratings, 
-                  data.home_advantages, 
-                  data.form, 
-                  data.position_over_time, 
-                  display_graphs=False, 
-                  team_name='Liverpool FC')
+    
