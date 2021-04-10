@@ -1,7 +1,7 @@
 .gitignore
 tempCodeRunnerFile.py
-data/
-__pycache__/
-templates/graphs/
-static/graphs/
+data
+__pycache__
+templates/graphs
+static/graphs
 .env
