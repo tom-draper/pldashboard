@@ -1185,7 +1185,7 @@ class Data:
         
     
     @timebudget
-    def updateAll(self, no_seasons=3, display_tables=False, display_graphs=False, request_new=True):
+    def updateAll(self, no_seasons=3, team_name=None, display_tables=False, display_graphs=False, request_new=True):
         # Standings for the last [n_seasons] seasons
         self.standings = self.buildStandings(no_seasons, display=display_tables, request_new=request_new)
         # Fixtures for the whole season for each team
@@ -1209,13 +1209,13 @@ class Data:
                       self.form, 
                       self.position_over_time, 
                       display_graphs=display_graphs, 
-                      team_name='Liverpool FC')
+                      team_name=team_name)
 
 
 
 if __name__ == "__main__":
     # Update all dataframes
     data = Data(2020)
-    data.updateAll(request_new=False)
+    data.updateAll(request_new=False, team_name='Liverpool FC')
     
     

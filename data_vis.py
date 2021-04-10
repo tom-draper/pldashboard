@@ -2,7 +2,7 @@ from numpy.core.numeric import NaN
 import plotly
 import plotly.graph_objects as go
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
 from timebudget import timebudget
 
 class DataVis:
@@ -514,6 +514,7 @@ class DataVis:
 
             
         x, y_goals_scored, y_goals_conceded, y_avg = map(list, zip(*sorted(zip(x, y_goals_scored, y_goals_conceded, y_avg))))
+        
 
         # Plot graph
         fig = go.Figure(data=[
@@ -580,10 +581,100 @@ class DataVis:
         
         if display:
             fig.show()
+        # fig.show()
         
         file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
         plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
         
+        self.genCleanSheets(team_name, x, y_goals_conceded, matchday_labels)
+    
+    
+    
+    # GEN CLEAN SHEETS
+    
+    def genCleanSheets(self, team_name, x, y_goals_conceded, matchday_labels, display=False):
+        
+        y_value = 0.5
+        not_clean_sheets = [y_value if goals != 0 else None for goals in y_goals_conceded]
+        clean_sheets = [y_value if goals == 0 else None for goals in y_goals_conceded]
+        labels = ['Clean sheet' if goals == 0 else 'Goal(s) conceded' for goals in y_goals_conceded]
+        line = [y_value] * len(clean_sheets)
+        
+        # Plot graph
+        fig = go.Figure(data=[
+            go.Scatter(name='Line', x=x, y=line, mode='lines',
+                       line=dict(color='#0080FF', width=2),
+                       showlegend=False),
+            go.Scatter(name='Clean Sheet', x=x, y=clean_sheets,
+                       mode='markers',
+                       connectgaps=True,
+                       marker_color='#77DD77',
+                       marker_line_color='#006400',
+                       marker_line_width=1,
+                    #    hovertemplate="Clean sheet",
+                       text=labels,
+                       hoverinfo=('text'),
+                       marker=dict(size=28),
+                       showlegend=False),
+            go.Scatter(name='Goals Conceded', x=x, y=not_clean_sheets,
+                       mode='markers',
+                       connectgaps=True,
+                       marker_color='#C23B22',
+                       marker_line_color='#8B0000',
+                       marker_line_width=1,
+                    #    hovertemplate="Goal conceded",
+                       text=labels,
+                       hoverinfo=('text'),
+                       marker=dict(size=10),
+                       showlegend=False),
+        ])
+        
+        # Ensure x axis is the same as goals scored and conceeded by adding
+        # a small margin to the axis
+        scale = 0.011
+        margin = (x[-1] - x[0]) * scale
+        
+        # Config graph layout
+        fig.update_layout(
+            yaxis=dict(
+                # title_text="Goals",
+                autorange=False,
+                range=[0, 1],
+                showgrid=False,
+                showline=False,
+                # zeroline=False,
+                # dtick=1,
+                visible=False,
+            ),
+            xaxis=dict(
+                title_text="Matchday",
+                tickmode="array",
+                ticktext=[str(i) for i in matchday_labels],
+                tickvals=x,
+                range=[x[0] - margin, x[-1] + margin],
+                showgrid=False,
+                showline=False,
+                visible=False
+            ),
+            margin=dict(
+                l=50,
+                r=50,
+                b=10,
+                t=10,
+                pad=4
+            ),
+            plot_bgcolor='#fafafa',
+            paper_bgcolor='#fafafa',
+        )        
+        
+        if display:
+            fig.show()
+        # fig.show()
+        
+        file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+        plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/clean-sheets-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+        
+    
         
     def updateAll(self, fixtures, team_ratings, home_advantages, form, position_over_time, team_name=None, display_graphs=False):
         self.updateFixtures(fixtures, team_ratings, home_advantages, display=display_graphs, team_name=team_name)

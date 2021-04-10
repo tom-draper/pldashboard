@@ -87,6 +87,15 @@ body {
   height: auto;
 }
 
+
+.clean-sheets-row {
+  position: relative;
+  display: flex;
+  margin-bottom: 25px;
+  height: 30%;
+}
+
+
 .row-left {
   display: flex;
   flex-direction: column;
@@ -114,6 +123,7 @@ img {
 .full-row-graph {
   margin-left: 10px;
 }
+
 
 .fixtures-graph {
   display: flex;

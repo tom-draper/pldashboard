@@ -67,8 +67,8 @@ def team():
 
 
 if __name__ == '__main__':
-    # Refresh data and graphs
     data = Data(2020)
+    # Update data and graphs
     data.updateAll(request_new=False)
     
     app.run(host='0.0.0.0', debug=False)
