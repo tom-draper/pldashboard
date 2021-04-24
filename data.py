@@ -264,40 +264,74 @@ class Data:
             matchday = f"Matchday {matchday_no+1}"
             matchday_data = self.fixtures[matchday]
             for team, row in matchday_data.iterrows():
-                if row['HomeAway'] == 'Home':  # From the perspective of the home team
-                    # If the teams next game is this team AND the game has been played
-                    if next_games.loc[team]['Next Game'] == row['Team'] and row['Score'] != 'None - None':
-                        date = row['Date'].strftime('%d %B %Y')
-                        split_score = row['Score'].split(' ')
-                        home_score, away_score = int(split_score[0]), int(split_score[2])
-                        # Record overall result for home and away team
-                        if home_score == away_score:
-                            result = ('Drew', 'Drew')
-                        elif home_score > away_score:
-                            result = ('Won', 'Lost')
-                        else:
-                            result = ('Lost', 'Won')
-                        next_games.loc[team]['Previous Meetings'].append(tuple((date, team, row['Team'], home_score, away_score, result[0])))
-                        next_games.loc[row['Team']]['Previous Meetings'].append(tuple((date, team, row['Team'], home_score, away_score, result[1])))
+                # if row['HomeAway'] == 'Home':  # From the perspective of the home team
+                # If the teams next game is this team AND the game has been played
+                if next_games.loc[team]['Next Game'] == row['Team'] and row['Score'] != 'None - None':
+                    date = row['Date'].strftime('%d %B %Y')
+                    split_score = row['Score'].split(' ')
+                    home_score, away_score = int(split_score[0]), int(split_score[2])
+                    # Record overall result for home and away team
+                    if home_score == away_score:
+                        result = ('Drew', 'Drew')
+                    elif home_score > away_score:
+                        result = ('Won', 'Lost')
+                    else:
+                        result = ('Lost', 'Won')
+                    next_games.loc[team]['Previous Meetings'].append(tuple((date, team, row['Team'], home_score, away_score, result[0])))
+                    # next_games.loc[row['Team']]['Previous Meetings'].append(tuple((date, team, row['Team'], home_score, away_score, result[1])))
     
+    # def includePrevSeasonsMeetings(self, next_games: pd.DataFrame, no_seasons: int, request_new: bool) -> None:
+    #     for season in range(self.season-1, self.season-1-no_seasons, -1):
+    #         data = self.fixturesData(season, request_new=request_new)
+    #         for match in sorted(data, key=lambda x: x['matchday']):
+    #             if match['homeTeam']['name'] in next_games.index:
+    #                 # From the perspective from the home team
+    #                 # If this match's home team has their next game against this match's away team
+    #                 if next_games.loc[match['homeTeam']['name']]['Next Game'] == match['awayTeam']['name']:
+    #                     date = datetime.strptime(match['utcDate'][:10], "%Y-%m-%d").date().strftime('%d %B %Y')
+                        
+    #                     print(date, match['homeTeam']['name'] + ' vs ' + match['awayTeam']['name'], match['score']['fullTime'])
+
+    #                     home_score = match['score']['fullTime']['homeTeam']
+    #                     away_score = match['score']['fullTime']['awayTeam']
+    #                     # Record overall result for home and away team
+    #                     if home_score == away_score:
+    #                         result = ('Drew', 'Drew')
+    #                     elif home_score > away_score:
+    #                         result = ('Won', 'Lost')
+    #                     else:
+    #                         result = ('Lost', 'Won')
+    #                     next_games.loc[match['homeTeam']['name']]['Previous Meetings'].append(tuple((date, match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[0])))
+    #                     next_games.loc[match['awayTeam']['name']]['Previous Meetings'].append(tuple((date, match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[1])))
     def includePrevSeasonsMeetings(self, next_games: pd.DataFrame, no_seasons: int, request_new: bool) -> None:
         for season in range(self.season-1, self.season-1-no_seasons, -1):
             data = self.fixturesData(season, request_new=request_new)
             for match in sorted(data, key=lambda x: x['matchday']):
-                if match['homeTeam']['name'] in next_games.index:  # From the perspective from the home team
-                    if next_games.loc[match['homeTeam']['name']]['Next Game'] == match['awayTeam']['name']:
-                        date = datetime.strptime(match['utcDate'][:10], "%Y-%m-%d").date().strftime('%d %B %Y')
-                        home_score = match['score']['fullTime']['homeTeam']
-                        away_score = match['score']['fullTime']['awayTeam']
-                        # Record overall result for home and away team
-                        if home_score == away_score:
-                            result = ('Drew', 'Drew')
-                        elif home_score > away_score:
-                            result = ('Won', 'Lost')
-                        else:
-                            result = ('Lost', 'Won')
-                        next_games.loc[match['homeTeam']['name']]['Previous Meetings'].append(tuple((date, match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[0])))
-                        next_games.loc[match['awayTeam']['name']]['Previous Meetings'].append(tuple((date, match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[1])))
+                home_team = match['homeTeam']['name']
+                away_team = match['awayTeam']['name']
+                
+                if home_team in next_games.index and away_team in next_games.index:
+                    date = datetime.strptime(match['utcDate'][:10], "%Y-%m-%d").date().strftime('%d %B %Y')
+                    
+                    home_score = match['score']['fullTime']['homeTeam']
+                    away_score = match['score']['fullTime']['awayTeam']
+                    if home_score == away_score:
+                        result = ('Drew', 'Drew')
+                    elif home_score > away_score:
+                        result = ('Won', 'Lost')
+                    else:
+                        result = ('Lost', 'Won')
+                    
+                    # From the perspective from the home team
+                    # If this match's home team has their next game against this match's away team
+                    if next_games.loc[home_team]['Next Game'] == away_team:
+                        next_games.loc[home_team]['Previous Meetings'].append(tuple((date, home_team, away_team, match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[0])))
+                    
+                    if next_games.loc[away_team]['Next Game'] == home_team:
+                        next_games.loc[away_team]['Previous Meetings'].append(tuple((date, home_team, away_team, match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[1])))
+                        
+                        
+                        
     
     @timebudget
     def buildNextGames(self, display: bool = False, request_new: bool = True) -> pd.DataFrame:
