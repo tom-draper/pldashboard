@@ -472,7 +472,6 @@ class DataVis:
         # Create chart y values (2 bar charts, and the average line)
         y_goals_scored, y_goals_conceded, y_avg = [], [], []
         team_position_over_time = position_over_time.loc[team_name]
-        # no_matchdays = len(set([x[0] for x in team_position_over_time.index]))
         
         # List of 'Matchday X' for all matchdays where at least one game has played
         cols = list(position_over_time.columns.unique(level=0))
@@ -597,13 +596,13 @@ class DataVis:
         y_value = 0.5
         not_clean_sheets = [y_value if goals != 0 else None for goals in y_goals_conceded]
         clean_sheets = [y_value if goals == 0 else None for goals in y_goals_conceded]
-        labels = ['Clean sheet' if goals == 0 else 'Goal(s) conceded' for goals in y_goals_conceded]
+        labels = ['Clean sheet' if goals == 0 else 'Goals conceded' for goals in y_goals_conceded]
         line = [y_value] * len(clean_sheets)
         
         # Plot graph
         fig = go.Figure(data=[
             go.Scatter(name='Line', x=x, y=line, mode='lines',
-                       line=dict(color='#0080FF', width=2),
+                       line=dict(color='#757575', width=2),
                        showlegend=False),
             go.Scatter(name='Clean Sheet', x=x, y=clean_sheets,
                        mode='markers',
@@ -614,7 +613,7 @@ class DataVis:
                     #    hovertemplate="Clean sheet",
                        text=labels,
                        hoverinfo=('text'),
-                       marker=dict(size=28),
+                       marker=dict(size=32),
                        showlegend=False),
             go.Scatter(name='Goals Conceded', x=x, y=not_clean_sheets,
                        mode='markers',

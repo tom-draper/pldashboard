@@ -15,12 +15,15 @@ def get_team_page_data(team_name):
     
     form, recent_teams_played, form_rating, won_against_star_team = data.getRecentForm(team_name)
     
+    clean_sheet_ratio, goals_per_game, conceded_per_game = data.getSeasonStats(team_name)
+    
     team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings = data.getNextGameDetails(team_name)
     
     table_snippet, table_index_of_this_team = data.getTableSnippet(team_name)
     
     team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
-    return position, form, recent_teams_played, form_rating, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, table_snippet, table_index_of_this_team
+    
+    return position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, table_snippet, table_index_of_this_team
 
 @app.route("/liverpool")
 @app.route("/manchester-city")
@@ -48,7 +51,7 @@ def team():
     team_name_hyphenated = rule.rule[1:]  # Get hypehenated team name from current URL
     team_name = team_name_hyphenated.replace('-', ' ').title().replace('And', 'and') + ' FC'
     
-    position, form, recent_teams_played, form_rating, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, table_snippet, table_index_of_this_team = get_team_page_data(team_name)
+    position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, table_snippet, table_index_of_this_team = get_team_page_data(team_name)
         
     return render_template('team.html', 
                            team_name_hyphenated=team_name_hyphenated,
@@ -61,6 +64,9 @@ def team():
                            team_playing_prev_meetings=team_playing_prev_meetings,
                            won_against_star_team=won_against_star_team,
                            form_rating=form_rating,
+                           clean_sheet_ratio=clean_sheet_ratio,
+                           goals_per_game=goals_per_game,
+                           conceded_per_game=conceded_per_game,
                            table_snippet=table_snippet,
                            table_index_of_this_team=table_index_of_this_team)
 
@@ -69,6 +75,6 @@ def team():
 if __name__ == '__main__':
     data = Data(2020)
     # Update data and graphs
-    data.updateAll(request_new=False)
+    data.updateAll(request_new=True)
     
     app.run(host='0.0.0.0', debug=False)

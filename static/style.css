@@ -124,6 +124,10 @@ img {
   margin-left: 10px;
 }
 
+.clean-sheets.body {
+  margin: 0;
+}
+
 
 .fixtures-graph {
   display: flex;
@@ -365,6 +369,25 @@ img {
   color: rgba(0, 0, 0, 0.37);
 }
 
+.season-stats-row {
+  margin-top: 70px;
+  height: auto;
+}
+
+.season-stats {
+  display: flex;
+  font-size: 60px;
+  width: 100%;
+  letter-spacing: -0.06em;
+}
+.season-stat-value {
+  font-size: 3.5em;
+  line-height: 0.6em;
+  font-weight: 700;
+}
+.season-stat {
+  flex: 1;
+}
 
 .debug {
   border: 4px solid rgb(46, 46, 46);
@@ -404,6 +427,18 @@ img {
   }
   .next-game-title {
     width: auto;
+  }
+  .season-stats {
+    flex-direction: column;
+  }
+  .season-stat-value {
+    font-size: 3em;
+  }
+  .season-stat {
+    margin-bottom: 1.4em;
+  }
+  .season-stats-row {
+    margin-top: 40px;
   }
 }
 

@@ -63,6 +63,8 @@ class Data:
         self.form = None
         self.position_over_time = None
         self.next_games = None
+        
+        self.season_stats = None
 
         self.names_and_initials = TwoWayDict({
             'ARS': 'Arsenal FC',
@@ -157,7 +159,25 @@ class Data:
         form_rating = self.getCurrentFormRating(team_name)
         won_against_star_team = self.getWonAgainstStarTeam(team_name)
         return form, recent_teams_played, form_rating, won_against_star_team
+
+    # ------- SEASON VALUES -------
     
+    def getCleanSheetRatio(self, team_name):
+        return self.season_stats['Clean Sheet Ratio'][team_name]
+    
+    def getGoalsPerGame(self, team_name):
+        return self.season_stats['Goals Per Game'][team_name]
+    
+    def getConcededPerGame(self, team_name):
+        return self.season_stats['Conceded Per Game'][team_name]
+
+    def getSeasonStats(self, team_name):
+        clean_sheet_ratio = self.getCleanSheetRatio(team_name)
+        goals_per_game = self.getGoalsPerGame(team_name)
+        conceded_per_game = self.getConcededPerGame(team_name)
+        return clean_sheet_ratio, goals_per_game, conceded_per_game
+
+            
     # ------- NEXT GAME --------
 
     def getNextTeamToPlay(self, team_name):
@@ -1182,6 +1202,45 @@ class Data:
         if display:
             print(team_ratings)
         return team_ratings
+    
+    # ----------- SEASON STATS -----------
+    
+    def calcSeasonStats(self):
+        cols = list(self.position_over_time.columns.unique(level=0))
+        
+        season_stats = {'Clean Sheet Ratio': {},
+                        'Goals Per Game': {},
+                        'Conceded Per Game': {}}
+        for team_name, row in self.position_over_time.iterrows():
+            n_games = 0
+            clean_sheets = 0
+            goals_scored = 0
+            goals_conceded = 0
+            for matchday in cols:
+                match = row[matchday]
+                if type(match['Score']) is str:
+                    home, _ , away = match['Score'].split(' ')
+                    home, away = int(home), int(away)
+                    if match['HomeAway'] == 'Home':
+                        goals_scored += home
+                        if away == 0:
+                            clean_sheets += 1
+                        else:
+                            goals_conceded += away
+                    elif match['HomeAway'] == 'Away':
+                        goals_scored += away
+                        if home == 0:
+                            clean_sheets += 1
+                        else:
+                            goals_conceded += home
+                            
+                    n_games += 1
+            season_stats['Clean Sheet Ratio'][team_name] = round(clean_sheets / n_games, 2)
+            season_stats['Goals Per Game'][team_name] = round(goals_scored / n_games, 2)
+            season_stats['Conceded Per Game'][team_name] = round(goals_conceded / n_games, 2)
+                
+        self.season_stats = season_stats
+    
         
     
     @timebudget
@@ -1201,21 +1260,24 @@ class Data:
         # Data about the opponent in each team's next game 
         self.next_games = self.buildNextGames(display=display_tables, request_new=request_new)
         
-        # Use dataframes to update all graph HTML files
-        vis = DataVis()
-        vis.updateAll(self.fixtures, 
-                      self.team_ratings, 
-                      self.home_advantages, 
-                      self.form, 
-                      self.position_over_time, 
-                      display_graphs=display_graphs, 
-                      team_name=team_name)
+        self.calcSeasonStats()
+        
+        if request_new:
+            # Use dataframes to update all graph HTML files
+            vis = DataVis()
+            vis.updateAll(self.fixtures, 
+                        self.team_ratings, 
+                        self.home_advantages, 
+                        self.form, 
+                        self.position_over_time, 
+                        display_graphs=display_graphs, 
+                        team_name=team_name)
 
 
 
 if __name__ == "__main__":
     # Update all dataframes
     data = Data(2020)
-    data.updateAll(request_new=False, team_name='Liverpool FC')
+    data.updateAll(request_new=False, team_name='Liverpool FC', display_tables=False)
     
     

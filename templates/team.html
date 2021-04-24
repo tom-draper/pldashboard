@@ -148,7 +148,7 @@
 </div>
 <div class="row" style="margin-bottom: 0;">
   <div class="goals-scored-vs-conceded-graph row-graph">
-    <h1>Goals Scored vs Goals Conceded</h1>
+    <h1>Goals Scored and Conceded</h1>
     <div class="graph full-row-graph">
       <iframe src="{{ 'static/graphs/{}/goals-scored-and-conceded-{}.html'.format(team_name_hyphenated, team_name_hyphenated) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
@@ -159,9 +159,25 @@
 <div class="row">
   <div class="clean-sheets row-graph">
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/clean-sheets-{}.html'.format(team_name_hyphenated, team_name_hyphenated) }}" style="border: none;" height=75px width=100%>
+      <iframe src="{{ 'static/graphs/{}/clean-sheets-{}.html'.format(team_name_hyphenated, team_name_hyphenated) }}" style="border: none;" width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
+    </div>
+  </div>
+</div>
+<div class="season-stats-row">
+  <div class="season-stats">
+    <div class="season-stat clean-sheet-ratio">
+      <div class="season-stat-value">{{ clean_sheet_ratio }}</div>
+      <div class="season-stat-text">clean sheets</div>
+    </div>
+    <div class="season-stat goals-per-game">
+      <div class="season-stat-value">{{ goals_per_game }}</div>
+      <div class="season-stat-text">goals per game</div>
+    </div>
+    <div class="season-stat conceded-per-game">
+      <div class="season-stat-value">{{ conceded_per_game }}</div>
+      <div class="season-stat-text">conceded per game</div>
     </div>
   </div>
 </div>
