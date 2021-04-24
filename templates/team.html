@@ -90,12 +90,7 @@
       <div class="predictions-and-logo">
         <div class="predictions">
           <div class="next-game-item">Current form: <b>{{ team_playing_next_form_rating }}%</b></div>
-          <!-- <div class="next-game-item">Clean sheet: <b>35%</b></div> -->
-          {% if (team_playing_prev_meetings|length) > 0 %}
-            <div class="next-game-item">Score prediction: <b>{{ team_playing_prev_meetings[0][3] }} - {{ team_playing_prev_meetings[0][4] }}</b></div>
-          {% else %}
-            <div class="next-game-item">Score prediction: <b>0 - 0</b></div>
-          {% endif %}
+          <div class="next-game-item">Score prediction<br><b>{{ score_prediction }}</b></div>
         </div>
         <div class="next-game-logo opposition-badge"
             style="background-image: url('static/img/club_badges/{{ team_playing_next_name_hypenated }}.png');
@@ -197,9 +192,9 @@
   <div class="footer-text-colour">
     v1.0
   </div>
-  <a class="footer-item-gap-large footer-link donation-fontsize" href="https://www.paypal.me/TomDraper">
+  <!-- <a class="footer-item-gap-large footer-link donation-fontsize" href="https://www.paypal.me/TomDraper">
     <img class="donation" src="static/img/coin.png">
     <div class="donation-text footer-text-colour">Buy me a coffee</div>
-  </a>
+  </a> -->
 </div>
 {% endblock content %}
