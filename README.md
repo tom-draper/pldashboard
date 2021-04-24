@@ -1,8 +1,3 @@
 # Premier-League
 
-TODO
-[] Next game score prediction (value)
-[] Top goal scorers list (table)
-[] Clean sheet games (shorter graph with ticks and crosses below goals scored vs goals conceded)
-[] Clean sheet percentage (value)
-[] Average goals scored vs average goals conceeded per game (value)
+![Leicester-City](https://user-images.githubusercontent.com/41476809/115970455-5bb1d780-a53a-11eb-88fc-9c5a697cbc76.png)
