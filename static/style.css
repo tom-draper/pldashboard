@@ -376,7 +376,7 @@ img {
 
 .season-stats {
   display: flex;
-  font-size: 60px;
+  font-size: 50px;
   width: 100%;
   letter-spacing: -0.06em;
 }
