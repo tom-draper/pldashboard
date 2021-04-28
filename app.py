@@ -2,28 +2,46 @@ from data import Data
 from flask import Flask, render_template, request
 
 
+class Params:
+    def __init__(self, team_name, team_name_hyphenated, position=None, form=None, recent_teams_played=None, form_rating=None, clean_sheet_ratio=None, goals_per_game=None, conceded_per_game=None, won_against_star_team=None, team_playing_next_name_hypenated=None, team_playing_next_form_rating=None, team_playing_next_home_away=None, team_playing_prev_meetings=None, score_prediction=None, table_snippet=None, table_index_of_this_team=None):
+        self.team_name = team_name
+        self.team_name_hyphenated = team_name_hyphenated
+        self.position = position
+        self.form = form
+        self.recent_teams_played = recent_teams_played
+        self.form_rating = form_rating
+        self.clean_sheet_ratio = clean_sheet_ratio
+        self.goals_per_game = goals_per_game
+        self.conceded_per_game = conceded_per_game
+        self.won_against_star_team = won_against_star_team
+        self.team_playing_next_name_hypenated = team_playing_next_name_hypenated
+        self.team_playing_next_form_rating = team_playing_next_form_rating
+        self.team_playing_next_home_away = team_playing_next_home_away
+        self.team_playing_prev_meetings = team_playing_prev_meetings
+        self.score_prediction = score_prediction
+        self.table_snippet = table_snippet
+        self.table_index_of_this_team = table_index_of_this_team
+
 app = Flask(__name__)
 
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html', team_name_hyphenated="None")
+    return render_template('home.html', params=None)
 
-def get_team_page_data(team_name):
+def getTeamPageData(team_name_hyphenated):
+    team_name = team_name_hyphenated.replace('-', ' ').title().replace('And', 'and') + ' FC'
     # Get data values to display on team webpage
     position = data.getPosition(team_name)
-    
     form, recent_teams_played, form_rating, won_against_star_team = data.getRecentForm(team_name)
-    
     clean_sheet_ratio, goals_per_game, conceded_per_game = data.getSeasonStats(team_name)
-    
     team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction = data.getNextGameDetails(team_name)
-    
     table_snippet, table_index_of_this_team = data.getTableSnippet(team_name)
-        
     team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
     
-    return position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction, table_snippet, table_index_of_this_team
+    params = Params(team_name, team_name_hyphenated, position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction, table_snippet, table_index_of_this_team)
+    
+    return params
 
 @app.route("/liverpool")
 @app.route("/manchester-city")
@@ -47,29 +65,10 @@ def get_team_page_data(team_name):
 @app.route("/fulham")
 def team():
     rule = request.url_rule
-    
     team_name_hyphenated = rule.rule[1:]  # Get hypehenated team name from current URL
-    team_name = team_name_hyphenated.replace('-', ' ').title().replace('And', 'and') + ' FC'
-    
-    position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction, table_snippet, table_index_of_this_team = get_team_page_data(team_name)
+    params = getTeamPageData(team_name_hyphenated)
         
-    return render_template('team.html', 
-                           team_name_hyphenated=team_name_hyphenated,
-                           position=position, 
-                           form=form,
-                           recent_teams_played=recent_teams_played,
-                           team_playing_next_name_hypenated=team_playing_next_name_hypenated,
-                           team_playing_next_form_rating=team_playing_next_form_rating,
-                           team_playing_next_home_away=team_playing_next_home_away,
-                           team_playing_prev_meetings=team_playing_prev_meetings,
-                           score_prediction=score_prediction,
-                           won_against_star_team=won_against_star_team,
-                           form_rating=form_rating,
-                           clean_sheet_ratio=clean_sheet_ratio,
-                           goals_per_game=goals_per_game,
-                           conceded_per_game=conceded_per_game,
-                           table_snippet=table_snippet,
-                           table_index_of_this_team=table_index_of_this_team)
+    return render_template('team.html', params=params)
 
 
 

@@ -32,21 +32,21 @@
       }
     </style>
 
-    {% if team_name_hyphenated == "None" %}
+    {% if params == None %}
       <title>Premier League</title>
     {% else %}
-      <title>{{ team_name_hyphenated.replace('-', ' ').title().replace('And', 'and')  }}</title>
+      <title>{{ params.team_name_hyphenated.replace('-', ' ').title().replace('And', 'and')  }}</title>
     {% endif %}
   </head>
   <body>
-    {% if team_name_hyphenated == "None" %}
+    {% if params == None %}
       <div class="header">
         <a class="title main-link" style="text-decoration: none;" href="/">Premier League</a>
       </div>
     {% else %}
-      <div class="header" style="background-color: var(--{{ team_name_hyphenated }});">
+      <div class="header" style="background-color: var(--{{ params.team_name_hyphenated }});">
         <a id="back-button" class="main-link" href="/"></a>
-        <a class="main-link title" style="color: var(--{{ team_name_hyphenated.replace(' ', '-') + '-secondary'}}); text-decoration: none;" href="/{{team_name_hyphenated}}">{{ team_name_hyphenated.replace('-', ' ').title().replace('And', 'and') }}</a>
+        <a class="main-link title" style="color: var(--{{ params.team_name_hyphenated.replace(' ', '-') + '-secondary'}}); text-decoration: none;" href="/{{ params.team_name_hyphenated }}">{{ params.team_name_hyphenated.replace('-', ' ').title().replace('And', 'and') }}</a>
       </div>
     {% endif %}
     <div class="page-content">

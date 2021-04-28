@@ -280,29 +280,6 @@ class Data:
                     next_games.loc[team]['Previous Meetings'].append(tuple((date, team, row['Team'], home_score, away_score, result[0])))
                     # next_games.loc[row['Team']]['Previous Meetings'].append(tuple((date, team, row['Team'], home_score, away_score, result[1])))
     
-    # def includePrevSeasonsMeetings(self, next_games: pd.DataFrame, no_seasons: int, request_new: bool) -> None:
-    #     for season in range(self.season-1, self.season-1-no_seasons, -1):
-    #         data = self.fixturesData(season, request_new=request_new)
-    #         for match in sorted(data, key=lambda x: x['matchday']):
-    #             if match['homeTeam']['name'] in next_games.index:
-    #                 # From the perspective from the home team
-    #                 # If this match's home team has their next game against this match's away team
-    #                 if next_games.loc[match['homeTeam']['name']]['Next Game'] == match['awayTeam']['name']:
-    #                     date = datetime.strptime(match['utcDate'][:10], "%Y-%m-%d").date().strftime('%d %B %Y')
-                        
-    #                     print(date, match['homeTeam']['name'] + ' vs ' + match['awayTeam']['name'], match['score']['fullTime'])
-
-    #                     home_score = match['score']['fullTime']['homeTeam']
-    #                     away_score = match['score']['fullTime']['awayTeam']
-    #                     # Record overall result for home and away team
-    #                     if home_score == away_score:
-    #                         result = ('Drew', 'Drew')
-    #                     elif home_score > away_score:
-    #                         result = ('Won', 'Lost')
-    #                     else:
-    #                         result = ('Lost', 'Won')
-    #                     next_games.loc[match['homeTeam']['name']]['Previous Meetings'].append(tuple((date, match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[0])))
-    #                     next_games.loc[match['awayTeam']['name']]['Previous Meetings'].append(tuple((date, match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[1])))
     def includePrevSeasonsMeetings(self, next_games: pd.DataFrame, no_seasons: int, request_new: bool) -> None:
         for season in range(self.season-1, self.season-1-no_seasons, -1):
             data = self.fixturesData(season, request_new=request_new)
