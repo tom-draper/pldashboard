@@ -1,9 +1,28 @@
 from data import Data
 from flask import Flask, render_template, request
 
+season = 2020
 
 class Params:
-    def __init__(self, team_name, team_name_hyphenated, position=None, form=None, recent_teams_played=None, form_rating=None, clean_sheet_ratio=None, goals_per_game=None, conceded_per_game=None, won_against_star_team=None, team_playing_next_name_hypenated=None, team_playing_next_form_rating=None, team_playing_next_home_away=None, team_playing_prev_meetings=None, score_prediction=None, table_snippet=None, table_index_of_this_team=None):
+    def __init__(self, title=None, 
+                 team_name=None, 
+                 team_name_hyphenated=None, 
+                 position=None, 
+                 form=None, 
+                 recent_teams_played=None, 
+                 form_rating=None, 
+                 clean_sheet_ratio=None, 
+                 goals_per_game=None, 
+                 conceded_per_game=None, 
+                 won_against_star_team=None, 
+                 team_playing_next_name_hypenated=None, 
+                 team_playing_next_form_rating=None, 
+                 team_playing_next_home_away=None, 
+                 team_playing_prev_meetings=None, 
+                 score_prediction=None, 
+                 table_snippet=None, 
+                 table_index_of_this_team=None):
+        self.title = title
         self.team_name = team_name
         self.team_name_hyphenated = team_name_hyphenated
         self.position = position
@@ -27,19 +46,21 @@ app = Flask(__name__)
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html', params=None)
+    params = Params(title='Premier League')
+    return render_template('home.html', params=params)
 
 def getTeamPageData(team_name_hyphenated):
-    team_name = team_name_hyphenated.replace('-', ' ').title().replace('And', 'and') + ' FC'
+    title = team_name_hyphenated.replace('-', ' ').title().replace('And', 'and')
+    team_name = title + ' FC'
     # Get data values to display on team webpage
-    position = data.getPosition(team_name)
-    form, recent_teams_played, form_rating, won_against_star_team = data.getRecentForm(team_name)
-    clean_sheet_ratio, goals_per_game, conceded_per_game = data.getSeasonStats(team_name)
+    position = data.standings.getPosition(team_name, season)
+    form, recent_teams_played, form_rating, won_against_star_team = data.form.getRecentForm(team_name)
+    clean_sheet_ratio, goals_per_game, conceded_per_game = data.season_stats.getSeasonStats(team_name)
     team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction = data.getNextGameDetails(team_name)
-    table_snippet, table_index_of_this_team = data.getTableSnippet(team_name)
+    table_snippet, table_index_of_this_team = data.standings.getTableSnippet(team_name, season)
     team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
     
-    params = Params(team_name, team_name_hyphenated, position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction, table_snippet, table_index_of_this_team)
+    params = Params(title, team_name, team_name_hyphenated, position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction, table_snippet, table_index_of_this_team)
     
     return params
 
@@ -73,7 +94,7 @@ def team():
 
 
 if __name__ == '__main__':
-    data = Data(2020)
+    data = Data(season)
     # Update data and graphs
     data.updateAll(request_new=False)
     
