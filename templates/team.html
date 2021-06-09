@@ -83,20 +83,25 @@
     </div>
   </div>
   <div class="next-game-prediction row-graph" style="border: 6px solid var(--{{ params.team_playing_next_name_hypenated }});">
-    <div class="next-game-title" style="background-color: var(--{{ params.team_playing_next_name_hypenated }});">
-      {% if params.team_playing_next_name_hypenated != '' %}
+
+    {% if params.team_playing_next_name_hypenated != '' %}
+      <!-- Pre or mid season -->
+      <div class="next-game-title" style="background-color: var(--{{ params.team_playing_next_name_hypenated }});">
         <h1 class="next-game-title-text" style="color: var(--{{ params.team_playing_next_name_hypenated }}-secondary);">
           Next Game: {{ params.team_playing_next_name_hypenated.replace('-', ' ').title().replace('And', 'and') }} ({{ params.team_playing_next_home_away }})
         </h1>
-      {% else %}
-      <h1 class="next-game-title-text" style="color: var(--{{ params.team_playing_next_name_hypenated }}-secondary); text-align: center;">
-        {{ params.season }} SEASON COMPLETE
-      </h1>
-      {% endif %}
+      </div>
+    {% else %}
+      <!-- Season complete -->
+      <div class="next-game-title"></div>
+        <h1 class="next-game-title-text"">
+          {{ params.season }}/{ params.season+1 } SEASON COMPLETE
+        </h1>
+      </div>
+    {% endif %}
       
-    </div>
+    {% if params.team_playing_next_name_hypenated != '' %}
     <div class="next-game-values">
-      {% if params.team_playing_next_name_hypenated != '' %}
         <div class="predictions-and-logo">
           <div class="predictions">
             <div class="next-game-item">Current form: <b>{{ params.team_playing_next_form_rating }}%</b></div>
@@ -127,9 +132,9 @@
           {% endfor %}
           <div class="next-game-divider"></div>
         </div>
+      </div>
       {% endif %}
-    </div>
-  </div>
+  <!-- </div> -->
 </div>
 <div class="row">
   <div class="form-graph row-graph">

@@ -100,6 +100,6 @@ def team():
 if __name__ == '__main__':
     data = Data(season)
     # Update data and graphs
-    data.updateAll(request_new=True)
+    data.updateAll(request_new=False)
     
     app.run(host='0.0.0.0', debug=False)
