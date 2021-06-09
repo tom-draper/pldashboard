@@ -4,7 +4,9 @@ from flask import Flask, render_template, request
 season = 2020
 
 class Params:
-    def __init__(self, title=None, 
+    def __init__(self, 
+                 season=season, 
+                 title=None, 
                  team_name=None, 
                  team_name_hyphenated=None, 
                  position=None, 
@@ -22,6 +24,7 @@ class Params:
                  score_prediction=None, 
                  table_snippet=None, 
                  table_index_of_this_team=None):
+        self.season = season
         self.title = title
         self.team_name = team_name
         self.team_name_hyphenated = team_name_hyphenated
@@ -59,8 +62,9 @@ def getTeamPageData(team_name_hyphenated):
     team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction = data.getNextGameDetails(team_name)
     table_snippet, table_index_of_this_team = data.standings.getTableSnippet(team_name, season)
     team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
+    print(team_playing_next_name_hypenated)
     
-    params = Params(title, team_name, team_name_hyphenated, position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction, table_snippet, table_index_of_this_team)
+    params = Params(season, title, team_name, team_name_hyphenated, position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction, table_snippet, table_index_of_this_team)
     
     return params
 
@@ -96,6 +100,6 @@ def team():
 if __name__ == '__main__':
     data = Data(season)
     # Update data and graphs
-    data.updateAll(request_new=False)
+    data.updateAll(request_new=True)
     
     app.run(host='0.0.0.0', debug=False)

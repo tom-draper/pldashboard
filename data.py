@@ -55,11 +55,20 @@ class Data:
     # ------- NEXT GAME --------
 
     def getNextGameDetails(self, team_name: str):
-        team_playing_next_name = self.next_games.getOpposition(team_name)
-        team_playing_next_form_rating = self.form.getCurrentFormRating(team_playing_next_name)
-        team_playing_next_home_away = self.next_games.getHomeAway(team_name)
-        team_playing_prev_meetings = self.next_games.getPreviousMeetings(team_name)
-        score_prediction = self.score_predictions[team_name]
+        team_playing_next_name = ""
+        team_playing_next_form_rating = None
+        team_playing_next_home_away = None
+        team_playing_prev_meetings = []
+        score_prediction = None
+        
+        if self.next_games != None:
+            # If season not finished
+            team_playing_next_name = self.next_games.getOpposition(team_name)
+            team_playing_next_form_rating = self.form.getCurrentFormRating(team_playing_next_name)
+            team_playing_next_home_away = self.next_games.getHomeAway(team_name)
+            team_playing_prev_meetings = self.next_games.getPreviousMeetings(team_name)
+            score_prediction = self.score_predictions[team_name]
+            
         return team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction
 
     
@@ -161,32 +170,37 @@ class Data:
         
         next_games = pd.DataFrame()
         
+        
         next_team_col = []
         for team_name, _ in self.fixtures.df.iterrows():
             matchday_no, next_team = self.getNextGame(team_name, self.fixtures)
             next_team_col.append(next_team)
         
-        next_games['Next Game'] = next_team_col
-        # Config index now as there are a correct number of rows, and allow to 
-        # insert the HomeAway fixtures column (with same indices)
-        next_games.index = self.fixtures.df.index
-        next_games['HomeAway'] = self.fixtures.df[f'Matchday {matchday_no+1}']['HomeAway']
-        next_games['Previous Meetings'] = [[] for _ in range(len(next_games.index))]
-                
-        # Add any previous meetings that have been played this season
-        self.includeCurrentSeasonsMeetings(next_games)
-        # Add any previous meetings from last 2 sesaons
-        self.includePrevSeasonsMeetings(next_games, 2, request_new)
-        
-        # Sort each list of tuple previous meeting to be descending by date
-        for _, row in next_games.iterrows():
-            row['Previous Meetings'].sort(key=lambda x: datetime.strptime(x[0], '%d %B %Y'), reverse=True)
-        
-        next_games = NextGames(next_games)
-        
+        if matchday_no == None:
+            # If season has finished
+            next_games = None
+        else:
+            next_games['Next Game'] = next_team_col
+            # Config index now as there are a correct number of rows, and allow to 
+            # insert the HomeAway fixtures column (with same indices)
+            next_games.index = self.fixtures.df.index
+            next_games['HomeAway'] = self.fixtures.df[f'Matchday {matchday_no+1}']['HomeAway']
+            next_games['Previous Meetings'] = [[] for _ in range(len(next_games.index))]
+                    
+            # Add any previous meetings that have been played this season
+            self.includeCurrentSeasonsMeetings(next_games)
+            # Add any previous meetings from last 2 sesaons
+            self.includePrevSeasonsMeetings(next_games, 2, request_new)
+            
+            # Sort each list of tuple previous meeting to be descending by date
+            for _, row in next_games.iterrows():
+                row['Previous Meetings'].sort(key=lambda x: datetime.strptime(x[0], '%d %B %Y'), reverse=True)
+            
+            next_games = NextGames(next_games)
+            
         if display:
             print(next_games)
-        
+            
         return next_games
     
     
@@ -365,7 +379,7 @@ class Data:
             form[(f'Matchday {matchday_no}', 'Date')] = self.fixtures.df[f'Matchday {matchday_no}', 'Date']
             
             # Get data about last 5 matchdays
-            teams_played_col, scores_col, home_aways_col = self.lastNGamesCols(self.fixtures, 5, matchday_no+1)
+            teams_played_col, scores_col, home_aways_col = self.lastNGamesCols(self.fixtures, 5, matchday_no)
             form[(f'Matchday {matchday_no}', 'Teams Played')] = teams_played_col
             form[(f'Matchday {matchday_no}', 'Scores')] = scores_col
             form[(f'Matchday {matchday_no}', 'HomeAway')] = home_aways_col
@@ -1089,14 +1103,14 @@ class Data:
         predictor = Predictor()
         self.score_predictions = predictor.calcScorePredictions(self.form, self.next_games)
         
-        if request_new:
-            # Use dataframes to update all graph HTML files
-            vis = DataVis()
-            vis.updateAll(self.fixtures, 
-                        self.team_ratings, 
-                        self.home_advantages, 
+        # if request_new:
+        # Use dataframes to update all graph HTML files
+        vis = DataVis()
+        vis.updateAll(self.fixtures.df, 
+                        self.team_ratings.df, 
+                        self.home_advantages.df, 
                         self.form.df, 
-                        self.position_over_time, 
+                        self.position_over_time.df, 
                         display_graphs=display_graphs, 
                         team_name=team_name)
 

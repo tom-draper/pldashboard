@@ -84,40 +84,50 @@
   </div>
   <div class="next-game-prediction row-graph" style="border: 6px solid var(--{{ params.team_playing_next_name_hypenated }});">
     <div class="next-game-title" style="background-color: var(--{{ params.team_playing_next_name_hypenated }});">
-      <h1 class="next-game-title-text" style="color: var(--{{ params.team_playing_next_name_hypenated }}-secondary);">Next Game: {{ params.team_playing_next_name_hypenated.replace('-', ' ').title().replace('And', 'and') }} ({{ params.team_playing_next_home_away }})</h1>
+      {% if params.team_playing_next_name_hypenated != '' %}
+        <h1 class="next-game-title-text" style="color: var(--{{ params.team_playing_next_name_hypenated }}-secondary);">
+          Next Game: {{ params.team_playing_next_name_hypenated.replace('-', ' ').title().replace('And', 'and') }} ({{ params.team_playing_next_home_away }})
+        </h1>
+      {% else %}
+      <h1 class="next-game-title-text" style="color: var(--{{ params.team_playing_next_name_hypenated }}-secondary); text-align: center;">
+        {{ params.season }} SEASON COMPLETE
+      </h1>
+      {% endif %}
+      
     </div>
     <div class="next-game-values">
-      <div class="predictions-and-logo">
-        <div class="predictions">
-          <div class="next-game-item">Current form: <b>{{ params.team_playing_next_form_rating }}%</b></div>
-          <div class="next-game-item">Score prediction<br><b>{{ params.score_prediction }}</b></div>
-        </div>
-        <div class="next-game-logo opposition-badge"
-            style="background-image: url('static/img/club_badges/{{ params.team_playing_next_name_hypenated }}.png');
-                    background-repeat: no-repeat;
-                    background-size: contain;
-                    background-position: center;">
-        </div>
-      </div>
-      <div class="past-results">
-        <div class="next-game-item" style="font-weight:700;">Previous Results</div>
-        
-        <!-- Display table of previous results against the next team this team is playing -->
-        {% for prev_meeting in params.team_playing_prev_meetings %}
-          <div class="next-game-divider"></div>
-          <div class="next-game-item {{ prev_meeting[5] }}">
-            <div class="past-result">
-              <div class="home-team">{{ prev_meeting[1] }}</div>
-              <div class="score" style="font-weight:800">{{ prev_meeting[3] }} - {{ prev_meeting[4] }}</div>
-              <div class="away-team">{{ prev_meeting[2] }}</div>
-            </div>
-            <div style="clear: both;"></div>
-            <div class="past-result-date">{{ prev_meeting[0] }}</div>
+      {% if params.team_playing_next_name_hypenated != '' %}
+        <div class="predictions-and-logo">
+          <div class="predictions">
+            <div class="next-game-item">Current form: <b>{{ params.team_playing_next_form_rating }}%</b></div>
+            <div class="next-game-item">Score prediction<br><b>{{ params.score_prediction }}</b></div>
           </div>
-        {% endfor %}
-        <div class="next-game-divider"></div>
-
-      </div>
+          <div class="next-game-logo opposition-badge"
+              style="background-image: url('static/img/club_badges/{{ params.team_playing_next_name_hypenated }}.png');
+                      background-repeat: no-repeat;
+                      background-size: contain;
+                      background-position: center;">
+          </div>
+        </div>
+        <div class="past-results">
+          <div class="next-game-item" style="font-weight:700;">Previous Results</div>
+          
+          <!-- Display table of previous results against the next team this team is playing -->
+          {% for prev_meeting in params.team_playing_prev_meetings %}
+            <div class="next-game-divider"></div>
+            <div class="next-game-item {{ prev_meeting[5] }}">
+              <div class="past-result">
+                <div class="home-team">{{ prev_meeting[1] }}</div>
+                <div class="score" style="font-weight:800">{{ prev_meeting[3] }} - {{ prev_meeting[4] }}</div>
+                <div class="away-team">{{ prev_meeting[2] }}</div>
+              </div>
+              <div style="clear: both;"></div>
+              <div class="past-result-date">{{ prev_meeting[0] }}</div>
+            </div>
+          {% endfor %}
+          <div class="next-game-divider"></div>
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>
