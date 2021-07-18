@@ -49,11 +49,11 @@ class DataVis:
     @timebudget
     def updateFixtures(self, fixtures, team_ratings, home_advantages, display=False, team_name=None):
         if team_name == None:
-            print("Updating all team fixtures graphs...")
+            print("📊 Updating all team fixtures graphs...")
             for team in fixtures.index.values.tolist():
                 self.genFixturesGraph(team, fixtures, team_ratings, home_advantages, display=display)
         else:
-            print(f"Updating {team_name} fixture graph...")
+            print(f"📊 Updating {team_name} fixture graph...")
             self.genFixturesGraph(team_name, fixtures, team_ratings, home_advantages, display=display)
     
     def genFixturesGraph(self, team_name, fixtures, team_ratings, home_advantages, display=False):
@@ -181,11 +181,11 @@ class DataVis:
     @timebudget
     def updateFormOverTime(self, form, display=False, team_name=None):
         if team_name == None:
-            print("Updating all teams form over time graphs...")
+            print("📊 Updating all teams form over time graphs...")
             for team in form.index.values.tolist():
                 self.genFormOverTimeGraph(team, form, display=display)
         else:
-            print(f"Updating {team_name} form over time graph...")
+            print(f"📊 Updating {team_name} form over time graph...")
             self.genFormOverTimeGraph(team_name, form, display=display)
     
     def genFormOverTimeGraph(self, team_name, form, display=False):
@@ -288,11 +288,11 @@ class DataVis:
     @timebudget
     def updatePositionOverTime(self, position_over_time, display=False, team_name=None):
         if team_name == None:
-            print("Updating all teams positions over time graphs...")
+            print("📊 Updating all teams positions over time graphs...")
             for team in position_over_time.index.values.tolist():
                 self.genPositionOverTimeGraph(team, position_over_time, display=display)
         else:
-            print(f"Updating {team_name} positions over time graph...")
+            print(f"📊 Updating {team_name} positions over time graph...")
             self.genPositionOverTimeGraph(team_name, position_over_time, display=display)
         
     def genPositionOverTimeGraph(self, team_name, position_over_time, display=False):
@@ -312,6 +312,8 @@ class DataVis:
         """
         x_cols = position_over_time.iloc[:, position_over_time.columns.get_level_values(1) == 'Date']
         y_cols = position_over_time.iloc[:, position_over_time.columns.get_level_values(1) == 'Position']
+        
+        print(x_cols, y_cols)
 
         # All ys have the same x date values
         x = []
@@ -325,6 +327,8 @@ class DataVis:
         for _, row_data in y_cols.iterrows():
             y = row_data.values.tolist()
             ys.append(y)
+        
+        print(x, ys)
 
         names = position_over_time.index.values.tolist()
         
@@ -332,6 +336,8 @@ class DataVis:
         cols = list(position_over_time.columns.unique(level=0))
         # Remove 'Matchday' prefix and just store sorted integers
         matchday_labels = sorted(map(lambda x: int(x.split(' ')[-1]), cols))
+        
+        print(x, matchday_labels, ys)
         x, matchday_labels, *ys = zip(*sorted(zip(x, matchday_labels, *ys)))
         
         
@@ -446,11 +452,11 @@ class DataVis:
     @timebudget
     def updateGoalsScoredAndConceded(self, position_over_time, display=False, team_name=None):
         if team_name == None:
-            print("Updating all teams goals scored and conceded over time graphs...")
+            print("📊 Updating all teams goals scored and conceded over time graphs...")
             for team in position_over_time.index.values.tolist():
                 self.genGoalsScoredAndConceded(team, position_over_time, display=display)
         else:
-            print(f"Updating {team_name} goals scored and conceded over time graph...")
+            print(f"📊 Updating {team_name} goals scored and conceded over time graph...")
             self.genGoalsScoredAndConceded(team_name, position_over_time, display=display)
     
     def genGoalsScoredAndConceded(self, team_name, position_over_time, display=False):
@@ -678,5 +684,5 @@ class DataVis:
     def updateAll(self, fixtures, team_ratings, home_advantages, form, position_over_time, team_name=None, display_graphs=False):
         self.updateFixtures(fixtures, team_ratings, home_advantages, display=display_graphs, team_name=team_name)
         self.updateFormOverTime(form, display=display_graphs, team_name=team_name)
-        self.updatePositionOverTime(position_over_time, display=display_graphs, team_name=team_name)
-        self.updateGoalsScoredAndConceded(position_over_time, display=display_graphs, team_name=team_name)
+        # self.updatePositionOverTime(position_over_time, display=display_graphs, team_name=team_name)
+        # self.updateGoalsScoredAndConceded(position_over_time, display=display_graphs, team_name=team_name)

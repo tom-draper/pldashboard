@@ -20,58 +20,69 @@ class Form(DF):
     
     def getCurrentMatchday(self) -> List:
         # Returns "Matchday X"
-        return list(self.df.columns.unique(level=0))[-1]
+        if len(self.df.columns) > 0:
+            return list(self.df.columns.unique(level=0))[-1]
+        else:
+            return None
 
     def getForm(self, team_name: str) -> List:
-        latest_matchday = self.getCurrentMatchday()
-        form = self.df[latest_matchday].loc[team_name]['Form']
-                
-        # If team hasn't yet played in current matchday, use previous matchday's form
-        if len(form.replace(',', '')) != 5:
-            previous_matchday = list(self.form.df.columns.unique(level=0))[-2]
-            form = self.df[previous_matchday].loc[team_name]['Form']
-        
-        if form == None:
-            form = []
-        else:
-            form = list(form.replace(',', ''))
-        form = form + ['None'] * (5 - len(form))  # Pad list
-        return form
+        current_matchday = self.getCurrentMatchday()
+        if current_matchday:
+            form = self.df[current_matchday].loc[team_name]['Form']
+                    
+            # If team hasn't yet played in current matchday, use previous matchday's form
+            if len(form.replace(',', '')) != 5:
+                previous_matchday = list(self.form.df.columns.unique(level=0))[-2]
+                form = self.df[previous_matchday].loc[team_name]['Form']
+            
+            if form == None:
+                form = []
+            else:
+                form = list(form.replace(',', ''))
+            form = form + ['None'] * (5 - len(form))  # Pad list
+            return form
+        return []
 
     def getRecentTeamsPlayed(self, team_name: str) -> pd.DataFrame:
-        latest_matchday = self.getCurrentMatchday()
-        latest_teams_played = self.df[latest_matchday].loc[team_name]['Teams Played']
-        
-        if len(latest_teams_played) == 5:
-            # If team has already played this game week
-            return latest_teams_played
-        else:
-            # Use previous matchday's games played list
-            previous_matchday = list(self.df.columns.unique(level=0))[-2]
-            return self.df[previous_matchday].loc[team_name]['Teams Played']
+        current_matchday = self.getCurrentMatchday()
+        if current_matchday:
+            latest_teams_played = self.df[current_matchday].loc[team_name]['Teams Played']
+            
+            if len(latest_teams_played) == 5:
+                # If team has already played this game week
+                return latest_teams_played
+            else:
+                # Use previous matchday's games played list
+                previous_matchday = list(self.df.columns.unique(level=0))[-2]
+                return self.df[previous_matchday].loc[team_name]['Teams Played']
+        return pd.DataFrame() 
     
-    def getCurrentFormRating(self, team_name: str) -> List:
-        matchday = self.getCurrentMatchday()# Latest matchday
-        latest_teams_played = self.df[matchday].loc[team_name]['Teams Played']
-        
-        # If team hasn't yet played this matchday use previous matchday data
-        if len(latest_teams_played) != 5:
-            matchday = list(self.df.columns.unique(level=0))[-2]
-        
-        return self.df[matchday].loc[team_name]['Form Rating %'].round(1)
+    def getCurrentFormRating(self, team_name: str) -> float:
+        current_matchday = self.getCurrentMatchday()# Latest matchday
+        if current_matchday:
+            latest_teams_played = self.df[current_matchday].loc[team_name]['Teams Played']
+            
+            # If team hasn't yet played this matchday use previous matchday data
+            if len(latest_teams_played) != 5:
+                matchday = list(self.df.columns.unique(level=0))[-2]
+            
+            return self.df[matchday].loc[team_name]['Form Rating %'].round(1)
+        return 0
     
     def getWonAgainstStarTeam(self, team_name: str) -> List[bool]:
-        latest_matchday = self.getCurrentMatchday()
-        won_against_star_team = self.df[latest_matchday].loc[team_name]['Won Against Star Team']
-        
-        # If team hasn't yet played this matchday use previous matchday data
-        if len(won_against_star_team) != 5:
-            previous_matchday = list(self.df.columns.unique(level=0))[-2]
-            won_against_star_team = self.df[previous_matchday].loc[team_name]['Won Against Star Team']
+        current_matchday = self.getCurrentMatchday()
+        if current_matchday:
+            won_against_star_team = self.df[current_matchday].loc[team_name]['Won Against Star Team']
             
-        # Replace boolean values with CSS tag for super win image
-        won_against_star_team = ["star-team" if x else "not-star-team" for x in won_against_star_team]
-        return won_against_star_team
+            # If team hasn't yet played this matchday use previous matchday data
+            if len(won_against_star_team) != 5:
+                previous_matchday = list(self.df.columns.unique(level=0))[-2]
+                won_against_star_team = self.df[previous_matchday].loc[team_name]['Won Against Star Team']
+                
+            # Replace boolean values with CSS tag for super win image
+            won_against_star_team = ["star-team" if x else "not-star-team" for x in won_against_star_team]
+            return won_against_star_team
+        return []
 
     def getRecentForm(self, team_name: str) -> Tuple[List[str], List[str], float, List[bool]]:
         form = self.getForm(team_name)  # List of five 'W', 'D' or 'L'
