@@ -720,9 +720,9 @@ class Data:
             response = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(season), 
                                     headers=self.headers)
             
-            print("Code:", response.status_code)
+            print("Status:", response.status_code)
             if response.status_code == 429:
-                raise Exception('Error: Data request failed')
+                raise Exception('❌ ERROR: Data request failed')
             
             response = response.json()['standings'][0]['table']
             
@@ -836,9 +836,9 @@ class Data:
             response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(season),
                                         headers=self.headers)
             
-            print("Code:", response.status_code)
+            print("Status:", response.status_code)
             if response.status_code == 429:
-                raise Exception('Error: Data request failed')
+                raise Exception('❌ ERROR: Data request failed')
             
             response = response.json()['matches']
             
@@ -997,10 +997,6 @@ class Data:
         """
         print("🔨 Building team ratings dataframe... ")
         
-        # Ensure dependencies have been built
-        if self.standings.df.empty:
-            raise ValueError('Error when creating team_ratings dataframe: standings dataframe empty')
-        
         # Add current season team names to the object team dataframe
         team_ratings = pd.DataFrame(index=self.standings.df.index)
 
@@ -1129,7 +1125,7 @@ class Data:
             self.buildDataFrames(no_seasons, display_tables, request_new)
         except Exception as e:
             print(e)
-            print("Retrying with saved data...")
+            print("🔄 Retrying with saved data...")
             self.buildDataFrames(no_seasons, display_tables, False)
             
         # Season metrics
