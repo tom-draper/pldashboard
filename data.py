@@ -36,7 +36,8 @@ class Data:
         self.new_data = {}
         
         # List of current season teams (taken from standings dataframe) 
-        self.team_names = None  
+        self.team_names = None
+        self.logo_urls = {}
         
         # Dataframes to build
         self.fixtures = None
@@ -47,6 +48,10 @@ class Data:
         self.position_over_time = None
         self.next_games = None
         self.season_stats = None
+    
+
+    def getLogoUrl(self, team_name):
+        return self.logo_urls[team_name]
 
             
     # ------- NEXT GAME --------
@@ -728,10 +733,6 @@ class Data:
             
             # Add new standings data to temp storage to be saved later
             self.new_data[f'data/standings_{season}.json'] = response
-            
-            # Save new standings data
-            # with open(f'data/standings_{season}.json', 'w') as json_file:
-            #     json.dump(response, json_file)
                 
             return response
         else:
@@ -788,23 +789,30 @@ class Data:
             
             # pprint.pprint(data)
             df = pd.DataFrame(data)
-            
+
             # Rename teams to their team name
             team_names = pd.Series([name.replace('&', 'and') for name in [df['team'][x]['name'] for x in range(len(df))]])
+            # Record each team's crest url to dictionary 
+            for _, team in df['team'].iteritems():
+                team_name = team['name'].replace('&', 'and')
+                crest_url = team['crestUrl']
+                self.logo_urls[team_name] = crest_url
+            
+            # Overwrite team column with just team names
             df['team'] = team_names
 
 
             df.columns = pd.MultiIndex.from_tuples(((f'{self.season-i}', 'Position'), 
-                                                   (f'{self.season-i}', 'Team'),
-                                                   (f'{self.season-i}', 'Played'),
-                                                   (f'{self.season-i}', 'Form'),
-                                                   (f'{self.season-i}', 'Won'),
-                                                   (f'{self.season-i}', 'Draw'),
-                                                   (f'{self.season-i}', 'Lost'),
-                                                   (f'{self.season-i}', 'Points'),
-                                                   (f'{self.season-i}', 'GF'),
-                                                   (f'{self.season-i}', 'GA'), 
-                                                   (f'{self.season-i}', 'GD'),))
+                                                    (f'{self.season-i}', 'Team'),
+                                                    (f'{self.season-i}', 'Played'),
+                                                    (f'{self.season-i}', 'Form'),
+                                                    (f'{self.season-i}', 'Won'),
+                                                    (f'{self.season-i}', 'Draw'),
+                                                    (f'{self.season-i}', 'Lost'),
+                                                    (f'{self.season-i}', 'Points'),
+                                                    (f'{self.season-i}', 'GF'),
+                                                    (f'{self.season-i}', 'GA'), 
+                                                    (f'{self.season-i}', 'GD'),))
 
             df.index = df[f'{self.season-i}']['Team']
             df = df.drop(columns=['Team'], level=1)
@@ -819,6 +827,7 @@ class Data:
                 df = df.drop(columns=['Form'], level=1)
                 # Add season standings to main standings dataframe 
                 standings = pd.concat([standings, df], axis=1)
+        
         standings.index.name = "Team"
         
         standings = Standings(standings)
@@ -1137,24 +1146,25 @@ class Data:
         
         # Save any new data to json files
         if self.new_data:
+            print("💾 Saving new data...")
             self.saveData()
         
         # if request_new:
         # Use dataframes to update all graph HTML files
         vis = DataVis()
         vis.updateAll(self.fixtures.df, 
-                        self.team_ratings.df, 
-                        self.home_advantages.df, 
-                        self.form.df, 
-                        self.position_over_time.df, 
-                        display_graphs=display_graphs, 
-                        team_name=team_name)
+                      self.team_ratings.df, 
+                      self.home_advantages.df, 
+                      self.form.df, 
+                      self.position_over_time.df, 
+                      display_graphs=display_graphs, 
+                      team_name=team_name)
 
 
 
 if __name__ == "__main__":
     # Update all dataframes
-    data = Data(2020)
+    data = Data(2021)
     data.updateAll(request_new=False, team_name='Liverpool FC', display_tables=False)
     
     

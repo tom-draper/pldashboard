@@ -2,7 +2,8 @@
 {% extends 'layout.html' %} {% block content %}
 
 <div class="row">
-  <div class="row-left position-and-badge" style="background-image: url('static/img/club_badges/{{ params.team_name_hyphenated }}.png'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;">
+  <!-- <div class="row-left position-and-badge" style="background-image: url('static/img/club_badges/{{ params.team_name_hyphenated }}.png'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;"> -->
+  <div class="row-left position-and-badge" style="background-image: url('{{ params.team_logo_url }}'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;">
     <div class="position">{{ params.position }}</div>
   </div>
   <div class="fixtures-graph row-graph">
@@ -108,10 +109,10 @@
             <div class="next-game-item">Score prediction<br><b>{{ params.score_prediction }}</b></div>
           </div>
           <div class="next-game-logo opposition-badge"
-              style="background-image: url('static/img/club_badges/{{ params.team_playing_next_name_hypenated }}.png');
-                      background-repeat: no-repeat;
-                      background-size: contain;
-                      background-position: center;">
+              style="background-image: url('{{ params.team_playing_logo_url }}');
+                     background-repeat: no-repeat;
+                     background-size: contain;
+                     background-position: center;">
           </div>
         </div>
         <div class="past-results">

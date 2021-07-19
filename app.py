@@ -23,7 +23,9 @@ class Params:
                  team_playing_prev_meetings=None, 
                  score_prediction=None, 
                  table_snippet=None, 
-                 table_index_of_this_team=None):
+                 table_index_of_this_team=None,
+                 team_logo_url=None,
+                 team_playing_logo_url=None):
         self.season = season
         self.title = title
         self.team_name = team_name
@@ -43,6 +45,8 @@ class Params:
         self.score_prediction = score_prediction
         self.table_snippet = table_snippet
         self.table_index_of_this_team = table_index_of_this_team
+        self.team_logo_url = team_logo_url
+        self.team_playing_logo_url = team_playing_logo_url
 
 app = Flask(__name__)
 
@@ -62,8 +66,10 @@ def getTeamPageData(team_name_hyphenated):
     team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction = data.getNextGameDetails(team_name)
     table_snippet, table_index_of_this_team = data.standings.getTableSnippet(team_name, season)
     team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
-    
-    params = Params(season, title, team_name, team_name_hyphenated, position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction, table_snippet, table_index_of_this_team)
+    team_logo_url = data.getLogoUrl(team_name)
+    team_playing_logo_url = data.getLogoUrl(team_playing_next_name)
+        
+    params = Params(season, title, team_name, team_name_hyphenated, position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction, table_snippet, table_index_of_this_team, team_logo_url, team_playing_logo_url)
     
     return params
 
@@ -75,7 +81,6 @@ def getTeamPageData(team_name_hyphenated):
 @app.route("/tottenham-hotspur")
 @app.route("/wolverhampton-wanderers")
 @app.route("/arsenal")
-@app.route("/sheffield-united")
 @app.route("/burnley")
 @app.route("/southampton")
 @app.route("/everton")
@@ -85,8 +90,12 @@ def getTeamPageData(team_name_hyphenated):
 @app.route("/west-ham-united")
 @app.route("/aston-villa")
 @app.route("/leeds-united")
-@app.route("/west-bromwich-albion")
-@app.route("/fulham")
+@app.route("/norwich-city")
+@app.route("/watford")
+@app.route("/brentford")
+
+# @app.route("/west-bromwich-albion")
+# @app.route("/fulham")
 def team():
     rule = request.url_rule
     team_name_hyphenated = rule.rule[1:]  # Get hypehenated team name from current URL
