@@ -1,8 +1,7 @@
-from numpy.core.numeric import NaN
 import plotly
 import plotly.graph_objects as go
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime
 from timebudget import timebudget
 
 class DataVis:
@@ -624,7 +623,7 @@ class DataVis:
     @timebudget
     def update_position_over_time(self, position_over_time, display=False, team_name=None):
         if position_over_time.empty:
-            print("Error: Cannot generate position over time graph; Position Over Time dataframe is empty")
+            print("Error: Cannot generate position over time graph; position over time dataframe is empty")
         else:
             if team_name == None:
                 print("📊 Updating all teams positions over time graphs...")
@@ -872,24 +871,33 @@ class DataVis:
         )
         return fig
     
+    def clean_sheets_data_points(self, y_goals_conceded):
+        y_value = 0.5  # Line in the centre of the graph
+        not_clean_sheets = [y_value if goals != 0 else None for goals in y_goals_conceded]
+        clean_sheets = [y_value if goals == 0 else None for goals in y_goals_conceded]
+        labels = ['Clean sheet' if goals == 0 else 'Goals conceded' for goals in y_goals_conceded]
+        line = [y_value] * len(clean_sheets)
+        
+        return line, clean_sheets, not_clean_sheets, labels
+    
     def create_goals_scored_and_conceded_fig(self, x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels):
         # Plot graph
         fig = go.Figure(data=[
             go.Bar(name='Goals Scored', x=x, y=y_goals_scored,
-                    marker_color='#77DD77',
-                    marker_line_color='#006400',
-                    marker_line_width=2,
-                    hovertemplate="Matchday %{x}<br>%{y} goals scored<extra></extra>",
-                    hoverinfo=('x+y')),
+                   marker_color='#77DD77',
+                   marker_line_color='#006400',
+                   marker_line_width=2,
+                   hovertemplate="Matchday %{x}<br>%{y} goals scored<extra></extra>",
+                   hoverinfo=('x+y')),
             go.Bar(name='Goals Conceded', x=x, y=y_goals_conceded,
-                    marker_color='#C23B22',
-                    marker_line_color='#8B0000',
-                    marker_line_width=2,
-                    hovertemplate="Matchday %{x}<br>%{y} goals conceded<extra></extra>",
-                    hoverinfo=('x+y')),
+                   marker_color='#C23B22',
+                   marker_line_color='#8B0000',
+                   marker_line_width=2,
+                   hovertemplate="Matchday %{x}<br>%{y} goals conceded<extra></extra>",
+                   hoverinfo=('x+y')),
             go.Scatter(name='Avg', x=x, y=y_avg, mode='lines',
-                    hovertemplate="Matchday %{x}<br>%{y} goals scored on average<extra></extra>",
-                    line=dict(color='#0080FF', width=2))
+                       hovertemplate="Matchday %{x}<br>%{y} goals scored on average<extra></extra>",
+                       line=dict(color='#0080FF', width=2))
         ])
         
         # Get the maximum y-axis value (6 goals unless a higher value found)
@@ -936,16 +944,6 @@ class DataVis:
         fig.update_layout(barmode='group')
 
         return fig
-    
-    def clean_sheets_data_points(self, y_goals_conceded):
-        y_value = 0.5  # Line in the centre of the graph
-        not_clean_sheets = [y_value if goals != 0 else None for goals in y_goals_conceded]
-        clean_sheets = [y_value if goals == 0 else None for goals in y_goals_conceded]
-        labels = ['Clean sheet' if goals == 0 else 'Goals conceded' for goals in y_goals_conceded]
-        line = [y_value] * len(clean_sheets)
-        
-        return line, clean_sheets, not_clean_sheets, labels
-        
 
     def goals_scored_and_conceeded_data_points(self, position_over_time, team_name):
         x_cols = position_over_time.iloc[:, position_over_time.columns.get_level_values(1) == 'Date']
@@ -999,35 +997,36 @@ class DataVis:
         
     @timebudget
     def update_goals_scored_and_conceded(self, position_over_time, display=False, team_name=None):
-        if team_name == None:
-            print("📊 Updating all teams goals scored and conceded over time graphs...")
-            teams_to_update = position_over_time.index.values.tolist()
+        if position_over_time.empty:
+            print("Error: Cannot generate goals scored and conceded graph; position over time dataframe is empty")
         else:
-            print(f"📊 Updating {team_name} goals scored and conceded over time graph...")
-            teams_to_update = [team_name]
-    
-        for team_name in teams_to_update:
-            x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self.goals_scored_and_conceeded_data_points(position_over_time, team_name)
-            
-            fig = self.create_goals_scored_and_conceded_fig(x, y_goals_scored, y_avg, matchday_labels)
-            
-            if display:
-                fig.show()
-            
-            file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-            plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
-            
-            
-            # EXTRA GRAPH FROM SAME DATA: CLEAN SHEETS
-            line, clean_sheets, not_clean_sheets, labels = self.clean_sheets_data_points(y_goals_conceded)
-            
-            fig = self.create_clean_sheets_fig(x, line, clean_sheets, not_clean_sheets, matchday_labels, labels)
-            
-            if display:
-                fig.show()
-            
-            file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-            plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/clean-sheets-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+            if team_name == None:
+                print("📊 Updating all teams goals scored and conceded over time graphs...")
+                teams_to_update = position_over_time.index.values.tolist()
+            else:
+                print(f"📊 Updating {team_name} goals scored and conceded over time graph...")
+                teams_to_update = [team_name]
+        
+            for team_name in teams_to_update:
+                x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self.goals_scored_and_conceeded_data_points(position_over_time, team_name)
+                fig = self.create_goals_scored_and_conceded_fig(x, y_goals_scored, y_avg, matchday_labels)
+                
+                if display:
+                    fig.show()
+                
+                file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+                plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+                
+                
+                # EXTRA GRAPH FROM SAME DATA: CLEAN SHEETS
+                line, clean_sheets, not_clean_sheets, labels = self.clean_sheets_data_points(y_goals_conceded)
+                fig = self.create_clean_sheets_fig(x, line, clean_sheets, not_clean_sheets, matchday_labels, labels)
+                
+                if display:
+                    fig.show()
+                
+                file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+                plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/clean-sheets-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
             
     
     # def genGoalsScoredAndConceded(self, team_name, position_over_time, display=False):
@@ -1183,4 +1182,4 @@ class DataVis:
         self.update_fixtures(fixtures, team_ratings, home_advantages, display=display_graphs, team_name=team_name)
         self.update_form_over_time(form, display=display_graphs, team_name=team_name)
         # self.update_position_over_time(position_over_time, display=display_graphs, team_name=team_name)
-        # self.update+goals_scored_and_conceded(position_over_time, display=display_graphs, team_name=team_name)
+        # self.update_goals_scored_and_conceded(position_over_time, display=display_graphs, team_name=team_name)
