@@ -46,7 +46,7 @@ class Utilities:
             'WOL': 'Wolverhampton Wanderers FC',
     })
     
-    def convertTeamNameOrInitials(self, team_name: str) -> str:
+    def convert_team_name_or_initials(self, team_name: str) -> str:
         if team_name in self.names_and_initials.keys():
             return self.names_and_initials[team_name]
         elif len(team_name) == 3:

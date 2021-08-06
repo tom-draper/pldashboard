@@ -3,7 +3,7 @@ from utilities import Utilities
 utilities = Utilities()
 
 class Predictor:
-    def calcScorePredictions(self, form, next_games) -> dict:
+    def calc_score_predictions(self, form, next_games) -> dict:
         score_predictions = {}
         
         team_names = form.df.index.values.tolist()
@@ -12,9 +12,9 @@ class Predictor:
                 # If season finished
                 score_predictions[team_name] = None
             else:
-                current_form = form.getCurrentFormRating(team_name)
+                current_form = form.get_current_form_rating(team_name)
                 team_playing_next_name = next_games.df['Next Game'].loc[team_name]
-                team_playing_next_form_rating = form.getCurrentFormRating(team_playing_next_name)
+                team_playing_next_form_rating = form.get_current_form_rating(team_playing_next_name)
                 team_playing_next_home_away = next_games.df['HomeAway'].loc[team_name]
                 team_playing_prev_meetings = next_games.df.loc[team_name]['Previous Meetings']
                 
@@ -51,9 +51,9 @@ class Predictor:
                 
                 # Construct prediction string to display
                 if team_playing_next_home_away == "home":
-                    prediction = f'{utilities.convertTeamNameOrInitials(team_name)}  {predicted_scored} - {predicted_conceded}  {utilities.convertTeamNameOrInitials(team_playing_next_name)}'
+                    prediction = f'{utilities.convert_team_name_or_initials(team_name)}  {predicted_scored} - {predicted_conceded}  {utilities.convert_team_name_or_initials(team_playing_next_name)}'
                 else:
-                    prediction = f'{utilities.convertTeamNameOrInitials(team_playing_next_name)}  {predicted_conceded} - {predicted_scored}  {utilities.convertTeamNameOrInitials(team_name)}'
+                    prediction = f'{utilities.convert_team_name_or_initials(team_playing_next_name)}  {predicted_conceded} - {predicted_scored}  {utilities.convert_team_name_or_initials(team_name)}'
                 score_predictions[team_name] = prediction
         
         return score_predictions

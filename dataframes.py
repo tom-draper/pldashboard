@@ -18,15 +18,15 @@ class Form(DF):
     def __init__(self, d):
         super().__init__(d)
     
-    def getCurrentMatchday(self) -> List:
+    def get_current_matchday(self) -> List:
         # Returns "Matchday X"
         if len(self.df.columns) > 0:
             return list(self.df.columns.unique(level=0))[-1]
         else:
             return None
 
-    def getForm(self, team_name: str) -> List:
-        current_matchday = self.getCurrentMatchday()
+    def get_form(self, team_name: str) -> List:
+        current_matchday = self.get_current_matchday()
         if current_matchday:
             form = self.df[current_matchday].loc[team_name]['Form']
                     
@@ -43,8 +43,8 @@ class Form(DF):
             return form
         return []
 
-    def getRecentTeamsPlayed(self, team_name: str) -> pd.DataFrame:
-        current_matchday = self.getCurrentMatchday()
+    def get_recent_teams_played(self, team_name: str) -> pd.DataFrame:
+        current_matchday = self.get_current_matchday()
         if current_matchday:
             latest_teams_played = self.df[current_matchday].loc[team_name]['Teams Played']
             
@@ -57,8 +57,8 @@ class Form(DF):
                 return self.df[previous_matchday].loc[team_name]['Teams Played']
         return pd.DataFrame() 
     
-    def getCurrentFormRating(self, team_name: str) -> float:
-        current_matchday = self.getCurrentMatchday()# Latest matchday
+    def get_current_form_rating(self, team_name: str) -> float:
+        current_matchday = self.get_current_matchday()# Latest matchday
         if current_matchday:
             latest_teams_played = self.df[current_matchday].loc[team_name]['Teams Played']
             
@@ -69,8 +69,8 @@ class Form(DF):
             return self.df[matchday].loc[team_name]['Form Rating %'].round(1)
         return 0
     
-    def getWonAgainstStarTeam(self, team_name: str) -> List[bool]:
-        current_matchday = self.getCurrentMatchday()
+    def get_won_against_star_team(self, team_name: str) -> List[bool]:
+        current_matchday = self.get_current_matchday()
         if current_matchday:
             won_against_star_team = self.df[current_matchday].loc[team_name]['Won Against Star Team']
             
@@ -84,21 +84,21 @@ class Form(DF):
             return won_against_star_team
         return []
 
-    def getRecentForm(self, team_name: str) -> Tuple[List[str], List[str], float, List[bool]]:
-        form = self.getForm(team_name)  # List of five 'W', 'D' or 'L'
-        recent_teams_played = self.getRecentTeamsPlayed(team_name)
-        form_rating = self.getCurrentFormRating(team_name)
-        won_against_star_team = self.getWonAgainstStarTeam(team_name)
+    def get_recent_form(self, team_name: str) -> Tuple[List[str], List[str], float, List[bool]]:
+        form = self.get_form(team_name)  # List of five 'W', 'D' or 'L'
+        recent_teams_played = self.get_recent_teams_played(team_name)
+        form_rating = self.get_current_form_rating(team_name)
+        won_against_star_team = self.get_won_against_star_team(team_name)
         return form, recent_teams_played, form_rating, won_against_star_team
 
 class Standings(DF):
     def __init__(self, d):
         super().__init__(d)
         
-    def getPosition(self, team_name: str, season: int) -> pd.DataFrame:
+    def get_position(self, team_name: str, season: int) -> pd.DataFrame:
         return self.df.loc[team_name, f'{season}']['Position']
     
-    def getTableSnippet(self, team_name: str, season: int) -> Tuple[List[Tuple[int, str, int, int]], int]:
+    def get_table_snippet(self, team_name: str, season: int) -> Tuple[List[Tuple[int, str, int, int]], int]:
         team_df_idx = self.df.index.get_loc(team_name)
         
         # Get range of table the snippet should cover
@@ -138,32 +138,33 @@ class NextGames(DF):
     def __init__(self, d):
         super().__init__(d)
     
-    def getOpposition(self, team_name: str) -> str:
+    def get_opposition(self, team_name: str) -> str:
         return self.df['Next Game'].loc[team_name]
     
-    def getPreviousMeetings(self, team_name: str):
+    def get_previous_meetings(self, team_name: str):
         return self.df.loc[team_name]['Previous Meetings']
     
-    def getHomeAway(self, team_name: str):
+    def get_home_away(self, team_name: str):
         return self.df['HomeAway'].loc[team_name]
+
 
 class SeasonStats(DF):
     def __init__(self, d):
         super().__init__(d)
     
-    def getCleanSheetRatio(self, team_name: str) -> int:
+    def get_clean_sheet_ratio(self, team_name: str) -> int:
         return self.df['Clean Sheet Ratio'][team_name]
 
-    def getGoalsPerGame(self, team_name: str) -> int:
+    def get_goals_per_game(self, team_name: str) -> int:
         return self.df['Goals Per Game'][team_name]
 
-    def getConcededPerGame(self, team_name: str) -> int:
+    def get_conceded_per_game(self, team_name: str) -> int:
         return self.df['Conceded Per Game'][team_name]
     
-    def getSeasonStats(self, team_name: str) -> Tuple[float, float, float]:
-        clean_sheet_ratio = self.getCleanSheetRatio(team_name)
-        goals_per_game = self.getGoalsPerGame(team_name)
-        conceded_per_game = self.getConcededPerGame(team_name)
+    def get_season_stats(self, team_name: str) -> Tuple[float, float, float]:
+        clean_sheet_ratio = self.get_clean_sheet_ratio(team_name)
+        goals_per_game = self.get_goals_per_game(team_name)
+        conceded_per_game = self.get_conceded_per_game(team_name)
         return clean_sheet_ratio, goals_per_game, conceded_per_game
 
 class TeamRatings(DF):

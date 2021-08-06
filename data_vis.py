@@ -1178,7 +1178,7 @@ class DataVis:
 
     
         
-    def updateAll(self, fixtures, team_ratings, home_advantages, form, position_over_time, team_name=None, display_graphs=False):
+    def update_all(self, fixtures, team_ratings, home_advantages, form, position_over_time, team_name=None, display_graphs=False):
         self.update_fixtures(fixtures, team_ratings, home_advantages, display=display_graphs, team_name=team_name)
         self.update_form_over_time(form, display=display_graphs, team_name=team_name)
         # self.update_position_over_time(position_over_time, display=display_graphs, team_name=team_name)
