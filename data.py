@@ -48,6 +48,9 @@ class Data:
         self.position_over_time = None
         self.next_games = None
         self.season_stats = None
+        
+        self.visualiser = DataVis()
+        self.predictor = Predictor()
     
 
     def getLogoUrl(self, team_name):
@@ -89,7 +92,7 @@ class Data:
         return next_matchday_no, next_team
 
     
-    def includeCurrentSeasonsMeetings(self, next_games: pd.DataFrame) -> None:
+    def includeCurrentSeasonsMeetings(self, next_games: pd.DataFrame):
         # Loop through the columns of matchdays that have been played
         for matchday_no in range(len(self.form.df.columns.unique(level=0))):
             matchday = f"Matchday {matchday_no+1}"
@@ -110,7 +113,7 @@ class Data:
                         result = ('Lost', 'Won')
                     next_games.loc[team]['Previous Meetings'].append(tuple((date, team, row['Team'], home_score, away_score, result[0])))
     
-    def includePrevSeasonsMeetings(self, next_games: pd.DataFrame, no_seasons: int, request_new: bool) -> None:
+    def includePrevSeasonsMeetings(self, next_games: pd.DataFrame, no_seasons: int, request_new: bool):
         for season in range(self.season-1, self.season-1-no_seasons, -1):
             data = self.fixturesData(season, request_new=request_new)
             
@@ -139,10 +142,9 @@ class Data:
                         next_games.loc[away_team]['Previous Meetings'].append(tuple((date, home_team, away_team, match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[1])))
                         
     @timebudget
-    def buildNextGames(self, display: bool = False, request_new: bool = True) -> pd.DataFrame:
-        """ Builds and stores a dataframe containing information about each teams
-            next game, along with data for each of their previous meetings results 
-            from the last 3 seasons.
+    def buildNextGames(self, display: bool = False, request_new: bool = True):
+        """ Assigns self.next_games a dataframe containing data about the team's 
+            previous meetings with the opposition team in their next game.
             
             Rows: the 20 teams participating in the current season
             Columns (multi-index):
@@ -165,10 +167,6 @@ class Data:
                 creation. Defaults to False.
             request_new (bool, optional): flag to request new data from data API.
                 If false, stored data file is used. Defaults to True.
-            
-        Returns:
-            DataFrame: dataframe containing data about the team's previous meetings
-                with the opposition team in their next game.
         """
         print("🔨 Building next games dataframe... ")
         
@@ -205,7 +203,7 @@ class Data:
         if display:
             print(next_games)
             
-        return next_games
+        self.next_games = next_games
     
     
     
@@ -323,11 +321,9 @@ class Data:
         return form_percentage
     
     @timebudget
-    def buildForm(self, display: bool = False) -> pd.DataFrame:
-        """ Build and store a dataframe containing snapshots of each teams recent
-            performance at the end of each matchday from matchday 1 to the most
-            recent matchday. The aim of this dataframe is to give a clear insight 
-            into how the teams form/performance has changed over time.
+    def buildForm(self, display: bool = False):
+        """ Assigns self.form a dataframe containing data about the team's form 
+            for each matchday played this season.
             
             Rows: the 20 teams participating in the current season
             Columns (multi-index):
@@ -361,10 +357,6 @@ class Data:
         Args:
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
-            
-        Returns:
-            DataFrame: dataframe containing data about the team's form for each 
-                matchday played this season
         """
         print("🔨 Building form dataframe... ")
         
@@ -436,12 +428,15 @@ class Data:
             
             # Remove column after use, data is not that useful to keep
             del form[(f'Matchday {matchday_no}', 'Played Star Team')]
+            
+            print(form)
                     
         form = Form(form)
                 
         if display: 
             print(form)
-        return form
+            
+        self.form = form
     
     
     
@@ -470,11 +465,10 @@ class Data:
 
     
     @timebudget
-    def buildPositionOverTime(self, display: bool = False) -> pd.DataFrame:
-        """ Build and store a dataframe containing snapshots of a teams match and
-            league table values for each matchday they have played so far. The aim 
-            of this dataframe is to give a clear insight into how the teams league
-            table position has changed over time.
+    def buildPositionOverTime(self, display: bool = False):
+        """ Assigns self.position_over_time a dataframe containing data about the 
+            team's past and present league positions at each matchday played this 
+            season.
             
             Rows: the 20 teams participating in the current season, ordered ascending
                 by row team name
@@ -505,12 +499,12 @@ class Data:
         Args:
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
-            
-        Returns:
-            DataFrame: dataframe containing data about the team's form for each 
-                matchday played this season
         """
         print("🔨 Building position over time dataframe... ")
+        
+        # Check for dependencies
+        if not self.fixtures or not self.standings:
+            raise Exception('Error building Position Over Time DataFrame: Dependencies not available')
                 
         position_over_time = pd.DataFrame()
 
@@ -572,7 +566,8 @@ class Data:
                 
         if display:
             print(position_over_time)
-        return position_over_time
+            
+        self.position_over_time = position_over_time
     
     
     
@@ -580,10 +575,10 @@ class Data:
     # ------------- HOME ADVANTAGES DATAFRAME ---------------
     
     @timebudget
-    def buildHomeAdvantages(self, no_seasons: int, display: bool = False, request_new: bool = True) -> pd.DataFrame:
-        """ Builds and stores a dataframe to hold each teams calculated home
-            advantage values as well as the data required to calculate
-            each team's home advantage values.
+    def buildHomeAdvantages(self, no_seasons: int, display: bool = False, request_new: bool = True):
+        """ Assigns self.home_advantages to a dataframe containing team's home 
+            advantage information for each season with a final column for 
+            combined total home advantage values.
             
             Rows: the 20 teams participating in the current season, ordered descending 
                 by the team's total home advantage
@@ -616,11 +611,6 @@ class Data:
                 creation. Defaults to False.
             request_new (bool, optional): flag to request new data from data API.
                 If false, stored data file is used. Defaults to True.
-
-        Returns:
-            DataFrame: dataframe containing team's home advantage information for 
-                each season with a final column for combined total home advantage 
-                values
         """
         print("🔨 Building home advantages dataframe... ")
         
@@ -714,7 +704,8 @@ class Data:
                 
         if display:
             print(home_advantages)
-        return home_advantages
+        
+        self.home_advantages = home_advantages
 
 
 
@@ -741,9 +732,9 @@ class Data:
                 return json.load(json_file)
 
     @timebudget
-    def buildStandings(self, no_seasons: int, display: bool = False, request_new: bool = True) -> pd.DataFrame:
-        """ Build and store a dataframe to hold the Premier League table standings
-            for the last [no_seasons] seasons.
+    def buildStandings(self, no_seasons: int, display: bool = False, request_new: bool = True):
+        """ Sets self.standings to a dataframe containing all table standings for 
+            each season from current season to season [no_seasons] years ago.
             
             Rows: the 20 teams participating in the current season, ordered ascending 
                 by the team's position in the current season 
@@ -774,13 +765,9 @@ class Data:
                 creation. Defaults to False.
             request_new (bool, optional): flag to request new data from data API.
                 If false, stored data file is used. Defaults to True.
-
-        Returns:
-            DataFrame: dataframe containing all table standings for each season 
-                       from current season to season no_seasons years ago.
         """
         print("🔨 Building standings dataframe...")
-        
+                
         standings = pd.DataFrame()
         
         # Loop from current season to the season 2 years ago
@@ -834,7 +821,8 @@ class Data:
         
         if display:
             print(standings)
-        return standings
+        
+        self.standings = standings
 
 
 
@@ -866,9 +854,9 @@ class Data:
         
             
     @timebudget
-    def buildFixtures(self, display: bool = False, request_new: bool = True) -> pd.DataFrame:        
-        """ Builds and stores a dataframe containing all fixtures of the current
-            season, from matchday 1 to matchday 38.
+    def buildFixtures(self, display: bool = False, request_new: bool = True):        
+        """ Sets self.fixtures to a dataframe containing the past and future 
+            fixtures for the current season (matchday 1 to 38).
             
             Rows: the 20 teams participating in the current season
             Columns (multi-index):
@@ -893,10 +881,6 @@ class Data:
                 creation. Defaults to False.
             request_new (bool, optional): flag to request new data from data API.
                 If false, stored data file is used. Defaults to True.
-            
-        Returns:
-            DataFrame: dataframe containing the past and future fixtures for the 
-                current season
         """
         print("🔨 Building fixtures dataframe... ")
         
@@ -951,8 +935,8 @@ class Data:
                 
         if display:
             print(fixtures)
-        return fixtures
-                   
+        
+        self.fixtures = fixtures
 
 
 
@@ -974,10 +958,9 @@ class Data:
         return weights
     
     @timebudget
-    def buildTeamRatings(self, no_seasons: int, display: bool = False) -> pd.DataFrame:
-        """ Builds and stores a dataframe containing calculated values for each
-            teams current rating, as well as the data used to calculate each teams 
-            current rating.
+    def buildTeamRatings(self, no_seasons: int, display: bool = False):
+        """ Sets self.team_ratings to a dataframe containing data regarding each team's 
+            calculated rating based on the last [no_seasons] seasons results.
             
             Rows: the 20 teams participating in the current season, ordered 
                 descending by the team's rating
@@ -999,10 +982,6 @@ class Data:
             Normalised Rating 2Y Ago: the Rating 2Y Ago column values normalised
             Total Rating: a final normalised rating value incorporating the values 
                 from all three normalised columns
-            
-        Returns:
-            DataFrame: dataframe containing data regarding each team's calculated 
-                rating based on the last [no_seasons] seasons results.
         """
         print("🔨 Building team ratings dataframe... ")
         
@@ -1055,11 +1034,12 @@ class Data:
         
         if display:
             print(team_ratings)
-        return team_ratings
+        
+        self.team_ratings = team_ratings
     
     # ----------- SEASON STATS -----------
     
-    def buildSeasonStats(self) -> dict:
+    def buildSeasonStats(self, display: bool = False) -> dict:
         cols = list(self.position_over_time.df.columns.unique(level=0))
         
         season_stats = {'Clean Sheet Ratio': {},
@@ -1100,8 +1080,11 @@ class Data:
                 season_stats['Conceded Per Game'][team_name] = 0
             
         season_stats = SeasonStats(season_stats)
-                
-        return season_stats
+        
+        if display:
+            print(season_stats)
+        
+        self.season_stats = season_stats
     
     
     def saveData(self):
@@ -1113,19 +1096,21 @@ class Data:
     
     def buildDataFrames(self, no_seasons: int = 3, display_tables: bool = False, request_new: bool = True):
         # Standings for the last [n_seasons] seasons
-        self.standings = self.buildStandings(no_seasons, display=display_tables, request_new=request_new)
+        self.buildStandings(no_seasons, display=display_tables, request_new=request_new)
         # Fixtures for the whole season for each team
-        self.fixtures = self.buildFixtures(display=display_tables, request_new=request_new)
+        self.buildFixtures(display=display_tables, request_new=request_new)
         # Ratings for each team, based on last [no_seasons] seasons standings table
-        self.team_ratings = self.buildTeamRatings(no_seasons, display=display_tables)
+        self.buildTeamRatings(no_seasons, display=display_tables)
         # Calculated values to represent the personalised advantage each team has at home
-        self.home_advantages = self.buildHomeAdvantages(no_seasons, display=display_tables, request_new=request_new)
+        self.buildHomeAdvantages(no_seasons, display=display_tables, request_new=request_new)
         # Calculated form values for each team for each matchday played so far
-        self.form = self.buildForm(display=display_tables)
+        self.buildForm(display=display_tables)
         # Snapshots of a teams table position and match results for each matchday played so far 
-        self.position_over_time = self.buildPositionOverTime(display=display_tables)
+        self.buildPositionOverTime(display=display_tables)
         # Data about the opponent in each team's next game 
-        self.next_games = self.buildNextGames(display=display_tables, request_new=request_new)
+        self.buildNextGames(display=display_tables, request_new=request_new)
+        # Season metrics
+        self.buildSeasonStats(display=display_tables)
     
     
     @timebudget
@@ -1136,35 +1121,28 @@ class Data:
             print(e)
             print("🔄 Retrying with saved data...")
             self.buildDataFrames(no_seasons, display_tables, False)
-            
-        # Season metrics
-        self.season_stats = self.buildSeasonStats()
-        
+                    
         # Create predictions
-        predictor = Predictor()
-        self.score_predictions = predictor.calcScorePredictions(self.form, self.next_games)
+        self.score_predictions = self.predictor.calcScorePredictions(self.form, self.next_games)
         
         # Save any new data to json files
         if self.new_data:
             print("💾 Saving new data...")
             self.saveData()
         
-        # if request_new:
-        # Use dataframes to update all graph HTML files
-        vis = DataVis()
-        vis.updateAll(self.fixtures.df, 
-                      self.team_ratings.df, 
-                      self.home_advantages.df, 
-                      self.form.df, 
-                      self.position_over_time.df, 
-                      display_graphs=display_graphs, 
-                      team_name=team_name)
+        if request_new:
+            # Use dataframes to update all graph HTML files
+            self.visualiser.updateAll(self.fixtures.df, 
+                                      self.team_ratings.df, 
+                                      self.home_advantages.df, 
+                                      self.form.df, 
+                                      self.position_over_time.df, 
+                                      display_graphs=display_graphs, 
+                                      team_name=team_name)
 
 
 
 if __name__ == "__main__":
     # Update all dataframes
     data = Data(2021)
-    data.updateAll(request_new=False, team_name='Liverpool FC', display_tables=False)
-    
-    
+    data.updateAll(request_new=False, team_name='Liverpool FC', display_tables=True)

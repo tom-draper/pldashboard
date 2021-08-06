@@ -93,7 +93,6 @@ def getTeamPageData(team_name_hyphenated):
 @app.route("/norwich-city")
 @app.route("/watford")
 @app.route("/brentford")
-
 # @app.route("/west-bromwich-albion")
 # @app.route("/fulham")
 def team():
