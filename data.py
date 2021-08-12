@@ -522,7 +522,7 @@ class Data:
         
         # Check for dependencies
         if not self.fixtures or not self.standings:
-            raise Exception('Error building Position Over Time DataFrame: Dependencies not available')
+            raise Exception('❌ ERROR: Cannot build position over time dataframe (dependencies not available)')
                 
         position_over_time = pd.DataFrame()
 

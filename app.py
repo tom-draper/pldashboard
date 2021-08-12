@@ -3,26 +3,27 @@ from flask import Flask, render_template, request
 
 season = 2021
 
+
 class Params:
-    def __init__(self, 
-                 season=season, 
-                 title=None, 
-                 team_name=None, 
-                 team_name_hyphenated=None, 
-                 position=None, 
-                 form=None, 
-                 recent_teams_played=None, 
-                 form_rating=None, 
-                 clean_sheet_ratio=None, 
-                 goals_per_game=None, 
-                 conceded_per_game=None, 
-                 won_against_star_team=None, 
-                 team_playing_next_name_hypenated=None, 
-                 team_playing_next_form_rating=None, 
-                 team_playing_next_home_away=None, 
-                 team_playing_prev_meetings=None, 
-                 score_prediction=None, 
-                 table_snippet=None, 
+    def __init__(self,
+                 season=season,
+                 title=None,
+                 team_name=None,
+                 team_name_hyphenated=None,
+                 position=None,
+                 form=None,
+                 recent_teams_played=None,
+                 form_rating=None,
+                 clean_sheet_ratio=None,
+                 goals_per_game=None,
+                 conceded_per_game=None,
+                 won_against_star_team=None,
+                 team_playing_next_name_hypenated=None,
+                 team_playing_next_form_rating=None,
+                 team_playing_next_home_away=None,
+                 team_playing_prev_meetings=None,
+                 score_prediction=None,
+                 table_snippet=None,
                  table_index_of_this_team=None,
                  team_logo_url=None,
                  team_playing_logo_url=None):
@@ -48,13 +49,16 @@ class Params:
         self.team_logo_url = team_logo_url
         self.team_playing_logo_url = team_playing_logo_url
 
+
 app = Flask(__name__)
+
 
 @app.route("/")
 @app.route("/home")
 def home():
     params = Params(title='Premier League')
     return render_template('home.html', params=params)
+
 
 def get_team_page_data(team_name_hyphenated):
     title = team_name_hyphenated.replace('-', ' ').title().replace('And', 'and')
@@ -65,13 +69,16 @@ def get_team_page_data(team_name_hyphenated):
     clean_sheet_ratio, goals_per_game, conceded_per_game = data.season_stats.get_season_stats(team_name)
     team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction = data.get_next_game_details(team_name)
     table_snippet, table_index_of_this_team = data.standings.get_table_snippet(team_name, season)
-    team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])  # Remove 'FC' from end
+    # Remove 'FC' from end
+    team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])
     team_logo_url = data.get_logo_url(team_name)
     team_playing_logo_url = data.get_logo_url(team_playing_next_name)
-        
-    params = Params(season, title, team_name, team_name_hyphenated, position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team, team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction, table_snippet, table_index_of_this_team, team_logo_url, team_playing_logo_url)
-    
+
+    params = Params(season, title, team_name, team_name_hyphenated, position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team,
+                    team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction, table_snippet, table_index_of_this_team, team_logo_url, team_playing_logo_url)
+
     return params
+
 
 @app.route("/liverpool")
 @app.route("/manchester-city")
@@ -97,16 +104,16 @@ def get_team_page_data(team_name_hyphenated):
 # @app.route("/fulham")
 def team():
     rule = request.url_rule
-    team_name_hyphenated = rule.rule[1:]  # Get hypehenated team name from current URL
+    # Get hypehenated team name from current URL
+    team_name_hyphenated = rule.rule[1:]
     params = get_team_page_data(team_name_hyphenated)
-        
-    return render_template('team.html', params=params)
 
+    return render_template('team.html', params=params)
 
 
 if __name__ == '__main__':
     data = Data(season)
     # Update data and graphs
-    data.update_all(request_new=True, display_tables=False)
-    
+    data.update_all(request_new=True, display_tables=True)
+
     app.run(host='0.0.0.0', debug=False)
