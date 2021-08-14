@@ -85,11 +85,12 @@ class Data:
         next_matchday_no, next_team = None, None
         for matchday_no in range(len(fixtures.df.columns.unique(level=0))):
             if fixtures.df.loc[team_name][f'Matchday {matchday_no+1}', 'Status'] == 'SCHEDULED':
-                next_team = fixtures.df.loc[team_name][f'Matchday {matchday_no+1}', 'Team']
                 next_matchday_no = matchday_no
+                date = fixtures.df.loc[team_name][f'Matchday {matchday_no+1}', 'Date']
+                next_team = fixtures.df.loc[team_name][f'Matchday {matchday_no+1}', 'Team']
                 break
         
-        return next_matchday_no, next_team
+        return next_matchday_no, date, next_team
 
     
     def include_current_seasons_meetings(self, next_games: pd.DataFrame):
@@ -174,15 +175,18 @@ class Data:
         
         
         next_team_col = []
+        next_game_dates_col = []
         for team_name, _ in self.fixtures.df.iterrows():
-            matchday_no, next_team = self.get_next_game(team_name, self.fixtures)
+            matchday_no, date, next_team = self.get_next_game(team_name, self.fixtures)
             next_team_col.append(next_team)
+            next_game_dates_col.append(date)
         
         if matchday_no == None:
             # If season has finished
             next_games = None
         else:
             next_games['Next Game'] = next_team_col
+            next_games['Date'] = next_game_dates_col
             # Config index now as there are a correct number of rows, and allow to 
             # insert the HomeAway fixtures column (with same indices)
             next_games.index = self.fixtures.df.index
@@ -733,6 +737,8 @@ class Data:
     # ------------- Standings dataframe ---------------
     
     def standings_data(self, season: int, request_new: bool = True) -> dict:
+
+        
         if request_new:
             response = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(season), 
                                     headers=self.headers)
@@ -1140,6 +1146,7 @@ class Data:
                     
         # Create predictions
         self.score_predictions = self.predictor.calc_score_predictions(self.form, self.next_games)
+        self.predictor.record_actual_results(self.fixtures)
         
         # Save any new data to json files
         if self.new_data:
