@@ -50,7 +50,7 @@ class Data:
         self.season_stats = None
         
         self.visualiser = DataVis()
-        self.predictor = Predictor()
+        self.predictor = Predictor(current_season)
     
 
     def get_logo_url(self, team_name):
@@ -1147,6 +1147,8 @@ class Data:
         # Create predictions
         self.score_predictions = self.predictor.calc_score_predictions(self.form, self.next_games)
         self.predictor.record_actual_results(self.fixtures)
+        self.prediction_accuracy = self.predictor.update_accuracy()
+        print(f'Predicting with accuracy: {self.prediction_accuracy*100}%')
         
         # Save any new data to json files
         if self.new_data:
@@ -1168,4 +1170,4 @@ class Data:
 if __name__ == "__main__":
     # Update all dataframes
     data = Data(2021)
-    data.update_all(request_new=False, team_name='Liverpool FC', display_tables=True)
+    data.update_all(request_new=True, team_name='Liverpool FC', display_tables=True)

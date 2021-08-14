@@ -1,6 +1,5 @@
 import json
 import re
-import pandas as pd
 import numpy as np
 from datetime import datetime
 from utilities import Utilities
@@ -8,13 +7,32 @@ from utilities import Utilities
 utilities = Utilities()
 
 class Predictor:
-    def __init__(self):
-        self.prediction_file = 'data/predictions.json'
+    def __init__(self, current_season):
+        self.current_season = current_season
+        self.prediction_file = f'data/predictions.json'
+    
+    def update_accuracy(self):
+        with open(self.prediction_file) as json_file:
+            data = json.load(json_file)
+            predictions = data[f'predictions_{self.current_season}']
+            
+            total = 0
+            correct = 0
+            for prediction in predictions:
+                if prediction['prediction'] != None and prediction['actual'] != None:
+                    total += 1
+                    if prediction['prediction'] == prediction['actual']:
+                        correct += 1
+        
+        if total == 0:
+            return 0
+        
+        return correct / total
     
     def save_prediction(self, date, prediction):
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
-            predictions = data['predictions']
+            predictions = data[f'predictions_{self.current_season}']
             
             new_prediction = {
                 "date": date,
@@ -33,7 +51,7 @@ class Predictor:
     def update_prediction(self, date, score):
          with open(self.prediction_file) as json_file:
             data = json.load(json_file)
-            predictions = data['predictions']
+            predictions = data[f'predictions_{self.current_season}']
             
             for prediction in predictions:
                 if prediction['prediction'] != None:
@@ -62,6 +80,40 @@ class Predictor:
                             actual_score = f'{utilities.convert_team_name_or_initials(row["Team"])}  {row["Score"]}  {utilities.convert_team_name_or_initials(team_name)}'
                             self.update_prediction(date, actual_score)
     
+    def calc_score_prediction(self, team_name, current_form, team_playing_next_form_rating, team_playing_prev_meetings):
+        # Get total goals scored and conceded in all previous games with this
+        # particular opposition team
+        goals_scored = 0
+        goals_conceded = 0
+        for prev_match in team_playing_prev_meetings:
+            if team_name == prev_match[1]:
+                # Played at home
+                goals_scored += prev_match[3]
+                goals_conceded += prev_match[4]
+            elif team_name == prev_match[2]:
+                # Played away
+                goals_scored += prev_match[4]
+                goals_conceded += prev_match[3]
+                
+        # Average scored and conceded            
+        predicted_scored = goals_scored / len(team_playing_prev_meetings)
+        predicted_conceded = goals_conceded / len(team_playing_prev_meetings)
+        
+        # Boost the score of the team better in form based on the absolute 
+        # difference in form
+        form_diff = current_form - team_playing_next_form_rating
+        if form_diff > 0:
+            # This team in better form
+            predicted_scored += predicted_scored * (form_diff/100)
+        else:
+            # Other team in better form
+            predicted_conceded += predicted_conceded * (abs(form_diff)/100)
+        
+        predicted_scored = int(predicted_scored)
+        predicted_conceded = int(predicted_conceded)
+        
+        return predicted_scored, predicted_conceded
+    
     def calc_score_predictions(self, form, next_games) -> dict:
         score_predictions = {}
         
@@ -80,36 +132,7 @@ class Predictor:
                 team_playing_prev_meetings = next_games.df.loc[team_name]['Previous Meetings']
                                 
                 if len(team_playing_prev_meetings) > 0:
-                    # Get total goals scored and conceded in all previous games with this
-                    # particular opposition team
-                    goals_scored = 0
-                    goals_conceded = 0
-                    for prev_match in team_playing_prev_meetings:
-                        if team_name == prev_match[1]:
-                            # Played at home
-                            goals_scored += prev_match[3]
-                            goals_conceded += prev_match[4]
-                        elif team_name == prev_match[2]:
-                            # Played away
-                            goals_scored += prev_match[4]
-                            goals_conceded += prev_match[3]
-                            
-                    # Average scored and conceded            
-                    predicted_scored = goals_scored / len(team_playing_prev_meetings)
-                    predicted_conceded = goals_conceded / len(team_playing_prev_meetings)
-                    
-                    # Boost the score of the team better in form based on the absolute 
-                    # difference in form
-                    form_diff = current_form - team_playing_next_form_rating
-                    if form_diff > 0:
-                        # This team in better form
-                        predicted_scored += predicted_scored * (form_diff/100)
-                    else:
-                        # Other team in better form
-                        predicted_conceded += predicted_conceded * (abs(form_diff)/100)
-                    
-                    predicted_scored = int(predicted_scored)
-                    predicted_conceded = int(predicted_conceded)
+                    predicted_scored, predicted_conceded = self.calc_score_prediction(team_name, current_form, team_playing_next_form_rating, team_playing_prev_meetings)
                 else:
                     predicted_scored = 0
                     predicted_conceded = 0
