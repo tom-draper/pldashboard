@@ -56,7 +56,6 @@ class Data:
     def get_logo_url(self, team_name):
         return self.logo_urls[team_name]
 
-            
     # ------- NEXT GAME --------
 
     def get_next_game_details(self, team_name: str):
@@ -76,6 +75,7 @@ class Data:
                 score_prediction = self.score_predictions[team_name]
             
         return team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction
+
 
     
     # ---------------------- NEXT GAMES DATAFRAME ---------------------------
@@ -211,13 +211,16 @@ class Data:
     # ------------------------- FORM DATAFRAME -------------------------------
     
     
-    def last_n_games(self, games_played: int, n_games: int, date) -> Tuple[List[str], List[str], List[str]]:
+    def last_n_games(self, games_played: List, n_games: int, date) -> Tuple[List[str], List[str], List[str]]:
         """ Slice games played data to return only the last 'n_games' games from 
             the given date """
+
+        if len(games_played) <= 0:
+            return [], [], []
             
         # Unzip tuples
         dates, teams_played, scores, home_aways = list(zip(*games_played))
-           
+        
         # Default to latest game
         index = len(dates)-1
         # Find index of dates where this matchday would fit
@@ -291,7 +294,7 @@ class Data:
     def calc_played_star_team_col(self, teams_played_col):
         played_star_team_col = []
         for teams_played in teams_played_col:
-            ratings = [self.team_ratings.df['Total Rating'][team_name] for team_name in list(map(utilities.convertTeamNameOrInitials, teams_played))]
+            ratings = [self.team_ratings.df['Total Rating'][team_name] for team_name in list(map(utilities.convert_team_name_or_initials, teams_played))]
             played_star_team_col.append([team_rating > self.star_team_threshold for team_rating in ratings])
         return played_star_team_col
     
@@ -522,7 +525,7 @@ class Data:
         
         # Check for dependencies
         if not self.fixtures or not self.standings:
-            raise Exception('❌ ERROR: Cannot build position over time dataframe (dependencies not available)')
+            raise ValueError('❌ ERROR: Cannot build position over time dataframe (dependencies not available)')
                 
         position_over_time = pd.DataFrame()
 
@@ -736,7 +739,7 @@ class Data:
             
             print("Status:", response.status_code)
             if response.status_code == 429:
-                raise Exception('❌ ERROR: Data request failed')
+                raise ValueError('❌ ERROR: Data request failed')
             
             response = response.json()['standings'][0]['table']
             
@@ -853,23 +856,18 @@ class Data:
             
             print("Status:", response.status_code)
             if response.status_code == 429:
-                raise Exception('❌ ERROR: Data request failed')
+                raise ValueError('❌ ERROR: Data request failed')
             
             response = response.json()['matches']
             
             # Add new fixtures data to temp storage to be saved later
             self.new_data[f'data/fixtures_{season}.json'] = response
             
-            # Save new fixtures data
-            # with open(f'data/fixtures_{season}.json', 'w') as json_file:
-            #     json.dump(response, json_file)
-            
             return response
         else:
             # Read saved fixtures data
             with open(f'data/fixtures_{season}.json', 'r') as json_file:
                 return json.load(json_file)
-        
             
     @timebudget
     def build_fixtures(self, display: bool = False, request_new: bool = True):        
@@ -1135,7 +1133,7 @@ class Data:
     def update_all(self, no_seasons: int = 3, team_name: str = None, display_tables: bool = False, display_graphs: bool = False, request_new: bool = True) -> None:
         try:
             self.build_dataframes(no_seasons, display_tables, request_new)
-        except Exception as e:
+        except ValueError as e:
             print(e)
             print("🔄 Retrying with saved data...")
             self.build_dataframes(no_seasons, display_tables, False)

@@ -38,6 +38,7 @@ class DataVis:
             'Stoke City FC': 'rgb(224, 58, 62)',
             'Huddersfield FC': 'rgb(14, 99, 173)',
             'Bournemouth FC': 'rgb(218, 41, 28)',
+            'Brentford FC': 'rgb(227, 6, 19)'
         }
     
     
@@ -384,7 +385,7 @@ class DataVis:
                 print(f"📊 Updating {team_name} form over time graph...")
                 teams_to_update = [team_name]
             
-            x, ys, matchday_labels = self.form_over_time_data_points(form)
+            x, matchday_labels, ys = self.form_over_time_data_points(form)
             team_names = form.index.values.tolist()
 
             for team_name in teams_to_update:
@@ -615,7 +616,6 @@ class DataVis:
         # Remove 'Matchday' prefix and just store sorted integers
         matchday_labels = sorted(map(lambda x: int(x.split(' ')[-1]), cols))
         
-        print(x, matchday_labels, ys)
         x, matchday_labels, *ys = zip(*sorted(zip(x, matchday_labels, *ys)))
         
         return x, matchday_labels, ys
@@ -990,8 +990,10 @@ class DataVis:
                 # Remove elements from other lists to ensure all lists will be same length
                 del x[idx]
                 del matchday_labels[idx]
-            
-        x, y_goals_scored, y_goals_conceded, y_avg = map(list, zip(*sorted(zip(x, y_goals_scored, y_goals_conceded, y_avg))))
+                
+        
+        if x != [] and y_goals_scored != [] and y_goals_conceded != [] and y_avg != []:
+            x, y_goals_scored, y_goals_conceded, y_avg = map(list, zip(*sorted(zip(x, y_goals_scored, y_goals_conceded, y_avg))))
         
         return x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels
         
@@ -1009,24 +1011,26 @@ class DataVis:
         
             for team_name in teams_to_update:
                 x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self.goals_scored_and_conceeded_data_points(position_over_time, team_name)
-                fig = self.create_goals_scored_and_conceded_fig(x, y_goals_scored, y_avg, matchday_labels)
-                
-                if display:
-                    fig.show()
-                
-                file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-                plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+                if y_goals_scored != [] and y_goals_conceded != []:
+                    fig = self.create_goals_scored_and_conceded_fig(x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels)
+                    
+                    if display:
+                        fig.show()
+                    
+                    file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+                    plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
                 
                 
                 # EXTRA GRAPH FROM SAME DATA: CLEAN SHEETS
                 line, clean_sheets, not_clean_sheets, labels = self.clean_sheets_data_points(y_goals_conceded)
-                fig = self.create_clean_sheets_fig(x, line, clean_sheets, not_clean_sheets, matchday_labels, labels)
+                if x != []:
+                    fig = self.create_clean_sheets_fig(x, line, clean_sheets, not_clean_sheets, matchday_labels, labels)
                 
-                if display:
-                    fig.show()
-                
-                file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-                plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/clean-sheets-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+                    if display:
+                        fig.show()
+                    
+                    file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+                    plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/clean-sheets-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
             
     
     # def genGoalsScoredAndConceded(self, team_name, position_over_time, display=False):
@@ -1181,5 +1185,5 @@ class DataVis:
     def update_all(self, fixtures, team_ratings, home_advantages, form, position_over_time, team_name=None, display_graphs=False):
         self.update_fixtures(fixtures, team_ratings, home_advantages, display=display_graphs, team_name=team_name)
         self.update_form_over_time(form, display=display_graphs, team_name=team_name)
-        # self.update_position_over_time(position_over_time, display=display_graphs, team_name=team_name)
-        # self.update_goals_scored_and_conceded(position_over_time, display=display_graphs, team_name=team_name)
+        self.update_position_over_time(position_over_time, display=display_graphs, team_name=team_name)
+        self.update_goals_scored_and_conceded(position_over_time, display=display_graphs, team_name=team_name)
