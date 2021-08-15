@@ -35,7 +35,7 @@ class Data:
         self.star_team_threshold = 0.75  # Rating over 75% to be a star team
         
         # Temp store for requested json API data 
-        self.new_data = {'fixtures': {}, 'standings': {}}
+        self.json_data = {'fixtures': {}, 'standings': {}}
         
         # List of current season teams (taken from standings dataframe) 
         self.team_names = None
@@ -101,11 +101,11 @@ class Data:
     def fetch_data(self, n_seasons: int, request_new: bool = True):
         for n in range(n_seasons):          
             # Add new fixtures data to temp storage to be saved later
-            self.new_data['fixtures'][self.season-n] = self.fixtures_data(self.season-n, request_new)
-        self.new_data['standings'][self.season] = self.standings_data(self.season, request_new)
+            self.json_data['fixtures'][self.season-n] = self.fixtures_data(self.season-n, request_new)
+        self.json_data['standings'][self.season] = self.standings_data(self.season, request_new)
             
     def save_data(self):
-        for season, data in self.new_data.items():
+        for season, data in self.json_data.items():
             # Save new fixtures data
             with open(f'data/fixtures_{season}.json', 'w') as json_file:
                 json.dump(data, json_file)
@@ -137,15 +137,17 @@ class Data:
 
     def get_next_game(self, team_name: str, fixtures: Fixtures) -> Tuple[int, str]:
         # Scan through list of fixtures to find the first that is 'scheduled' 
-        next_matchday_no, next_team = None, None
+        next_matchday_no, date, next_team, home_away = None, None, None, None
         for matchday_no in range(len(fixtures.df.columns.unique(level=0))):
             if fixtures.df.loc[team_name][f'Matchday {matchday_no+1}', 'Status'] == 'SCHEDULED':
-                next_matchday_no = matchday_no
+                next_matchday_no = matchday_no+1
                 date = fixtures.df.loc[team_name][f'Matchday {matchday_no+1}', 'Date']
                 next_team = fixtures.df.loc[team_name][f'Matchday {matchday_no+1}', 'Team']
+                home_away = fixtures.df.loc[team_name][f'Matchday {matchday_no+1}', 'HomeAway']
                 break
         
-        return next_matchday_no, date, next_team
+        return next_matchday_no, date, next_team, home_away
+        
 
     
     def include_current_seasons_meetings(self, next_games: pd.DataFrame):
@@ -171,7 +173,7 @@ class Data:
     
     def include_prev_seasons_meetings(self, next_games: pd.DataFrame, no_seasons: int):
         for season in range(self.season-1, self.season-1-no_seasons, -1):
-            data = self.new_data['fixtures'][season]
+            data = self.json_data['fixtures'][season]
             
             for match in sorted(data, key=lambda x: x['matchday']):
                 home_team = match['homeTeam']['name'].replace('&', 'and')
@@ -193,7 +195,6 @@ class Data:
                     # If this match's home team has their next game against this match's away team
                     if next_games.loc[home_team]['Next Game'] == away_team:
                         next_games.loc[home_team]['Previous Meetings'].append(tuple((date, home_team, away_team, match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[0])))
-                    
                     if next_games.loc[away_team]['Next Game'] == home_team:
                         next_games.loc[away_team]['Previous Meetings'].append(tuple((date, home_team, away_team, match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'], result[1])))
                         
@@ -230,21 +231,19 @@ class Data:
         
         next_team_col = []
         next_game_dates_col = []
+        home_away_col = []
         for team_name, _ in self.fixtures.df.iterrows():
-            matchday_no, date, next_team = self.get_next_game(team_name, self.fixtures)
-            next_team_col.append(next_team)
+            matchday_no, date, next_team, home_away = self.get_next_game(team_name, self.fixtures)
             next_game_dates_col.append(date)
+            next_team_col.append(next_team)
+            home_away_col.append(home_away)
         
-        if matchday_no == None:
-            # If season has finished
-            next_games = None
-        else:
-            next_games['Next Game'] = next_team_col
+        if matchday_no != None:
             next_games['Date'] = next_game_dates_col
-            # Config index now as there are a correct number of rows, and allow to 
-            # insert the HomeAway fixtures column (with same indices)
+            next_games['Next Game'] = next_team_col
+            next_games['HomeAway'] = home_away_col
             next_games.index = self.fixtures.df.index
-            next_games['HomeAway'] = self.fixtures.df[f'Matchday {matchday_no+1}']['HomeAway']
+            # next_games['HomeAway'] = self.fixtures.df[f'Matchday {matchday_no+1}']['HomeAway']
             next_games['Previous Meetings'] = [[] for _ in range(len(next_games.index))]
                     
             # Add any previous meetings that have been played this season
@@ -759,7 +758,7 @@ class Data:
         
         dfs = []
         for i in range(no_seasons):
-            data = self.new_data['fixtures'][self.season-i]
+            data = self.json_data['fixtures'][self.season-i]
             df = self.home_advantages_for_season(data, self.season-i)
             dfs.append(df)
         
@@ -891,13 +890,8 @@ class Data:
     #         print(standings)
         
     #     self.standings = standings
-
-    def season_standings(self, season: int) -> DataFrame:
-        data = self.new_data['fixtures'][season]
-        
-        col_headings = ['Position', 'Played', 'Won', 'Draw', 'Lost', 'GF', 'GA', 'GD', 'Points']
-        #                                0        1      2    3     4     5  6   7     8
-        # Create rows of team name : [Position, Played, Won, Draw, Lost, GF, GA, GD, Points]
+    
+    def fill_rows_from_data(self, data, col_headings):
         df_rows = {}
         for match in data:
             home_team = match['homeTeam']['name'].replace('&', 'and')
@@ -941,6 +935,16 @@ class Data:
                     # Points
                     df_rows[home_team][8] += 1
                     df_rows[away_team][8] += 1
+        return df_rows
+
+    def season_standings(self, season: int) -> DataFrame:
+        
+        col_headings = ['Position', 'Played', 'Won', 'Draw', 'Lost', 'GF', 'GA', 'GD', 'Points']
+        #                                0        1      2    3     4     5  6   7     8
+        # Create rows of team name : [Position, Played, Won, Draw, Lost, GF, GA, GD, Points]
+        data = self.json_data['fixtures'][season]
+
+        df_rows = self.fill_rows_from_data(data, col_headings)
                     
         # Sort rows by Points, then GD
         df_rows = dict(sorted(df_rows.items(), key=lambda v: v[1][8], reverse=True))
@@ -961,7 +965,7 @@ class Data:
         return df
 
     @timebudget
-    def build_standings(self, no_seasons: int, display: bool = False):
+    def build_standings(self, n_seasons: int, display: bool = False):
         """ Sets self.standings to a dataframe containing all table standings for 
             each season from current season to season [no_seasons] years ago.
             
@@ -1003,7 +1007,7 @@ class Data:
         standings = pd.DataFrame()
         
         # Loop from current season to the season 2 years ago
-        for n in range(no_seasons):
+        for n in range(n_seasons):
             season_standings = self.season_standings(self.season-n)
             standings = pd.concat((standings, season_standings), axis=1)
         
@@ -1018,9 +1022,7 @@ class Data:
         self.standings = standings
 
     # ------------ Fixtures dataframe -------------
-
-
-            
+    
     @timebudget
     def build_fixtures(self, display: bool = False):        
         """ Sets self.fixtures to a dataframe containing the past and future 
@@ -1053,7 +1055,7 @@ class Data:
         print("🔨 Building fixtures dataframe... ")
         
         # Get json fixtures data
-        data = self.new_data['fixtures'][self.season]
+        data = self.json_data['fixtures'][self.season]
                 
         team_names = []  # List of all team names mentioned in fixtures
         team_names_index = []  # Specific order of team names to be dataframe index
@@ -1118,15 +1120,28 @@ class Data:
             rating *= points
         return rating
     
-    def get_season_weightings(self, no_seasons: int) -> List[float]:
+    def get_season_weightings(self, n_seasons: int) -> List[float]:
         weights = [0.75, 0.20, 0.05]
-        weights = np.array(weights[:no_seasons])
+        weights = np.array(weights[:n_seasons])
         # Normalise list
         weights = list(weights / sum(weights))
         return weights
+
+    def calc_total_rating_col(self, team_ratings, n_seasons, include_current_season):
+        # Calculate total rating column
+        team_ratings['Total Rating'] = 0
+        if include_current_season:
+            start_n = 0  # Include current season when calculating total rating
+            w = self.get_season_weightings(n_seasons) # Column weights
+        else:
+            start_n = 1  # Exclude current season when calculating total rating
+            w = self.get_season_weightings(n_seasons-1) # Column weights
+
+        for n in range(start_n, n_seasons):
+            team_ratings['Total Rating'] += w[n-start_n] * team_ratings[f'Normalised Rating {n}Y Ago']
     
     @timebudget
-    def build_team_ratings(self, no_seasons: int, display: bool = False):
+    def build_team_ratings(self, n_seasons: int, display: bool = False):
         """ Sets self.team_ratings to a dataframe containing data regarding each team's 
             calculated rating based on the last [no_seasons] seasons results.
             
@@ -1161,25 +1176,25 @@ class Data:
         team_ratings = pd.DataFrame(index=self.standings.df.index)
 
         # Create column for each included season
-        for i in range(0, no_seasons):
-            team_ratings[f'Rating {i}Y Ago'] = np.nan
+        for n in range(0, n_seasons):
+            team_ratings[f'Rating {n}Y Ago'] = np.nan
                 
         # Insert rating values for each row
         for team_name, row in self.standings.df.iterrows():
-            for i in range(no_seasons):
-                rating = self.calc_rating(row[self.season-i]['Position'], row[self.season-i]['Points'], row[self.season-i]['GD'])
-                team_ratings.loc[team_name, 'Rating {}Y Ago'.format(i)] = rating
+            for n in range(n_seasons):
+                rating = self.calc_rating(row[self.season-n]['Position'], row[self.season-n]['Points'], row[self.season-n]['GD'])
+                team_ratings.loc[team_name, f'Rating {n}Y Ago'] = rating
 
         # Replace any NaN with the lowest rating in the same column
         for col in team_ratings.columns:
             team_ratings[col].replace(np.nan, team_ratings[col].min(), inplace=True)
 
         # Create normalised versions of the three ratings columns
-        for i in range(0, no_seasons):
-            team_ratings[f'Normalised Rating {i}Y Ago'] = (team_ratings[f'Rating {i}Y Ago']
-                                                           - team_ratings[f'Rating {i}Y Ago'].min()) \
-                                                          / (team_ratings[f'Rating {i}Y Ago'].max() 
-                                                           - team_ratings[f'Rating {i}Y Ago'].min())
+        for n in range(0, n_seasons):
+            team_ratings[f'Normalised Rating {n}Y Ago'] = (team_ratings[f'Rating {n}Y Ago']
+                                                         - team_ratings[f'Rating {n}Y Ago'].min()) \
+                                                        / (team_ratings[f'Rating {n}Y Ago'].max() 
+                                                         - team_ratings[f'Rating {n}Y Ago'].min())
 
         # Check whether current season data should be included in each team's total rating
         if (self.standings.df[self.season]['Played'] <= self.games_threshold).all():  # If current season hasn't played enough games
@@ -1188,19 +1203,10 @@ class Data:
         else:
             include_current_season = True
 
-        # Calculate total rating column
-        team_ratings['Total Rating'] = 0
-        if include_current_season:
-            start_n = 0  # Include current season when calculating total rating
-            w = self.get_season_weightings(no_seasons) # Column weights
-        else:
-            start_n = 1  # Exclude current season when calculating total rating
-            w = self.get_season_weightings(no_seasons-1) # Column weights
+        self.calc_total_rating_col(team_ratings, n_seasons, include_current_season)
 
-        for i in range(start_n, no_seasons):
-            team_ratings['Total Rating'] += w[i-start_n] * team_ratings[f'Normalised Rating {i}Y Ago']
-
-        team_ratings = team_ratings.sort_values(by="Total Rating", ascending=False).rename(columns={'Rating 0Y Ago': 'Rating Current', 'Normalised Rating 0Y Ago': 'Normalised Rating Current'})
+        team_ratings = team_ratings.sort_values(by="Total Rating", ascending=False)
+        team_ratings = team_ratings.rename(columns={'Rating 0Y Ago': 'Rating Current', 'Normalised Rating 0Y Ago': 'Normalised Rating Current'})
         
         team_ratings = TeamRatings(team_ratings)
         
@@ -1211,7 +1217,7 @@ class Data:
     
     
     def build_logo_urls(self):
-        data = self.new_data['standings'][self.season]
+        data = self.json_data['standings'][self.season]
 
         logo_urls = {}
         for standings_row in data:
@@ -1320,7 +1326,7 @@ class Data:
         self.update_predictions()
         
         # Save any new data to json files
-        if self.new_data:
+        if self.json_data:
             print("💾 Saving new data...")
             self.save_data()
         

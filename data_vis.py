@@ -304,7 +304,7 @@ class DataVis:
             else:
                 # Save index the input teams is found for plotting the final line
                 team_idx = idx
-        
+                
         # Add this as teams name last to have this line on top
         fig.add_trace(go.Scatter(x=x,
                                  y=ys[team_idx],
