@@ -14,14 +14,18 @@ class Predictor:
         self.accuracy = None
         self.prediction_file = f'data/predictions.json'
     
-    def set_accuracy(self) -> Tuple[float, float]:
+    def set_accuracy(self) -> Tuple[float, float, float, float]:
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
-            predictions_dict = data[f'predictions_{self.current_season}']
+            predictions_dict = data[f'predictions{self.current_season}']
             
             total = 0
             correct = 0
             result_correct = 0
+            total_home_scored_p = 0
+            total_home_scored_a = 0
+            total_away_scored_p = 0
+            total_away_scored_a = 0
             # Scan through all current predictions and fill any missing 'actual' scorelines
             for predictions in predictions_dict.values():
                 for prediction in predictions:
@@ -36,32 +40,45 @@ class Predictor:
                         home_score_p, away_score_p, home_score_a, away_score_a = map(int, [home_score_p, away_score_p, home_score_a, away_score_a])
                         # Prediction and actual BOTH a draw or home win or away win
                         if (home_score_p == away_score_p and home_score_a == away_score_a) or \
-                        (home_score_p > away_score_p and home_score_a > away_score_a) or \
-                        (home_score_p < away_score_p and home_score_a < away_score_a):
+                            (home_score_p > away_score_p and home_score_a > away_score_a) or \
+                            (home_score_p < away_score_p and home_score_a < away_score_a):
                             result_correct += 1
+                            
+                        total_home_scored_p += home_score_p
+                        total_home_scored_a += home_score_a
+                        total_away_scored_p += away_score_p
+                        total_away_scored_a += away_score_a
+                        
         
         if total == 0:
             return 0
         
         self.accuracy = correct / total
         self.result_accuracy  = result_correct / total
+        # Aim for both to be zero
+        # Positive -> predicting too many goals
+        # Negative -> predicting too few goals
+        self.home_scored_avg_diff = (total_home_scored_p - total_home_scored_a) / total
+        self.away_scored_avg_diff = (total_away_scored_p - total_away_scored_a) / total
         
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
             data['accuracy'] = self.accuracy
             data['resultAccuracy'] = self.result_accuracy
+            data['homeScoredAvgDiff'] = self.home_scored_avg_diff
+            data['awayScoredAvgDiff'] = self.away_scored_avg_diff
             
         with open(self.prediction_file, 'w') as f:
             json.dump(data, f)
         
-        return self.accuracy, self.result_accuracy
+        return self.accuracy, self.result_accuracy, self.home_scored_avg_diff, self.away_scored_avg_diff
 
     
     def update_prediction(self, actual_scores: list) -> int:
         count = 0
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
-            predictions = data[f'predictions_{self.current_season}']
+            predictions = data[f'predictions{self.current_season}']
                         
             for date, score in actual_scores:
                 for prediction in predictions[date]:
@@ -114,7 +131,7 @@ class Predictor:
         count = 0
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
-            predictions = data[f'predictions_{self.current_season}']
+            predictions = data[f'predictions{self.current_season}']
             
             for date, new_prediction in new_predictions:
                 if not self.prediction_already_made(date, new_prediction, predictions):

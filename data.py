@@ -1277,18 +1277,25 @@ class Data:
             print(season_stats)
         
         self.season_stats = season_stats
+        
+    def signed_float_str(self, float_val):
+        float_val = round(float_val, 2)
+        if float_val >= 0:
+            return f'+{float_val}'
+        return str(float_val)
     
     def update_predictions(self):
         # Create predictions
         count = self.predictor.set_score_predictions(self.form, self.next_games, self.home_advantages.df)
         if count > 0:
-            print(f'ℹ️  Added {count} new predictions')
+            print(f'ℹ️ Added {count} new predictions')
         count = self.predictor.record_actual_results(self.fixtures)
         if count > 0:
-            print(f'ℹ️  Updated {count} predictions with their actual results')
-        prediction_accuracy, result_accuracy = self.predictor.set_accuracy()
-        print(f'ℹ️  Predicting with accuracy: {prediction_accuracy*100}%')
-        print(f'ℹ️  Predicting correct results with accuracy: {result_accuracy*100}%')
+            print(f'ℹ️ Updated {count} predictions with their actual results')
+        prediction_accuracy, result_accuracy, home_scored_avg_diff, away_scored_avg_diff = self.predictor.set_accuracy()
+        print(f'ℹ️ Predicting with accuracy: {prediction_accuracy*100}%')
+        print(f'ℹ️ Predicting correct results with accuracy: {result_accuracy*100}%')
+        print(f'ℹ️ Net predictions: [{self.signed_float_str(home_scored_avg_diff)}] - [{self.signed_float_str(away_scored_avg_diff)}]')
 
     
     def build_dataframes(self, n_seasons: int = 3, display_tables: bool = False, request_new: bool = True):
