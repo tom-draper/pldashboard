@@ -46,6 +46,14 @@ class Predictor:
         self.accuracy = correct / total
         self.result_accuracy  = result_correct / total
         
+        with open(self.prediction_file) as json_file:
+            data = json.load(json_file)
+            data['accuracy'] = self.accuracy
+            data['resultAccuracy'] = self.result_accuracy
+            
+        with open(self.prediction_file, 'w') as f:
+            json.dump(data, f)
+        
         return self.accuracy, self.result_accuracy
 
     
@@ -121,12 +129,12 @@ class Predictor:
         
         return count
     
-    def calc_score_prediction(self, team_name: str, current_form: float, team_playing_next_form_rating: float, team_playing_prev_meetings: List[dict]) -> Tuple[int, int]:
+    def calc_score_prediction(self, team_name: str, opp_team_name: str, home_advantages: DataFrame, home_away: str, form_rating: float, opp_form_rating: float, prev_meetings: List[dict]) -> Tuple[int, int]:
         # Get total goals scored and conceded in all previous games with this
         # particular opposition team
         goals_scored = 0
         goals_conceded = 0
-        for prev_match in team_playing_prev_meetings:
+        for prev_match in prev_meetings:
             if team_name == prev_match[1]:
                 # Played at home
                 goals_scored += prev_match[3]
@@ -137,25 +145,28 @@ class Predictor:
                 goals_conceded += prev_match[3]
                 
         # Average scored and conceded            
-        predicted_scored = goals_scored / len(team_playing_prev_meetings)
-        predicted_conceded = goals_conceded / len(team_playing_prev_meetings)
+        predicted_scored = goals_scored / len(prev_meetings)
+        predicted_conceded = goals_conceded / len(prev_meetings)
         
         # Boost the score of the team better in form based on the absolute 
         # difference in form
-        form_diff = current_form - team_playing_next_form_rating
+        form_diff = form_rating - opp_form_rating
         if form_diff > 0:
             # This team in better form
             predicted_scored += predicted_scored * (form_diff/100)
         else:
             # Other team in better form
             predicted_conceded += predicted_conceded * (abs(form_diff)/100)
+                
+        # Decrese scores conceded if playing at home
+        if home_away == "Home":
+            predicted_conceded *= (1 - home_advantages.loc[team_name, 'Total Home Advantage'][0])
+        else:
+            predicted_scored *= (1 - home_advantages.loc[opp_team_name, 'Total Home Advantage'][0])
         
-        predicted_scored = int(predicted_scored)
-        predicted_conceded = int(predicted_conceded)
-        
-        return predicted_scored, predicted_conceded
+        return int(round(predicted_scored)), int(round(predicted_conceded))
     
-    def set_score_predictions(self, form, next_games) -> dict:
+    def set_score_predictions(self, form, next_games, home_advantages) -> dict:
         predictions = {}  # Stores team names and the corresponding prediction for their next game
         predictions_for_json = set()  # Stores prediction objects for storing in a json file
         
@@ -164,27 +175,26 @@ class Predictor:
         for team_name in team_names:
             prediction = None
             if next_games != None:
-                current_form = form.get_current_form_rating(team_name)
-                date = next_games.df['Date'].astype(str).loc[team_name]
-                team_playing_next_name = next_games.df['Next Game'].loc[team_name]
-                team_playing_next_form_rating = form.get_current_form_rating(team_playing_next_name)
-                team_playing_next_home_away = next_games.df['HomeAway'].loc[team_name]
-                team_playing_prev_meetings = next_games.df.loc[team_name]['Previous Meetings']
-                
+                form_rating = form.get_current_form_rating(team_name)
+                opp_team_name = next_games.df['Next Game'].loc[team_name]
+                opposition_form_rating = form.get_current_form_rating(opp_team_name)
+                home_away = next_games.df['HomeAway'].loc[team_name]
+                prev_meetings = next_games.df.loc[team_name]['Previous Meetings']
                                 
-                if len(team_playing_prev_meetings) > 0:
-                    predicted_scored, predicted_conceded = self.calc_score_prediction(team_name, current_form, team_playing_next_form_rating, team_playing_prev_meetings)
+                if len(prev_meetings) > 0:
+                    predicted_scored, predicted_conceded = self.calc_score_prediction(team_name, opp_team_name, home_advantages, home_away, form_rating, opposition_form_rating, prev_meetings)
                 else:
                     predicted_scored = 0
                     predicted_conceded = 0
                 
                 # Construct prediction string to display
-                if team_playing_next_home_away == "Home":
-                    prediction = f'{utilities.convert_team_name_or_initials(team_name)}  {predicted_scored} - {predicted_conceded}  {utilities.convert_team_name_or_initials(team_playing_next_name)}'
+                if home_away == "Home":
+                    prediction = f'{utilities.convert_team_name_or_initials(team_name)}  {predicted_scored} - {predicted_conceded}  {utilities.convert_team_name_or_initials(opp_team_name)}'
                 else:
-                    prediction = f'{utilities.convert_team_name_or_initials(team_playing_next_name)}  {predicted_conceded} - {predicted_scored}  {utilities.convert_team_name_or_initials(team_name)}'
+                    prediction = f'{utilities.convert_team_name_or_initials(opp_team_name)}  {predicted_conceded} - {predicted_scored}  {utilities.convert_team_name_or_initials(team_name)}'
                 
-                predictions_for_json.add((date, prediction))
+                game_date = next_games.df['Date'].astype(str).loc[team_name]
+                predictions_for_json.add((game_date, prediction))
             predictions[team_name] = prediction
             
         count = self.save_prediction(predictions_for_json)

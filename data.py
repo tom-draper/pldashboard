@@ -1280,7 +1280,7 @@ class Data:
     
     def update_predictions(self):
         # Create predictions
-        count = self.predictor.set_score_predictions(self.form, self.next_games)
+        count = self.predictor.set_score_predictions(self.form, self.next_games, self.home_advantages.df)
         if count > 0:
             print(f'ℹ️  Added {count} new predictions')
         count = self.predictor.record_actual_results(self.fixtures)
