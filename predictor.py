@@ -62,8 +62,9 @@ class Predictor:
                         # If the actual scoreline matches this prediction, this is the prediction to update
                         home_p, _, _, _, away_p = re.split(' +', prediction['prediction'])
                         home_s, _, _, _, away_s = re.split(' +', score)
-                        if prediction['date'] == date and home_p == home_s and away_p == away_s and prediction['actual'] == None:
+                        if (prediction['date'] == date) and (home_p == home_s) and (away_p == away_s) and (prediction['actual'] == None):
                             # Update this prediction with its actual score
+                            print(prediction)
                             prediction['actual'] = score
                             count += 1
                             break
@@ -94,7 +95,11 @@ class Predictor:
         count = self.update_prediction(actual_scores)
         return count
     
-    
+    def prediction_already_made(self, new_prediction: object, predictions: List[object]) -> bool:
+        for prediction in predictions:
+            if prediction['date'] == new_prediction['date'] and prediction['prediction'] == new_prediction['prediction']:
+                return True
+        return False
         
     def save_prediction(self, new_predictions: List[object]) -> int:
         count = 0
@@ -103,7 +108,7 @@ class Predictor:
             predictions = data[f'predictions_{self.current_season}']
             
             for new_prediction in new_predictions:
-                if new_prediction not in predictions:
+                if not self.prediction_already_made(new_prediction, predictions):
                     predictions.append(new_prediction)
                     count += 1
         

@@ -1005,10 +1005,10 @@ class Data:
         # Loop from current season to the season 2 years ago
         for n in range(no_seasons):
             season_standings = self.season_standings(self.season-n)
-            standings = pd.concat([standings, season_standings], axis=1)
-            
+            standings = pd.concat((standings, season_standings), axis=1)
+        
+        standings = standings.fillna(0).astype(int)
         standings.index.name = "Team"
-
         standings = Standings(standings)
 
         print(standings)

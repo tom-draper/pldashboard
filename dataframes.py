@@ -104,7 +104,7 @@ class Standings(DF):
         super().__init__(d)
         
     def get_position(self, team_name: str, season: int) -> pd.DataFrame:
-        return int(self.df.loc[team_name, season]['Position'])
+        return self.df.loc[team_name, season]['Position']
     
     def get_table_snippet(self, team_name: str, season: int) -> Tuple[List[Tuple[int, str, int, int]], int]:
         team_df_idx = self.df.index.get_loc(team_name)
