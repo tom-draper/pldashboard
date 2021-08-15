@@ -5,3 +5,4 @@ __pycache__
 templates/graphs
 static/graphs
 .env
+.pytest_cache
