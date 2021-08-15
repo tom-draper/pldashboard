@@ -38,7 +38,7 @@ class Utilities:
             'LIV': 'Liverpool FC',
             'MCI': 'Manchester City FC',
             'MUN': 'Manchester United FC',
-            'NOR': 'Norwich FC',
+            'NOR': 'Norwich City FC',
             'NEW': 'Newcastle United FC',
             'SHU': 'Sheffield United FC',
             'SOU': 'Southampton FC',

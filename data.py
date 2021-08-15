@@ -3,6 +3,7 @@ from os.path import join, dirname
 from dotenv import load_dotenv
 import pandas as pd
 from collections import defaultdict
+from pandas.core.frame import DataFrame
 from timebudget import timebudget
 import numpy as np
 import requests
@@ -63,7 +64,7 @@ class Data:
         team_playing_next_form_rating = None
         team_playing_next_home_away = None
         team_playing_prev_meetings = []
-        score_prediction = None
+        prediction = None
         
         if self.next_games != None:
             # If season not finished
@@ -71,10 +72,10 @@ class Data:
             team_playing_next_form_rating = self.form.get_current_form_rating(team_playing_next_name)
             team_playing_next_home_away = self.next_games.get_home_away(team_name)
             team_playing_prev_meetings = self.next_games.get_previous_meetings(team_name)
-            if self.score_predictions:
-                score_prediction = self.score_predictions[team_name]
+            if self.predictor.predictions:
+                prediction = self.predictor.predictions[team_name]
             
-        return team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction
+        return team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, prediction
 
 
     
@@ -599,6 +600,68 @@ class Data:
     
     # ------------- HOME ADVANTAGES DATAFRAME ---------------
     
+    
+    def home_advantages_for_season(self, data: json, season: int) -> DataFrame:
+        d = {}
+        for match in data:
+            home_team = match['homeTeam']['name'].replace('&', 'and')
+            away_team = match['awayTeam']['name'].replace('&', 'and')
+
+            if home_team not in d.keys():
+                d[home_team] = {(f'{season}', 'Home Wins'): 0, 
+                                (f'{season}', 'Home Draws'): 0,
+                                (f'{season}', 'Home Loses'): 0,
+                                (f'{season}', 'Away Wins'): 0,
+                                (f'{season}', 'Away Draws'): 0,
+                                (f'{season}', 'Away Loses'): 0}                
+            if away_team not in d.keys():
+                d[away_team] = {(f'{season}', 'Home Wins'): 0, 
+                                (f'{season}', 'Home Draws'): 0,
+                                (f'{season}', 'Home Loses'): 0,
+                                (f'{season}', 'Away Wins'): 0,
+                                (f'{season}', 'Away Draws'): 0,
+                                (f'{season}', 'Away Loses'): 0}   
+            
+            if match['score']['winner'] != None:
+                if match['score']['fullTime']['homeTeam'] > match['score']['fullTime']['awayTeam']:
+                    # Home team wins
+                    d[home_team][(f'{season}', 'Home Wins')] += 1
+                    d[away_team][(f'{season}', 'Away Loses')] += 1
+                elif match['score']['fullTime']['homeTeam'] < match['score']['fullTime']['awayTeam']:
+                    # Away team wins
+                    d[home_team][(f'{season}', 'Home Loses')] += 1
+                    d[away_team][(f'{season}', 'Away Wins')] += 1
+                else:  # Draw
+                    d[home_team][(f'{season}', 'Home Draws')] += 1
+                    d[away_team][(f'{season}', 'Away Draws')] += 1
+                    
+        df = pd.DataFrame(d)
+        # Drop teams that are not in the current season
+        df = df.drop(df.columns[~df.columns.isin(self.team_names)].values.tolist(), axis=1)
+        
+        return df
+
+    def create_home_advantages_column(self, home_advantages, season):
+        home_advantages[f'{season}', 'Played'] = home_advantages[f'{season}']['Home Wins'] \
+                                               + home_advantages[f'{season}']['Home Draws'] \
+                                               + home_advantages[f'{season}']['Home Loses'] \
+                                               + home_advantages[f'{season}']['Away Wins'] \
+                                               + home_advantages[f'{season}']['Away Draws'] \
+                                               + home_advantages[f'{season}']['Away Loses']
+        home_advantages[f'{season}', 'Played at Home'] = home_advantages[f'{season}']['Home Wins'] \
+                                                       + home_advantages[f'{season}']['Home Draws'] \
+                                                       + home_advantages[f'{season}']['Home Loses']
+        # Percentage wins = total wins / total games played
+        home_advantages[f'{season}', 'Wins %'] = ((home_advantages[f'{season}']['Home Wins'] 
+                                                 + home_advantages[f'{season}']['Away Wins']) 
+                                                 / home_advantages[f'{season}']['Played']) * 100
+        # Percentage wins at home = total wins at home / total games played at home 
+        home_advantages[f'{season}', 'Home Wins %'] = (home_advantages[f'{season}']['Home Wins'] 
+                                                     / home_advantages[f'{season}']['Played at Home']) * 100
+        # Home advantage = percentage wins at home - percentage wins 
+        home_advantages[f'{season}', 'Home Advantage'] = (home_advantages[f'{season}']['Home Wins %'] 
+                                                        - home_advantages[f'{season}']['Wins %']) / 100
+    
     @timebudget
     def build_home_advantages(self, no_seasons: int, display: bool = False, request_new: bool = True):
         """ Assigns self.home_advantages to a dataframe containing team's home 
@@ -644,43 +707,7 @@ class Data:
         dfs = []
         for i in range(no_seasons):
             data = self.fixtures_data(self.season-i, request_new=request_new)
-            
-            d = {}
-            for match in data:
-                home_team = match['homeTeam']['name'].replace('&', 'and')
-                away_team = match['awayTeam']['name'].replace('&', 'and')
-
-                if home_team not in d.keys():
-                    d[home_team] = {(f'{self.season-i}', 'Home Wins'): 0, 
-                                    (f'{self.season-i}', 'Home Draws'): 0,
-                                    (f'{self.season-i}', 'Home Loses'): 0,
-                                    (f'{self.season-i}', 'Away Wins'): 0,
-                                    (f'{self.season-i}', 'Away Draws'): 0,
-                                    (f'{self.season-i}', 'Away Loses'): 0}                
-                if away_team not in d.keys():
-                    d[away_team] = {(f'{self.season-i}', 'Home Wins'): 0, 
-                                    (f'{self.season-i}', 'Home Draws'): 0,
-                                    (f'{self.season-i}', 'Home Loses'): 0,
-                                    (f'{self.season-i}', 'Away Wins'): 0,
-                                    (f'{self.season-i}', 'Away Draws'): 0,
-                                    (f'{self.season-i}', 'Away Loses'): 0}   
-                
-                if match['score']['winner'] != None:
-                    if match['score']['fullTime']['homeTeam'] > match['score']['fullTime']['awayTeam']:
-                        # Home team wins
-                        d[home_team][(f'{self.season-i}', 'Home Wins')] += 1
-                        d[away_team][(f'{self.season-i}', 'Away Loses')] += 1
-                    elif match['score']['fullTime']['homeTeam'] < match['score']['fullTime']['awayTeam']:
-                        # Away team wins
-                        d[home_team][(f'{self.season-i}', 'Home Loses')] += 1
-                        d[away_team][(f'{self.season-i}', 'Away Wins')] += 1
-                    else:  # Draw
-                        d[home_team][(f'{self.season-i}', 'Home Draws')] += 1
-                        d[away_team][(f'{self.season-i}', 'Away Draws')] += 1
-            
-            df = pd.DataFrame(d)
-            # Drop teams that are not in the current season
-            df = df.drop(df.columns[~df.columns.isin(self.team_names)].values.tolist(), axis=1)
+            df = self.home_advantages_for_season(data, self.season-i)
             dfs.append(df)
         
         home_advantages = pd.concat(dfs).T
@@ -688,28 +715,9 @@ class Data:
         home_advantages = home_advantages.fillna(0)
         home_advantages = home_advantages.astype(int)
         
-        
         # Create home advantage column
         for i in range(no_seasons):
-            home_advantages[f'{self.season-i}', 'Played'] = home_advantages[f'{self.season-i}']['Home Wins'] \
-                                                            + home_advantages[f'{self.season-i}']['Home Draws'] \
-                                                            + home_advantages[f'{self.season-i}']['Home Loses'] \
-                                                            + home_advantages[f'{self.season-i}']['Away Wins'] \
-                                                            + home_advantages[f'{self.season-i}']['Away Draws'] \
-                                                            + home_advantages[f'{self.season-i}']['Away Loses']
-            home_advantages[f'{self.season-i}', 'Played at Home'] = home_advantages[f'{self.season-i}']['Home Wins'] \
-                                                                    + home_advantages[f'{self.season-i}']['Home Draws'] \
-                                                                    + home_advantages[f'{self.season-i}']['Home Loses']
-            # Percentage wins = total wins / total games played
-            home_advantages[f'{self.season-i}', 'Wins %'] = ((home_advantages[f'{self.season-i}']['Home Wins'] 
-                                                              + home_advantages[f'{self.season-i}']['Away Wins']) 
-                                                             / home_advantages[f'{self.season-i}']['Played']) * 100
-            # Percentage wins at home = total wins at home / total games played at home 
-            home_advantages[f'{self.season-i}', 'Home Wins %'] = (home_advantages[f'{self.season-i}']['Home Wins'] 
-                                                                  / home_advantages[f'{self.season-i}']['Played at Home']) * 100
-            # Home advantage = percentage wins at home - percentage wins 
-            home_advantages[f'{self.season-i}', 'Home Advantage'] = (home_advantages[f'{self.season-i}']['Home Wins %'] 
-                                                                     - home_advantages[f'{self.season-i}']['Wins %']) / 100
+            self.create_home_advantages_column(home_advantages, self.season-i)
         
         home_advantages = home_advantages.sort_index(axis=1)
 
@@ -737,15 +745,15 @@ class Data:
     # ------------- Standings dataframe ---------------
     
     def standings_data(self, season: int, request_new: bool = True) -> dict:
-
-        
         if request_new:
             response = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(season), 
                                     headers=self.headers)
             
-            print("Status:", response.status_code)
             if response.status_code == 429:
+                print("❌  Status:", response.status_code)
                 raise ValueError('❌ ERROR: Data request failed')
+            else:
+                print("✔️  Status:", response.status_code)
             
             response = response.json()['standings'][0]['table']
             
@@ -860,9 +868,11 @@ class Data:
             response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(season),
                                         headers=self.headers)
             
-            print("Status:", response.status_code)
             if response.status_code == 429:
+                print('❌  Status:', response.status_code)
                 raise ValueError('❌ ERROR: Data request failed')
+            else:
+                print("✔️  Status:", response.status_code)
             
             response = response.json()['matches']
             
@@ -1145,10 +1155,15 @@ class Data:
             self.build_dataframes(no_seasons, display_tables, False)
                     
         # Create predictions
-        self.score_predictions = self.predictor.calc_score_predictions(self.form, self.next_games)
-        self.predictor.record_actual_results(self.fixtures)
-        self.prediction_accuracy = self.predictor.update_accuracy()
-        print(f'Predicting with accuracy: {self.prediction_accuracy*100}%')
+        count = self.predictor.set_score_predictions(self.form, self.next_games)
+        if count > 0:
+            print(f'ℹ️  Added {count} new predictions')
+        count = self.predictor.record_actual_results(self.fixtures)
+        if count > 0:
+            print(f'ℹ️  Updated {count} predictions with their actual results')
+        prediction_accuracy, result_accuracy = self.predictor.set_accuracy()
+        print(f'ℹ️  Predicting with accuracy: {prediction_accuracy*100}%')
+        print(f'ℹ️  Predicting correct results with accuracy: {result_accuracy*100}%')
         
         # Save any new data to json files
         if self.new_data:
