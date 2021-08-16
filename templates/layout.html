@@ -40,9 +40,9 @@
         <a class="title main-link" style="text-decoration: none;" href="/">{{ params.title }}</a>
       </div>
     {% else %}
-      <div class="header" style="background-color: var(--{{ params.team_name_hyphenated }});">
+      <div class="header" style="background-color: var(--{{ params.team_name_hyphen }});">
         <a id="back-button" class="main-link" href="/"></a>
-        <a class="main-link title" style="color: var(--{{ params.team_name_hyphenated.replace(' ', '-') + '-secondary'}}); text-decoration: none;" href="/{{ params.team_name_hyphenated }}">{{ params.title }}</a>
+        <a class="main-link title" style="color: var(--{{ params.team_name_hyphen.replace(' ', '-') + '-secondary'}}); text-decoration: none;" href="/{{ params.team_name_hyphen}}">{{ params.title }}</a>
       </div>
     {% endif %}
     <div class="page-content">

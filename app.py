@@ -9,7 +9,7 @@ class Params:
                  season=season,
                  title=None,
                  team_name=None,
-                 team_name_hyphenated=None,
+                 team_name_hyphen=None,
                  position=None,
                  form=None,
                  recent_teams_played=None,
@@ -18,19 +18,21 @@ class Params:
                  goals_per_game=None,
                  conceded_per_game=None,
                  won_against_star_team=None,
-                 team_playing_next_name_hypenated=None,
-                 team_playing_next_form_rating=None,
-                 team_playing_next_home_away=None,
-                 team_playing_prev_meetings=None,
-                 score_prediction=None,
+                 opp_team_name_hyphen=None,
+                 opp_form_rating=None,
+                 home_away=None,
+                 prev_meetings=None,
+                 prediction=None,
+                 prediction_accuracy=None,
+                 prediction_results_accuracy = None,
                  table_snippet=None,
-                 table_index_of_this_team=None,
+                 team_table_idx=None,
                  team_logo_url=None,
                  team_playing_logo_url=None):
         self.season = season
         self.title = title
         self.team_name = team_name
-        self.team_name_hyphenated = team_name_hyphenated
+        self.team_name_hyphen = team_name_hyphen
         self.position = position
         self.form = form
         self.recent_teams_played = recent_teams_played
@@ -39,13 +41,15 @@ class Params:
         self.goals_per_game = goals_per_game
         self.conceded_per_game = conceded_per_game
         self.won_against_star_team = won_against_star_team
-        self.team_playing_next_name_hypenated = team_playing_next_name_hypenated
-        self.team_playing_next_form_rating = team_playing_next_form_rating
-        self.team_playing_next_home_away = team_playing_next_home_away
-        self.team_playing_prev_meetings = team_playing_prev_meetings
-        self.score_prediction = score_prediction
+        self.opp_team_name_hyphen = opp_team_name_hyphen
+        self.opp_form_rating = opp_form_rating
+        self.home_away = home_away
+        self.prev_meetings = prev_meetings
+        self.prediction = prediction
+        self.prediction_accuracy = prediction_accuracy
+        self.prediction_results_accuracy = prediction_results_accuracy
         self.table_snippet = table_snippet
-        self.table_index_of_this_team = table_index_of_this_team
+        self.team_table_idx = team_table_idx
         self.team_logo_url = team_logo_url
         self.team_playing_logo_url = team_playing_logo_url
 
@@ -60,22 +64,50 @@ def home():
     return render_template('home.html', params=params)
 
 
-def get_team_page_data(team_name_hyphenated):
-    title = team_name_hyphenated.replace('-', ' ').title().replace('And', 'and')
+def get_team_page_data(team_name_hyphen):
+    title = team_name_hyphen.replace('-', ' ').title().replace('And', 'and')
+    
     team_name = title + ' FC'
+    team_logo_url = data.get_logo_url(team_name)
     # Get data values to display on team webpage
     position = data.standings.get_position(team_name, season)
+    
     form, recent_teams_played, form_rating, won_against_star_team = data.form.get_recent_form(team_name)
-    clean_sheet_ratio, goals_per_game, conceded_per_game = data.season_stats.get_season_stats(team_name)
-    team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction = data.get_next_game_details(team_name)
-    table_snippet, table_index_of_this_team = data.standings.get_table_snippet(team_name, season)
-    # Remove 'FC' from end
-    team_playing_next_name_hypenated = '-'.join(team_playing_next_name.lower().split(' ')[:-1])
-    team_logo_url = data.get_logo_url(team_name)
-    team_playing_logo_url = data.get_logo_url(team_playing_next_name)
 
-    params = Params(season, title, team_name, team_name_hyphenated, position, form, recent_teams_played, form_rating, clean_sheet_ratio, goals_per_game, conceded_per_game, won_against_star_team,
-                    team_playing_next_name_hypenated, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, score_prediction, table_snippet, table_index_of_this_team, team_logo_url, team_playing_logo_url)
+    clean_sheet_ratio, goals_per_game, conceded_per_game = data.season_stats.get_season_stats(team_name)
+    
+    opp_team_name, home_away, prev_meetings = data.next_games.get_details(team_name)
+    opp_form_rating = data.form.get_current_form_rating(opp_team_name)
+    prediction, accuracy, results_accuracy = data.get_next_game_prediction(team_name) 
+    # Remove 'FC' from end
+    opp_team_name_hyphen = '-'.join(opp_team_name.lower().split(' ')[:-1])
+    team_playing_logo_url = data.get_logo_url(opp_team_name)
+    
+    table_snippet, team_table_idx = data.standings.get_table_snippet(team_name, season)
+
+    params = Params(season=season, 
+                    title=title, 
+                    team_name=team_name, 
+                    team_name_hyphen=team_name_hyphen, 
+                    position=position, 
+                    form=form, 
+                    recent_teams_played=recent_teams_played, 
+                    form_rating=form_rating, 
+                    clean_sheet_ratio=clean_sheet_ratio, 
+                    goals_per_game=goals_per_game, 
+                    conceded_per_game=conceded_per_game, 
+                    won_against_star_team=won_against_star_team, 
+                    opp_team_name_hyphen=opp_team_name_hyphen, 
+                    opp_form_rating=opp_form_rating, 
+                    home_away=home_away, 
+                    prev_meetings=prev_meetings, 
+                    prediction=prediction, 
+                    prediction_accuracy=accuracy, 
+                    prediction_results_accuracy=results_accuracy, 
+                    table_snippet=table_snippet, 
+                    team_table_idx=team_table_idx, 
+                    team_logo_url=team_logo_url, 
+                    team_playing_logo_url=team_playing_logo_url)
 
     return params
 
@@ -105,8 +137,8 @@ def get_team_page_data(team_name_hyphenated):
 def team():
     rule = request.url_rule
     # Get hypehenated team name from current URL
-    team_name_hyphenated = rule.rule[1:]
-    params = get_team_page_data(team_name_hyphenated)
+    team_name_hyphen = rule.rule[1:]
+    params = get_team_page_data(team_name_hyphen)
 
     return render_template('team.html', params=params)
 

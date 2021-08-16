@@ -245,7 +245,7 @@ img {
   margin: auto;
 }
 .next-game-logo {
-  height: 280px;
+  height: 225px;
   margin: 10px;
 }
 .predictions-and-logo {
@@ -263,7 +263,7 @@ img {
 }
 .next-game-values {
   display: flex;
-  margin: 25px 5% 0px 0px;
+  margin: 1% 5% 1% 0px;
 }
 .past-result {
   font-size: 17px;
@@ -287,6 +287,10 @@ img {
 }
 .next-game-item {
   padding: 8px 0px;
+}
+.accuracy-item {
+  font-size: 14px;
+  color: rgb(97, 97, 97)
 }
 .next-game-divider {
   height: 2px;

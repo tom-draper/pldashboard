@@ -1,5 +1,6 @@
 from typing import List, Tuple
 import pandas as pd
+from pandas.core.frame import DataFrame
 
 
 class DF:
@@ -143,7 +144,7 @@ class Standings(DF):
         return table_snippet, team_idx
 
 class NextGames(DF):
-    def __init__(self, d: dict):
+    def __init__(self, d: DataFrame):
         super().__init__(d)
     
     def get_opposition(self, team_name: str) -> str:
@@ -154,6 +155,19 @@ class NextGames(DF):
     
     def get_home_away(self, team_name: str):
         return self.df['HomeAway'].loc[team_name]
+
+    def get_details(self, team_name: str):
+        opp_team_name = ""
+        home_away = None
+        prev_meetings = []
+
+        if not self.df.empty:
+            # If season not finished
+            opp_team_name = self.get_opposition(team_name)
+            home_away = self.get_home_away(team_name)
+            prev_meetings = self.get_previous_meetings(team_name)
+            
+        return opp_team_name, home_away, prev_meetings
 
 
 class SeasonStats(DF):

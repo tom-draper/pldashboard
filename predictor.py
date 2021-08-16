@@ -12,6 +12,9 @@ class Predictor:
         self.current_season = current_season
         self.predictions = {}
         self.accuracy = None
+        self.result_accuracy = None
+        self.home_scored_avg_diff = None
+        self.away_scored_avg_diff = None
         self.prediction_file = f'data/predictions.json'
     
     def set_accuracy(self) -> Tuple[float, float, float, float]:
@@ -177,9 +180,9 @@ class Predictor:
                 
         # Decrese scores conceded if playing at home
         if home_away == "Home":
-            predicted_conceded *= (1 - home_advantages.loc[team_name, 'Total Home Advantage'][0])
+            predicted_conceded *= (1 - home_advantages.df.loc[team_name, 'Total Home Advantage'][0])
         else:
-            predicted_scored *= (1 - home_advantages.loc[opp_team_name, 'Total Home Advantage'][0])
+            predicted_scored *= (1 - home_advantages.df.loc[opp_team_name, 'Total Home Advantage'][0])
         
         return int(round(predicted_scored)), int(round(predicted_conceded))
     
@@ -218,3 +221,22 @@ class Predictor:
         self.predictions = predictions
         
         return count
+
+    def signed_float_str(self, float_val):
+        float_val = round(float_val, 2)
+        if float_val >= 0:
+            return f'+{float_val}'
+        return str(float_val)
+
+    def refresh_predictions(self, fixtures, form, next_games, home_advantages):
+        # Create predictions
+        count = self.set_score_predictions(form, next_games, home_advantages)
+        if count > 0:
+            print(f'ℹ️ Added {count} new predictions')
+        count = self.record_actual_results(fixtures)
+        if count > 0:
+            print(f'ℹ️ Updated {count} predictions with their actual results')
+        self.set_accuracy()
+        print(f'ℹ️ Predicting with accuracy: {self.accuracy*100}%')
+        print(f'ℹ️ Predicting correct results with accuracy: {self.result_accuracy*100}%')
+        print(f'ℹ️ Net predictions: [{self.signed_float_str(self.home_scored_avg_diff)}] - [{self.signed_float_str(self.away_scored_avg_diff)}]')

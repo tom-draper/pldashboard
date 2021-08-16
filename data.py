@@ -113,24 +113,19 @@ class Data:
 
     # ------- NEXT GAME --------
 
-    def get_next_game_details(self, team_name: str):
-        team_playing_next_name = ""
-        team_playing_next_form_rating = None
-        team_playing_next_home_away = None
-        team_playing_prev_meetings = []
+    def get_next_game_prediction(self, team_name):
         prediction = None
+        accuracy = None
+        result_accuracy = None
         
-        if self.next_games != None:
-            # If season not finished
-            team_playing_next_name = self.next_games.get_opposition(team_name)
-            team_playing_next_form_rating = self.form.get_current_form_rating(team_playing_next_name)
-            team_playing_next_home_away = self.next_games.get_home_away(team_name)
-            team_playing_prev_meetings = self.next_games.get_previous_meetings(team_name)
-            if self.predictor.predictions:
-                prediction = self.predictor.predictions[team_name]
-            
-        return team_playing_next_name, team_playing_next_form_rating, team_playing_next_home_away, team_playing_prev_meetings, prediction
-
+        if self.predictor.predictions:
+            prediction = self.predictor.predictions[team_name]
+        if self.predictor.accuracy:
+            accuracy = self.predictor.accuracy
+        if self.predictor.result_accuracy:
+            result_accuracy = self.predictor.result_accuracy
+        
+        return prediction, accuracy, result_accuracy
 
     
     # ---------------------- NEXT GAMES DATAFRAME ---------------------------
@@ -254,9 +249,9 @@ class Data:
             # Sort each list of tuple previous meeting to be descending by date
             for _, row in next_games.iterrows():
                 row['Previous Meetings'].sort(key=lambda x: datetime.strptime(x[0], '%d %B %Y'), reverse=True)
-            
-            next_games = NextGames(next_games)
-            
+        
+        next_games = NextGames(next_games)
+                    
         if display:
             print(next_games)
             
@@ -938,7 +933,6 @@ class Data:
         return df_rows
 
     def season_standings(self, season: int) -> DataFrame:
-        
         col_headings = ['Position', 'Played', 'Won', 'Draw', 'Lost', 'GF', 'GA', 'GD', 'Points']
         #                                0        1      2    3     4     5  6   7     8
         # Create rows of team name : [Position, Played, Won, Draw, Lost, GF, GA, GD, Points]
@@ -1015,7 +1009,6 @@ class Data:
         standings.index.name = "Team"
         standings = Standings(standings)
 
-        print(standings)
         if display:
             print(standings)
         
@@ -1277,25 +1270,6 @@ class Data:
             print(season_stats)
         
         self.season_stats = season_stats
-        
-    def signed_float_str(self, float_val):
-        float_val = round(float_val, 2)
-        if float_val >= 0:
-            return f'+{float_val}'
-        return str(float_val)
-    
-    def update_predictions(self):
-        # Create predictions
-        count = self.predictor.set_score_predictions(self.form, self.next_games, self.home_advantages.df)
-        if count > 0:
-            print(f'ℹ️ Added {count} new predictions')
-        count = self.predictor.record_actual_results(self.fixtures)
-        if count > 0:
-            print(f'ℹ️ Updated {count} predictions with their actual results')
-        prediction_accuracy, result_accuracy, home_scored_avg_diff, away_scored_avg_diff = self.predictor.set_accuracy()
-        print(f'ℹ️ Predicting with accuracy: {prediction_accuracy*100}%')
-        print(f'ℹ️ Predicting correct results with accuracy: {result_accuracy*100}%')
-        print(f'ℹ️ Net predictions: [{self.signed_float_str(home_scored_avg_diff)}] - [{self.signed_float_str(away_scored_avg_diff)}]')
 
     
     def build_dataframes(self, n_seasons: int = 3, display_tables: bool = False, request_new: bool = True):
@@ -1330,7 +1304,7 @@ class Data:
             self.fetch_data(n_seasons, False)
         
         self.build_dataframes(n_seasons, display_tables)
-        self.update_predictions()
+        self.predictor.refresh_predictions(self.fixtures, self.form, self.next_games, self.home_advantages)
         
         # Save any new data to json files
         if self.json_data:

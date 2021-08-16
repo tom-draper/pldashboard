@@ -2,7 +2,7 @@
 {% extends 'layout.html' %} {% block content %}
 
 <div class="row">
-  <!-- <div class="row-left position-and-badge" style="background-image: url('static/img/club_badges/{{ params.team_name_hyphenated }}.png'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;"> -->
+  <!-- <div class="row-left position-and-badge" style="background-image: url('static/img/club_badges/{{ params.team_name_hyphen }}.png'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;"> -->
   <div class="row-left position-and-badge" style="background-image: url('{{ params.team_logo_url }}'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;">
     <div class="position">{{ params.position }}</div>
   </div>
@@ -10,7 +10,7 @@
     <h1>Fixtures</h1>
     <!-- Not included in an iframe to ensure it loads before page is rendered -->
     <div class="graph mini-graph">
-      {% include 'graphs/%s/fixtures-%s.html' % (params.team_name_hyphenated, params.team_name_hyphenated) %}
+      {% include 'graphs/%s/fixtures-%s.html' % (params.team_name_hyphen, params.team_name_hyphen) %}
     </div>
   </div>
 </div>
@@ -59,11 +59,11 @@
           <!-- Row of table -->
           {% if i == params.table_index_of_this_team %}
             <!-- Highlighted row for the team of the current page -->
-            <div class="table-row this-team" style="background-color: var(--{{ params.team_name_hyphenated }});">
-              <div class="table-element table-position this-team" style="color: var(--{{ params.team_name_hyphenated }}-secondary);">{{ params.table_snippet[i][0] }}</div>
-              <div class="table-element table-team-name this-team" style="color: var(--{{ params.team_name_hyphenated }}-secondary);">{{ params.table_snippet[i][1] }}</div>
-              <div class="table-element table-gd this-team" style="color: var(--{{ params.team_name_hyphenated }}-secondary);">{{ params.table_snippet[i][2] }}</div>
-              <div class="table-element table-points this-team" style="color: var(--{{ params.team_name_hyphenated }}-secondary);">{{ params.table_snippet[i][3] }}</div>
+            <div class="table-row this-team" style="background-color: var(--{{ params.team_name_hyphen }});">
+              <div class="table-element table-position this-team" style="color: var(--{{ params.team_name_hyphen }}-secondary);">{{ params.table_snippet[i][0] }}</div>
+              <div class="table-element table-team-name this-team" style="color: var(--{{ params.team_name_hyphen }}-secondary);">{{ params.table_snippet[i][1] }}</div>
+              <div class="table-element table-gd this-team" style="color: var(--{{ params.team_name_hyphen }}-secondary);">{{ params.table_snippet[i][2] }}</div>
+              <div class="table-element table-points this-team" style="color: var(--{{ params.team_name_hyphen }}-secondary);">{{ params.table_snippet[i][3] }}</div>
             </div>
           {% else %}
             <!-- Plain row -->
@@ -83,13 +83,13 @@
         {% endif %}
     </div>
   </div>
-  <div class="next-game-prediction row-graph" style="border: 6px solid var(--{{ params.team_playing_next_name_hypenated }});">
+  <div class="next-game-prediction row-graph" style="border: 6px solid var(--{{ params.opp_team_name_hyphen }});">
 
-    {% if params.team_playing_next_name_hypenated != '' %}
+    {% if params.opp_team_name_hyphen != '' %}
       <!-- Pre or mid season -->
-      <div class="next-game-title" style="background-color: var(--{{ params.team_playing_next_name_hypenated }});">
-        <h1 class="next-game-title-text" style="color: var(--{{ params.team_playing_next_name_hypenated }}-secondary);">
-          Next Game: {{ params.team_playing_next_name_hypenated.replace('-', ' ').title().replace('And', 'and') }} ({{ params.team_playing_next_home_away }})
+      <div class="next-game-title" style="background-color: var(--{{ params.opp_team_name_hyphen }});">
+        <h1 class="next-game-title-text" style="color: var(--{{ params.opp_team_name_hyphen }}-secondary);">
+          Next Game: {{ params.opp_team_name_hyphen.replace('-', ' ').title().replace('And', 'and') }} ({{ params.home_away }})
         </h1>
       </div>
     {% else %}
@@ -101,25 +101,27 @@
       </div>
     {% endif %}
       
-    {% if params.team_playing_next_name_hypenated != '' %}
+    {% if params.opp_team_name_hyphen != '' %}
     <div class="next-game-values">
         <div class="predictions-and-logo">
-          <div class="predictions">
-            <div class="next-game-item">Current form: <b>{{ params.team_playing_next_form_rating }}%</b></div>
-            <div class="next-game-item">Score prediction<br><b>{{ params.score_prediction }}</b></div>
-          </div>
           <div class="next-game-logo opposition-badge"
               style="background-image: url('{{ params.team_playing_logo_url }}');
                      background-repeat: no-repeat;
                      background-size: contain;
                      background-position: center;">
           </div>
+          <div class="predictions">
+            <div class="next-game-item">Current form: <b>{{ params.opp_form_rating }}%</b></div>
+            <div class="next-game-item">Score prediction<br><b>{{ params.prediction }}</b><br><span class="accuracy-item">Predicting with accuracy: <b>{{ params.prediction_accuracy }}%</b></span><br><div class="accuracy-item">General results accuracy: <b>{{ params.prediction_results_accuracy }}%</b></div></div>
+            
+            
+          </div>
         </div>
         <div class="past-results">
           <div class="next-game-item" style="font-weight:700;">Previous Results</div>
           
           <!-- Display table of previous results against the next team this team is playing -->
-          {% for prev_meeting in params.team_playing_prev_meetings %}
+          {% for prev_meeting in params.prev_meetings %}
             <div class="next-game-divider"></div>
             <div class="next-game-item {{ prev_meeting[5] }}">
               <div class="past-result">
@@ -141,7 +143,7 @@
   <div class="form-graph row-graph">
     <h1>Form Over Time</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/form-over-time-{}.html'.format(params.team_name_hyphenated, params.team_name_hyphenated) }}" style="border: none;" height=450px width=100%>
+      <iframe src="{{ 'static/graphs/{}/form-over-time-{}.html'.format(params.team_name_hyphen, params.team_name_hyphen) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
     </div>
@@ -151,7 +153,7 @@
   <div class="position-over-time-graph row-graph">
     <h1>Position Over Time</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/position-over-time-{}.html'.format(params.team_name_hyphenated, params.team_name_hyphenated) }}" style="border: none;" height=450px width=100%>
+      <iframe src="{{ 'static/graphs/{}/position-over-time-{}.html'.format(params.team_name_hyphen, params.team_name_hyphen) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
     </div>
@@ -161,7 +163,7 @@
   <div class="goals-scored-vs-conceded-graph row-graph">
     <h1>Goals Scored and Conceded</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/goals-scored-and-conceded-{}.html'.format(params.team_name_hyphenated, params.team_name_hyphenated) }}" style="border: none;" height=450px width=100%>
+      <iframe src="{{ 'static/graphs/{}/goals-scored-and-conceded-{}.html'.format(params.team_name_hyphen, params.team_name_hyphen) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
     </div>
@@ -170,7 +172,7 @@
 <div class="row">
   <div class="clean-sheets row-graph">
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/clean-sheets-{}.html'.format(params.team_name_hyphenated, params.team_name_hyphenated) }}" style="border: none;" width=100%>
+      <iframe src="{{ 'static/graphs/{}/clean-sheets-{}.html'.format(params.team_name_hyphen, params.team_name_hyphen) }}" style="border: none;" width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
     </div>
