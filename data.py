@@ -38,7 +38,7 @@ class Data:
         self.json_data = {'fixtures': {}, 'standings': {}}
         
         # List of current season teams (taken from standings dataframe) 
-        self.team_names = None
+        self.current_season_teams = None
         self.logo_urls = {}
         
         # Dataframes to build
@@ -648,7 +648,7 @@ class Data:
     # ------------- HOME ADVANTAGES DATAFRAME ---------------
     
     
-    def home_advantages_for_season(self, data: json, season: int) -> DataFrame:
+    def home_advantages_for_season(self, data: json, season: int) -> doct:
         d = {}
         for match in data:
             home_team = match['homeTeam']['name'].replace('&', 'and')
@@ -681,12 +681,7 @@ class Data:
                 else:  # Draw
                     d[home_team][(f'{season}', 'Home Draws')] += 1
                     d[away_team][(f'{season}', 'Away Draws')] += 1
-                    
-        df = pd.DataFrame(d)
-        # Drop teams that are not in the current season
-        df = df.drop(df.columns[~df.columns.isin(self.team_names)].values.tolist(), axis=1)
-        
-        return df
+        return d
 
     def create_home_advantages_column(self, home_advantages, season):
         home_advantages[f'{season}', 'Played'] = home_advantages[f'{season}']['Home Wins'] \
@@ -754,13 +749,15 @@ class Data:
         dfs = []
         for i in range(no_seasons):
             data = self.json_data['fixtures'][self.season-i]
-            df = self.home_advantages_for_season(data, self.season-i)
+            d = self.home_advantages_for_season(data, self.season-i)
+            df = pd.DataFrame(d)
+            # Drop teams that are not in the current season
+            df = df.drop(df.columns[~df.columns.isin(self.current_season_teams)].values.tolist(), axis=1)
             dfs.append(df)
         
         home_advantages = pd.concat(dfs).T
         home_advantages.index.name = "Team"
-        home_advantages = home_advantages.fillna(0)
-        home_advantages = home_advantages.astype(int)
+        home_advantages = home_advantages.fillna(0).astype(int)
         
         # Create home advantage column
         for i in range(no_seasons):
@@ -868,7 +865,7 @@ class Data:
             
     #         if i == 0:  # If building current season table
     #             standings = standings.append(df)
-    #             self.team_names = team_names
+    #             self.current_season_teams = team_names
     #         else:
     #             # Drop team rows that are no longer in the current season
     #             df = df.drop(df[~df.index.isin(standings.index)].index)
@@ -934,8 +931,10 @@ class Data:
 
     def season_standings(self, season: int) -> DataFrame:
         col_headings = ['Position', 'Played', 'Won', 'Draw', 'Lost', 'GF', 'GA', 'GD', 'Points']
+        
         #                                0        1      2    3     4     5  6   7     8
         # Create rows of team name : [Position, Played, Won, Draw, Lost, GF, GA, GD, Points]
+        
         data = self.json_data['fixtures'][season]
 
         df_rows = self.fill_rows_from_data(data, col_headings)
@@ -954,7 +953,7 @@ class Data:
         df.columns = pd.MultiIndex.from_product([[season], col_headings])
         
         # Drop any rows with columns not in the current season
-        df = df.drop(df[~df.index.isin(self.team_names)].index)
+        df = df.drop(df[~df.index.isin(self.current_season_teams)].index)
 
         return df
 
@@ -995,7 +994,7 @@ class Data:
         """
         print("🔨 Building standings dataframe...")
                 
-        if not self.team_names:
+        if not self.current_season_teams:
             raise ValueError('❌ [ERROR] Cannot build standings dataframe: Team names list required')
         
         standings = pd.DataFrame()
@@ -1047,7 +1046,6 @@ class Data:
         """
         print("🔨 Building fixtures dataframe... ")
         
-        # Get json fixtures data
         data = self.json_data['fixtures'][self.season]
                 
         team_names = []  # List of all team names mentioned in fixtures
@@ -1200,7 +1198,6 @@ class Data:
 
         team_ratings = team_ratings.sort_values(by="Total Rating", ascending=False)
         team_ratings = team_ratings.rename(columns={'Rating 0Y Ago': 'Rating Current', 'Normalised Rating 0Y Ago': 'Normalised Rating Current'})
-        
         team_ratings = TeamRatings(team_ratings)
         
         if display:
@@ -1219,7 +1216,7 @@ class Data:
             logo_urls[team_name] = crest_url
         
         self.logo_urls = logo_urls
-        self.team_names = logo_urls.keys()
+        self.current_season_teams = logo_urls.keys()
             
 
     # ----------- SEASON STATS -----------
@@ -1231,10 +1228,7 @@ class Data:
                         'Goals Per Game': {},
                         'Conceded Per Game': {}}
         for team_name, row in self.position_over_time.df.iterrows():
-            n_games = 0
-            clean_sheets = 0
-            goals_scored = 0
-            goals_conceded = 0
+            n_games, clean_sheets, goals_scored, goals_conceded = 0, 0, 0, 0
             for matchday in cols:
                 match = row[matchday]
                 if type(match['Score']) is str:
@@ -1273,8 +1267,6 @@ class Data:
 
     
     def build_dataframes(self, n_seasons: int = 3, display_tables: bool = False, request_new: bool = True):
-        # Record team names and urls of team logos
-        self.build_logo_urls()
         # Standings for the last [n_seasons] seasons
         self.build_standings(n_seasons, display=display_tables)
         # Fixtures for the whole season for each team
@@ -1303,8 +1295,10 @@ class Data:
             print("🔄 Retrying with saved data...")
             self.fetch_data(n_seasons, False)
         
+        
+        self.build_logo_urls()  # Record team names and urls of team logos
         self.build_dataframes(n_seasons, display_tables)
-        self.predictor.refresh_predictions(self.fixtures, self.form, self.next_games, self.home_advantages)
+        self.predictor.update_predictions(self.fixtures, self.form, self.next_games, self.home_advantages)
         
         # Save any new data to json files
         if self.json_data:

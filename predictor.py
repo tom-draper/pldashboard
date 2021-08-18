@@ -17,67 +17,78 @@ class Predictor:
         self.away_scored_avg_diff = None
         self.prediction_file = f'data/predictions.json'
     
-    def set_accuracy(self) -> Tuple[float, float, float, float]:
-        with open(self.prediction_file) as json_file:
-            data = json.load(json_file)
-            predictions_dict = data[f'predictions{self.current_season}']
-            
-            total = 0
-            correct = 0
-            result_correct = 0
-            total_home_scored_p = 0
-            total_home_scored_a = 0
-            total_away_scored_p = 0
-            total_away_scored_a = 0
-            # Scan through all current predictions and fill any missing 'actual' scorelines
-            for predictions in predictions_dict.values():
-                for prediction in predictions:
-                    if prediction['prediction'] != None and prediction['actual'] != None:
-                        total += 1
-                        if prediction['prediction'] == prediction['actual']:
-                            correct += 1
+    def prediction_count(self, predictions: dict):
+        total, correct, result_correct,  = 0, 0, 0
+        # Count number of home and away goals (predicted vs actually)
+        n_pred_home_goals, n_pred_away_goals, n_act_home_goals, n_act_away_goals = 0, 0, 0, 0
+        
+        # Scan through all current predictions and fill any missing 'actual' scorelines
+        for predictions in predictions.values():
+            for prediction in predictions:
+                if prediction['prediction'] != None and prediction['actual'] != None:
+                    total += 1
+                    if prediction['prediction'] == prediction['actual']:
+                        correct += 1
+                    
+                    # Get the goals scored for predictions and actual
+                    _, home_score_p, _, away_score_p, _ = re.split(' +', prediction['prediction'])
+                    _, home_score_a,  _, away_score_a, _ = re.split(' +', prediction['actual'])
+                    home_score_p, away_score_p, home_score_a, away_score_a = map(int, [home_score_p, away_score_p, home_score_a, away_score_a])
+                    # Prediction and actual BOTH a draw or home win or away win
+                    if (home_score_p == away_score_p and home_score_a == away_score_a) or \
+                        (home_score_p > away_score_p and home_score_a > away_score_a) or \
+                        (home_score_p < away_score_p and home_score_a < away_score_a):
+                        result_correct += 1
                         
-                        # Get the goals scored for predictions and actual
-                        _, home_score_p, _, away_score_p, _ = re.split(' +', prediction['prediction'])
-                        _, home_score_a,  _, away_score_a, _ = re.split(' +', prediction['actual'])
-                        home_score_p, away_score_p, home_score_a, away_score_a = map(int, [home_score_p, away_score_p, home_score_a, away_score_a])
-                        # Prediction and actual BOTH a draw or home win or away win
-                        if (home_score_p == away_score_p and home_score_a == away_score_a) or \
-                            (home_score_p > away_score_p and home_score_a > away_score_a) or \
-                            (home_score_p < away_score_p and home_score_a < away_score_a):
-                            result_correct += 1
-                            
-                        total_home_scored_p += home_score_p
-                        total_home_scored_a += home_score_a
-                        total_away_scored_p += away_score_p
-                        total_away_scored_a += away_score_a
-                        
+                    n_pred_home_goals += home_score_p
+                    n_pred_away_goals += away_score_p
+                    n_act_home_goals += home_score_a
+                    n_act_away_goals += away_score_a
         
-        if total == 0:
-            return 0
-        
-        self.accuracy = correct / total
-        self.result_accuracy  = result_correct / total
-        # Aim for both to be zero
-        # Positive -> predicting too many goals
-        # Negative -> predicting too few goals
-        self.home_scored_avg_diff = (total_home_scored_p - total_home_scored_a) / total
-        self.away_scored_avg_diff = (total_away_scored_p - total_away_scored_a) / total
-        
-        with open(self.prediction_file) as json_file:
-            data = json.load(json_file)
-            data['accuracy'] = self.accuracy
-            data['resultAccuracy'] = self.result_accuracy
-            data['homeScoredAvgDiff'] = self.home_scored_avg_diff
-            data['awayScoredAvgDiff'] = self.away_scored_avg_diff
-            
-        with open(self.prediction_file, 'w') as f:
-            json.dump(data, f)
-        
-        return self.accuracy, self.result_accuracy, self.home_scored_avg_diff, self.away_scored_avg_diff
-
+        return total, correct, result_correct, n_pred_home_goals, n_pred_away_goals, n_act_home_goals, n_act_away_goals
     
-    def update_prediction(self, actual_scores: list) -> int:
+    def set_accuracy(self):
+        """Sets the class accuracy variables:
+            - accuracy: the proportion of perfectly predicted predicitons
+            - result_accuracy: the proportion of predictions with a correct result 
+                (win, draw, lose)
+            - home_acored_avg_diff: the difference between the predicted average 
+                home goals scored vs the actual average home goals scored
+            - away_acored_avg_diff: the difference between the predicted average 
+                away goals scored vs the actual average away goals scored
+        """
+        # Read predictions dictionary (date string : predictions list) from json file
+        with open(self.prediction_file) as json_file:
+            data = json.load(json_file)
+            predictions = data[f'predictions{self.current_season}']
+            
+        total, correct, result_correct, n_pred_home_goals, n_pred_away_goals, n_act_home_goals, n_act_away_goals = self.prediction_count(predictions)
+        
+        if total != 0:        
+            self.accuracy = correct / total
+            self.result_accuracy  = result_correct / total
+            # Aim for both to be zero
+            # Positive -> predicting too many goals
+            # Negative -> predicting too few goals
+            self.home_scored_avg_diff = (n_pred_home_goals - n_act_home_goals) / total
+            self.away_scored_avg_diff = (n_pred_away_goals - n_act_away_goals) / total
+            
+            # Write accuracy metrics to json file
+            with open(self.prediction_file) as json_file:
+                data = json.load(json_file)
+                data['accuracy'] = self.accuracy
+                data['resultAccuracy'] = self.result_accuracy
+                data['homeScoredAvgDiff'] = self.home_scored_avg_diff
+                data['awayScoredAvgDiff'] = self.away_scored_avg_diff
+            
+            # Overwrite file with new data
+            with open(self.prediction_file, 'w') as f:
+                json.dump(data, f)
+        
+    
+    def insert_actual_scores_into_json_file(self, actual_scores: list) -> int:
+        """Check whether each actual score string in the list is present in the 
+           predictions json file and insert it if not."""
         count = 0
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
@@ -86,16 +97,16 @@ class Predictor:
             for date, score in actual_scores:
                 for prediction in predictions[date]:
                     if prediction['prediction'] != None:
-                        # If the actual scoreline matches this prediction, this is the prediction to update
                         home_p, _, _, _, away_p = re.split(' +', prediction['prediction'])
                         home_s, _, _, _, away_s = re.split(' +', score)
-                        if (prediction['actual'] == None) and (home_p == home_s) and (away_p == away_s):
+                        # If the actual scoreline matches this prediction and no actual score has been filled
+                        if (home_p == home_s) and (away_p == away_s) and (prediction['actual'] == None):
                             # Update this prediction with its actual score
-                            print(prediction)
                             prediction['actual'] = score
                             count += 1
                             break
-            
+        
+        # Overwrite file with new data
         with open(self.prediction_file, 'w') as f:
             json.dump(data, f)
         
@@ -119,7 +130,7 @@ class Predictor:
                         actual_scores.append((date, actual_score))
         
         # Update prediction json objects by inserting their actual scores
-        count = self.update_prediction(actual_scores)
+        count = self.insert_actual_scores_into_json_file(actual_scores)
         return count
     
     def prediction_already_made(self, date: str, new_prediction: str, predictions: List[dict]) -> bool:        
@@ -130,7 +141,7 @@ class Predictor:
                     already_made = True
         return already_made
         
-    def save_prediction(self, new_predictions: Set[Tuple[str, str]]) -> int:
+    def insert_predicted_scores_into_json_file(self, new_predictions: Set[Tuple[str, str]]) -> int:
         count = 0
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
@@ -143,7 +154,8 @@ class Predictor:
                     count += 1
         
         predictions = sorted(predictions.items())
-        # predictions = sorted(predictions, key=lambda prediction: datetime.strptime(prediction['date'], "%Y-%M-%d"))
+        
+        # Overwrite file with new data
         with open(self.prediction_file, 'w') as f:
             json.dump(data, f)
         
@@ -217,7 +229,7 @@ class Predictor:
                 predictions_for_json.add((game_date, prediction))
             predictions[team_name] = prediction
             
-        count = self.save_prediction(predictions_for_json)
+        count = self.insert_predicted_scores_into_json_file(predictions_for_json)
         self.predictions = predictions
         
         return count
@@ -228,14 +240,15 @@ class Predictor:
             return f'+{float_val}'
         return str(float_val)
 
-    def refresh_predictions(self, fixtures, form, next_games, home_advantages):
-        # Create predictions
+    def update_predictions(self, fixtures, form, next_games, home_advantages):
         count = self.set_score_predictions(form, next_games, home_advantages)
         if count > 0:
             print(f'ℹ️ Added {count} new predictions')
+            
         count = self.record_actual_results(fixtures)
         if count > 0:
             print(f'ℹ️ Updated {count} predictions with their actual results')
+            
         self.set_accuracy()
         print(f'ℹ️ Predicting with accuracy: {self.accuracy*100}%')
         print(f'ℹ️ Predicting correct results with accuracy: {self.result_accuracy*100}%')
