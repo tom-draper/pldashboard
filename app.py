@@ -146,6 +146,6 @@ def team():
 if __name__ == '__main__':
     data = Data(season)
     # Update data and graphs
-    data.update_all(request_new=False, display_tables=False)
+    data.update_all(request_new=True, display_tables=False)
 
     app.run(host='0.0.0.0', debug=False)

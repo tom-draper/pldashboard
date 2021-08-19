@@ -105,25 +105,19 @@ class Data:
         self.json_data['standings'][self.season] = self.standings_data(self.season, request_new)
             
     def save_data(self):
-        for season, data in self.json_data.items():
-            # Save new fixtures data
-            with open(f'data/fixtures_{season}.json', 'w') as json_file:
-                json.dump(data, json_file)
+        for data_type in self.json_data.keys():
+            for season, data in self.json_data[data_type].items():
+                # Save new fixtures data
+                with open(f'data/{data_type}_{season}.json', 'w') as json_file:
+                    json.dump(data, json_file)
     
 
     # ------- NEXT GAME --------
 
     def get_next_game_prediction(self, team_name):
-        prediction = None
-        accuracy = None
-        result_accuracy = None
-        
-        if self.predictor.predictions:
-            prediction = self.predictor.predictions[team_name]
-        if self.predictor.accuracy:
-            accuracy = self.predictor.accuracy
-        if self.predictor.result_accuracy:
-            result_accuracy = self.predictor.result_accuracy
+        prediction = self.predictor.predictions[team_name], 2
+        accuracy = round(self.predictor.accuracy, 2)
+        result_accuracy = round(self.predictor.result_accuracy, 2)
         
         return prediction, accuracy, result_accuracy
 
@@ -142,8 +136,6 @@ class Data:
                 break
         
         return next_matchday_no, date, next_team, home_away
-        
-
     
     def include_current_seasons_meetings(self, next_games: pd.DataFrame):
         # Loop through the columns of matchdays that have been played
@@ -151,7 +143,6 @@ class Data:
             matchday = f"Matchday {matchday_no+1}"
             matchday_data = self.fixtures.df[matchday]
             for team, row in matchday_data.iterrows():
-                # if row['HomeAway'] == 'Home':  # From the perspective of the home team
                 # If the teams next game is this team AND the game has been played
                 if next_games.loc[team]['Next Game'] == row['Team'] and row['Score'] != 'None - None':
                     date = row['Date'].strftime('%d %B %Y')
@@ -224,9 +215,7 @@ class Data:
         
         next_games = pd.DataFrame()
         
-        next_team_col = []
-        next_game_dates_col = []
-        home_away_col = []
+        next_team_col, next_game_dates_col, home_away_col = [], [], []
         for team_name, _ in self.fixtures.df.iterrows():
             matchday_no, date, next_team, home_away = self.get_next_game(team_name, self.fixtures)
             next_game_dates_col.append(date)
@@ -238,7 +227,6 @@ class Data:
             next_games['Next Game'] = next_team_col
             next_games['HomeAway'] = home_away_col
             next_games.index = self.fixtures.df.index
-            # next_games['HomeAway'] = self.fixtures.df[f'Matchday {matchday_no+1}']['HomeAway']
             next_games['Previous Meetings'] = [[] for _ in range(len(next_games.index))]
                     
             # Add any previous meetings that have been played this season
@@ -382,9 +370,7 @@ class Data:
         return form_str_col, goal_differences_col
 
     def calc_last_n_games_cols(self, fixtures: Fixtures, n_games: int, matchday_num: int) -> Tuple[List[List[str]], List[List[str]], List[List[str]]]:
-        teams_played_col = []
-        scores_col = []
-        home_away_col = []
+        teams_played_col, scores_col, home_away_col  = [], [], []
         
         matchday_dates = fixtures.df[f'Matchday {matchday_num}', 'Date']
         median_matchday_date = matchday_dates[len(matchday_dates)//2].asm8
@@ -416,8 +402,7 @@ class Data:
             home_away_col.append(home_away)
 
         # Convert full team names to team initials
-        teams_played_col = [list(map(lambda team_name : utilities.convert_team_name_or_initials(team_name), teams_played))
-                                 for teams_played in teams_played_col]
+        teams_played_col = [list(map(utilities.convert_team_name_or_initials, teams_played)) for teams_played in teams_played_col]
                 
         return teams_played_col, scores_col, home_away_col
     
@@ -648,7 +633,7 @@ class Data:
     # ------------- HOME ADVANTAGES DATAFRAME ---------------
     
     
-    def home_advantages_for_season(self, data: json, season: int) -> doct:
+    def home_advantages_for_season(self, data: json, season: int) -> dict:
         d = {}
         for match in data:
             home_team = match['homeTeam']['name'].replace('&', 'and')

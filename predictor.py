@@ -17,6 +17,21 @@ class Predictor:
         self.away_scored_avg_diff = None
         self.prediction_file = f'data/predictions.json'
     
+    def identical_fixtures(self, scoreline1, scoreline2):
+        home_p, _, _, _, away_p = re.split(' +', scoreline1)
+        home_s, _, _, _, away_s = re.split(' +', scoreline2)
+        return (home_p == home_s) and (away_p == away_s)
+
+    def extract_scores(self, scoreline):
+        _, home_score, _, away_score, _ = re.split(' +', scoreline)
+        return int(home_score), int(away_score)
+    
+    def identical_result(self, pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
+        return (pred_home_goals == pred_away_goals and act_home_goals == act_away_goals) or \
+                (pred_home_goals > pred_away_goals and act_home_goals > act_away_goals) or \
+                (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)
+
+    
     def prediction_count(self, predictions: dict):
         total, correct, result_correct,  = 0, 0, 0
         # Count number of home and away goals (predicted vs actually)
@@ -31,19 +46,16 @@ class Predictor:
                         correct += 1
                     
                     # Get the goals scored for predictions and actual
-                    _, home_score_p, _, away_score_p, _ = re.split(' +', prediction['prediction'])
-                    _, home_score_a,  _, away_score_a, _ = re.split(' +', prediction['actual'])
-                    home_score_p, away_score_p, home_score_a, away_score_a = map(int, [home_score_p, away_score_p, home_score_a, away_score_a])
+                    pred_home_goals, pred_away_goals = self.extract_scores(prediction['prediction'])
+                    act_home_goals, act_away_goals = self.extract_scores(prediction['actual'])
                     # Prediction and actual BOTH a draw or home win or away win
-                    if (home_score_p == away_score_p and home_score_a == away_score_a) or \
-                        (home_score_p > away_score_p and home_score_a > away_score_a) or \
-                        (home_score_p < away_score_p and home_score_a < away_score_a):
+                    if self.identical_result(pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
                         result_correct += 1
                         
-                    n_pred_home_goals += home_score_p
-                    n_pred_away_goals += away_score_p
-                    n_act_home_goals += home_score_a
-                    n_act_away_goals += away_score_a
+                    n_pred_home_goals += pred_home_goals
+                    n_pred_away_goals += pred_away_goals
+                    n_act_home_goals += act_home_goals
+                    n_act_away_goals += act_away_goals
         
         return total, correct, result_correct, n_pred_home_goals, n_pred_away_goals, n_act_home_goals, n_act_away_goals
     
@@ -94,15 +106,14 @@ class Predictor:
             data = json.load(json_file)
             predictions = data[f'predictions{self.current_season}']
                         
-            for date, score in actual_scores:
+            for date, actual_score in actual_scores:
                 for prediction in predictions[date]:
-                    if prediction['prediction'] != None:
-                        home_p, _, _, _, away_p = re.split(' +', prediction['prediction'])
-                        home_s, _, _, _, away_s = re.split(' +', score)
+                    predicted_score = prediction['prediction']
+                    if predicted_score != None:
                         # If the actual scoreline matches this prediction and no actual score has been filled
-                        if (home_p == home_s) and (away_p == away_s) and (prediction['actual'] == None):
+                        if self.identical_fixtures(actual_score, predicted_score) and predicted_score == None:
                             # Update this prediction with its actual score
-                            prediction['actual'] = score
+                            prediction['actual'] = predicted_score
                             count += 1
                             break
         
