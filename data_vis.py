@@ -229,7 +229,7 @@ class DataVis:
 
     def form_over_time_data_points(self, form):
         x_cols = form.iloc[:, form.columns.get_level_values(1) == 'Date']
-        y_cols = form.iloc[:, form.columns.get_level_values(1) == 'Form Rating %']
+        y_cols = form.iloc[:, form.columns.get_level_values(1) == 'Form Rating']
         
         # All ys have the same x date values
         x = []
@@ -242,7 +242,9 @@ class DataVis:
         ys = []
         for _, row_data in y_cols.iterrows():
             y = row_data.values.tolist()
+            y = list(map(lambda x: x *100, y))  # Convert to percentages
             ys.append(y)
+        
         
         # Sort the x-axis data by date to remove errors due to match rescheduling
         cols = list(form.columns.unique(level=0))

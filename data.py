@@ -22,6 +22,7 @@ class Data:
         self.season = current_season
                 
         # Import environment variables
+        __file__ = 'data.py'
         dotenv_path = join(dirname(__file__), '.env')
         load_dotenv(dotenv_path)
         self.url = os.getenv('URL')
@@ -270,7 +271,7 @@ class Data:
         return form_str
 
     def calc_form_rating(self, teams_played: List[str], form_str: str, gds: List[int], team_ratings: TeamRatings) -> float:
-        form_percentage = 50  # Default percentage, moves up or down based on performance
+        form_percentage = 0.5  # Default percentage, moves up or down based on performance
         
         if form_str != None:  # If games have been played this season
             # form_str = form_str.replace(',', '')
@@ -280,15 +281,15 @@ class Data:
 
                 # Increament form score based on rating of the team they've won, drawn or lost against
                 if result == 'W':
-                    form_percentage += (team_ratings.df.loc[team_name]['Total Rating'] * 100 / len(form_str)) * abs(gds[form_idx])
+                    form_percentage += (team_ratings.df.loc[team_name]['Total Rating'] / len(form_str)) * abs(gds[form_idx])
                 elif result == 'D':
-                    form_percentage +=  ((team_ratings.df.loc[team_name]['Total Rating'] - (team_ratings.df.loc[team_name]['Total Rating'])) * 100) / len(form_str)
+                    form_percentage +=  (team_ratings.df.loc[team_name]['Total Rating'] - team_ratings.df.loc[team_name]['Total Rating']) / len(form_str)
                 elif result == 'L':
-                    form_percentage -= ((team_ratings.df.iloc[0]['Total Rating'] - team_ratings.df.loc[team_name]['Total Rating']) * 100 / len(form_str) * abs(gds[form_idx]))
+                    form_percentage -= ((team_ratings.df.iloc[0]['Total Rating'] - team_ratings.df.loc[team_name]['Total Rating']) / len(form_str)) * abs(gds[form_idx])
                     
         # Cap rating
-        if form_percentage > 100:
-            form_percentage = 100
+        if form_percentage > 1:
+            form_percentage = 1
         elif form_percentage < 0:
             form_percentage = 0
         
@@ -422,10 +423,10 @@ class Data:
             
             Rows: the 20 teams participating in the current season
             Columns (multi-index):
-            -------------------------------------------------------------------------------------------------------------------
-            |                                                Matchday [X]                                                     |
-            -------------------------------------------------------------------------------------------------------------------
-            | Date | Teams Played | Scores | HomeAway | Form | GDs | Form Rating % | Played Star Team | Won Against Star Team |
+            -----------------------------------------------------------------------------------------------------------------
+            |                                               Matchday [X]                                                    |
+            -----------------------------------------------------------------------------------------------------------------
+            | Date | Teams Played | Scores | HomeAway | Form | GDs | Form Rating | Played Star Team | Won Against Star Team |
             
             Matchday [X]: where X is integers from 1 to the most recent matchday
                 with a game played
@@ -485,7 +486,7 @@ class Data:
             form[(f'Matchday {n}', 'GDs')] = gd_col
 
             form_rating_col = self.calc_form_rating_col(teams_played_col, form_str_col, gd_col)
-            form[(f'Matchday {n}', 'Form Rating %')] = form_rating_col
+            form[(f'Matchday {n}', 'Form Rating')] = form_rating_col
             
             # Column (list of booleans) for whether last 5 games have been against 
             # a team with a long term (multiple season) rating over a certain 

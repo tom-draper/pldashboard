@@ -91,7 +91,7 @@ class Form(DF):
             n_should_have_played = self.n_should_have_played(current_matchday, 5)
             if len(latest_teams_played) != n_should_have_played:
                 matchday = self.get_prev_matchday()
-            rating = self.df[f'Matchday {matchday}'].loc[team_name]['Form Rating %'].round(1)
+            rating = (self.df[f'Matchday {matchday}'].loc[team_name]['Form Rating'] * 100).round(1)
             
         return rating
     
