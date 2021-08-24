@@ -89,7 +89,7 @@
       <!-- Pre or mid season -->
       <div class="next-game-title" style="background-color: var(--{{ params.opp_team_name_hyphen }});">
         <h1 class="next-game-title-text" style="color: var(--{{ params.opp_team_name_hyphen }}-secondary);">
-          Next Game: {{ params.opp_team_name_hyphen.replace('-', ' ').title().replace('And', 'and') }} ({{ params.home_away }})
+          Next Game: {{ params.opp_team_name_hyphen.replace('-', '').title().replace('And', 'and') }} ({{ params.home_away }})
         </h1>
       </div>
     {% else %}
@@ -105,7 +105,7 @@
     <div class="next-game-values">
         <div class="predictions-and-logo">
           <div class="next-game-logo opposition-badge"
-              style="background-image: url('{{ params.team_playing_logo_url }}');
+              style="background-image: url('{{ params.opp_logo_url }}');
                      background-repeat: no-repeat;
                      background-size: contain;
                      background-position: center;">

@@ -19,40 +19,58 @@ class Form(DF):
     def __init__(self, d: dict):
         super().__init__(d)
     
-    def get_current_matchday(self) -> List:
+    def get_current_matchday(self) -> int:
         current_matchday = None
-        # Returns "Matchday X"
+        
         if len(self.df.columns) > 0:
             current_matchday = list(self.df.columns.unique(level=0))[-1]
+            current_matchday = int(current_matchday.split(' ')[-1])  # Extract number
         return current_matchday
+
+    def get_prev_matchday(self) -> int:
+        prev_matchday = None
+        
+        if len(self.df.columns) > 0:
+            prev_matchday = list(self.df.columns.unique(level=0))[-2]
+            prev_matchday = int(prev_matchday.split(' ')[-1])  # Extract number
+        return prev_matchday
+    
+    def n_should_have_played(self, current_matchday, maximum) -> int:
+        n_should_have_played = maximum
+        if current_matchday < maximum:
+            n_should_have_played = current_matchday
+        return n_should_have_played
 
     def get_form(self, team_name: str) -> List:
         form = []
         current_matchday = self.get_current_matchday()
+        
         if current_matchday:
-            form = self.df[current_matchday].loc[team_name]['Form']
+            form = self.df[f'Matchday {current_matchday}'].loc[team_name]['Form']
                     
             # If team hasn't yet played in current matchday, use previous matchday's form
-            if len(form.replace(',', '')) != 5 and current_matchday != 'Matchday 1':
+            n_should_have_played = self.n_should_have_played(current_matchday, 5)
+            if len(form) != n_should_have_played:
                 previous_matchday = list(self.df.columns.unique(level=0))[-2]
                 form = self.df[previous_matchday].loc[team_name]['Form']
             
             if form == None:
                 form = []
             else:
-                form = list(form.replace(',', ''))
+                form = list(form)
             form = form + ['None'] * (5 - len(form))  # Pad list
 
         return form
 
     def get_recent_teams_played(self, team_name: str) -> pd.DataFrame:
         recent_teams_played = pd.DataFrame()
-        current_matchday = self.get_current_matchday()
+        current_matchday= self.get_current_matchday()
         
         if current_matchday:
-            recent_teams_played = self.df[current_matchday].loc[team_name]['Teams Played']
+            recent_teams_played = self.df[f'Matchday {current_matchday}'].loc[team_name]['Teams Played']
             
-            if len(recent_teams_played) != 5 and current_matchday != 'Matchday 1':
+            n_should_have_played = self.n_should_have_played(current_matchday, 5)
+            if len(recent_teams_played) != n_should_have_played:
                 # Use previous matchday's games played list
                 previous_matchday = list(self.df.columns.unique(level=0))[-2]
                 recent_teams_played = self.df[previous_matchday].loc[team_name]['Teams Played']
@@ -64,15 +82,16 @@ class Form(DF):
         current_matchday = self.get_current_matchday()
 
         if current_matchday:
-            latest_teams_played = self.df[current_matchday].loc[team_name]['Teams Played']
+            latest_teams_played = self.df[f'Matchday {current_matchday}'].loc[team_name]['Teams Played']
             matchday = current_matchday
             # If played in current gameweek, 5 teams played
             # If not yet played in current gameweek, 4 teams played
             # If team hasn't yet played this matchday use previous matchday data
             # TODO: NEEDS FIXING
-            if len(latest_teams_played) == 4 and current_matchday != 'Matchday 4':
-                matchday = list(self.df.columns.unique(level=0))[-2]
-            rating = self.df[matchday].loc[team_name]['Form Rating %'].round(1)
+            n_should_have_played = self.n_should_have_played(current_matchday, 5)
+            if len(latest_teams_played) != n_should_have_played:
+                matchday = self.get_prev_matchday()
+            rating = self.df[f'Matchday {matchday}'].loc[team_name]['Form Rating %'].round(1)
             
         return rating
     
@@ -81,11 +100,11 @@ class Form(DF):
         current_matchday = self.get_current_matchday()
         
         if current_matchday:
-            won_against_star_team = self.df[current_matchday].loc[team_name]['Won Against Star Team']
+            won_against_star_team = self.df[f'Matchday {current_matchday}'].loc[team_name]['Won Against Star Team']
             
             # If team hasn't yet played this matchday use previous matchday data
-            # TODO: NEEDS FIXING
-            if len(won_against_star_team) == 4 and current_matchday != 'Matchday 4':
+            n_should_have_played = self.n_should_have_played(current_matchday, 5)
+            if len(won_against_star_team) != n_should_have_played:
                 previous_matchday = list(self.df.columns.unique(level=0))[-2]
                 won_against_star_team = self.df[previous_matchday].loc[team_name]['Won Against Star Team']
                 

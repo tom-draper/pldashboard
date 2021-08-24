@@ -24,11 +24,11 @@ class Params:
                  prev_meetings=None,
                  prediction=None,
                  prediction_accuracy=None,
-                 prediction_results_accuracy = None,
+                 prediction_results_accuracy=None,
                  table_snippet=None,
                  team_table_idx=None,
                  team_logo_url=None,
-                 team_playing_logo_url=None):
+                 opp_logo_url=None):
         self.season = season
         self.title = title
         self.team_name = team_name
@@ -51,7 +51,7 @@ class Params:
         self.table_snippet = table_snippet
         self.team_table_idx = team_table_idx
         self.team_logo_url = team_logo_url
-        self.team_playing_logo_url = team_playing_logo_url
+        self.opp_logo_url = opp_logo_url
 
 
 app = Flask(__name__)
@@ -64,24 +64,30 @@ def home():
     return render_template('home.html', params=params)
 
 
-def get_team_page_data(team_name_hyphen):
+def get_params(team_name_hyphen):
     title = team_name_hyphen.replace('-', ' ').title().replace('And', 'and')
     
+    # This team
     team_name = title + ' FC'
     team_logo_url = data.get_logo_url(team_name)
+    
     # Get data values to display on team webpage
     position = data.standings.get_position(team_name, season)
     
+    # Season stats
     form, recent_teams_played, form_rating, won_against_star_team = data.form.get_recent_form(team_name)
-
     clean_sheet_ratio, goals_per_game, conceded_per_game = data.season_stats.get_season_stats(team_name)
     
+    print(form)
+    
+    # Next game
     opp_team_name, home_away, prev_meetings = data.next_games.get_details(team_name)
     opp_form_rating = data.form.get_current_form_rating(opp_team_name)
     prediction, accuracy, results_accuracy = data.get_next_game_prediction(team_name) 
-    # Remove 'FC' from end
-    opp_team_name_hyphen = '-'.join(opp_team_name.lower().split(' ')[:-1])
-    team_playing_logo_url = data.get_logo_url(opp_team_name)
+    opp_team_name_hyphen = '-'.join(opp_team_name.lower()[:-3]) # Remove 'FC' from end
+    opp_logo_url = data.get_logo_url(opp_team_name)
+    
+    print(opp_team_name)
     
     table_snippet, team_table_idx = data.standings.get_table_snippet(team_name, season)
 
@@ -107,7 +113,7 @@ def get_team_page_data(team_name_hyphen):
                     table_snippet=table_snippet, 
                     team_table_idx=team_table_idx, 
                     team_logo_url=team_logo_url, 
-                    team_playing_logo_url=team_playing_logo_url)
+                    opp_logo_url=opp_logo_url)
 
     return params
 
@@ -138,7 +144,7 @@ def team():
     rule = request.url_rule
     # Get hypehenated team name from current URL
     team_name_hyphen = rule.rule[1:]
-    params = get_team_page_data(team_name_hyphen)
+    params = get_params(team_name_hyphen)
 
     return render_template('team.html', params=params)
 

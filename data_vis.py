@@ -105,8 +105,8 @@ class DataVis:
         for n in range(N_MATCHES):
             match = team_fixtures[f'Matchday {n+1}']
             
-            # Append single datetime value of matchday to x-axis 
-            x.append(datetime.utcfromtimestamp(match['Date'].tolist()/1e9))
+            # Append single datetime value of matchday to x-axis
+            x.append(match['Date'].to_pydatetime())
             
             # Get rating of the opposition team
             rating = team_ratings.loc[match['Team'], 'Total Rating']
