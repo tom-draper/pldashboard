@@ -102,17 +102,17 @@ class DataVis:
     
     def fixtures_data_points(self, team_fixtures, team_ratings, home_advantages, sizes, NOW, N_MATCHES, BIG_MARKER_SIZE):
         x, y, details = [], [], []
-        for n in range(N_MATCHES):
-            match = team_fixtures[f'Matchday {n+1}']
+        for match_n in range(N_MATCHES):
+            match = team_fixtures[match_n+1]
             
             # Append single datetime value of matchday to x-axis
             x.append(match['Date'].to_pydatetime())
             
             # Get rating of the opposition team
-            rating = team_ratings.loc[match['Team'], 'Total Rating']
+            rating = team_ratings.loc[match['Team'], 'TotalRating']
             # Decrease other team's rating if you're playing at home
             if match['HomeAway'] == 'Home':
-                rating *= (1 - home_advantages.loc[match['Team'], 'Total Home Advantage'][0])
+                rating *= (1 - home_advantages.loc[match['Team'], 'TotalHomeAdvantage'][0])
             # Append percentage rating value of opposition team playing on this matchday
             y.append(rating*100)
 
@@ -124,12 +124,12 @@ class DataVis:
             details.append(match_detail)
             
             # Increase size of point marker if it's the current upcoming match
-            if n == 0: 
+            if match_n == 0: 
                 # If we haven't played first game of season
                 if NOW < x[-1]:
-                    sizes[n] = BIG_MARKER_SIZE
-            elif (n != N_MATCHES) and (x[-2] < NOW <= x[-1]):
-                sizes[n] = BIG_MARKER_SIZE
+                    sizes[match_n] = BIG_MARKER_SIZE
+            elif (match_n != N_MATCHES) and (x[-2] < NOW <= x[-1]):
+                sizes[match_n] = BIG_MARKER_SIZE
                 
         # Sort the data by date to remove errors due to match rescheduling
         x, y, details = zip(*sorted(zip(x, y, details)))
@@ -229,7 +229,7 @@ class DataVis:
 
     def form_over_time_data_points(self, form):
         x_cols = form.iloc[:, form.columns.get_level_values(1) == 'Date']
-        y_cols = form.iloc[:, form.columns.get_level_values(1) == 'Form Rating']
+        y_cols = form.iloc[:, form.columns.get_level_values(1) == 'FormRating']
         
         # All ys have the same x date values
         x = []
@@ -247,9 +247,8 @@ class DataVis:
         
         
         # Sort the x-axis data by date to remove errors due to match rescheduling
-        cols = list(form.columns.unique(level=0))
+        matchday_labels = sorted(list(form.columns.unique(level=0)))
         # Remove 'Matchday' prefix and just store sorted integers
-        matchday_labels = sorted(map(lambda x: int(x.split(' ')[-1]), cols))
         x, matchday_labels, *ys = zip(*sorted(zip(x, matchday_labels, *ys)))
         
         return x, matchday_labels, ys
@@ -399,9 +398,7 @@ class DataVis:
             ys.append(y)
                 
         # Sort the x-axis data by date to remove errors due to match rescheduling
-        cols = list(position_over_time.columns.unique(level=0))
-        # Remove 'Matchday' prefix and just store sorted integers
-        matchday_labels = sorted(map(lambda x: int(x.split(' ')[-1]), cols))
+        matchday_labels = sorted(list(position_over_time.columns.unique(level=0)))
         
         x, matchday_labels, *ys = zip(*sorted(zip(x, matchday_labels, *ys)))
         
@@ -590,18 +587,16 @@ class DataVis:
         team_position_over_time = position_over_time.loc[team_name]
         
         # List of 'Matchday X' for all matchdays where at least one game has played
-        cols = list(position_over_time.columns.unique(level=0))
-        # Remove 'Matchday' prefix and just store sorted integers
-        matchday_labels = sorted(map(lambda x: int(x.split(' ')[-1]), cols))
+        matchday_labels = sorted(list(position_over_time.columns.unique(level=0)))
         
         # List of matchday strings that have had all games play
         for idx, matchday_no in enumerate(matchday_labels):
             # Append the teams number of goals scored and cocneded this matchday
-            team_matchday = team_position_over_time[f'Matchday {matchday_no}']
+            team_matchday = team_position_over_time[matchday_no]
             # If match has been played
             if type(team_matchday['Score']) is str:
                 # Append the average goals for this matchday to average goals list
-                matchday_scorelines = position_over_time[f'Matchday {matchday_no}']['Score']
+                matchday_scorelines = position_over_time[matchday_no]['Score']
                 goals_scored = []
                 for scoreline in matchday_scorelines.values.tolist():
                     if type(scoreline) is str:

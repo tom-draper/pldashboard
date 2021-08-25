@@ -101,11 +101,11 @@ class Predictor:
     def get_actual_scores(self, fixtures: DataFrame) -> List[str]:
         actual_scores = []
         for matchday_no in range(1, 39):
-            matchday = fixtures.df[f'Matchday {matchday_no}']
+            matchday = fixtures.df[matchday_no]
             
             # If whole column is SCHEDULED, skip
             if not all(matchday['Status'] == 'SCHEDULED'):                
-                for team_name, row in fixtures.df[f'Matchday {matchday_no}'].iterrows():
+                for team_name, row in fixtures.df[matchday_no].iterrows():
                     if row['Status'] == 'FINISHED':
                         date = np.datetime_as_string(row['Date'].asm8, unit='D')
                         actual_score = self.format_scoreline_str_from_str(team_name, row["Team"], row["Score"], row["HomeAway"])
@@ -211,13 +211,13 @@ class Predictor:
         if home_away == "Home":
             # Decrease conceded (if team has a positive home advantage)
             if debug:
-                print(f"\tHome -> {pred_conceded} x {round((1 - home_advantages.df.loc[team_name, 'Total Home Advantage'][0]), 2)}".ljust(60), f"[{round(pred_scored, 2)} - {round(pred_conceded * ((1 - home_advantages.df.loc[team_name, 'Total Home Advantage'][0])), 2)}]")
-            pred_conceded *= (1 - home_advantages.df.loc[team_name, 'Total Home Advantage'][0])
+                print(f"\tHome -> {pred_conceded} x {round((1 - home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]), 2)}".ljust(60), f"[{round(pred_scored, 2)} - {round(pred_conceded * ((1 - home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0])), 2)}]")
+            pred_conceded *= (1 - home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0])
         else:
             # Decrease scored (if opposition team has a positive home advantage)
             if debug:
-                print(f"\tAway -> {pred_scored} x {round((1 - home_advantages.df.loc[opp_team_name, 'Total Home Advantage'][0]), 2)}".ljust(60), f"[{round(pred_scored * ((1 - home_advantages.df.loc[opp_team_name, 'Total Home Advantage'][0])), 2)} - {round(pred_conceded, 2)}]")
-            pred_scored *= (1 - home_advantages.df.loc[opp_team_name, 'Total Home Advantage'][0])
+                print(f"\tAway -> {pred_scored} x {round((1 - home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]), 2)}".ljust(60), f"[{round(pred_scored * ((1 - home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0])), 2)} - {round(pred_conceded, 2)}]")
+            pred_scored *= (1 - home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0])
         return pred_scored, pred_conceded
     
     def calc_score_prediction(self, team_name: str, opp_team_name: str, home_advantages: DataFrame, home_away: str, form_rating: float, opp_form_rating: float, prev_meetings: List[dict], debug: bool = False) -> Tuple[int, int]:
@@ -258,10 +258,10 @@ class Predictor:
             prediction = None
             if next_games != None:
                 form_rating = form.get_current_form_rating(team_name)
-                opp_team_name = next_games.df['Next Game'].loc[team_name]
+                opp_team_name = next_games.df['NextGame'].loc[team_name]
                 opp_form_rating = form.get_current_form_rating(opp_team_name)
                 home_away = next_games.df['HomeAway'].loc[team_name]
-                prev_meetings = next_games.df.loc[team_name]['Previous Meetings']
+                prev_meetings = next_games.df.loc[team_name]['PreviousMeetings']
                 
                 if debug:
                     print(team_name, "vs", opp_team_name)

@@ -21,10 +21,8 @@ class Form(DF):
     
     def get_current_matchday(self) -> int:
         current_matchday = None
-        
         if len(self.df.columns) > 0:
             current_matchday = list(self.df.columns.unique(level=0))[-1]
-            current_matchday = int(current_matchday.split(' ')[-1])  # Extract number
         return current_matchday
 
     def get_prev_matchday(self) -> int:
@@ -46,7 +44,7 @@ class Form(DF):
         current_matchday = self.get_current_matchday()
         
         if current_matchday:
-            form = self.df[f'Matchday {current_matchday}'].loc[team_name]['Form']
+            form = self.df[current_matchday].loc[team_name]['Form']
                     
             # If team hasn't yet played in current matchday, use previous matchday's form
             n_should_have_played = self.n_should_have_played(current_matchday, 5)
@@ -67,13 +65,13 @@ class Form(DF):
         current_matchday= self.get_current_matchday()
         
         if current_matchday:
-            recent_teams_played = self.df[f'Matchday {current_matchday}'].loc[team_name]['Teams Played']
+            recent_teams_played = self.df[current_matchday].loc[team_name]['TeamsPlayed']
             
             n_should_have_played = self.n_should_have_played(current_matchday, 5)
             if len(recent_teams_played) != n_should_have_played:
                 # Use previous matchday's games played list
                 previous_matchday = list(self.df.columns.unique(level=0))[-2]
-                recent_teams_played = self.df[previous_matchday].loc[team_name]['Teams Played']
+                recent_teams_played = self.df[previous_matchday].loc[team_name]['TeamsPlayed']
                 
         return recent_teams_played
     
@@ -82,7 +80,7 @@ class Form(DF):
         current_matchday = self.get_current_matchday()
 
         if current_matchday:
-            latest_teams_played = self.df[f'Matchday {current_matchday}'].loc[team_name]['Teams Played']
+            latest_teams_played = self.df[current_matchday].loc[team_name]['TeamsPlayed']
             matchday = current_matchday
             # If played in current gameweek, 5 teams played
             # If not yet played in current gameweek, 4 teams played
@@ -91,7 +89,7 @@ class Form(DF):
             n_should_have_played = self.n_should_have_played(current_matchday, 5)
             if len(latest_teams_played) != n_should_have_played:
                 matchday = self.get_prev_matchday()
-            rating = (self.df[f'Matchday {matchday}'].loc[team_name]['Form Rating'] * 100).round(1)
+            rating = (self.df[matchday].loc[team_name]['FormRating'] * 100).round(1)
             
         return rating
     
@@ -100,7 +98,7 @@ class Form(DF):
         current_matchday = self.get_current_matchday()
         
         if current_matchday:
-            won_against_star_team = self.df[f'Matchday {current_matchday}'].loc[team_name]['Won Against Star Team']
+            won_against_star_team = self.df[current_matchday].loc[team_name]['WonAgainstStarTeam']
             
             # If team hasn't yet played this matchday use previous matchday data
             n_should_have_played = self.n_should_have_played(current_matchday, 5)
@@ -109,7 +107,7 @@ class Form(DF):
                 won_against_star_team = self.df[previous_matchday].loc[team_name]['Won Against Star Team']
                 
             # Replace boolean values with CSS tag for super win image
-            won_against_star_team = ["star-team" if x else "not-star-team" for x in won_against_star_team]
+            won_against_star_team = ['star-team' if x else 'not-star-team' for x in won_against_star_team]
         return won_against_star_team
 
     def get_recent_form(self, team_name: str) -> Tuple[List[str], List[str], float, List[bool]]:
@@ -167,10 +165,10 @@ class NextGames(DF):
         super().__init__(d)
     
     def get_opposition(self, team_name: str) -> str:
-        return self.df['Next Game'].loc[team_name]
+        return self.df['NextGame'].loc[team_name]
     
     def get_previous_meetings(self, team_name: str):
-        return self.df.loc[team_name]['Previous Meetings']
+        return self.df.loc[team_name]['PreviousMeetings']
     
     def get_home_away(self, team_name: str):
         return self.df['HomeAway'].loc[team_name]
@@ -194,13 +192,13 @@ class SeasonStats(DF):
         super().__init__(d)
     
     def get_clean_sheet_ratio(self, team_name: str) -> int:
-        return self.df['Clean Sheet Ratio'][team_name]
+        return self.df['CleanSheetRatio'][team_name]
 
     def get_goals_per_game(self, team_name: str) -> int:
-        return self.df['Goals Per Game'][team_name]
+        return self.df['GoalsPerGame'][team_name]
 
     def get_conceded_per_game(self, team_name: str) -> int:
-        return self.df['Conceded Per Game'][team_name]
+        return self.df['ConcededPerGame'][team_name]
     
     def get_season_stats(self, team_name: str) -> Tuple[float, float, float]:
         clean_sheet_ratio = self.get_clean_sheet_ratio(team_name)
