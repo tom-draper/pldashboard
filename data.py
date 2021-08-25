@@ -59,6 +59,10 @@ class Data:
     def get_logo_url(self, team_name):
         return self.logo_urls[team_name]
     
+    
+    
+    
+    
     # ------ DATA API --------
     
     def fixtures_data(self, season: int, request_new: bool = True) -> dict:
@@ -113,6 +117,9 @@ class Data:
                     json.dump(data, json_file)
     
 
+
+
+
     # ---------------------------- NEXT GAME -----------------------------------
 
     def get_next_game_prediction(self, team_name):
@@ -121,6 +128,8 @@ class Data:
         result_accuracy = round(self.predictor.result_accuracy, 2)
         
         return prediction, accuracy, result_accuracy
+
+
 
 
     
@@ -376,6 +385,7 @@ class Data:
     
     
     
+    
     # ---------------------- POSITION OVER TIME DATAFRAME ----------------------
     
     def get_gd_and_pts(self, score: str, home_away: str) -> Tuple[int, int]:
@@ -504,6 +514,7 @@ class Data:
             print(position_over_time)
             
         self.position_over_time = PositionOverTime(position_over_time)
+    
     
     
     
@@ -639,6 +650,10 @@ class Data:
         
         self.home_advantages = HomeAdvantages(home_advantages)
 
+
+
+
+
     # ------------------------- STANDINGS DATAFRAME ----------------------------
     
     def fill_rows_from_data(self, data, col_headings):
@@ -766,7 +781,11 @@ class Data:
         
         self.standings = Standings(standings)
 
-    # ------------ Fixtures dataframe -------------
+
+
+
+
+    # ------------------------- FIXTURES DATAFRAME -----------------------------
     
     @timebudget
     def build_fixtures_df(self, display: bool = False):        
@@ -960,6 +979,9 @@ class Data:
         
         self.team_ratings = team_ratings
     
+    
+    
+    
     # ------------ LOGO URLS ---------------
     
     def build_logo_urls(self):
@@ -979,6 +1001,39 @@ class Data:
         
     # ------------------------ NEXT GAMES DATAFRAME ----------------------------
 
+    
+    # def include_current_seasons_meetings(self, next_games: pd.DataFrame):
+    #     # Loop through the columns of matchdays that have been played
+    #     for matchday_no in range(len(self.form.df.columns.unique(level=0))):
+    #         matchday_data = self.fixtures.df[matchday_no+1]
+    #         for team, row in matchday_data.iterrows():
+    #             # If the teams next game is this team AND the game has been played
+    #             if next_games.loc[team]['NextGame'] == row['Team'] and row['Score'] != 'None - None':
+    #                 date = row['Date'].strftime('%d %B %Y')
+    #                 home_score, away_score = self.str_score_to_int_score(row['Score'])
+    #                 # Record overall result for home and away team
+    #                 if home_score == away_score:
+    #                     result = ('Drew', 'Drew')
+    #                 elif home_score > away_score:
+    #                     result = ('Won', 'Lost')
+    #                 else:
+    #                     result = ('Lost', 'Won')
+    #                 next_games.loc[team]['Previous Meetings'].append(((date, team, row['Team'], home_score, away_score, result[0])))
+    
+    
+    # def include_prev_seasons_meetings(self, next_games: pd.DataFrame, no_seasons: int):
+    #     for season in range(self.season-1, self.season-1-no_seasons, -1):
+    #         data = self.json_data['fixtures'][season]
+            
+    #         for match in sorted(data, key=lambda x: x['matchday']):
+    #             home_team = match['homeTeam']['name'].replace('&', 'and')
+    #             away_team = match['awayTeam']['name'].replace('&', 'and')
+                
+    #             if home_team in self.team_names and away_team in self.team_names:
+    #                 date = datetime.strptime(match['utcDate'][:10], "%Y-%m-%d").date().strftime('%d %B %Y')
+    #                 result = self.game_result_tuple(match)
+    #                 self.append_prev_meeting(next_games, home_team, away_team, date, result, match)
+    
     def get_next_game(self, team_name: str, fixtures: Fixtures) -> Tuple[int, str, str, str]:
         date, next_team, home_away = None, None, None
 
@@ -991,24 +1046,6 @@ class Data:
                 break
         return matchday_no, date, next_team, home_away
     
-    def include_current_seasons_meetings(self, next_games: pd.DataFrame):
-        # Loop through the columns of matchdays that have been played
-        for matchday_no in range(len(self.form.df.columns.unique(level=0))):
-            matchday_data = self.fixtures.df[matchday_no+1]
-            for team, row in matchday_data.iterrows():
-                # If the teams next game is this team AND the game has been played
-                if next_games.loc[team]['NextGame'] == row['Team'] and row['Score'] != 'None - None':
-                    date = row['Date'].strftime('%d %B %Y')
-                    home_score, away_score = self.str_score_to_int_score(row['Score'])
-                    # Record overall result for home and away team
-                    if home_score == away_score:
-                        result = ('Drew', 'Drew')
-                    elif home_score > away_score:
-                        result = ('Won', 'Lost')
-                    else:
-                        result = ('Lost', 'Won')
-                    next_games.loc[team]['Previous Meetings'].append(((date, team, row['Team'], home_score, away_score, result[0])))
-    
     def game_result_tuple(self, match) -> Tuple[str, str]:
         home_score = match['score']['fullTime']['homeTeam']
         away_score = match['score']['fullTime']['awayTeam']
@@ -1019,21 +1056,6 @@ class Data:
         else:
             result = ('Lost', 'Won')
         return result
-    
-    
-    def include_prev_seasons_meetings(self, next_games: pd.DataFrame, no_seasons: int):
-        for season in range(self.season-1, self.season-1-no_seasons, -1):
-            data = self.json_data['fixtures'][season]
-            
-            for match in sorted(data, key=lambda x: x['matchday']):
-                home_team = match['homeTeam']['name'].replace('&', 'and')
-                away_team = match['awayTeam']['name'].replace('&', 'and')
-                
-                if home_team in self.team_names and away_team in self.team_names:
-                    date = datetime.strptime(match['utcDate'][:10], "%Y-%m-%d").date().strftime('%d %B %Y')
-                    result = self.game_result_tuple(match)
-                    self.append_prev_meeting(next_games, home_team, away_team, date, result, match)
-    
                     
     def append_prev_meeting(self, next_games: NextGames, home_team: str, away_team: str, date: datetime, result: Tuple[str, str], match: dict):
         # From the perspective from the home team
@@ -1116,66 +1138,67 @@ class Data:
         
         
     
-    @timebudget
-    def build_next_games_df2(self, display: bool = False):
-        """ Assigns self.next_games a dataframe containing data about the team's 
-            previous meetings with the opposition team in their next game.
+    # @timebudget
+    # def build_next_games_df2(self, display: bool = False):
+    #     """ Assigns self.next_games a dataframe containing data about the team's 
+    #         previous meetings with the opposition team in their next game.
             
-            Rows: the 20 teams participating in the current season
-            Columns (multi-index):
-            --------------------------------------------
-            | Next Game | HomeAway | Previous Meetings |
+    #         Rows: the 20 teams participating in the current season
+    #         Columns (multi-index):
+    #         --------------------------------------------
+    #         | Next Game | HomeAway | Previous Meetings |
             
-            Next Game: name of the opposition team in a team's next game
-            HomeAway: whether the team is playing the next match at home or away, 
-                either 'Home' or 'Away'
-            Previous Meetings: list of (String Date, Home Team, Away Team, Home Score, 
-                Away Score, Winning Team) tuples of each previous game between the
-                two teams
+    #         Next Game: name of the opposition team in a team's next game
+    #         HomeAway: whether the team is playing the next match at home or away, 
+    #             either 'Home' or 'Away'
+    #         Previous Meetings: list of (String Date, Home Team, Away Team, Home Score, 
+    #             Away Score, Winning Team) tuples of each previous game between the
+    #             two teams
         
-        Dependencies:
-            fixtures dataframe
-            form dataframe 
+    #     Dependencies:
+    #         fixtures dataframe
+    #         form dataframe 
                 
-        Args:
-            display (bool, optional): flag to print the dataframe to console after 
-                creation. Defaults to False.
-            request_new (bool, optional): flag to request new data from data API.
-                If false, stored data file is used. Defaults to True.
-        """
-        print('🔨 Building next games dataframe... ')
+    #     Args:
+    #         display (bool, optional): flag to print the dataframe to console after 
+    #             creation. Defaults to False.
+    #         request_new (bool, optional): flag to request new data from data API.
+    #             If false, stored data file is used. Defaults to True.
+    #     """
+    #     print('🔨 Building next games dataframe... ')
         
-        next_games = pd.DataFrame()
+    #     next_games = pd.DataFrame()
         
-        next_team_col, next_game_dates_col, home_away_col = [], [], []
-        for team_name, _ in self.fixtures.df.iterrows():
-            matchday_no, date, next_team, home_away = self.get_next_game(team_name, self.fixtures)
-            next_game_dates_col.append(date)
-            next_team_col.append(next_team)
-            home_away_col.append(home_away)
+    #     next_team_col, next_game_dates_col, home_away_col = [], [], []
+    #     for team_name, _ in self.fixtures.df.iterrows():
+    #         matchday_no, date, next_team, home_away = self.get_next_game(team_name, self.fixtures)
+    #         next_game_dates_col.append(date)
+    #         next_team_col.append(next_team)
+    #         home_away_col.append(home_away)
         
-        if matchday_no != None:
-            next_games['Date'] = next_game_dates_col
-            next_games['NextGame'] = next_team_col
-            next_games['HomeAway'] = home_away_col
-            next_games['PreviousMeetings'] = [[] for _ in range(len(next_game_dates_col))]
+    #     if matchday_no != None:
+    #         next_games['Date'] = next_game_dates_col
+    #         next_games['NextGame'] = next_team_col
+    #         next_games['HomeAway'] = home_away_col
+    #         next_games['PreviousMeetings'] = [[] for _ in range(len(next_game_dates_col))]
                     
-            # Add any previous meetings that have been played this season
-            self.include_current_seasons_meetings(next_games)
-            # Add any previous meetings from last 2 sesaons
-            self.include_prev_seasons_meetings(next_games, 2)
+    #         # Add any previous meetings that have been played this season
+    #         self.include_current_seasons_meetings(next_games)
+    #         # Add any previous meetings from last 2 sesaons
+    #         self.include_prev_seasons_meetings(next_games, 2)
             
-            # Sort each list of tuple previous meeting to be descending by date
-            for _, row in next_games.iterrows():
-                row['PreviousMeetings'].sort(key=lambda x: datetime.strptime(x[0], '%d %B %Y'), reverse=True)
+    #         # Sort each list of tuple previous meeting to be descending by date
+    #         for _, row in next_games.iterrows():
+    #             row['PreviousMeetings'].sort(key=lambda x: datetime.strptime(x[0], '%d %B %Y'), reverse=True)
                             
-        if display:
-            print(next_games)
+    #     if display:
+    #         print(next_games)
             
-        self.next_games = NextGames(next_games)
+    #     self.next_games = NextGames(next_games)
     
     
     
+
 
     # ----------- SEASON STATS -----------
     
@@ -1224,7 +1247,7 @@ class Data:
                 season_stats['GoalsPerGame'][team_name] = round(goals_scored / n_games, 2)
                 season_stats['ConcededPerGame'][team_name] = round(goals_conceded / n_games, 2)
             else:
-                season_stats['CleanSheetRatio'][team_name] =0
+                season_stats['CleanSheetRatio'][team_name] = 0
                 season_stats['GoalsPerGame'][team_name] = 0
                 season_stats['ConcededPerGame'][team_name] = 0
         
@@ -1265,7 +1288,6 @@ class Data:
             print('🔄 Retrying with saved data...')
             self.fetch_data(n_seasons, False)
         
-        
         self.build_logo_urls()  # Record team names and urls of team logos
         self.build_dfs(n_seasons, display_tables)
         self.predictor.update_predictions(self.fixtures, self.form, self.next_games, self.home_advantages)
@@ -1290,4 +1312,4 @@ class Data:
 if __name__ == "__main__":
     # Update all dataframes
     data = Data(2021)
-    data.update_all(request_new=True, team_name='Liverpool FC', display_tables=True)
+    data.update_all(request_new=False, team_name='Liverpool FC', display_tables=False)
