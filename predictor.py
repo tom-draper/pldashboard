@@ -237,9 +237,9 @@ class Predictor:
         opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
         # Construct prediction string to display
         if home_away == "Home":
-            scoreline = f'{team_name_initials}  {scored} - {conceded}  {opp_team_name_initials}'
+            scoreline = f'{team_name_initials} {scored} - {conceded} {opp_team_name_initials}'
         else:
-            scoreline = f'{opp_team_name_initials}  {conceded} - {scored}  {team_name_initials}'
+            scoreline = f'{opp_team_name_initials} {conceded} - {scored} {team_name_initials}'
         return scoreline
     
     def gen_score_predictions(self, form: DataFrame, next_games: DataFrame, home_advantages: DataFrame, debug: bool = False):
@@ -258,7 +258,7 @@ class Predictor:
             prediction = None
             if next_games != None:
                 form_rating = form.get_current_form_rating(team_name)
-                opp_team_name = next_games.df['NextGame'].loc[team_name]
+                opp_team_name = next_games.df['NextTeam'].loc[team_name]
                 opp_form_rating = form.get_current_form_rating(opp_team_name)
                 home_away = next_games.df['HomeAway'].loc[team_name]
                 prev_meetings = next_games.df.loc[team_name]['PreviousMeetings']

@@ -165,7 +165,7 @@ class NextGames(DF):
         super().__init__(d)
     
     def get_opposition(self, team_name: str) -> str:
-        return self.df['NextGame'].loc[team_name]
+        return self.df['NextTeam'].loc[team_name]
     
     def get_previous_meetings(self, team_name: str):
         return self.df.loc[team_name]['PreviousMeetings']

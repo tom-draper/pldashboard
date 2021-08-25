@@ -77,18 +77,14 @@ def get_params(team_name_hyphen):
     # Season stats
     form, recent_teams_played, form_rating, won_against_star_team = data.form.get_recent_form(team_name)
     clean_sheet_ratio, goals_per_game, conceded_per_game = data.season_stats.get_season_stats(team_name)
-    
-    print(form)
-    
+        
     # Next game
     opp_team_name, home_away, prev_meetings = data.next_games.get_details(team_name)
     opp_form_rating = data.form.get_current_form_rating(opp_team_name)
-    prediction, accuracy, results_accuracy = data.get_next_game_prediction(team_name) 
-    opp_team_name_hyphen = '-'.join(opp_team_name.lower()[:-3]) # Remove 'FC' from end
+    prediction, accuracy, results_accuracy = data.get_next_game_prediction(team_name)
+    opp_team_name_hyphen = (opp_team_name.lower()[:-3]).replace(' ', '-') # Remove 'FC' from end
     opp_logo_url = data.get_logo_url(opp_team_name)
-    
-    print(opp_team_name)
-    
+        
     table_snippet, team_table_idx = data.standings.get_table_snippet(team_name, season)
 
     params = Params(season=season, 
