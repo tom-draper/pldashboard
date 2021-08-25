@@ -681,19 +681,19 @@ class Data:
                                           + home_advantages[season]['Away']['Wins'] \
                                           + home_advantages[season]['Away']['Draws'] \
                                           + home_advantages[season]['Away']['Loses']
-        home_advantages[season, 'Played (Home)', ''] = home_advantages[season]['Home']['Wins'] \
+        home_advantages[season, 'Played(Home)', ''] = home_advantages[season]['Home']['Wins'] \
                                                  + home_advantages[season]['Home']['Draws'] \
                                                  + home_advantages[season]['Home']['Loses']
         # Percentage wins = total wins / total games played
-        home_advantages[season, 'Win Ratio', ''] = ((home_advantages[season]['Home']['Wins'] 
+        home_advantages[season, 'WinRatio', ''] = ((home_advantages[season]['Home']['Wins'] 
                                                + home_advantages[season]['Away']['Wins']) 
                                                / home_advantages[season]['Played'])
         # Percentage wins at home = total wins at home / total games played at home 
-        home_advantages[season, 'Win Ratio (Home)', ''] = (home_advantages[season]['Home']['Wins'] 
-                                                     / home_advantages[season]['Played (Home)'])
+        home_advantages[season, 'WinRatio(Home)', ''] = (home_advantages[season]['Home']['Wins'] 
+                                                     / home_advantages[season]['Played(Home)'])
         # Home advantage = percentage wins at home - percentage wins 
-        home_advantages[season, 'Home Advantage', ''] = (home_advantages[season]['Win Ratio (Home)'] 
-                                                      - home_advantages[season]['Win Ratio'])
+        home_advantages[season, 'HomeAdvantage', ''] = (home_advantages[season]['WinRatio(Home)'] 
+                                                      - home_advantages[season]['WinRatio'])
         
     def build_home_advantages_df(self, no_seasons: int, display: bool = False):
         """ Assigns self.home_advantages to a dataframe containing team's home 
@@ -741,17 +741,17 @@ class Data:
             self.create_home_advantages_column(home_advantages, self.season-i)
         
         # Create total home advantage column
-        home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(1)=='Home Advantage']
+        home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(1)=='HomeAdvantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
-        if (home_advantages[self.season]['Played (Home)']<= self.home_games_threshold).all():
+        if (home_advantages[self.season]['Played(Home)']<= self.home_games_threshold).all():
             print(f"Current season excluded from home advantages calculation -> all teams haven't played {self.home_games_threshold} home games.")
             # Drop this seasons column, start from previous season
             home_advantages_cols = home_advantages_cols.iloc[:, :-1]
         print(home_advantages_cols)
         
         home_advantages = home_advantages.sort_index(axis=1)
-        home_advantages['Total Home Advantage'] = home_advantages_cols.mean(axis=1).fillna(0)
-        home_advantages = home_advantages.sort_values(by='Total Home Advantage', ascending=False)
+        home_advantages['TotalHomeAdvantage'] = home_advantages_cols.mean(axis=1).fillna(0)
+        home_advantages = home_advantages.sort_values(by='TotalHomeAdvantage', ascending=False)
         home_advantages.index.name = "Team"
 
         print(home_advantages)
