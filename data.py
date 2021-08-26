@@ -22,12 +22,12 @@ class Data:
         self.season = current_season
                 
         # Import environment variables
-        __file__ = 'data.py'
-        dotenv_path = join(dirname(__file__), '.env')
-        load_dotenv(dotenv_path)
-        self.url = os.getenv('URL')
-        self.api = os.getenv('API')
-        self.headers = {'X-Auth-Token': os.getenv('X_AUTH_TOKEN')}
+        # __file__ = 'data.py'
+        # dotenv_path = join(dirname(__file__), '.env')
+        # load_dotenv(dotenv_path)
+        self.url = os.environ.get('URL')
+        self.api = os.environ.get('API')
+        self.headers = {'X-Auth-Token': os.environ.get('X_AUTH_TOKEN')}
                 
         # Number of games played in a season for season data to be used
         self.games_threshold = 4
