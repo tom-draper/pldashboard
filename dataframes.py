@@ -39,19 +39,20 @@ class Form(DF):
             n_should_have_played = current_matchday
         return n_should_have_played
 
+    def not_played_current_matchday(self, recent_games: List[str], current_matchday: int) -> bool:
+        n_should_have_played = self.n_should_have_played(current_matchday, 5)
+        return len(recent_games) != n_should_have_played
+
     def get_form(self, team_name: str) -> List:
         form = []
         current_matchday = self.get_current_matchday()
-        
         if current_matchday:
             form = self.df[current_matchday].loc[team_name]['Form']
                     
-            # If team hasn't yet played in current matchday, use previous matchday's form
-            n_should_have_played = self.n_should_have_played(current_matchday, 5)
-            if len(form) != n_should_have_played:
+            if self.not_played_current_matchday(form, current_matchday):
+                # Use previous matchday's form
                 previous_matchday = list(self.df.columns.unique(level=0))[-2]
                 form = self.df[previous_matchday].loc[team_name]['Form']
-            
             if form == None:
                 form = []
             else:
@@ -67,8 +68,7 @@ class Form(DF):
         if current_matchday:
             recent_teams_played = self.df[current_matchday].loc[team_name]['TeamsPlayed']
             
-            n_should_have_played = self.n_should_have_played(current_matchday, 5)
-            if len(recent_teams_played) != n_should_have_played:
+            if self.not_played_current_matchday(recent_teams_played, current_matchday):
                 # Use previous matchday's games played list
                 previous_matchday = list(self.df.columns.unique(level=0))[-2]
                 recent_teams_played = self.df[previous_matchday].loc[team_name]['TeamsPlayed']
@@ -82,12 +82,9 @@ class Form(DF):
         if current_matchday:
             latest_teams_played = self.df[current_matchday].loc[team_name]['TeamsPlayed']
             matchday = current_matchday
-            # If played in current gameweek, 5 teams played
-            # If not yet played in current gameweek, 4 teams played
-            # If team hasn't yet played this matchday use previous matchday data
-            # TODO: NEEDS FIXING
-            n_should_have_played = self.n_should_have_played(current_matchday, 5)
-            if len(latest_teams_played) != n_should_have_played:
+
+            if self.not_played_current_matchday(latest_teams_played, current_matchday):
+                # Use previous matchday data
                 matchday = self.get_prev_matchday()
             rating = (self.df[matchday].loc[team_name]['FormRating'] * 100).round(1)
             
@@ -100,9 +97,8 @@ class Form(DF):
         if current_matchday:
             won_against_star_team = self.df[current_matchday].loc[team_name]['WonAgainstStarTeam']
             
-            # If team hasn't yet played this matchday use previous matchday data
-            n_should_have_played = self.n_should_have_played(current_matchday, 5)
-            if len(won_against_star_team) != n_should_have_played:
+            if self.not_played_current_matchday(won_against_star_team, current_matchday):
+                # Use previous matchday data
                 previous_matchday = list(self.df.columns.unique(level=0))[-2]
                 won_against_star_team = self.df[previous_matchday].loc[team_name]['Won Against Star Team']
                 
@@ -191,20 +187,29 @@ class SeasonStats(DF):
     def __init__(self, d: dict):
         super().__init__(d)
     
-    def get_clean_sheet_ratio(self, team_name: str) -> int:
-        return self.df['CleanSheetRatio'][team_name]
-
-    def get_goals_per_game(self, team_name: str) -> int:
-        return self.df['GoalsPerGame'][team_name]
-
-    def get_conceded_per_game(self, team_name: str) -> int:
-        return self.df['ConcededPerGame'][team_name]
+    def format_position(self, position: int) -> str:
+        j = position % 10
+        k = position % 100
+        position = str(position)
+        if j == 1 and k != 11:
+            return position + "st"
+        if j == 2 and k != 12:
+            return position + "nd"
+        if j == 3 and k != 13:
+            return position + "rd"
+        return position + "th"
     
-    def get_season_stats(self, team_name: str) -> Tuple[float, float, float]:
-        clean_sheet_ratio = self.get_clean_sheet_ratio(team_name)
-        goals_per_game = self.get_goals_per_game(team_name)
-        conceded_per_game = self.get_conceded_per_game(team_name)
-        return clean_sheet_ratio, goals_per_game, conceded_per_game
+    def get_stat(self, team_name: str, col_heading: str) -> Tuple[float, str]:
+        stat = self.df[col_heading][team_name]
+        position = self.df[col_heading].sort_values(ascending=False).index.get_loc(team_name) + 1
+        position = self.format_position(position)
+        return stat, position
+    
+    def get_season_stats(self, team_name: str) -> Tuple[float, str, float, str, float, str]:
+        clean_sheet_ratio, csr_position = self.get_stat(team_name, 'CleanSheetRatio')
+        goals_per_game, gpg_position = self.get_stat(team_name, 'GoalsPerGame')
+        conceded_per_game, cpg_position = self.get_stat(team_name, 'ConcededPerGame')
+        return clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position
 
 class TeamRatings(DF):
     def __init__(self, d: dict):

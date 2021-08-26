@@ -627,6 +627,8 @@ class Data:
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
+        print('🔨 Building home advantages dataframe... ')
+
         home_advantages = {}
         for i in range(no_seasons):
             data = self.json_data['fixtures'][self.season-i]
@@ -653,9 +655,6 @@ class Data:
 
 
 
-
-    # ------------------------- STANDINGS DATAFRAME ----------------------------
-    
     # ------------------------- STANDINGS DATAFRAME ----------------------------
     
     def fill_rows_from_data(self, data):
@@ -1081,6 +1080,9 @@ class Data:
                 creation. Defaults to False.
         """
         
+        print('🔨 Building next games dataframe... ')
+
+        
         next_games = {}
         
         for team_name in self.team_names:
@@ -1139,6 +1141,9 @@ class Data:
 
     @timebudget
     def build_season_stats_df(self, display: bool = False) -> dict:
+        print('🔨 Building season stats dataframe... ')
+
+        
         matchdays = list(self.position_over_time.df.columns.unique(level=0))
         
         season_stats = {'CleanSheetRatio': {},

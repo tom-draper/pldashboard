@@ -257,6 +257,7 @@ img {
   width: 55%;
   display: flex;
   flex-direction: column;
+  margin: auto 0;
 }
 .next-game-prediction {
   margin: 0px 20px 0px 0px;
@@ -285,6 +286,10 @@ img {
   font-size: 14px;
   color: grey;
 }
+.prev-results-title {
+  font-weight: 700;
+  margin-top: -50px; /* To allow for vertically centred table values */
+}
 .next-game-item {
   padding: 8px 0px;
 }
@@ -308,6 +313,7 @@ img {
   float: left;
   min-width: 37px;
   text-align: center;
+  font-weight: 800
 }
 .away-team {
  float: left;
@@ -392,8 +398,16 @@ img {
   line-height: 0.6em;
   font-weight: 700;
 }
+.season-stat-position {
+  font-size: 0.9em;
+  color: rgb(162, 162, 162);
+  position: absolute;
+  top: -58px;
+  right: calc(50% - 180px);
+}
 .season-stat {
   flex: 1;
+  position: relative;
 }
 
 .debug {

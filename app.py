@@ -15,8 +15,11 @@ class Params:
                  recent_teams_played=None,
                  form_rating=None,
                  clean_sheet_ratio=None,
+                 csr_position=None,
                  goals_per_game=None,
+                 gpg_position=None,
                  conceded_per_game=None,
+                 cpg_position=None,
                  won_against_star_team=None,
                  opp_team_name_hyphen=None,
                  opp_form_rating=None,
@@ -38,8 +41,11 @@ class Params:
         self.recent_teams_played = recent_teams_played
         self.form_rating = form_rating
         self.clean_sheet_ratio = clean_sheet_ratio
+        self.csr_position = csr_position
         self.goals_per_game = goals_per_game
+        self.gpg_position = gpg_position
         self.conceded_per_game = conceded_per_game
+        self.cpg_position = cpg_position
         self.won_against_star_team = won_against_star_team
         self.opp_team_name_hyphen = opp_team_name_hyphen
         self.opp_form_rating = opp_form_rating
@@ -76,7 +82,7 @@ def get_params(team_name_hyphen):
     
     # Season stats
     form, recent_teams_played, form_rating, won_against_star_team = data.form.get_recent_form(team_name)
-    clean_sheet_ratio, goals_per_game, conceded_per_game = data.season_stats.get_season_stats(team_name)
+    clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position = data.season_stats.get_season_stats(team_name)
         
     # Next game
     opp_team_name, home_away, prev_meetings = data.next_games.get_details(team_name)
@@ -95,9 +101,12 @@ def get_params(team_name_hyphen):
                     form=form, 
                     recent_teams_played=recent_teams_played, 
                     form_rating=form_rating, 
-                    clean_sheet_ratio=clean_sheet_ratio, 
+                    clean_sheet_ratio=clean_sheet_ratio,
+                    csr_position=csr_position,
                     goals_per_game=goals_per_game, 
+                    gpg_position=gpg_position,
                     conceded_per_game=conceded_per_game, 
+                    cpg_position=cpg_position,
                     won_against_star_team=won_against_star_team, 
                     opp_team_name_hyphen=opp_team_name_hyphen, 
                     opp_form_rating=opp_form_rating, 
