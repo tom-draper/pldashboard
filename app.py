@@ -118,13 +118,14 @@ def team():
     
 
 def thread_function(time=3600):
-    print("Sleeping:", time)
-    sleep(time)
-    data.update_all(request_new=True, display_tables=False)
+    while True:
+        print(f'Sleeping: {time}s')
+        sleep(time)
+        data.update_all(request_new=True, display_tables=False)
 
 if __name__ == '__main__':
     
-    data_updater_thread = Thread(target=thread_function, args=(30,))
+    data_updater_thread = Thread(target=thread_function, args=(3600,))
     data.update_all(request_new=True, display_tables=False)
     data_updater_thread.start()
     
