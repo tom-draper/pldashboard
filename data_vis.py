@@ -1,3 +1,4 @@
+import os
 import plotly
 import plotly.graph_objects as go
 import numpy as np
@@ -7,8 +8,9 @@ from timebudget import timebudget
 class DataVis:
     def __init__(self):
         # Fixture graph
-        self.fixtures_colour_scale = ['#01c626', '#08a825',  '#0b7c20', '#0a661b', '#064411',
-                                      '#000000', '#5b1d15', '#85160f', '#ad1a10', '#db1a0d', '#fc1303']
+        self.fixtures_colour_scale = ['#01c626', '#08a825',  '#0b7c20', '#0a661b', 
+                                      '#064411','#000000', '#5b1d15', '#85160f', 
+                                      '#ad1a10', '#db1a0d', '#fc1303']
     
         self.team_colours = {
             'Sheffield United FC': 'rgb(238, 39, 55)',
@@ -135,6 +137,25 @@ class DataVis:
         x, y, details = zip(*sorted(zip(x, y, details)))
         return x, y, details
     
+    def save_fig(self, fig, team_name, graph_type, path='./static/graphs/', auto_open=False, display_mode_bar=False, scroll_zoom=False):
+        file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+        
+        temp_path = f'{path}{file_team_name}/temp-{graph_type}-{file_team_name}.html'
+        path = f'{path}{file_team_name}/{graph_type}-{file_team_name}.html'
+        
+        # Save plot as HTML file
+        plotly.offline.plot(
+            fig, 
+            filename=temp_path, 
+            auto_open=auto_open, 
+            config={'displayModeBar': display_mode_bar, 'scrollZoom': scroll_zoom})
+        
+        try:
+            os.rename(temp_path, path)
+        except WindowsError:
+            os.remove(path)
+            os.rename(temp_path, path)
+    
     @timebudget
     def update_fixtures(self, fixtures, team_ratings, home_advantages, display=False, team_name=None):
         if team_name == None:
@@ -159,11 +180,10 @@ class DataVis:
 
             if display:
                 fig.show()
-            # Convert team name into suitable use for filename
-            file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-            # Save plot as HTML file
-            plotly.offline.plot(
-                fig, filename=f'./templates/graphs/{file_team_name}/fixtures-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+            
+            self.save_fig(fig, team_name, 'fixtures', path='./templates/graphs/')
+            
+            
             
     # ------------- FORM OVER TIME GRAPHS -------------
     
@@ -274,10 +294,20 @@ class DataVis:
 
                 if display:
                     fig.show()
+                    
+                self.save_fig(fig, team_name, 'form-over-time')
                 
-                # Format and save team name
-                file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-                plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/form-over-time-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+                # # Format and save team name
+                # file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+                # temp_path = f'./static/graphs/{file_team_name}/temp-form-over-time-{file_team_name}.html'
+                # path = f'./static/graphs/{file_team_name}/form-over-time-{file_team_name}.html'
+                # plotly.offline.plot(fig, filename=temp_path, auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+                
+                # try:
+                #     os.rename(temp_path, path)
+                # except WindowsError:
+                #     os.remove(path)
+                #     os.rename(temp_path, path)
         
     
     # ---------- POSITION OVER TIME GRAPHS ----------
@@ -426,12 +456,22 @@ class DataVis:
                 if display:
                     fig.show()
                 
-                file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-                plotly.offline.plot(
-                    fig, 
-                    filename=f'./static/graphs/{file_team_name}/position-over-time-{file_team_name}.html', 
-                    auto_open=False, 
-                    config={'displayModeBar': False, 'scrollZoom': False})
+                self.save_fig(fig, team_name, 'position-over-time')
+                
+                # file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+                # temp_path = f'./static/graphs/{file_team_name}/temp-position-over-time-{file_team_name}.html'
+                # path = f'./static/graphs/{file_team_name}/position-over-time-{file_team_name}.html'
+                # plotly.offline.plot(
+                #     fig, 
+                #     filename=temp_path, 
+                #     auto_open=False, 
+                #     config={'displayModeBar': False, 'scrollZoom': False})
+
+                # try:
+                #     os.rename(temp_path, path)
+                # except WindowsError:
+                #     os.remove(path)
+                #     os.rename(temp_path, path)
     
     # -------------- GOALS SCORED AND CONCEDED GRAPHS -------------
     def create_clean_sheets_fig(self, x, line, clean_sheets, not_clean_sheets, matchday_labels, labels):
@@ -647,8 +687,10 @@ class DataVis:
                     if display:
                         fig.show()
                     
-                    file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-                    plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+                    self.save_fig(fig, team_name, 'goals-scored-and-conceded')
+                    
+                    # file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+                    # plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/goals-scored-and-conceded-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
                 
                 
                 # EXTRA GRAPH FROM SAME DATA: CLEAN SHEETS
@@ -658,10 +700,22 @@ class DataVis:
                 
                     if display:
                         fig.show()
+                        
+                    self.save_fig(fig, team_name, 'clean-sheets')
                     
-                    file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
-                    plotly.offline.plot(fig, filename=f'./static/graphs/{file_team_name}/clean-sheets-{file_team_name}.html', auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
-    
+                    # file_team_name = '-'.join(team_name.lower().split()[:-1]).replace('&', 'and')
+                    # temp_path = f'./static/graphs/{file_team_name}/temp-clean-sheets-{file_team_name}.html'
+                    # path = f'./static/graphs/{file_team_name}/clean-sheets-{file_team_name}.html'
+                    
+                    # plotly.offline.plot(fig, filename=temp_path, auto_open=False, config={'displayModeBar': False, 'scrollZoom': False})
+                    
+                    # try:
+                    #     os.rename(temp_path, path)
+                    # except WindowsError:
+                    #     os.remove(path)
+                    #     os.rename(temp_path, path)
+                        
+        
         
     def update_all(self, fixtures, team_ratings, home_advantages, form, position_over_time, team_name=None, display_graphs=False):
         self.update_fixtures(fixtures, team_ratings, home_advantages, display=display_graphs, team_name=team_name)
