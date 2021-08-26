@@ -1,6 +1,8 @@
 from data import Data
 from flask import Flask, render_template, request
 from collections import namedtuple
+from threading import Thread, Lock
+from time import sleep
 
 season = 2021
 
@@ -100,9 +102,29 @@ def team():
     return render_template('team.html', params=params)
 
 
-if __name__ == '__main__':
-    data = Data(season)
-    # Update data and graphs
+# class SharedData:
+#     """ 
+#     A synchronised wrapper for the Data class.
+#     Stops the Flask server and accessing the HTML files at the same time"""
+
+#     def __init__(self, season):
+#         self.data = Data(season)
+#         self.lock = Lock()
+    
+#     def update_all(self, request_new=True, display_tables=False):
+#         self.data.update_all(request)
+    
+
+def thread_function(time=3600):
+    print("Sleeping:", time)
+    sleep(time)
     data.update_all(request_new=True, display_tables=False)
 
+if __name__ == '__main__':
+    data = Data(season)
+    
+    data_updater_thread = Thread(target=thread_function, args=(30,))
+    data.update_all(request_new=True, display_tables=False)
+    data_updater_thread.start()
+    
     app.run(host='0.0.0.0', debug=False)
