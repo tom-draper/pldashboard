@@ -3,7 +3,6 @@ from flask import Flask, render_template, request
 from collections import namedtuple
 from threading import Thread
 from time import sleep
-from os import getpid
 
 season = 2021
 
@@ -121,7 +120,6 @@ def thread_function(time=3600):
         sleep(time)
         data.update_all(request_new=True, display_tables=False)
 
-print(getpid())
 data = Data(season)
 data_updater_thread = Thread(target=thread_function, args=(3600,))
 data.update_all(request_new=True, display_tables=False)
