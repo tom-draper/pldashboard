@@ -8,6 +8,8 @@ season = 2021
 
 app = Flask(__name__)
 
+data = Data(season)
+
 Params = namedtuple('Params', ['season', 'title', 'team', 'form', 'season_stats', 'next_game', 'prediction', 'table_snippet'])
 
 
@@ -121,7 +123,6 @@ def thread_function(time=3600):
     data.update_all(request_new=True, display_tables=False)
 
 if __name__ == '__main__':
-    data = Data(season)
     
     data_updater_thread = Thread(target=thread_function, args=(30,))
     data.update_all(request_new=True, display_tables=False)
