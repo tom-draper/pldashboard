@@ -1,7 +1,7 @@
 from data import Data
 from flask import Flask, render_template, request
 from collections import namedtuple
-from threading import Thread
+from threading import Thready
 from time import sleep
 
 season = 2021
