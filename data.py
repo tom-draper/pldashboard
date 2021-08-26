@@ -2,9 +2,8 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 import pandas as pd
-from collections import defaultdict
 from pandas.core.frame import DataFrame
-from requests.sessions import dispatch_hook
+from collections import defaultdict
 from timebudget import timebudget
 import numpy as np
 import requests
@@ -116,19 +115,6 @@ class Data:
                 with open(f'data/{data_type}_{season}.json', 'w') as json_file:
                     json.dump(data, json_file)
     
-
-
-
-
-    # ---------------------------- NEXT GAME -----------------------------------
-
-    def get_next_game_prediction(self, team_name):
-        prediction = self.predictor.predictions[team_name][1]  # (Date, Prediction)
-        accuracy = round(self.predictor.accuracy, 2)
-        result_accuracy = round(self.predictor.result_accuracy, 2)
-        
-        return prediction, accuracy, result_accuracy
-
 
 
 

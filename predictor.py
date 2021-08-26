@@ -1,5 +1,5 @@
-from json.decoder import JSONDecodeError
 from typing import List, Tuple
+from collections import namedtuple
 import json
 import re
 import numpy as np
@@ -17,6 +17,13 @@ class Predictor:
         self.home_scored_avg_diff = None
         self.away_scored_avg_diff = None
         self.prediction_file = f'data/predictions.json'
+
+    def get_next_game_prediction(self, team_name):
+        score_prediction = self.predictions[team_name][1]  # (Date, Prediction)
+        accuracy = round(self.accuracy, 2)
+        result_accuracy = round(self.result_accuracy, 2)
+
+        return score_prediction, accuracy, result_accuracy
     
     def identical_fixtures(self, scoreline1, scoreline2):
         home_p, _, _, _, away_p = re.split(' +', scoreline1)

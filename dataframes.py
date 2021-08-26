@@ -1,6 +1,7 @@
 from typing import List, Tuple
 import pandas as pd
 from pandas.core.frame import DataFrame
+from collections import namedtuple
 
 
 class DF:
@@ -107,11 +108,11 @@ class Form(DF):
         return won_against_star_team
 
     def get_recent_form(self, team_name: str) -> Tuple[List[str], List[str], float, List[bool]]:
-        form = self.get_form(team_name)  # List of five 'W', 'D' or 'L'
+        form_str = self.get_form(team_name)  # List of five 'W', 'D' or 'L'
         recent_teams_played = self.get_recent_teams_played(team_name)
-        form_rating = self.get_current_form_rating(team_name)
+        rating = self.get_current_form_rating(team_name)
         won_against_star_team = self.get_won_against_star_team(team_name)
-        return form, recent_teams_played, form_rating, won_against_star_team
+        return form_str, recent_teams_played, rating, won_against_star_team
 
 class Standings(DF):
     def __init__(self, d: dict):
@@ -209,6 +210,7 @@ class SeasonStats(DF):
         clean_sheet_ratio, csr_position = self.get_stat(team_name, 'CleanSheetRatio')
         goals_per_game, gpg_position = self.get_stat(team_name, 'GoalsPerGame')
         conceded_per_game, cpg_position = self.get_stat(team_name, 'ConcededPerGame')
+        
         return clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position
 
 class TeamRatings(DF):

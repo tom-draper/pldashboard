@@ -2,35 +2,35 @@
 {% extends 'layout.html' %} {% block content %}
 
 <div class="row">
-  <!-- <div class="row-left position-and-badge" style="background-image: url('static/img/club_badges/{{ params.team_name_hyphen }}.png'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;"> -->
-  <div class="row-left position-and-badge" style="background-image: url('{{ params.team_logo_url }}'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;">
-    <div class="position">{{ params.position }}</div>
+  <!-- <div class="row-left position-and-badge" style="background-image: url('static/img/club_badges/{{ params.team.name_hyphen }}.png'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;"> -->
+  <div class="row-left position-and-badge" style="background-image: url('{{ params.team.logo_url }}'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;">
+    <div class="position">{{ params.team.position }}</div>
   </div>
   <div class="fixtures-graph row-graph">
     <h1>Fixtures</h1>
     <!-- Not included in an iframe to ensure it loads before page is rendered -->
     <div class="graph mini-graph">
-      {% include 'graphs/%s/fixtures-%s.html' % (params.team_name_hyphen, params.team_name_hyphen) %}
+      {% include 'graphs/%s/fixtures-%s.html' % (params.team.name_hyphen, params.team.name_hyphen) %}
     </div>
   </div>
 </div>
 <div class="row">
   <div class="row-left form-details">
     <div class="current-form-row">
-      <div class="icon pos-0 {{ params.form[0] }} {{ params.won_against_star_team[0] }}"></div>
-      <div class="icon pos-1 {{ params.form[1] }} {{ params.won_against_star_team[1] }}"></div>
-      <div class="icon pos-2 {{ params.form[2] }} {{ params.won_against_star_team[2] }}"></div>
-      <div class="icon pos-3 {{ params.form[3] }} {{ params.won_against_star_team[3] }}"></div>
-      <div class="icon pos-4 {{ params.form[4] }} {{ params.won_against_star_team[4] }}"></div>
+      <div class="icon pos-0 {{ params.form.form[0] }} {{ params.form.won_against_star_team[0] }}"></div>
+      <div class="icon pos-1 {{ params.form.form[1] }} {{ params.form.won_against_star_team[1] }}"></div>
+      <div class="icon pos-2 {{ params.form.form[2] }} {{ params.form.won_against_star_team[2] }}"></div>
+      <div class="icon pos-3 {{ params.form.form[3] }} {{ params.form.won_against_star_team[3] }}"></div>
+      <div class="icon pos-4 {{ params.form.form[4] }} {{ params.form.won_against_star_team[4] }}"></div>
     </div>
     <div class="current-form-row">
-      <div class="icon-name pos-0">{{ params.recent_teams_played[0] }}</div>
-      <div class="icon-name pos-1">{{ params.recent_teams_played[1] }}</div>
-      <div class="icon-name pos-2">{{ params.recent_teams_played[2] }}</div>
-      <div class="icon-name pos-3">{{ params.recent_teams_played[3] }}</div>
-      <div class="icon-name pos-4">{{ params.recent_teams_played[4] }}</div>
+      <div class="icon-name pos-0">{{ params.form.recent_teams_played[0] }}</div>
+      <div class="icon-name pos-1">{{ params.form.recent_teams_played[1] }}</div>
+      <div class="icon-name pos-2">{{ params.form.recent_teams_played[2] }}</div>
+      <div class="icon-name pos-3">{{ params.form.recent_teams_played[3] }}</div>
+      <div class="icon-name pos-4">{{ params.form.recent_teams_played[4] }}</div>
     </div>
-    <div class="current-form">Current Form: {{ params.form_rating }}%</div>
+    <div class="current-form">Current Form: {{ params.form.rating }}%</div>
     <div class="table-snippet">
       <div class="divider"></div>
         <div class="table-row">
@@ -40,16 +40,16 @@
           <div class="table-element table-points column-title">Points</div>
         </div>
 
-        {% for i in range(params.table_snippet|length) %}
+        {% for i in range(params.table_snippet.rows|length) %}
           <!-- Divider -->
           {% if i == 0 %}
-            {% if (i == params.team_table_idx) %}
+            {% if (i == params.table_snippet.team_table_idx) %}
               <div id="big-divider"></div>
             {% else %}
               <div id="divider"></div>
             {% endif %}
           {% else %}
-            {% if (i-1 == params.team_table_idx) or (i == params.team_table_idx) %}
+            {% if (i-1 == params.table_snippet.team_table_idx) or (i == params.table_snippet.team_table_idx) %}
               <div id="big-divider"></div>
             {% else %}
               <div id="divider"></div>
@@ -57,39 +57,39 @@
           {% endif %}
 
           <!-- Row of table -->
-          {% if i == params.team_table_idx %}
+          {% if i == params.table_snippet.team_table_idx %}
             <!-- Highlighted row for the team of the current page -->
-            <div class="table-row this-team" style="background-color: var(--{{ params.team_name_hyphen }});">
-              <div class="table-element table-position this-team" style="color: var(--{{ params.team_name_hyphen }}-secondary);">{{ params.table_snippet[i][0] }}</div>
-              <div class="table-element table-team-name this-team" style="color: var(--{{ params.team_name_hyphen }}-secondary);">{{ params.table_snippet[i][1] }}</div>
-              <div class="table-element table-gd this-team" style="color: var(--{{ params.team_name_hyphen }}-secondary);">{{ params.table_snippet[i][2] }}</div>
-              <div class="table-element table-points this-team" style="color: var(--{{ params.team_name_hyphen }}-secondary);">{{ params.table_snippet[i][3] }}</div>
+            <div class="table-row this-team" style="background-color: var(--{{ params.team.name_hyphen }});">
+              <div class="table-element table-position this-team" style="color: var(--{{ params.team.name_hyphen }}-secondary);">{{ params.table_snippet.rows[i][0] }}</div>
+              <div class="table-element table-team-name this-team" style="color: var(--{{ params.team.name_hyphen }}-secondary);">{{ params.table_snippet.rows[i][1] }}</div>
+              <div class="table-element table-gd this-team" style="color: var(--{{ params.team.name_hyphen }}-secondary);">{{ params.table_snippet.rows[i][2] }}</div>
+              <div class="table-element table-points this-team" style="color: var(--{{ params.team.name_hyphen }}-secondary);">{{ params.table_snippet.rows[i][3] }}</div>
             </div>
           {% else %}
             <!-- Plain row -->
             <div class="table-row">
-              <div class="table-element table-position">{{ params.table_snippet[i][0] }}</div>
-              <div class="table-element table-team-name">{{ params.table_snippet[i][1] }}</div>
-              <div class="table-element table-gd">{{ params.table_snippet[i][2] }}</div>
-              <div class="table-element table-points">{{ params.table_snippet[i][3] }}</div>
+              <div class="table-element table-position">{{ params.table_snippet.rows[i][0] }}</div>
+              <div class="table-element table-team-name">{{ params.table_snippet.rows[i][1] }}</div>
+              <div class="table-element table-gd">{{ params.table_snippet.rows[i][2] }}</div>
+              <div class="table-element table-points">{{ params.table_snippet.rows[i][3] }}</div>
             </div>
           {% endif %}
         {% endfor %}
 
-        {% if params.team_table_idx == 6 %}
+        {% if params.table_snippet.team_table_idx == 6 %}
           <div id="big-divider"></div>
         {% else %}
           <div id="divider"></div>
         {% endif %}
     </div>
   </div>
-  <div class="next-game-prediction row-graph" style="border: 6px solid var(--{{ params.opp_team_name_hyphen }});">
+  <div class="next-game-prediction row-graph" style="border: 6px solid var(--{{ params.next_game.opp_team.name_hyphen }});">
 
-    {% if params.opp_team_name_hyphen != '' %}
+    {% if params.next_game.opp_team.name_hyphen  != '' %}
       <!-- Pre or mid season -->
-      <div class="next-game-title" style="background-color: var(--{{ params.opp_team_name_hyphen }});">
-        <h1 class="next-game-title-text" style="color: var(--{{ params.opp_team_name_hyphen }}-secondary);">
-          Next Game: {{ params.opp_team_name_hyphen.replace('-', ' ').title().replace('And', 'and') }} ({{ params.home_away }})
+      <div class="next-game-title" style="background-color: var(--{{ params.next_game.opp_team.name_hyphen }});">
+        <h1 class="next-game-title-text" style="color: var(--{{ params.next_game.opp_team.name_hyphen  }}-secondary);">
+          Next Game: {{ params.next_game.opp_team.name_hyphen .replace('-', ' ').title().replace('And', 'and') }} ({{ params.next_game.home_away }})
         </h1>
       </div>
     {% else %}
@@ -101,18 +101,18 @@
       </div>
     {% endif %}
       
-    {% if params.opp_team_name_hyphen != '' %}
+    {% if params.next_game.opp_team.name_hyphen != '' %}
     <div class="next-game-values">
         <div class="predictions-and-logo">
           <div class="next-game-logo opposition-badge"
-              style="background-image: url('{{ params.opp_logo_url }}');
+              style="background-image: url('{{ params.next_game.opp_team.logo_url }}');
                      background-repeat: no-repeat;
                      background-size: contain;
                      background-position: center;">
           </div>
           <div class="predictions">
-            <div class="next-game-item">Current form: <b>{{ params.opp_form_rating }}%</b></div>
-            <div class="next-game-item">Score prediction<br><b>{{ params.prediction }}</b><br><span class="accuracy-item">Predicting with accuracy: <b>{{ params.prediction_accuracy }}%</b></span><br><div class="accuracy-item">General results accuracy: <b>{{ params.prediction_results_accuracy }}%</b></div></div>
+            <div class="next-game-item">Current form: <b>{{ params.next_game.opp_team.form_rating }}%</b></div>
+            <div class="next-game-item">Score prediction<br><b>{{ params.prediction.score_prediction }}</b><br><span class="accuracy-item">Predicting with accuracy: <b>{{ params.prediction.accuracy }}%</b></span><br><div class="accuracy-item">General results accuracy: <b>{{ params.prediction.results_accuracy }}%</b></div></div>
             
             
           </div>
@@ -121,7 +121,7 @@
           <div class="next-game-item prev-results-title">Previous Results</div>
           
           <!-- Display table of previous results against the next team this team is playing -->
-          {% for prev_meeting in params.prev_meetings %}
+          {% for prev_meeting in params.next_game.prev_meetings %}
             <div class="next-game-divider"></div>
             <div class="next-game-item {{ prev_meeting[5] }}">
               <div class="past-result">
@@ -143,7 +143,7 @@
   <div class="form-graph row-graph">
     <h1>Form Over Time</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/form-over-time-{}.html'.format(params.team_name_hyphen, params.team_name_hyphen) }}" style="border: none;" height=450px width=100%>
+      <iframe src="{{ 'static/graphs/{}/form-over-time-{}.html'.format(params.team.name_hyphen, params.team.name_hyphen) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
     </div>
@@ -153,7 +153,7 @@
   <div class="position-over-time-graph row-graph">
     <h1>Position Over Time</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/position-over-time-{}.html'.format(params.team_name_hyphen, params.team_name_hyphen) }}" style="border: none;" height=450px width=100%>
+      <iframe src="{{ 'static/graphs/{}/position-over-time-{}.html'.format(params.team.name_hyphen, params.team.name_hyphen) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
     </div>
@@ -163,7 +163,7 @@
   <div class="goals-scored-vs-conceded-graph row-graph">
     <h1>Goals Scored and Conceded</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/goals-scored-and-conceded-{}.html'.format(params.team_name_hyphen, params.team_name_hyphen) }}" style="border: none;" height=450px width=100%>
+      <iframe src="{{ 'static/graphs/{}/goals-scored-and-conceded-{}.html'.format(params.team.name_hyphen, params.team.name_hyphen) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
     </div>
@@ -172,7 +172,7 @@
 <div class="row">
   <div class="clean-sheets row-graph">
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/clean-sheets-{}.html'.format(params.team_name_hyphen, params.team_name_hyphen) }}" style="border: none;" width=100%>
+      <iframe src="{{ 'static/graphs/{}/clean-sheets-{}.html'.format(params.team.name_hyphen, params.team.name_hyphen) }}" style="border: none;" width=100%>
         Sorry your browser does not support inline frames.
      </iframe>
     </div>
@@ -181,18 +181,18 @@
 <div class="season-stats-row">
   <div class="season-stats">
     <div class="season-stat clean-sheet-ratio">
-      <div class="season-stat-value">{{ params.clean_sheet_ratio }}</div>
-      <div class="season-stat-position">{{ params.csr_position }}</div>
+      <div class="season-stat-value">{{ params.season_stats.clean_sheet_ratio }}</div>
+      <div class="season-stat-position">{{ params.season_stats.csr_position }}</div>
       <div class="season-stat-text">clean sheets</div>
     </div>
     <div class="season-stat goals-per-game">
-      <div class="season-stat-value">{{ params.goals_per_game }}</div>
-      <div class="season-stat-position">{{ params.gpg_position }}</div>
+      <div class="season-stat-value">{{ params.season_stats.goals_per_game }}</div>
+      <div class="season-stat-position">{{ params.season_stats.gpg_position }}</div>
       <div class="season-stat-text">goals per game</div>
     </div>
     <div class="season-stat conceded-per-game">
-      <div class="season-stat-value">{{ params.conceded_per_game }}</div>
-      <div class="season-stat-position">{{ params.cpg_position }}</div>
+      <div class="season-stat-value">{{ params.season_stats.conceded_per_game }}</div>
+      <div class="season-stat-position">{{ params.season_stats.cpg_position }}</div>
       <div class="season-stat-text">conceded per game</div>
     </div>
   </div>

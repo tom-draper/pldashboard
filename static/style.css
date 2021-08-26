@@ -288,7 +288,7 @@ img {
 }
 .prev-results-title {
   font-weight: 700;
-  margin-top: -50px; /* To allow for vertically centred table values */
+  margin-top: -60px; /* To allow for vertically centred table values */
 }
 .next-game-item {
   padding: 8px 0px;

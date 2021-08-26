@@ -1,127 +1,73 @@
 from data import Data
 from flask import Flask, render_template, request
+from collections import namedtuple
 
 season = 2021
 
-
-class Params:
-    def __init__(self,
-                 season=season,
-                 title=None,
-                 team_name=None,
-                 team_name_hyphen=None,
-                 position=None,
-                 form=None,
-                 recent_teams_played=None,
-                 form_rating=None,
-                 clean_sheet_ratio=None,
-                 csr_position=None,
-                 goals_per_game=None,
-                 gpg_position=None,
-                 conceded_per_game=None,
-                 cpg_position=None,
-                 won_against_star_team=None,
-                 opp_team_name_hyphen=None,
-                 opp_form_rating=None,
-                 home_away=None,
-                 prev_meetings=None,
-                 prediction=None,
-                 prediction_accuracy=None,
-                 prediction_results_accuracy=None,
-                 table_snippet=None,
-                 team_table_idx=None,
-                 team_logo_url=None,
-                 opp_logo_url=None):
-        self.season = season
-        self.title = title
-        self.team_name = team_name
-        self.team_name_hyphen = team_name_hyphen
-        self.position = position
-        self.form = form
-        self.recent_teams_played = recent_teams_played
-        self.form_rating = form_rating
-        self.clean_sheet_ratio = clean_sheet_ratio
-        self.csr_position = csr_position
-        self.goals_per_game = goals_per_game
-        self.gpg_position = gpg_position
-        self.conceded_per_game = conceded_per_game
-        self.cpg_position = cpg_position
-        self.won_against_star_team = won_against_star_team
-        self.opp_team_name_hyphen = opp_team_name_hyphen
-        self.opp_form_rating = opp_form_rating
-        self.home_away = home_away
-        self.prev_meetings = prev_meetings
-        self.prediction = prediction
-        self.prediction_accuracy = prediction_accuracy
-        self.prediction_results_accuracy = prediction_results_accuracy
-        self.table_snippet = table_snippet
-        self.team_table_idx = team_table_idx
-        self.team_logo_url = team_logo_url
-        self.opp_logo_url = opp_logo_url
-
-
 app = Flask(__name__)
+
+Params = namedtuple('Params', ['season', 'title', 'team', 'form', 'season_stats', 'next_game', 'prediction', 'table_snippet'])
+
 
 
 @app.route("/")
 @app.route("/home")
 def home():
-    params = Params(title='Premier League')
+    params = Params(None, 'Premier League', None, None, None, None, None, None)
     return render_template('home.html', params=params)
 
+
+
+def get_team(title, team_name_hyphen):
+    team_name = title + ' FC'
+    team_logo_url = data.get_logo_url(team_name)
+    position = data.standings.get_position(team_name, season)
+    Team = namedtuple('Team', ['name', 'name_hyphen', 'position', 'logo_url'])
+    return Team(team_name, team_name_hyphen, position, team_logo_url)
+
+def get_form(team_name):
+    form_str, recent_teams_played, rating, won_against_star_team = data.form.get_recent_form(team_name)
+    Form = namedtuple('Form', ['form', 'recent_teams_played', 'rating', 'won_against_star_team'])
+    return Form(form_str, recent_teams_played, rating, won_against_star_team)
+
+def get_season_stats(team_name):
+    clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position = data.season_stats.get_season_stats(team_name)
+    SeasonStats = namedtuple('SeasonStats', ['clean_sheet_ratio', 'csr_position', 'goals_per_game', 'gpg_position', 'conceded_per_game', 'cpg_position'])
+    return SeasonStats(clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position)
+
+def get_next_game(team_name):
+    opp_team_name, home_away, prev_meetings = data.next_games.get_details(team_name)
+    opp_team_name_hyphen = (opp_team_name.lower()[:-3]).replace(' ', '-') # Remove 'FC' from end
+    opp_form_rating = data.form.get_current_form_rating(opp_team_name)
+    opp_logo_url = data.get_logo_url(opp_team_name)
+    OppTeam = namedtuple('OppositionTeam', ['name', 'name_hyphen', 'form_rating', 'logo_url'])
+    opp_team = OppTeam(opp_team_name, opp_team_name_hyphen, opp_form_rating, opp_logo_url)
+    NextGame = namedtuple('NextGame', ['opp_team', 'home_away', 'prev_meetings'])
+    return NextGame(opp_team, home_away, prev_meetings)
+
+def get_prediction(team_name):
+    score_prediction, accuracy, results_accuracy = data.predictor.get_next_game_prediction(team_name)
+    Prediction = namedtuple('Prediction', ['score_prediction', 'accuracy', 'results_accuracy'])
+    return Prediction(score_prediction, accuracy, results_accuracy)
+
+def get_table_snippet(team_name):
+    rows, team_table_idx = data.standings.get_table_snippet(team_name, season)
+    TableSnippet = namedtuple('TableSnippet', ['rows', 'team_table_idx'])
+    return TableSnippet(rows, team_table_idx)
 
 def get_params(team_name_hyphen):
     title = team_name_hyphen.replace('-', ' ').title().replace('And', 'and')
     
-    # This team
-    team_name = title + ' FC'
-    team_logo_url = data.get_logo_url(team_name)
-    
-    # Get data values to display on team webpage
-    position = data.standings.get_position(team_name, season)
-    
-    # Season stats
-    form, recent_teams_played, form_rating, won_against_star_team = data.form.get_recent_form(team_name)
-    clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position = data.season_stats.get_season_stats(team_name)
-        
-    # Next game
-    opp_team_name, home_away, prev_meetings = data.next_games.get_details(team_name)
-    opp_form_rating = data.form.get_current_form_rating(opp_team_name)
-    prediction, accuracy, results_accuracy = data.get_next_game_prediction(team_name)
-    opp_team_name_hyphen = (opp_team_name.lower()[:-3]).replace(' ', '-') # Remove 'FC' from end
-    opp_logo_url = data.get_logo_url(opp_team_name)
-        
-    table_snippet, team_table_idx = data.standings.get_table_snippet(team_name, season)
+    team = get_team(title, team_name_hyphen)
+    form = get_form(team.name)
+    season_stats = get_season_stats(team.name)
+    next_game = get_next_game(team.name)
+    prediction = get_prediction(team.name)
+    table_snippet = get_table_snippet(team.name)
 
-    params = Params(season=season, 
-                    title=title, 
-                    team_name=team_name, 
-                    team_name_hyphen=team_name_hyphen, 
-                    position=position, 
-                    form=form, 
-                    recent_teams_played=recent_teams_played, 
-                    form_rating=form_rating, 
-                    clean_sheet_ratio=clean_sheet_ratio,
-                    csr_position=csr_position,
-                    goals_per_game=goals_per_game, 
-                    gpg_position=gpg_position,
-                    conceded_per_game=conceded_per_game, 
-                    cpg_position=cpg_position,
-                    won_against_star_team=won_against_star_team, 
-                    opp_team_name_hyphen=opp_team_name_hyphen, 
-                    opp_form_rating=opp_form_rating, 
-                    home_away=home_away, 
-                    prev_meetings=prev_meetings, 
-                    prediction=prediction, 
-                    prediction_accuracy=accuracy, 
-                    prediction_results_accuracy=results_accuracy, 
-                    table_snippet=table_snippet, 
-                    team_table_idx=team_table_idx, 
-                    team_logo_url=team_logo_url, 
-                    opp_logo_url=opp_logo_url)
+    params = Params(season, title, team, form, season_stats, next_game, prediction, table_snippet)
 
     return params
-
 
 @app.route("/liverpool")
 @app.route("/manchester-city")
