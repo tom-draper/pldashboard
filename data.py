@@ -28,6 +28,11 @@ class Data:
         self.url = os.environ.get('URL')
         self.api = os.environ.get('API')
         self.headers = {'X-Auth-Token': os.environ.get('X_AUTH_TOKEN')}
+        
+        print(self.url)
+        print(type(self.url))
+        print(self.api)
+        print(self.headers)
                 
         # Number of games played in a season for season data to be used
         self.games_threshold = 4
