@@ -8,10 +8,7 @@ season = 2021
 
 app = Flask(__name__)
 
-data = Data(season)
-
 Params = namedtuple('Params', ['season', 'title', 'team', 'form', 'season_stats', 'next_game', 'prediction', 'table_snippet'])
-
 
 
 @app.route("/")
@@ -123,13 +120,12 @@ def thread_function(time=3600):
         sleep(time)
         data.update_all(request_new=True, display_tables=False)
 
+data = Data(season)
+data_updater_thread = Thread(target=thread_function, args=(3600,))
+data.update_all(request_new=True, display_tables=False)
+data_updater_thread.start()
+
 if __name__ == '__main__':
-    data_updater_thread = Thread(target=thread_function, args=(3600,))
-    data.update_all(request_new=True, display_tables=False)
-    data_updater_thread.start()
-    
-    app.run(host='0.0.0.0', debug=False)
-else:
     data_updater_thread = Thread(target=thread_function, args=(3600,))
     data.update_all(request_new=True, display_tables=False)
     data_updater_thread.start()
