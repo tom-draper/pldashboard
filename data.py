@@ -22,17 +22,9 @@ class Data:
         self.season = current_season
                 
         # Import environment variables
-        # __file__ = 'data.py'
-        # dotenv_path = join(dirname(__file__), '.env')
-        # load_dotenv(dotenv_path)
         self.url = os.environ.get('URL')
         self.api = os.environ.get('API')
         self.headers = {'X-Auth-Token': os.environ.get('X_AUTH_TOKEN')}
-        
-        print(self.url)
-        print(type(self.url))
-        print(self.api)
-        print(self.headers)
                 
         # Number of games played in a season for season data to be used
         self.games_threshold = 4
@@ -61,7 +53,6 @@ class Data:
     
 
     def get_logo_url(self, team_name):
-        print(self.logo_urls)
         return self.logo_urls[team_name]
     
     
