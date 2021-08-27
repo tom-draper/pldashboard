@@ -1,9 +1,9 @@
 .gitignore
 tempCodeRunnerFile.py
-data
+# data
 __pycache__
-templates/graphs
-static/graphs
+# templates/graphs
+# static/graphs
 .env
 .pytest_cache
 venv
