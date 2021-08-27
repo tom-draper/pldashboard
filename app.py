@@ -101,11 +101,13 @@ def team():
 
     return render_template('team.html', params=params)
 
-def is_draw(scoreline1, scoreline2):
+def correct_result(scoreline1, scoreline2):
     _, h1, _, a1, _ = scoreline1.split(' ')
     _, h2, _, a2, _ = scoreline2.split(' ')
     h1, a1, h2, a2 = map(int, [h1, a1, h2, a2])
-    if h1 == h2 and a1 == a2:
+
+    # If identical results (both a home win, a draw, or away win)
+    if (h1 > a1 and h2 > a2) or (h1 == a1 and h2 == a2) or (h1 < a1 and h2 < a2):
         return True
     return False
 
@@ -116,7 +118,7 @@ def insert_predictions_colours(predictions_dict):
                 prediction['colour'] = ''  # No colour
             elif prediction['prediction'] == prediction['actual']:
                 prediction['colour'] = 'green'
-            elif is_draw(prediction['prediction'], prediction['actual']):
+            elif correct_result(prediction['prediction'], prediction['actual']):
                 prediction['colour'] = 'yellow'
             else:
                 prediction['colour'] = 'red'
