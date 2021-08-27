@@ -202,7 +202,7 @@ class SeasonStats(DF):
     
     def get_stat(self, team_name: str, col_heading: str, ascending: bool) -> Tuple[float, str]:
         stat = self.df[col_heading][team_name]
-        position = self.df[col_heading].sort_values(ascending=False).index.get_loc(team_name) + 1
+        position = self.df[col_heading].sort_values(ascending=ascending).index.get_loc(team_name) + 1
         position = self.format_position(position)
         return stat, position
     
