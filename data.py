@@ -181,8 +181,8 @@ class Data:
         df_rows = self.fill_rows_from_data(data)
         self.add_gd_col(df_rows)
                 
-        # Sort rows by Points, then GD
-        df_rows = dict(sorted(df_rows.items(), key=lambda v: [v[1]['Points'], v[1]['GD']], reverse=True))
+        # Sort rows by Points, then GD, then GF
+        df_rows = dict(sorted(df_rows.items(), key=lambda v: [v[1]['Points'], v[1]['GD'], v[1]['GF']], reverse=True))
         # Use df sorted by points to insert table position
         self.add_position_col(df_rows)
         
