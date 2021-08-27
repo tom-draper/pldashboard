@@ -105,7 +105,7 @@ def is_draw(scoreline1, scoreline2):
     _, h1, _, a1, _ = scoreline1.split(' ')
     _, h2, _, a2, _ = scoreline2.split(' ')
     h1, a1, h2, a2 = map(int, [h1, a1, h2, a2])
-    if h1 == h2 and a2 == a2:
+    if h1 == h2 and a1 == a2:
         return True
     return False
 
