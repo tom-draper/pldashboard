@@ -32,18 +32,15 @@
                 <div class="prediction-container {{ prediction['colour'] }}">
                   <div class="prediction prediction-item">
                     <div class="prediction-label">Predicted:</div>
-                    <div class="prediction-value">{{ prediction['prediction'] }}
-                    </div>
-                     </div>
+                    <div class="prediction-value">{{ prediction['prediction'] }}</div>
+                  </div>
                   {% if prediction['actual'] != None %}
                     <div class="actual prediction-item">
                       <div class="prediction-label">Actual:</div>
                       <div class="prediction-value">{{ prediction['actual'] }}</div>
-
                     </div>
                   {% endif %}
                 </div>
-                <div class="small-predictions-divider"></div>
               {% endfor %}
               <div class="predictions-gap"></div>
             {% endfor %}

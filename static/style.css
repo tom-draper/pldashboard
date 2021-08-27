@@ -528,7 +528,7 @@ img {
   text-align: right;
 }
 .prediction-container {
-  padding: 3px 0;
+  padding: 5px 0 3px 0;
   margin: 2px 0;
   width: min(90%, 300px);
   align-self: center;
@@ -538,11 +538,7 @@ img {
   align-self: center;
   border-bottom: 3px solid black;
   width: min(100%, 360px);
-}
-.small-predictions-divider {
-  align-self: center;
-  border-bottom: 1px solid rgb(163, 163, 163);
-  width: min(90%, 300px);
+  margin-bottom: 2px;
 }
 
 
