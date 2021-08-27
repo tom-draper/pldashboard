@@ -24,12 +24,12 @@ h1 {
 
 .main-link {
   font-size: 30px;
-  /* top: 34%; */
   color: #333333;
   font-weight: 600;
   flex: auto;
   align-self: center;
   margin: 0px 6px;
+  text-decoration: none;
 }
 
 .title {
@@ -252,6 +252,10 @@ img {
   font-size: 22px;
   width: 45%;
 }
+.predictions-link {
+  text-decoration: none;
+  color: #333333;
+}
 .past-results {
   font-size: 22px;
   width: 55%;
@@ -446,10 +450,7 @@ img {
   .next-game-prediction {
     margin: 50px 20px 0px 20px;
   }
-  .predictions-link {
-    text-decoration: none;
-    color: #333333;;
-  }
+
   .next-game-title {
     width: auto;
   }
