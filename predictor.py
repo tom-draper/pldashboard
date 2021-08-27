@@ -23,12 +23,15 @@ class Predictor:
             predictions = data[f'predictions{self.current_season}']
         return predictions
 
-    def get_next_game_prediction(self, team_name):
-        score_prediction = self.predictions[team_name][1]  # (Date, Prediction)
+    def get_accuracy(self):
         accuracy = round(self.accuracy, 2)
         result_accuracy = round(self.result_accuracy, 2)
+        return accuracy, result_accuracy
+    
+    def get_next_game_prediction(self, team_name):
+        score_prediction = self.predictions[team_name][1]  # (Date, Prediction)
 
-        return score_prediction, accuracy, result_accuracy
+        return score_prediction
     
     def identical_fixtures(self, scoreline1, scoreline2):
         home_p, _, _, _, away_p = re.split(' +', scoreline1)

@@ -469,8 +469,14 @@ img {
 
 
 
+.predictions-header {
+  padding: 40px 40px 5px 40px;
+  text-align: center;
+}
 
-
+.accuracy-item {
+  margin-bottom: 30px;
+}
 
 .predictions {
   display: flex;
@@ -480,13 +486,9 @@ img {
 .predictions-gap {
   margin: 15px 0;
 }
-
-/* .big-predictions-divider {
-  align-self: center;
-  border-bottom: 3px solid black;
-  width: 70%;
-  margin: 5px 0;
-} */
+.page-content {
+  font-size: 1.3em;
+}
 .green {
   background-color: #77dd77;
 }
@@ -496,34 +498,60 @@ img {
 .red {
   background-color: #c23b22;
 }
+.predictions-title {
+  font-size: 3em;
+  font-weight: 800;
+}
 .predictions-container {
   margin-bottom: 80px;
+  width: 50%;
+  margin: 0 auto;
+  /* font-size:0vw; */
 }
-.prediction-date {
-  width: 100px;
+.date {
+  width: min(90%, 300px);
   align-self: center;
   margin-bottom: 2px;
 }
 .prediction-item {
-  width: 260px;
-  align-self: center;
-  /* margin: 2px 0; */
+  /* width: 80%; */
+  text-align: left;
+  margin: 0 8%;
+  display: flex;
+}
+.prediction-label {
+  flex: 4;
+}
+.prediction-value {
+  flex: 6;
+  text-align: right;
 }
 .prediction-container {
+  padding: 3px 0;
   margin: 2px 0;
-  width: 260px;
+  width: min(90%, 300px);
   align-self: center;
   border-radius: 6px;
 }
 .medium-predictions-divider {
   align-self: center;
   border-bottom: 3px solid black;
-  width: min(60%, 300px);
-  /* margin: 2px 0; */
+  width: min(100%, 360px);
 }
 .small-predictions-divider {
   align-self: center;
   border-bottom: 1px solid rgb(163, 163, 163);
-  width: min(50%, 260px);
-  /* margin: 2px 0; */
+  width: min(90%, 300px);
 }
+
+
+@media only screen and (max-width: 800px) {
+  .predictions-container {
+    width: 80%;
+  }
+  .page-content {
+    font-size: 1.1em;
+  }
+}
+
+

@@ -1,24 +1,58 @@
-{% extends "layout.html" %} {% block content %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <title>Predictions</title>
+  </head>
+  <body>
+    <div class="predictions-header">
+      <a class="predictions-title main-link" style="text-decoration: none;" href="/predictions">Predictions</a>
+    </div>
 
-<div class="predictions-container">
-  <div class="predictions">
-    {% if params.prediction_dict != None %}
-      {% for date, predictions in params.predictions_dict.items() %}
-        <div class="date">{{ date[8:10] }}-{{ date[5:7] }}-{{ date[:4] }}</div>
-        <div class="medium-predictions-divider"></div>
-        {% for prediction in predictions %}
-          <div class="prediction-container {{ prediction['colour'] }}">
-            <div class="prediction prediction-item">Predicted: {{ prediction['prediction'] }}</div>
-            {% if prediction['actual'] != None %}
-              <div class="actual prediction-item">Actual: {{ prediction['actual'] }}</div>
-            {% endif %}
+    <div class="page-content">
+      <div class="accuracy-display">
+        <div class="accuracy">
+          <span class="accuracy-item">
+          Predicting with accuracy: <b>{{ params.accuracy }}%</b></span><br>
+          <div class="accuracy-item">
+            General results accuracy: <b>{{ params.results_accuracy }}%</b>
           </div>
-          <div class="small-predictions-divider"></div>
-        {% endfor %}
-        <div class="predictions-gap"></div>
-      {% endfor %}
-    {% endif %}
-  </div>
-</div>
+        </div>
+      </div>
 
-{% endblock content %}
+      <div class="predictions-container">
+        <div class="predictions">
+          {% if params.prediction_dict != None %}
+            {% for date, predictions in params.predictions_dict.items() %}
+              <div class="date">{{ date[8:10] }}-{{ date[5:7] }}-{{ date[:4] }}</div>
+              <div class="medium-predictions-divider"></div>
+              {% for prediction in predictions %}
+                <div class="prediction-container {{ prediction['colour'] }}">
+                  <div class="prediction prediction-item">
+                    <div class="prediction-label">Predicted:</div>
+                    <div class="prediction-value">{{ prediction['prediction'] }}
+                    </div>
+                     </div>
+                  {% if prediction['actual'] != None %}
+                    <div class="actual prediction-item">
+                      <div class="prediction-label">Actual:</div>
+                      <div class="prediction-value">{{ prediction['actual'] }}</div>
+
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="small-predictions-divider"></div>
+              {% endfor %}
+              <div class="predictions-gap"></div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+
+

@@ -46,7 +46,8 @@ def get_next_game(team_name):
     return NextGame(opp_team, home_away, prev_meetings)
 
 def get_prediction(team_name):
-    score_prediction, accuracy, results_accuracy = data.predictor.get_next_game_prediction(team_name)
+    score_prediction = data.predictor.get_next_game_prediction(team_name)
+    accuracy, results_accuracy = data.predictor.get_accuracy()
     Prediction = namedtuple('Prediction', ['score_prediction', 'accuracy', 'results_accuracy'])
     return Prediction(score_prediction, accuracy, results_accuracy)
 
@@ -126,8 +127,11 @@ def predictions():
     predictions_dict = data.predictor.get_predictions()
     predictions_dict = dict(sorted(predictions_dict.items(), reverse=True))
     insert_predictions_colours(predictions_dict)
-    Params= namedtuple('Params', ['title', 'predictions_dict'])
-    params = Params('Predictions', predictions_dict)
+    
+    accuracy, results_accuracy = data.predictor.get_accuracy()
+    
+    Params= namedtuple('Params', ['predictions_dict', 'accuracy', 'results_accuracy'])
+    params = Params(predictions_dict, accuracy, results_accuracy)
     return render_template('predictions.html', params=params)
 
     
