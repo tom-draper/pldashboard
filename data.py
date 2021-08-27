@@ -167,8 +167,7 @@ class Data:
         return df_rows
     
     def add_gd_col(self, df_rows):
-        for _, team in enumerate(df_rows.keys()):
-            # GD = GF - GA
+        for team in df_rows.keys():
             df_rows[team]['GD'] = df_rows[team]['GF'] - df_rows[team]['GA']
     
     def add_position_col(self, df_rows):
@@ -180,12 +179,10 @@ class Data:
         data = self.json_data['fixtures'][season]
 
         df_rows = self.fill_rows_from_data(data)
-        
         self.add_gd_col(df_rows)
                 
         # Sort rows by Points, then GD
         df_rows = dict(sorted(df_rows.items(), key=lambda v: [v[1]['Points'], v[1]['GD']], reverse=True))
-        
         # Use df sorted by points to insert table position
         self.add_position_col(df_rows)
         
