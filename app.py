@@ -101,7 +101,6 @@ def team():
     return render_template('team.html', params=params)
 
 def is_draw(scoreline1, scoreline2):
-    print(scoreline1.split(' '))
     _, h1, _, a1, _ = scoreline1.split(' ')
     _, h2, _, a2, _ = scoreline2.split(' ')
     h1, a1, h2, a2 = map(int, [h1, a1, h2, a2])
