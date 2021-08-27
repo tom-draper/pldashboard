@@ -111,10 +111,22 @@
                      background-position: center;">
           </div>
           <div class="predictions">
-            <div class="next-game-item">Current form: <b>{{ params.next_game.opp_team.form_rating }}%</b></div>
-            <div class="next-game-item">Score prediction<br><b>{{ params.prediction.score_prediction }}</b><br><span class="accuracy-item">Predicting with accuracy: <b>{{ params.prediction.accuracy }}%</b></span><br><div class="accuracy-item">General results accuracy: <b>{{ params.prediction.results_accuracy }}%</b></div></div>
-            
-            
+            <div class="next-game-item">
+              Current form: <b>{{ params.next_game.opp_team.form_rating }}%</b>
+            </div>
+            <div class="next-game-item">
+              Score prediction
+              <br>
+              <a class="predictions-link" href="/predictions">
+                <b>{{ params.prediction.score_prediction }}</b>
+              </a>
+              <br>
+              <span class="accuracy-item">
+                Predicting with accuracy: <b>{{ params.prediction.accuracy }}%</b></span><br>
+                <div class="accuracy-item">
+                  General results accuracy: <b>{{ params.prediction.results_accuracy }}%</b>
+                </div>
+              </div>
           </div>
         </div>
         <div class="past-results">

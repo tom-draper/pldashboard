@@ -446,6 +446,10 @@ img {
   .next-game-prediction {
     margin: 50px 20px 0px 20px;
   }
+  .predictions-link {
+    text-decoration: none;
+    color: #333333;;
+  }
   .next-game-title {
     width: auto;
   }
@@ -463,3 +467,63 @@ img {
   }
 }
 
+
+
+
+
+
+.predictions {
+  display: flex;
+  flex-direction: column;
+}
+
+.predictions-gap {
+  margin: 15px 0;
+}
+
+/* .big-predictions-divider {
+  align-self: center;
+  border-bottom: 3px solid black;
+  width: 70%;
+  margin: 5px 0;
+} */
+.green {
+  background-color: #77dd77;
+}
+.yellow {
+  background-color:#ffb347;
+}
+.red {
+  background-color: #c23b22;
+}
+.predictions-container {
+  margin-bottom: 80px;
+}
+.prediction-date {
+  width: 100px;
+  align-self: center;
+  margin-bottom: 2px;
+}
+.prediction-item {
+  width: 260px;
+  align-self: center;
+  /* margin: 2px 0; */
+}
+.prediction-container {
+  margin: 2px 0;
+  width: 260px;
+  align-self: center;
+  border-radius: 6px;
+}
+.medium-predictions-divider {
+  align-self: center;
+  border-bottom: 3px solid black;
+  width: min(60%, 300px);
+  /* margin: 2px 0; */
+}
+.small-predictions-divider {
+  align-self: center;
+  border-bottom: 1px solid rgb(163, 163, 163);
+  width: min(50%, 260px);
+  /* margin: 2px 0; */
+}

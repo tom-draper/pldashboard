@@ -8,13 +8,12 @@ season = 2021
 
 app = Flask(__name__)
 
-Params = namedtuple('Params', ['season', 'title', 'team', 'form', 'season_stats', 'next_game', 'prediction', 'table_snippet'])
 
-
-@app.route("/")
-@app.route("/home")
+@app.route('/')
+@app.route('/home')
 def home():
-    params = Params(None, 'Premier League', None, None, None, None, None, None)
+    Params= namedtuple('Params', ['title'])
+    params = Params('Premier League')
     return render_template('home.html', params=params)
 
 
@@ -65,33 +64,34 @@ def get_params(team_name_hyphen):
     next_game = get_next_game(team.name)
     prediction = get_prediction(team.name)
     table_snippet = get_table_snippet(team.name)
+    Params = namedtuple('Params', ['season', 'title', 'team', 'form', 'season_stats', 'next_game', 'prediction', 'table_snippet'])
 
     params = Params(season, title, team, form, season_stats, next_game, prediction, table_snippet)
 
     return params
 
-@app.route("/liverpool")
-@app.route("/manchester-city")
-@app.route("/manchester-united")
-@app.route("/chelsea")
-@app.route("/leicester-city")
-@app.route("/tottenham-hotspur")
-@app.route("/wolverhampton-wanderers")
-@app.route("/arsenal")
-@app.route("/burnley")
-@app.route("/southampton")
-@app.route("/everton")
-@app.route("/newcastle-united")
-@app.route("/crystal-palace")
-@app.route("/brighton-and-hove-albion")
-@app.route("/west-ham-united")
-@app.route("/aston-villa")
-@app.route("/leeds-united")
-@app.route("/norwich-city")
-@app.route("/watford")
-@app.route("/brentford")
-# @app.route("/west-bromwich-albion")
-# @app.route("/fulham")
+@app.route('/liverpool')
+@app.route('/manchester-city')
+@app.route('/manchester-united')
+@app.route('/chelsea')
+@app.route('/leicester-city')
+@app.route('/tottenham-hotspur')
+@app.route('/wolverhampton-wanderers')
+@app.route('/arsenal')
+@app.route('/burnley')
+@app.route('/southampton')
+@app.route('/everton')
+@app.route('/newcastle-united')
+@app.route('/crystal-palace')
+@app.route('/brighton-and-hove-albion')
+@app.route('/west-ham-united')
+@app.route('/aston-villa')
+@app.route('/leeds-united')
+@app.route('/norwich-city')
+@app.route('/watford')
+@app.route('/brentford')
+# @app.route('/west-bromwich-albion')
+# @app.route('/fulham')
 def team():
     rule = request.url_rule
     # Get hypehenated team name from current URL
@@ -100,18 +100,37 @@ def team():
 
     return render_template('team.html', params=params)
 
+def is_draw(scoreline1, scoreline2):
+    print(scoreline1.split(' '))
+    _, h1, _, a1, _ = scoreline1.split(' ')
+    _, h2, _, a2, _ = scoreline2.split(' ')
+    h1, a1, h2, a2 = map(int, [h1, a1, h2, a2])
+    if h1 == h2 and a2 == a2:
+        return True
+    return False
 
-# class SharedData:
-#     """ 
-#     A synchronised wrapper for the Data class.
-#     Stops the Flask server and accessing the HTML files at the same time"""
-
-#     def __init__(self, season):
-#         self.data = Data(season)
-#         self.lock = Lock()
+def insert_predictions_colours(predictions_dict):
+    for date in predictions_dict.keys():
+        for prediction in predictions_dict[date]:
+            if prediction['actual'] == None:
+                prediction['colour'] = ''  # No colour
+            elif prediction['prediction'] == prediction['actual']:
+                prediction['colour'] = 'green'
+            elif is_draw(prediction['prediction'], prediction['actual']):
+                prediction['colour'] = 'yellow'
+            else:
+                prediction['colour'] = 'red'
     
-#     def update_all(self, request_new=True, display_tables=False):
-#         self.data.update_all(request)
+
+@app.route('/predictions')
+def predictions():
+    predictions_dict = data.predictor.get_predictions()
+    predictions_dict = dict(sorted(predictions_dict.items(), reverse=True))
+    insert_predictions_colours(predictions_dict)
+    Params= namedtuple('Params', ['title', 'predictions_dict'])
+    params = Params('Predictions', predictions_dict)
+    return render_template('predictions.html', params=params)
+
     
 
 def thread_function(time=3600):
@@ -121,13 +140,9 @@ def thread_function(time=3600):
         data.update_all(request_new=True, display_tables=False)
 
 data = Data(season)
-data_updater_thread = Thread(target=thread_function, args=(3600,))
+data_updater_thread = Thread(target=thread_function, args=(7200,))
 data.update_all(request_new=True, display_tables=False)
 data_updater_thread.start()
 
-if __name__ == '__main__':
-    data_updater_thread = Thread(target=thread_function, args=(3600,))
-    data.update_all(request_new=True, display_tables=False)
-    data_updater_thread.start()
-    
+if __name__ == '__main__':    
     app.run(host='0.0.0.0', debug=False)

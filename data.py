@@ -56,7 +56,6 @@ class Data:
     
 
     def get_logo_url(self, team_name):
-        print(self.logo_urls)
         return self.logo_urls[team_name]
     
     

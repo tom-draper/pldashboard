@@ -1,5 +1,4 @@
 from typing import List, Tuple
-from collections import namedtuple
 import json
 import re
 import numpy as np
@@ -17,6 +16,12 @@ class Predictor:
         self.home_scored_avg_diff = None
         self.away_scored_avg_diff = None
         self.prediction_file = f'data/predictions.json'
+    
+    def get_predictions(self):
+        with open(self.prediction_file) as json_file:
+            data = json.load(json_file)
+            predictions = data[f'predictions{self.current_season}']
+        return predictions
 
     def get_next_game_prediction(self, team_name):
         score_prediction = self.predictions[team_name][1]  # (Date, Prediction)
