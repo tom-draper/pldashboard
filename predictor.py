@@ -34,12 +34,12 @@ class Predictor:
         return score_prediction
     
     def identical_fixtures(self, scoreline1, scoreline2):
-        home_p, _, _, _, away_p = re.split(' +', scoreline1)
-        home_s, _, _, _, away_s = re.split(' +', scoreline2)
+        home_p, _, _, _, away_p = scoreline1.split(' ')
+        home_s, _, _, _, away_s = scoreline2.split(' ')
         return (home_p == home_s) and (away_p == away_s)
 
     def extract_scores(self, scoreline):
-        _, home_score, _, away_score, _ = re.split(' +', scoreline)
+        _, home_score, _, away_score, _ = scoreline.split(' ')
         return int(home_score), int(away_score)
     
     def identical_result(self, pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
