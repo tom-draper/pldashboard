@@ -156,7 +156,7 @@ class Predictor:
             for prediction in predictions[date]:
                 predicted_score = prediction['prediction']
                 actual_score = prediction['actual']
-                if predicted_score != None and actual_score != None:
+                if predicted_score != None:
                     if self.identical_fixtures(predicted_score, new_prediction):
                         # If fixture match perfectly but predicted scoreline different (outdated)
                         if (predicted_score != new_prediction) and (actual_score == None):
@@ -172,7 +172,7 @@ class Predictor:
         for prediction in predictions[date]:
             predicted_score = prediction['prediction']
             actual_score = prediction['actual']
-            if predicted_score != None and actual_score != None:
+            if predicted_score != None:
                 if self.identical_fixtures(predicted_score, new_prediction):
                     # If fixture match perfectly but predicted scoreline different (outdated)
                     if (predicted_score != new_prediction) and (actual_score == None):
