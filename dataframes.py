@@ -28,10 +28,8 @@ class Form(DF):
 
     def get_prev_matchday(self) -> int:
         prev_matchday = None
-        
         if len(self.df.columns) > 0:
             prev_matchday = list(self.df.columns.unique(level=0))[-2]
-            prev_matchday = int(prev_matchday.split(' ')[-1])  # Extract number
         return prev_matchday
     
     def n_should_have_played(self, current_matchday, maximum) -> int:
