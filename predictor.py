@@ -2,6 +2,7 @@ from typing import List, Tuple
 import json
 import re
 import numpy as np
+from pandas.core.base import SpecificationError
 from pandas.core.frame import DataFrame
 from utilities import Utilities
 
@@ -34,13 +35,20 @@ class Predictor:
         return score_prediction
     
     def identical_fixtures(self, scoreline1, scoreline2):
-        home_p, _, _, _, away_p = re.split(' +', scoreline1)
-        home_s, _, _, _, away_s = re.split(' +', scoreline2)
-        return (home_p == home_s) and (away_p == away_s)
+        if scoreline1 != None and scoreline2 != None:
+            print(scoreline1, scoreline2)
+            print(scoreline1.split(' '))
+            print(scoreline2.split(' '))
+            home_p, x, y, z, away_p = scoreline1.split(' ')
+            home_s, xx, yy, zz, away_s = scoreline2.split(' ')
+            return (home_p == home_s) and (away_p == away_s)
+        return False
 
     def extract_scores(self, scoreline):
-        _, home_score, _, away_score, _ = re.split(' +', scoreline)
-        return int(home_score), int(away_score)
+        if scoreline != None:
+            _, home_score, _, away_score, _ = scoreline.split(' ')
+            return int(home_score), int(away_score)
+        return None
     
     def identical_result(self, pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
         return (pred_home_goals == pred_away_goals and act_home_goals == act_away_goals) or \
@@ -49,7 +57,7 @@ class Predictor:
 
     
     def prediction_count(self, predictions: dict):
-        total, correct, result_correct,  = 0, 0, 0
+        total, correct, result_correct = 0, 0, 0
         # Count number of home and away goals (predicted vs actually)
         n_pred_home_goals, n_pred_away_goals, n_act_home_goals, n_act_away_goals = 0, 0, 0, 0
         
@@ -108,13 +116,13 @@ class Predictor:
         opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
         
         if home_away == 'Home':
-            scoreline = f'{team_name_initials}  {score_str}  {opp_team_name_initials}'
+            scoreline = f'{team_name_initials} {score_str} {opp_team_name_initials}'
         else:
-            scoreline = f'{opp_team_name_initials}  {score_str}  {team_name_initials}'
+            scoreline = f'{opp_team_name_initials} {score_str} {team_name_initials}'
         return scoreline
     
     def get_actual_scores(self, fixtures: DataFrame) -> List[str]:
-        actual_scores = []
+        actual_scores = set()
         for matchday_no in range(1, 39):
             matchday = fixtures.df[matchday_no]
             
@@ -124,7 +132,7 @@ class Predictor:
                     if row['Status'] == 'FINISHED':
                         date = np.datetime_as_string(row['Date'].asm8, unit='D')
                         actual_score = self.format_scoreline_str_from_str(team_name, row["Team"], row["Score"], row["HomeAway"])
-                        actual_scores.append((date, actual_score))
+                        actual_scores.add((date, actual_score))
         
         return actual_scores
                             
@@ -156,6 +164,7 @@ class Predictor:
             for prediction in predictions[date]:
                 predicted_score = prediction['prediction']
                 actual_score = prediction['actual']
+                print(predicted_score, actual_score)
                 if self.identical_fixtures(predicted_score, new_prediction):
                     # If fixture match perfectly but predicted scoreline different (outdated)
                     if (predicted_score != new_prediction) and (actual_score == None):
@@ -171,8 +180,9 @@ class Predictor:
         for prediction in predictions[date]:
             predicted_score = prediction['prediction']
             actual_score = prediction['actual']
+            print(predicted_score, actual_score)
             if self.identical_fixtures(predicted_score, new_prediction):
-                # If fixture match perfectly but predicted scoreline different (outdated)
+                # If fixture match perfectly predicted scoreline different (outdated)
                 if (predicted_score != new_prediction) and (actual_score == None):
                     print("Updating existing prediction:", predicted_score, '-->', new_prediction)
                     prediction['prediction'] = new_prediction
@@ -292,7 +302,7 @@ class Predictor:
                 prediction = (game_date, scoreline)
                 
             predictions[team_name] = prediction
-            
+                    
         self.predictions = predictions
         
     def signed_float_str(self, value: float):
@@ -314,20 +324,18 @@ class Predictor:
     
     def insert_actual_scores(self, predictions: dict, fixtures: DataFrame):
         actual_scores = self.get_actual_scores(fixtures)
-        
+                
         n_inserted = 0
         for date, actual_score in actual_scores:
             for prediction in predictions[date]:
                 predicted_score = prediction['prediction']
-                actual_score = prediction['actual']
-                if predicted_score != None:
-                    # If the actual scoreline matches this prediction and no actual score has been filled
-                    if self.identical_fixtures(actual_score, predicted_score) and actual_score == None:
-                        # Update this prediction with its actual score
-                        prediction['actual'] = actual_score
-                        print("Adding actual score:", actual_score)
-                        n_inserted += 1
-                        break
+                # If the actual scoreline matches this prediction and no actual score has been filled
+                if self.identical_fixtures(predicted_score, actual_score) and prediction['actual'] == None:
+                    # Update this prediction with its actual score
+                    prediction['actual'] = actual_score
+                    print("Adding actual score:", actual_score)
+                    n_inserted += 1
+                    break
         
         return n_inserted
     
@@ -341,7 +349,7 @@ class Predictor:
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
             predictions = data[f'predictions{self.current_season}']
-            
+                        
             new_predictions_inserted = self.insert_new_predictions(predictions)
             actual_scores_inserted = self.insert_actual_scores(predictions, fixtures)
             self.insert_accuracy(data)
@@ -350,10 +358,13 @@ class Predictor:
                 print(f'ℹ️ Added {new_predictions_inserted} new predictions')
             if actual_scores_inserted > 0:
                 print(f'ℹ️ Updated {actual_scores_inserted} existing predictions with their actual results')
-                
+        
+        print(predictions)
         # Sort by date
         predictions = dict(sorted(predictions.items(), key=lambda x: x[0]))
         
+        print(predictions)
+                
         # Overwrite file with new data
         with open(self.prediction_file, 'w') as f:
             json.dump(data, f)

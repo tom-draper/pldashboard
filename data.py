@@ -1214,4 +1214,4 @@ class Data:
 if __name__ == "__main__":
     # Update all dataframes
     data = Data(2021)
-    data.update_all(request_new=False, team_name='Liverpool FC', display_tables=True)
+    data.update_all(request_new=True, team_name='Liverpool FC', display_tables=True)
