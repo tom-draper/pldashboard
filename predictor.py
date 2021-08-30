@@ -159,21 +159,12 @@ class Predictor:
             for prediction in predictions[date]:
                 predicted_score = prediction['prediction']
                 actual_score = prediction['actual']
-<<<<<<< HEAD
-                print(predicted_score, actual_score)
-                if self.identical_fixtures(predicted_score, new_prediction):
-                    # If fixture match perfectly but predicted scoreline different (outdated)
-                    if (predicted_score != new_prediction) and (actual_score == None):
-                        already_made = True  
-                    break
-=======
                 if predicted_score != None:
                     if self.identical_fixtures(predicted_score, new_prediction):
                         # If fixture match perfectly but predicted scoreline different (outdated)
                         if (predicted_score != new_prediction) and (actual_score == None):
                             already_made = True  
                         break
->>>>>>> 35dd9a7dcb74ec2352ceecbbcc5653aaab109b3e
         return already_made
     
     def insert_new_prediction(self, date: str, new_prediction: str, predictions: dict):
@@ -184,7 +175,6 @@ class Predictor:
         for prediction in predictions[date]:
             predicted_score = prediction['prediction']
             actual_score = prediction['actual']
-<<<<<<< HEAD
             print(predicted_score, actual_score)
             if self.identical_fixtures(predicted_score, new_prediction):
                 # If fixture match perfectly predicted scoreline different (outdated)
@@ -192,15 +182,6 @@ class Predictor:
                     print("Updating existing prediction:", predicted_score, '-->', new_prediction)
                     prediction['prediction'] = new_prediction
                 return
-=======
-            if predicted_score != None:
-                if self.identical_fixtures(predicted_score, new_prediction):
-                    # If fixture match perfectly but predicted scoreline different (outdated)
-                    if (predicted_score != new_prediction) and (actual_score == None):
-                        print("Updating existing prediction:", predicted_score, '-->', new_prediction)
-                        prediction['prediction'] = new_prediction
-                    return
->>>>>>> 35dd9a7dcb74ec2352ceecbbcc5653aaab109b3e
             
         # Add new prediction object
         print("Adding new prediction:", new_prediction)
