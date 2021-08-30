@@ -1,8 +1,8 @@
 {
-    "accuracy": 0.15,
-    "resultAccuracy": 0.55,
-    "homeScoredAvgDiff": -0.45,
-    "awayScoredAvgDiff": 0.25,
+    "accuracy": 0.13333333333333333,
+    "resultAccuracy": 0.5333333333333333,
+    "homeScoredAvgDiff": -0.3333333333333333,
+    "awayScoredAvgDiff": 0.13333333333333333,
     "predictions2021": {
         "2021-08-13": [
             {
@@ -36,7 +36,7 @@
                 "actual": "NOR 0 - 3 LIV"
             },
             {
-                "prediction": "MAN 3 - 0 LEE",
+                "prediction": "MUN 3 - 0 LEE",
                 "actual": "MUN 5 - 1 LEE"
             }
         ],
@@ -96,48 +96,48 @@
                 "actual": "WHU 4 - 1 LEI"
             }
         ],
-        "2021-08-29": [
-            {
-                "prediction": "BUR 0 - 3 LEE",
-                "actual": null
-            },
-            {
-                "prediction": "TOT 1 - 0 WAT",
-                "actual": null
-            },
-            {
-                "prediction": "WOL 0 - 2 MUN",
-                "actual": null
-            }
-        ],
         "2021-08-28": [
             {
                 "prediction": "LIV 2 - 1 CHE",
-                "actual": null
+                "actual": "LIV 1 - 1 CHE"
             },
             {
                 "prediction": "BHA 1 - 2 EVE",
-                "actual": null
+                "actual": "BHA 0 - 2 EVE"
             },
             {
                 "prediction": "NOR 1 - 0 LEI",
-                "actual": null
+                "actual": "NOR 1 - 2 LEI"
             },
             {
                 "prediction": "MCI 3 - 0 ARS",
-                "actual": null
+                "actual": "MCI 5 - 0 ARS"
             },
             {
                 "prediction": "AVL 0 - 0 BRE",
-                "actual": null
+                "actual": "AVL 1 - 1 BRE"
             },
             {
                 "prediction": "NEW 2 - 1 SOU",
-                "actual": null
+                "actual": "NEW 2 - 2 SOU"
             },
             {
                 "prediction": "WHU 3 - 2 CRY",
-                "actual": null
+                "actual": "WHU 2 - 2 CRY"
+            }
+        ],
+        "2021-08-29": [
+            {
+                "prediction": "BUR 0 - 3 LEE",
+                "actual": "BUR 1 - 1 LEE"
+            },
+            {
+                "prediction": "TOT 1 - 0 WAT",
+                "actual": "TOT 1 - 0 WAT"
+            },
+            {
+                "prediction": "WOL 0 - 2 MUN",
+                "actual": "WOL 0 - 1 MUN"
             }
         ],
         "2021-09-11": [

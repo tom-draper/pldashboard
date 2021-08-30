@@ -407,7 +407,7 @@ img {
   color: rgb(162, 162, 162);
   position: absolute;
   top: -58px;
-  right: calc(50% - 180px);
+  right: calc(50% - 200px);
 }
 .season-stat {
   flex: 1;

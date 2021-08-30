@@ -30,17 +30,12 @@ class Predictor:
         return accuracy, result_accuracy
     
     def get_next_game_prediction(self, team_name):
-        score_prediction = self.predictions[team_name][1]  # (Date, Prediction)
-
-        return score_prediction
+        return self.predictions[team_name][1]  # (Date, Prediction)
     
     def identical_fixtures(self, scoreline1, scoreline2):
         if scoreline1 != None and scoreline2 != None:
-            print(scoreline1, scoreline2)
-            print(scoreline1.split(' '))
-            print(scoreline2.split(' '))
-            home_p, x, y, z, away_p = scoreline1.split(' ')
-            home_s, xx, yy, zz, away_s = scoreline2.split(' ')
+            home_p, _, _, _, away_p = scoreline1.split(' ')
+            home_s, _, _, _, away_s = scoreline2.split(' ')
             return (home_p == home_s) and (away_p == away_s)
         return False
 
@@ -359,12 +354,9 @@ class Predictor:
             if actual_scores_inserted > 0:
                 print(f'ℹ️ Updated {actual_scores_inserted} existing predictions with their actual results')
         
-        print(predictions)
-        # Sort by date
-        predictions = dict(sorted(predictions.items(), key=lambda x: x[0]))
-        
-        print(predictions)
-                
+        # Sort by date keys
+        data[f'predictions{self.current_season}'] = dict(sorted(predictions.items(), key=lambda x: x[0]))
+                        
         # Overwrite file with new data
         with open(self.prediction_file, 'w') as f:
             json.dump(data, f)
