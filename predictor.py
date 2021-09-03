@@ -1,8 +1,6 @@
-from typing import List, Tuple
+from typing import List, Tuple, Set
 import json
-import re
 import numpy as np
-from pandas.core.base import SpecificationError
 from pandas.core.frame import DataFrame
 from utilities import Utilities
 
@@ -116,7 +114,7 @@ class Predictor:
             scoreline = f'{opp_team_name_initials} {score_str} {team_name_initials}'
         return scoreline
     
-    def get_actual_scores(self, fixtures: DataFrame) -> List[str]:
+    def get_actual_scores(self, fixtures: DataFrame) -> Set[Tuple[str, str]]:
         actual_scores = set()
         for matchday_no in range(1, 39):
             matchday = fixtures.df[matchday_no]
@@ -134,8 +132,7 @@ class Predictor:
     def record_actual_results(self, fixtures: DataFrame):
         actual_scores = self.get_actual_scores(fixtures)
         # Update prediction json objects by inserting their actual scores
-        n_inserted = self.insert_actual_scores_into_json_file(actual_scores)
-                
+        n_inserted = self.insert_actual_scores(actual_scores)
         if n_inserted > 0:
             print(f'ℹ️ Updated {n_inserted} existing predictions with their actual results')
             

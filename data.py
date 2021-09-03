@@ -1103,8 +1103,7 @@ class Data:
     
     def str_score_to_int_score(self, score: str) -> Tuple[int, int]:
         home, _ , away = score.split(' ')
-        home, away = int(home), int(away)
-        return home, away
+        return int(home), int(away)
 
     def row_season_goals(self, row: pd.Series, matchdays: List[str]):
         n_games, clean_sheets, goals_scored, goals_conceded = 0, 0, 0, 0

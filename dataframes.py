@@ -1,7 +1,6 @@
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 import pandas as pd
 from pandas.core.frame import DataFrame
-from collections import namedtuple
 
 
 class DF:
@@ -20,7 +19,7 @@ class Form(DF):
     def __init__(self, d: dict):
         super().__init__(d)
     
-    def get_current_matchday(self) -> int:
+    def get_current_matchday(self) -> Optional[int]:
         current_matchday = None
         if len(self.df.columns) > 0:
             current_matchday = list(self.df.columns.unique(level=0))[-1]
@@ -32,7 +31,7 @@ class Form(DF):
             prev_matchday = list(self.df.columns.unique(level=0))[-2]
         return prev_matchday
     
-    def n_should_have_played(self, current_matchday, maximum) -> int:
+    def n_should_have_played(self, current_matchday: int, maximum: int) -> int:
         n_should_have_played = maximum
         if current_matchday < maximum:
             n_should_have_played = current_matchday
@@ -42,7 +41,7 @@ class Form(DF):
         n_should_have_played = self.n_should_have_played(current_matchday, 5)
         return len(recent_games) != n_should_have_played
 
-    def get_form(self, team_name: str) -> List:
+    def get_form(self, team_name: str) -> List[str]:
         form = []
         current_matchday = self.get_current_matchday()
         if current_matchday:
@@ -89,8 +88,8 @@ class Form(DF):
             
         return rating
     
-    def get_won_against_star_team(self, team_name: str) -> List[bool]:
-        won_against_star_team = []
+    def get_won_against_star_team(self, team_name: str) -> List[str]:
+        won_against_star_team = []  # type: List[str]
         current_matchday = self.get_current_matchday()
         
         if current_matchday:
@@ -168,8 +167,8 @@ class NextGames(DF):
     def get_home_away(self, team_name: str):
         return self.df['HomeAway'].loc[team_name]
 
-    def get_details(self, team_name: str):
-        opp_team_name = ""
+    def get_details(self, team_name: str) -> Tuple[str, bool or None, List]:
+        opp_team_name = ''
         home_away = None
         prev_meetings = []
 
@@ -189,14 +188,15 @@ class SeasonStats(DF):
     def format_position(self, position: int) -> str:
         j = position % 10
         k = position % 100
-        position = str(position)
+        position_str = str(position)
+        
         if j == 1 and k != 11:
-            return position + "st"
+            return position_str + 'st'
         if j == 2 and k != 12:
-            return position + "nd"
+            return position_str + 'nd'
         if j == 3 and k != 13:
-            return position + "rd"
-        return position + "th"
+            return position_str + 'rd'
+        return position_str + 'th'
     
     def get_stat(self, team_name: str, col_heading: str, ascending: bool) -> Tuple[float, str]:
         stat = self.df[col_heading][team_name]
