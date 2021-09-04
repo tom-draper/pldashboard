@@ -104,7 +104,7 @@ class Form(DF):
             won_against_star_team = ['star-team' if x else 'not-star-team' for x in won_against_star_team]
         return won_against_star_team
 
-    def get_recent_form(self, team_name: str) -> Tuple[List[str], List[str], float, List[bool]]:
+    def get_recent_form(self, team_name: str) -> Tuple[List[str], DataFrame, float, List[bool]]:
         form_str = self.get_form(team_name)  # List of five 'W', 'D' or 'L'
         recent_teams_played = self.get_recent_teams_played(team_name)
         rating = self.get_current_form_rating(team_name)

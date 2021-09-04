@@ -140,7 +140,7 @@ def predictions():
 
 def thread_function(time=3600):
     while True:
-        print(f'Sleeping: {time}s')
+        print(f'Updating data in {time} seconds...')
         sleep(time)
         data.update_all(request_new=True, display_tables=False)
 
