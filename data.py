@@ -743,12 +743,12 @@ class Data:
         """
         print('🔨 Building home advantages dataframe... ')
 
-        home_advantages = {}
+        d = {}
         for i in range(no_seasons):
             data = self.json_data['fixtures'][self.season-i]
-            self.home_advantages_for_season(home_advantages, data, self.season-i)
+            self.home_advantages_for_season(d, data, self.season-i)
         
-        home_advantages = pd.DataFrame.from_dict(home_advantages, orient='index')
+        home_advantages = pd.DataFrame.from_dict(d, orient='index')
         # Drop teams from previous seasons
         home_advantages = home_advantages.dropna(subset=home_advantages.loc[[], [self.season]].columns)
         home_advantages = home_advantages.fillna(0).astype(int)

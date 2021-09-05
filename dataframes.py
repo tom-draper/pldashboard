@@ -1,6 +1,6 @@
 from typing import List, Tuple, Optional
-import pandas as pd
 from pandas.core.frame import DataFrame
+import pandas as pd
 
 
 class DF:
@@ -59,7 +59,7 @@ class Form(DF):
 
         return form
 
-    def get_recent_teams_played(self, team_name: str) -> pd.DataFrame:
+    def get_recent_teams_played(self, team_name: str) -> DataFrame:
         recent_teams_played = pd.DataFrame()
         current_matchday= self.get_current_matchday()
         

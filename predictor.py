@@ -184,7 +184,7 @@ class Predictor:
         print("Adding new prediction:", new_prediction)
         predictions[date].append({'prediction': new_prediction, 'actual': None})
     
-    def avg_previous_result(self, team_name: str, prev_meetings: List[Tuple], debug=False):
+    def avg_previous_result(self, team_name: str, prev_meetings: List[Tuple], debug=False) -> Tuple[float, float]:
         goals_scored, goals_conceded = 0, 0
         
         for prev_match in prev_meetings:
@@ -206,9 +206,8 @@ class Predictor:
 
         return avg_scored, avg_conceded
 
-    def modify_prediction_by_current_form(self, form_rating: str, opp_form_rating: str, pred_scored: int = 0, pred_conceded: int = 0, debug: bool = False):
-        # Boost the score of the team better in form based on the absolute 
-        # difference in form
+    def modify_prediction_by_current_form(self, form_rating: float, opp_form_rating: float, pred_scored: int = 0, pred_conceded: int = 0, debug: bool = False):
+        # Boost the score of the team better in form based on the absolute difference in form
         form_diff = form_rating - opp_form_rating
         
         if form_diff > 0:

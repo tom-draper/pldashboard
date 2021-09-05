@@ -102,9 +102,9 @@ def team() -> str:
     return render_template('team.html', params=params)
 
 def correct_result(scoreline1: str, scoreline2: str) -> bool:
-    _, h1, _, a1, _ = scoreline1.split(' ')
-    _, h2, _, a2, _ = scoreline2.split(' ')
-    h1, a1, h2, a2 = map(int, [h1, a1, h2, a2])
+    _, h1_str, _, a1_str, _ = scoreline1.split(' ')
+    _, h2_str, _, a2_str, _ = scoreline2.split(' ')
+    h1, a1, h2, a2 = map(int, [h1_str, a1_str, h2_str, a2_str])
 
     # If identical results (both a home win, a draw, or away win)
     if (h1 > a1 and h2 > a2) or (h1 == a1 and h2 == a2) or (h1 < a1 and h2 < a2):
