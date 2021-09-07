@@ -8,7 +8,7 @@ from timebudget import timebudget
 import numpy as np
 import requests
 import json
-from typing import List, Tuple, Dict, Optional, Union
+from typing import Optional
 from datetime import datetime
 from dataframes import Fixtures, Standings, TeamRatings, HomeAdvantages, Form, PositionOverTime, NextGames, SeasonStats
 from data_vis import DataVis
@@ -35,11 +35,11 @@ class Data:
         self.star_team_threshold = 0.75  # Rating over 75% to be a star team
         
         # Temp store for requested json API data 
-        self.json_data = {'fixtures': {}, 'standings': {}}  # type: Dict[str, Dict[int, Dict]]
+        self.json_data = {'fixtures': {}, 'standings': {}}  # type: dict[str, dict[int, dict]]
         
         # List of current season teams (taken from standings dataframe) 
-        self.team_names = None # type: Optional[List[str]]
-        self.logo_urls = {}  # type: Dict[str, str] 
+        self.team_names = []  # type: list[str]
+        self.logo_urls = {}  # type: dict[str, str] 
         
         # Dataframes to build
         self.fixtures = Fixtures()
@@ -62,12 +62,12 @@ class Data:
     
     
     
-    # ------ DATA API --------
+    # ----------------------------- DATA API -----------------------------------
     
     def fixtures_data(self, season: int, request_new: bool = True) -> dict:
         if request_new and self.url != None:
             response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(season),
-                                        headers=self.headers)
+                                    headers=self.headers)
             
             if response.status_code == 429:
                 print('❌  Status:', response.status_code)
@@ -114,10 +114,12 @@ class Data:
     
     
     
+    
+    
     # ------------------------- STANDINGS DATAFRAME ----------------------------
     
     def fill_rows_from_data(self, data):
-        df_rows = {}
+        df_rows = {}  # type: dict[str, dict[str, int]]
         for match in data:
             home_team = match['homeTeam']['name'].replace('&', 'and')
             away_team = match['awayTeam']['name'].replace('&', 'and')
@@ -134,11 +136,9 @@ class Data:
                 # Increment Played
                 df_rows[home_team]['Played'] += 1  
                 df_rows[away_team]['Played'] += 1  
-                
                 # Add GF
                 df_rows[home_team]['GF'] += home_goals
                 df_rows[away_team]['GF'] += away_goals
-
                 # Add GA
                 df_rows[home_team]['GA'] += away_goals
                 df_rows[away_team]['GA'] += home_goals
@@ -183,11 +183,11 @@ class Data:
         self.add_position_col(df_rows)
         
         df = pd.DataFrame.from_dict(df_rows, orient='index')
-        df.columns = pd.MultiIndex.from_product([[season], ['Position', 'Played', 'Won', 'Drawn', 'Lost', 'GF', 'GA', 'GD', 'Points']])
+        col_headings = ['Position', 'Played', 'Won', 'Drawn', 'Lost', 'GF', 'GA', 'GD', 'Points']
+        df.columns = pd.MultiIndex.from_product([[season], col_headings])
         
         # Drop any rows with columns not in the current season
         df = df.drop(df[~df.index.isin(self.team_names)].index)
-
         return df
 
     @timebudget
@@ -242,15 +242,17 @@ class Data:
 
 
 
+
+
     
     # --------------------------- FORM DATAFRAME -------------------------------
     
-    def extract_str_scores(self, score: str) -> Tuple[str, str]:
+    def extract_str_scores(self, score: str) -> tuple[str, str]:
         home, _, away = score.split(' ')
         return home, away
     
-    def form_string(self, scores: List[str], home_aways: List[str]) -> str:
-        form = []  # type: List[str]
+    def form_string(self, scores: list[str], home_aways: list[str]) -> str:
+        form = []  # type: list[str]
         
         for score, homeAway in zip(scores, home_aways):
             home, away = self.extract_str_scores(score)
@@ -264,7 +266,7 @@ class Data:
                     
         return ''.join(form)  # Convert to string
 
-    def calc_form_rating(self, teams_played: List[str], form_str: str, gds: List[int], team_ratings: TeamRatings) -> float:
+    def calc_form_rating(self, teams_played: list[str], form_str: str, gds: list[int], team_ratings: TeamRatings) -> float:
         form_percentage = 0.5  # Default percentage, moves up or down based on performance
         
         if form_str != None:  # If games have been played this season
@@ -333,7 +335,7 @@ class Data:
             
         return form_str_col, goal_differences_col
 
-    def last_n_games(self, games_played: List, n_games: int, date) -> Tuple[List[str], List[str], List[str]]:
+    def last_n_games(self, games_played: list, n_games: int, date) -> tuple[list[str], list[str], list[str]]:
         """ Slice games played data to return only the last 'n_games' games from 
             the given date """
 
@@ -368,7 +370,7 @@ class Data:
         
         return list(teams_played), list(scores), list(home_aways)
     
-    def last_n_games_cols(self, fixtures: Fixtures, n_games: int, matchday_no: int) -> Tuple[List[List[str]], List[List[str]], List[List[str]]]:
+    def last_n_games_cols(self, fixtures: Fixtures, n_games: int, matchday_no: int) -> tuple[list[list[str]], list[list[str]], list[list[str]]]:
         teams_played_col, scores_col, home_away_col  = [], [], []
         
         matchday_dates = fixtures.df[matchday_no, 'Date']
@@ -456,7 +458,7 @@ class Data:
 
         matchday_nos = sorted(list(score.columns.get_level_values(0)))
         
-        d = {}  # type: Dict[Tuple[int, str], List]
+        d = {}  # type: dict[tuple[int, str], list]
         for n in matchday_nos:
             d[(n, 'Date')] = self.fixtures.df[n, 'Date']
             
@@ -500,13 +502,14 @@ class Data:
     
     
     
+    
     # ---------------------- POSITION OVER TIME DATAFRAME ----------------------
     
-    def extract_scores(self, score: str) -> Tuple[int, int]:
+    def extract_scores(self, score: str) -> tuple[int, int]:
         home, _, away = score.split(' ')
         return int(home), int(away)
     
-    def get_gd_and_pts(self, score: str, home_away: str) -> Tuple[int, int]:
+    def get_gd_and_pts(self, score: str, home_away: str) -> tuple[int, int]:
         pts, gd = 0, 0
         if type(score) == str:  # If score exists and game has been played
             home, away = self.extract_scores(score)
@@ -523,7 +526,7 @@ class Data:
                     pts = 3
         return gd, pts
 
-    def goal_diff_and_pts_cols(self,  matchday_no: int, matchday_nums: List[int], matchday_nums_idx: int, position_over_time: pd.DataFrame) -> Tuple[List[int], List[int]]:
+    def goal_diff_and_pts_cols(self,  matchday_no: int, matchday_nums: list[int], matchday_nums_idx: int, position_over_time: pd.DataFrame) -> tuple[list[int], list[int]]:
         gd_col, pts_col = [], []
         
         col_data = position_over_time[matchday_no]
@@ -752,7 +755,7 @@ class Data:
         """
         print('🔨 Building home advantages dataframe... ')
 
-        d = {} # type: Dict[str, Dict[Tuple[int, str, str], int]]
+        d = {} # type: dict[str, dict[tuple[int, str, str], int]]
         for i in range(no_seasons):
             data = self.json_data['fixtures'][self.season-i]
             self.home_advantages_for_season(d, data, self.season-i)
@@ -774,10 +777,6 @@ class Data:
             print(home_advantages)
         
         self.home_advantages.set_data(home_advantages)
-
-
-
-
 
 
 
@@ -818,9 +817,9 @@ class Data:
         
         data = self.json_data['fixtures'][self.season]
                 
-        team_names = []  # type: List[str]
+        team_names = []  # type: list[str]
         team_names_index = []  # Specific order of team names to be dataframe index
-        matchday = defaultdict(lambda: [])  # type: Dict[Tuple[int, str], List]
+        matchday = defaultdict(lambda: [])  # type: dict[tuple[int, str], list]
         matchdays = []
         prev_matchday = 0
         for match in sorted(data, key=lambda x: x['matchday']):
@@ -873,7 +872,9 @@ class Data:
 
 
 
-    # ----------- Team ratings dataframe -----------
+
+
+    # ------------------------- TEAM RATINGS DATAFRAME -------------------------
     
     def calc_rating(self, position: int, points: int, gd: int) -> float:
         rating = (20 - position) / 2
@@ -883,7 +884,7 @@ class Data:
             rating *= points
         return rating
     
-    def get_season_weightings(self, n_seasons: int) -> List[float]:
+    def get_season_weightings(self, n_seasons: int) -> list[float]:
         season_weights = [0.75, 0.20, 0.05]
         weights = np.array(season_weights[:n_seasons])
         return list(weights / sum(weights))  # Normalise list
@@ -987,7 +988,8 @@ class Data:
     
     
     
-    # ------------ LOGO URLS ---------------
+    
+    # ------------------------------- LOGO URLS --------------------------------
     
     def build_logo_urls(self):
         data = self.json_data['standings'][self.season]
@@ -1003,10 +1005,11 @@ class Data:
     
     
     
+    
         
     # ------------------------ NEXT GAMES DATAFRAME ----------------------------
     
-    def get_next_game(self, team_name: str, fixtures: Fixtures) -> Tuple[Optional[int], Optional[str], Optional[str], Optional[str]]:
+    def get_next_game(self, team_name: str, fixtures: Fixtures) -> tuple[Optional[int], Optional[str], Optional[str], Optional[str]]:
         date = None  # type: Optional[str]
         next_team = None  # type: Optional[str]
         home_away = None  # type: Optional[str]
@@ -1019,7 +1022,7 @@ class Data:
                 break
         return matchday_no, date, next_team, home_away
     
-    def game_result_tuple(self, match) -> Tuple[str, str]:
+    def game_result_tuple(self, match) -> tuple[str, str]:
         home_score = match['score']['fullTime']['homeTeam']
         away_score = match['score']['fullTime']['awayTeam']
         if home_score == away_score:
@@ -1030,7 +1033,7 @@ class Data:
             result = ('Lost', 'Won')
         return result
                     
-    def append_prev_meeting(self, next_games: dict, home_team: str, away_team: str, date: str, result: Tuple[str, str], match: dict):
+    def append_prev_meeting(self, next_games: dict, home_team: str, away_team: str, date: str, result: tuple[str, str], match: dict):
         # From the perspective from the home team
         # If this match's home team has their next game against this match's away team
         if next_games[home_team]['NextTeam'] == away_team:
@@ -1100,7 +1103,7 @@ class Data:
         if not self.team_names:
             raise ValueError('❌ [ERROR] Cannot build next games dataframe: Teams names list not available')
 
-        d = {}  # type: Dict[str, Dict[str, Optional[str] | List]]
+        d = {}  # type: dict[str, dict[str, Optional[str] | list]]
                 
         for team_name in self.team_names:
             _, date, next_team, home_away = self.get_next_game(team_name, self.fixtures)
@@ -1124,13 +1127,13 @@ class Data:
     
 
 
-    # ----------- SEASON STATS -----------
+    # --------------------------- SEASON STATS ---------------------------------
     
-    def str_score_to_int_score(self, score: str) -> Tuple[int, int]:
+    def str_score_to_int_score(self, score: str) -> tuple[int, int]:
         home, _ , away = score.split(' ')
         return int(home), int(away)
 
-    def row_season_goals(self, row: pd.Series, matchdays: List[str]):
+    def row_season_goals(self, row: pd.Series, matchdays: list[str]) -> tuple[int, int, int, int]:
         n_games, clean_sheets, goals_scored, goals_conceded = 0, 0, 0, 0
         
         for matchday in matchdays:
@@ -1190,7 +1193,7 @@ class Data:
         
         season_stats = {'CleanSheetRatio': {},
                         'GoalsPerGame': {},
-                        'ConcededPerGame': {}}  # type: Dict[str, Dict[str, int]]
+                        'ConcededPerGame': {}}  # type: dict[str, dict[str, float]]
         for team_name, row in self.position_over_time.df.iterrows():
             n_games, clean_sheets, goals_scored, goals_conceded = self.row_season_goals(row, matchdays)
             
@@ -1216,7 +1219,7 @@ class Data:
         self.build_standings_df(n_seasons, display=display_tables)
         # Fixtures for the whole season for each team
         self.build_fixtures_df(display=display_tables)
-        # Ratings for each team, based on last [no_seasons] seasons standings table
+        # Ratings for each team, based on last <no_seasons> seasons standings table
         self.build_team_ratings_df(n_seasons, display=display_tables)
         # Calculated values to represent the personalised advantage each team has at home
         self.build_home_advantages_df(n_seasons, display=display_tables)
@@ -1233,7 +1236,6 @@ class Data:
     @timebudget
     def update_all(self, n_seasons: int = 3, team_name: str = None, display_tables: bool = False, display_graphs: bool = False, request_new: bool = True):
         try:
-            # Fetch data
             self.fetch_data(n_seasons, request_new)
         except ValueError as e:
             print(e)
@@ -1258,6 +1260,8 @@ class Data:
                                        self.position_over_time.df, 
                                        display_graphs=display_graphs, 
                                        team_name=team_name)
+
+
 
 
 

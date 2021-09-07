@@ -1,18 +1,16 @@
-from typing import List, Tuple, Optional
 from pandas.core.frame import DataFrame
-import pandas as pd
 
 
 class DF:
     def __init__(self, d: DataFrame = DataFrame()):
         if not d.empty:
-            self.df = pd.DataFrame(d)
+            self.df = DataFrame(d)
     
     def __str__(self):
         return str(self.df)
     
     def set_data(self, d: dict):
-        self.df = pd.DataFrame(d)
+        self.df = DataFrame(d)
 
 
 class Fixtures(DF):
@@ -23,17 +21,17 @@ class Form(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d)
     
-    def get_current_matchday(self) -> Optional[int]:
-        current_matchday = None
+    def get_current_matchday(self) -> int:
         if len(self.df.columns) > 0:
             current_matchday = list(self.df.columns.unique(level=0))[-1]
-        return current_matchday
+            return current_matchday
+        raise ValueError('❌ ERROR: Cannot get current matchday number')
 
-    def get_prev_matchday(self) -> Optional[int]:
-        prev_matchday = None
+    def get_prev_matchday(self) -> int:
         if len(self.df.columns) > 0:
             prev_matchday = list(self.df.columns.unique(level=0))[-2]
-        return prev_matchday
+            return prev_matchday
+        raise ValueError('❌ ERROR: Cannot get previous matchday number')
     
     def n_should_have_played(self, current_matchday: int, maximum: int) -> int:
         n_should_have_played = maximum
@@ -41,11 +39,11 @@ class Form(DF):
             n_should_have_played = current_matchday
         return n_should_have_played
 
-    def not_played_current_matchday(self, recent_games: List[str], current_matchday: int) -> bool:
+    def not_played_current_matchday(self, recent_games: list[str], current_matchday: int) -> bool:
         n_should_have_played = self.n_should_have_played(current_matchday, 5)
         return len(recent_games) != n_should_have_played
 
-    def get_form(self, team_name: str) -> List[str]:
+    def get_form(self, team_name: str) -> list[str]:
         form = []
         current_matchday = self.get_current_matchday()
         if current_matchday:
@@ -64,7 +62,7 @@ class Form(DF):
         return form
 
     def get_recent_teams_played(self, team_name: str) -> DataFrame:
-        recent_teams_played = pd.DataFrame()
+        recent_teams_played = DataFrame()
         current_matchday= self.get_current_matchday()
         
         if current_matchday:
@@ -92,7 +90,7 @@ class Form(DF):
             
         return rating
     
-    def get_won_against_star_team(self, team_name: str) -> List[str]:
+    def get_won_against_star_team(self, team_name: str) -> list[str]:
         won_against_star_team = []  # 'star-team' or 'not-star-team' elements
         if current_matchday := self.get_current_matchday():
             won_against_star_team = self.df[current_matchday].loc[team_name]['WonAgainstStarTeam']
@@ -106,8 +104,8 @@ class Form(DF):
             won_against_star_team = ['star-team' if x else 'not-star-team' for x in won_against_star_team]
         return won_against_star_team
 
-    def get_recent_form(self, team_name: str) -> Tuple[List[str], DataFrame, float, List[str]]:
-        form_str = self.get_form(team_name)  # List of five 'W', 'D' or 'L'
+    def get_recent_form(self, team_name: str) -> tuple[list[str], DataFrame, float, list[str]]:
+        form_str = self.get_form(team_name)  # list of five 'W', 'D' or 'L'
         recent_teams_played = self.get_recent_teams_played(team_name)
         rating = self.get_current_form_rating(team_name)
         won_against_star_team = self.get_won_against_star_team(team_name)
@@ -117,10 +115,10 @@ class Standings(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d)
         
-    def get_position(self, team_name: str, season: int) -> pd.DataFrame:
+    def get_position(self, team_name: str, season: int) -> DataFrame:
         return self.df.loc[team_name, season]['Position']
     
-    def get_table_snippet(self, team_name: str, season: int) -> Tuple[List[Tuple[int, str, int, int]], int]:
+    def get_table_snippet(self, team_name: str, season: int) -> tuple[list[tuple[int, str, int, int]], int]:
         team_df_idx = self.df.index.get_loc(team_name)
         
         # Get range of table the snippet should cover
@@ -163,15 +161,16 @@ class NextGames(DF):
     def get_opposition(self, team_name: str) -> str:
         return self.df['NextTeam'].loc[team_name]
     
-    def get_previous_meetings(self, team_name: str):
+    def get_previous_meetings(self, team_name: str) -> list:
+        print(self.df.loc[team_name]['PreviousMeetings'])
         return self.df.loc[team_name]['PreviousMeetings']
     
-    def get_home_away(self, team_name: str):
+    def get_home_away(self, team_name: str) -> str:
         return self.df['HomeAway'].loc[team_name]
 
-    def get_details(self, team_name: str) -> Tuple[str, bool or None, List]:
+    def get_details(self, team_name: str) -> tuple[str, str, list]:
         opp_team_name = ''
-        home_away = None
+        home_away = ''
         prev_meetings = []
 
         if not self.df.empty:
@@ -200,13 +199,13 @@ class SeasonStats(DF):
             return position_str + 'rd'
         return position_str + 'th'
     
-    def get_stat(self, team_name: str, col_heading: str, ascending: bool) -> Tuple[float, str]:
+    def get_stat(self, team_name: str, col_heading: str, ascending: bool) -> tuple[float, str]:
         stat = self.df[col_heading][team_name]
         position = self.df[col_heading].sort_values(ascending=ascending).index.get_loc(team_name) + 1
         position = self.format_position(position)
         return stat, position
     
-    def get_season_stats(self, team_name: str) -> Tuple[float, str, float, str, float, str]:
+    def get_season_stats(self, team_name: str) -> tuple[float, str, float, str, float, str]:
         clean_sheet_ratio, csr_position = self.get_stat(team_name, 'CleanSheetRatio', False)
         goals_per_game, gpg_position = self.get_stat(team_name, 'GoalsPerGame', False)
         conceded_per_game, cpg_position = self.get_stat(team_name, 'ConcededPerGame', True)
