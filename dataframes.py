@@ -4,19 +4,23 @@ import pandas as pd
 
 
 class DF:
-    def __init__(self, d: dict):
-        self.df = pd.DataFrame(d)
+    def __init__(self, d: DataFrame = DataFrame()):
+        if not d.empty:
+            self.df = pd.DataFrame(d)
     
     def __str__(self):
         return str(self.df)
+    
+    def set_data(self, d: dict):
+        self.df = pd.DataFrame(d)
 
 
 class Fixtures(DF):
-    def __init__(self, d: dict):
+    def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d)
     
 class Form(DF):
-    def __init__(self, d: dict):
+    def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d)
     
     def get_current_matchday(self) -> Optional[int]:
@@ -25,7 +29,7 @@ class Form(DF):
             current_matchday = list(self.df.columns.unique(level=0))[-1]
         return current_matchday
 
-    def get_prev_matchday(self) -> int:
+    def get_prev_matchday(self) -> Optional[int]:
         prev_matchday = None
         if len(self.df.columns) > 0:
             prev_matchday = list(self.df.columns.unique(level=0))[-2]
@@ -89,10 +93,8 @@ class Form(DF):
         return rating
     
     def get_won_against_star_team(self, team_name: str) -> List[str]:
-        won_against_star_team = []  # type: List[str]
-        current_matchday = self.get_current_matchday()
-        
-        if current_matchday:
+        won_against_star_team = []  # 'star-team' or 'not-star-team' elements
+        if current_matchday := self.get_current_matchday():
             won_against_star_team = self.df[current_matchday].loc[team_name]['WonAgainstStarTeam']
             
             if self.not_played_current_matchday(won_against_star_team, current_matchday):
@@ -104,7 +106,7 @@ class Form(DF):
             won_against_star_team = ['star-team' if x else 'not-star-team' for x in won_against_star_team]
         return won_against_star_team
 
-    def get_recent_form(self, team_name: str) -> Tuple[List[str], DataFrame, float, List[bool]]:
+    def get_recent_form(self, team_name: str) -> Tuple[List[str], DataFrame, float, List[str]]:
         form_str = self.get_form(team_name)  # List of five 'W', 'D' or 'L'
         recent_teams_played = self.get_recent_teams_played(team_name)
         rating = self.get_current_form_rating(team_name)
@@ -112,7 +114,7 @@ class Form(DF):
         return form_str, recent_teams_played, rating, won_against_star_team
 
 class Standings(DF):
-    def __init__(self, d: dict):
+    def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d)
         
     def get_position(self, team_name: str, season: int) -> pd.DataFrame:
@@ -155,7 +157,7 @@ class Standings(DF):
         return table_snippet, team_idx
 
 class NextGames(DF):
-    def __init__(self, d: DataFrame):
+    def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d)
     
     def get_opposition(self, team_name: str) -> str:
@@ -182,7 +184,7 @@ class NextGames(DF):
 
 
 class SeasonStats(DF):
-    def __init__(self, d: dict):
+    def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d)
     
     def format_position(self, position: int) -> str:
@@ -212,13 +214,13 @@ class SeasonStats(DF):
         return clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position
 
 class TeamRatings(DF):
-    def __init__(self, d: dict):
+    def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d)
 
 class PositionOverTime(DF):
-    def __init__(self, d: dict):
+    def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d)
 
 class HomeAdvantages(DF):
-    def __init__(self, d: dict):
+    def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d)

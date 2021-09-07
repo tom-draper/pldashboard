@@ -1,4 +1,4 @@
-from typing import List, Tuple, Set
+from typing import List, Tuple, Set, Dict, Optional
 import json
 import numpy as np
 from pandas.core.frame import DataFrame
@@ -184,7 +184,7 @@ class Predictor:
         print("Adding new prediction:", new_prediction)
         predictions[date].append({'prediction': new_prediction, 'actual': None})
     
-    def avg_previous_result(self, team_name: str, prev_meetings: List[Tuple], debug=False) -> Tuple[float, float]:
+    def avg_previous_result(self, team_name: str, prev_meetings: List[Tuple[str, str, str, int, int, str]], debug=False) -> Tuple[float, float]:
         goals_scored, goals_conceded = 0, 0
         
         for prev_match in prev_meetings:
@@ -206,7 +206,7 @@ class Predictor:
 
         return avg_scored, avg_conceded
 
-    def modify_prediction_by_current_form(self, form_rating: float, opp_form_rating: float, pred_scored: int = 0, pred_conceded: int = 0, debug: bool = False):
+    def modify_prediction_by_current_form(self, form_rating: float, opp_form_rating: float, pred_scored: float = 0, pred_conceded: float = 0, debug: bool = False) -> Tuple[float, float]:
         # Boost the score of the team better in form based on the absolute difference in form
         form_diff = form_rating - opp_form_rating
         
@@ -223,7 +223,7 @@ class Predictor:
         return pred_scored, pred_conceded
 
         
-    def modify_prediction_by_home_advantage(self, team_name: str, opp_team_name: str, home_advantages: DataFrame, home_away: str, pred_scored: int = 0, pred_conceded: int = 0, debug: bool = False) -> Tuple[int, int]:
+    def modify_prediction_by_home_advantage(self, team_name: str, opp_team_name: str, home_advantages: DataFrame, home_away: str, pred_scored: float = 0, pred_conceded: float = 0, debug: bool = False) -> Tuple[float, float]:
         if home_away == "Home":
             # Decrease conceded (if team has a positive home advantage)
             if debug:
@@ -236,8 +236,8 @@ class Predictor:
             pred_scored *= (1 - home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0])
         return pred_scored, pred_conceded
     
-    def calc_score_prediction(self, team_name: str, opp_team_name: str, home_advantages: DataFrame, home_away: str, form_rating: float, opp_form_rating: float, prev_meetings: List[dict], debug: bool = False) -> Tuple[int, int]:
-        pred_scored, pred_conceded = 0, 0
+    def calc_score_prediction(self, team_name: str, opp_team_name: str, home_advantages: DataFrame, home_away: str, form_rating: float, opp_form_rating: float, prev_meetings: List[Tuple[str, str, str, int, int, str]], debug: bool = False) -> Tuple[int, int]:
+        pred_scored, pred_conceded = 0.0, 0.0
         if len(prev_meetings) > 0:
             # Begin with average scored and conceded in previous meetings
             pred_scored, pred_conceded = self.avg_previous_result(team_name, prev_meetings, debug=debug)
@@ -266,7 +266,8 @@ class Predictor:
             next_games ([type]): [description]
             home_advantages ([type]): [description]
         """
-        predictions = {}  # {"Liverpool FC": ("25-08-21", "LIV  2 - 1 BUR"), ...}
+        # {"Liverpool FC": ("25-08-21", "LIV  2 - 1 BUR"), ...}
+        predictions = {}  # type: Dict[str, Optional[Tuple[str, str]]]
         
         team_names = form.df.index.values.tolist()
         # Check ALL teams as two teams can have different next games
@@ -289,7 +290,7 @@ class Predictor:
                 if debug:
                     print("\t\b", scoreline)
                 
-                game_date = next_games.df['Date'].astype(str).loc[team_name]
+                game_date = next_games.df['Date'].astype(str).loc[team_name]  # type: str
                 prediction = (game_date, scoreline)
                 
             predictions[team_name] = prediction
