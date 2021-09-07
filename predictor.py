@@ -24,7 +24,7 @@ class Predictor:
 
     def get_accuracy(self):
         accuracy = round(self.accuracy, 2)
-        result_accuracy = round(self.result_accuracy, 2)
+        result_accuracy = round(self.result_accuracy*100, 2)  # As percentage
         return accuracy, result_accuracy
     
     def get_next_game_prediction(self, team_name):
