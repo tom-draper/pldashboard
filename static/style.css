@@ -368,7 +368,7 @@ img {
   margin-top: 70px;
   display: flex;
   width: 100%;
-  font-size: 0.9em;
+  font-size: 0.65em;
   /* flex-direction: column; */
   align-items: center;
 }
@@ -407,7 +407,7 @@ img {
   color: rgb(162, 162, 162);
   position: absolute;
   top: -58px;
-  right: calc(50% - 200px);
+  right: calc(50% - 210px);
 }
 .season-stat {
   flex: 1;
