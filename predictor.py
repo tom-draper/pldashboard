@@ -23,7 +23,7 @@ class Predictor:
         return predictions
 
     def get_accuracy(self):
-        accuracy = round(self.accuracy, 2)
+        accuracy = round(self.accuracy*100, 2)
         result_accuracy = round(self.result_accuracy*100, 2)  # As percentage
         return accuracy, result_accuracy
     
