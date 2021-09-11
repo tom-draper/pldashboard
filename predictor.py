@@ -357,9 +357,11 @@ class Predictor:
     def git_push(self):
         # try:
         repo = Repo('.')
-        repo.index.add(['data/predictions.json'])
+        repo.index.remove(all=True)
+        repo.index.add(['./data/predictions.json'])
         repo.index.commit('automated predictions store')
-        repo.git.push('origin', 'predictions-store')
+        origin = repo.remote(name='origin')
+        origin.push('predictions-store')
         # except:
             # print('Some error occured while pushing the code')    
         
