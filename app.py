@@ -50,8 +50,8 @@ def get_next_game(team_name: str):
     return NextGame(opp_team, home_away, prev_meetings)
 
 def get_prediction(team_name: str):
-    score_prediction = updater.data.predictor.get_next_game_prediction(team_name)
-    accuracy, results_accuracy = updater.data.predictor.get_accuracy()
+    score_prediction = updater.predictor.get_next_game_prediction(team_name)
+    accuracy, results_accuracy = updater.predictor.get_accuracy()
     
     Prediction = namedtuple('Prediction', ['score_prediction', 'accuracy', 'results_accuracy'])
     return Prediction(score_prediction, accuracy, results_accuracy)
