@@ -368,7 +368,7 @@ class Predictor:
         self.gen_score_predictions(form, next_games, home_advantages, debug=False)
         self.record_accuracy()
         self.update_json_file(fixtures)
-        self.git_push()
+        # self.git_push()
         print(f'ℹ️ Predicting with accuracy: {round(self.accuracy*100, 2)}%')
         print(f'ℹ️ Predicting correct results with accuracy: {round(self.result_accuracy*100, 2)}%')
         print(f'ℹ️ Net predictions: [{self.signed_float_str(self.home_scored_avg_diff)}] - [{self.signed_float_str(self.away_scored_avg_diff)}]')
