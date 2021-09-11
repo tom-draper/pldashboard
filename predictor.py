@@ -357,13 +357,12 @@ class Predictor:
     def git_push(self):
         # try:
         repo = Repo('.')
-        repo.index.remove(all=True)
-        repo.index.add(['./data/predictions.json'])
+        repo.git.add(update=True)
         repo.index.commit('automated predictions store')
         origin = repo.remote(name='origin')
         origin.push('predictions-store')
         # except:
-            # print('Some error occured while pushing the code')    
+        #     print('Some error occured while pushing the code')    
         
     def update(self, fixtures, form, next_games, home_advantages):
         self.gen_score_predictions(form, next_games, home_advantages, debug=False)
