@@ -356,7 +356,7 @@ class Predictor:
     
     def git_push(self):
         # try:
-        repo = Repo('.')
+        repo = Repo('./app')
         repo.git.add(['.'])
         repo.git.add(update=True)
         repo.index.commit('automated predictions store')
