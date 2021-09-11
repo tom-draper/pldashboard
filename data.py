@@ -18,6 +18,22 @@ from utilities import Utilities
 utilities = Utilities()
 
 class Data:
+    def __init__(self):
+        # List of current season teams (taken from standings dataframe) 
+        self.team_names = []  # type: list[str]
+        self.logo_urls = {}  # type: dict[str, str] 
+        
+        # Dataframes
+        self.fixtures = Fixtures()
+        self.standings = Standings()
+        self.team_ratings = TeamRatings()
+        self.home_advantages = HomeAdvantages()
+        self.form = Form()
+        self.position_over_time = PositionOverTime()
+        self.next_games = NextGames()
+        self.season_stats = SeasonStats()
+
+class Updater:
     def __init__(self, current_season: int):
         self.season = current_season
                 
@@ -37,19 +53,8 @@ class Data:
         # Temp store for requested json API data 
         self.json_data = {'fixtures': {}, 'standings': {}}  # type: dict[str, dict[int, dict]]
         
-        # List of current season teams (taken from standings dataframe) 
-        self.team_names = []  # type: list[str]
-        self.logo_urls = {}  # type: dict[str, str] 
-        
         # Dataframes to build
-        self.fixtures = Fixtures()
-        self.standings = Standings()
-        self.team_ratings = TeamRatings()
-        self.home_advantages = HomeAdvantages()
-        self.form = Form()
-        self.position_over_time = PositionOverTime()
-        self.next_games = NextGames()
-        self.season_stats = SeasonStats()
+        self.data = Data()
         
         self.visualiser = DataVis()
         self.predictor = Predictor(current_season)
