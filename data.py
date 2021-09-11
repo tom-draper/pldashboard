@@ -770,7 +770,6 @@ class NextGames(DF):
         return self.df['NextTeam'].loc[team_name]
     
     def get_previous_meetings(self, team_name: str) -> list:
-        print(self.df.loc[team_name]['PreviousMeetings'])
         return self.df.loc[team_name]['PreviousMeetings']
     
     def get_home_away(self, team_name: str) -> str:
