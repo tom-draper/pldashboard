@@ -1,6 +1,6 @@
 from typing import List, Tuple, Set, Dict, Optional
 import json
-from git import Repo
+# from git import Repo
 import numpy as np
 from pandas.core.frame import DataFrame
 from utilities import Utilities
