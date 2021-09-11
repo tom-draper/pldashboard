@@ -5,12 +5,8 @@ import pandas as pd
 from pandas.core.frame import DataFrame
 import timebudget
 from utilities import Utilities
-import pandas as pd
-from collections import defaultdict
 from timebudget import timebudget
-import numpy as np
 from typing import Optional
-from datetime import datetime
 from dataclasses import dataclass
 
 utilities = Utilities()

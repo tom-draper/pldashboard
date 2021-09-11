@@ -1,7 +1,6 @@
 from pandas.core.frame import DataFrame
 from updater import Updater
 from flask import Flask, render_template, request
-from collections import namedtuple
 from threading import Thread
 from time import sleep
 from dataclasses import dataclass
@@ -80,6 +79,8 @@ class PredictionsParams:
     predictions: dict
     accuracy: float
     results_accuracy: float
+
+
 
 
 @app.route('/')
@@ -188,6 +189,8 @@ def insert_predictions_colours(predictions: dict):
                 pred['colour'] = 'red'
     
 
+
+
 @app.route('/predictions')
 def predictions() -> str:
     predictions = updater.predictor.get_predictions()
@@ -200,6 +203,7 @@ def predictions() -> str:
     return render_template('predictions.html', params=params)
 
     
+
 
 def thread_function(time=3600):
     while True:
