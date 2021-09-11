@@ -42,7 +42,7 @@ def get_next_game(team_name: str):
     opp_team_name, home_away, prev_meetings = updater.data.next_games.get_details(team_name)
     opp_team_name_hyphen = (opp_team_name.lower()[:-3]).replace(' ', '-') # Remove 'FC' from end
     opp_form_rating = updater.data.form.get_current_form_rating(opp_team_name)
-    opp_logo_url = updater.data.get_logo_url(opp_team_name)
+    opp_logo_url = updater.data.teams.get_logo_url(opp_team_name)
     
     OppTeam = namedtuple('OppTeam', ['name', 'name_hyphen', 'form_rating', 'logo_url'])
     opp_team = OppTeam(opp_team_name, opp_team_name_hyphen, opp_form_rating, opp_logo_url)
