@@ -6,8 +6,8 @@ import requests
 import json
 from data import Data
 from data_vis import DataVis
-from predictor import Predictor
 from utilities import Utilities
+from predictor import Predictor
 
 utilities = Utilities()
 
@@ -17,6 +17,8 @@ class Updater:
         self.season = current_season
         
         self.data = Data()
+        self.predictor = Predictor(current_season)
+        self.visualiser = DataVis()
                 
         # Import environment variables
         __file__ = 'data.py'
@@ -34,9 +36,6 @@ class Updater:
         # Store for new requested API data or old data from memory 
         self.json_data = {'fixtures': {}, 'standings': {}}  # type: dict[str, dict[int, dict]]
         
-        self.visualiser = DataVis()
-        self.predictor = Predictor(current_season)
-
     
     
     # ----------------------------- DATA API -----------------------------------
@@ -88,12 +87,21 @@ class Updater:
                 with open(f'data/{data_type}_{season}.json', 'w') as json_file:
                     json.dump(data, json_file)
     
+    def get_logo_urls(self) -> dict[str, str]:
+        data = self.json_data['standings'][self.season]
+
+        logo_urls = {}
+        for standings_row in data:
+            team_name = standings_row['team']['name'].replace('&', 'and')
+            crest_url = standings_row['team']['crestUrl']
+            logo_urls[team_name] = crest_url
+        
+        return logo_urls
+    
     def update_all_dataframes(self, n_seasons: int = 3, display_tables: bool = False):
-        self.data.teams.update(self.json_data, 
-                               self.season)
         # Standings for the last [n_seasons] seasons
         self.data.standings.update(self.json_data, 
-                                   self.data.teams.names, 
+                                   self.logo_urls.keys(), 
                                    self.season, 
                                    n_seasons, 
                                    display=display_tables)
@@ -110,7 +118,8 @@ class Updater:
         # Calculated values to represent the personalised advantage each team has at home
         self.data.home_advantages.update(self.json_data, 
                                          self.season, 
-                                         self.home_games_threshold, n_seasons, 
+                                         self.home_games_threshold, 
+                                         n_seasons, 
                                          display=display_tables)
         # Calculated form values for each team for each matchday played so far
         self.data.form.update(self.data.fixtures, 
@@ -124,7 +133,7 @@ class Updater:
         # Data about the opponent in each team's next game 
         self.data.next_games.update(self.json_data, 
                                     self.data.fixtures, 
-                                    self.data.teams.names, 
+                                    self.logo_urls.keys(), 
                                     self.season, 
                                     n_seasons, 
                                     display=display_tables)
@@ -148,6 +157,7 @@ class Updater:
             request_new = False
             self.fetch_data(n_seasons, request_new)
         
+        self.logo_urls = self.get_logo_urls()
         # Update using stored json data
         self.update_all_dataframes(n_seasons, display_tables)
         self.update_predictions()
@@ -156,11 +166,11 @@ class Updater:
             print('💾 Saving new data...')
             self.save_data()
             # Use dataframes to update all graph HTML files
-            self.visualiser.update_all(self.data.fixtures.df, 
-                                       self.data.team_ratings.df, 
-                                       self.data.home_advantages.df, 
-                                       self.data.form.df, 
-                                       self.data.position_over_time.df, 
+            self.visualiser.update_all(self.data.fixtures, 
+                                       self.data.team_ratings, 
+                                       self.data.home_advantages, 
+                                       self.data.form, 
+                                       self.data.position_over_time, 
                                        display_graphs=display_graphs, 
                                        team_name=team_name)
 

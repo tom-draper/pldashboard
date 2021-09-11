@@ -11,23 +11,9 @@ from timebudget import timebudget
 import numpy as np
 from typing import Optional
 from datetime import datetime
+from dataclasses import dataclass
 
 utilities = Utilities()
-
-
-
-
-class Data:
-    def __init__(self):
-        self.teams = Teams()
-        self.fixtures = Fixtures()
-        self.standings = Standings()
-        self.team_ratings = TeamRatings()
-        self.home_advantages = HomeAdvantages()
-        self.form = Form()
-        self.position_over_time = PositionOverTime()
-        self.next_games = NextGames()
-        self.season_stats = SeasonStats()
 
 
 
@@ -326,7 +312,7 @@ class Form(DF):
             if self.not_played_current_matchday(won_against_star_team, current_matchday):
                 # Use previous matchday data
                 previous_matchday = list(self.df.columns.unique(level=0))[-2]
-                won_against_star_team = self.df[previous_matchday].loc[team_name]['Won Against Star Team']
+                won_against_star_team = self.df[previous_matchday].loc[team_name]['WonAgainstStarTeam']
                 
             # Replace boolean values with CSS tag for super win image
             won_against_star_team = ['star-team' if x else 'not-star-team' for x in won_against_star_team]
@@ -1297,7 +1283,9 @@ class HomeAdvantages(DF):
             print(home_advantages)
         
         self.df = home_advantages
-        
+
+
+
 
 class Teams:
     def __init__(self):
@@ -1305,17 +1293,19 @@ class Teams:
         self.names = []  # type: list[str]
         self.logo_urls = {}  # type: dict[str, str]
     
-    def update(self, json_data: dict, season: int):
-        data = json_data['standings'][season]
 
-        logo_urls = {}
-        for standings_row in data:
-            team_name = standings_row['team']['name'].replace('&', 'and')
-            crest_url = standings_row['team']['crestUrl']
-            logo_urls[team_name] = crest_url
-        
-        self.logo_urls = logo_urls
-        self.names = logo_urls.keys()
-        
-    def get_logo_url(self, team_name):
-        return self.logo_urls[team_name]
+
+
+
+
+@dataclass
+class Data:
+    logo_urls: dict = defaultdict
+    fixtures: Fixtures = Fixtures()
+    standings: Standings = Standings()
+    team_ratings: TeamRatings = TeamRatings()
+    home_advantages: HomeAdvantages = HomeAdvantages()
+    form: Form = Form()
+    position_over_time: PositionOverTime = PositionOverTime()
+    next_games: NextGames = NextGames()
+    season_stats: SeasonStats = SeasonStats()

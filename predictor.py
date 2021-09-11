@@ -1,6 +1,7 @@
-from typing import List, Tuple, Set, Dict, Optional
+from typing import Optional
+from data import Fixtures, Form, HomeAdvantages, NextGames
 import json
-# from git import Repo
+from git import Repo
 import numpy as np
 from pandas.core.frame import DataFrame
 from utilities import Utilities
@@ -17,28 +18,29 @@ class Predictor:
         self.away_scored_avg_diff = None
         self.prediction_file = f'data/predictions.json'
     
-    def get_predictions(self):
+    def get_predictions(self) -> dict:
+        predictions = {}
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
             predictions = data[f'predictions{self.current_season}']
         return predictions
 
-    def get_accuracy(self):
+    def get_accuracy(self) -> tuple[float, float]:
         accuracy = round(self.accuracy*100, 2)
         result_accuracy = round(self.result_accuracy*100, 2)  # As percentage
         return accuracy, result_accuracy
     
-    def get_next_game_prediction(self, team_name):
+    def get_next_game_prediction(self, team_name: str) -> tuple[str, str]:
         return self.predictions[team_name][1]  # (Date, Prediction)
     
-    def identical_fixtures(self, scoreline1, scoreline2):
+    def identical_fixtures(self, scoreline1: str, scoreline2: str) -> bool:
         if scoreline1 != None and scoreline2 != None:
             home_p, _, _, _, away_p = scoreline1.split(' ')
             home_s, _, _, _, away_s = scoreline2.split(' ')
             return (home_p == home_s) and (away_p == away_s)
         return False
 
-    def extract_scores(self, scoreline):
+    def extract_scores(self, scoreline: str) -> tuple[int, int]:
         if scoreline != None:
             _, home_score, _, away_score, _ = scoreline.split(' ')
             return int(home_score), int(away_score)
@@ -50,10 +52,10 @@ class Predictor:
                 (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)
 
     
-    def prediction_count(self, predictions: dict):
+    def prediction_count(self, predictions: dict) -> tuple[int, int, int, int, int, int, int]:
         total, correct, result_correct = 0, 0, 0
         # Count number of home and away goals (predicted vs actually)
-        n_pred_home_goals, n_pred_away_goals, n_act_home_goals, n_act_away_goals = 0, 0, 0, 0
+        n_pred_home, n_pred_away, n_act_home, n_act_away = 0, 0, 0, 0
         
         # Scan through all current predictions and fill any missing 'actual' scorelines
         for predictions in predictions.values():
@@ -72,12 +74,12 @@ class Predictor:
                     if self.identical_result(pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
                         result_correct += 1
                         
-                    n_pred_home_goals += pred_home_goals
-                    n_pred_away_goals += pred_away_goals
-                    n_act_home_goals += act_home_goals
-                    n_act_away_goals += act_away_goals
+                    n_pred_home += pred_home_goals
+                    n_pred_away += pred_away_goals
+                    n_act_home += act_home_goals
+                    n_act_away += act_away_goals
         
-        return total, correct, result_correct, n_pred_home_goals, n_pred_away_goals, n_act_home_goals, n_act_away_goals
+        return total, correct, result_correct, n_pred_home, n_pred_away, n_act_home, n_act_away
     
     def record_accuracy(self):
         """Sets the class accuracy variables:
@@ -105,17 +107,17 @@ class Predictor:
             self.home_scored_avg_diff = (n_pred_home_goals - n_act_home_goals) / total
             self.away_scored_avg_diff = (n_pred_away_goals - n_act_away_goals) / total
     
-    def format_scoreline_str_from_str(self, team_name, opp_team_name, score_str, home_away):
+    def format_scoreline_str_from_str(self, team_name: str, opp_team_name: str, score: str, home_away: str) -> str:
         team_name_initials = util.convert_team_name_or_initials(team_name)
         opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
         
         if home_away == 'Home':
-            scoreline = f'{team_name_initials} {score_str} {opp_team_name_initials}'
+            scoreline = f'{team_name_initials} {score} {opp_team_name_initials}'
         else:
-            scoreline = f'{opp_team_name_initials} {score_str} {team_name_initials}'
+            scoreline = f'{opp_team_name_initials} {score} {team_name_initials}'
         return scoreline
     
-    def get_actual_scores(self, fixtures: DataFrame) -> Set[Tuple[str, str]]:
+    def get_actual_scores(self, fixtures: DataFrame) -> set[tuple[str, str]]:
         actual_scores = set()
         for matchday_no in range(1, 39):
             matchday = fixtures.df[matchday_no]
@@ -129,16 +131,6 @@ class Predictor:
                         actual_scores.add((date, actual_score))
         
         return actual_scores
-                            
-    # def record_actual_results(self, fixtures: DataFrame):
-    #     actual_scores = self.get_actual_scores(fixtures)
-    #     # Update prediction json objects by inserting their actual scores
-    #     n_inserted = self.insert_actual_scores(actual_scores)
-    #     if n_inserted > 0:
-    #         print(f'ℹ️ Updated {n_inserted} existing predictions with their actual results')
-            
-            
-    
     
     def exact_prediction_already_made(self, date: str, new_prediction: str, predictions: dict) -> bool:        
         already_made = False
@@ -149,6 +141,7 @@ class Predictor:
                 if (prediction['prediction'] == new_prediction) and (prediction['actual'] == None):
                     already_made = True
                     break
+                
         return already_made
 
     def outdated_prediction_already_made(self, date: str, new_prediction: str, predictions: dict) -> bool: 
@@ -163,6 +156,7 @@ class Predictor:
                         if (predicted_score != new_prediction) and (actual_score == None):
                             already_made = True  
                         break
+                    
         return already_made
     
     def insert_new_prediction(self, date: str, new_prediction: str, predictions: dict):
@@ -173,7 +167,6 @@ class Predictor:
         for prediction in predictions[date]:
             predicted_score = prediction['prediction']
             actual_score = prediction['actual']
-            print(predicted_score, actual_score)
             if self.identical_fixtures(predicted_score, new_prediction):
                 # If fixture match perfectly predicted scoreline different (outdated)
                 if (predicted_score != new_prediction) and (actual_score == None):
@@ -185,7 +178,7 @@ class Predictor:
         print("Adding new prediction:", new_prediction)
         predictions[date].append({'prediction': new_prediction, 'actual': None})
     
-    def avg_previous_result(self, team_name: str, prev_meetings: List[Tuple[str, str, str, int, int, str]], debug=False) -> Tuple[float, float]:
+    def avg_previous_result(self, team_name: str, prev_meetings: list[tuple[str, str, str, int, int, str]], debug=False) -> tuple[float, float]:
         goals_scored, goals_conceded = 0, 0
         
         for prev_match in prev_meetings:
@@ -207,7 +200,7 @@ class Predictor:
 
         return avg_scored, avg_conceded
 
-    def modify_prediction_by_current_form(self, form_rating: float, opp_form_rating: float, pred_scored: float = 0, pred_conceded: float = 0, debug: bool = False) -> Tuple[float, float]:
+    def modify_prediction_by_current_form(self, form_rating: float, opp_form_rating: float, pred_scored: float = 0, pred_conceded: float = 0, debug: bool = False) -> tuple[float, float]:
         # Boost the score of the team better in form based on the absolute difference in form
         form_diff = form_rating - opp_form_rating
         
@@ -221,10 +214,11 @@ class Predictor:
             if debug:
                 print(f"\tForm difference {form_rating} - {opp_form_rating} = [{round(form_diff, 2)}] -> {pred_conceded} + {round(pred_conceded * (abs(form_diff)/100), 2)}".ljust(60), f"[{round(pred_scored, 2)} - {round(pred_conceded + (pred_conceded * (abs(form_diff)/100)), 2)}]")
             pred_conceded += pred_conceded * (abs(form_diff)/100)
+            
         return pred_scored, pred_conceded
 
         
-    def modify_prediction_by_home_advantage(self, team_name: str, opp_team_name: str, home_advantages: DataFrame, home_away: str, pred_scored: float = 0, pred_conceded: float = 0, debug: bool = False) -> Tuple[float, float]:
+    def modify_prediction_by_home_advantage(self, team_name: str, opp_team_name: str, home_advantages: DataFrame, home_away: str, pred_scored: float = 0, pred_conceded: float = 0, debug: bool = False) -> tuple[float, float]:
         if home_away == "Home":
             # Decrease conceded (if team has a positive home advantage)
             if debug:
@@ -235,9 +229,10 @@ class Predictor:
             if debug:
                 print(f"\tAway -> {pred_scored} x {round((1 - home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]), 2)}".ljust(60), f"[{round(pred_scored * ((1 - home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0])), 2)} - {round(pred_conceded, 2)}]")
             pred_scored *= (1 - home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0])
+            
         return pred_scored, pred_conceded
     
-    def calc_score_prediction(self, team_name: str, opp_team_name: str, home_advantages: DataFrame, home_away: str, form_rating: float, opp_form_rating: float, prev_meetings: List[Tuple[str, str, str, int, int, str]], debug: bool = False) -> Tuple[int, int]:
+    def calc_score_prediction(self, team_name: str, opp_team_name: str, home_advantages: DataFrame, home_away: str, form_rating: float, opp_form_rating: float, prev_meetings: list[tuple[str, str, str, int, int, str]], debug: bool = False) -> tuple[int, int]:
         pred_scored, pred_conceded = 0.0, 0.0
         if len(prev_meetings) > 0:
             # Begin with average scored and conceded in previous meetings
@@ -257,6 +252,7 @@ class Predictor:
             scoreline = f'{team_name_initials} {scored} - {conceded} {opp_team_name_initials}'
         else:
             scoreline = f'{opp_team_name_initials} {conceded} - {scored} {team_name_initials}'
+            
         return scoreline
     
     def gen_score_predictions(self, form: DataFrame, next_games: DataFrame, home_advantages: DataFrame, debug: bool = False):
@@ -268,8 +264,7 @@ class Predictor:
             home_advantages ([type]): [description]
         """
         # {"Liverpool FC": ("25-08-21", "LIV  2 - 1 BUR"), ...}
-        predictions = {}  # type: Dict[str, Optional[Tuple[str, str]]]
-        
+        predictions = {}  # type: dict[str, Optional[tuple[str, str]]]
         team_names = form.df.index.values.tolist()
         # Check ALL teams as two teams can have different next games
         for team_name in team_names:
@@ -298,7 +293,7 @@ class Predictor:
                     
         self.predictions = predictions
         
-    def signed_float_str(self, value: float):
+    def signed_float_str(self, value: float) -> str:
         value = round(value, 2)
         if value >= 0:
             return f'+{value}'
@@ -314,7 +309,7 @@ class Predictor:
         if n_inserted > 0:
             print(f'ℹ️ Added {n_inserted} new predictions')
     
-    def insert_actual_scores(self, actual_scores: Set[Tuple[str, str]], predictions: dict):                
+    def insert_actual_scores(self, actual_scores: set[tuple[str, str]], predictions: dict):                
         n_inserted = 0
         for date, actual_score in actual_scores:
             for prediction in predictions[date]:
@@ -364,7 +359,7 @@ class Predictor:
         # except:
         #     print('Some error occured while pushing the code')    
         
-    def update(self, fixtures, form, next_games, home_advantages):
+    def update(self, fixtures: Fixtures, form: Form, next_games: NextGames, home_advantages: HomeAdvantages):
         self.gen_score_predictions(form, next_games, home_advantages, debug=False)
         self.record_accuracy()
         self.update_json_file(fixtures)

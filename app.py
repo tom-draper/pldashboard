@@ -1,68 +1,129 @@
+from pandas.core.frame import DataFrame
 from updater import Updater
 from flask import Flask, render_template, request
 from collections import namedtuple
 from threading import Thread
 from time import sleep
+from dataclasses import dataclass
 
 season = 2021
 
 app = Flask(__name__)
 
 
+
+    
+@dataclass
+class Team:
+    name: str
+    name_hyphen: str
+    position: int
+    logo_url: str
+    
+@dataclass
+class TableSnippet:
+    rows: list
+    team_table_idx: int
+
+@dataclass
+class Form:
+    form: list[str]
+    recent_teams_played: DataFrame
+    rating: float
+    won_against_star_team: list[str]
+
+@dataclass
+class SeasonStats:
+    clean_sheet_ratio: float
+    csr_position: int
+    goals_per_game: float
+    gpg_position: int
+    conceded_per_game: float
+    cpg_position: int
+
+@dataclass
+class NextGame:
+    opp_team: str
+    home_away: str
+    prev_meetings: list[tuple]
+
+@dataclass
+class OppTeam:
+    name: str
+    name_hyphen: str
+    form_rating: float
+    logo_url: str
+
+@dataclass
+class Prediction:
+    score_prediction: str
+    accuracy: float
+    results_accuracy: float
+
+@dataclass
+class Params:
+    season: int
+    title: str
+    team: Team
+    form: Form
+    season_stats: SeasonStats
+    next_game: NextGame
+    prediction: Prediction
+    table_snippet: TableSnippet
+
+@dataclass
+class HomeParams:
+    title: str
+
+@dataclass
+class PredictionsParams:
+    predictions: dict
+    accuracy: float
+    results_accuracy: float
+
+
 @app.route('/')
 @app.route('/home')
-def home():
-    Params= namedtuple('Params', ['title'])
-    params = Params('Premier League')
+def home() -> str:
+    params = HomeParams('Premier League')
     return render_template('home.html', params=params)
 
 
 
-def get_team(title: str, team_name_hyphen: str):
+
+def get_team(title: str, team_name_hyphen: str) -> Team:
     team_name = title + ' FC'
-    team_logo_url = updater.data.teams.get_logo_url(team_name)
+    team_logo_url = updater.logo_urls[team_name]
     position = updater.data.standings.get_position(team_name, season)
-    
-    Team = namedtuple('Team', ['name', 'name_hyphen', 'position', 'logo_url'])
     return Team(team_name, team_name_hyphen, position, team_logo_url)
 
-def get_form(team_name: str):
+def get_form(team_name: str) -> Form:
     form_str, recent_teams_played, rating, won_against_star_team = updater.data.form.get_recent_form(team_name)
-    
-    Form = namedtuple('Form', ['form', 'recent_teams_played', 'rating', 'won_against_star_team'])
     return Form(form_str, recent_teams_played, rating, won_against_star_team)
 
-def get_season_stats(team_name: str):
+def get_season_stats(team_name: str) -> SeasonStats:
     clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position = updater.data.season_stats.get_season_stats(team_name)
-    
-    SeasonStats = namedtuple('SeasonStats', ['clean_sheet_ratio', 'csr_position', 'goals_per_game', 'gpg_position', 'conceded_per_game', 'cpg_position'])
     return SeasonStats(clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position)
 
-def get_next_game(team_name: str):
+def get_next_game(team_name: str) -> NextGame:
     opp_team_name, home_away, prev_meetings = updater.data.next_games.get_details(team_name)
     opp_team_name_hyphen = (opp_team_name.lower()[:-3]).replace(' ', '-') # Remove 'FC' from end
     opp_form_rating = updater.data.form.get_current_form_rating(opp_team_name)
-    opp_logo_url = updater.data.teams.get_logo_url(opp_team_name)
+    opp_logo_url = updater.logo_urls[opp_team_name]
     
-    OppTeam = namedtuple('OppTeam', ['name', 'name_hyphen', 'form_rating', 'logo_url'])
     opp_team = OppTeam(opp_team_name, opp_team_name_hyphen, opp_form_rating, opp_logo_url)
-    NextGame = namedtuple('NextGame', ['opp_team', 'home_away', 'prev_meetings'])
     return NextGame(opp_team, home_away, prev_meetings)
 
-def get_prediction(team_name: str):
+def get_prediction(team_name: str) -> Prediction:
     score_prediction = updater.predictor.get_next_game_prediction(team_name)
     accuracy, results_accuracy = updater.predictor.get_accuracy()
-    
-    Prediction = namedtuple('Prediction', ['score_prediction', 'accuracy', 'results_accuracy'])
     return Prediction(score_prediction, accuracy, results_accuracy)
 
-def get_table_snippet(team_name: str):
+def get_table_snippet(team_name: str) -> TableSnippet:
     rows, team_table_idx = updater.data.standings.get_table_snippet(team_name, season)
-    
-    TableSnippet = namedtuple('TableSnippet', ['rows', 'team_table_idx'])
     return TableSnippet(rows, team_table_idx)
 
-def get_params(team_name_hyphen: str):
+def get_params(team_name_hyphen: str) -> Params:
     title = team_name_hyphen.replace('-', ' ').title().replace('And', 'and')
     
     team = get_team(title, team_name_hyphen)
@@ -72,10 +133,7 @@ def get_params(team_name_hyphen: str):
     prediction = get_prediction(team.name)
     table_snippet = get_table_snippet(team.name)
     
-    Params = namedtuple('Params', ['season', 'title', 'team', 'form', 'season_stats', 'next_game', 'prediction', 'table_snippet'])
-    params = Params(season, title, team, form, season_stats, next_game, prediction, table_snippet)
-
-    return params
+    return Params(season, title, team, form, season_stats, next_game, prediction, table_snippet)
 
 @app.route('/liverpool')
 @app.route('/manchester-city')
@@ -131,15 +189,14 @@ def insert_predictions_colours(predictions: dict):
     
 
 @app.route('/predictions')
-def predictions():
-    predictions_dict = updater.data.predictor.get_predictions()
-    predictions_dict = dict(sorted(predictions_dict.items(), reverse=True))
-    insert_predictions_colours(predictions_dict)
+def predictions() -> str:
+    predictions = updater.predictor.get_predictions()
+    predictions = dict(sorted(predictions.items(), reverse=True))
+    insert_predictions_colours(predictions)
     
-    accuracy, results_accuracy = updater.data.predictor.get_accuracy()
+    accuracy, results_accuracy = updater.predictor.get_accuracy()
     
-    Params= namedtuple('Params', ['predictions_dict', 'accuracy', 'results_accuracy'])
-    params = Params(predictions_dict, accuracy, results_accuracy)
+    params = PredictionsParams(predictions, accuracy, results_accuracy)
     return render_template('predictions.html', params=params)
 
     
