@@ -1,4 +1,4 @@
-from data import Data
+from updater import Updater
 from flask import Flask, render_template, request
 from collections import namedtuple
 from threading import Thread
@@ -20,29 +20,29 @@ def home():
 
 def get_team(title: str, team_name_hyphen: str):
     team_name = title + ' FC'
-    team_logo_url = data.get_logo_url(team_name)
-    position = data.standings.get_position(team_name, season)
+    team_logo_url = updater.data.teams.get_logo_url(team_name)
+    position = updater.data.standings.get_position(team_name, season)
     
     Team = namedtuple('Team', ['name', 'name_hyphen', 'position', 'logo_url'])
     return Team(team_name, team_name_hyphen, position, team_logo_url)
 
 def get_form(team_name: str):
-    form_str, recent_teams_played, rating, won_against_star_team = data.form.get_recent_form(team_name)
+    form_str, recent_teams_played, rating, won_against_star_team = updater.data.form.get_recent_form(team_name)
     
     Form = namedtuple('Form', ['form', 'recent_teams_played', 'rating', 'won_against_star_team'])
     return Form(form_str, recent_teams_played, rating, won_against_star_team)
 
 def get_season_stats(team_name: str):
-    clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position = data.season_stats.get_season_stats(team_name)
+    clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position = updater.data.season_stats.get_season_stats(team_name)
     
     SeasonStats = namedtuple('SeasonStats', ['clean_sheet_ratio', 'csr_position', 'goals_per_game', 'gpg_position', 'conceded_per_game', 'cpg_position'])
     return SeasonStats(clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position)
 
 def get_next_game(team_name: str):
-    opp_team_name, home_away, prev_meetings = data.next_games.get_details(team_name)
+    opp_team_name, home_away, prev_meetings = updater.data.next_games.get_details(team_name)
     opp_team_name_hyphen = (opp_team_name.lower()[:-3]).replace(' ', '-') # Remove 'FC' from end
-    opp_form_rating = data.form.get_current_form_rating(opp_team_name)
-    opp_logo_url = data.get_logo_url(opp_team_name)
+    opp_form_rating = updater.data.form.get_current_form_rating(opp_team_name)
+    opp_logo_url = updater.data.get_logo_url(opp_team_name)
     
     OppTeam = namedtuple('OppTeam', ['name', 'name_hyphen', 'form_rating', 'logo_url'])
     opp_team = OppTeam(opp_team_name, opp_team_name_hyphen, opp_form_rating, opp_logo_url)
@@ -50,14 +50,14 @@ def get_next_game(team_name: str):
     return NextGame(opp_team, home_away, prev_meetings)
 
 def get_prediction(team_name: str):
-    score_prediction = data.predictor.get_next_game_prediction(team_name)
-    accuracy, results_accuracy = data.predictor.get_accuracy()
+    score_prediction = updater.data.predictor.get_next_game_prediction(team_name)
+    accuracy, results_accuracy = updater.data.predictor.get_accuracy()
     
     Prediction = namedtuple('Prediction', ['score_prediction', 'accuracy', 'results_accuracy'])
     return Prediction(score_prediction, accuracy, results_accuracy)
 
 def get_table_snippet(team_name: str):
-    rows, team_table_idx = data.standings.get_table_snippet(team_name, season)
+    rows, team_table_idx = updater.data.standings.get_table_snippet(team_name, season)
     
     TableSnippet = namedtuple('TableSnippet', ['rows', 'team_table_idx'])
     return TableSnippet(rows, team_table_idx)
@@ -132,11 +132,11 @@ def insert_predictions_colours(predictions: dict):
 
 @app.route('/predictions')
 def predictions():
-    predictions_dict = data.predictor.get_predictions()
+    predictions_dict = updater.data.predictor.get_predictions()
     predictions_dict = dict(sorted(predictions_dict.items(), reverse=True))
     insert_predictions_colours(predictions_dict)
     
-    accuracy, results_accuracy = data.predictor.get_accuracy()
+    accuracy, results_accuracy = updater.data.predictor.get_accuracy()
     
     Params= namedtuple('Params', ['predictions_dict', 'accuracy', 'results_accuracy'])
     params = Params(predictions_dict, accuracy, results_accuracy)
@@ -148,11 +148,11 @@ def thread_function(time=3600):
     while True:
         print(f'Updating data in {time} seconds...')
         sleep(time)
-        data.update_all(request_new=True, display_tables=False)
+        updater.update_all(request_new=True, display_tables=False)
 
-data = Data(season)
+updater = Updater(season)
 data_updater_thread = Thread(target=thread_function, args=(7200,))
-data.update_all(request_new=True, display_tables=False)
+updater.update_all(request_new=True, display_tables=False)
 data_updater_thread.start()
 
 if __name__ == '__main__':    

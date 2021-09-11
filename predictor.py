@@ -1,5 +1,6 @@
 from typing import List, Tuple, Set, Dict, Optional
 import json
+from git import Repo
 import numpy as np
 from pandas.core.frame import DataFrame
 from utilities import Utilities
@@ -352,11 +353,21 @@ class Predictor:
         # Overwrite file with new data
         with open(self.prediction_file, 'w') as f:
             json.dump(data, f)
+    
+    def git_push(self):
+        # try:
+        repo = Repo('.')
+        repo.index.add(['data/predictions.json'])
+        repo.index.commit('automated predictions store')
+        repo.git.push('origin', 'predictions-store')
+        # except:
+            # print('Some error occured while pushing the code')    
         
-    def update_predictions(self, fixtures, form, next_games, home_advantages):
+    def update(self, fixtures, form, next_games, home_advantages):
         self.gen_score_predictions(form, next_games, home_advantages, debug=False)
         self.record_accuracy()
         self.update_json_file(fixtures)
+        self.git_push()
         print(f'ℹ️ Predicting with accuracy: {round(self.accuracy*100, 2)}%')
         print(f'ℹ️ Predicting correct results with accuracy: {round(self.result_accuracy*100, 2)}%')
         print(f'ℹ️ Net predictions: [{self.signed_float_str(self.home_scored_avg_diff)}] - [{self.signed_float_str(self.away_scored_avg_diff)}]')
