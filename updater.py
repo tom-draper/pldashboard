@@ -148,7 +148,7 @@ class Updater:
                               self.data.home_advantages)
     
     @timebudget
-    def update_all(self, n_seasons: int = 3, team_name: str = None, display_tables: bool = False, display_graphs: bool = False, request_new: bool = True):
+    def update_all(self, n_seasons: int = 3, team_name: str = '', display_tables: bool = False, display_graphs: bool = False, request_new: bool = True):
         try:
             self.fetch_data(n_seasons, request_new)
         except ValueError as e:

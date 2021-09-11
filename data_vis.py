@@ -75,11 +75,13 @@ class DataVis:
                                                 width=1,
                                                 dash="dot")))
 
+        y_values = [i for i in range(0, 101, 10)]
+        
         fig.update_layout(
             yaxis=dict(
                 title_text="Calculated Team Rating",
-                ticktext=[str(i) + "%" for i in range(0, 101, 10)],
-                tickvals=[i for i in range(0, 101, 10)],
+                ticktext=[f"{val}%" for val in y_values],
+                tickvals=y_values,
                 gridcolor='gray',
                 showline=False,
                 zeroline=False,
@@ -165,8 +167,8 @@ class DataVis:
             os.rename(temp_path, path)
 
     @timebudget
-    def update_fixtures(self, fixtures: Fixtures, team_ratings: TeamRatings, home_advantages: HomeAdvantages, display: bool = False, team_name: Optional[str] = None):
-        if team_name == None:
+    def update_fixtures(self, fixtures: Fixtures, team_ratings: TeamRatings, home_advantages: HomeAdvantages, team_name: str = '', display: bool = False):
+        if not team_name:
             print("📊 Updating all team fixtures graphs...")
             teams_to_update = fixtures.df.index.values.tolist()
         else:
@@ -180,9 +182,9 @@ class DataVis:
         # Sizes of each data point marker
         sizes = [DEFAULT_MARKER_SIZE] * N_MATCHES
 
-        for team_name in teams_to_update:
+        for team in teams_to_update:
             # Get row of fixtures dataframe
-            team_fixtures = fixtures.df.loc[team_name]
+            team_fixtures = fixtures.df.loc[team]
             x, y, details = self.fixtures_data_points(
                 team_fixtures, team_ratings, home_advantages, sizes, NOW, N_MATCHES, BIG_MARKER_SIZE)
 
@@ -191,7 +193,9 @@ class DataVis:
             if display:
                 fig.show()
 
-            self.save_fig(fig, team_name, 'fixtures',
+            self.save_fig(fig, 
+                          team, 
+                          'fixtures',
                           path='./templates/graphs/')
 
     # ------------- FORM OVER TIME GRAPHS -------------
@@ -227,11 +231,14 @@ class DataVis:
                                  "Matchday %{x}<br>Form: <b>%{y:.1f}%</b><extra></extra>",
                                  hoverinfo=('x+y'),
                                  ))
+        
+        y_labels = [i for i in range(0, 101, 10)]
+        
         fig.update_layout(
             yaxis=dict(
                 title_text="Form Rating %",
-                ticktext=([i for i in range(0, 101, 10)]),
-                tickvals=([i for i in range(0, 101, 10)]),
+                ticktext=y_labels,
+                tickvals=y_labels,
                 showgrid=False,
                 showline=False,
                 zeroline=False,
@@ -241,7 +248,7 @@ class DataVis:
                 linecolor="black",
                 tickmode="array",
                 dtick=1,
-                ticktext=[str(i) for i in matchday_labels],
+                ticktext=matchday_labels,
                 tickvals=x,
                 showgrid=False,
                 showline=False,
@@ -256,12 +263,12 @@ class DataVis:
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
         )
+        
         return fig
 
-    def form_over_time_data_points(self, form: Form) -> tuple[list[datetime], list[str], list[float]]:
+    def form_over_time_data_points(self, form: Form) -> tuple[list[datetime], list[str], list[list[float]]]:
         x_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'Date']
-        y_cols = form.df.iloc[:, form.df.columns.get_level_values(
-            1) == 'FormRating']
+        y_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'FormRating']
 
         # All ys have the same x date values
         x = []
@@ -285,11 +292,11 @@ class DataVis:
         return x, matchday_labels, ys
 
     @timebudget
-    def update_form_over_time(self, form: Form, display: bool = False, team_name: str = None):
+    def update_form_over_time(self, form: Form,  team_name: str = '', display: bool = False):
         if form.df.empty:
             print("Error: Cannot generate form over time graph; Form dataframe is empty")
         else:
-            if team_name == None:
+            if not team_name:
                 print("📊 Updating all teams form over time graphs...")
                 teams_to_update = form.df.index.values.tolist()
             else:
@@ -299,14 +306,13 @@ class DataVis:
             x, matchday_labels, ys = self.form_over_time_data_points(form)
             team_names = form.df.index.values.tolist()
 
-            for team_name in teams_to_update:
-                fig = self.create_form_over_time_fig(
-                    x, ys, matchday_labels, team_name, team_names)
+            for team in teams_to_update:
+                fig = self.create_form_over_time_fig(x, ys, matchday_labels, team, team_names)
 
                 if display:
                     fig.show()
 
-                self.save_fig(fig, team_name, 'form-over-time')
+                self.save_fig(fig, team, 'form-over-time')
 
     # --------------------- POSITION OVER TIME GRAPHS --------------------------
 
@@ -378,11 +384,13 @@ class DataVis:
                       layer="below",
                       )
 
+        positional_values = [i for i in range(1, 21)]
+
         fig.update_layout(
             yaxis=dict(
                 title_text="League Position",
-                ticktext=([i for i in range(1, 21)]),
-                tickvals=([i for i in range(1, 21)]),
+                ticktext=positional_values,
+                tickvals=positional_values,
                 autorange="reversed",
                 showgrid=False,
                 showline=False,
@@ -393,7 +401,7 @@ class DataVis:
                 linecolor="black",
                 tickmode="array",
                 dtick=1,
-                ticktext=[str(i) for i in matchday_labels],
+                ticktext=matchday_labels,
                 tickvals=x,
                 showgrid=False,
                 showline=False,
@@ -412,10 +420,8 @@ class DataVis:
         return fig
 
     def position_over_time_data_points(self, position_over_time: PositionOverTime) -> tuple[list[datetime], list[str], list[list[int]]]:
-        x_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(
-            1) == 'Date']
-        y_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(
-            1) == 'Position']
+        x_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(1) == 'Date']
+        y_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(1) == 'Position']
 
         # All ys have the same x date values
         x = []
@@ -439,12 +445,12 @@ class DataVis:
         return x, matchday_labels, ys
 
     @timebudget
-    def update_position_over_time(self, position_over_time, display=False, team_name=None):
+    def update_position_over_time(self, position_over_time: PositionOverTime, team_name: str = '', display: bool = False):
         if position_over_time.df.empty:
             print(
                 "Error: Cannot generate position over time graph; position over time dataframe is empty")
         else:
-            if team_name == None:
+            if not team_name:
                 print("📊 Updating all teams positions over time graphs...")
                 teams_to_update = position_over_time.df.index.values.tolist()
             else:
@@ -456,23 +462,26 @@ class DataVis:
             team_names = position_over_time.df.index.values.tolist()
 
             # Create a fig for each team
-            for team_name in teams_to_update:
+            for team in teams_to_update:
                 fig = self.create_position_over_time_fig(
-                    x, ys, matchday_labels, team_name, team_names)
+                    x, ys, matchday_labels, team, team_names)
 
                 if display:
                     fig.show()
 
-                self.save_fig(fig, team_name, 'position-over-time')
+                self.save_fig(fig, team, 'position-over-time')
 
     # -------------------- GOALS SCORED AND CONCEDED GRAPHS --------------------
 
-    def create_clean_sheets_fig(self, x: list[datetime], line: list[float], clean_sheets: list[int], not_clean_sheets, matchday_labels: list[int], labels: list[str]) -> FigureWidget:
+    def create_clean_sheets_fig(self, x: list[datetime], line: list[float], clean_sheets: list[Optional[float]], not_clean_sheets, matchday_labels: list[str], labels: list[str]) -> FigureWidget:
         # Plot graph
         fig = go.Figure(data=[
-            go.Scatter(name='Line', x=x, y=line, mode='lines',
-                        line=dict(color='#757575', width=2),
-                        showlegend=False),
+            go.Scatter(name='Line', 
+                       x=x, 
+                       y=line, 
+                       mode='lines',
+                       line=dict(color='#757575', width=2),
+                       showlegend=False),
             go.Scatter(name='Clean Sheet', x=x, y=clean_sheets,
                        mode='markers',
                        connectgaps=True,
@@ -483,7 +492,9 @@ class DataVis:
                        hoverinfo=('text'),
                        marker=dict(size=32),
                        showlegend=False),
-            go.Scatter(name='Goals Conceded', x=x, y=not_clean_sheets,
+            go.Scatter(name='Goals Conceded', 
+                       x=x, 
+                       y=not_clean_sheets,
                        mode='markers',
                        connectgaps=True,
                        marker_color='#C23B22',
@@ -532,12 +543,11 @@ class DataVis:
         
         return fig
 
-    def clean_sheets_data_points(self, y_goals_conceded: list[int]) -> tuple[list[float], list[Optional[float]], list[float], list[str]]:
+    def clean_sheets_data_points(self, y_goals_conceded: list[int]) -> tuple[list[float], list[Optional[float]], list[Optional[float]], list[str]]:
         y_value = 0.5  # Line in the centre of the graph
         not_clean_sheets = [y_value if goals !=
                             0 else None for goals in y_goals_conceded]
-        clean_sheets = [y_value if goals ==
-                        0 else None for goals in y_goals_conceded]
+        clean_sheets = [y_value if goals == 0 else None for goals in y_goals_conceded]
         labels = ['Clean sheet' if goals ==
                   0 else 'Goals conceded' for goals in y_goals_conceded]
         line = [y_value] * len(clean_sheets)
@@ -658,20 +668,19 @@ class DataVis:
                 del matchday_nos[idx]
 
         if x != [] and y_goals_scored != [] and y_goals_conceded != [] and y_avg != []:
-            x, y_goals_scored, y_goals_conceded, y_avg = map(
-                list, zip(*sorted(zip(x, y_goals_scored, y_goals_conceded, y_avg))))
+            x, y_goals_scored, y_goals_conceded, y_avg = map(list, zip(*sorted(zip(x, y_goals_scored, y_goals_conceded, y_avg))))
 
         matchday_labels = list(map(str, matchday_nos))
 
         return x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels
 
     @timebudget
-    def update_goals_scored_and_conceded(self, position_over_time: PositionOverTime, display: bool = False, team_name: Optional[str] = None):
+    def update_goals_scored_and_conceded(self, position_over_time: PositionOverTime, team_name: str = '', display: bool = False):
         if position_over_time.df.empty:
             print(
                 "Error: Cannot generate goals scored and conceded graph; position over time dataframe is empty")
         else:
-            if team_name == None:
+            if not team_name:
                 print(
                     "📊 Updating all teams goals scored and conceded over time graphs...")
                 teams_to_update = position_over_time.df.index.values.tolist()
@@ -680,36 +689,38 @@ class DataVis:
                     f"📊 Updating {team_name} goals scored and conceded over time graph...")
                 teams_to_update = [team_name]
 
-            for team_name in teams_to_update:
-                x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self.goals_scored_and_conceeded_data_points(
-                    position_over_time, team_name)
+            for team in teams_to_update:
+                x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self.goals_scored_and_conceeded_data_points(position_over_time, team)
                 if y_goals_scored != [] and y_goals_conceded != []:
-                    fig = self.create_goals_scored_and_conceded_fig(
-                        x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels)
+                    fig = self.create_goals_scored_and_conceded_fig(x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels)
 
                     if display:
                         fig.show()
 
-                    self.save_fig(fig, team_name, 'goals-scored-and-conceded')
+                    self.save_fig(fig, team, 'goals-scored-and-conceded')
 
                 # EXTRA GRAPH FROM SAME DATA: CLEAN SHEETS
-                line, clean_sheets, not_clean_sheets, labels = self.clean_sheets_data_points(
-                    y_goals_conceded)
+                line, clean_sheets, not_clean_sheets, labels = self.clean_sheets_data_points(y_goals_conceded)
                 if x != []:
-                    fig = self.create_clean_sheets_fig(
-                        x, line, clean_sheets, not_clean_sheets, matchday_labels, labels)
+                    fig = self.create_clean_sheets_fig(x, line, clean_sheets, not_clean_sheets, matchday_labels, labels)
 
                     if display:
                         fig.show()
 
                     self.save_fig(fig, team_name, 'clean-sheets')
 
-    def update_all(self, fixtures: Fixtures, team_ratings: TeamRatings, home_advantages: HomeAdvantages, form: Form, position_over_time: PositionOverTime, team_name: Optional[str] = None, display_graphs: bool = False):
-        self.update_fixtures(fixtures, team_ratings, home_advantages,
-                             display=display_graphs, team_name=team_name)
-        self.update_form_over_time(
-            form, display=display_graphs, team_name=team_name)
-        self.update_position_over_time(
-            position_over_time, display=display_graphs, team_name=team_name)
-        self.update_goals_scored_and_conceded(
-            position_over_time, display=display_graphs, team_name=team_name)
+    def update_all(self, fixtures: Fixtures, team_ratings: TeamRatings, home_advantages: HomeAdvantages, form: Form, position_over_time: PositionOverTime, team_name: str = '', display_graphs: bool = False):
+        self.update_fixtures(fixtures, 
+                             team_ratings, 
+                             home_advantages,
+                             display=display_graphs, 
+                             team_name=team_name)
+        self.update_form_over_time(form, 
+                                   display=display_graphs, 
+                                   team_name=team_name)
+        self.update_position_over_time(position_over_time, 
+                                       display=display_graphs, 
+                                       team_name=team_name)
+        self.update_goals_scored_and_conceded(position_over_time, 
+                                              display=display_graphs, 
+                                              team_name=team_name)

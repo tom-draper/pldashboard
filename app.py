@@ -34,17 +34,11 @@ class Form:
 @dataclass
 class SeasonStats:
     clean_sheet_ratio: float
-    csr_position: int
+    csr_position: str  # Ordinal position e.g. '1st'
     goals_per_game: float
-    gpg_position: int
+    gpg_position: str
     conceded_per_game: float
-    cpg_position: int
-
-@dataclass
-class NextGame:
-    opp_team: str
-    home_away: str
-    prev_meetings: list[tuple]
+    cpg_position: str
 
 @dataclass
 class OppTeam:
@@ -52,15 +46,21 @@ class OppTeam:
     name_hyphen: str
     form_rating: float
     logo_url: str
+    
+@dataclass
+class NextGame:
+    opp_team: OppTeam
+    home_away: str
+    prev_meetings: list[tuple]
 
 @dataclass
 class Prediction:
-    score_prediction: str
+    score_prediction: tuple[str, str]
     accuracy: float
     results_accuracy: float
 
 @dataclass
-class Params:
+class TeamParams:
     season: int
     title: str
     team: Team
@@ -124,7 +124,7 @@ def get_table_snippet(team_name: str) -> TableSnippet:
     rows, team_table_idx = updater.data.standings.get_table_snippet(team_name, season)
     return TableSnippet(rows, team_table_idx)
 
-def get_params(team_name_hyphen: str) -> Params:
+def get_params(team_name_hyphen: str) -> TeamParams:
     title = team_name_hyphen.replace('-', ' ').title().replace('And', 'and')
     
     team = get_team(title, team_name_hyphen)
@@ -134,7 +134,7 @@ def get_params(team_name_hyphen: str) -> Params:
     prediction = get_prediction(team.name)
     table_snippet = get_table_snippet(team.name)
     
-    return Params(season, title, team, form, season_stats, next_game, prediction, table_snippet)
+    return TeamParams(season, title, team, form, season_stats, next_game, prediction, table_snippet)
 
 @app.route('/liverpool')
 @app.route('/manchester-city')
