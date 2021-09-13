@@ -18,7 +18,7 @@ h1 {
 
 .header {
   padding: 40px;
-  text-align: center;
+  text-align: center;f
   margin-bottom: 20px;
 }
 
@@ -528,7 +528,7 @@ img {
   text-align: right;
 }
 .prediction-container {
-  padding: 5px 0 3px 0;
+  padding: 6px 0 3px 0;
   margin: 2px 0;
   width: min(90%, 300px);
   align-self: center;

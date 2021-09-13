@@ -1,13 +1,15 @@
+import json
 import os
-from os.path import join, dirname
+from os.path import dirname, join
+
+import requests
 from dotenv import load_dotenv
 from timebudget import timebudget
-import requests
-import json
+
 from data import Data
 from data_vis import DataVis
-from utilities import Utilities
 from predictor import Predictor
+from utilities import Utilities
 
 utilities = Utilities()
 
@@ -101,7 +103,7 @@ class Updater:
     def update_all_dataframes(self, n_seasons: int = 3, display_tables: bool = False):
         # Standings for the last [n_seasons] seasons
         self.data.standings.update(self.json_data, 
-                                   self.logo_urls.keys(), 
+                                   self.logo_urls.keys(),  # Current season team names
                                    self.season, 
                                    n_seasons, 
                                    display=display_tables)
@@ -133,7 +135,7 @@ class Updater:
         # Data about the opponent in each team's next game 
         self.data.next_games.update(self.json_data, 
                                     self.data.fixtures, 
-                                    self.logo_urls.keys(), 
+                                    self.logo_urls.keys(),  # Current season team names
                                     self.season, 
                                     n_seasons, 
                                     display=display_tables)
@@ -172,7 +174,7 @@ class Updater:
                                        self.data.form, 
                                        self.data.position_over_time, 
                                        display_graphs=display_graphs, 
-                                       team_name=team_name)
+                                       team=team_name)
 
 
 

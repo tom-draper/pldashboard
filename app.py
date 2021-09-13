@@ -1,9 +1,11 @@
-from pandas.core.frame import DataFrame
-from updater import Updater
-from flask import Flask, render_template, request
+from dataclasses import dataclass
 from threading import Thread
 from time import sleep
-from dataclasses import dataclass
+
+from flask import Flask, render_template, request
+from pandas.core.frame import DataFrame
+
+from updater import Updater
 
 season = 2021
 
@@ -212,7 +214,7 @@ def thread_function(time=3600):
         updater.update_all(request_new=True, display_tables=False)
 
 updater = Updater(season)
-data_updater_thread = Thread(target=thread_function, args=(7200,))
+data_updater_thread = Thread(target=thread_function, args=(1800,))
 updater.update_all(request_new=True, display_tables=False)
 data_updater_thread.start()
 

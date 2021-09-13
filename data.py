@@ -1,15 +1,17 @@
 from collections import defaultdict
+from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
+
 import numpy as np
 import pandas as pd
-from pandas.core.frame import DataFrame
 import timebudget
-from utilities import Utilities
+from pandas.core.frame import DataFrame
 from timebudget import timebudget
-from typing import Optional
-from dataclasses import dataclass
 
-utilities = Utilities()
+from utilities import Utilities
+
+utils = Utilities()
 
 
 
@@ -213,7 +215,7 @@ class TeamRatings(DF):
 
         # Check whether current season data should be included in each team's total rating
         if (standings.df[season]['Played'] <= games_threshold).all():  # If current season hasn't played enough games
-            print(f"Current season excluded from team ratings calculation: all teams must have played {games_threshold} games.")
+            print(f"Current season excluded from team ratings calculation, all teams must have played {games_threshold} games.")
             include_current_season = False
         else:
             include_current_season = True
@@ -312,6 +314,7 @@ class Form(DF):
                 
             # Replace boolean values with CSS tag for super win image
             won_against_star_team = ['star-team' if x else 'not-star-team' for x in won_against_star_team]
+            
         return won_against_star_team
 
     def get_recent_form(self, team_name: str) -> tuple[list[str], DataFrame, float, list[str]]:
@@ -321,14 +324,10 @@ class Form(DF):
         won_against_star_team = self.get_won_against_star_team(team_name)
         return form_str, recent_teams_played, rating, won_against_star_team
     
-    def extract_str_scores(self, score: str) -> tuple[str, str]:
-        home, _, away = score.split(' ')
-        return home, away
-    
     def form_string(self, scores: list[str], home_aways: list[str]) -> str:
         form = []  # type: list[str]
         for score, homeAway in zip(scores, home_aways):
-            home, away = self.extract_str_scores(score)
+            home, away = utils.extract_str_score(score)
             if home != 'None' and away != 'None':
                 if int(home) == int(away):
                     form.append('D')
@@ -345,7 +344,7 @@ class Form(DF):
             # form_str = form_str.replace(',', '')
             for form_idx, result in enumerate(form_str):
                 # Convert opposition team initials to their name 
-                team_name = utilities.convert_team_name_or_initials(teams_played[form_idx])
+                team_name = utils.convert_team_name_or_initials(teams_played[form_idx])
 
                 # Increament form score based on rating of the team they've won, drawn or lost against
                 if result == 'W':
@@ -372,7 +371,7 @@ class Form(DF):
     def calc_played_star_team_col(self, team_ratings, teams_played_col, star_team_threshold):
         played_star_team_col = []
         for teams_played in teams_played_col:
-            ratings = [team_ratings.df['TotalRating'][team_name] for team_name in list(map(utilities.convert_team_name_or_initials, teams_played))]
+            ratings = [team_ratings.df['TotalRating'][team_name] for team_name in list(map(utils.convert_team_name_or_initials, teams_played))]
             played_star_team_col.append([team_rating > star_team_threshold for team_rating in ratings])
         return played_star_team_col
     
@@ -384,65 +383,71 @@ class Form(DF):
         return form_rating_col
 
     def calc_form_str_and_gd_cols(self, scores_col, home_aways_col):
-        form_str_col, goal_differences_col = [], []
+        form_str_col = []  # type: list[list[str]]
+        gds_col = []  # type: list[list[int]]
+        
         # Loop through each matchday and record the goal different for each team
         for scores, home_aways in zip(scores_col, home_aways_col):
             # Append 'W', 'L' or 'D' depending on result
             form_str_col.append(self.form_string(scores, home_aways))
             
             # Build goal differences of last games played from perspective of current team
-            goal_differences = []
+            gds = []
             for score, home_away in zip(scores, home_aways):
-                home, away = self.extract_str_scores(score)
+                home, away = utils.extract_str_score(score)
                 if home != 'None' and away != 'None':
                     diff = int(home) - int(away)
                     if diff > 0 and home_away == 'Home' or diff < 0 and home_away == 'Home':
-                        goal_differences.append(diff)
+                        gds.append(diff)
                     elif diff < 0 and home_away == 'Away' or diff > 0 and home_away == 'Away':
-                        goal_differences.append(diff*-1)
+                        gds.append(-1*diff)
                     else:
-                        goal_differences.append(0)
-            goal_differences_col.append(goal_differences)
+                        gds.append(0)
+            gds_col.append(gds)
             
-        return form_str_col, goal_differences_col
+        return form_str_col, gds_col
 
     def last_n_games(self, games_played: list, n_games: int, date) -> tuple[list[str], list[str], list[str]]:
         """ Slice games played data to return only the last 'n_games' games from 
             the given date """
 
-        if len(games_played) <= 0:
-            return [], [], []
+        teams_played = []
+        scores = []
+        home_aways = []
+        
+        if len(games_played) > 0:
+            dates, teams_played, scores, home_aways = list(zip(*games_played))
+            index = len(dates) - 1  # Default to latest game
             
-        dates, teams_played, scores, home_aways = list(zip(*games_played))
-        index = len(dates) - 1  # Default to latest game
-        
-        # Find index of dates where this matchday would fit
-        for i in range(len(dates)):
-            if i == len(dates)-1:
-                index = i+1
-                break
-            if date < dates[i+1]:
-                index = i
-                break
-        
-        # Get the last n_games matchday values from this index
-        if len(dates) > n_games:
-            low = index - n_games+1
-            if low < 0:
+            # Find index of dates where this matchday would fit
+            for i in range(len(dates)):
+                if i == len(dates)-1:
+                    index = i+1
+                    break
+                if date < dates[i+1]:
+                    index = i
+                    break
+            
+            # Get the last n_games matchday values from this index
+            if len(dates) > n_games:
+                low = index - n_games+1
+                if low < 0:
+                    low = 0
+                high = index + 1
+            else:
                 low = 0
-            high = index + 1
-        else:
-            low = 0
-            high = index + 1
-            
-        teams_played = teams_played[low:high]
-        scores = scores[low:high]
-        home_aways = home_aways[low:high]
+                high = index + 1
+                
+            teams_played = teams_played[low:high]
+            scores = scores[low:high]
+            home_aways = home_aways[low:high]
         
         return list(teams_played), list(scores), list(home_aways)
     
     def last_n_games_cols(self, fixtures: Fixtures, n_games: int, matchday_no: int) -> tuple[list[list[str]], list[list[str]], list[list[str]]]:
-        teams_played_col, scores_col, home_away_col  = [], [], []
+        teams_played_col = []
+        scores_col = []
+        home_away_col  = []
         
         matchday_dates = fixtures.df[matchday_no, 'Date']
         median_matchday_date = matchday_dates[len(matchday_dates)//2].asm8
@@ -473,7 +478,7 @@ class Form(DF):
             home_away_col.append(home_away)
 
         # Convert full team names to team initials
-        teams_played_col = [list(map(utilities.convert_team_name_or_initials, teams_played)) for teams_played in teams_played_col]
+        teams_played_col = [list(map(utils.convert_team_name_or_initials, teams_played)) for teams_played in teams_played_col]
                 
         return teams_played_col, scores_col, home_away_col
     
@@ -916,9 +921,7 @@ class SeasonStats(DF):
         
         return clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position
 
-    def str_score_to_int_score(self, score: str) -> tuple[int, int]:
-        home, _ , away = score.split(' ')
-        return int(home), int(away)
+
 
     def row_season_goals(self, row: pd.Series, matchdays: list[str]) -> tuple[int, int, int, int]:
         n_games, clean_sheets, goals_scored, goals_conceded = 0, 0, 0, 0
@@ -926,8 +929,7 @@ class SeasonStats(DF):
         for matchday in matchdays:
             match = row[matchday]
             if type(match['Score']) is str:
-                home, away = self.str_score_to_int_score(match['Score'])
-
+                home, away = utils.extract_int_score(match['Score'])
                 if match['HomeAway'] == 'Home':
                     goals_scored += home
                     if away == 0:
@@ -1004,15 +1006,12 @@ class SeasonStats(DF):
 class PositionOverTime(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d)
-
-    def extract_scores(self, score: str) -> tuple[int, int]:
-        home, _, away = score.split(' ')
-        return int(home), int(away)
     
     def get_gd_and_pts(self, score: str, home_away: str) -> tuple[int, int]:
-        pts, gd = 0, 0
+        gd = 0
+        pts = 0
         if type(score) == str:  # If score exists and game has been played
-            home, away = self.extract_scores(score)
+            home, away = utils.extract_int_score(score)
             
             if home == away:
                 pts = 1
@@ -1212,7 +1211,7 @@ class HomeAdvantages(DF):
         home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(1)=='HomeAdvantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
         if (home_advantages[season]['Home']['Played']<= threshold).all():
-            print(f"Current season excluded from home advantages calculation: all teams must have played {threshold} home games.")
+            print(f"Current season excluded from home advantages calculation, all teams must have played {threshold} home games.")
             # Drop this current seasons column (start from previous season)
             home_advantages_cols = home_advantages_cols.iloc[:, 1:]
         
