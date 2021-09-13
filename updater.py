@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from timebudget import timebudget
 
 from data import Data
-from data_vis import DataVis
+from data_vis import Visualiser
 from predictor import Predictor
 from utilities import Utilities
 
@@ -20,7 +20,7 @@ class Updater:
         
         self.data = Data()
         self.predictor = Predictor(current_season)
-        self.visualiser = DataVis()
+        self.visualiser = Visualiser()
                 
         # Import environment variables
         __file__ = 'data.py'

@@ -15,7 +15,7 @@ from utilities import Utilities
 utils = Utilities()
 
 
-class DataVis:
+class Visualiser:
     def __init__(self):
         # Fixture graph
         self.fixtures_colour_scale = ['#01c626', '#08a825',  '#0b7c20', '#0a661b',

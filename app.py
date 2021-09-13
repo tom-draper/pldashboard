@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 
 
-    
+
 @dataclass
 class Team:
     name: str
