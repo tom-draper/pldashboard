@@ -20,6 +20,7 @@ class DF():
     def __init__(self, d: DataFrame = DataFrame()):
         if not d.empty:
             self.df = DataFrame(d)
+        self.last_updated = None  # type: datetime
     
     def __str__(self):
         return str(self.df)

@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import os
 from os.path import dirname, join
@@ -7,11 +8,13 @@ from dotenv import load_dotenv
 from timebudget import timebudget
 
 from data import Data
-from data_vis import Visualiser
+from visualiser import Visualiser
 from predictor import Predictor
 from utilities import Utilities
 
 utilities = Utilities()
+
+
 
 
 class Updater:
@@ -36,8 +39,8 @@ class Updater:
         self.star_team_threshold = 0.75  # Rating over 75% to be a star team
         
         # Store for new requested API data or old data from memory 
-        self.json_data = {'fixtures': {}, 'standings': {}}  # type: dict[str, dict[int, dict]]
-        
+        self.json_data = {'fixtures': {}, 'standings': {}}
+        self.last_updated = ''
     
     
     # ----------------------------- DATA API -----------------------------------
@@ -81,7 +84,11 @@ class Updater:
             # Add new fixtures data to temp storage to be saved later
             self.json_data['fixtures'][self.season-n] = self.fixtures_data(self.season-n, request_new)
         self.json_data['standings'][self.season] = self.standings_data(self.season, request_new)
-            
+        
+        # If requested new data and ValueError wasn't thrown
+        if request_new:
+            self.last_updated = f'Last updated:  {datetime.now().strftime("%d-%m-%y  %H:%M:%S")}'
+    
     def save_data(self):
         for data_type in self.json_data.keys():
             for season, data in self.json_data[data_type].items():
@@ -163,7 +170,7 @@ class Updater:
         # Update using stored json data
         self.update_all_dataframes(n_seasons, display_tables)
         self.update_predictions()
-                        
+        
         if request_new:
             print('💾 Saving new data...')
             self.save_data()
@@ -175,7 +182,6 @@ class Updater:
                                        self.data.position_over_time, 
                                        display_graphs=display_graphs, 
                                        team=team_name)
-
 
 
 

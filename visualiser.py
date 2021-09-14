@@ -308,7 +308,7 @@ class Visualiser:
     # --------------------- POSITION OVER TIME GRAPHS --------------------------
     
     def plot_teams_position_over_time(self, fig, x, ys, team, team_names):
-      for idx, y in enumerate(ys):
+        for idx, y in enumerate(ys):
             if team_names[idx] != team:
                 fig.add_trace(go.Scatter(x=x,
                                          y=y,
@@ -323,7 +323,7 @@ class Visualiser:
             else:
                 # Save index the input teams is found for plotting the final line
                 team_idx = idx
-                
+        
         # Add this as teams name last to have this line on top
         fig.add_trace(go.Scatter(x=x,
                                  y=ys[team_idx],
@@ -351,7 +351,7 @@ class Visualiser:
                       layer='below',
                       )
         
-    def format_position_over_time_fig(self, fig, matchday_labels):
+    def format_position_over_time_fig(self, fig, x, matchday_labels):
         positional_values = [i for i in range(1, 21)]
 
         fig.update_layout(
@@ -392,7 +392,7 @@ class Visualiser:
         self.plot_position_rect(fig, x[0], 4, x[-1], 1, '#03AC13')  # Top 4
         self.plot_position_rect(fig, x[0], 6, x[-1], 4, '#008080')  # 5-6
         self.plot_position_rect(fig, x[0], 20, x[-1], 17, '#800000')  # Relegation zone
-        self.format_position_over_time_fig(fig, matchday_labels)
+        self.format_position_over_time_fig(fig, x, matchday_labels)
         return fig
 
     def position_over_time_data_points(self, position_over_time: PositionOverTime) -> tuple[list[datetime], list[str], list[list[int]]]:
@@ -423,8 +423,7 @@ class Visualiser:
     @timebudget
     def update_position_over_time(self, position_over_time: PositionOverTime, team: str = '', display: bool = False):
         if position_over_time.df.empty:
-            print(
-                "Error: Cannot generate position over time graph; position over time dataframe is empty")
+            print("Error: Cannot generate position over time graph; position over time dataframe is empty")
         else:
             if not team:
                 print("📊 Updating all teams positions over time graphs...")

@@ -71,6 +71,7 @@ class TeamParams:
     next_game: NextGame
     prediction: Prediction
     table_snippet: TableSnippet
+    last_updated: str
 
 @dataclass
 class HomeParams:
@@ -81,6 +82,7 @@ class PredictionsParams:
     predictions: dict
     accuracy: float
     results_accuracy: float
+    last_updated: str
 
 
 
@@ -98,14 +100,17 @@ def get_team(title: str, team_name_hyphen: str) -> Team:
     team_name = title + ' FC'
     team_logo_url = updater.logo_urls[team_name]
     position = updater.data.standings.get_position(team_name, season)
+    
     return Team(team_name, team_name_hyphen, position, team_logo_url)
 
 def get_form(team_name: str) -> Form:
     form_str, recent_teams_played, rating, won_against_star_team = updater.data.form.get_recent_form(team_name)
+    
     return Form(form_str, recent_teams_played, rating, won_against_star_team)
 
 def get_season_stats(team_name: str) -> SeasonStats:
     clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position = updater.data.season_stats.get_season_stats(team_name)
+    
     return SeasonStats(clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position)
 
 def get_next_game(team_name: str) -> NextGame:
@@ -120,10 +125,12 @@ def get_next_game(team_name: str) -> NextGame:
 def get_prediction(team_name: str) -> Prediction:
     score_prediction = updater.predictor.get_next_game_prediction(team_name)
     accuracy, results_accuracy = updater.predictor.get_accuracy()
+    
     return Prediction(score_prediction, accuracy, results_accuracy)
 
 def get_table_snippet(team_name: str) -> TableSnippet:
     rows, team_table_idx = updater.data.standings.get_table_snippet(team_name, season)
+    
     return TableSnippet(rows, team_table_idx)
 
 def get_params(team_name_hyphen: str) -> TeamParams:
@@ -136,7 +143,9 @@ def get_params(team_name_hyphen: str) -> TeamParams:
     prediction = get_prediction(team.name)
     table_snippet = get_table_snippet(team.name)
     
-    return TeamParams(season, title, team, form, season_stats, next_game, prediction, table_snippet)
+    last_updated = updater.last_updated
+    
+    return TeamParams(season, title, team, form, season_stats, next_game, prediction, table_snippet, last_updated)
 
 @app.route('/liverpool')
 @app.route('/manchester-city')
@@ -201,7 +210,9 @@ def predictions() -> str:
     
     accuracy, results_accuracy = updater.predictor.get_accuracy()
     
-    params = PredictionsParams(predictions, accuracy, results_accuracy)
+    last_updated = updater.last_updated
+    
+    params = PredictionsParams(predictions, accuracy, results_accuracy, last_updated)
     return render_template('predictions.html', params=params)
 
     
