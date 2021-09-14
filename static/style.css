@@ -376,6 +376,7 @@ img {
 
 .predictions-footer {
   align-items: center;
+  font-size: 0.8em;
 }
 
 .last-updated {
@@ -409,12 +410,12 @@ img {
   letter-spacing: -0.06em;
 }
 .season-stat-value {
-  font-size: 3.5em;
+  font-size: 3.2em;
   line-height: 0.6em;
   font-weight: 700;
 }
 .season-stat-position {
-  font-size: 0.9em;
+  font-size: 0.85em;
   color: rgb(162, 162, 162);
   position: absolute;
   top: -58px;
