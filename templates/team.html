@@ -135,14 +135,14 @@
           <!-- Display table of previous results against the next team this team is playing -->
           {% for prev_meeting in params.next_game.prev_meetings %}
             <div class="next-game-divider"></div>
-            <div class="next-game-item {{ prev_meeting[5] }}">
+            <div class="next-game-item {{ prev_meeting['Result'] }}">
               <div class="past-result">
-                <div class="home-team">{{ prev_meeting[1] }}</div>
-                <div class="score">{{ prev_meeting[3] }} - {{ prev_meeting[4] }}</div>
-                <div class="away-team">{{ prev_meeting[2] }}</div>
+                <div class="home-team">{{ prev_meeting['HomeTeam'] }}</div>
+                <div class="score">{{ prev_meeting['HomeGoals'] }} - {{ prev_meeting['AwayGoals'] }}</div>
+                <div class="away-team">{{ prev_meeting['AwayTeam'] }}</div>
               </div>
               <div style="clear: both;"></div>
-              <div class="past-result-date">{{ prev_meeting[0] }}</div>
+              <div class="past-result-date">{{ prev_meeting['Date'] }}</div>
             </div>
           {% endfor %}
           <div class="next-game-divider"></div>

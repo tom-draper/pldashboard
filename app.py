@@ -114,7 +114,7 @@ def get_season_stats(team_name: str) -> SeasonStats:
     return SeasonStats(clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position)
 
 def get_next_game(team_name: str) -> NextGame:
-    opp_team_name, home_away, prev_meetings = updater.data.next_games.get_details(team_name)
+    opp_team_name, home_away, prev_meetings = updater.data.upcoming.get_details(team_name)
     opp_team_name_hyphen = (opp_team_name.lower()[:-3]).replace(' ', '-') # Remove 'FC' from end
     opp_form_rating = updater.data.form.get_current_form_rating(opp_team_name)
     opp_logo_url = updater.logo_urls[opp_team_name]
@@ -198,7 +198,7 @@ def insert_predictions_colours(predictions: dict):
                 pred['colour'] = 'yellow'
             else:
                 pred['colour'] = 'red'
-    
+
 
 
 
@@ -215,7 +215,7 @@ def predictions() -> str:
     params = PredictionsParams(predictions, accuracy, results_accuracy, last_updated)
     return render_template('predictions.html', params=params)
 
-    
+
 
 
 def thread_function(time=3600):

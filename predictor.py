@@ -1,5 +1,5 @@
 from typing import Optional
-from data import Fixtures, Form, HomeAdvantages, NextGames
+from data import Fixtures, Form, HomeAdvantages, Upcoming
 import json
 from git import Repo
 import numpy as np
@@ -115,6 +115,7 @@ class Predictor:
             scoreline = f'{team_name_initials} {score} {opp_team_name_initials}'
         else:
             scoreline = f'{opp_team_name_initials} {score} {team_name_initials}'
+            
         return scoreline
     
     def get_actual_scores(self, fixtures: DataFrame) -> set[tuple[str, str]]:
@@ -178,18 +179,18 @@ class Predictor:
         print("Adding new prediction:", new_prediction)
         predictions[date].append({'prediction': new_prediction, 'actual': None})
     
-    def avg_previous_result(self, team_name: str, prev_meetings: list[tuple[str, str, str, int, int, str]], debug=False) -> tuple[float, float]:
-        goals_scored, goals_conceded = 0, 0
-        
+    def avg_previous_result(self, team_name: str, prev_meetings: list[dict[str, str]], debug=False) -> tuple[float, float]:
+        goals_scored, goals_conceded = 0, 0   
+              
         for prev_match in prev_meetings:
-            if team_name == prev_match[1]:
+            if team_name == prev_match['HomeTeam']:
                 # Played at home
-                goals_scored += prev_match[3]
-                goals_conceded += prev_match[4]
-            elif team_name == prev_match[2]:
+                goals_scored += prev_match['HomeGoals']
+                goals_conceded += prev_match['AwayGoals']
+            elif team_name == prev_match['AwayTeam']:
                 # Played away
-                goals_scored += prev_match[4]
-                goals_conceded += prev_match[3]
+                goals_scored += prev_match['AwayGoals']
+                goals_conceded += prev_match['HomeGoals']
                 
         # Average scored and conceded            
         avg_scored = goals_scored / len(prev_meetings)
@@ -204,13 +205,11 @@ class Predictor:
         # Boost the score of the team better in form based on the absolute difference in form
         form_diff = form_rating - opp_form_rating
         
-        if form_diff > 0:
-            # This team in better form
+        if form_diff > 0:  # This team in better form
             if debug:
                 print(f"\tForm difference {form_rating} - {opp_form_rating} = [{round(form_diff, 2)}] -> {pred_scored} + {round(pred_scored * (form_diff/100), 2)}".ljust(60), f"[{round(pred_scored + (pred_scored * (form_diff/100)), 2)} - {round(pred_conceded, 2)}]")
             pred_scored += pred_scored * (form_diff/100)
-        else:
-            # Other team in better form
+        else:  # Other team in better form
             if debug:
                 print(f"\tForm difference {form_rating} - {opp_form_rating} = [{round(form_diff, 2)}] -> {pred_conceded} + {round(pred_conceded * (abs(form_diff)/100), 2)}".ljust(60), f"[{round(pred_scored, 2)} - {round(pred_conceded + (pred_conceded * (abs(form_diff)/100)), 2)}]")
             pred_conceded += pred_conceded * (abs(form_diff)/100)
@@ -232,9 +231,9 @@ class Predictor:
             
         return pred_scored, pred_conceded
     
-    def calc_score_prediction(self, team_name: str, opp_team_name: str, home_advantages: DataFrame, home_away: str, form_rating: float, opp_form_rating: float, prev_meetings: list[tuple[str, str, str, int, int, str]], debug: bool = False) -> tuple[int, int]:
+    def calc_score_prediction(self, team_name: str, opp_team_name: str, home_advantages: DataFrame, home_away: str, form_rating: float, opp_form_rating: float, prev_meetings: list[dict[str, str]], debug: bool = False) -> tuple[int, int]:
         pred_scored, pred_conceded = 0.0, 0.0
-        if len(prev_meetings) > 0:
+        if prev_meetings:
             # Begin with average scored and conceded in previous meetings
             pred_scored, pred_conceded = self.avg_previous_result(team_name, prev_meetings, debug=debug)
         # Modify based on difference in current form between two teams
@@ -266,6 +265,7 @@ class Predictor:
         # {"Liverpool FC": ("25-08-21", "LIV  2 - 1 BUR"), ...}
         predictions = {}  # type: dict[str, Optional[tuple[str, str]]]
         team_names = form.df.index.values.tolist()
+        
         # Check ALL teams as two teams can have different next games
         for team_name in team_names:
             prediction = None
@@ -274,7 +274,7 @@ class Predictor:
                 opp_team_name = next_games.df['NextTeam'].loc[team_name]
                 opp_form_rating = form.get_current_form_rating(opp_team_name)
                 home_away = next_games.df['HomeAway'].loc[team_name]
-                prev_meetings = next_games.df.loc[team_name]['PreviousMeetings']
+                prev_meetings = next_games.df.loc[team_name]['PreviousMeetings']  # type: dict[str, str]
                 
                 if debug:
                     print(team_name, "vs", opp_team_name)
@@ -350,17 +350,17 @@ class Predictor:
             json.dump(data, f)
     
     def git_push(self):
-        # try:
-        repo = Repo('.')
-        repo.git.add(update=True)
-        repo.index.commit('automated predictions store')
-        origin = repo.remote(name='origin')
-        origin.push('predictions-store')
-        # except:
-        #     print('Some error occured while pushing the code')    
+        try:
+            repo = Repo('.')
+            repo.git.add(update=True)
+            repo.index.commit('automated predictions store')
+            origin = repo.remote(name='origin')
+            origin.push('predictions-store')
+        except:
+            print('Some error occured while pushing the code')    
         
-    def update(self, fixtures: Fixtures, form: Form, next_games: NextGames, home_advantages: HomeAdvantages):
-        self.gen_score_predictions(form, next_games, home_advantages, debug=False)
+    def update(self, fixtures: Fixtures, form: Form, upcoming: Upcoming, home_advantages: HomeAdvantages):
+        self.gen_score_predictions(form, upcoming, home_advantages, debug=False)
         self.record_accuracy()
         self.update_json_file(fixtures)
         # self.git_push()
