@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from timebudget import timebudget
 
 from data import Data
-from database import Database
 from visualiser import Visualiser
 from predictor import Predictor
 from utilities import Utilities
@@ -25,7 +24,6 @@ class Updater:
         self.data = Data()
         self.predictor = Predictor(current_season)
         self.visualiser = Visualiser()
-        self.database = Database()
                 
         # Import environment variables
         __file__ = 'data.py'
@@ -108,16 +106,6 @@ class Updater:
             logo_urls[team_name] = crest_url
         
         return logo_urls
-    
-    def update_database(self):
-        self.database.save_table(self.data.standings, 'standings')
-        self.database.save_table(self.data.fixtures, 'fixtures')
-        self.database.save_table(self.data.team_ratings, 'team_ratings')
-        self.database.save_table(self.data.home_advantages, 'home_advantages')
-        # self.database.save_table(self.data.form, 'form')
-        self.database.save_table(self.data.position_over_time, 'position_over_time')
-        self.database.save_table(self.data.upcoming, 'upcoming')
-        self.database.save_table(self.data.season_stats, 'season_stats')
             
     def update_all_dataframes(self, n_seasons: int = 3, display_tables: bool = False):
         # Standings for the last [n_seasons] seasons
@@ -186,7 +174,6 @@ class Updater:
         if request_new:
             print('💾 Saving new data...')
             self.save_data()
-            # self.update_database()
             # Use dataframes to update all graph HTML files
             self.visualiser.update_all(self.data.fixtures, 
                                        self.data.team_ratings, 
