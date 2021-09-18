@@ -308,6 +308,7 @@ img {
 .accuracy-item {
   font-size: 14px;
   color: rgb(120, 120, 120)
+  margin-bottom: 5px;
 }
 .next-game-divider {
   height: 2px;
@@ -496,10 +497,6 @@ img {
 .predictions-header {
   padding: 40px 40px 5px 40px;
   text-align: center;
-}
-
-.accuracy-item {
-  margin-bottom: 30px;
 }
 
 .predictions {
