@@ -2,6 +2,7 @@ atomicwrites==1.4.0
 attrs==21.2.0
 autopep8==1.5.7
 backcall==0.2.0
+Brotli==1.0.9
 certifi==2021.5.30
 charset-normalizer==2.0.4
 click==8.0.1
@@ -10,6 +11,7 @@ debugpy==1.4.1
 decorator==5.0.9
 entrypoints==0.3
 Flask==2.0.1
+Flask-Compress==1.10.1
 gitdb==4.0.7
 GitPython==3.1.18
 gunicorn==20.1.0
