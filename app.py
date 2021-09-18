@@ -15,6 +15,7 @@ compress = Compress()
 app = Flask(__name__)
 compress.init_app(app)
 
+
 @dataclass
 class Team:
     name: str
