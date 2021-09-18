@@ -128,7 +128,7 @@ class Visualiser:
 
         return x, y, details
 
-    def save_fig(self, fig, team: str, graph_type: str, path: str = './static/graphs/', auto_open: bool = False, display_mode_bar: bool = False, scroll_zoom: bool = False):
+    def save_fig(self, fig, team: str, graph_type: str, path: str = './templates/graphs/', auto_open: bool = False, display_mode_bar: bool = False, scroll_zoom: bool = False):
         file_team_name = '-'.join(team.lower().split()
                                   [:-1]).replace('&', 'and')
 
@@ -140,8 +140,10 @@ class Visualiser:
             fig,
             filename=temp_path,
             auto_open=auto_open,
+            include_plotlyjs=False, 
+            # output_type='div',
             config={'displayModeBar': display_mode_bar, 'scrollZoom': scroll_zoom})
-
+        
         try:
             os.rename(temp_path, path)
         except WindowsError:
@@ -180,10 +182,7 @@ class Visualiser:
             if display:
                 fig.show()
 
-            self.save_fig(fig, 
-                          team_name, 
-                          'fixtures',
-                          path='./templates/graphs/')
+            self.save_fig(fig, team_name, 'fixtures')
 
 
     # ------------------------ FORM OVER TIME GRAPHS ---------------------------

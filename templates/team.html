@@ -1,5 +1,6 @@
 
 {% extends 'layout.html' %} {% block content %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
 
 <div class="row">
   <!-- <div class="row-left position-and-badge" style="background-image: url('static/img/club_badges/{{ params.team.name_hyphen }}.png'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;"> -->
@@ -155,9 +156,10 @@
   <div class="form-graph row-graph">
     <h1>Form Over Time</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/form-over-time-{}.html'.format(params.team.name_hyphen, params.team.name_hyphen) }}" style="border: none;" height=450px width=100%>
+      <!-- <iframe src="{{ 'static/graphs/{}/form-over-time-{}.html'.format(params.team.name_hyphen, params.team.name_hyphen) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
-     </iframe>
+     </iframe> -->
+     {% include 'graphs/%s/form-over-time-%s.html' % (params.team.name_hyphen, params.team.name_hyphen) %}
     </div>
   </div>
 </div>
@@ -165,9 +167,10 @@
   <div class="position-over-time-graph row-graph">
     <h1>Position Over Time</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/position-over-time-{}.html'.format(params.team.name_hyphen, params.team.name_hyphen) }}" style="border: none;" height=450px width=100%>
+      <!-- <iframe src="{{ 'static/graphs/{}/position-over-time-{}.html'.format(params.team.name_hyphen, params.team.name_hyphen) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
-     </iframe>
+     </iframe> -->
+     {% include 'graphs/%s/position-over-time-%s.html' % (params.team.name_hyphen, params.team.name_hyphen) %}
     </div>
   </div>
 </div>
@@ -175,18 +178,20 @@
   <div class="goals-scored-vs-conceded-graph row-graph">
     <h1>Goals Scored and Conceded</h1>
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/goals-scored-and-conceded-{}.html'.format(params.team.name_hyphen, params.team.name_hyphen) }}" style="border: none;" height=450px width=100%>
+      <!-- <iframe src="{{ 'static/graphs/{}/goals-scored-and-conceded-{}.html'.format(params.team.name_hyphen, params.team.name_hyphen) }}" style="border: none;" height=450px width=100%>
         Sorry your browser does not support inline frames.
-     </iframe>
+     </iframe> -->
+     {% include 'graphs/%s/goals-scored-and-conceded-%s.html' % (params.team.name_hyphen, params.team.name_hyphen) %}
     </div>
   </div>
 </div>
 <div class="row">
   <div class="clean-sheets row-graph">
     <div class="graph full-row-graph">
-      <iframe src="{{ 'static/graphs/{}/clean-sheets-{}.html'.format(params.team.name_hyphen, params.team.name_hyphen) }}" style="border: none;" width=100%>
+      <!-- <iframe src="{{ 'static/graphs/{}/clean-sheets-{}.html'.format(params.team.name_hyphen, params.team.name_hyphen) }}" style="border: none;" width=100%>
         Sorry your browser does not support inline frames.
-     </iframe>
+     </iframe> -->
+     {% include 'graphs/%s/clean-sheets-%s.html' % (params.team.name_hyphen, params.team.name_hyphen) %}
     </div>
   </div>
 </div>
