@@ -3,14 +3,17 @@ from threading import Thread
 from time import sleep
 
 from flask import Flask, render_template, request
+from flask_compress import Compress
 from pandas.core.frame import DataFrame
 
 from updater import Updater
 
 season = 2021
 
-app = Flask(__name__)
+compress = Compress()
 
+app = Flask(__name__)
+compress.init_app(app)
 
 @dataclass
 class Team:

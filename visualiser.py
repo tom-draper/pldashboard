@@ -36,28 +36,28 @@ class Visualiser:
                                                     colorscale=self.fixtures_colour_scale),
                                         line=dict(color='#737373'),
                                         text=details,
-                                        hovertemplate="<b>%{text}</b><br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
+                                        hovertemplate='<b>%{text}</b><br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>',
                                         hoverinfo=('x+y+text')))
         return fig
     
     def plot_current_day(self, fig, NOW):
-        fig.add_shape(go.layout.Shape(type="line",
-                                yref="paper",
-                                xref="x",
+        fig.add_shape(go.layout.Shape(type='line',
+                                yref='paper',
+                                xref='x',
                                 x0=NOW,
                                 y0=0.04,
                                 x1=NOW,
                                 y1=1.01,
-                                line=dict(color="black",
+                                line=dict(color='black',
                                         width=1,
-                                        dash="dot")))
+                                        dash='dot')))
     
     def format_fixtures_fig(self, fig, x):
         y_labels = [i for i in range(0, 101, 10)]
         
         fig.update_layout(
             yaxis=dict(
-                title_text="Team Rating (%)",
+                title_text='Team Rating (%)',
                 ticktext=y_labels,
                 tickvals=y_labels,
                 gridcolor='gray',
@@ -66,8 +66,8 @@ class Visualiser:
 
             ),
             xaxis=dict(
-                title_text="Matchday",
-                linecolor="black",
+                title_text='Matchday',
+                linecolor='black',
                 showgrid=False,
                 showline=False,
 
@@ -109,10 +109,10 @@ class Visualiser:
             y.append(rating*100)
 
             # Add team played, home or away and the final score if game has already happened
-            if match['Score'] != "None - None":
-                match_detail = f"{match['Team']} ({match['HomeAway']})  {match['Score']}"
+            if match['Score'] != 'None - None':
+                match_detail = f'{match["Team"]} ({match["HomeAway"]})  {match["Score"]}'
             else:
-                match_detail = f"{match['Team']} ({match['HomeAway']})"
+                match_detail = f'{match["Team"]} ({match["HomeAway"]})'
             details.append(match_detail)
 
             # Increase size of point marker if it's the current upcoming match
@@ -151,10 +151,10 @@ class Visualiser:
     @timebudget
     def update_fixtures(self, fixtures: Fixtures, team_ratings: TeamRatings, home_advantages: HomeAdvantages, team: str = '', display: bool = False):
         if not team:
-            print("📊 Updating all team fixtures graphs...")
+            print('📊 Updating all team fixtures graphs...')
             teams_to_update = fixtures.df.index.values.tolist()
         else:
-            print(f"📊 Updating {team} fixture graph...")
+            print(f'📊 Updating {team} fixture graph...')
             teams_to_update = [team]
 
         DEFAULT_MARKER_SIZE = 14
@@ -197,8 +197,8 @@ class Visualiser:
                                          mode='lines',
                                          line=dict(color='#d3d3d3'),
                                          showlegend=False,
-                                         hovertemplate=f"<b>{team_names[idx]}</b><br>" +
-                                         "Matchday %{x}<br>Form: <b>%{y:.1f}%</b><extra></extra>",
+                                         hovertemplate=f'<b>{team_names[idx]}</b><br>' +
+                                         'Matchday %{x}<br>Form: <b>%{y:.1f}%</b><extra></extra>',
                                          hoverinfo=('x+y'),
                                          ))
             else:
@@ -212,8 +212,8 @@ class Visualiser:
                                  line=dict(color=utils.team_colours[team_names[team_idx]],
                                            width=4),
                                  showlegend=False,
-                                 hovertemplate=f"<b>{team_names[team_idx]}</b><br>" +
-                                 "Matchday %{x}<br>Form: <b>%{y:.1f}%</b><extra></extra>",
+                                 hovertemplate=f'<b>{team_names[team_idx]}</b><br>' +
+                                 'Matchday %{x}<br>Form: <b>%{y:.1f}%</b><extra></extra>',
                                  hoverinfo=('x+y'),
                                  ))
     
@@ -222,7 +222,7 @@ class Visualiser:
         
         fig.update_layout(
             yaxis=dict(
-                title_text="Form Rating (%)",
+                title_text='Form Rating (%)',
                 ticktext=y_labels,
                 tickvals=y_labels,
                 showgrid=False,
@@ -230,9 +230,9 @@ class Visualiser:
                 zeroline=False,
             ),
             xaxis=dict(
-                title_text="Matchday",
-                linecolor="black",
-                tickmode="array",
+                title_text='Matchday',
+                linecolor='black',
+                tickmode='array',
                 dtick=1,
                 ticktext=matchday_labels,
                 tickvals=x,
@@ -284,13 +284,13 @@ class Visualiser:
     @timebudget
     def update_form_over_time(self, form: Form,  team: str = '', display: bool = False):
         if form.df.empty:
-            print("Error: Cannot generate form over time graph; Form dataframe is empty")
+            print('Error: Cannot generate form over time graph; Form dataframe is empty')
         else:
             if not team:
-                print("📊 Updating all teams form over time graphs...")
+                print('📊 Updating all teams form over time graphs...')
                 teams_to_update = form.df.index.values.tolist()
             else:
-                print(f"📊 Updating {team} form over time graph...")
+                print(f'📊 Updating {team} form over time graph...')
                 teams_to_update = [team]
 
             x, matchday_labels, ys = self.form_over_time_data_points(form)
@@ -316,8 +316,8 @@ class Visualiser:
                                          mode='lines',
                                          line=dict(color='#d3d3d3'),
                                          showlegend=False,
-                                         hovertemplate=f"<b>{team_names[idx]}</b><br>" +
-                                         "Matchday %{x}<br>%{y}th<extra></extra>",
+                                         hovertemplate=f'<b>{team_names[idx]}</b><br>' +
+                                         'Matchday %{x}<br>%{y}th<extra></extra>',
                                          hoverinfo=('x+y'),
                                          ))
             else:
@@ -332,8 +332,8 @@ class Visualiser:
                                  line=dict(color=utils.team_colours[team_names[team_idx]],
                                            width=4),
                                  showlegend=False,
-                                 hovertemplate=f"<b>{team_names[team_idx]}</b><br>" +
-                                 "Matchday %{x}<br>%{y}th<extra></extra>",
+                                 hovertemplate=f'<b>{team_names[team_idx]}</b><br>' +
+                                 'Matchday %{x}<br>%{y}th<extra></extra>',
                                  hoverinfo=('x+y'),
                                  ))
     
@@ -356,18 +356,18 @@ class Visualiser:
 
         fig.update_layout(
             yaxis=dict(
-                title_text="League Position",
+                title_text='League Position',
                 ticktext=positional_values,
                 tickvals=positional_values,
-                autorange="reversed",
+                autorange='reversed',
                 showgrid=False,
                 showline=False,
                 zeroline=False,
             ),
             xaxis=dict(
-                title_text="Matchday",
-                linecolor="black",
-                tickmode="array",
+                title_text='Matchday',
+                linecolor='black',
+                tickmode='array',
                 dtick=1,
                 ticktext=matchday_labels,
                 tickvals=x,
@@ -423,13 +423,13 @@ class Visualiser:
     @timebudget
     def update_position_over_time(self, position_over_time: PositionOverTime, team: str = '', display: bool = False):
         if position_over_time.df.empty:
-            print("Error: Cannot generate position over time graph; position over time dataframe is empty")
+            print('Error: Cannot generate position over time graph; position over time dataframe is empty')
         else:
             if not team:
-                print("📊 Updating all teams positions over time graphs...")
+                print('📊 Updating all teams positions over time graphs...')
                 teams_to_update = position_over_time.df.index.values.tolist()
             else:
-                print(f"📊 Updating {team} positions over time graph...")
+                print(f'📊 Updating {team} positions over time graph...')
                 teams_to_update = [team]
 
             x, matchday_labels, ys = self.position_over_time_data_points(
@@ -500,8 +500,8 @@ class Visualiser:
                 visible=False,
             ),
             xaxis=dict(
-                title_text="Matchday",
-                tickmode="array",
+                title_text='Matchday',
+                tickmode='array',
                 ticktext=[str(i) for i in matchday_labels],
                 tickvals=x,
                 range=[x[0] - margin, x[-1] + margin],
@@ -545,16 +545,16 @@ class Visualiser:
                    marker_color='#77DD77',
                    marker_line_color='#006400',
                    marker_line_width=2,
-                   hovertemplate="Matchday %{x}<br>%{y} goals scored<extra></extra>",
+                   hovertemplate='Matchday %{x}<br>%{y} goals scored<extra></extra>',
                    hoverinfo=('x+y')),
             go.Bar(name='Goals Conceded', x=x, y=y_goals_conceded,
                    marker_color='#C23B22',
                    marker_line_color='#8B0000',
                    marker_line_width=2,
-                   hovertemplate="Matchday %{x}<br>%{y} goals conceded<extra></extra>",
+                   hovertemplate='Matchday %{x}<br>%{y} goals conceded<extra></extra>',
                    hoverinfo=('x+y')),
             go.Scatter(name='Avg', x=x, y=y_avg, mode='lines',
-                       hovertemplate="Matchday %{x}<br>%{y} goals scored on average<extra></extra>",
+                       hovertemplate='Matchday %{x}<br>%{y} goals scored on average<extra></extra>',
                        line=dict(color='#0080FF', width=2))
         ])
         
@@ -570,7 +570,7 @@ class Visualiser:
         fig.update_layout(
             barmode='group',
             yaxis=dict(
-                title_text="Goals",
+                title_text='Goals',
                 autorange=False,
                 range=[0, max_y],
                 showgrid=False,
@@ -579,8 +579,8 @@ class Visualiser:
                 dtick=1,
             ),
             xaxis=dict(
-                title_text="Matchday",
-                tickmode="array",
+                title_text='Matchday',
+                tickmode='array',
                 ticktext=matchday_labels,
                 tickvals=x,
                 showgrid=False,
@@ -596,9 +596,9 @@ class Visualiser:
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
             legend=dict(
-                yanchor="top",
+                yanchor='top',
                 y=0.99,
-                xanchor="left",
+                xanchor='left',
                 x=0.01
             ),
         )
@@ -642,6 +642,7 @@ class Visualiser:
         y_goals_scored = []  # type: list[int]
         y_goals_conceded = []  # type: list[int]
         y_avg = []  # type: list[float]
+        
         team_position_over_time = position_over_time.df.loc[team]
 
         matchday_nums = sorted(list(position_over_time.df.columns.unique(level=0)))
@@ -670,15 +671,13 @@ class Visualiser:
     def update_goals_scored_and_conceded(self, position_over_time: PositionOverTime, team: str = '', display: bool = False):
         if position_over_time.df.empty:
             print(
-                "Error: Cannot generate goals scored and conceded graph; position over time dataframe is empty")
+                'Error: Cannot generate goals scored and conceded graph; position over time dataframe is empty')
         else:
             if not team:
-                print(
-                    "📊 Updating all teams goals scored and conceded over time graphs...")
+                print('📊 Updating all teams goals scored and conceded over time graphs...')
                 teams_to_update = position_over_time.df.index.values.tolist()
             else:
-                print(
-                    f"📊 Updating {team} goals scored and conceded over time graph...")
+                print(f'📊 Updating {team} goals scored and conceded over time graph...')
                 teams_to_update = [team]
 
             for team_name in teams_to_update:

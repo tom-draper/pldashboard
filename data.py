@@ -2,7 +2,6 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
-from line_profiler_pycharm import profile
 
 import numpy as np
 import pandas as pd
@@ -29,7 +28,6 @@ class Fixtures(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d)
 
-    #@profile
     def update(self, json_data: dict, season: int, display: bool = False):
         """ Builds a dataframe containing the past and future fixtures for the 
             current season (matchday 1 to 38) and inserts it into the fixtures 

@@ -84,12 +84,11 @@ class Updater:
 
         # If requested new data and ValueError wasn't thrown
         if request_new:
-            self.last_updated = f'Last updated:  {datetime.now().strftime("%d-%m-%y  %H:%M:%S")}'
+            self.last_updated = datetime.now().strftime('Last updated: %d-%m-%y -- %H:%M:%S')
 
-    def save_data(self):
+    def save_data(self):     
         for data_type in self.json_data.keys():
             for season, data in self.json_data[data_type].items():
-                # Save new fixtures data
                 with open(f'data/{data_type}_{season}.json', 'w') as json_file:
                     json.dump(data, json_file)
 
