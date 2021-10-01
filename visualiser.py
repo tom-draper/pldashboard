@@ -403,7 +403,8 @@ class Visualiser:
         self.format_position_over_time_fig(fig, x, matchday_labels)
         return fig
 
-    def position_over_time_data_points(self, position_over_time: PositionOverTime) -> tuple[list[datetime], list[str], list[list[int]]]:
+    def position_over_time_data_points(self, 
+                                       position_over_time: PositionOverTime) -> tuple[list[datetime], list[str], list[list[int]]]:
         x_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(
             1) == 'Date']
         y_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(
@@ -431,7 +432,8 @@ class Visualiser:
         return x, matchday_labels, ys
 
     @timebudget
-    def update_position_over_time(self, position_over_time: PositionOverTime, team: str = '', display: bool = False):
+    def update_position_over_time(self, position_over_time: PositionOverTime, 
+                                  team: str = '', display: bool = False):
         if position_over_time.df.empty:
             print(
                 'Error: Cannot generate position over time graph; position over time dataframe is empty')
@@ -529,9 +531,11 @@ class Visualiser:
             paper_bgcolor='#fafafa',
         )
 
-    def clean_sheets_fig(self, x: list[datetime], line: list[float], clean_sheets: list[Optional[float]], not_clean_sheets, matchday_labels: list[str], labels: list[str]) -> FigureWidget:
-        fig = self.plot_clean_sheets(
-            x, line, clean_sheets, not_clean_sheets, labels)
+    def clean_sheets_fig(self, x: list[datetime], line: list[float], 
+                         clean_sheets: list[Optional[float]], 
+                         not_clean_sheets: list[Optional[float]], 
+                         matchday_labels: list[str], labels: list[str]) -> FigureWidget:
+        fig = self.plot_clean_sheets(x, line, clean_sheets, not_clean_sheets, labels)
         self.format_clean_sheets_fig(fig, x, matchday_labels)
         return fig
 
@@ -549,7 +553,8 @@ class Visualiser:
 
     # ---------------------- GOALS SCORED AND CONCEDED -------------------------
 
-    def plot_goals_scored_and_conceded(self, x, y_goals_scored, y_goals_conceded, y_avg):
+    def plot_goals_scored_and_conceded(self, x, y_goals_scored, y_goals_conceded, 
+                                       y_avg):
         fig = go.Figure(data=[
             go.Bar(name='Goals Scored', x=x, y=y_goals_scored,
                    marker_color='#77DD77',
@@ -570,7 +575,8 @@ class Visualiser:
 
         return fig
 
-    def format_goals_scored_and_conceded_fig(self, fig, x, y_goals_scored, y_goals_conceded, matchday_labels):
+    def format_goals_scored_and_conceded_fig(self, fig, x, y_goals_scored, 
+                                             y_goals_conceded, matchday_labels):
         # Get the maximum y-axis value (6 goals unless a higher value found)
         max_y = max([max(y_goals_scored), max(y_goals_conceded)])
         if max_y < 6:

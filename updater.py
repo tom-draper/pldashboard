@@ -187,4 +187,4 @@ class Updater:
 if __name__ == "__main__":
     # Update all dataframes
     updater = Updater(2021)
-    updater.update_all(request_new=False, team_name='Liverpool FC', display_tables=False)
+    updater.update_all(request_new=True, team_name='Liverpool FC', display_tables=False)
