@@ -1217,10 +1217,16 @@ class HomeAdvantages(DF):
         home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(1) == 'HomeAdvantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
         if (home_advantages[season]['Home']['Played'] <= threshold).all():
-            print(
-                f"Current season excluded from home advantages calculation, all teams must have played {threshold} home games.")
+            print(f"Current season excluded from home advantages calculation, all teams must have played {threshold} home games.")
             # Drop this current seasons column (start from previous season)
             home_advantages_cols = home_advantages_cols.iloc[:, 1:]
+        
+        # Drop pandemic year (anomaly, no fans, data shows neutral home advantage)
+        if (2020, 'HomeAdvantage', '') in list(home_advantages_cols.columns):
+            home_advantages_cols = home_advantages_cols.drop((2020, 'HomeAdvantage', ''), axis=1)
+        
+        print(home_advantages_cols)
+        print(list(home_advantages_cols.columns.get_level_values(0)))
 
         home_advantages = home_advantages.sort_index(axis=1)
         home_advantages['TotalHomeAdvantage'] = home_advantages_cols.mean(axis=1).fillna(0)
