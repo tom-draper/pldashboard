@@ -939,7 +939,9 @@ class SeasonStats(DF):
         position = self.format_position(position)
         return stat, position
 
-    def get_season_stats(self, team_name: str) -> tuple[float, str, float, str, float, str]:
+    def get_season_stats(self, team_name: str) -> tuple[float, str, 
+                                                        float, str, 
+                                                        float, str]:
         csr, csr_position = self.get_stat(team_name, 'CleanSheetRatio', False)
         gpg, gpg_position = self.get_stat(team_name, 'GoalsPerGame', False)
         cpg, cpg_position = self.get_stat(team_name, 'ConcededPerGame', True)
@@ -1055,10 +1057,10 @@ class PositionOverTime(DF):
                                position_over_time: pd.DataFrame) -> tuple[list[int], list[int]]:
         gd_col = []
         pts_col = []
-
-        col_data = position_over_time[matchday_no]
-        for team_name, row in col_data.iterrows():
-            gd, pts = 0, 0
+        matchday_col = position_over_time[matchday_no]
+        for team_name, row in matchday_col.iterrows():
+            gd = 0
+            pts = 0
             if matchday_nums_idx != 0:
                 # Add previous weeks cumulative gd
                 prev_matchday_no_idx = matchday_nums_idx - 1

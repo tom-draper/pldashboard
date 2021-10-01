@@ -423,5 +423,4 @@ class Predictor:
         # self.git_push()
         print(f'ℹ️ Predicting with accuracy: {round(self.accuracy*100, 2)}%')
         print(f'ℹ️ Predicting correct results with accuracy: {round(self.result_accuracy*100, 2)}%')
-        print(f'ℹ️ Net predictions: [{self.signed_float_str(self.home_scored_avg_diff)}] - \
-               [{self.signed_float_str(self.away_scored_avg_diff)}]')
+        print(f'ℹ️ Net predictions: [{self.signed_float_str(self.home_scored_avg_diff)}] - [{self.signed_float_str(self.away_scored_avg_diff)}]')

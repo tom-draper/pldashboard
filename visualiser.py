@@ -461,68 +461,49 @@ class Visualiser:
 
     # -------------------- GOALS SCORED AND CONCEDED GRAPHS --------------------
 
-    def plot_clean_sheets(self, x, line, clean_sheets, not_clean_sheets, labels):
+    def plot_clean_sheets(self, x, clean_sheets, not_clean_sheets):
         fig = go.Figure(data=[
-            go.Scatter(name='Line',
-                       x=x,
-                       y=line,
-                       mode='lines',
-                       line=dict(color='#757575', width=2),
-                       showlegend=False),
-            go.Scatter(name='Clean Sheet', x=x, y=clean_sheets,
-                       mode='markers',
-                       connectgaps=True,
-                       marker_color='#77DD77',
-                       marker_line_color='#006400',
-                       marker_line_width=1,
-                       text=labels,
-                       hoverinfo=('text'),
-                       marker=dict(size=32),
-                       showlegend=False),
-            go.Scatter(name='Goals Conceded',
-                       x=x,
-                       y=not_clean_sheets,
-                       mode='markers',
-                       connectgaps=True,
-                       marker_color='#C23B22',
-                       marker_line_color='#8B0000',
-                       marker_line_width=1,
-                       text=labels,
-                       hoverinfo=('text'),
-                       marker=dict(size=10),
-                       showlegend=False),
+            go.Bar(name='Goals Scored', x=x, y=[0.1]*len(x), showlegend=False),
+            go.Bar(name='Goals Conceded', x=x, y=[0.1]*len(x), showlegend=False),
+            go.Scatter(name='Line', x=x, y=[0.5]*len(x), mode='lines', 
+                       line=dict(color='#757575', width=2), showlegend=False),
+            go.Scatter(name='Clean Sheet', x=x, y=clean_sheets, mode='markers',
+                       hovertemplate='Matchday %{x}<br>Clean sheet<extra></extra>',
+                       marker_color='#77DD77', marker_line_color='#006400',
+                       marker_line_width=1, showlegend=False,
+                       marker=dict(size=30)),
+            go.Scatter(name='Goals Conceded', x=x, y=not_clean_sheets, mode='markers',
+                       hovertemplate='Matchday %{x}<br>Goal(s) conceded<extra></extra>', 
+                       marker_color='#C23B22', marker_line_color='#8B0000', 
+                       marker_line_width=1, showlegend=False, marker=dict(size=30)),
         ])
 
         return fig
 
-    def format_clean_sheets_fig(self, fig, x, matchday_labels):
-        # Ensure x axis is the same as goals scored and conceeded by adding
-        # a small margin to the axis
-        scale = 0.011
-        margin = (x[-1] - x[0]) * scale
-
-        # Config graph layout
+    def format_clean_sheets_fig(self, fig, x):
         fig.update_layout(
+            barmode='group',
+            height=120,
             yaxis=dict(
                 autorange=False,
-                range=[0, 1],
+                range=[0],
+                ticktext=[''],
+                tickvals=[0],
                 showgrid=False,
                 showline=False,
-                visible=False,
+                zeroline=False,
+                dtick=1,
             ),
             xaxis=dict(
-                title_text='Matchday',
                 tickmode='array',
-                ticktext=[str(i) for i in matchday_labels],
+                ticktext=['']*len(x),
                 tickvals=x,
-                range=[x[0] - margin, x[-1] + margin],
                 showgrid=False,
                 showline=False,
-                visible=False
             ),
             margin=dict(
-                l=50,
-                r=50,
+                l=40,
+                r=40,
                 b=10,
                 t=10,
                 pad=4
@@ -531,25 +512,19 @@ class Visualiser:
             paper_bgcolor='#fafafa',
         )
 
-    def clean_sheets_fig(self, x: list[datetime], line: list[float], 
-                         clean_sheets: list[Optional[float]], 
-                         not_clean_sheets: list[Optional[float]], 
-                         matchday_labels: list[str], labels: list[str]) -> FigureWidget:
-        fig = self.plot_clean_sheets(x, line, clean_sheets, not_clean_sheets, labels)
-        self.format_clean_sheets_fig(fig, x, matchday_labels)
+    def clean_sheets_fig(self, x: list[datetime], clean_sheets: list[Optional[float]], 
+                         not_clean_sheets: list[Optional[float]]) -> FigureWidget:
+        fig = self.plot_clean_sheets(x, clean_sheets, not_clean_sheets)
+        self.format_clean_sheets_fig(fig, x)
         return fig
 
-    def clean_sheets_data_points(self, y_goals_conceded: list[int]) -> tuple[list[float], list[Optional[float]], list[Optional[float]], list[str]]:
+    def clean_sheets_data_points(self, y_goals_conceded: list[int]) -> tuple[list[Optional[float]], 
+                                                                             list[Optional[float]]]:
         y_value = 0.5  # Line in the centre of the graph
-        not_clean_sheets = [y_value if goals !=
-                            0 else None for goals in y_goals_conceded]
-        clean_sheets = [y_value if goals ==
-                        0 else None for goals in y_goals_conceded]
-        labels = ['Clean sheet' if goals ==
-                  0 else 'Goals conceded' for goals in y_goals_conceded]
-        line = [y_value] * len(clean_sheets)
+        not_clean_sheets = [y_value if goals != 0 else None for goals in y_goals_conceded]
+        clean_sheets = [y_value if goals == 0 else None for goals in y_goals_conceded]
 
-        return line, clean_sheets, not_clean_sheets, labels
+        return clean_sheets, not_clean_sheets
 
     # ---------------------- GOALS SCORED AND CONCEDED -------------------------
 
@@ -618,16 +593,18 @@ class Visualiser:
                 x=0.01
             ),
         )
-        fig.update_layout(barmode='group')
 
-    def goals_scored_and_conceded_fig(self, x: list[datetime], y_goals_scored: list[int], y_goals_conceded: list[int], y_avg: list[float], matchday_labels: list[str]) -> FigureWidget:
+    def goals_scored_and_conceded_fig(self, x: list[datetime], y_goals_scored: list[int], 
+                                      y_goals_conceded: list[int], y_avg: list[float], 
+                                      matchday_labels: list[str]) -> FigureWidget:
         fig = self.plot_goals_scored_and_conceded(
             x, y_goals_scored, y_goals_conceded, y_avg)
         self.format_goals_scored_and_conceded_fig(
             fig, x, y_goals_scored, y_goals_conceded, matchday_labels)
         return fig
 
-    def append_num_goals(self, y_goals_scored: int, y_goals_conceded: int, team_matchday: dict):
+    def append_num_goals(self, y_goals_scored: int, y_goals_conceded: int, 
+                         team_matchday: dict):
         home, _, away = team_matchday['Score'].split(' ')
 
         num_goals_scored = 0
@@ -650,9 +627,13 @@ class Visualiser:
         # Append the mean goals scored (equal to mean goals conceded) this gameweek
         y_avg.append(sum(goals_scored) / len(goals_scored))
 
-    def goals_scored_and_conceeded_data_points(self, position_over_time: PositionOverTime, team: str) -> tuple[list[datetime], list[int], list[int], list[float], list[str]]:
-        x_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(
-            1) == 'Date']
+    def goals_scored_and_conceeded_data_points(self, position_over_time: PositionOverTime, 
+                                               team: str) -> tuple[list[datetime], 
+                                                                   list[int], 
+                                                                   list[int], 
+                                                                   list[float], 
+                                                                   list[str]]:
+        x_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(1) == 'Date']
         # All ys have the same x date values
         x = [datetime.utcfromtimestamp(date/1e9)
              for date in x_cols.loc[team].values.tolist()]
@@ -673,8 +654,7 @@ class Visualiser:
             if type(team_matchday['Score']) is str:
                 matchday_scorelines = position_over_time.df[matchday_no]['Score']
                 self.append_avg_goals(y_avg, matchday_scorelines)
-                self.append_num_goals(
-                    y_goals_scored, y_goals_conceded, team_matchday)
+                self.append_num_goals(y_goals_scored, y_goals_conceded, team_matchday)
             else:
                 # Do not add goals scored, goals condeded or average goals graph points
                 # Remove elements from other lists to ensure all lists will be same length
@@ -690,7 +670,8 @@ class Visualiser:
         return x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels
 
     @timebudget
-    def update_goals_scored_and_conceded(self, position_over_time: PositionOverTime, team: str = '', display: bool = False):
+    def update_goals_scored_and_conceded(self, position_over_time: PositionOverTime, 
+                                         team: str = '', display: bool = False):        
         if position_over_time.df.empty:
             print(
                 'Error: Cannot generate goals scored and conceded graph; position over time dataframe is empty')
@@ -705,8 +686,7 @@ class Visualiser:
                 teams_to_update = [team]
 
             for team_name in teams_to_update:
-                x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self.goals_scored_and_conceeded_data_points(
-                    position_over_time, team_name)
+                x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self.goals_scored_and_conceeded_data_points(position_over_time, team_name)
                 if y_goals_scored != [] and y_goals_conceded != []:
                     fig = self.goals_scored_and_conceded_fig(
                         x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels)
@@ -717,11 +697,9 @@ class Visualiser:
                     self.save_fig(fig, team_name, 'goals-scored-and-conceded')
 
                 # EXTRA GRAPH FROM SAME DATA: CLEAN SHEETS
-                line, clean_sheets, not_clean_sheets, labels = self.clean_sheets_data_points(
-                    y_goals_conceded)
+                clean_sheets, not_clean_sheets = self.clean_sheets_data_points(y_goals_conceded)
                 if x != []:
-                    fig = self.clean_sheets_fig(
-                        x, line, clean_sheets, not_clean_sheets, matchday_labels, labels)
+                    fig = self.clean_sheets_fig(x, clean_sheets, not_clean_sheets)
 
                     if display:
                         fig.show()
