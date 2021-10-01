@@ -269,12 +269,14 @@ class Predictor:
     def calc_score_prediction(self, team_name: str, opp_team_name: str, 
                               home_advantages: DataFrame, home_away: str, 
                               form_rating: float, opp_form_rating: float, 
-                              prev_meetings: list[dict[str, str]], debug: bool = False) -> tuple[int, int]:
-        pred_scored, pred_conceded = 0.0, 0.0
+                              prev_meetings: list[dict[str, str]], 
+                              debug: bool = False) -> tuple[int, int]:
         if prev_meetings:
             # Begin with average scored and conceded in previous meetings
             pred_scored, pred_conceded = self.avg_previous_result(
                 team_name, prev_meetings, debug=debug)
+        else:
+            pred_scored, pred_conceded = 1.0, 1.0
         # Modify based on difference in current form between two teams
         pred_scored, pred_conceded = self.modify_prediction_by_current_form(
             form_rating, opp_form_rating, pred_scored, pred_conceded, debug=debug)
@@ -339,8 +341,7 @@ class Predictor:
                 if debug:
                     print("\t\b", scoreline)
 
-                game_date = next_games.df['Date'].astype(
-                    str).loc[team_name]  # type: str
+                game_date = next_games.df['Date'].astype(str).loc[team_name]  # type: str
                 prediction = (game_date, scoreline)
 
             predictions[team_name] = prediction
@@ -361,7 +362,7 @@ class Predictor:
                 n_inserted += 1
 
         if n_inserted > 0:
-            print(f'➡️ Added {n_inserted} new predictions')
+            print(f'➡️  Added {n_inserted} new predictions')
 
     def insert_actual_scores(self, actual_scores: set[tuple[str, str]], predictions: dict):
         n_inserted = 0
@@ -377,7 +378,7 @@ class Predictor:
                     break
 
         if n_inserted > 0:
-            print(f'➡️ Updated {n_inserted} existing predictions with their actual results')
+            print(f'➡️  Updated {n_inserted} existing predictions with their actual results')
 
     def insert_accuracy(self, data: dict):
         data['accuracy'] = self.accuracy
