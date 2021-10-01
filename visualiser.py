@@ -463,13 +463,13 @@ class Visualiser:
 
     def plot_clean_sheets(self, x, clean_sheets, not_clean_sheets):
         fig = go.Figure(data=[
-            go.Bar(name='Goals Scored', x=x, y=[0.1]*len(x), showlegend=False),
-            go.Bar(name='Goals Conceded', x=x, y=[0.1]*len(x), showlegend=False),
+            go.Bar(name='Goals Scored', x=x, y=[0]*len(x), showlegend=False),
+            go.Bar(name='Goals Conceded', x=x, y=[0]*len(x), showlegend=False),
             go.Scatter(name='Line', x=x, y=[0.5]*len(x), mode='lines', 
-                       line=dict(color='#757575', width=2), showlegend=False),
+                       line=dict(color='#FFFFFF', width=2), showlegend=False),
             go.Scatter(name='Clean Sheet', x=x, y=clean_sheets, mode='markers',
                        hovertemplate='Matchday %{x}<br>Clean sheet<extra></extra>',
-                       marker_color='#77DD77', marker_line_color='#006400',
+                       marker_color='#FFFFFF', marker_line_color='#006400',
                        marker_line_width=1, showlegend=False,
                        marker=dict(size=30)),
             go.Scatter(name='Goals Conceded', x=x, y=not_clean_sheets, mode='markers',
@@ -486,7 +486,7 @@ class Visualiser:
             height=120,
             yaxis=dict(
                 autorange=False,
-                range=[0],
+                range=[0, 1],
                 ticktext=[''],
                 tickvals=[0],
                 showgrid=False,
