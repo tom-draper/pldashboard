@@ -85,16 +85,14 @@ class Fixtures(DF):
             matchday[(match["matchday"], 'HomeAway')].append('Home')
             matchday[(match["matchday"], 'Team')].append(match['awayTeam']['name'].replace('&', 'and'))
             matchday[(match["matchday"], 'Status')].append(match['status'])
-            matchday[(match["matchday"], 'Score')].append(
-                f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}")
+            matchday[(match["matchday"], 'Score')].append(f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}")
             team_names.append(match['homeTeam']['name'].replace('&', 'and'))
             # Away team row
             matchday[(match["matchday"], 'Date')].append(datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"))
             matchday[(match["matchday"], 'HomeAway')].append('Away')
             matchday[(match["matchday"], 'Team')].append(match['homeTeam']['name'].replace('&', 'and'))
             matchday[(match["matchday"], 'Status')].append(match['status'])
-            matchday[(match["matchday"], 'Score')].append(
-                f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}")
+            matchday[(match["matchday"], 'Score')].append(f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}")
             team_names.append(match['awayTeam']['name'].replace('&', 'and'))
 
         # Add last matchday (38) dataframe to list
@@ -927,11 +925,11 @@ class SeasonStats(DF):
         return stat, position
 
     def get_season_stats(self, team_name: str) -> tuple[float, str, float, str, float, str]:
-        clean_sheet_ratio, csr_position = self.get_stat(team_name, 'CleanSheetRatio', False)
-        goals_per_game, gpg_position = self.get_stat(team_name, 'GoalsPerGame', False)
-        conceded_per_game, cpg_position = self.get_stat(team_name, 'ConcededPerGame', True)
+        csr, csr_position = self.get_stat(team_name, 'CleanSheetRatio', False)
+        gpg, gpg_position = self.get_stat(team_name, 'GoalsPerGame', False)
+        cpg, cpg_position = self.get_stat(team_name, 'ConcededPerGame', True)
 
-        return clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position
+        return csr, csr_position, gpg, gpg_position, cpg, cpg_position
 
     def row_season_goals(self, row: pd.Series, matchdays: list[str]) -> tuple[int, int, int, int]:
         n_games, clean_sheets, goals_scored, goals_conceded = 0, 0, 0, 0
@@ -1211,8 +1209,8 @@ class HomeAdvantages(DF):
         win_ratio_at_home = home_advantages[season]['Home']['Wins'] / played_at_home
         home_advantages[season, 'Home', 'WinRatio'] = win_ratio_at_home
 
-        home_advantage = win_ratio_at_home - win_ratio
         # Home advantage = percentage wins at home - percentage wins 
+        home_advantage = win_ratio_at_home - win_ratio
         home_advantages[season, 'HomeAdvantage', ''] = home_advantage
 
     def create_total_home_advantage_col(self, home_advantages, season, threshold):
@@ -1287,14 +1285,6 @@ class HomeAdvantages(DF):
             print(home_advantages)
 
         self.df = home_advantages
-
-
-class Teams:
-    def __init__(self):
-        # List of current season teams (taken from standings dataframe) 
-        self.names = []  # type: list[str]
-        self.logo_urls = {}  # type: dict[str, str]
-
 
 @dataclass
 class Data:

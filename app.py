@@ -11,10 +11,21 @@ from updater import Updater
 season = 2021
 
 compress = Compress()
-
 app = Flask(__name__)
 compress.init_app(app)
 
+
+# ----------------------------- HOME PAGE --------------------------------------
+
+@dataclass
+class HomeParams:
+    title: str
+
+@app.route('/')
+@app.route('/home')
+def home() -> str:
+    params = HomeParams('Premier League')
+    return render_template('home.html', params=params)
 
 @dataclass
 class Team:
@@ -23,12 +34,10 @@ class Team:
     position: int
     logo_url: str
 
-
 @dataclass
 class TableSnippet:
     rows: list
     team_table_idx: int
-
 
 @dataclass
 class Form:
@@ -36,7 +45,6 @@ class Form:
     recent_teams_played: DataFrame
     rating: float
     won_against_star_team: list[str]
-
 
 @dataclass
 class SeasonStats:
@@ -47,7 +55,6 @@ class SeasonStats:
     conceded_per_game: float
     cpg_position: str
 
-
 @dataclass
 class OppTeam:
     name: str
@@ -55,13 +62,11 @@ class OppTeam:
     form_rating: float
     logo_url: str
 
-
 @dataclass
 class NextGame:
     opp_team: OppTeam
     home_away: str
     prev_meetings: list[tuple]
-
 
 @dataclass
 class Prediction:
@@ -69,6 +74,7 @@ class Prediction:
     accuracy: float
     results_accuracy: float
 
+# ------------------------------- TEAM PAGE ------------------------------------
 
 @dataclass
 class TeamParams:
@@ -82,27 +88,6 @@ class TeamParams:
     table_snippet: TableSnippet
     last_updated: str
 
-
-@dataclass
-class HomeParams:
-    title: str
-
-
-@dataclass
-class PredictionsParams:
-    predictions: dict
-    accuracy: float
-    results_accuracy: float
-    last_updated: str
-
-
-@app.route('/')
-@app.route('/home')
-def home() -> str:
-    params = HomeParams('Premier League')
-    return render_template('home.html', params=params)
-
-
 def get_team(title: str, team_name_hyphen: str) -> Team:
     team_name = title + ' FC'
     team_logo_url = updater.logo_urls[team_name]
@@ -110,29 +95,26 @@ def get_team(title: str, team_name_hyphen: str) -> Team:
 
     return Team(team_name, team_name_hyphen, position, team_logo_url)
 
-
 def get_form(team_name: str) -> Form:
     form_str, recent_teams_played, rating, won_against_star_team = updater.data.form.get_recent_form(team_name)
 
     return Form(form_str, recent_teams_played, rating, won_against_star_team)
 
-
 def get_season_stats(team_name: str) -> SeasonStats:
-    clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position = updater.data.season_stats.get_season_stats(
-        team_name)
+    csr, csr_position, gpg, gpg_position, cpg, cpg_position= updater.data.season_stats.get_season_stats(team_name)
 
-    return SeasonStats(clean_sheet_ratio, csr_position, goals_per_game, gpg_position, conceded_per_game, cpg_position)
-
+    return SeasonStats(csr, csr_position, gpg, gpg_position, cpg, cpg_position)
 
 def get_next_game(team_name: str) -> NextGame:
-    opp_team_name, home_away, prev_meetings = updater.data.upcoming.get_details(team_name)
-    opp_team_name_hyphen = (opp_team_name.lower()[:-3]).replace(' ', '-')  # Remove 'FC' from end
+    opp_team_name, home_away, prev_meetings = updater.data.upcoming.get_details(
+        team_name)
+    opp_team_name_hyphen = (opp_team_name.lower(
+    )[:-3]).replace(' ', '-')  # Remove 'FC' from end
     opp_form_rating = updater.data.form.get_current_form_rating(opp_team_name)
     opp_logo_url = updater.logo_urls[opp_team_name]
 
     opp_team = OppTeam(opp_team_name, opp_team_name_hyphen, opp_form_rating, opp_logo_url)
     return NextGame(opp_team, home_away, prev_meetings)
-
 
 def get_prediction(team_name: str) -> Prediction:
     score_prediction = updater.predictor.get_next_game_prediction(team_name)
@@ -140,12 +122,11 @@ def get_prediction(team_name: str) -> Prediction:
 
     return Prediction(score_prediction, accuracy, results_accuracy)
 
-
 def get_table_snippet(team_name: str) -> TableSnippet:
-    rows, team_table_idx = updater.data.standings.get_table_snippet(team_name, season)
+    rows, team_table_idx = updater.data.standings.get_table_snippet(
+        team_name, season)
 
     return TableSnippet(rows, team_table_idx)
-
 
 def get_params(team_name_hyphen: str) -> TeamParams:
     title = team_name_hyphen.replace('-', ' ').title().replace('And', 'and')
@@ -160,7 +141,6 @@ def get_params(team_name_hyphen: str) -> TeamParams:
     last_updated = updater.last_updated
 
     return TeamParams(season, title, team, form, season_stats, next_game, prediction, table_snippet, last_updated)
-
 
 @app.route('/liverpool')
 @app.route('/manchester-city')
@@ -192,17 +172,27 @@ def team() -> str:
 
     return render_template('team.html', params=params)
 
+# ------------------------------ PREDICTIONS PAGE ------------------------------
+
+@dataclass
+class PredictionsParams:
+    predictions: dict
+    accuracy: float
+    results_accuracy: float
+    last_updated: str
+
+def extract_int_score(scoreline: str) -> tuple[int, int]:
+    # Scoreline: [home_team_initials] [home_goals] - [away_goals] [away_team_initials]
+    _, home_goals, _, away_goals, _ = scoreline.split(' ')
+    return int(home_goals), int(away_goals) 
+
 
 def correct_result(scoreline1: str, scoreline2: str) -> bool:
-    _, h1_str, _, a1_str, _ = scoreline1.split(' ')
-    _, h2_str, _, a2_str, _ = scoreline2.split(' ')
-    h1, a1, h2, a2 = map(int, [h1_str, a1_str, h2_str, a2_str])
+    h1, a1 = extract_int_score(scoreline1)
+    h2, a2 = extract_int_score(scoreline2)
 
-    # If identical results (both a home win, a draw, or away win)
-    if (h1 > a1 and h2 > a2) or (h1 == a1 and h2 == a2) or (h1 < a1 and h2 < a2):
-        return True
-    return False
-
+    # If identical results (both a home win, draw, or away win)
+    return (h1 > a1 and h2 > a2) or (h1 == a1 and h2 == a2) or (h1 < a1 and h2 < a2)
 
 def insert_predictions_colours(predictions: dict):
     for date in predictions.keys():
@@ -215,7 +205,6 @@ def insert_predictions_colours(predictions: dict):
                 pred['colour'] = 'yellow'
             else:
                 pred['colour'] = 'red'
-
 
 @app.route('/predictions')
 def predictions() -> str:
@@ -231,16 +220,17 @@ def predictions() -> str:
     return render_template('predictions.html', params=params)
 
 
+
+
 def thread_function(time=3600):
     while True:
         print(f'Updating data in {time} seconds...')
         sleep(time)
         updater.update_all(request_new=True, display_tables=False)
 
-
 updater = Updater(season)
-data_updater_thread = Thread(target=thread_function, args=(1800,))
-updater.update_all(request_new=True, display_tables=False)
+data_updater_thread = Thread(target=thread_function, args=(3600,))
+updater.update_all(request_new=False, display_tables=False)
 data_updater_thread.start()
 
 if __name__ == '__main__':

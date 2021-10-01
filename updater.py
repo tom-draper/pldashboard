@@ -36,7 +36,7 @@ class Updater:
         self.home_games_threshold = 4
         self.star_team_threshold = 0.75  # Rating over 75% to be a star team
 
-        # Store for new requested API data or old data from memory 
+        # Store for new requested API data or old data from memory
         self.json_data = {'fixtures': {}, 'standings': {}}
         self.last_updated = ''
 
@@ -79,14 +79,17 @@ class Updater:
     def fetch_data(self, n_seasons: int, request_new: bool = True):
         for n in range(n_seasons):
             # Add new fixtures data to temp storage to be saved later
-            self.json_data['fixtures'][self.season - n] = self.fixtures_data(self.season - n, request_new)
-        self.json_data['standings'][self.season] = self.standings_data(self.season, request_new)
+            self.json_data['fixtures'][self.season -
+                                       n] = self.fixtures_data(self.season - n, request_new)
+        self.json_data['standings'][self.season] = self.standings_data(
+            self.season, request_new)
 
         # If requested new data and ValueError wasn't thrown
         if request_new:
-            self.last_updated = datetime.now().strftime('Last updated: %d-%m-%y -- %H:%M:%S')
+            self.last_updated = datetime.now().strftime(
+                'Last updated: %d-%m-%y -- %H:%M:%S')
 
-    def save_data(self):     
+    def save_data(self):
         for data_type in self.json_data.keys():
             for season, data in self.json_data[data_type].items():
                 with open(f'data/{data_type}_{season}.json', 'w') as json_file:
@@ -131,11 +134,11 @@ class Updater:
                               self.data.team_ratings,
                               self.star_team_threshold,
                               display=display_tables)
-        # Snapshots of a teams table position and match results for each matchday played so far 
+        # Snapshots of a teams table position and match results for each matchday played so far
         self.data.position_over_time.update(self.data.fixtures,
                                             self.data.standings,
                                             display=display_tables)
-        # Data about the opponent in each team's next game 
+        # Data about the opponent in each team's next game
         self.data.upcoming.update(self.json_data,
                                   self.data.fixtures,
                                   self.logo_urls.keys(),  # Current season team names
@@ -184,4 +187,4 @@ class Updater:
 if __name__ == "__main__":
     # Update all dataframes
     updater = Updater(2021)
-    updater.update_all(request_new=True, team_name='Liverpool FC', display_tables=True)
+    updater.update_all(request_new=False, team_name='Liverpool FC', display_tables=True)
