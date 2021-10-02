@@ -24,7 +24,8 @@ h1 {
 }
 
 .main-link {
-  font-size: 30px;
+  font-size: 1.4em;
+  font-weight: 600;
   color: #333333;
   flex: auto;
   align-self: center;
