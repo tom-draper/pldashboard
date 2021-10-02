@@ -13,7 +13,7 @@
 }
 
 h1 {
-  margin: 20px 0px 0px 0px;
+  margin: 25px 0 0 0;
   font-size: 1.7em;
 }
 
@@ -66,6 +66,7 @@ body {
   margin: 0 auto 0 auto;
   width: 90%;
   border: 8px solid rgb(46, 46, 46);
+  border-radius: 3px;
 }
 @media only screen and (max-width: 1100px) {
   .teams {
@@ -441,6 +442,10 @@ img {
 .season-stat {
   flex: 1;
   position: relative;
+}
+
+.lowered {
+  margin-bottom: -10px;
 }
 
 .debug {

@@ -8,7 +8,7 @@
     <div class="position">{{ params.team.position }}</div>
   </div>
   <div class="fixtures-graph row-graph">
-    <h1>Fixtures</h1>
+    <h1 class="lowered">Fixtures</h1>
     <!-- Not included in an iframe to ensure it loads before page is rendered -->
     <div class="graph mini-graph">
       {% include 'graphs/%s/fixtures-%s.html' % (params.team.name_hyphen, params.team.name_hyphen) %}
@@ -84,7 +84,7 @@
         {% endif %}
     </div>
   </div>
-  <div class="next-game-prediction row-graph" style="border: 6px solid var(--{{ params.next_game.opp_team.name_hyphen }});">
+  <div class="next-game-prediction row-graph" style="border: 6px solid var(--{{ params.next_game.opp_team.name_hyphen }}); border-radius: 3px;">
 
     {% if params.next_game.opp_team.name_hyphen  != '' %}
       <!-- Pre or mid season -->
@@ -162,7 +162,7 @@
 </div>
 <div class="row">
   <div class="form-graph row-graph">
-    <h1>Form Over Time</h1>
+    <h1 class="lowered">Form Over Time</h1>
     <div class="graph full-row-graph">
      {% include 'graphs/%s/form-over-time-%s.html' % (params.team.name_hyphen, params.team.name_hyphen) %}
     </div>
@@ -170,7 +170,7 @@
 </div>
 <div class="row">
   <div class="position-over-time-graph row-graph">
-    <h1>Position Over Time</h1>
+    <h1 class="lowered">Position Over Time</h1>
     <div class="graph full-row-graph">
      {% include 'graphs/%s/position-over-time-%s.html' % (params.team.name_hyphen, params.team.name_hyphen) %}
     </div>
@@ -178,7 +178,7 @@
 </div>
 <div class="row" style="margin-bottom: 0;">
   <div class="goals-scored-vs-conceded-graph row-graph">
-    <h1>Goals Scored and Conceded</h1>
+    <h1 class="lowered">Goals Scored and Conceded</h1>
     <div class="graph full-row-graph">
      {% include 'graphs/%s/goals-scored-and-conceded-%s.html' % (params.team.name_hyphen, params.team.name_hyphen) %}
     </div>
