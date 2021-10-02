@@ -465,17 +465,33 @@ class Visualiser:
         fig = go.Figure(data=[
             go.Bar(name='Goals Scored', x=x, y=[0]*len(x), showlegend=False),
             go.Bar(name='Goals Conceded', x=x, y=[0]*len(x), showlegend=False),
-            go.Scatter(name='Line', x=x, y=[0.5]*len(x), mode='lines', 
-                       line=dict(color='#FFFFFF', width=2), showlegend=False),
-            go.Scatter(name='Clean Sheet', x=x, y=clean_sheets, mode='markers',
+            go.Scatter(name='Line', 
+                       x=x, 
+                       y=[0.5]*len(x), 
+                       mode='lines', 
+                       line=dict(color='#757575', 
+                                 width=2), 
+                       showlegend=False),
+            go.Scatter(name='Clean Sheet', 
+                       x=x, 
+                       y=clean_sheets, 
+                       mode='markers',
                        hovertemplate='Matchday %{x}<br>Clean sheet<extra></extra>',
-                       marker_color='#FFFFFF', marker_line_color='#006400',
-                       marker_line_width=1, showlegend=False,
+                       marker_color='#77DD77', 
+                       marker_line_color='#006400',
+                       marker_line_width=1, 
+                       showlegend=False,
                        marker=dict(size=30)),
-            go.Scatter(name='Goals Conceded', x=x, y=not_clean_sheets, mode='markers',
+            go.Scatter(name='Goals Conceded', 
+                       x=x, 
+                       y=not_clean_sheets, 
+                       mode='markers',
                        hovertemplate='Matchday %{x}<br>Goal(s) conceded<extra></extra>', 
-                       marker_color='#C23B22', marker_line_color='#8B0000', 
-                       marker_line_width=1, showlegend=False, marker=dict(size=30)),
+                       marker_color='#C23B22', 
+                       marker_line_color='#8B0000', 
+                       marker_line_width=1, 
+                       showlegend=False, 
+                       marker=dict(size=30)),
         ])
 
         return fig
@@ -483,7 +499,7 @@ class Visualiser:
     def format_clean_sheets_fig(self, fig, x):
         fig.update_layout(
             barmode='group',
-            height=120,
+            height=100,
             yaxis=dict(
                 autorange=False,
                 range=[0, 1],
@@ -502,8 +518,8 @@ class Visualiser:
                 showline=False,
             ),
             margin=dict(
-                l=40,
-                r=40,
+                l=42,
+                r=42,
                 b=10,
                 t=10,
                 pad=4

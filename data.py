@@ -843,7 +843,7 @@ class Upcoming(DF):
 
     def sort_prev_meetings_by_date(self, next_games: dict):
         for _, row in next_games.items():
-            row['PreviousMeetings'] = sorted(row['PreviousMeetings'], key=lambda x: x['Date'], reverse=False)
+            row['PreviousMeetings'] = sorted(row['PreviousMeetings'], key=lambda x: x['Date'], reverse=True)
 
     def append_season_prev_meetings(self, next_games: dict, json_data: dict, 
                                     season: int, team_names: list[str]):

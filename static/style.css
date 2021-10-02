@@ -14,6 +14,7 @@
 
 h1 {
   margin: 20px 0px 0px 0px;
+  font-size: 1.7em;
 }
 
 .header {
@@ -25,7 +26,6 @@ h1 {
 .main-link {
   font-size: 30px;
   color: #333333;
-  font-weight: 600;
   flex: auto;
   align-self: center;
   margin: 0px 6px;
@@ -42,8 +42,8 @@ h1 {
 }
 
 .title {
-  font-size: 40px;
-  font-weight: 800;
+  font-size: 2.6em;
+  font-weight: 600;
 }
 
 body {
@@ -159,6 +159,7 @@ img {
 
 
 .current-form-row {
+  font-size: 0.9em;
   display: flex;
   width: 100%;
 }
@@ -194,7 +195,7 @@ img {
 }
 
 .current-form {
-  font-size: 34px;
+  font-size: 1.6em;
   margin: 20px 10px;
 }
 
