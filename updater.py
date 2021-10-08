@@ -86,8 +86,7 @@ class Updater:
 
         # If requested new data and ValueError wasn't thrown
         if request_new:
-            self.last_updated = datetime.now().strftime(
-                'Last updated: %d-%m-%y -- %H:%M:%S')
+            self.last_updated = datetime.now().strftime('Last updated: %d-%m-%y %H:%M:%S')
 
     def save_data(self):
         for data_type in self.json_data.keys():

@@ -463,8 +463,8 @@ class Visualiser:
 
     def plot_clean_sheets(self, x, clean_sheets, not_clean_sheets):
         fig = go.Figure(data=[
-            go.Bar(name='Goals Scored', x=x, y=[0]*len(x), showlegend=False),
-            go.Bar(name='Goals Conceded', x=x, y=[0]*len(x), showlegend=False),
+            go.Bar(name='Goals Scored', x=x, y=[0]*len(x), showlegend=False, marker_line_color='#fafafa'),
+            go.Bar(name='Goals Conceded', x=x, y=[0]*len(x), showlegend=False, marker_line_color='#fafafa'),
             go.Scatter(name='Line', 
                        x=x, 
                        y=[0.5]*len(x), 
@@ -499,7 +499,7 @@ class Visualiser:
     def format_clean_sheets_fig(self, fig, x):
         fig.update_layout(
             barmode='group',
-            height=100,
+            height=70,
             yaxis=dict(
                 autorange=False,
                 range=[0, 1],
