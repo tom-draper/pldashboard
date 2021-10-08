@@ -230,7 +230,7 @@ def thread_function(time=3600):
 
 updater = Updater(season)
 data_updater_thread = Thread(target=thread_function, args=(3600,))
-updater.update_all(request_new=False, display_tables=False)
+updater.update_all(request_new=True, display_tables=False)
 data_updater_thread.start()
 
 if __name__ == '__main__':
