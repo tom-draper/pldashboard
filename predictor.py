@@ -344,13 +344,13 @@ class Predictor:
         for team_name in team_names:
             prediction = None
             if next_games != None:
-                form_rating = form.get_current_form_rating(team_name)
-                home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]
                 opp_team_name = next_games.df['NextTeam'].loc[team_name]
+                form_rating = form.get_current_form_rating(team_name)
                 opp_form_rating = form.get_current_form_rating(opp_team_name)
+                home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]
                 opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]
                 home_away = next_games.df['HomeAway'].loc[team_name]  # type: dict[str, str]
-                prev_meetings = next_games.df.loc[team_name]['PreviousMeetings']
+                prev_meetings = next_games.df.loc[team_name]['PreviousMeetings']  # type: list[tuple]
 
                 pred_scored, pred_conceded, details = self.calc_score_prediction(team_name, 
                                                                             home_advantage,

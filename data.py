@@ -857,8 +857,7 @@ class Upcoming(DF):
 
     @timebudget
     def update(self, json_data: dict, fixtures: DataFrame, team_names: list[str], 
-               season: int, n_seasons: int = 3,
-               display: bool = False):
+               season: int, n_seasons: int = 3, display: bool = False):
         """ Builds a dataframe for details about the next game each team has to 
             play and inserts it into the next_games class variable.
             
@@ -870,7 +869,7 @@ class Upcoming(DF):
             NextGame: name of the opposition team in a team's next game
             HomeAway: whether the team is playing the next match at home or away, 
                 either 'Home' or 'Away'
-            Previous Meetings: list of (String Date, Home Team, Away Team, Home Score, 
+            PreviousMeetings: list of (String Date, Home Team, Away Team, Home Score, 
                 Away Score, Winning Team) tuples of each previous game between the
                 two teams
         
@@ -894,7 +893,10 @@ class Upcoming(DF):
         d = {}  # type: dict[str, dict[str, Optional[str] | list]]
         for team_name in team_names:
             date, next_team, home_away = self.get_next_game(team_name, fixtures)
-            d[team_name] = {'Date': date, 'NextTeam': next_team, 'HomeAway': home_away, 'PreviousMeetings': []}
+            d[team_name] = {'Date': date, 
+                            'NextTeam': next_team,  
+                            'HomeAway': home_away,
+                            'PreviousMeetings': []}
 
         for i in range(n_seasons):
             self.append_season_prev_meetings(d, json_data, season - i, team_names)
@@ -943,7 +945,10 @@ class SeasonStats(DF):
 
         return csr, csr_position, gpg, gpg_position, cpg, cpg_position
 
-    def row_season_goals(self, row: pd.Series, matchdays: list[str]) -> tuple[int, int, int, int]:
+    def row_season_goals(self, row: pd.Series, matchdays: list[str]) -> tuple[int, 
+                                                                              int, 
+                                                                              int, 
+                                                                              int]:
         n_games = 0
         clean_sheets = 0
         goals_scored = 0
@@ -1048,8 +1053,7 @@ class PositionOverTime(DF):
         return gd, pts
 
     def goal_diff_and_pts_cols(self, matchday_no: int, matchday_nums: list[int], 
-                               matchday_nums_idx: int, 
-                               position_over_time: pd.DataFrame) -> tuple[list[int], list[int]]:
+                               matchday_nums_idx: int, position_over_time: pd.DataFrame) -> tuple[list[int], list[int]]:
         gd_col = []
         pts_col = []
         matchday_col = position_over_time[matchday_no]
@@ -1084,7 +1088,6 @@ class PositionOverTime(DF):
             Builds a dataframe containing data about the team's past and present 
             league positions at each matchday played this season and inserts it 
             into the fixtures class variable.
-            
             
             Rows: the 20 teams participating in the current season, ordered ascending
                 by row team name
@@ -1200,7 +1203,8 @@ class HomeAdvantages(DF):
                     # Away team wins
                     d[home_team][(season, 'Home', 'Loses')] += 1
                     d[away_team][(season, 'Away', 'Wins')] += 1
-                else:  # Draw
+                else: 
+                    # Draw
                     d[home_team][(season, 'Home', 'Draws')] += 1
                     d[away_team][(season, 'Away', 'Draws')] += 1
 

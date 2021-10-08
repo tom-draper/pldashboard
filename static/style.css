@@ -427,7 +427,7 @@ img {
 }
 
 .season-stats-row {
-  margin-top: 90px;
+  margin-top: 100px;
   height: auto;
 }
 
@@ -596,6 +596,7 @@ img {
 
 a.kofi-button {
   font-size: 16px !important;
+  font-weight: 500;
 }
 
 .kofitext img.kofiimg {
