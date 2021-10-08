@@ -307,7 +307,6 @@ class Predictor:
         pred_scored, pred_conceded, detail = self.modify_prediction_by_current_form(
             form_rating, opp_form_rating, home_away, pred_scored, pred_conceded)
         details.append(detail)
-
         
         # Decrese scores conceded if playing at home
         pred_scored, pred_conceded, detail = self.modify_prediction_by_home_advantage(
