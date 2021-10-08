@@ -476,7 +476,7 @@ class Visualiser:
                        x=x, 
                        y=clean_sheets, 
                        mode='markers',
-                       hovertemplate='Matchday %{x}<br>Clean sheet<extra></extra>',
+                       hovertemplate='>Clean sheet<extra></extra>',
                        marker_color='#77DD77', 
                        marker_line_color='#006400',
                        marker_line_width=1, 
@@ -486,7 +486,7 @@ class Visualiser:
                        x=x, 
                        y=not_clean_sheets, 
                        mode='markers',
-                       hovertemplate='Matchday %{x}<br>Goal(s) conceded<extra></extra>', 
+                       hovertemplate='Goal(s) conceded<extra></extra>', 
                        marker_color='#C23B22', 
                        marker_line_color='#8B0000', 
                        marker_line_width=1, 
@@ -499,7 +499,7 @@ class Visualiser:
     def format_clean_sheets_fig(self, fig, x):
         fig.update_layout(
             barmode='group',
-            height=70,
+            height=65,
             yaxis=dict(
                 autorange=False,
                 range=[0, 1],

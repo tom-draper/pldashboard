@@ -300,7 +300,8 @@ class Predictor:
                               prev_meetings: list[dict[str, str]]) -> tuple[int, int]:
         details = []
         
-        pred_scored, pred_conceded, detail = self.starting_score(team_name, prev_meetings, home_away)
+        pred_scored, pred_conceded, detail = self.starting_score(
+            team_name, prev_meetings, home_away)
         details.append(detail)
 
         # Modify based on difference in current form between two teams
@@ -353,12 +354,12 @@ class Predictor:
                 prev_meetings = next_games.df.loc[team_name]['PreviousMeetings']  # type: list[tuple]
 
                 pred_scored, pred_conceded, details = self.calc_score_prediction(team_name, 
-                                                                            home_advantage,
-                                                                            opp_home_advantage, 
-                                                                            home_away, 
-                                                                            form_rating, 
-                                                                            opp_form_rating, 
-                                                                            prev_meetings)
+                                                                                 home_advantage,
+                                                                                 opp_home_advantage, 
+                                                                                 home_away, 
+                                                                                 form_rating, 
+                                                                                 opp_form_rating, 
+                                                                                 prev_meetings)
 
                 scoreline = self.format_scoreline_str(team_name, opp_team_name, 
                                                       pred_scored, pred_conceded, 
