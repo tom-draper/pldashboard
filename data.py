@@ -426,23 +426,18 @@ class Form(DF):
 
             # Find index of dates where this matchday would fit
             for i in range(len(dates)):
-                if i == len(dates) - 1:
-                    index = i + 1
-                    break
-                if date < dates[i + 1]:
+                if i == len(dates) - 1 or date < dates[i + 1]:
                     index = i
                     break
 
             # Get the last n_games matchday values from this index
             if len(dates) > n_games:
                 low = index - n_games + 1
-                if low < 0:
-                    low = 0
                 high = index + 1
-            else:
+                
+            if low < 0:
                 low = 0
-                high = index + 1
-
+            
             teams_played = teams_played[low:high]
             scores = scores[low:high]
             home_aways = home_aways[low:high]
@@ -477,20 +472,20 @@ class Form(DF):
             # If matchday date is far away from the mean and this matchday has 
             # been rescheduled, use the mean matchday date insead
             # Check within 2 weeks either side
-            if not (median_matchday_date - np.timedelta64(14,
-                                                          'D') < matchday_date < median_matchday_date + np.timedelta64(
-                    14, 'D')):
+            if not (median_matchday_date - np.timedelta64(14,'D') < 
+                    matchday_date < 
+                    median_matchday_date + np.timedelta64(14, 'D')):
                 matchday_date = median_matchday_date
-
+            
             teams_played, scores, home_away = self.last_n_games(games_played, n_games, matchday_date)
             teams_played_col.append(teams_played)
             scores_col.append(scores)
             home_away_col.append(home_away)
 
         # Convert full team names to team initials
-        teams_played_col = [list(map(utils.convert_team_name_or_initials, teams_played)) for teams_played in
-                            teams_played_col]
-
+        teams_played_col = [list(map(utils.convert_team_name_or_initials, teams_played)) 
+                            for teams_played in teams_played_col]
+        
         return teams_played_col, scores_col, home_away_col
 
     @timebudget

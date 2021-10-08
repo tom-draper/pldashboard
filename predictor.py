@@ -405,22 +405,11 @@ class Predictor:
         with open(self.prediction_file, 'w') as f:
             json.dump(data, f)
 
-    def git_push(self):
-        try:
-            repo = Repo('.')
-            repo.git.add(update=True)
-            repo.index.commit('automated predictions store')
-            origin = repo.remote(name='origin')
-            origin.push('predictions-store')
-        except:
-            print('Some error occured while pushing the code')
-
     def update(self, fixtures: Fixtures, form: Form, upcoming: Upcoming, 
                home_advantages: HomeAdvantages):
         self.gen_score_predictions(form, upcoming, home_advantages, debug=False)
         self.record_accuracy()
         self.update_json_file(fixtures)
-        # self.git_push()
         print(f'ℹ️ Predicting with accuracy: {round(self.accuracy*100, 2)}%')
         print(f'ℹ️ Predicting correct results with accuracy: {round(self.result_accuracy*100, 2)}%')
         print(f'ℹ️ Net predictions: [{self.signed_float_str(self.home_scored_avg_diff)}] - [{self.signed_float_str(self.away_scored_avg_diff)}]')

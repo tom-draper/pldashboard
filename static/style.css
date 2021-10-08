@@ -93,6 +93,19 @@ body {
   height: auto;
 }
 
+.top-left {
+  border-radius: 2px 0 0 0
+}
+.top-right {
+  border-radius: 0 2px 0 0
+}
+.bottom-right {
+  border-radius: 0 0 2px 0;
+}
+.bottom-left {
+  border-radius: 0 0 0 2px;
+}
+
 
 .clean-sheets-row {
   position: relative;
@@ -272,6 +285,7 @@ img {
 }
 .next-game-prediction {
   margin: 0px 20px 0px 0px;
+  border-radius: 3px;
 }
 .next-game-values {
   display: flex;
