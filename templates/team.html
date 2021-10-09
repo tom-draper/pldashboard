@@ -176,7 +176,7 @@
     </div>
   </div>
 </div>
-<div class="row" style="margin-bottom: 0;">
+<div class="row no-bottom-margin" style="margin-bottom: 0;">
   <div class="goals-scored-vs-conceded-graph row-graph">
     <h1 class="lowered">Goals Scored and Conceded</h1>
     <div class="graph full-row-graph">
@@ -194,18 +194,24 @@
 <div class="season-stats-row">
   <div class="season-stats">
     <div class="season-stat clean-sheet-ratio">
-      <div class="season-stat-value">{{ params.season_stats.clean_sheet_ratio }}</div>
-      <div class="season-stat-position">{{ params.season_stats.csr_position }}</div>
+      <div class="season-stat-value">
+        {{ params.season_stats.clean_sheet_ratio }}
+        <div class="season-stat-position" id="ssp1">{{ params.season_stats.csr_position }}</div>
+      </div>
       <div class="season-stat-text">clean sheets</div>
     </div>
     <div class="season-stat goals-per-game">
-      <div class="season-stat-value">{{ params.season_stats.goals_per_game }}</div>
-      <div class="season-stat-position">{{ params.season_stats.gpg_position }}</div>
+      <div class="season-stat-value">
+        {{ params.season_stats.goals_per_game }}
+        <div class="season-stat-position" id="ssp2">{{ params.season_stats.gpg_position }}</div>
+      </div>
       <div class="season-stat-text">goals per game</div>
     </div>
     <div class="season-stat conceded-per-game">
-      <div class="season-stat-value">{{ params.season_stats.conceded_per_game }}</div>
-      <div class="season-stat-position">{{ params.season_stats.cpg_position }}</div>
+      <div class="season-stat-value">
+        {{ params.season_stats.conceded_per_game }}
+        <div class="season-stat-position" id="ssp3">{{ params.season_stats.cpg_position }}</div>
+      </div>
       <div class="season-stat-text">conceded per game</div>
     </div>
   </div>
