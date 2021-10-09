@@ -24,7 +24,8 @@ class Visualiser:
 
     # ---------------------------- FIXTURES GRAPHS -----------------------------
 
-    def plot_fixtures_points(self, x, y, sizes, details):
+    def plot_fixtures_points(self, x: list[datetime], y: list[float], 
+                             sizes: list[int], details: list[str]):
         fig = go.Figure(data=go.Scatter(x=x,
                                         y=y,
                                         mode='lines+markers',
@@ -37,7 +38,7 @@ class Visualiser:
                                         hoverinfo=('x+y+text')))
         return fig
 
-    def plot_current_day(self, fig, NOW):
+    def plot_current_day(self, fig: FigureWidget, NOW: datetime):
         fig.add_shape(go.layout.Shape(type='line',
                                       yref='paper',
                                       xref='x',
@@ -49,7 +50,7 @@ class Visualiser:
                                                 width=1,
                                                 dash='dot')))
 
-    def format_fixtures_fig(self, fig, x):
+    def format_fixtures_fig(self, fig: FigureWidget, x: list[datetime]):
         y_labels = [i for i in range(0, 101, 10)]
 
         fig.update_layout(
@@ -129,9 +130,9 @@ class Visualiser:
 
         return x, y, details
 
-    def save_fig(self, fig, team: str, graph_type: str, path: str = './templates/graphs/',
-                 auto_open: bool = False, display_mode_bar: bool = False,
-                 scroll_zoom: bool = False):
+    def save_fig(self, fig: FigureWidget, team: str, graph_type: str, 
+                 path: str = './templates/graphs/', auto_open: bool = False, 
+                 display_mode_bar: bool = False, scroll_zoom: bool = False):
         file_team_name = '-'.join(team.lower().split()
                                   [:-1]).replace('&', 'and')
 
@@ -191,7 +192,8 @@ class Visualiser:
 
     # ------------------------ FORM OVER TIME GRAPHS ---------------------------
 
-    def plot_teams_form(self, fig, x, ys, team, team_names):
+    def plot_teams_form(self, fig: FigureWidget, x: list[datetime], 
+                        ys: list[list[float]], team: str, team_names: list[str]):
         for idx, y in enumerate(ys):
             if team_names[idx] != team:
                 fig.add_trace(go.Scatter(x=x,
@@ -220,7 +222,8 @@ class Visualiser:
                                  hoverinfo=('x+y'),
                                  ))
 
-    def format_form_over_time_fig(self, fig, x, matchday_labels):
+    def format_form_over_time_fig(self, fig: FigureWidget, x: list[datetime], 
+                                  matchday_labels: list[str]):
         y_labels = [i for i in range(0, 101, 10)]
 
         fig.update_layout(
@@ -261,7 +264,9 @@ class Visualiser:
         self.format_form_over_time_fig(fig, x, matchday_labels)
         return fig
 
-    def form_over_time_data_points(self, form: Form) -> tuple[list[datetime], list[str], list[list[float]]]:
+    def form_over_time_data_points(self, form: Form) -> tuple[list[datetime], 
+                                                              list[str], 
+                                                              list[list[float]]]:
         x_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'Date']
         y_cols = form.df.iloc[:, form.df.columns.get_level_values(
             1) == 'FormRating']
@@ -288,7 +293,7 @@ class Visualiser:
         return x, matchday_labels, ys
 
     @timebudget
-    def update_form_over_time(self, form: Form,  team: str = '', display: bool = False):
+    def update_form_over_time(self, form: Form, team: str = '', display: bool = False):
         if form.df.empty:
             print('Error: Cannot generate form over time graph; Form dataframe is empty')
         else:
@@ -313,7 +318,9 @@ class Visualiser:
 
     # --------------------- POSITION OVER TIME GRAPHS --------------------------
 
-    def plot_teams_position_over_time(self, fig, x, ys, team, team_names):
+    def plot_teams_position_over_time(self, fig: FigureWidget, x: list[datetime], 
+                                      ys: list[list[float]], team: str, 
+                                      team_names: list[str]):
         for idx, y in enumerate(ys):
             if team_names[idx] != team:
                 fig.add_trace(go.Scatter(x=x,
@@ -343,7 +350,7 @@ class Visualiser:
                                  hoverinfo=('x+y'),
                                  ))
 
-    def plot_position_rect(self, fig, x0, y0, x1, y1, colour):
+    def plot_position_rect(self, fig: FigureWidget, x0, y0, x1, y1, colour):
         fig.add_shape(type='rect',
                       x0=x0,
                       y0=y0,
@@ -357,7 +364,8 @@ class Visualiser:
                       layer='below',
                       )
 
-    def format_position_over_time_fig(self, fig, x, matchday_labels):
+    def format_position_over_time_fig(self, fig: FigureWidget, x: list[datetime], 
+                                      matchday_labels: list[str]):
         positional_values = [i for i in range(1, 21)]
 
         fig.update_layout(
@@ -398,17 +406,13 @@ class Visualiser:
         self.plot_teams_position_over_time(fig, x, ys, team, team_names)
         self.plot_position_rect(fig, x[0], 4, x[-1], 1, '#03AC13')  # Top 4
         self.plot_position_rect(fig, x[0], 6, x[-1], 4, '#008080')  # 5-6
-        self.plot_position_rect(
-            fig, x[0], 20, x[-1], 17, '#800000')  # Relegation zone
+        self.plot_position_rect(fig, x[0], 20, x[-1], 17, '#800000')  # Relegation zone
         self.format_position_over_time_fig(fig, x, matchday_labels)
         return fig
 
-    def position_over_time_data_points(self, 
-                                       position_over_time: PositionOverTime) -> tuple[list[datetime], list[str], list[list[int]]]:
-        x_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(
-            1) == 'Date']
-        y_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(
-            1) == 'Position']
+    def position_over_time_data_points(self, position_over_time: PositionOverTime) -> tuple[list[datetime], list[str], list[list[int]]]:
+        x_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(1) == 'Date']
+        y_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(1) == 'Position']
 
         # All ys have the same x date values
         x = []
@@ -424,8 +428,7 @@ class Visualiser:
             ys.append(y)
 
         # Sort the x-axis data by date to remove errors due to match rescheduling
-        matchday_labels = sorted(
-            list(position_over_time.df.columns.unique(level=0)))
+        matchday_labels = sorted(list(position_over_time.df.columns.unique(level=0)))
 
         x, matchday_labels, *ys = zip(*sorted(zip(x, matchday_labels, *ys)))
 
@@ -463,8 +466,16 @@ class Visualiser:
 
     def plot_clean_sheets(self, x, clean_sheets, not_clean_sheets):
         fig = go.Figure(data=[
-            go.Bar(name='Goals Scored', x=x, y=[0]*len(x), showlegend=False, marker_line_color='#fafafa'),
-            go.Bar(name='Goals Conceded', x=x, y=[0]*len(x), showlegend=False, marker_line_color='#fafafa'),
+            go.Bar(name='Goals Scored',
+                   x=x, 
+                   y=[0]*len(x), 
+                   showlegend=False, 
+                   marker_line_color='#fafafa'),
+            go.Bar(name='Goals Conceded', 
+                   x=x, 
+                   y=[0]*len(x), 
+                   showlegend=False, 
+                   marker_line_color='#fafafa'),
             go.Scatter(name='Line', 
                        x=x, 
                        y=[0.5]*len(x), 
@@ -476,7 +487,7 @@ class Visualiser:
                        x=x, 
                        y=clean_sheets, 
                        mode='markers',
-                       hovertemplate='>Clean sheet<extra></extra>',
+                       hovertemplate='Clean sheet<extra></extra>',
                        marker_color='#77DD77', 
                        marker_line_color='#006400',
                        marker_line_width=1, 
@@ -566,12 +577,13 @@ class Visualiser:
 
         return fig
 
-    def format_goals_scored_and_conceded_fig(self, fig, x, y_goals_scored, 
-                                             y_goals_conceded, matchday_labels):
+    def format_goals_scored_and_conceded_fig(self, fig: FigureWidget, 
+                                             x: list[datetime],
+                                             y_goals_scored: list[int], 
+                                             y_goals_conceded: list[int], 
+                                             matchday_labels: list[str]):
         # Get the maximum y-axis value (6 goals unless a higher value found)
-        max_y = max([max(y_goals_scored), max(y_goals_conceded)])
-        if max_y < 6:
-            max_y = 6
+        max_y = min(max(y_goals_scored + y_goals_conceded), 6)
 
         # Config graph layout
         fig.update_layout(
@@ -613,10 +625,10 @@ class Visualiser:
     def goals_scored_and_conceded_fig(self, x: list[datetime], y_goals_scored: list[int], 
                                       y_goals_conceded: list[int], y_avg: list[float], 
                                       matchday_labels: list[str]) -> FigureWidget:
-        fig = self.plot_goals_scored_and_conceded(
-            x, y_goals_scored, y_goals_conceded, y_avg)
-        self.format_goals_scored_and_conceded_fig(
-            fig, x, y_goals_scored, y_goals_conceded, matchday_labels)
+        fig = self.plot_goals_scored_and_conceded(x, y_goals_scored, 
+                                                  y_goals_conceded, y_avg)
+        self.format_goals_scored_and_conceded_fig(fig, x, y_goals_scored, 
+                                                  y_goals_conceded, matchday_labels)
         return fig
 
     def append_num_goals(self, y_goals_scored: int, y_goals_conceded: int, 
@@ -661,8 +673,7 @@ class Visualiser:
 
         team_position_over_time = position_over_time.df.loc[team]
 
-        matchday_nums = sorted(
-            list(position_over_time.df.columns.unique(level=0)))
+        matchday_nums = sorted(list(position_over_time.df.columns.unique(level=0)))
         for idx, matchday_no in enumerate(matchday_nums):
             # Append the teams number of goals scored and cocneded this matchday
             team_matchday = team_position_over_time[matchday_no]
@@ -693,12 +704,10 @@ class Visualiser:
                 'Error: Cannot generate goals scored and conceded graph; position over time dataframe is empty')
         else:
             if not team:
-                print(
-                    '📊 Updating all teams goals scored and conceded over time graphs...')
+                print('📊 Updating all teams goals scored and conceded over time graphs...')
                 teams_to_update = position_over_time.df.index.values.tolist()
             else:
-                print(
-                    f'📊 Updating {team} goals scored and conceded over time graph...')
+                print(f'📊 Updating {team} goals scored and conceded over time graph...')
                 teams_to_update = [team]
 
             for team_name in teams_to_update:
