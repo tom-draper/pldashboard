@@ -54,7 +54,6 @@ a.kofi-button {
 }
 
 #back-button {
-  background-size: contain;
   position: absolute;
   top: 20px;
   left: 40px;
@@ -255,6 +254,9 @@ img {
   padding: 5px 5%;
   border-radius: 3px;
 }
+.table-row.this-team {
+  padding: 7px 5%;
+}
 
 #divider {
   align-self: center;
@@ -320,6 +322,7 @@ img {
 .next-game-prediction {
   margin: 0px 20px 0px 0px;
   border-radius: 3px;
+  padding-bottom: 8px;
 }
 .next-game-values {
   display: flex;
@@ -399,7 +402,6 @@ img {
 }
 .donation-text {
   align-self: center;
-  /* font-family: "VT323"; */
 }
 .footer-link {
   display: flex;
@@ -480,6 +482,27 @@ img {
   right: calc(50% - 210px);
   right: -80px;
 }
+.ssp-1st {color:#6cff68;}
+.ssp-2nd {color:#78f570;}
+.ssp-3rd {color:#81eb78;}
+.ssp-4th {color:#89e07f;}
+.ssp-5th {color:#8fd686;}
+.ssp-6th {color:#95cc8c;}
+.ssp-7th {color:#99c192;}
+.ssp-8th {color:#9db797;}
+.ssp-9th {color:#a0ad9d;}
+.ssp-10th {color:#a2a2a2;}
+.ssp-11th {color:#a2a2a2;}
+.ssp-12th {color:#af9d9b;}
+.ssp-13th {color:#bc9895;}
+.ssp-14th {color:#c7928e;}
+.ssp-15th {color:#d18d88;}
+.ssp-16th {color:#db8681;}
+.ssp-17th {color:#e5807b;}
+.ssp-18th {color:#ee7975;}
+.ssp-19th {color:#f7716e;}
+.ssp-20th {color:#FF6868;}
+
 .season-stat {
   flex: 1;
 }
@@ -619,6 +642,3 @@ img {
     font-size: 1.1em;
   }
 }
-
-
-

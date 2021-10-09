@@ -529,8 +529,8 @@ class Visualiser:
                 showline=False,
             ),
             margin=dict(
-                l=42,
-                r=42,
+                l=41,
+                r=41,
                 b=10,
                 t=10,
                 pad=4
@@ -583,7 +583,7 @@ class Visualiser:
                                              y_goals_conceded: list[int], 
                                              matchday_labels: list[str]):
         # Get the maximum y-axis value (6 goals unless a higher value found)
-        max_y = min(max(y_goals_scored + y_goals_conceded), 6)
+        max_y = max(max(y_goals_scored), max(y_goals_conceded), 6)
 
         # Config graph layout
         fig.update_layout(
