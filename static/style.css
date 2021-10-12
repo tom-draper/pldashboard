@@ -378,6 +378,7 @@ img {
 .score {
   float: left;
   min-width: 37px;
+  margin: 0 4px;
   text-align: center;
   font-weight: 800
 }
@@ -538,7 +539,6 @@ img {
     margin-bottom: 1.4em;
   }
   .season-stats-row {
-    /* margin-top: 40px; */
     margin: 70px 0 0 0;
   }
   .season-stat-text {
@@ -765,12 +765,32 @@ img {
   width: min(90%, 300px);
   align-self: center;
   border-radius: 6px;
+
+  /* background: none; */
+  color: inherit;
+  border: none;
+  font-size: 0.8em;
+  cursor: pointer;
+  outline: inherit;
 }
 .medium-predictions-divider {
   align-self: center;
   border-bottom: 3px solid black;
   width: min(100%, 360px);
   margin-bottom: 2px;
+}
+
+.prediction-details {
+  display: none;
+  font-size: 0.65em;
+  color: #8d8d8d;
+  color: black;
+  margin-bottom: 5px;
+  margin-left: 30px;
+  text-align: left;
+}
+.prediction-detail {
+  margin: 3px 0;
 }
 
 /* Mobile view */

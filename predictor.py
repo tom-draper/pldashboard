@@ -205,11 +205,11 @@ class Predictor:
         return already_made
 
     def insert_new_prediction(self, date: str, new_prediction: str, details: list[str], predictions: dict[str, list]):
-        # Init with empty list if missing
+        # Init with empty list if missing...
         if date not in predictions.keys():
             predictions[date] = []
 
-        # Update existing prediction object with new score prediction
+        # Update existing prediction object with new score prediction...
         for prediction in predictions[date]:
             predicted_score = prediction['prediction']
             if self.identical_fixtures(predicted_score, new_prediction):
@@ -220,7 +220,7 @@ class Predictor:
                     prediction['details'] = details
                 return
 
-        # Add new prediction object
+        # Add new prediction object...
         print("Adding new prediction:", new_prediction)
         predictions[date].append({'prediction': new_prediction, 'actual': None, 'details': details})
 
@@ -282,15 +282,15 @@ class Predictor:
         if prev_meetings:
             # Begin with average scored and conceded in previous meetings
             pred_scored, pred_conceded = self.avg_previous_result(team_name, prev_meetings)
-            reason =  'previous match average'
+            type =  'Previous match average'
         else:
             pred_scored, pred_conceded = 1.0, 1.0
-            reason = 'no previous matches'
+            type = 'Default'
         
         if home_away == "Home":
-            detail = f'Starting: {pred_scored} - {pred_conceded} ({reason})'
+            detail = f'{type}: {pred_scored} - {pred_conceded}'
         else:
-            detail = f'Starting: {pred_conceded} - {pred_scored} ({reason})'
+            detail = f'{type}: {pred_conceded} - {pred_scored}'
             
         return pred_scored, pred_conceded, detail
 
