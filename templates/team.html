@@ -90,7 +90,10 @@
       <!-- Pre or mid season -->
       <div class="next-game-title" style="background-color: var(--{{ params.next_game.opp_team.name_hyphen }});">
         <h1 class="next-game-title-text" style="color: var(--{{ params.next_game.opp_team.name_hyphen  }}-secondary);">
-          Next Game: {{ params.next_game.opp_team.name_hyphen .replace('-', ' ').title().replace('And', 'and') }} ({{ params.next_game.home_away }})
+          Next Game: 
+          <a href="/{{params.next_game.opp_team.name_hyphen}}" class="no-decoration" style="color:inherit;">
+            {{ params.next_game.opp_team.name_hyphen.replace('-', ' ').title().replace('And', 'and') }}
+          </a> ({{ params.next_game.home_away }})
         </h1>
       </div>
     {% else %}
