@@ -322,7 +322,7 @@ img {
 .next-game-prediction {
   margin: 0px 20px 0px 0px;
   border-radius: 3px;
-  padding-bottom: 8px;
+  padding-bottom: 6px;
 }
 .next-game-values {
   display: flex;
@@ -487,13 +487,12 @@ img {
 }
 
 .season-stat-position {
-  font-size: 0.85em;
   font-size: 0.3em;
   color: rgb(162, 162, 162);
   position: absolute;
   top: -58px;
-  right: calc(50% - 210px);
   right: -80px;
+  letter-spacing: -0.07em;
 }
 .ssp-1st {color:#6cff68;}
 .ssp-2nd {color:#78f570;}
@@ -546,8 +545,8 @@ img {
     font-size: 0.9em;
   }
   .season-stat-position {
-    right: -80px;
-    top: -48px;
+    right: -70px;
+    top: -45px;
   }
   .teams-footer {
     margin-top: 0;
@@ -577,6 +576,9 @@ img {
   }
   .form-details {
     width: 80%;
+  }
+  .table-snippet {
+    margin-top: 0;
   }
   .mini-graph {
     /* Reset margin to match other graphs as no longer on row with other items */
