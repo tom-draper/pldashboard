@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
     <title>{{ params.title }}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='club-colours.css') }}">
@@ -41,7 +42,9 @@
         <a id="back-button" class="main-link" href="/"></a>
         <a class="main-link title no-decoration" 
         style="color: var(--{{ params.team.name_hyphen.replace(' ', '-') + '-secondary' }});" 
-        href="/{{ params.team.name_hyphen }}">{{ params.title }}</a>
+        href="/{{ params.team.name_hyphen }}">
+          {{ params.title }}
+        </a>
       </div>
     {% endif %}
     <div class="page-content">

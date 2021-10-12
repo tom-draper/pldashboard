@@ -34,6 +34,9 @@ h1 {
   text-decoration: none;
 }
 
+
+/* Ko-fi button */
+
 a.kofi-button {
   font-size: 16px !important;
   font-weight: 500;
@@ -48,9 +51,9 @@ a.kofi-button {
 /* -------------------------------- Layout ------------------------------------- */
 
 .header {
-  padding: 30px;
+  padding: 30px 15px;
   text-align: center;
-  margin-bottom: 20px;
+  /* margin-bottom: 10px; */
 }
 
 #back-button {
@@ -191,7 +194,6 @@ img {
   font-size: 450px;
   text-align: left;
 
-  -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -414,6 +416,7 @@ img {
 
 
 /* Teams page footer */
+
 .teams-footer {
   padding: 50px 0 4px 0;
   height: auto;
@@ -422,8 +425,19 @@ img {
   font-size: 0.65em;
   align-items: center;
 }
-.teams-footer-bottom {
+.footer-details {
   display: flex;
+  flex-direction: column;
+}
+.footer-detail {
+  margin: 4px 0 !important;
+}
+.created-by {
+  margin-left: auto !important;
+  margin: 0 10px;
+}
+.version {
+  margin: 0 10px;
 }
 
 .predictions-footer {
@@ -444,8 +458,8 @@ img {
 .footer-item-gap {
   margin: 8px 10px;
 }
-.footer-gap-padding {
-  margin-left: auto;
+.footer-bottom {
+  margin: 15px 0 5px auto;
   display: flex;
 }
 .footer-text-colour {
@@ -453,7 +467,7 @@ img {
 }
 
 .season-stats-row {
-  margin-top: 100px;
+  margin: 100px 100px 0 100px;
   height: auto;
 }
 
@@ -508,12 +522,33 @@ img {
 }
 
 .lowered {
-  margin-bottom: -10px;
-  z-index: 10;
+  margin-bottom: -9px;
 }
 
 .debug {
   border: 4px solid rgb(46, 46, 46);
+}
+
+@media only screen and (max-width: 1400px) {
+  .season-stat-value {
+    font-size: 2.5em;
+  }
+  .season-stat {
+    margin-bottom: 1.4em;
+  }
+  .season-stats-row {
+    /* margin-top: 40px; */
+    margin: 70px 0 0 0;
+  }
+  .season-stat-text {
+    font-size: 0.9em;
+  }
+  .season-stat-position {
+    right: -60px;
+  }
+  .teams-footer {
+    margin-top: 0;
+  }
 }
 
 /* Mobile view, turn every multielement row into a single column. */
@@ -532,8 +567,8 @@ img {
     width: 25%;
     max-width: 400px;
     min-width: 150px;
-    padding-right: 35%;
-    padding-left: 10%;
+    padding-right: 35% !important;
+    padding-left: 10% !important;
   }
   .icon {
     width: 20vw;
@@ -564,6 +599,7 @@ img {
   .season-stats-row {
     margin-top: 40px;
   }
+
 }
 
 
@@ -635,6 +671,111 @@ img {
 
 
 @media only screen and (max-width: 800px) {
+  .row-graph {
+    margin: 0;
+  }
+  .next-game-prediction {
+    margin: 50px 75px 0 75px;
+  }
+  /* Change next game to column orientation */
+  .next-game-values {
+    flex-direction: column;
+    margin: 20px;
+  }
+  .predictions-and-logo {
+    margin: 0 auto;
+    width: 100%;
+  }
+  .past-results {
+    margin: 70px auto 0 auto;
+    width: 100%;
+  }
+  .next-game-prediction {
+    padding-bottom: 0;
+  }
+
+  .season-stat {
+    margin-bottom: 1.2em;
+  }
+  .season-stat-value {
+    font-size: 2.5em;
+  }
+  .season-stat-position {
+    right: -60px;
+    top: -40px;
+  }
+  .season-stat-text {
+    font-size: 0.9em;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  #back-button {
+    display: none;
+  }
+  .position-and-badge {
+    width: 35%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .next-game-prediction {
+    margin: 50px 10px 0 10px;
+  }
+
+  .lowered {
+    margin: 0 30px;
+  }
+
+  .position {
+    font-size: 400px;
+    text-align: center;
+    line-height: 1.1;
+  }
+  .position-and-badge {
+    background-size: auto 350px !important;
+    background-position: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100%;
+    height: 420px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .season-stat {
+    margin-bottom: 1.2em;
+  }
+  .season-stat-value {
+    font-size: 1.9em;
+    letter-spacing: 0.01em;
+  }
+  .season-stat-position {
+    right: -50px;
+    top: -30px;
+  }
+  .season-stat-text {
+    font-size: 0.75em;
+  }
+
+
+
+  .form-details {
+    width: 90%;
+  }
+  .teams-footer {
+    padding: 0;
+  }
+  .footer-detail {
+    margin: 2px 0 !important;
+  }
+}
+
+/* ----------------------------- Predictions Page -----------------------------*/
+
+/* Mobile view */
+
+@media only screen and (max-width: 800px) {
   .predictions-container {
     width: 80%;
   }
@@ -642,3 +783,4 @@ img {
     font-size: 1.1em;
   }
 }
+
