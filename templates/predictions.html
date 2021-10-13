@@ -43,7 +43,9 @@
                   {% if pred['details'] != None %}
                     <div class="prediction-details" id="{{ pred['id'] }}">
                       {% for detail in pred['details'] %}
-                        <div class="prediction-detail">{{ detail }}</div>
+                        <div class="prediction-detail">
+                          {{ detail }}
+                        </div>
                       {% endfor %}
                     </div>
                   {% endif %}

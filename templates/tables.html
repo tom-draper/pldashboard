@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+    <title>Tables</title>
+  </head>
+  <body>
+    <div class="predictions-header">
+      <a
+        class="predictions-title main-link"
+        style="text-decoration: none;"
+        href="/tables"
+      >
+        Tables
+      </a>
+    </div>
+
+    <div class="page-content">
+      <div class="table-title">Standings</div>
+      <div class="data-table-container">
+        {% include 'tables/standings.html' %}
+      </div>
+
+      <div class="table-title">Fixtures</div>
+      <div class="data-table-container">
+        {% include 'tables/fixtures.html' %}
+      </div>
+
+      <div class="table-title">Form</div>
+      <div class="data-table-container">
+        {% include 'tables/form.html' %}
+      </div>
+
+      <div class="table-title">Team Ratings</div>
+      <div class="data-table-container">
+        {% include 'tables/team_ratings.html' %}
+      </div>
+
+      <div class="table-title">Home Advantages</div>
+      <div class="data-table-container">
+        {% include 'tables/home_advantages.html' %}
+      </div>
+
+      <div class="table-title">Upcoming</div>
+      <div class="data-table-container">
+        {% include 'tables/upcoming.html' %}
+      </div>
+
+      <div class="table-title">Season Statistics</div>
+      <div class="data-table-container">
+        {% include 'tables/season_stats.html' %}
+      </div>
+    </div>
+
+    <div class="predictions-footer footer-text-colour">
+      <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me', '#d9534f', 'C0C069FOI');kofiwidget2.draw();</script> 
+      <div class="last-updated">
+        {{ params.last_updated }}
+      </div>
+    </div>
+  </body>
+</html>

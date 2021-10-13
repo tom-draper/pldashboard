@@ -15,18 +15,24 @@ utils = Utilities()
 
 
 class DF:
-    def __init__(self, d: DataFrame = DataFrame()):
+    def __init__(self, d: DataFrame = DataFrame(), name: str = None):
         if not d.empty:
             self.df = DataFrame(d)
+        self.name = name
         self.last_updated = None  # type: datetime
 
     def __str__(self):
         return str(self.df)
+    
+    def save_to_html(self):
+        html = self.df.to_html()
+        with open(f'./templates/tables/{self.name}.html', 'w') as f:
+            f.write(html)
 
 
 class Fixtures(DF):
     def __init__(self, d: DataFrame = DataFrame()):
-        super().__init__(d)
+        super().__init__(d, 'fixtures')
 
     def update(self, json_data: dict, season: int, display: bool = False):
         """ Builds a dataframe containing the past and future fixtures for the 
@@ -101,9 +107,10 @@ class Fixtures(DF):
         matchdays.append(df_matchday)
 
         fixtures = pd.concat(matchdays, axis=1)
+        
         fixtures.index = team_names_index
-
-        fixtures.columns.names = ["Matchday", None]
+        fixtures.columns.names = ("Matchday", None)
+        fixtures.index.name = 'Team'
 
         if display:
             print(fixtures)
@@ -113,7 +120,7 @@ class Fixtures(DF):
 
 class TeamRatings(DF):
     def __init__(self, d: DataFrame = DataFrame()):
-        super().__init__(d)
+        super().__init__(d, 'team_ratings')
 
     def calc_rating(self, position: int, points: int, gd: int) -> float:
         rating = (20 - position) / 2
@@ -230,7 +237,7 @@ class TeamRatings(DF):
 
 class Form(DF):
     def __init__(self, d: DataFrame = DataFrame()):
-        super().__init__(d)
+        super().__init__(d, 'form')
 
     def get_current_matchday(self) -> int:
         if len(self.df.columns) > 0:
@@ -575,6 +582,7 @@ class Form(DF):
 
         form = pd.DataFrame.from_dict(d)
         form.columns.names = ["Matchday", None]
+        form.index.name = "Team"
 
         if display:
             print(form)
@@ -584,13 +592,17 @@ class Form(DF):
 
 class Standings(DF):
     def __init__(self, d: DataFrame = DataFrame()):
-        super().__init__(d)
+        super().__init__(d, 'standings')
 
     def get_position(self, team_name: str, season: int) -> DataFrame:
         return self.df.loc[team_name, season]['Position']
 
-    def get_table_snippet(self, team_name: str, 
-                          season: int) -> tuple[list[tuple[int, str, int, int]], int]:
+    def get_table_snippet(self, team_name: str, season: int) -> tuple[list
+                                                                      [tuple[int, 
+                                                                             str, 
+                                                                             int, 
+                                                                             int]], 
+                                                                      int]:
         team_df_idx = self.df.index.get_loc(team_name)
 
         # Get range of table the snippet should cover
@@ -626,7 +638,7 @@ class Standings(DF):
 
         return table_snippet, team_idx
 
-    def fill_rows_from_data(self, data):
+    def fill_rows_from_data(self, data: dict) -> dict[str, dict[str, int]]:
         df_rows = {}  # type: dict[str, dict[str, int]]
         for match in data:
             home_team = match['homeTeam']['name'].replace('&', 'and')
@@ -745,7 +757,7 @@ class Standings(DF):
             standings = pd.concat((standings, season_standings), axis=1)
 
         standings = standings.fillna(0).astype(int)
-        standings.index.name = "Team"
+        standings.index.name = 'Team'
 
         if display:
             print(standings)
@@ -755,7 +767,7 @@ class Standings(DF):
 
 class Upcoming(DF):
     def __init__(self, d: DataFrame = DataFrame()):
-        super().__init__(d)
+        super().__init__(d, 'upcoming')
 
     def get_opposition(self, team_name: str) -> str:
         return self.df['NextTeam'].loc[team_name]
@@ -906,6 +918,7 @@ class Upcoming(DF):
         self.convert_to_readable_dates(d)
 
         upcoming = pd.DataFrame.from_dict(d, orient='index')
+        upcoming.index.name = 'Team'
 
         if display:
             print(upcoming)
@@ -915,7 +928,7 @@ class Upcoming(DF):
 
 class SeasonStats(DF):
     def __init__(self, d: DataFrame = DataFrame()):
-        super().__init__(d)
+        super().__init__(d, 'season_stats')
 
     def format_position(self, position: int) -> str:
         j = position % 10
@@ -1022,6 +1035,7 @@ class SeasonStats(DF):
                 season_stats['ConcededPerGame'][team_name] = 0
 
         season_stats = pd.DataFrame.from_dict(season_stats)
+        season_stats.index.name = 'Team'
 
         if display:
             print(season_stats)
@@ -1031,7 +1045,7 @@ class SeasonStats(DF):
 
 class PositionOverTime(DF):
     def __init__(self, d: DataFrame = DataFrame()):
-        super().__init__(d)
+        super().__init__(d, 'position_over_time')
 
     def get_gd_and_pts(self, score: str, home_away: str) -> tuple[int, int]:
         gd = 0
@@ -1170,7 +1184,7 @@ class PositionOverTime(DF):
 
 class HomeAdvantages(DF):
     def __init__(self, d: DataFrame = DataFrame()):
-        super().__init__(d)
+        super().__init__(d, 'home_advantages')
 
     def home_advantages_for_season(self, d: dict, data: dict, season: int):
         for match in data:
@@ -1304,7 +1318,9 @@ class HomeAdvantages(DF):
 
         # Create the final overall home advantage value for each team
         home_advantages = self.create_total_home_advantage_col(home_advantages, season, threshold)
-        home_advantages.index.name = "Team"
+        
+        home_advantages.columns.names = ('Season', None, None)
+        home_advantages.index.name = 'Team'
 
         if display:
             print(home_advantages)

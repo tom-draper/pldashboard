@@ -148,11 +148,23 @@ class Updater:
         self.data.season_stats.update(self.data.position_over_time,
                                       display=display_tables)
 
+    def save_tables(self):
+        self.data.standings.save_to_html()
+        self.data.fixtures.save_to_html()
+        self.data.team_ratings.save_to_html()
+        self.data.home_advantages.save_to_html()
+        self.data.form.save_to_html()
+        self.data.position_over_time.save_to_html()
+        self.data.upcoming.save_to_html()
+        self.data.season_stats.save_to_html()
+
     def update_predictions(self):
         self.predictor.update(self.data.fixtures,
                               self.data.form,
                               self.data.upcoming,
                               self.data.home_advantages)
+    
+
 
     @timebudget
     def update_all(self, n_seasons: int = 3, team_name: str = '', display_tables: bool = False,
@@ -171,8 +183,10 @@ class Updater:
         self.update_predictions()
 
         if request_new or True:
-            print('💾 Saving new data...')
+            print('💾 Saving new data as JSON files...')
             self.save_data()
+            print('💾 Saving tables as HTML files...')
+            self.save_tables()
             # Use dataframes to update all graph HTML files
             self.visualiser.update_all(self.data.fixtures,
                                        self.data.team_ratings,

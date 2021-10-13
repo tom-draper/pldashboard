@@ -804,3 +804,22 @@ img {
   }
 }
 
+/* Data Page */
+.table-title {
+  margin-top: 30px;
+  font-size: 1.3em;
+  font-weight: 700;
+}
+.data-table-container {
+  font-size: 0.6em;
+  margin: 20px auto;
+  overflow-x: auto;
+  overflow-y: auto;
+  width: max-content;
+  max-width: 95%;
+  height: 500px;
+}
+
+table {
+  margin: 0 auto;
+}
