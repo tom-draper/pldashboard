@@ -232,4 +232,17 @@
     </div>
   </div>
 </div>
+
+<script>
+  function f() {
+    var ssp1 = document.getElementById('ssp1');
+    var ssp2 = document.getElementById('ssp2');
+    var ssp3 = document.getElementById('ssp3');
+    document.documentElement.style.setProperty('--ssp1-offset', -ssp1.clientWidth/2 + "px");
+    document.documentElement.style.setProperty('--ssp2-offset', -ssp2.clientWidth/2 + "px");
+    document.documentElement.style.setProperty('--ssp3-offset', -ssp3.clientWidth/2 + "px");
+  }
+  f()
+  window.addEventListener("resize", f);
+</script>
 {% endblock content %}

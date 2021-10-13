@@ -2,6 +2,9 @@
 
 :root {
   --border-radius: 4px;
+  --ssp1-offset: 0px;
+  --ssp2-offset: 0px;
+  --ssp3-offset: 0px;
 }
 
 @font-face {
@@ -501,9 +504,17 @@ img {
   font-size: 0.3em;
   color: rgb(162, 162, 162);
   position: absolute;
-  top: -58px;
-  right: -80px;
+  top: -53px;
   letter-spacing: -0.07em;
+}
+#ssp1 {
+  right: calc(var(--ssp1-offset) - 52px);
+}
+#ssp2 {
+  right: calc(var(--ssp2-offset) - 52px);
+}
+#ssp3 {
+  right: calc(var(--ssp3-offset) - 52px);
 }
 .ssp-1st {color:#6cff68;}
 .ssp-2nd {color:#78f570;}
@@ -554,12 +565,20 @@ img {
   .season-stat-text {
     font-size: 0.9em;
   }
-  .season-stat-position {
-    right: -80px;
-    top: -50px;
-  }
   .teams-footer {
     margin-top: 0;
+  }
+  .season-stat-position {
+    top: -42px;
+  }
+  #ssp1 {
+    right: calc(var(--ssp1-offset) - 40px);
+  }
+  #ssp2 {
+    right: calc(var(--ssp2-offset) - 40px);
+  }
+  #ssp3 {
+    right: calc(var(--ssp3-offset) - 40px);
   }
 }
 
@@ -598,6 +617,7 @@ img {
     margin: 50px 20px 0px 20px;
   }
 
+  
   .next-game-title {
     width: auto;
     border-radius: 0;
@@ -613,6 +633,21 @@ img {
   }
   .season-stats-row {
     margin-top: 40px;
+  }
+  .season-stat-position {
+    top: -49px;
+  }
+  #ssp1 {
+    right: calc(var(--ssp1-offset) - 45px);
+  }
+  #ssp2 {
+    right: calc(var(--ssp2-offset) - 45px);
+  }
+  #ssp3 {
+    right: calc(var(--ssp3-offset) - 45px);
+  }
+  .season-stat-text {
+    font-size: 0.9em;
   }
 }
 
@@ -648,8 +683,16 @@ img {
     font-size: 2.5em;
   }
   .season-stat-position {
-    right: -64px;
-    top: -40px;
+    top: -42px;
+  }
+  #ssp1 {
+    right: calc(var(--ssp1-offset) - 40px);
+  }
+  #ssp2 {
+    right: calc(var(--ssp2-offset) - 40px);
+  }
+  #ssp3 {
+    right: calc(var(--ssp3-offset) - 40px);
   }
   .season-stat-text {
     font-size: 0.9em;
@@ -698,8 +741,16 @@ img {
     letter-spacing: 0.01em;
   }
   .season-stat-position {
-    right: -60px;
-    top: -30px;
+    top: -31px;
+  }
+  #ssp1 {
+    right: calc(var(--ssp1-offset) - 28px);
+  }
+  #ssp2 {
+    right: calc(var(--ssp2-offset) - 28px);
+  }
+  #ssp3 {
+    right: calc(var(--ssp3-offset) - 28px);
   }
   .season-stat-text {
     font-size: 0.75em;
