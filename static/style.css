@@ -1,5 +1,9 @@
 /* -------------------------------- Global ------------------------------------- */
 
+:root {
+  --border-radius: 4px;
+}
+
 @font-face {
   font-family: "Radikal Medium";
   src: url("/static/fonts/Radikal-Medium.ttf");
@@ -40,6 +44,7 @@ h1 {
 a.kofi-button {
   font-size: 16px !important;
   font-weight: 500;
+  border-radius: var(--border-radius);
 }
 
 .kofitext img.kofiimg {
@@ -78,7 +83,7 @@ a.kofi-button {
   margin: 0 auto 0 auto;
   width: 90%;
   border: 8px solid rgb(46, 46, 46);
-  border-radius: 3px;
+  border-radius: var(--border-radius);
 }
 
 .team-button {
@@ -254,7 +259,7 @@ img {
 .table-row {
   display: flex;
   padding: 5px 5%;
-  border-radius: 3px;
+  border-radius: var(--border-radius);
 }
 .table-row.this-team {
   padding: 13px 5%;
@@ -295,6 +300,7 @@ img {
 .next-game-title {
   width: max-content;
   padding: 6px 20px;
+  border-radius: 0 0 var(--border-radius) 0;
 }
 .next-game-title-text {
   align-self: center;
@@ -321,8 +327,7 @@ img {
 }
 .next-game-prediction {
   margin: 0px 20px 0px 0px;
-  border-radius: 3px;
-  padding-bottom: 6px;
+  border-radius: var(--border-radius);
 }
 .next-game-values {
   display: flex;
@@ -354,6 +359,8 @@ img {
 }
 .next-game-item {
   padding: 8px 0px;
+  border-radius: var(--border-radius);
+  margin: 2px 0;
 }
 .accuracy {
   margin-bottom: 30px;
@@ -363,12 +370,11 @@ img {
   color: rgb(120, 120, 120);
   margin-bottom: 5px;
 }
-.next-game-divider {
+/* .next-game-divider {
   height: 2px;
   width: 100%;
   margin: 0px auto;
-  background-color: black;
-}
+} */
 
 .home-team {
   float: left;
@@ -545,8 +551,8 @@ img {
     font-size: 0.9em;
   }
   .season-stat-position {
-    right: -70px;
-    top: -45px;
+    right: -80px;
+    top: -50px;
   }
   .teams-footer {
     margin-top: 0;
@@ -590,6 +596,7 @@ img {
 
   .next-game-title {
     width: auto;
+    border-radius: 0;
   }
   .season-stats {
     flex-direction: column;

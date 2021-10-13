@@ -44,17 +44,11 @@
         {% for i in range(params.table_snippet.rows|length) %}
           <!-- Divider -->
           {% if i == 0 %}
-            {% if (i == params.table_snippet.team_table_idx) %}
-              <div id="big-divider"></div>
-            {% else %}
+            {% if (i != params.table_snippet.team_table_idx) %}
               <div id="divider"></div>
             {% endif %}
-          {% else %}
-            {% if (i-1 == params.table_snippet.team_table_idx) or (i == params.table_snippet.team_table_idx) %}
-              <div id="big-divider"></div>
-            {% else %}
-              <div id="divider"></div>
-            {% endif %}
+          {% elif (i-1 != params.table_snippet.team_table_idx) and (i != params.table_snippet.team_table_idx) %}
+            <div id="divider"></div>
           {% endif %}
 
           <!-- Row of table -->
@@ -77,9 +71,7 @@
           {% endif %}
         {% endfor %}
 
-        {% if params.table_snippet.team_table_idx == 6 %}
-          <div id="big-divider"></div>
-        {% else %}
+        {% if params.table_snippet.team_table_idx != 6 %}
           <div id="divider"></div>
         {% endif %}
     </div>
@@ -142,7 +134,6 @@
           
           <!-- Display table of previous results against the next team this team is playing -->
           {% for prev_meeting in params.next_game.prev_meetings %}
-            <div class="next-game-divider"></div>
             <div class="next-game-item {{ prev_meeting['Result'] }}">
               <div class="past-result">
                 <div class="home-team">{{ prev_meeting['HomeTeam'] }}</div>
@@ -153,11 +144,6 @@
               <div class="past-result-date">{{ prev_meeting['Date'] }}</div>
             </div>
           {% endfor %}
-
-          <!-- Final divider -->
-          {% if params.next_game.prev_meetings|length != 0 %}
-            <div class="next-game-divider"></div>
-          {% endif %}
         </div>
       </div>
       {% endif %}
