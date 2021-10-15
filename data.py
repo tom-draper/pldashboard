@@ -692,7 +692,7 @@ class Standings(DF):
             # Position is index as they have been sorted by points
             df_rows[team]['Position'] = idx + 1
 
-    def season_standings(self, json_data: dict, team_names: list[str], 
+    def season_standings_from_fixtures(self, json_data: dict, team_names: list[str], 
                          season: int) -> DataFrame:
         data = json_data['fixtures'][season]
 
@@ -712,6 +712,31 @@ class Standings(DF):
         df = df.drop(df[~df.index.isin(team_names)].index)
 
         return df
+
+    def season_standings(self, json_data: dict, team_names: list[str], season: int) -> DataFrame:
+        data = json_data['standings'][season]
+        df = pd.DataFrame(data)
+        
+        # Rename teams to their team name
+        team_names = pd.Series([name.replace('&', 'and') for name in [df['team'][x]['name'] for x in range(len(df))]])
+        df['team'] = team_names
+
+        col_headings = ['Position', 'Played', 'Won', 'Drawn', 'Lost', 'GF', 'GA', 'GD', 'Points']
+        df.columns = pd.MultiIndex.from_product([[season], col_headings])
+
+        df.index = df[f'{season}']['Team']
+        df = df.drop(columns=['Team'], level=1)
+        return df
+        
+        # if i == 0:  # If building current season table
+        #     standings = standings.append(df)
+        #     self.team_names = team_names
+        # else:
+        #     # Drop team rows that are no longer in the current season
+        #     df = df.drop(df[~df.index.isin(standings.index)].index)
+        #     # Drop the Form column from previous seasons
+        #     df = df.drop(columns=['Form'], level=1)
+            
 
     @timebudget
     def update(self, json_data: dict, team_names: list[str], season: int, 
@@ -753,7 +778,7 @@ class Standings(DF):
 
         # Loop from current season to the season 2 years ago
         for n in range(no_seasons):
-            season_standings = self.season_standings(json_data, team_names, season - n)
+            season_standings = self.season_standings_from_fixtures(json_data, team_names, season - n)
             standings = pd.concat((standings, season_standings), axis=1)
 
         standings = standings.fillna(0).astype(int)

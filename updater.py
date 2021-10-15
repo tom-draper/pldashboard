@@ -46,8 +46,8 @@ class Updater:
         if request_new and self.url != None:
             response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(season),
                                     headers=self.headers)
-
-            if response.status_code == 429:
+            
+            if response.status_code == 429 or response.status_code == 403:
                 print('❌  Status:', response.status_code)
                 raise ValueError('❌ ERROR: Data request failed')
             else:
@@ -64,7 +64,7 @@ class Updater:
             response = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(season),
                                     headers=self.headers)
 
-            if response.status_code == 429:
+            if response.status_code == 429 or response.status_code == 403:
                 print('❌  Status:', response.status_code)
                 raise ValueError('❌ ERROR: Data request failed')
             else:
@@ -75,16 +75,21 @@ class Updater:
             # Read standings data
             with open(f'data/standings_{season}.json', 'r') as json_file:
                 return json.load(json_file)
+        
+    def fetch_current_season(self, request_new):
+        # Fetch data from API (max this season and last season)
+        self.json_data['fixtures'][self.season] = self.fixtures_data(self.season, request_new)
+        self.json_data['standings'][self.season] = self.standings_data(self.season, request_new)
+    
+    def load_previous_fixtures(self, n_seasons):
+        for i in range(1, n_seasons):
+            season = self.season - i
+            self.json_data['fixtures'][season] = self.fixtures_data(season, request_new=False)
 
     def fetch_data(self, n_seasons: int, request_new: bool = True):
-        for n in range(n_seasons):
-            # Add new fixtures data to temp storage to be saved later
-            self.json_data['fixtures'][self.season -
-                                       n] = self.fixtures_data(self.season - n, request_new)
-        self.json_data['standings'][self.season] = self.standings_data(
-            self.season, request_new)
+        self.fetch_current_season(request_new)
+        self.load_previous_fixtures(n_seasons)
 
-        # If requested new data and ValueError wasn't thrown
         if request_new:
             self.last_updated = datetime.now().strftime('Last updated: %d-%m-%y %H:%M:%S')
 
@@ -105,7 +110,7 @@ class Updater:
 
         return logo_urls
 
-    def update_all_dataframes(self, n_seasons: int = 3, display_tables: bool = False):
+    def update_all_dataframes(self, n_seasons, display_tables: bool = False):
         # Standings for the last [n_seasons] seasons
         self.data.standings.update(self.json_data,
                                    self.logo_urls.keys(),  # Current season team names
@@ -200,4 +205,4 @@ class Updater:
 if __name__ == "__main__":
     # Update all dataframes
     updater = Updater(2021)
-    updater.update_all(request_new=False, team_name='Liverpool FC', display_tables=True, display_graphs=False)
+    updater.update_all(request_new=True, team_name='Liverpool FC', display_tables=True, display_graphs=False)

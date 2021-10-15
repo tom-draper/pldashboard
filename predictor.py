@@ -294,12 +294,11 @@ class Predictor:
             
         return pred_scored, pred_conceded, detail
 
-    def calc_score_prediction(self, team_name: str,
-                              home_advantage: float, opp_home_advantage: float, 
-                              home_away: str, form_rating: float, opp_form_rating: float, 
+    def calc_score_prediction(self, team_name: str, home_advantage: float, 
+                              opp_home_advantage: float, home_away: str, 
+                              form_rating: float, opp_form_rating: float, 
                               prev_meetings: list[dict[str, str]]) -> tuple[int, int]:
         details = []
-        
         pred_scored, pred_conceded, detail = self.starting_score(
             team_name, prev_meetings, home_away)
         details.append(detail)
@@ -313,6 +312,12 @@ class Predictor:
         pred_scored, pred_conceded, detail = self.modify_prediction_by_home_advantage(
             home_advantage, opp_home_advantage, home_away, pred_scored, pred_conceded)
         details.append(detail)
+        
+        if home_away == "Home":
+            detailed_score = f'{round(pred_scored, 2)} - {round(pred_conceded, 2)}'
+        else:
+            detailed_score = f'{round(pred_conceded, 2)} - {round(pred_scored, 2)}'
+        details.append(detailed_score)
 
         return int(round(pred_scored)), int(round(pred_conceded)), details
 
