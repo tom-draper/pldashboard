@@ -337,7 +337,7 @@ img {
 }
 .next-game-values {
   display: flex;
-  margin: 1% 5% 1% 0px;
+  margin: 0.5% 5% 0.5% 0px;
 }
 .past-result {
   font-size: 17px;
@@ -361,7 +361,8 @@ img {
 }
 .prev-results-title {
   font-weight: 700;
-  margin-top: -60px; /* To allow for vertically centred table values */
+  padding-top: 0 !important;
+  margin: 0 !important;
 }
 .next-game-item {
   padding: 8px 0px;
@@ -663,7 +664,7 @@ img {
     width: 100%;
   }
   .past-results {
-    margin: 70px auto 0 auto;
+    margin: 30px auto 0 auto;
     width: 100%;
   }
   .next-game-prediction {

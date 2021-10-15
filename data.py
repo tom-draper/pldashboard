@@ -724,21 +724,15 @@ class Standings(DF):
         del df['team']
         df.index = team_names
 
-        col_headings = ['Position', 'Played', 'Won', 'Drawn', 'Lost', 'Points', 'GF', 'GA', 'GD']
+        # Move points column ot the end
+        points_col = df.pop('points')
+        df.insert(8, 'points', points_col)
+        col_headings = ['Position', 'Played', 'Won', 'Drawn', 'Lost', 'GF', 'GA', 'GD', 'Points']
         df.columns = pd.MultiIndex.from_product([[season], col_headings])
         
         df.drop(index=df.index.difference(current_teams), inplace=True)
 
         return df
-        
-        # if i == 0:  # If building current season table
-        #     standings = standings.append(df)
-        #     self.team_names = team_names
-        # else:
-        #     # Drop team rows that are no longer in the current season
-        #     df = df.drop(df[~df.index.isin(standings.index)].index)
-        #     # Drop the Form column from previous seasons
-        #     df = df.drop(columns=['Form'], level=1)
             
 
     @timebudget
@@ -1255,6 +1249,10 @@ class HomeAdvantages(DF):
                          + home_advantages[season]['Home']['Draws'] \
                          + home_advantages[season]['Home']['Loses']
         home_advantages[season, 'Home', 'Played'] = played_at_home
+        
+        # Percentage wins at home = total wins at home / total games played at home 
+        win_ratio_at_home = home_advantages[season]['Home']['Wins'] / played_at_home
+        home_advantages[season, 'Home', 'WinRatio'] = win_ratio_at_home
 
         played = played_at_home \
                  + home_advantages[season]['Away']['Wins'] \
@@ -1268,16 +1266,12 @@ class HomeAdvantages(DF):
                     / played
         home_advantages[season, 'Overall', 'WinRatio'] = win_ratio
 
-        # Percentage wins at home = total wins at home / total games played at home 
-        win_ratio_at_home = home_advantages[season]['Home']['Wins'] / played_at_home
-        home_advantages[season, 'Home', 'WinRatio'] = win_ratio_at_home
-
         # Home advantage = percentage wins at home - percentage wins 
         home_advantage = win_ratio_at_home - win_ratio
-        home_advantages[season, 'HomeAdvantage', ''] = home_advantage
+        home_advantages[season, 'Home', 'Advantage'] = home_advantage
 
     def create_total_home_advantage_col(self, home_advantages, season, threshold):
-        home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(1) == 'HomeAdvantage']
+        home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(2) == 'Advantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
         if (home_advantages[season]['Home']['Played'] <= threshold).all():
             print(f"Current season excluded from home advantages calculation, all teams must have played {threshold} home games.")
@@ -1285,8 +1279,8 @@ class HomeAdvantages(DF):
             home_advantages_cols = home_advantages_cols.iloc[:, 1:]
         
         # Drop pandemic year (anomaly, no fans, data shows neutral home advantage)
-        if (2020, 'HomeAdvantage', '') in list(home_advantages_cols.columns):
-            home_advantages_cols = home_advantages_cols.drop((2020, 'HomeAdvantage', ''), axis=1)
+        if (2020, 'Home', 'Advantage') in list(home_advantages_cols.columns):
+            home_advantages_cols = home_advantages_cols.drop((2020, 'Home', 'Advantage'), axis=1)
 
         home_advantages = home_advantages.sort_index(axis=1)
         home_advantages['TotalHomeAdvantage'] = home_advantages_cols.mean(axis=1).fillna(0)
@@ -1304,12 +1298,12 @@ class HomeAdvantages(DF):
             Rows: the 20 teams participating in the current season, ordered descending 
                 by the team's total home advantage
             Columns (multi-index):
-            --------------------------------------------------------------------------------------------------------
-            |                                 [SEASON YEAR]                                   | TotalHomeAdvantage |
-            ----------------------------------------------------------------------------------|                    |
-            |         Home         |         Away         |      Overall      | HomeAdvantage |                    |
-            ------------------------------------------------------------------|               |                    |
-            | Draws | Loses | Wins | Draws | Loses | Wins | Played | WinRatio |               |                    |
+            ------------------------------------------------------------------------------------------------------------------------
+            |                                         [SEASON YEAR]                                           | TotalHomeAdvantage |
+            --------------------------------------------------------------------------------------------------|                    |
+            |                         Home                         |         Away         |      Overall      |                    |
+            --------------------------------------------------------------------------------------------------|                    |
+            | Draws | Loses | Wins | Played | WinRatio | Advantage | Draws | Loses | Wins | Played | WinRatio |                    |
             
             [SEASON YEAR]: 4-digit year values that a season began, from current 
                 season to season no_seasons ago.
@@ -1318,12 +1312,17 @@ class HomeAdvantages(DF):
             Wins: the total [home/away] games won this season.
             Played: the number of games played in the season.
             WinsRatio: the win ratio of all games played in the season.
-            HomeAdvantage: the difference between the ratio of games won at home 
+            Advantage: the difference between the ratio of games won at home 
                 and the ratio of games won in total for a given season year.
             TotalHomeAdvantage: combined home advantages value from all seasons 
                in the table: the average home wins ratio / wins ratio.
                 
         Args:
+            json_data dict: the json data storage to use to build the dataframe
+            season int: the year of the current season
+            threshold float: the minimum number of home games played to incorporate
+                a season's home advantage calculation for all teams into the 
+                Total Home Advantage value
             no_seasons (int, optional): number of seasons to include. 
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
