@@ -131,7 +131,8 @@ class TeamRatings(DF):
         return rating
 
     def get_season_weightings(self, no_seasons: int) -> list[float]:
-        season_weights = [0.75, 0.20, 0.05]
+        mult = 2.5  # High = recent weighted more
+        season_weights = [0.01*(mult**3), 0.01*(mult**2), 0.01*mult, 0.01]
         weights = np.array(season_weights[:no_seasons])
         return list(weights / sum(weights))  # Normalise list
 
@@ -713,19 +714,21 @@ class Standings(DF):
 
         return df
 
-    def season_standings(self, json_data: dict, team_names: list[str], season: int) -> DataFrame:
+    def season_standings(self, json_data: dict, current_teams: list[str], season: int) -> DataFrame:
         data = json_data['standings'][season]
         df = pd.DataFrame(data)
         
         # Rename teams to their team name
         team_names = pd.Series([name.replace('&', 'and') for name in [df['team'][x]['name'] for x in range(len(df))]])
-        df['team'] = team_names
+        del df['form']
+        del df['team']
+        df.index = team_names
 
-        col_headings = ['Position', 'Played', 'Won', 'Drawn', 'Lost', 'GF', 'GA', 'GD', 'Points']
+        col_headings = ['Position', 'Played', 'Won', 'Drawn', 'Lost', 'Points', 'GF', 'GA', 'GD']
         df.columns = pd.MultiIndex.from_product([[season], col_headings])
+        
+        df.drop(index=df.index.difference(current_teams), inplace=True)
 
-        df.index = df[f'{season}']['Team']
-        df = df.drop(columns=['Team'], level=1)
         return df
         
         # if i == 0:  # If building current season table
@@ -778,7 +781,7 @@ class Standings(DF):
 
         # Loop from current season to the season 2 years ago
         for n in range(no_seasons):
-            season_standings = self.season_standings_from_fixtures(json_data, team_names, season - n)
+            season_standings = self.season_standings(json_data, team_names, season - n)
             standings = pd.concat((standings, season_standings), axis=1)
 
         standings = standings.fillna(0).astype(int)

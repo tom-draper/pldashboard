@@ -85,6 +85,7 @@ class Updater:
         for i in range(1, n_seasons):
             season = self.season - i
             self.json_data['fixtures'][season] = self.fixtures_data(season, request_new=False)
+            self.json_data['standings'][season] = self.standings_data(season, request_new=False)
 
     def fetch_data(self, n_seasons: int, request_new: bool = True):
         self.fetch_current_season(request_new)
@@ -94,10 +95,11 @@ class Updater:
             self.last_updated = datetime.now().strftime('Last updated: %d-%m-%y %H:%M:%S')
 
     def save_data(self):
-        for data_type in self.json_data.keys():
-            for season, data in self.json_data[data_type].items():
-                with open(f'data/{data_type}_{season}.json', 'w') as json_file:
-                    json.dump(data, json_file)
+        """Save current season fixtures and standings data in self.json_data to 
+        json files."""
+        for type in ('fixtures', 'standings'):
+            with open(f'data/{type}_{self.season}.json', 'w') as f:
+                json.dump(self.json_data[type][self.season], f)
 
     def get_logo_urls(self) -> dict[str, str]:
         data = self.json_data['standings'][self.season]
@@ -172,7 +174,7 @@ class Updater:
 
 
     @timebudget
-    def update_all(self, n_seasons: int = 3, team_name: str = '', display_tables: bool = False,
+    def update_all(self, n_seasons: int = 4, team_name: str = '', display_tables: bool = False,
                    display_graphs: bool = False, request_new: bool = True):
         try:
             self.fetch_data(n_seasons, request_new)

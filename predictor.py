@@ -257,9 +257,9 @@ class Predictor:
             pred_conceded += pred_conceded * (abs(form_diff)/100)
         
         if home_away == "Home":
-            detail = f'Modified by form: {pred_scored} - {pred_conceded} ({form_rating} vs {opp_form_rating})'
+            detail = f'Modified by form: {round(pred_scored, 2)} - {round(pred_conceded, 2)} ({round(form_rating, 4)} vs {round(opp_form_rating, 4)})'
         else:
-            detail = f'Modified by form: {pred_conceded} - {pred_scored} ({opp_form_rating} vs {form_rating})'
+            detail = f'Modified by form: {round(pred_conceded, 2)} - {round(pred_scored, 2)} ({round(opp_form_rating, 4)} vs {round(form_rating, 4)})'
 
         return pred_scored, pred_conceded, detail
 
@@ -269,12 +269,12 @@ class Predictor:
         if home_away == "Home":
             # Decrease conceded (if team has a positive home advantage)
             pred_conceded *= (1 - home_advantage)
-            detail = f'Modified by home advantage: {pred_scored} - {round(pred_conceded, 4)} ({round(home_advantage, 4)})'
+            detail = f'Modified by home advantage: {round(pred_scored, 4)} - {round(pred_conceded, 4)} ({round(home_advantage, 4)})'
 
         else:
             # Decrease scored (if opposition team has a positive home advantage)
             pred_scored *= (1 - opp_home_advantage)
-            detail = f'Modified by home advantage: {pred_conceded} - {round(pred_scored, 4)} ({round(opp_home_advantage, 4)})'
+            detail = f'Modified by home advantage: {round(pred_conceded, 4)} - {round(pred_scored, 4)} ({round(opp_home_advantage, 4)})'
 
         return pred_scored, pred_conceded, detail
 
@@ -288,9 +288,9 @@ class Predictor:
             type = 'Default'
         
         if home_away == "Home":
-            detail = f'{type}: {pred_scored} - {pred_conceded}'
+            detail = f'{type}: {round(pred_scored, 4)} - {round(pred_conceded, 4)}'
         else:
-            detail = f'{type}: {pred_conceded} - {pred_scored}'
+            detail = f'{type}: {round(pred_conceded, 4)} - {round(pred_scored, 4)}'
             
         return pred_scored, pred_conceded, detail
 
