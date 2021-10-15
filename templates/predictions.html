@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+'<!DOCTYPE html>
 <html>
   <head>
     <meta content="width=device-width, initial-scale=1" name="viewport" />
@@ -42,10 +42,16 @@
                   {% endif %}
                   {% if pred['details'] != None %}
                     <div class="prediction-details" id="{{ pred['id'] }}">
-                      {% for detail in pred['details'] %}
-                        <div class="prediction-detail">
-                          {{ detail }}
-                        </div>
+                      {% for i in range(pred['details']|length) %}
+                        {% if i == pred['details']|length - 1 %}
+                          <div class="detailed-predicted-score">
+                            {{ pred['details'][i] }}
+                          </div>
+                        {% else %}
+                          <div class="prediction-detail">
+                            {{ pred['details'][i] }}
+                          </div>
+                        {% endif %}
                       {% endfor %}
                     </div>
                   {% endif %}
@@ -82,3 +88,4 @@
 
 
 
+'

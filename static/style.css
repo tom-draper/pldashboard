@@ -33,7 +33,6 @@ h1 {
   color: #333333;
   flex: auto;
   align-self: center;
-  margin: 0px 6px;
   text-decoration: none;
 }
 
@@ -377,11 +376,6 @@ img {
   color: rgb(120, 120, 120);
   margin-bottom: 5px;
 }
-/* .next-game-divider {
-  height: 2px;
-  width: 100%;
-  margin: 0px auto;
-} */
 
 .home-team {
   float: left;
@@ -765,6 +759,16 @@ img {
   .footer-detail {
     margin: 2px 0 !important;
   }
+
+  .team-button {
+    height: 90px;
+  }
+  .title {
+    font-size: 2.2em !important;
+  }
+  .main-link {
+    font-size: 1.2em;
+  }
 }
 
 
@@ -827,8 +831,6 @@ img {
   width: min(90%, 300px);
   align-self: center;
   border-radius: 6px;
-
-  /* background: none; */
   color: inherit;
   border: none;
   font-size: 0.8em;
@@ -847,12 +849,16 @@ img {
   font-size: 0.65em;
   color: #8d8d8d;
   color: black;
-  margin-bottom: 5px;
-  margin-left: 30px;
+  margin: 5px 0;
   text-align: left;
 }
 .prediction-detail {
-  margin: 3px 0;
+  margin: 3px 0 3px 30px;
+}
+.detailed-predicted-score {
+  font-size: 1.2em;
+  margin: 4px 0 0 0;
+  text-align: center;
 }
 
 /* Mobile view */
