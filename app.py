@@ -27,10 +27,16 @@ def home() -> str:
     params = HomeParams('Premier League')
     return render_template('home.html', params=params)
 
+
+@dataclass
+class TeamNames:
+    full_name: str
+    name: str
+    hyphenated: str
+
 @dataclass
 class Team:
-    name: str
-    name_hyphen: str
+    names: TeamNames
     position: int
     logo_url: str
 
@@ -57,8 +63,7 @@ class SeasonStats:
 
 @dataclass
 class OppTeam:
-    name: str
-    name_hyphen: str
+    names: TeamNames
     form_rating: float
     logo_url: str
 
@@ -79,7 +84,6 @@ class Prediction:
 @dataclass
 class TeamParams:
     season: int
-    title: str
     team: Team
     form: Form
     season_stats: SeasonStats
@@ -88,11 +92,14 @@ class TeamParams:
     table_snippet: TableSnippet
     last_updated: str
 
-def get_team(title: str, team_name_hyphen: str) -> Team:
-    team_name = title + ' FC'
-    team_logo_url = updater.logo_urls[team_name]
-    position = updater.data.standings.get_position(team_name, season)
-    return Team(team_name, team_name_hyphen, position, team_logo_url)
+def get_team(team_name_hyphen: str) -> Team:
+    team_name = team_name_hyphen.replace('-', ' ').title().replace('And', 'and')
+    team_name_full = team_name + ' FC'
+    names = TeamNames(team_name_full, team_name, team_name_hyphen)
+    
+    team_logo_url = updater.logo_urls[team_name_full]
+    position = updater.data.standings.get_position(team_name_full, season)
+    return Team(names, position, team_logo_url)
 
 def get_form(team_name: str) -> Form:
     form_str, recent_teams_played, rating, won_against_star_team = updater.data.form.get_recent_form(team_name)
@@ -103,11 +110,14 @@ def get_season_stats(team_name: str) -> SeasonStats:
     return SeasonStats(csr, csr_position, gpg, gpg_position, cpg, cpg_position)
 
 def get_next_game(team_name: str) -> NextGame:
-    opp_team_name, home_away, prev_meetings = updater.data.upcoming.get_details(team_name)
-    opp_team_name_hyphen = (opp_team_name.lower()[:-3]).replace(' ', '-')  # Remove 'FC' from end
-    opp_form_rating = updater.data.form.get_current_form_rating(opp_team_name)
-    opp_logo_url = updater.logo_urls[opp_team_name]
-    opp_team = OppTeam(opp_team_name, opp_team_name_hyphen, opp_form_rating, opp_logo_url)
+    opp_team_name_full, home_away, prev_meetings = updater.data.upcoming.get_details(team_name)
+    opp_team_name = opp_team_name_full[:-3]  # Remove 'FC' from end
+    opp_team_name_hyphen = (opp_team_name.lower()).replace(' ', '-')  # Remove 'FC' from end
+    names = TeamNames(opp_team_name_full, opp_team_name, opp_team_name_hyphen)
+    
+    opp_form_rating = updater.data.form.get_current_form_rating(opp_team_name_full)
+    opp_logo_url = updater.logo_urls[opp_team_name_full]
+    opp_team = OppTeam(names, opp_form_rating, opp_logo_url)
     return NextGame(opp_team, home_away, prev_meetings)
 
 def get_prediction(team_name: str) -> Prediction:
@@ -121,15 +131,14 @@ def get_table_snippet(team_name: str) -> TableSnippet:
     return TableSnippet(rows, team_table_idx)
 
 def get_params(team_name_hyphen: str) -> TeamParams:
-    title = team_name_hyphen.replace('-', ' ').title().replace('And', 'and')
-    team = get_team(title, team_name_hyphen)
-    form = get_form(team.name)
-    season_stats = get_season_stats(team.name)
-    next_game = get_next_game(team.name)
-    prediction = get_prediction(team.name)
-    table_snippet = get_table_snippet(team.name)
+    team = get_team(team_name_hyphen)
+    form = get_form(team.names.full_name)
+    season_stats = get_season_stats(team.names.full_name)
+    next_game = get_next_game(team.names.full_name)
+    prediction = get_prediction(team.names.full_name)
+    table_snippet = get_table_snippet(team.names.full_name)
     last_updated = updater.last_updated
-    return TeamParams(season, title, team, form, season_stats, next_game, prediction, table_snippet, last_updated)
+    return TeamParams(season, team, form, season_stats, next_game, prediction, table_snippet, last_updated)
 
 @app.route('/liverpool')
 @app.route('/manchester-city')
@@ -158,7 +167,6 @@ def team() -> str:
         # Get hypehenated team name from current URL
         team_name_hyphen = rule.rule[1:]
     params = get_params(team_name_hyphen)
-
     return render_template('team.html', params=params)
 
 
