@@ -39,13 +39,13 @@ class Predictor:
         # self.result_accuracy = None
         # self.home_scored_avg_diff = None
         # self.away_scored_avg_diff = None
-        self.prediction_file = f'data/predictions.json'
+        self.prediction_file = f'data/predictions_{current_season}.json'
 
     def get_predictions(self) -> dict:
         predictions = {}
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
-            predictions = data[f'predictions{self.current_season}']
+            predictions = data['predictions']
         return predictions
 
     def get_accuracy(self) -> tuple[float, float]:
@@ -83,7 +83,7 @@ class Predictor:
         predictions = {}
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
-            predictions = data[f'predictions{self.current_season}']
+            predictions = data['predictions']
         
         total = 0
         correct = 0
@@ -203,12 +203,9 @@ class Predictor:
                         break
 
         return already_made
-
-    def insert_new_prediction(self, date: str, new_prediction: str, details: list[str], predictions: dict[str, list]):
-        # Init with empty list if missing...
-        if date not in predictions.keys():
-            predictions[date] = []
-
+    
+    def update_existing_prediction(self, date: str, new_prediction: str, details: list[str], 
+                                   predictions: dict[str, list]) -> bool:
         # Update existing prediction object with new score prediction...
         for prediction in predictions[date]:
             predicted_score = prediction['prediction']
@@ -218,13 +215,32 @@ class Predictor:
                     print("Updating existing prediction:", predicted_score, '-->', new_prediction)
                     prediction['prediction'] = new_prediction
                     prediction['details'] = details
-                return
+                return True
+        return False
 
-        # Add new prediction object...
-        print("Adding new prediction:", new_prediction)
-        predictions[date].append({'prediction': new_prediction, 'actual': None, 'details': details})
+    def insert_new_prediction(self, date: str, prediction_id: int, new_prediction: str, 
+                              details: list[str], predictions: dict[str, list]) -> bool:
+        """Attempts to inesrt a prediction into the predictions dictionary.
+           Returns True if inserted a NEW predcition
+           Return False if a prediction for this fixture already exists"""
+        # Init with empty list if missing...
+        if date not in predictions.keys():
+            predictions[date] = []
 
-    def avg_previous_result(self, team_name: str, prev_meetings: list[dict[str, str]]) -> tuple[float, float]:
+        # Try to update the existing prediciton if available...
+        if self.update_existing_prediction(date, new_prediction, details, predictions):
+            return False
+        else:
+            # Otherwise add new...
+            print("Adding new prediction:", new_prediction)
+            predictions[date].append({'id': prediction_id, 
+                                      'prediction': new_prediction, 
+                                      'actual': None, 
+                                      'details': details})
+            return True
+
+    def avg_previous_result(self, team_name: str, prev_meetings: 
+                            list[dict[str, str]]) -> tuple[float, float]:
         goals_scored = 0
         goals_conceded = 0
         for prev_match in prev_meetings:
@@ -382,13 +398,21 @@ class Predictor:
         if value >= 0:
             return f'+{value}'
         return str(value)
+    
+    def max_prediction_id(self, predictions: dict) -> int:
+        return max([max([pred['id'] for pred in preds]) for preds in predictions.values()])        
 
     def insert_new_predictions(self, new_predictions, predictions: dict):
+        max_id = self.max_prediction_id(predictions)
+        prediction_id = max_id + 1
+        
         n_inserted = 0
         for date, new_prediction, details in new_predictions:
             if not self.exact_prediction_already_made(date, new_prediction, predictions):
-                self.insert_new_prediction(date, new_prediction, details, predictions)
-                n_inserted += 1
+                if self.insert_new_prediction(date, prediction_id, new_prediction, 
+                                              details, predictions):
+                    prediction_id += 1
+                    n_inserted += 1
 
         if n_inserted > 0:
             print(f'➡️  Added {n_inserted} new predictions')
@@ -411,8 +435,7 @@ class Predictor:
 
     def sort_predictions(self, data, predictions_json):
         # Sort by date keys...
-        data[f'predictions{self.current_season}'] = dict(
-            sorted(predictions_json.items(), key=lambda x: x[0]))
+        data['predictions'] = dict(sorted(predictions_json.items(), key=lambda x: x[0]))
 
     def insert_accuracy(self, data: dict):
         data['accuracy'] = self.accuracy
@@ -420,15 +443,15 @@ class Predictor:
     def update_json_file(self, fixtures: DataFrame):
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
-            predictions_json = data[f'predictions{self.current_season}']  # type: dict[str, list]
+            predictions_json = data['predictions']  # type: dict[str, list]
 
             # Update with new data...
             new_predictions = self.predictions.values()
             self.insert_new_predictions(new_predictions, predictions_json)
             actual_scores = self.get_actual_scores(fixtures)
             self.insert_actual_scores(actual_scores, predictions_json)
+            # Sort predictions by date...
             self.sort_predictions(data, predictions_json)
-            
             # Update accuracy...
             self.insert_accuracy(data)
 
