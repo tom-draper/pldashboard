@@ -9,6 +9,7 @@
         "2021-08-13": [
             {
                 "id": 0,
+                "time": "00:00:00",
                 "prediction": "BRE 0 - 0 ARS",
                 "actual": "BRE 2 - 0 ARS",
                 "details": null
@@ -17,42 +18,49 @@
         "2021-08-14": [
             {
                 "id": 1,
+                "time": "00:00:00",
                 "prediction": "WAT 2 - 1 AVL",
                 "actual": "WAT 3 - 2 AVL",
                 "details": null
             },
             {
                 "id": 2,
+                "time": "00:00:00",
                 "prediction": "LEI 0 - 0 WOL",
                 "actual": "LEI 1 - 0 WOL",
                 "details": null
             },
             {
                 "id": 3,
+                "time": "00:00:00",
                 "prediction": "EVE 1 - 1 SOU",
                 "actual": "EVE 3 - 1 SOU",
                 "details": null
             },
             {
                 "id": 4,
+                "time": "00:00:00",
                 "prediction": "CHE 3 - 0 CRY",
                 "actual": "CHE 3 - 0 CRY",
                 "details": null
             },
             {
                 "id": 5,
+                "time": "00:00:00",
                 "prediction": "BUR 0 - 1 BHA",
                 "actual": "BUR 1 - 2 BHA",
                 "details": null
             },
             {
                 "id": 6,
+                "time": "00:00:00",
                 "prediction": "NOR 0 - 2 LIV",
                 "actual": "NOR 0 - 3 LIV",
                 "details": null
             },
             {
                 "id": 7,
+                "time": "00:00:00",
                 "prediction": "MUN 3 - 0 LEE",
                 "actual": "MUN 5 - 1 LEE",
                 "details": null
@@ -61,12 +69,14 @@
         "2021-08-15": [
             {
                 "id": 8,
+                "time": "00:00:00",
                 "prediction": "NEW 2 - 1 WHU",
                 "actual": "NEW 2 - 4 WHU",
                 "details": null
             },
             {
                 "id": 9,
+                "time": "00:00:00",
                 "prediction": "TOT 1 - 1 MCI",
                 "actual": "TOT 1 - 0 MCI",
                 "details": null
@@ -75,36 +85,42 @@
         "2021-08-21": [
             {
                 "id": 10,
+                "time": "00:00:00",
                 "prediction": "CRY 0 - 0 BRE",
                 "actual": "CRY 0 - 0 BRE",
                 "details": null
             },
             {
                 "id": 11,
+                "time": "00:00:00",
                 "prediction": "LEE 1 - 2 EVE",
                 "actual": "LEE 2 - 2 EVE",
                 "details": null
             },
             {
                 "id": 12,
+                "time": "00:00:00",
                 "prediction": "LIV 3 - 0 BUR",
                 "actual": "LIV 2 - 0 BUR",
                 "details": null
             },
             {
                 "id": 13,
+                "time": "00:00:00",
                 "prediction": "BHA 2 - 1 WAT",
                 "actual": "BHA 2 - 0 WAT",
                 "details": null
             },
             {
                 "id": 14,
+                "time": "00:00:00",
                 "prediction": "MCI 4 - 1 NOR",
                 "actual": "MCI 5 - 0 NOR",
                 "details": null
             },
             {
                 "id": 15,
+                "time": "00:00:00",
                 "prediction": "AVL 2 - 0 NEW",
                 "actual": "AVL 2 - 0 NEW",
                 "details": null
@@ -113,18 +129,21 @@
         "2021-08-22": [
             {
                 "id": 16,
+                "time": "00:00:00",
                 "prediction": "SOU 1 - 7 MUN",
                 "actual": "SOU 1 - 1 MUN",
                 "details": null
             },
             {
                 "id": 17,
+                "time": "00:00:00",
                 "prediction": "WOL 1 - 3 TOT",
                 "actual": "WOL 0 - 1 TOT",
                 "details": null
             },
             {
                 "id": 18,
+                "time": "00:00:00",
                 "prediction": "ARS 2 - 2 CHE",
                 "actual": "ARS 0 - 2 CHE",
                 "details": null
@@ -133,6 +152,7 @@
         "2021-08-23": [
             {
                 "id": 19,
+                "time": "00:00:00",
                 "prediction": "WHU 2 - 2 LEI",
                 "actual": "WHU 4 - 1 LEI",
                 "details": null
@@ -141,42 +161,49 @@
         "2021-08-28": [
             {
                 "id": 20,
+                "time": "00:00:00",
                 "prediction": "LIV 2 - 1 CHE",
                 "actual": "LIV 1 - 1 CHE",
                 "details": null
             },
             {
                 "id": 21,
+                "time": "00:00:00",
                 "prediction": "BHA 1 - 2 EVE",
                 "actual": "BHA 0 - 2 EVE",
                 "details": null
             },
             {
                 "id": 22,
+                "time": "00:00:00",
                 "prediction": "NOR 1 - 0 LEI",
                 "actual": "NOR 1 - 2 LEI",
                 "details": null
             },
             {
                 "id": 23,
+                "time": "00:00:00",
                 "prediction": "MCI 3 - 0 ARS",
                 "actual": "MCI 5 - 0 ARS",
                 "details": null
             },
             {
                 "id": 24,
+                "time": "00:00:00",
                 "prediction": "AVL 0 - 0 BRE",
                 "actual": "AVL 1 - 1 BRE",
                 "details": null
             },
             {
                 "id": 25,
+                "time": "00:00:00",
                 "prediction": "NEW 2 - 1 SOU",
                 "actual": "NEW 2 - 2 SOU",
                 "details": null
             },
             {
                 "id": 26,
+                "time": "00:00:00",
                 "prediction": "WHU 3 - 2 CRY",
                 "actual": "WHU 2 - 2 CRY",
                 "details": null
@@ -185,18 +212,21 @@
         "2021-08-29": [
             {
                 "id": 27,
+                "time": "00:00:00",
                 "prediction": "BUR 0 - 3 LEE",
                 "actual": "BUR 1 - 1 LEE",
                 "details": null
             },
             {
                 "id": 28,
+                "time": "00:00:00",
                 "prediction": "TOT 1 - 0 WAT",
                 "actual": "TOT 1 - 0 WAT",
                 "details": null
             },
             {
                 "id": 29,
+                "time": "00:00:00",
                 "prediction": "WOL 0 - 2 MUN",
                 "actual": "WOL 0 - 1 MUN",
                 "details": null
@@ -205,48 +235,56 @@
         "2021-09-11": [
             {
                 "id": 30,
+                "time": "00:00:00",
                 "prediction": "BRE 0 - 0 BHA",
                 "actual": "BRE 0 - 1 BHA",
                 "details": null
             },
             {
                 "id": 31,
+                "time": "00:00:00",
                 "prediction": "ARS 3 - 1 NOR",
                 "actual": "ARS 1 - 0 NOR",
                 "details": null
             },
             {
                 "id": 32,
+                "time": "00:00:00",
                 "prediction": "MUN 5 - 1 NEW",
                 "actual": "MUN 4 - 1 NEW",
                 "details": null
             },
             {
                 "id": 33,
+                "time": "00:00:00",
                 "prediction": "WAT 1 - 1 WOL",
                 "actual": "WAT 0 - 2 WOL",
                 "details": null
             },
             {
                 "id": 34,
+                "time": "00:00:00",
                 "prediction": "CHE 2 - 1 AVL",
                 "actual": "CHE 3 - 0 AVL",
                 "details": null
             },
             {
                 "id": 35,
+                "time": "00:00:00",
                 "prediction": "LEI 2 - 3 MCI",
                 "actual": "LEI 0 - 1 MCI",
                 "details": null
             },
             {
                 "id": 36,
+                "time": "00:00:00",
                 "prediction": "SOU 0 - 3 WHU",
                 "actual": "SOU 0 - 0 WHU",
                 "details": null
             },
             {
                 "id": 37,
+                "time": "00:00:00",
                 "prediction": "CRY 1 - 5 TOT",
                 "actual": "CRY 3 - 0 TOT",
                 "details": null
@@ -255,6 +293,7 @@
         "2021-09-12": [
             {
                 "id": 38,
+                "time": "00:00:00",
                 "prediction": "LEE 2 - 4 LIV",
                 "actual": "LEE 0 - 3 LIV",
                 "details": null
@@ -263,6 +302,7 @@
         "2021-09-13": [
             {
                 "id": 39,
+                "time": "00:00:00",
                 "prediction": "EVE 1 - 1 BUR",
                 "actual": "EVE 3 - 1 BUR",
                 "details": null
@@ -271,6 +311,7 @@
         "2021-09-17": [
             {
                 "id": 40,
+                "time": "00:00:00",
                 "prediction": "NEW 2 - 3 LEE",
                 "actual": "NEW 1 - 1 LEE",
                 "details": null
@@ -279,36 +320,42 @@
         "2021-09-18": [
             {
                 "id": 41,
+                "time": "00:00:00",
                 "prediction": "LIV 6 - 0 CRY",
                 "actual": "LIV 3 - 0 CRY",
                 "details": null
             },
             {
                 "id": 42,
+                "time": "00:00:00",
                 "prediction": "WOL 0 - 0 BRE",
                 "actual": "WOL 0 - 2 BRE",
                 "details": null
             },
             {
                 "id": 43,
+                "time": "00:00:00",
                 "prediction": "BUR 1 - 1 ARS",
                 "actual": "BUR 0 - 1 ARS",
                 "details": null
             },
             {
                 "id": 44,
+                "time": "00:00:00",
                 "prediction": "NOR 0 - 2 WAT",
                 "actual": "NOR 1 - 3 WAT",
                 "details": null
             },
             {
                 "id": 45,
+                "time": "00:00:00",
                 "prediction": "MCI 3 - 1 SOU",
                 "actual": "MCI 0 - 0 SOU",
                 "details": null
             },
             {
                 "id": 46,
+                "time": "00:00:00",
                 "prediction": "AVL 1 - 1 EVE",
                 "actual": "AVL 3 - 0 EVE",
                 "details": null
@@ -317,18 +364,21 @@
         "2021-09-19": [
             {
                 "id": 47,
+                "time": "00:00:00",
                 "prediction": "TOT 0 - 2 CHE",
                 "actual": "TOT 0 - 3 CHE",
                 "details": null
             },
             {
                 "id": 48,
+                "time": "00:00:00",
                 "prediction": "WHU 1 - 1 MUN",
                 "actual": "WHU 1 - 2 MUN",
                 "details": null
             },
             {
                 "id": 49,
+                "time": "00:00:00",
                 "prediction": "BHA 0 - 2 LEI",
                 "actual": "BHA 2 - 1 LEI",
                 "details": null
@@ -337,42 +387,49 @@
         "2021-09-25": [
             {
                 "id": 50,
+                "time": "00:00:00",
                 "prediction": "BRE 0 - 0 LIV",
                 "actual": "BRE 3 - 3 LIV",
                 "details": null
             },
             {
                 "id": 51,
+                "time": "00:00:00",
                 "prediction": "LEE 0 - 3 WHU",
                 "actual": "LEE 1 - 2 WHU",
                 "details": null
             },
             {
                 "id": 52,
+                "time": "00:00:00",
                 "prediction": "WAT 2 - 1 NEW",
                 "actual": "WAT 1 - 1 NEW",
                 "details": null
             },
             {
                 "id": 53,
+                "time": "00:00:00",
                 "prediction": "LEI 2 - 1 BUR",
                 "actual": "LEI 2 - 2 BUR",
                 "details": null
             },
             {
                 "id": 54,
+                "time": "00:00:00",
                 "prediction": "EVE 1 - 1 NOR",
                 "actual": "EVE 2 - 0 NOR",
                 "details": null
             },
             {
                 "id": 55,
+                "time": "00:00:00",
                 "prediction": "CHE 2 - 2 MCI",
                 "actual": "CHE 0 - 1 MCI",
                 "details": null
             },
             {
                 "id": 56,
+                "time": "00:00:00",
                 "prediction": "MUN 3 - 1 AVL",
                 "actual": "MUN 0 - 1 AVL",
                 "details": null
@@ -381,12 +438,14 @@
         "2021-09-26": [
             {
                 "id": 57,
+                "time": "00:00:00",
                 "prediction": "ARS 1 - 2 TOT",
                 "actual": "ARS 3 - 1 TOT",
                 "details": null
             },
             {
                 "id": 58,
+                "time": "00:00:00",
                 "prediction": "SOU 2 - 2 WOL",
                 "actual": "SOU 0 - 1 WOL",
                 "details": null
@@ -395,6 +454,7 @@
         "2021-09-27": [
             {
                 "id": 59,
+                "time": "00:00:00",
                 "prediction": "CRY 1 - 1 BHA",
                 "actual": "CRY 1 - 1 BHA",
                 "details": null
@@ -403,36 +463,42 @@
         "2021-10-02": [
             {
                 "id": 60,
+                "time": "00:00:00",
                 "prediction": "BHA 1 - 1 ARS",
                 "actual": "BHA 0 - 0 ARS",
                 "details": null
             },
             {
                 "id": 61,
+                "time": "00:00:00",
                 "prediction": "MUN 3 - 1 EVE",
                 "actual": "MUN 1 - 1 EVE",
                 "details": null
             },
             {
                 "id": 62,
+                "time": "00:00:00",
                 "prediction": "LEE 1 - 1 WAT",
                 "actual": "LEE 1 - 0 WAT",
                 "details": null
             },
             {
                 "id": 63,
+                "time": "00:00:00",
                 "prediction": "WOL 1 - 1 NEW",
                 "actual": "WOL 2 - 1 NEW",
                 "details": null
             },
             {
                 "id": 64,
+                "time": "00:00:00",
                 "prediction": "CHE 3 - 2 SOU",
                 "actual": "CHE 3 - 1 SOU",
                 "details": null
             },
             {
                 "id": 65,
+                "time": "00:00:00",
                 "prediction": "BUR 2 - 0 NOR",
                 "actual": "BUR 0 - 0 NOR",
                 "details": null
@@ -441,24 +507,28 @@
         "2021-10-03": [
             {
                 "id": 66,
+                "time": "00:00:00",
                 "prediction": "WHU 1 - 1 BRE",
                 "actual": "WHU 1 - 2 BRE",
                 "details": null
             },
             {
                 "id": 67,
+                "time": "00:00:00",
                 "prediction": "TOT 2 - 1 AVL",
                 "actual": "TOT 2 - 1 AVL",
                 "details": null
             },
             {
                 "id": 68,
+                "time": "00:00:00",
                 "prediction": "CRY 1 - 2 LEI",
                 "actual": "CRY 2 - 2 LEI",
                 "details": null
             },
             {
                 "id": 69,
+                "time": "00:00:00",
                 "prediction": "LIV 2 - 2 MCI",
                 "actual": "LIV 2 - 2 MCI",
                 "details": null
@@ -467,6 +537,7 @@
         "2021-10-16": [
             {
                 "id": 70,
+                "time": "00:00:00",
                 "prediction": "BRE 1 - 1 CHE",
                 "actual": "BRE 0 - 1 CHE",
                 "details": {
@@ -498,6 +569,7 @@
             },
             {
                 "id": 71,
+                "time": "00:00:00",
                 "prediction": "LEI 1 - 2 MUN",
                 "actual": "LEI 4 - 2 MUN",
                 "details": {
@@ -529,6 +601,7 @@
             },
             {
                 "id": 72,
+                "time": "00:00:00",
                 "prediction": "SOU 0 - 3 LEE",
                 "actual": "SOU 1 - 0 LEE",
                 "details": {
@@ -560,6 +633,7 @@
             },
             {
                 "id": 73,
+                "time": "00:00:00",
                 "prediction": "WAT 1 - 4 LIV",
                 "actual": "WAT 0 - 5 LIV",
                 "details": {
@@ -591,6 +665,7 @@
             },
             {
                 "id": 74,
+                "time": "00:00:00",
                 "prediction": "AVL 1 - 1 WOL",
                 "actual": "AVL 2 - 3 WOL",
                 "details": {
@@ -622,6 +697,7 @@
             },
             {
                 "id": 75,
+                "time": "00:00:00",
                 "prediction": "MCI 6 - 0 BUR",
                 "actual": "MCI 2 - 0 BUR",
                 "details": {
@@ -653,6 +729,7 @@
             },
             {
                 "id": 76,
+                "time": "00:00:00",
                 "prediction": "NOR 0 - 2 BHA",
                 "actual": "NOR 0 - 0 BHA",
                 "details": {
@@ -686,6 +763,7 @@
         "2021-10-17": [
             {
                 "id": 77,
+                "time": "00:00:00",
                 "prediction": "EVE 1 - 1 WHU",
                 "actual": "EVE 0 - 1 WHU",
                 "details": {
@@ -717,6 +795,7 @@
             },
             {
                 "id": 78,
+                "time": "00:00:00",
                 "prediction": "NEW 1 - 1 TOT",
                 "actual": "NEW 2 - 3 TOT",
                 "details": {
@@ -894,6 +973,56 @@
             }
         ],
         "2021-10-23": [
+            {
+                "id": 86,
+                "prediction": "CHE 4 - 1 NOR",
+                "time": "11:30:00",
+                "actual": null,
+                "details": {
+                    "starting": {
+                        "description": "Previous match average",
+                        "previousMatches": [
+                            {
+                                "date": "2020-07-14T19:15:00Z",
+                                "homeTeam": "Chelsea FC",
+                                "awayTeam": "Norwich City FC",
+                                "homeGoals": 1,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2019-08-24T11:30:00Z",
+                                "homeTeam": "Norwich City FC",
+                                "awayTeam": "Chelsea FC",
+                                "homeGoals": 2,
+                                "awayGoals": 3
+                            }
+                        ],
+                        "homeGoals": 2.0,
+                        "awayGoals": 1.0
+                    },
+                    "adjustments": [
+                        {
+                            "description": "Adjusted by form",
+                            "operation": "2.0 += 2.0 * 0.679 * 1.5",
+                            "homeGoals": 4.037,
+                            "awayGoals": 1.0,
+                            "homeFormRating": 67.9,
+                            "awayFormRating": 0.0
+                        },
+                        {
+                            "description": "Adjusted by home advantage",
+                            "operation": "1.0 *= 1 - (0.0658 * 1.5)",
+                            "homeGoals": 4.037,
+                            "awayGoals": 0.9013,
+                            "homeAdvantage": 0.0658
+                        }
+                    ],
+                    "score": {
+                        "homeGoals": 4.037,
+                        "awayGoals": 0.9013
+                    }
+                }
+            },
             {
                 "id": 82,
                 "prediction": "LEE 0 - 1 WOL",
@@ -1087,52 +1216,80 @@
                 }
             },
             {
-                "id": 86,
-                "prediction": "CHE 4 - 1 NOR",
-                "time": "11:30:00",
+                "id": 88,
+                "prediction": "CRY 1 - 1 NEW",
+                "time": "14:00:00",
                 "actual": null,
                 "details": {
                     "starting": {
                         "description": "Previous match average",
                         "previousMatches": [
                             {
-                                "date": "2020-07-14T19:15:00Z",
-                                "homeTeam": "Chelsea FC",
-                                "awayTeam": "Norwich City FC",
+                                "date": "2021-02-02T20:15:00Z",
+                                "homeTeam": "Newcastle United FC",
+                                "awayTeam": "Crystal Palace FC",
+                                "homeGoals": 1,
+                                "awayGoals": 2
+                            },
+                            {
+                                "date": "2020-11-27T20:00:00Z",
+                                "homeTeam": "Crystal Palace FC",
+                                "awayTeam": "Newcastle United FC",
+                                "homeGoals": 0,
+                                "awayGoals": 2
+                            },
+                            {
+                                "date": "2020-02-22T15:00:00Z",
+                                "homeTeam": "Crystal Palace FC",
+                                "awayTeam": "Newcastle United FC",
                                 "homeGoals": 1,
                                 "awayGoals": 0
                             },
                             {
-                                "date": "2019-08-24T11:30:00Z",
-                                "homeTeam": "Norwich City FC",
-                                "awayTeam": "Chelsea FC",
-                                "homeGoals": 2,
-                                "awayGoals": 3
+                                "date": "2019-12-21T15:00:00Z",
+                                "homeTeam": "Newcastle United FC",
+                                "awayTeam": "Crystal Palace FC",
+                                "homeGoals": 1,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2019-04-06T14:00:00Z",
+                                "homeTeam": "Newcastle United FC",
+                                "awayTeam": "Crystal Palace FC",
+                                "homeGoals": 0,
+                                "awayGoals": 1
+                            },
+                            {
+                                "date": "2018-09-22T14:00:00Z",
+                                "homeTeam": "Crystal Palace FC",
+                                "awayTeam": "Newcastle United FC",
+                                "homeGoals": 0,
+                                "awayGoals": 0
                             }
                         ],
-                        "homeGoals": 2.0,
-                        "awayGoals": 1.0
+                        "homeGoals": 0.6667,
+                        "awayGoals": 0.6667
                     },
                     "adjustments": [
                         {
                             "description": "Adjusted by form",
-                            "operation": "2.0 += 2.0 * 0.679 * 1.5",
-                            "homeGoals": 4.037,
-                            "awayGoals": 1.0,
-                            "homeFormRating": 67.9,
+                            "operation": "0.6667 += 0.6667 * -0.558 * 1.5",
+                            "homeGoals": 1.2247,
+                            "awayGoals": 0.6667,
+                            "homeFormRating": 55.8,
                             "awayFormRating": 0.0
                         },
                         {
                             "description": "Adjusted by home advantage",
-                            "operation": "1.0 *= 1 - (0.0658 * 1.5)",
-                            "homeGoals": 4.037,
-                            "awayGoals": 0.9013,
-                            "homeAdvantage": 0.0658
+                            "operation": "0.6667 *= 1 - (-0.0395 * 1.5)",
+                            "homeGoals": 1.2247,
+                            "awayGoals": 0.7061,
+                            "homeAdvantage": -0.0395
                         }
                     ],
                     "score": {
-                        "homeGoals": 4.037,
-                        "awayGoals": 0.9013
+                        "homeGoals": 1.2247,
+                        "awayGoals": 0.7061
                     }
                 }
             },
@@ -1213,84 +1370,6 @@
                         "awayGoals": 3.3434
                     }
                 }
-            },
-            {
-                "id": 88,
-                "prediction": "CRY 1 - 1 NEW",
-                "time": "14:00:00",
-                "actual": null,
-                "details": {
-                    "starting": {
-                        "description": "Previous match average",
-                        "previousMatches": [
-                            {
-                                "date": "2021-02-02T20:15:00Z",
-                                "homeTeam": "Newcastle United FC",
-                                "awayTeam": "Crystal Palace FC",
-                                "homeGoals": 1,
-                                "awayGoals": 2
-                            },
-                            {
-                                "date": "2020-11-27T20:00:00Z",
-                                "homeTeam": "Crystal Palace FC",
-                                "awayTeam": "Newcastle United FC",
-                                "homeGoals": 0,
-                                "awayGoals": 2
-                            },
-                            {
-                                "date": "2020-02-22T15:00:00Z",
-                                "homeTeam": "Crystal Palace FC",
-                                "awayTeam": "Newcastle United FC",
-                                "homeGoals": 1,
-                                "awayGoals": 0
-                            },
-                            {
-                                "date": "2019-12-21T15:00:00Z",
-                                "homeTeam": "Newcastle United FC",
-                                "awayTeam": "Crystal Palace FC",
-                                "homeGoals": 1,
-                                "awayGoals": 0
-                            },
-                            {
-                                "date": "2019-04-06T14:00:00Z",
-                                "homeTeam": "Newcastle United FC",
-                                "awayTeam": "Crystal Palace FC",
-                                "homeGoals": 0,
-                                "awayGoals": 1
-                            },
-                            {
-                                "date": "2018-09-22T14:00:00Z",
-                                "homeTeam": "Crystal Palace FC",
-                                "awayTeam": "Newcastle United FC",
-                                "homeGoals": 0,
-                                "awayGoals": 0
-                            }
-                        ],
-                        "homeGoals": 0.6667,
-                        "awayGoals": 0.6667
-                    },
-                    "adjustments": [
-                        {
-                            "description": "Adjusted by form",
-                            "operation": "0.6667 += 0.6667 * -0.558 * 1.5",
-                            "homeGoals": 1.2247,
-                            "awayGoals": 0.6667,
-                            "homeFormRating": 55.8,
-                            "awayFormRating": 0.0
-                        },
-                        {
-                            "description": "Adjusted by home advantage",
-                            "operation": "0.6667 *= 1 - (-0.0395 * 1.5)",
-                            "homeGoals": 1.2247,
-                            "awayGoals": 0.7061,
-                            "homeAdvantage": -0.0395
-                        }
-                    ],
-                    "score": {
-                        "homeGoals": 1.2247,
-                        "awayGoals": 0.7061
-                    }
-                }
             }
         ],
         "2021-10-24": [
@@ -1326,84 +1405,6 @@
                     "score": {
                         "homeGoals": 1.0,
                         "awayGoals": 1.138
-                    }
-                }
-            },
-            {
-                "id": 81,
-                "prediction": "MUN 1 - 3 LIV",
-                "time": "15:30:00",
-                "actual": null,
-                "details": {
-                    "starting": {
-                        "description": "Previous match average",
-                        "previousMatches": [
-                            {
-                                "date": "2021-05-13T19:15:00Z",
-                                "homeTeam": "Manchester United FC",
-                                "awayTeam": "Liverpool FC",
-                                "homeGoals": 2,
-                                "awayGoals": 4
-                            },
-                            {
-                                "date": "2021-01-17T16:30:00Z",
-                                "homeTeam": "Liverpool FC",
-                                "awayTeam": "Manchester United FC",
-                                "homeGoals": 0,
-                                "awayGoals": 0
-                            },
-                            {
-                                "date": "2020-01-19T16:30:00Z",
-                                "homeTeam": "Liverpool FC",
-                                "awayTeam": "Manchester United FC",
-                                "homeGoals": 2,
-                                "awayGoals": 0
-                            },
-                            {
-                                "date": "2019-10-20T15:30:00Z",
-                                "homeTeam": "Manchester United FC",
-                                "awayTeam": "Liverpool FC",
-                                "homeGoals": 1,
-                                "awayGoals": 1
-                            },
-                            {
-                                "date": "2019-02-24T14:05:00Z",
-                                "homeTeam": "Manchester United FC",
-                                "awayTeam": "Liverpool FC",
-                                "homeGoals": 0,
-                                "awayGoals": 0
-                            },
-                            {
-                                "date": "2018-12-16T16:00:00Z",
-                                "homeTeam": "Liverpool FC",
-                                "awayTeam": "Manchester United FC",
-                                "homeGoals": 3,
-                                "awayGoals": 1
-                            }
-                        ],
-                        "homeGoals": 0.6667,
-                        "awayGoals": 1.6667
-                    },
-                    "adjustments": [
-                        {
-                            "description": "Adjusted by form",
-                            "operation": "1.6667 += 1.6667 * -0.5 * 1.5",
-                            "homeGoals": 0.6667,
-                            "awayGoals": 2.9167,
-                            "homeFormRating": 16.4,
-                            "awayFormRating": 66.4
-                        },
-                        {
-                            "description": "Adjusted by home advantage",
-                            "operation": "2.9167 *= 1 - (0.0395 * 1.5)",
-                            "homeGoals": 0.6667,
-                            "awayGoals": 2.744,
-                            "homeAdvantage": 0.0395
-                        }
-                    ],
-                    "score": {
-                        "homeGoals": 0.6667,
-                        "awayGoals": 2.744
                     }
                 }
             },
@@ -1482,6 +1483,84 @@
                     "score": {
                         "homeGoals": 1.9553,
                         "awayGoals": 1.5022
+                    }
+                }
+            },
+            {
+                "id": 81,
+                "prediction": "MUN 1 - 3 LIV",
+                "time": "15:30:00",
+                "actual": null,
+                "details": {
+                    "starting": {
+                        "description": "Previous match average",
+                        "previousMatches": [
+                            {
+                                "date": "2021-05-13T19:15:00Z",
+                                "homeTeam": "Manchester United FC",
+                                "awayTeam": "Liverpool FC",
+                                "homeGoals": 2,
+                                "awayGoals": 4
+                            },
+                            {
+                                "date": "2021-01-17T16:30:00Z",
+                                "homeTeam": "Liverpool FC",
+                                "awayTeam": "Manchester United FC",
+                                "homeGoals": 0,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2020-01-19T16:30:00Z",
+                                "homeTeam": "Liverpool FC",
+                                "awayTeam": "Manchester United FC",
+                                "homeGoals": 2,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2019-10-20T15:30:00Z",
+                                "homeTeam": "Manchester United FC",
+                                "awayTeam": "Liverpool FC",
+                                "homeGoals": 1,
+                                "awayGoals": 1
+                            },
+                            {
+                                "date": "2019-02-24T14:05:00Z",
+                                "homeTeam": "Manchester United FC",
+                                "awayTeam": "Liverpool FC",
+                                "homeGoals": 0,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2018-12-16T16:00:00Z",
+                                "homeTeam": "Liverpool FC",
+                                "awayTeam": "Manchester United FC",
+                                "homeGoals": 3,
+                                "awayGoals": 1
+                            }
+                        ],
+                        "homeGoals": 0.6667,
+                        "awayGoals": 1.6667
+                    },
+                    "adjustments": [
+                        {
+                            "description": "Adjusted by form",
+                            "operation": "1.6667 += 1.6667 * -0.5 * 1.5",
+                            "homeGoals": 0.6667,
+                            "awayGoals": 2.9167,
+                            "homeFormRating": 16.4,
+                            "awayFormRating": 66.4
+                        },
+                        {
+                            "description": "Adjusted by home advantage",
+                            "operation": "2.9167 *= 1 - (0.0395 * 1.5)",
+                            "homeGoals": 0.6667,
+                            "awayGoals": 2.744,
+                            "homeAdvantage": 0.0395
+                        }
+                    ],
+                    "score": {
+                        "homeGoals": 0.6667,
+                        "awayGoals": 2.744
                     }
                 }
             }

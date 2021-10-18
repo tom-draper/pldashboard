@@ -25,7 +25,7 @@ class DF:
         return str(self.df)
     
     def save_to_html(self):
-        html = self.df.to_html()
+        html = self.df.to_html(justify='center')
         with open(f'./templates/tables/{self.name}.html', 'w') as f:
             f.write(html)
 
@@ -229,8 +229,7 @@ class TeamRatings(DF):
         self.calc_total_rating_col(team_ratings, n_seasons, include_current_season)
 
         team_ratings = team_ratings.sort_values(by="TotalRating", ascending=False)
-        team_ratings = team_ratings.rename(
-            columns={'Rating0YAgo': 'RatingCurrent', 'NormalisedRating0YAgo': 'NormalisedRatingCurrent'})
+        team_ratings = team_ratings.rename(columns={'Rating0YAgo': 'RatingCurrent', 'NormalisedRating0YAgo': 'NormalisedRatingCurrent'})
 
         if display:
             print(team_ratings)
@@ -600,12 +599,8 @@ class Standings(DF):
     def get_position(self, team_name: str, season: int) -> DataFrame:
         return self.df.loc[team_name, season]['Position']
 
-    def get_table_snippet(self, team_name: str, season: int) -> tuple[list
-                                                                      [tuple[int, 
-                                                                             str, 
-                                                                             int, 
-                                                                             int]], 
-                                                                      int]:
+    def get_table_snippet(self, team_name: str, 
+                          season: int) -> tuple[list[tuple[int, str, int, int]], int]:
         team_df_idx = self.df.index.get_loc(team_name)
 
         # Get range of table the snippet should cover
@@ -686,11 +681,11 @@ class Standings(DF):
 
         return df_rows
 
-    def add_gd_col(self, df_rows):
+    def add_gd_col(self, df_rows: dict):
         for team in df_rows.keys():
             df_rows[team]['GD'] = df_rows[team]['GF'] - df_rows[team]['GA']
 
-    def add_position_col(self, df_rows):
+    def add_position_col(self, df_rows: dict):
         for idx, team in enumerate(df_rows.keys()):
             # Position is index as they have been sorted by points
             df_rows[team]['Position'] = idx + 1
@@ -782,6 +777,7 @@ class Standings(DF):
 
         standings = standings.fillna(0).astype(int)
         standings.index.name = 'Team'
+        standings.columns.names = ('Season', None)
 
         if display:
             print(standings)
@@ -850,25 +846,25 @@ class Upcoming(DF):
         if next_games[home_team]['NextTeam'] == away_team:
             prev_match = {'Date': date,
                           'ReadableDate': readable_date,
-                            'HomeTeam': home_team,
-                            'AwayTeam': away_team,
-                            'HomeGoals': match['score']['fullTime']['homeTeam'],
-                            'AwayGoals': match['score']['fullTime']['awayTeam'],
-                            'Result': result[0]}
+                          'HomeTeam': home_team,
+                          'AwayTeam': away_team,
+                          'HomeGoals': match['score']['fullTime']['homeTeam'],
+                          'AwayGoals': match['score']['fullTime']['awayTeam'],
+                          'Result': result[0]}
             next_games[home_team]['PreviousMatches'].append(prev_match)
 
         if next_games[away_team]['NextTeam'] == home_team:
             prev_match = {'Date': date,
                           'ReadableDate': readable_date,
-                            'HomeTeam': home_team,
-                            'AwayTeam': away_team,
-                            'HomeGoals': match['score']['fullTime']['homeTeam'],
-                            'AwayGoals': match['score']['fullTime']['awayTeam'],
-                            'Result': result[1]}
+                          'HomeTeam': home_team,
+                          'AwayTeam': away_team,
+                          'HomeGoals': match['score']['fullTime']['homeTeam'],
+                          'AwayGoals': match['score']['fullTime']['awayTeam'],
+                          'Result': result[1]}
             next_games[away_team]['PreviousMatches'].append(prev_match)
     
     def ord(self, n):
-        return str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))
+        return str(n) + ("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))
     
     def readable_date(self, date):
         dt = datetime.strptime(date[:10], "%Y-%m-%d")
@@ -1218,27 +1214,10 @@ class HomeAdvantages(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'home_advantages')
 
-    def home_advantages_for_season(self, d: dict, data: dict, season: int):
+    def home_advantages_for_season(self, d: defaultdict, data: dict, season: int):
         for match in data:
             home_team = match['homeTeam']['name'].replace('&', 'and')
             away_team = match['awayTeam']['name'].replace('&', 'and')
-
-            # Initialise dictionary if needed
-            for team in (home_team, away_team):
-                if team not in d.keys():
-                    d[team] = {(season, 'Home', 'Wins'): 0,
-                               (season, 'Home', 'Draws'): 0,
-                               (season, 'Home', 'Loses'): 0,
-                               (season, 'Away', 'Wins'): 0,
-                               (season, 'Away', 'Draws'): 0,
-                               (season, 'Away', 'Loses'): 0}
-                elif (season, 'Home', 'Wins') not in d[team].keys():
-                    d[team].update({(season, 'Home', 'Wins'): 0,
-                                    (season, 'Home', 'Draws'): 0,
-                                    (season, 'Home', 'Loses'): 0,
-                                    (season, 'Away', 'Wins'): 0,
-                                    (season, 'Away', 'Draws'): 0,
-                                    (season, 'Away', 'Loses'): 0})
 
             if match['score']['winner'] != None:
                 if match['score']['fullTime']['homeTeam'] > match['score']['fullTime']['awayTeam']:
@@ -1298,6 +1277,17 @@ class HomeAdvantages(DF):
 
         return home_advantages
 
+    def row_template(self, season, no_seasons):
+        template = {}
+        for i in range(no_seasons):
+            template.update({(season-i, 'Home', 'Wins'): 0,
+                             (season-i, 'Home', 'Draws'): 0,
+                             (season-i, 'Home', 'Loses'): 0,
+                             (season-i, 'Away', 'Wins'): 0,
+                             (season-i, 'Away', 'Draws'): 0,
+                             (season-i, 'Away', 'Loses'): 0})
+        return template
+
     @timebudget
     def update(self, json_data: dict, season: int, threshold: float, 
                no_seasons: int = 3, display: bool = False):
@@ -1339,10 +1329,10 @@ class HomeAdvantages(DF):
         """
         print('🔨 Building home advantages dataframe... ')
 
-        d = {}  # type: dict[str, dict[tuple[int, str, str], int]]
+        d = defaultdict(lambda: self.row_template(season, no_seasons))
         for i in range(no_seasons):
-            data = json_data['fixtures'][season - i]
-            self.home_advantages_for_season(d, data, season - i)
+            data = json_data['fixtures'][season-i]
+            self.home_advantages_for_season(d, data, season-i)
 
         home_advantages = pd.DataFrame.from_dict(d, orient='index')
         # Drop teams from previous seasons

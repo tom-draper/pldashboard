@@ -963,7 +963,7 @@ img {
   }
 }
 
-/* Data Page */
+/* -------------------------------- Data Page ----------------------------------*/
 .table-title {
   margin-top: 30px;
   font-size: 1.3em;
@@ -981,4 +981,8 @@ img {
 
 table {
   margin: 0 auto;
+  border-collapse: collapse; 
 }
+th, td { 	
+  padding: 3px 4px; 
+} 

@@ -205,8 +205,9 @@ class Predictor:
                 return True
         return False
 
-    def insert_new_prediction(self, date: str, time: str, prediction_id: int, new_prediction: str, 
-                              details: list[str], predictions: dict[str, list]) -> bool:
+    def insert_new_prediction(self, date: str, time: str, prediction_id: int, 
+                              new_prediction: str, details: list[str], 
+                              predictions: dict[str, list]) -> bool:
         """Attempts to inesrt a prediction into the predictions dictionary.
            Returns True if inserted a NEW predcition
            Return False if a prediction for this fixture already exists"""
@@ -221,8 +222,8 @@ class Predictor:
             # Otherwise add new...
             print("Adding new prediction:", new_prediction)
             predictions[date].append({'id': prediction_id, 
-                                      'prediction': new_prediction,
                                       'time': time, 
+                                      'prediction': new_prediction,
                                       'actual': None, 
                                       'details': details})
             id_used = True
@@ -431,7 +432,6 @@ class Predictor:
 
                 date = upcoming.df['Date'].loc[team_name].to_pydatetime()
                 prediction = (date, scoreline, details)
-                print(prediction)
 
             predictions[team_name] = prediction
 
@@ -453,8 +453,6 @@ class Predictor:
         n_inserted = 0
         for dt, new_prediction, details in new_predictions:
             date = datetime.strftime(dt, '%Y-%m-%d')
-            print(dt)
-            print(date)
             if not self.exact_prediction_already_made(date, new_prediction, predictions):
                 time = datetime.strftime(dt, '%H:%M:%S')
                 if self.insert_new_prediction(date, time, prediction_id, new_prediction, 
@@ -482,6 +480,9 @@ class Predictor:
             print(f'➡️  Updated {n_inserted} existing predictions with their actual results')
 
     def sort_predictions(self, data, predictions_json):
+        for date in predictions_json:
+            predictions_json[date] = sorted(predictions_json[date], key=lambda x: x['time'])
+            
         # Sort by date keys...
         data['predictions'] = dict(sorted(predictions_json.items(), key=lambda x: x[0]))
 
