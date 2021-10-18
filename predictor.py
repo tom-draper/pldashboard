@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import json
 from typing import Optional
+from datetime import datetime
 
 import numpy as np
 from pandas.core.frame import DataFrame
@@ -204,7 +205,7 @@ class Predictor:
                 return True
         return False
 
-    def insert_new_prediction(self, date: str, prediction_id: int, new_prediction: str, 
+    def insert_new_prediction(self, date: str, time: str, prediction_id: int, new_prediction: str, 
                               details: list[str], predictions: dict[str, list]) -> bool:
         """Attempts to inesrt a prediction into the predictions dictionary.
            Returns True if inserted a NEW predcition
@@ -220,7 +221,8 @@ class Predictor:
             # Otherwise add new...
             print("Adding new prediction:", new_prediction)
             predictions[date].append({'id': prediction_id, 
-                                      'prediction': new_prediction, 
+                                      'prediction': new_prediction,
+                                      'time': time, 
                                       'actual': None, 
                                       'details': details})
             id_used = True
@@ -427,8 +429,9 @@ class Predictor:
                                                       pred_scored, pred_conceded, 
                                                       home_away)
 
-                game_date = upcoming.df['Date'].astype(str).loc[team_name]  # type: str
-                prediction = (game_date, scoreline, details)
+                date = upcoming.df['Date'].loc[team_name].to_pydatetime()
+                prediction = (date, scoreline, details)
+                print(prediction)
 
             predictions[team_name] = prediction
 
@@ -448,9 +451,13 @@ class Predictor:
         prediction_id = max_id + 1
         
         n_inserted = 0
-        for date, new_prediction, details in new_predictions:
+        for dt, new_prediction, details in new_predictions:
+            date = datetime.strftime(dt, '%Y-%m-%d')
+            print(dt)
+            print(date)
             if not self.exact_prediction_already_made(date, new_prediction, predictions):
-                if self.insert_new_prediction(date, prediction_id, new_prediction, 
+                time = datetime.strftime(dt, '%H:%M:%S')
+                if self.insert_new_prediction(date, time, prediction_id, new_prediction, 
                                               details, predictions):
                     prediction_id += 1
                     n_inserted += 1
@@ -481,15 +488,13 @@ class Predictor:
     def insert_accuracy(self, data: dict):
         data['accuracy'] = self.accuracy
 
-    def update_json_file(self, fixtures: DataFrame):
+    def update_json_file(self, new_predictions, actual_scores):
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)
             predictions_json = data['predictions']  # type: dict[str, list]
-
+            
             # Update with new data...
-            new_predictions = self.predictions.values()
             self.insert_new_predictions(new_predictions, predictions_json)
-            actual_scores = self.get_actual_scores(fixtures)
             self.insert_actual_scores(actual_scores, predictions_json)
             # Sort predictions by date...
             self.sort_predictions(data, predictions_json)
@@ -509,5 +514,6 @@ class Predictor:
                home_advantages: HomeAdvantages):
         self.predictions = self.gen_score_predictions(form, upcoming, home_advantages)
         self.accuracy = self.measure_accuracy()
-        self.update_json_file(fixtures)
+        actual_scores = self.get_actual_scores(fixtures)
+        self.update_json_file(self.predictions.values(), actual_scores)
         self.print_accuracy()

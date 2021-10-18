@@ -87,14 +87,16 @@ class Fixtures(DF):
                 team_names = []
 
             # Home team row
-            matchday[(match["matchday"], 'Date')].append(datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"))
+            matchday[(match["matchday"], 'Date')].append(datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ"))
+            # matchday[(match["matchday"], 'Date')].append(datetime(match['utcDate'][:10]).strptime())
             matchday[(match["matchday"], 'HomeAway')].append('Home')
             matchday[(match["matchday"], 'Team')].append(match['awayTeam']['name'].replace('&', 'and'))
             matchday[(match["matchday"], 'Status')].append(match['status'])
             matchday[(match["matchday"], 'Score')].append(f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}")
             team_names.append(match['homeTeam']['name'].replace('&', 'and'))
             # Away team row
-            matchday[(match["matchday"], 'Date')].append(datetime.strptime(match['utcDate'][:10], "%Y-%m-%d"))
+            matchday[(match["matchday"], 'Date')].append(datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ"))
+            # matchday[(match["matchday"], 'Date')].append(match['utcDate'][:10])
             matchday[(match["matchday"], 'HomeAway')].append('Away')
             matchday[(match["matchday"], 'Team')].append(match['homeTeam']['name'].replace('&', 'and'))
             matchday[(match["matchday"], 'Status')].append(match['status'])
