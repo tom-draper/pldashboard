@@ -842,10 +842,12 @@ class Upcoming(DF):
 
     def append_prev_match(self, next_games: dict, home_team: str, away_team: str, 
                             date: str, result: tuple[str, str], match: dict):
+        readable_date = self.readable_date(date)
         # From the perspective from the home team
         # If this match's home team has their next game against this match's away team
         if next_games[home_team]['NextTeam'] == away_team:
             prev_match = {'Date': date,
+                          'ReadableDate': readable_date,
                             'HomeTeam': home_team,
                             'AwayTeam': away_team,
                             'HomeGoals': match['score']['fullTime']['homeTeam'],
@@ -855,15 +857,21 @@ class Upcoming(DF):
 
         if next_games[away_team]['NextTeam'] == home_team:
             prev_match = {'Date': date,
+                          'ReadableDate': readable_date,
                             'HomeTeam': home_team,
                             'AwayTeam': away_team,
                             'HomeGoals': match['score']['fullTime']['homeTeam'],
                             'AwayGoals': match['score']['fullTime']['awayTeam'],
                             'Result': result[1]}
             next_games[away_team]['PreviousMatches'].append(prev_match)
-
+    
+    def ord(self, n):
+        return str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))
+    
     def readable_date(self, date):
-        return datetime.strptime(date[:10], "%Y-%m-%d").date().strftime('%d %B %Y')
+        dt = datetime.strptime(date[:10], "%Y-%m-%d")
+        day = self.ord(dt.day)
+        return day + dt.date().strftime(' %B %Y')
 
     def convert_to_readable_dates(self, next_games: dict):
         for _, row in next_games.items():

@@ -311,15 +311,13 @@ class Predictor:
     def neutral_prev_matches(self, prev_matches):
         neutral_prev_matches = []
         for match in prev_matches:
-            neutral_match = match
-            # Remove result indicator for home team
-            neutral_match.pop('Result')
+            neutral_match = {}
             # Rename to match json format
-            neutral_match['date'] = neutral_match.pop('Date')
-            neutral_match['homeTeam'] = neutral_match.pop('HomeTeam')
-            neutral_match['awayTeam'] = neutral_match.pop('AwayTeam')
-            neutral_match['homeGoals'] = neutral_match.pop('HomeGoals')
-            neutral_match['awayGoals'] = neutral_match.pop('AwayGoals')
+            neutral_match['date'] = match['Date']
+            neutral_match['homeTeam'] = match['HomeTeam']
+            neutral_match['awayTeam'] = match['AwayTeam']
+            neutral_match['homeGoals'] = match['HomeGoals']
+            neutral_match['awayGoals'] = match['AwayGoals']
             neutral_prev_matches.append(neutral_match)
         
         return neutral_prev_matches

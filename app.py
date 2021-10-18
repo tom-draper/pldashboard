@@ -110,15 +110,15 @@ def get_season_stats(team_name: str) -> SeasonStats:
     return SeasonStats(csr, csr_position, gpg, gpg_position, cpg, cpg_position)
 
 def get_next_game(team_name: str) -> NextGame:
-    opp_team_name_full, home_away, prev_meetings = updater.data.upcoming.get_details(team_name)
+    opp_team_name_full, home_away, prev_matches = updater.data.upcoming.get_details(team_name)
     opp_team_name = opp_team_name_full[:-3]  # Remove 'FC' from end
     opp_team_name_hyphen = (opp_team_name.lower()).replace(' ', '-')  # Remove 'FC' from end
     names = TeamNames(opp_team_name_full, opp_team_name, opp_team_name_hyphen)
-    
+        
     opp_form_rating = updater.data.form.get_current_form_rating(opp_team_name_full)
     opp_logo_url = updater.logo_urls[opp_team_name_full]
     opp_team = OppTeam(names, opp_form_rating, opp_logo_url)
-    return NextGame(opp_team, home_away, prev_meetings)
+    return NextGame(opp_team, home_away, prev_matches)
 
 def get_prediction(team_name: str) -> Prediction:
     score_prediction = updater.predictor.get_next_game_prediction(team_name)
