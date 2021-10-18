@@ -36,7 +36,6 @@ class PredictionsAnalysis:
         # Compare whether comparison in goals scored by each team matches comparison in the average of their previous matches
         return util.identical_result(act_home_goals, act_away_goals, home_goals, away_goals)
 
-
     def if_predicted_by_prev_matches(self, predictions):
         total = 0
         count = 0
@@ -49,51 +48,30 @@ class PredictionsAnalysis:
                         total += 1
         return count / total
     
+    
+    
     def by_home_team(self, actual_scoreline):
         act_home_goals, act_away_goals = util.extract_int_score_from_scoreline(actual_scoreline)
         return act_home_goals > act_away_goals
-
-    def if_predicted_by_home_team(self, predictions):
-        total = 0
-        count = 0
-        for prediction in predictions.values():
-            for pred in prediction:
-                if pred['actual'] != None:
-                    if self.by_home_team(pred['actual']):
-                        count += 1
-                    total += 1
-        return count / total
 
     def by_away_team(self, actual_scoreline):
         act_home_goals, act_away_goals = util.extract_int_score_from_scoreline(actual_scoreline)
         return act_home_goals < act_away_goals
 
-    def if_predicted_by_away_team(self, predictions):
-        total = 0
-        count = 0
-        for prediction in predictions.values():
-            for pred in prediction:
-                if pred['actual'] != None:
-                    if self.by_away_team(pred['actual']):
-                        count += 1
-                    total += 1
-        return count / total
-
     def by_draw(self, actual_scoreline):
         act_home_goals, act_away_goals = util.extract_int_score_from_scoreline(actual_scoreline)
         return act_home_goals == act_away_goals
-
-    def if_predicted_by_draw(self, predictions):
+    
+    def if_predicted_by(self, predictions, by_function):
         total = 0
         count = 0
         for prediction in predictions.values():
             for pred in prediction:
                 if pred['actual'] != None:
-                    if self.by_draw(pred['actual']):
+                    if by_function(pred['actual']):
                         count += 1
                     total += 1
         return count / total
-
 
         
     def display_current_accuracy(self, data):
@@ -111,15 +89,15 @@ class PredictionsAnalysis:
 
     def display_if_predicted_by_home_team(self, predictions):
         print('If predicted results for home team')
-        print('     Results accuracy:', round(self.if_predicted_by_home_team(predictions), 4))
+        print('     Results accuracy:', round(self.if_predicted_by(predictions, self.by_home_team), 4))
         
     def display_if_predicted_by_away_team(self, predictions):
         print('If predicted results for away team')
-        print('     Results accuracy:', round(self.if_predicted_by_away_team(predictions), 4))
+        print('     Results accuracy:', round(self.if_predicted_by(predictions, self.by_away_team), 4))
         
     def display_if_predicted_by_draw(self, predictions):
         print('If predicted results to draw')
-        print('     Results accuracy:', round(self.if_predicted_by_draw(predictions), 4))
+        print('     Results accuracy:', round(self.if_predicted_by(predictions, self.by_draw), 4))
 
     
     def possible_predictions(self):
