@@ -42,19 +42,20 @@
                   {% endif %}
                   {% if pred['details'] != None %}
                     <div class="prediction-details" id="{{ pred['id'] }}">
-                      <div class="predicted-detail">
-                        {{ pred['details']['starting']['description'] }}
-                        {{ pred['details']['starting']['homeGoals'] }}
-                        {{ pred['details']['starting']['awayGoals'] }}
+                      <div class="prediction-detail">
+                        {{ pred['details']['starting']['description'] }}:
+                        {{ pred['details']['starting']['homeGoals'] }} - {{ pred['details']['starting']['awayGoals'] }}
                       </div>
-                      {% for i in range(pred['details']['adjustments'] | length) %}
-                        <div class="prediction-detail">
-                          {{ pred['details']['adjustments'][i]['operation'] }}
-                          {{ pred['details']['adjustments'][i]['homeGoals'] }}
-                          {{ pred['details']['adjustments'][i]['awayGoals'] }}
-                          {{ pred['details']['adjustments'][i]['homeAdvantage'] }}
-                        </div>
-                      {% endfor %}
+                      <div class="prediction-detail">
+                        {{ pred['details']['adjustments'][0]['description'] }}:
+                        {{ pred['details']['adjustments'][0]['homeGoals'] }} - {{ pred['details']['adjustments'][0]['awayGoals'] }}
+                        ({{ pred['details']['adjustments'][0]['homeFormRating'] }} vs {{ pred['details']['adjustments'][0]['awayFormRating'] }})
+                      </div>
+                      <div class="prediction-detail">
+                        {{ pred['details']['adjustments'][1]['description'] }}:
+                        {{ pred['details']['adjustments'][1]['homeGoals'] }} - {{ pred['details']['adjustments'][1]['awayGoals'] }}
+                        ({{ pred['details']['adjustments'][1]['homeAdvantage'] }})
+                      </div>
                       <div class="detailed-predicted-score">
                         {{ pred['details']['score']['homeGoals'] }} - {{ pred['details']['score']['awayGoals'] }}
                       </div>

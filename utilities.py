@@ -98,3 +98,23 @@ class Utilities:
     def extract_str_score(self, score: str) -> tuple[str, str]:
         home, _, away = score.split(' ')
         return home, away
+    
+    def extract_int_score_from_scoreline(self, score: str) -> tuple[int, int]:
+        _, home, _, away, _ = score.split(' ')
+        return int(home), int(away)
+    
+    def extract_str_score_from_scoreline(self, score: str) -> tuple[int, int]:
+        _, home, _, away, _ = score.split(' ')
+        return home, away
+    
+    def identical_fixtures(self, scoreline1: str, scoreline2: str) -> bool:
+        if scoreline1 != None and scoreline2 != None:
+            home_p, _, _, _, away_p = scoreline1.split(' ')
+            home_s, _, _, _, away_s = scoreline2.split(' ')
+            return (home_p == home_s) and (away_p == away_s)
+        return False
+
+    def identical_result(self, pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
+        return (pred_home_goals == pred_away_goals and act_home_goals == act_away_goals) or \
+            (pred_home_goals > pred_away_goals and act_home_goals > act_away_goals) or \
+            (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)

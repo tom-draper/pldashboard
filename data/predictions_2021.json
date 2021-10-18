@@ -477,14 +477,14 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
                             "homeGoals": 1.0,
                             "awayGoals": 1.197,
                             "homeFormRating": 46.6,
                             "awayFormRating": 66.3
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
                             "homeGoals": 1.0,
                             "awayGoals": 1.197,
                             "homeAdvantage": 0.0
@@ -508,14 +508,14 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
                             "homeGoals": 0.83,
                             "awayGoals": 1.62,
                             "homeFormRating": 39.0,
                             "awayFormRating": 46.8
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
                             "homeGoals": 0.8333,
                             "awayGoals": 1.5106,
                             "homeAdvantage": 0.0658
@@ -539,14 +539,14 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
                             "homeGoals": 0.0,
                             "awayGoals": 2.52,
                             "homeFormRating": 35.4,
                             "awayFormRating": 36.2
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
                             "homeGoals": 0.0,
                             "awayGoals": 2.7189,
                             "homeAdvantage": -0.0789
@@ -570,14 +570,14 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
                             "homeGoals": 0.75,
                             "awayGoals": 4.0,
                             "homeFormRating": 0.0,
                             "awayFormRating": 60.0
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
                             "homeGoals": 0.75,
                             "awayGoals": 3.6842,
                             "homeAdvantage": 0.0789
@@ -601,14 +601,14 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
                             "homeGoals": 0.677,
                             "awayGoals": 0.75,
                             "homeFormRating": 63.7,
                             "awayFormRating": 28.3
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
                             "homeGoals": 0.677,
                             "awayGoals": 0.6513,
                             "homeAdvantage": 0.1316
@@ -632,14 +632,14 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
                             "homeGoals": 6.496,
                             "awayGoals": 0.25,
                             "homeFormRating": 76.2,
                             "awayFormRating": 13.8
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
                             "homeGoals": 6.496,
                             "awayGoals": 0.2237,
                             "homeAdvantage": 0.1053
@@ -650,7 +650,6 @@
                         "awayGoals": 0.22
                     }
                 }
-                
             },
             {
                 "id": 76,
@@ -664,14 +663,14 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
                             "homeGoals": 0.0,
                             "awayGoals": 2.046,
                             "homeFormRating": 0.0,
                             "awayFormRating": 36.4
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
                             "homeGoals": 0.0,
                             "awayGoals": 1.8845,
                             "homeAdvantage": 0.0789
@@ -697,14 +696,14 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
                             "homeGoals": 1.17,
                             "awayGoals": 0.91,
                             "homeFormRating": 22.6,
                             "awayFormRating": 32.2
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
                             "homeGoals": 1.1667,
                             "awayGoals": 0.8172,
                             "homeAdvantage": 0.1053
@@ -728,14 +727,14 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
                             "homeGoals": 1.4775,
                             "awayGoals": 1.5,
                             "homeFormRating": 18.2,
                             "awayFormRating": 0.0
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
                             "homeGoals": 1.4775,
                             "awayGoals": 1.4605,
                             "homeAdvantage": 0.0263
@@ -761,22 +760,24 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
-                            "homeGoals": 1.6917,
+                            "description": "Adjusted by form",
+                            "operation": "1.6667 += 1.6667 * 0.015 * 1.5",
+                            "homeGoals": 1.7042,
                             "awayGoals": 1.5,
                             "homeFormRating": 57.3,
                             "awayFormRating": 55.8
                         },
                         {
-                            "operation": "Adjusted by home advantage",
-                            "homeGoals": 1.6917,
-                            "awayGoals": 1.2434,
+                            "description": "Adjusted by home advantage",
+                            "operation": "1.5 *= 1 - (0.1711 * 1.5)",
+                            "homeGoals": 1.7042,
+                            "awayGoals": 1.1151,
                             "homeAdvantage": 0.1711
                         }
                     ],
                     "score": {
-                        "homeGoals": 1.6917,
-                        "awayGoals": 1.2434
+                        "homeGoals": 1.7042,
+                        "awayGoals": 1.1151
                     }
                 }
             }
@@ -794,22 +795,24 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
-                            "homeGoals": 0.981,
+                            "description": "Adjusted by form",
+                            "operation": "0.75 += 0.75 * -0.308 * 1.5",
+                            "homeGoals": 1.0965,
                             "awayGoals": 1.75,
                             "homeFormRating": 57.3,
                             "awayFormRating": 26.5
                         },
                         {
-                            "operation": "Adjusted by home advantage",
-                            "homeGoals": 0.981,
-                            "awayGoals": 1.4507,
+                            "description": "Adjusted by home advantage",
+                            "operation": "1.75 *= 1 - (0.1711 * 1.5)",
+                            "homeGoals": 1.0965,
+                            "awayGoals": 1.301,
                             "homeAdvantage": 0.1711
                         }
                     ],
                     "score": {
-                        "homeGoals": 0.981,
-                        "awayGoals": 1.4507
+                        "homeGoals": 1.0965,
+                        "awayGoals": 1.301
                     }
                 }
             }
@@ -827,22 +830,24 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
+                            "operation": "1.0 += 1.0 * -0.061 * 1.5",
                             "homeGoals": 0.0,
-                            "awayGoals": 1.061,
+                            "awayGoals": 1.0915,
                             "homeFormRating": 23.2,
                             "awayFormRating": 29.3
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
+                            "operation": "1.0915 *= 1 - (0.0 * 1.5)",
                             "homeGoals": 0.0,
-                            "awayGoals": 1.061,
+                            "awayGoals": 1.0915,
                             "homeAdvantage": 0.0
                         }
                     ],
                     "score": {
                         "homeGoals": 0.0,
-                        "awayGoals": 1.061
+                        "awayGoals": 1.0915
                     }
                 }
             },
@@ -858,22 +863,24 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
+                            "operation": "1.25 += 1.25 * 0.085 * 1.5",
                             "homeGoals": 1.5,
-                            "awayGoals": 1.3562,
+                            "awayGoals": 1.4094,
                             "homeFormRating": 0.4,
                             "awayFormRating": 8.9
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
+                            "operation": "1.4094 *= 1 - (0.1053 * 1.5)",
                             "homeGoals": 1.5,
-                            "awayGoals": 1.2135,
+                            "awayGoals": 1.1868,
                             "homeAdvantage": 0.1053
                         }
                     ],
                     "score": {
                         "homeGoals": 1.5,
-                        "awayGoals": 1.2135
+                        "awayGoals": 1.1868
                     }
                 }
             },
@@ -889,28 +896,30 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
-                            "homeGoals": 1.225,
+                            "description": "Adjusted by form",
+                            "operation": "1.0 += 1.0 * 0.225 * 1.5",
+                            "homeGoals": 1.3375,
                             "awayGoals": 1.3333,
                             "homeFormRating": 30.0,
                             "awayFormRating": 7.5
                         },
                         {
-                            "operation": "Adjusted by home advantage",
-                            "homeGoals": 1.225,
-                            "awayGoals": 1.3684,
+                            "description": "Adjusted by home advantage",
+                            "operation": "1.3333 *= 1 - (-0.0263 * 1.5)",
+                            "homeGoals": 1.3375,
+                            "awayGoals": 1.386,
                             "homeAdvantage": -0.0263
                         }
                     ],
                     "score": {
-                        "homeGoals": 1.225,
-                        "awayGoals": 1.3684
+                        "homeGoals": 1.3375,
+                        "awayGoals": 1.386
                     }
                 }
             },
             {
                 "id": 86,
-                "prediction": "CHE 3 - 1 NOR",
+                "prediction": "CHE 4 - 1 NOR",
                 "actual": null,
                 "details": {
                     "starting": {
@@ -920,22 +929,24 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
-                            "homeGoals": 3.358,
+                            "description": "Adjusted by form",
+                            "operation": "2.0 += 2.0 * 0.679 * 1.5",
+                            "homeGoals": 4.037,
                             "awayGoals": 1.0,
                             "homeFormRating": 67.9,
                             "awayFormRating": 0.0
                         },
                         {
-                            "operation": "Adjusted by home advantage",
-                            "homeGoals": 3.358,
-                            "awayGoals": 0.9342,
+                            "description": "Adjusted by home advantage",
+                            "operation": "1.0 *= 1 - (0.0658 * 1.5)",
+                            "homeGoals": 4.037,
+                            "awayGoals": 0.9013,
                             "homeAdvantage": 0.0658
                         }
                     ],
                     "score": {
-                        "homeGoals": 3.358,
-                        "awayGoals": 0.9342
+                        "homeGoals": 4.037,
+                        "awayGoals": 0.9013
                     }
                 }
             },
@@ -951,22 +962,24 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
+                            "operation": "3.0 += 3.0 * -0.14 * 1.5",
                             "homeGoals": 0.6667,
-                            "awayGoals": 3.42,
+                            "awayGoals": 3.63,
                             "homeFormRating": 55.9,
                             "awayFormRating": 69.9
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
+                            "operation": "3.63 *= 1 - (0.0526 * 1.5)",
                             "homeGoals": 0.6667,
-                            "awayGoals": 3.24,
+                            "awayGoals": 3.3434,
                             "homeAdvantage": 0.0526
                         }
                     ],
                     "score": {
                         "homeGoals": 0.6667,
-                        "awayGoals": 3.24
+                        "awayGoals": 3.3434
                     }
                 }
             },
@@ -982,22 +995,24 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
-                            "homeGoals": 1.0387,
+                            "description": "Adjusted by form",
+                            "operation": "0.6667 += 0.6667 * -0.558 * 1.5",
+                            "homeGoals": 1.2247,
                             "awayGoals": 0.6667,
                             "homeFormRating": 55.8,
                             "awayFormRating": 0.0
                         },
                         {
-                            "operation": "Adjusted by home advantage",
-                            "homeGoals": 1.0387,
-                            "awayGoals": 0.693,
+                            "description": "Adjusted by home advantage",
+                            "operation": "0.6667 *= 1 - (-0.0395 * 1.5)",
+                            "homeGoals": 1.2247,
+                            "awayGoals": 0.7061,
                             "homeAdvantage": -0.0395
                         }
                     ],
                     "score": {
-                        "homeGoals": 1.0387,
-                        "awayGoals": 0.693
+                        "homeGoals": 1.2247,
+                        "awayGoals": 0.7061
                     }
                 }
             }
@@ -1015,28 +1030,30 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
+                            "operation": "1.0 += 1.0 * -0.092 * 1.5",
                             "homeGoals": 1.0,
-                            "awayGoals": 1.092,
+                            "awayGoals": 1.138,
                             "homeFormRating": 41.5,
                             "awayFormRating": 50.7
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
+                            "operation": "1.138 *= 1 - (0.0 * 1.5)",
                             "homeGoals": 1.0,
-                            "awayGoals": 1.092,
+                            "awayGoals": 1.138,
                             "homeAdvantage": 0.0
                         }
                     ],
                     "score": {
                         "homeGoals": 1.0,
-                        "awayGoals": 1.092
+                        "awayGoals": 1.138
                     }
                 }
             },
             {
                 "id": 81,
-                "prediction": "MUN 1 - 2 LIV",
+                "prediction": "MUN 1 - 3 LIV",
                 "actual": null,
                 "details": {
                     "starting": {
@@ -1046,22 +1063,24 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
+                            "description": "Adjusted by form",
+                            "operation": "1.6667 += 1.6667 * -0.5 * 1.5",
                             "homeGoals": 0.6667,
-                            "awayGoals": 2.5,
+                            "awayGoals": 2.9167,
                             "homeFormRating": 16.4,
                             "awayFormRating": 66.4
                         },
                         {
-                            "operation": "Adjusted by home advantage",
+                            "description": "Adjusted by home advantage",
+                            "operation": "2.9167 *= 1 - (0.0395 * 1.5)",
                             "homeGoals": 0.6667,
-                            "awayGoals": 2.4013,
+                            "awayGoals": 2.744,
                             "homeAdvantage": 0.0395
                         }
                     ],
                     "score": {
                         "homeGoals": 0.6667,
-                        "awayGoals": 2.4013
+                        "awayGoals": 2.744
                     }
                 }
             },
@@ -1077,22 +1096,24 @@
                     },
                     "adjustments": [
                         {
-                            "operation": "Adjusted by form",
-                            "homeGoals": 1.748,
+                            "description": "Adjusted by form",
+                            "operation": "1.3333 += 1.3333 * 0.311 * 1.5",
+                            "homeGoals": 1.9553,
                             "awayGoals": 1.6667,
                             "homeFormRating": 31.1,
                             "awayFormRating": 0.0
                         },
                         {
-                            "operation": "Adjusted by home advantage",
-                            "homeGoals": 1.748,
-                            "awayGoals": 1.557,
+                            "description": "Adjusted by home advantage",
+                            "operation": "1.6667 *= 1 - (0.0658 * 1.5)",
+                            "homeGoals": 1.9553,
+                            "awayGoals": 1.5022,
                             "homeAdvantage": 0.0658
                         }
                     ],
                     "score": {
-                        "homeGoals": 1.748,
-                        "awayGoals": 1.557
+                        "homeGoals": 1.9553,
+                        "awayGoals": 1.5022
                     }
                 }
             }

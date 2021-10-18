@@ -35,6 +35,9 @@ class Predictor:
         self.current_season = current_season
         self.predictions = {}  # type: dict[str, tuple[str, str, list[str]]]
         self.accuracy = None  # type: Accuracy
+        
+        self.form_diff_multiplier = 1.5
+        self.home_advantage_multiplier = 1.5
         # self.accuracy = None
         # self.result_accuracy = None
         # self.home_scored_avg_diff = None
@@ -58,23 +61,7 @@ class Predictor:
 
 
 
-    def identical_fixtures(self, scoreline1: str, scoreline2: str) -> bool:
-        if scoreline1 != None and scoreline2 != None:
-            home_p, _, _, _, away_p = scoreline1.split(' ')
-            home_s, _, _, _, away_s = scoreline2.split(' ')
-            return (home_p == home_s) and (away_p == away_s)
-        return False
 
-    def extract_scores(self, scoreline: str) -> tuple[int, int]:
-        if scoreline != None:
-            _, home_score, _, away_score, _ = scoreline.split(' ')
-            return int(home_score), int(away_score)
-        return None
-
-    def identical_result(self, pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
-        return (pred_home_goals == pred_away_goals and act_home_goals == act_away_goals) or \
-            (pred_home_goals > pred_away_goals and act_home_goals > act_away_goals) or \
-            (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)
 
 
 
@@ -106,8 +93,8 @@ class Predictor:
                         correct += 1
 
                     # Get the goals scored for predictions and actual
-                    pred_home_goals, pred_away_goals = self.extract_scores(predicted_score)
-                    act_home_goals, act_away_goals = self.extract_scores(actual_score)
+                    pred_home_goals, pred_away_goals = util.extract_int_score_from_scoreline(predicted_score)
+                    act_home_goals, act_away_goals = util.extract_int_score_from_scoreline(actual_score)
                     # Prediction and actual BOTH a draw or home win or away win
                     if self.identical_result(pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
                         result_correct += 1
@@ -148,8 +135,7 @@ class Predictor:
     def format_scoreline_str_from_str(self, team_name: str, opp_team_name: str, 
                                       score: str, home_away: str) -> str:
         team_name_initials = util.convert_team_name_or_initials(team_name)
-        opp_team_name_initials = util.convert_team_name_or_initials(
-            opp_team_name)
+        opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
 
         if home_away == 'Home':
             scoreline = f'{team_name_initials} {score} {opp_team_name_initials}'
@@ -268,11 +254,13 @@ class Predictor:
         form_diff = form_rating - opp_form_rating
 
         if form_diff > 0:
-            # This team in better form
-            pred_scored += pred_scored * (form_diff/100)
+            # This team in better form -> increase predicted scored
+            operation = f'{round(pred_scored, 4)} += {round(pred_scored, 4)} * {round((form_diff/100), 4)} * {self.form_diff_multiplier}'
+            pred_scored += pred_scored * (form_diff/100) * self.form_diff_multiplier
         else:
-            # Other team in better form
-            pred_conceded += pred_conceded * (abs(form_diff)/100)
+            # Opposition team in better form -> increase predicted coneded
+            operation = f'{round(pred_conceded, 4)} += {round(pred_conceded, 4)} * {round((form_diff/100), 4)} * {self.form_diff_multiplier}'
+            pred_conceded += pred_conceded * abs(form_diff/100) * self.form_diff_multiplier
         
         if home_away == "Home":
             home_goals = pred_scored
@@ -285,10 +273,11 @@ class Predictor:
             home_form_rating = opp_form_rating
             away_form_rating = form_rating
             
-        detail = {'operation': 'Adjusted by form', 
-                  'homeGoals': round(home_goals, 4), 
-                  'awayGoals': round(away_goals, 4), 
-                  'homeFormRating': round(home_form_rating, 4), 
+        detail = {'description': 'Adjusted by form',
+                  'operation': operation,
+                  'homeGoals': round(home_goals, 4),
+                  'awayGoals': round(away_goals, 4),
+                  'homeFormRating': round(home_form_rating, 4),
                   'awayFormRating': round(away_form_rating, 4)}
 
         return pred_scored, pred_conceded, detail
@@ -298,32 +287,35 @@ class Predictor:
                                             pred_conceded: float = 0) -> tuple[float, float]:
         if home_away == "Home":
             # Decrease conceded (if team has a positive home advantage)
-            pred_conceded *= (1 - home_advantage)
+            operation = f'{round(pred_conceded, 4)} *= 1 - ({round(home_advantage, 4)} * {self.home_advantage_multiplier})'
+            pred_conceded *= (1 - (home_advantage * self.home_advantage_multiplier))
             home_goals = pred_scored
             away_goals = pred_conceded
             advantage = home_advantage
         else:
             # Decrease scored (if opposition team has a positive home advantage)
-            pred_scored *= (1 - opp_home_advantage)
+            operation = f'{round(pred_scored, 4)} *= 1 - ({round(opp_home_advantage, 4)} * {self.home_advantage_multiplier})'
+            pred_scored *= (1 - (opp_home_advantage * self.home_advantage_multiplier))
             home_goals = pred_conceded
             away_goals = pred_scored
             advantage = opp_home_advantage
 
-        detail = {'operation': 'Adjusted by home advantage', 
+        detail = {'description': 'Adjusted by home advantage',
+                  'operation': operation,
                   'homeGoals': round(home_goals, 4), 
                   'awayGoals': round(away_goals, 4), 
                   'homeAdvantage': round(advantage, 4)}
         
         return pred_scored, pred_conceded, detail
 
-    def starting_score(self, team_name, prev_meetings, home_away):
+    def starting_score(self, team_name: str, prev_meetings: list[dict[str]], home_away: str):
         if prev_meetings:
             # Begin with average scored and conceded in previous meetings
             pred_scored, pred_conceded = self.avg_previous_result(team_name, prev_meetings)
-            type = 'Previous match average'
+            description = 'Previous match average'
         else:
             pred_scored, pred_conceded = 1.0, 1.0
-            type = 'Default'
+            description = 'Default'
         
         if home_away == "Home":
             home_goals = pred_scored
@@ -332,7 +324,7 @@ class Predictor:
             home_goals = pred_conceded
             away_goals = pred_scored
             
-        detail = {'description': type, 
+        detail = {'description': description, 
                   'homeGoals': round(home_goals, 4), 
                   'awayGoals': round(away_goals, 4)}
         
@@ -353,11 +345,9 @@ class Predictor:
                               opp_home_advantage: float, home_away: str, 
                               form_rating: float, opp_form_rating: float, 
                               prev_meetings: list[dict[str, str]]) -> tuple[int, int]:
-        details = {'starting': {},
-                   'adjustments': [],
-                   'score': {}}
-        pred_scored, pred_conceded, detail = self.starting_score(
-            team_name, prev_meetings, home_away)
+        details = {'starting': {}, 'adjustments': [], 'score': {}}
+        
+        pred_scored, pred_conceded, detail = self.starting_score(team_name, prev_meetings, home_away)
         details['starting'] = detail
 
         # Modify based on difference in current form between two teams
@@ -380,7 +370,8 @@ class Predictor:
                              conceded: int, home_away: str) -> str:
         team_name_initials = util.convert_team_name_or_initials(team_name)
         opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
-        # Construct prediction string to display
+        
+        # Construct prediction string for display...
         if home_away == "Home":
             scoreline = f'{team_name_initials} {scored} - {conceded} {opp_team_name_initials}'
         else:
@@ -413,13 +404,9 @@ class Predictor:
                 home_away = next_games.df['HomeAway'].loc[team_name]  # type: dict[str, str]
                 prev_meetings = next_games.df.loc[team_name]['PreviousMeetings']  # type: list[tuple]
 
-                pred_scored, pred_conceded, details = self.calc_score_prediction(team_name, 
-                                                                                 home_advantage,
-                                                                                 opp_home_advantage, 
-                                                                                 home_away, 
-                                                                                 form_rating, 
-                                                                                 opp_form_rating, 
-                                                                                 prev_meetings)
+                pred_scored, pred_conceded, details = self.calc_score_prediction(
+                    team_name, home_advantage,opp_home_advantage, home_away, 
+                    form_rating, opp_form_rating, prev_meetings)
 
                 scoreline = self.format_scoreline_str(team_name, opp_team_name, 
                                                       pred_scored, pred_conceded, 
