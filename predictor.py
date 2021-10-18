@@ -96,7 +96,7 @@ class Predictor:
                     pred_home_goals, pred_away_goals = util.extract_int_score_from_scoreline(predicted_score)
                     act_home_goals, act_away_goals = util.extract_int_score_from_scoreline(actual_score)
                     # Prediction and actual BOTH a draw or home win or away win
-                    if self.identical_result(pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
+                    if util.identical_result(pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
                         result_correct += 1
 
                     n_pred_home += pred_home_goals
@@ -182,7 +182,7 @@ class Predictor:
                 predicted_score = prediction['prediction']
                 actual_score = prediction['actual']
                 if predicted_score != None:
-                    if self.identical_fixtures(predicted_score, new_prediction):
+                    if util.identical_fixtures(predicted_score, new_prediction):
                         # If fixture match perfectly but predicted scoreline different (outdated)
                         if (predicted_score != new_prediction) and (actual_score == None):
                             already_made = True
@@ -195,7 +195,7 @@ class Predictor:
         # Update existing prediction object with new score prediction...
         for prediction in predictions[date]:
             predicted_score = prediction['prediction']
-            if self.identical_fixtures(predicted_score, new_prediction):
+            if util.identical_fixtures(predicted_score, new_prediction):
                 # If fixture match perfectly predicted scoreline different (outdated)
                 if (predicted_score != new_prediction) and (prediction['actual'] == None):
                     print("Updating existing prediction:", predicted_score, '-->', new_prediction)
@@ -227,11 +227,11 @@ class Predictor:
         
         return id_used
 
-    def avg_previous_result(self, team_name: str, prev_meetings: 
+    def avg_previous_result(self, team_name: str, prev_matches: 
                             list[dict[str, str]]) -> tuple[float, float]:
         goals_scored = 0
         goals_conceded = 0
-        for prev_match in prev_meetings:
+        for prev_match in prev_matches:
             if team_name == prev_match['HomeTeam']:
                 # Played at home
                 goals_scored += prev_match['HomeGoals']
@@ -242,8 +242,8 @@ class Predictor:
                 goals_conceded += prev_match['HomeGoals']
 
         # Average scored and conceded
-        avg_scored = goals_scored / len(prev_meetings)
-        avg_conceded = goals_conceded / len(prev_meetings)
+        avg_scored = goals_scored / len(prev_matches)
+        avg_conceded = goals_conceded / len(prev_matches)
 
         return avg_scored, avg_conceded
 
@@ -308,10 +308,26 @@ class Predictor:
         
         return pred_scored, pred_conceded, detail
 
-    def starting_score(self, team_name: str, prev_meetings: list[dict[str]], home_away: str):
-        if prev_meetings:
+    def neutral_prev_matches(self, prev_matches):
+        neutral_prev_matches = []
+        for match in prev_matches:
+            neutral_match = match
+            # Remove result indicator for home team
+            neutral_match.pop('Result')
+            # Rename to match json format
+            neutral_match['date'] = neutral_match.pop('Date')
+            neutral_match['homeTeam'] = neutral_match.pop('HomeTeam')
+            neutral_match['awayTeam'] = neutral_match.pop('AwayTeam')
+            neutral_match['homeGoals'] = neutral_match.pop('HomeGoals')
+            neutral_match['awayGoals'] = neutral_match.pop('AwayGoals')
+            neutral_prev_matches.append(neutral_match)
+        
+        return neutral_prev_matches
+
+    def starting_score(self, team_name: str, prev_matches: list[dict[str]], home_away: str):
+        if prev_matches:
             # Begin with average scored and conceded in previous meetings
-            pred_scored, pred_conceded = self.avg_previous_result(team_name, prev_meetings)
+            pred_scored, pred_conceded = self.avg_previous_result(team_name, prev_matches)
             description = 'Previous match average'
         else:
             pred_scored, pred_conceded = 1.0, 1.0
@@ -325,6 +341,7 @@ class Predictor:
             away_goals = pred_scored
             
         detail = {'description': description, 
+                  'previousMatches': self.neutral_prev_matches(prev_matches),
                   'homeGoals': round(home_goals, 4), 
                   'awayGoals': round(away_goals, 4)}
         
@@ -344,10 +361,10 @@ class Predictor:
     def calc_score_prediction(self, team_name: str, home_advantage: float, 
                               opp_home_advantage: float, home_away: str, 
                               form_rating: float, opp_form_rating: float, 
-                              prev_meetings: list[dict[str, str]]) -> tuple[int, int]:
+                              prev_matches: list[dict[str, str]]) -> tuple[int, int]:
         details = {'starting': {}, 'adjustments': [], 'score': {}}
         
-        pred_scored, pred_conceded, detail = self.starting_score(team_name, prev_meetings, home_away)
+        pred_scored, pred_conceded, detail = self.starting_score(team_name, prev_matches, home_away)
         details['starting'] = detail
 
         # Modify based on difference in current form between two teams
@@ -402,11 +419,11 @@ class Predictor:
                 home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]
                 opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]
                 home_away = next_games.df['HomeAway'].loc[team_name]  # type: dict[str, str]
-                prev_meetings = next_games.df.loc[team_name]['PreviousMeetings']  # type: list[tuple]
+                prev_matches = next_games.df.loc[team_name]['PreviousMatches']  # type: list[tuple]
 
                 pred_scored, pred_conceded, details = self.calc_score_prediction(
                     team_name, home_advantage,opp_home_advantage, home_away, 
-                    form_rating, opp_form_rating, prev_meetings)
+                    form_rating, opp_form_rating, prev_matches)
 
                 scoreline = self.format_scoreline_str(team_name, opp_team_name, 
                                                       pred_scored, pred_conceded, 
@@ -449,7 +466,7 @@ class Predictor:
             for prediction in predictions[date]:
                 predicted_score = prediction['prediction']
                 # If the actual scoreline matches this prediction and no actual score has been filled
-                if self.identical_fixtures(predicted_score, actual_score) and prediction['actual'] == None:
+                if util.identical_fixtures(predicted_score, actual_score) and prediction['actual'] == None:
                     # Update this prediction with its actual score
                     prediction['actual'] = actual_score
                     print("Adding actual score:", actual_score)

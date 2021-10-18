@@ -794,8 +794,8 @@ class Upcoming(DF):
     def get_opposition(self, team_name: str) -> str:
         return self.df['NextTeam'].loc[team_name]
 
-    def get_previous_meetings(self, team_name: str) -> list:
-        return self.df.loc[team_name]['PreviousMeetings']
+    def get_previous_matches(self, team_name: str) -> list:
+        return self.df.loc[team_name]['PreviousMatches']
 
     def get_home_away(self, team_name: str) -> str:
         return self.df['HomeAway'].loc[team_name]
@@ -803,14 +803,14 @@ class Upcoming(DF):
     def get_details(self, team_name: str) -> tuple[str, str, list]:
         opp_team_name = ''
         home_away = ''
-        prev_meetings = []
+        prev_matches = []
         if not self.df.empty:
             # If season not finished
             opp_team_name = self.get_opposition(team_name)
             home_away = self.get_home_away(team_name)
-            prev_meetings = self.get_previous_meetings(team_name)
+            prev_matches = self.get_previous_matches(team_name)
 
-        return opp_team_name, home_away, prev_meetings
+        return opp_team_name, home_away, prev_matches
 
     def get_next_game(self, team_name: str, fixtures: Fixtures) -> tuple[Optional[str], 
                                                                          Optional[str], 
@@ -840,41 +840,41 @@ class Upcoming(DF):
 
         return result
 
-    def append_prev_meeting(self, next_games: dict, home_team: str, away_team: str, 
+    def append_prev_match(self, next_games: dict, home_team: str, away_team: str, 
                             date: str, result: tuple[str, str], match: dict):
         # From the perspective from the home team
         # If this match's home team has their next game against this match's away team
         if next_games[home_team]['NextTeam'] == away_team:
-            prev_meeting = {'Date': date,
+            prev_match = {'Date': date,
                             'HomeTeam': home_team,
                             'AwayTeam': away_team,
                             'HomeGoals': match['score']['fullTime']['homeTeam'],
                             'AwayGoals': match['score']['fullTime']['awayTeam'],
                             'Result': result[0]}
-            next_games[home_team]['PreviousMeetings'].append(prev_meeting)
+            next_games[home_team]['PreviousMatches'].append(prev_match)
 
         if next_games[away_team]['NextTeam'] == home_team:
-            prev_meeting = {'Date': date,
+            prev_match = {'Date': date,
                             'HomeTeam': home_team,
                             'AwayTeam': away_team,
                             'HomeGoals': match['score']['fullTime']['homeTeam'],
                             'AwayGoals': match['score']['fullTime']['awayTeam'],
                             'Result': result[1]}
-            next_games[away_team]['PreviousMeetings'].append(prev_meeting)
+            next_games[away_team]['PreviousMatches'].append(prev_match)
 
     def readable_date(self, date):
         return datetime.strptime(date[:10], "%Y-%m-%d").date().strftime('%d %B %Y')
 
     def convert_to_readable_dates(self, next_games: dict):
         for _, row in next_games.items():
-            for i, prev_meeting in enumerate(row['PreviousMeetings']):
-                row['PreviousMeetings'][i]['Date'] = self.readable_date(prev_meeting['Date'])
+            for i, prev_match in enumerate(row['PreviousMatches']):
+                row['PreviousMatches'][i]['Date'] = self.readable_date(prev_match['Date'])
 
-    def sort_prev_meetings_by_date(self, next_games: dict):
+    def sort_prev_matches_by_date(self, next_games: dict):
         for _, row in next_games.items():
-            row['PreviousMeetings'] = sorted(row['PreviousMeetings'], key=lambda x: x['Date'], reverse=True)
+            row['PreviousMatches'] = sorted(row['PreviousMatches'], key=lambda x: x['Date'], reverse=True)
 
-    def append_season_prev_meetings(self, next_games: dict, json_data: dict, 
+    def append_season_prev_matches(self, next_games: dict, json_data: dict, 
                                     season: int, team_names: list[str]):
         data = json_data['fixtures'][season]
 
@@ -887,7 +887,7 @@ class Upcoming(DF):
 
                 if home_team in team_names and away_team in team_names:
                     result = self.game_result_tuple(match)
-                    self.append_prev_meeting(next_games, home_team, away_team, match['utcDate'], result, match)
+                    self.append_prev_match(next_games, home_team, away_team, match['utcDate'], result, match)
 
     @timebudget
     def update(self, json_data: dict, fixtures: DataFrame, team_names: list[str], 
@@ -903,7 +903,7 @@ class Upcoming(DF):
             NextGame: name of the opposition team in a team's next game
             HomeAway: whether the team is playing the next match at home or away, 
                 either 'Home' or 'Away'
-            PreviousMeetings: list of (String Date, Home Team, Away Team, Home Score, 
+            PreviousMatches: list of (String Date, Home Team, Away Team, Home Score, 
                 Away Score, Winning Team) tuples of each previous game between the
                 two teams
         
@@ -930,14 +930,14 @@ class Upcoming(DF):
             d[team_name] = {'Date': date, 
                             'NextTeam': next_team,  
                             'HomeAway': home_away,
-                            'PreviousMeetings': []}
+                            'PreviousMatches': []}
 
         for i in range(n_seasons):
-            self.append_season_prev_meetings(d, json_data, season - i, team_names)
+            self.append_season_prev_matches(d, json_data, season - i, team_names)
 
         # Format previous meeting dates as long, readable str
-        self.sort_prev_meetings_by_date(d)
-        self.convert_to_readable_dates(d)
+        self.sort_prev_matches_by_date(d)
+        # self.convert_to_readable_dates(d)
 
         upcoming = pd.DataFrame.from_dict(d, orient='index')
         upcoming.index.name = 'Team'

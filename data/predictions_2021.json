@@ -755,6 +755,50 @@
                 "details": {
                     "starting": {
                         "description": "Previous match average",
+                        "previousMatches": [
+                            {
+                                "date": "2021-05-19T18:00:00Z",
+                                "homeTeam": "Crystal Palace FC",
+                                "awayTeam": "Arsenal FC",
+                                "homeGoals": 1,
+                                "awayGoals": 3
+                            },
+                            {
+                                "date": "2021-01-14T20:00:00Z",
+                                "homeTeam": "Arsenal FC",
+                                "awayTeam": "Crystal Palace FC",
+                                "homeGoals": 0,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2020-01-11T12:30:00Z",
+                                "homeTeam": "Crystal Palace FC",
+                                "awayTeam": "Arsenal FC",
+                                "homeGoals": 1,
+                                "awayGoals": 1
+                            },
+                            {
+                                "date": "2019-10-27T16:30:00Z",
+                                "homeTeam": "Arsenal FC",
+                                "awayTeam": "Crystal Palace FC",
+                                "homeGoals": 2,
+                                "awayGoals": 2
+                            },
+                            {
+                                "date": "2019-04-21T15:00:00Z",
+                                "homeTeam": "Arsenal FC",
+                                "awayTeam": "Crystal Palace FC",
+                                "homeGoals": 2,
+                                "awayGoals": 3
+                            },
+                            {
+                                "date": "2018-10-28T13:30:00Z",
+                                "homeTeam": "Crystal Palace FC",
+                                "awayTeam": "Arsenal FC",
+                                "homeGoals": 2,
+                                "awayGoals": 2
+                            }
+                        ],
                         "homeGoals": 1.6667,
                         "awayGoals": 1.5
                     },
@@ -790,6 +834,36 @@
                 "details": {
                     "starting": {
                         "description": "Previous match average",
+                        "previousMatches": [
+                            {
+                                "date": "2021-02-06T12:30:00Z",
+                                "homeTeam": "Aston Villa FC",
+                                "awayTeam": "Arsenal FC",
+                                "homeGoals": 1,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2020-11-08T19:15:00Z",
+                                "homeTeam": "Arsenal FC",
+                                "awayTeam": "Aston Villa FC",
+                                "homeGoals": 0,
+                                "awayGoals": 3
+                            },
+                            {
+                                "date": "2020-07-21T19:15:00Z",
+                                "homeTeam": "Aston Villa FC",
+                                "awayTeam": "Arsenal FC",
+                                "homeGoals": 1,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2019-09-22T15:30:00Z",
+                                "homeTeam": "Arsenal FC",
+                                "awayTeam": "Aston Villa FC",
+                                "homeGoals": 3,
+                                "awayGoals": 2
+                            }
+                        ],
                         "homeGoals": 0.75,
                         "awayGoals": 1.75
                     },
@@ -825,6 +899,22 @@
                 "details": {
                     "starting": {
                         "description": "Previous match average",
+                        "previousMatches": [
+                            {
+                                "date": "2021-02-19T20:00:00Z",
+                                "homeTeam": "Wolverhampton Wanderers FC",
+                                "awayTeam": "Leeds United FC",
+                                "homeGoals": 1,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2020-10-19T19:00:00Z",
+                                "homeTeam": "Leeds United FC",
+                                "awayTeam": "Wolverhampton Wanderers FC",
+                                "homeGoals": 0,
+                                "awayGoals": 1
+                            }
+                        ],
                         "homeGoals": 0.0,
                         "awayGoals": 1.0
                     },
@@ -858,6 +948,36 @@
                 "details": {
                     "starting": {
                         "description": "Previous match average",
+                        "previousMatches": [
+                            {
+                                "date": "2020-02-01T15:00:00Z",
+                                "homeTeam": "Watford FC",
+                                "awayTeam": "Everton FC",
+                                "homeGoals": 2,
+                                "awayGoals": 3
+                            },
+                            {
+                                "date": "2019-08-17T14:00:00Z",
+                                "homeTeam": "Everton FC",
+                                "awayTeam": "Watford FC",
+                                "homeGoals": 1,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2019-02-09T15:00:00Z",
+                                "homeTeam": "Watford FC",
+                                "awayTeam": "Everton FC",
+                                "homeGoals": 1,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2018-12-10T20:00:00Z",
+                                "homeTeam": "Everton FC",
+                                "awayTeam": "Watford FC",
+                                "homeGoals": 2,
+                                "awayGoals": 2
+                            }
+                        ],
                         "homeGoals": 1.5,
                         "awayGoals": 1.25
                     },
@@ -891,6 +1011,50 @@
                 "details": {
                     "starting": {
                         "description": "Previous match average",
+                        "previousMatches": [
+                            {
+                                "date": "2021-04-04T11:00:00Z",
+                                "homeTeam": "Southampton FC",
+                                "awayTeam": "Burnley FC",
+                                "homeGoals": 3,
+                                "awayGoals": 2
+                            },
+                            {
+                                "date": "2020-09-26T19:00:00Z",
+                                "homeTeam": "Burnley FC",
+                                "awayTeam": "Southampton FC",
+                                "homeGoals": 0,
+                                "awayGoals": 1
+                            },
+                            {
+                                "date": "2020-02-15T12:30:00Z",
+                                "homeTeam": "Southampton FC",
+                                "awayTeam": "Burnley FC",
+                                "homeGoals": 1,
+                                "awayGoals": 2
+                            },
+                            {
+                                "date": "2019-08-10T14:00:00Z",
+                                "homeTeam": "Burnley FC",
+                                "awayTeam": "Southampton FC",
+                                "homeGoals": 3,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2019-02-02T15:00:00Z",
+                                "homeTeam": "Burnley FC",
+                                "awayTeam": "Southampton FC",
+                                "homeGoals": 1,
+                                "awayGoals": 1
+                            },
+                            {
+                                "date": "2018-08-12T12:30:00Z",
+                                "homeTeam": "Southampton FC",
+                                "awayTeam": "Burnley FC",
+                                "homeGoals": 0,
+                                "awayGoals": 0
+                            }
+                        ],
                         "homeGoals": 1.0,
                         "awayGoals": 1.3333
                     },
@@ -924,6 +1088,22 @@
                 "details": {
                     "starting": {
                         "description": "Previous match average",
+                        "previousMatches": [
+                            {
+                                "date": "2020-07-14T19:15:00Z",
+                                "homeTeam": "Chelsea FC",
+                                "awayTeam": "Norwich City FC",
+                                "homeGoals": 1,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2019-08-24T11:30:00Z",
+                                "homeTeam": "Norwich City FC",
+                                "awayTeam": "Chelsea FC",
+                                "homeGoals": 2,
+                                "awayGoals": 3
+                            }
+                        ],
                         "homeGoals": 2.0,
                         "awayGoals": 1.0
                     },
@@ -957,6 +1137,50 @@
                 "details": {
                     "starting": {
                         "description": "Previous match average",
+                        "previousMatches": [
+                            {
+                                "date": "2021-05-18T18:00:00Z",
+                                "homeTeam": "Brighton and Hove Albion FC",
+                                "awayTeam": "Manchester City FC",
+                                "homeGoals": 3,
+                                "awayGoals": 2
+                            },
+                            {
+                                "date": "2021-01-13T18:00:00Z",
+                                "homeTeam": "Manchester City FC",
+                                "awayTeam": "Brighton and Hove Albion FC",
+                                "homeGoals": 1,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2020-07-11T19:00:00Z",
+                                "homeTeam": "Brighton and Hove Albion FC",
+                                "awayTeam": "Manchester City FC",
+                                "homeGoals": 0,
+                                "awayGoals": 5
+                            },
+                            {
+                                "date": "2019-08-31T14:00:00Z",
+                                "homeTeam": "Manchester City FC",
+                                "awayTeam": "Brighton and Hove Albion FC",
+                                "homeGoals": 4,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2019-05-12T14:00:00Z",
+                                "homeTeam": "Brighton and Hove Albion FC",
+                                "awayTeam": "Manchester City FC",
+                                "homeGoals": 1,
+                                "awayGoals": 4
+                            },
+                            {
+                                "date": "2018-09-29T14:00:00Z",
+                                "homeTeam": "Manchester City FC",
+                                "awayTeam": "Brighton and Hove Albion FC",
+                                "homeGoals": 2,
+                                "awayGoals": 0
+                            }
+                        ],
                         "homeGoals": 0.6667,
                         "awayGoals": 3.0
                     },
@@ -990,6 +1214,50 @@
                 "details": {
                     "starting": {
                         "description": "Previous match average",
+                        "previousMatches": [
+                            {
+                                "date": "2021-02-02T20:15:00Z",
+                                "homeTeam": "Newcastle United FC",
+                                "awayTeam": "Crystal Palace FC",
+                                "homeGoals": 1,
+                                "awayGoals": 2
+                            },
+                            {
+                                "date": "2020-11-27T20:00:00Z",
+                                "homeTeam": "Crystal Palace FC",
+                                "awayTeam": "Newcastle United FC",
+                                "homeGoals": 0,
+                                "awayGoals": 2
+                            },
+                            {
+                                "date": "2020-02-22T15:00:00Z",
+                                "homeTeam": "Crystal Palace FC",
+                                "awayTeam": "Newcastle United FC",
+                                "homeGoals": 1,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2019-12-21T15:00:00Z",
+                                "homeTeam": "Newcastle United FC",
+                                "awayTeam": "Crystal Palace FC",
+                                "homeGoals": 1,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2019-04-06T14:00:00Z",
+                                "homeTeam": "Newcastle United FC",
+                                "awayTeam": "Crystal Palace FC",
+                                "homeGoals": 0,
+                                "awayGoals": 1
+                            },
+                            {
+                                "date": "2018-09-22T14:00:00Z",
+                                "homeTeam": "Crystal Palace FC",
+                                "awayTeam": "Newcastle United FC",
+                                "homeGoals": 0,
+                                "awayGoals": 0
+                            }
+                        ],
                         "homeGoals": 0.6667,
                         "awayGoals": 0.6667
                     },
@@ -1025,6 +1293,7 @@
                 "details": {
                     "starting": {
                         "description": "Default",
+                        "previousMatches": [],
                         "homeGoals": 1.0,
                         "awayGoals": 1.0
                     },
@@ -1058,6 +1327,50 @@
                 "details": {
                     "starting": {
                         "description": "Previous match average",
+                        "previousMatches": [
+                            {
+                                "date": "2021-05-13T19:15:00Z",
+                                "homeTeam": "Manchester United FC",
+                                "awayTeam": "Liverpool FC",
+                                "homeGoals": 2,
+                                "awayGoals": 4
+                            },
+                            {
+                                "date": "2021-01-17T16:30:00Z",
+                                "homeTeam": "Liverpool FC",
+                                "awayTeam": "Manchester United FC",
+                                "homeGoals": 0,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2020-01-19T16:30:00Z",
+                                "homeTeam": "Liverpool FC",
+                                "awayTeam": "Manchester United FC",
+                                "homeGoals": 2,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2019-10-20T15:30:00Z",
+                                "homeTeam": "Manchester United FC",
+                                "awayTeam": "Liverpool FC",
+                                "homeGoals": 1,
+                                "awayGoals": 1
+                            },
+                            {
+                                "date": "2019-02-24T14:05:00Z",
+                                "homeTeam": "Manchester United FC",
+                                "awayTeam": "Liverpool FC",
+                                "homeGoals": 0,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2018-12-16T16:00:00Z",
+                                "homeTeam": "Liverpool FC",
+                                "awayTeam": "Manchester United FC",
+                                "homeGoals": 3,
+                                "awayGoals": 1
+                            }
+                        ],
                         "homeGoals": 0.6667,
                         "awayGoals": 1.6667
                     },
@@ -1091,6 +1404,50 @@
                 "details": {
                     "starting": {
                         "description": "Previous match average",
+                        "previousMatches": [
+                            {
+                                "date": "2021-02-21T12:00:00Z",
+                                "homeTeam": "West Ham United FC",
+                                "awayTeam": "Tottenham Hotspur FC",
+                                "homeGoals": 2,
+                                "awayGoals": 1
+                            },
+                            {
+                                "date": "2020-10-18T15:30:00Z",
+                                "homeTeam": "Tottenham Hotspur FC",
+                                "awayTeam": "West Ham United FC",
+                                "homeGoals": 3,
+                                "awayGoals": 3
+                            },
+                            {
+                                "date": "2020-06-23T19:15:00Z",
+                                "homeTeam": "Tottenham Hotspur FC",
+                                "awayTeam": "West Ham United FC",
+                                "homeGoals": 2,
+                                "awayGoals": 0
+                            },
+                            {
+                                "date": "2019-11-23T12:30:00Z",
+                                "homeTeam": "West Ham United FC",
+                                "awayTeam": "Tottenham Hotspur FC",
+                                "homeGoals": 2,
+                                "awayGoals": 3
+                            },
+                            {
+                                "date": "2019-04-27T11:30:00Z",
+                                "homeTeam": "Tottenham Hotspur FC",
+                                "awayTeam": "West Ham United FC",
+                                "homeGoals": 0,
+                                "awayGoals": 1
+                            },
+                            {
+                                "date": "2018-10-20T14:00:00Z",
+                                "homeTeam": "West Ham United FC",
+                                "awayTeam": "Tottenham Hotspur FC",
+                                "homeGoals": 0,
+                                "awayGoals": 1
+                            }
+                        ],
                         "homeGoals": 1.3333,
                         "awayGoals": 1.6667
                     },
