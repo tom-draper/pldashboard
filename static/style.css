@@ -2,9 +2,9 @@
 
 :root {
   --border-radius: 4px;
-  --ssp1-offset: 0px;
-  --ssp2-offset: 0px;
-  --ssp3-offset: 0px;
+  --ssp1-offset: 0;
+  --ssp2-offset: 0;
+  --ssp3-offset: 0;
 
   /* Club colours */
   --sheffield-united:rgb(238, 39, 55);
@@ -266,7 +266,7 @@ img {
 
 .row-graph {
   width: 100%;
-  margin: 0px 20px;
+  margin: 0 20px;
 }
 
 .full-row-graph {
@@ -308,7 +308,7 @@ img {
   width: 20%;
   height: 0;
   padding-bottom: 20%;
-  margin: 0px 5px;
+  margin: 0 5px;
 
   background-repeat: no-repeat;
   background-size: contain;
@@ -316,7 +316,7 @@ img {
 .icon-name {
   position: relative;
   width: 20%;
-  margin: 0px 5px;
+  margin: 0 5px;
 }
 .pos-4 {  /* Most recent game */
   opacity: 1;
@@ -417,17 +417,17 @@ img {
   margin: auto 0;
 }
 .next-game-prediction {
-  margin: 0px 20px 0px 0px;
+  margin: 0 20px 0 0;
   border-radius: var(--border-radius);
 }
 .next-game-values {
   display: flex;
-  margin: 0.5% 5% 0.5% 0px;
+  margin: 0.5% 5% 0.5% 0;
 }
 .past-result {
   font-size: 17px;
   display: flex;
-  margin: 0px 5% 2px 5%;
+  margin: 0 5% 2px 5%;
 }
 
 .Drew {
@@ -441,7 +441,7 @@ img {
 }
 
 .past-result-date {
-  font-size: 14px;
+  font-size: 13px;
   color: grey;
 }
 .prev-results-title {
@@ -450,7 +450,7 @@ img {
   margin: 0 !important;
 }
 .next-game-item {
-  padding: 8px 0px;
+  padding: 8px 0 4px 0;
   border-radius: var(--border-radius);
   margin: 2px 0;
 }
@@ -694,7 +694,7 @@ img {
     margin-left: 10px;
   }
   .next-game-prediction {
-    margin: 50px 20px 0px 20px;
+    margin: 50px 20px 0 20px;
   }
 
   
@@ -931,15 +931,20 @@ img {
 }
 
 .prediction-details {
-  display: none;
   font-size: 0.65em;
-  color: #8d8d8d;
   color: black;
   margin: 5px 0;
   text-align: left;
+  
+  height: 0;
+  display: none;
 }
 .prediction-detail {
   margin: 3px 0 3px 30px;
+}
+.prediction-details.expanded {
+  height: auto;
+  display: block;
 }
 .detailed-predicted-score {
   font-size: 1.2em;
