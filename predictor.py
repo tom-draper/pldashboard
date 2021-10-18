@@ -394,7 +394,7 @@ class Predictor:
 
         return scoreline
 
-    def gen_score_predictions(self, form: DataFrame, next_games: DataFrame, 
+    def gen_score_predictions(self, form: DataFrame, upcoming: DataFrame, 
                               home_advantages: DataFrame):
         """Generate a dictionary
 
@@ -410,14 +410,14 @@ class Predictor:
         # Check ALL teams as two teams can have different next games
         for team_name in team_names:
             prediction = None
-            if next_games != None:
-                opp_team_name = next_games.df['NextTeam'].loc[team_name]
+            if upcoming != None:
+                opp_team_name = upcoming.df['NextTeam'].loc[team_name]
                 form_rating = form.get_current_form_rating(team_name)
                 opp_form_rating = form.get_current_form_rating(opp_team_name)
                 home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]
                 opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]
-                home_away = next_games.df['HomeAway'].loc[team_name]  # type: dict[str, str]
-                prev_matches = next_games.df.loc[team_name]['PreviousMatches']  # type: list[tuple]
+                home_away = upcoming.df['HomeAway'].loc[team_name]  # type: dict[str, str]
+                prev_matches = upcoming.df.loc[team_name]['PreviousMatches']  # type: list[tuple]
 
                 pred_scored, pred_conceded, details = self.calc_score_prediction(
                     team_name, home_advantage,opp_home_advantage, home_away, 
@@ -427,7 +427,7 @@ class Predictor:
                                                       pred_scored, pred_conceded, 
                                                       home_away)
 
-                game_date = next_games.df['Date'].astype(str).loc[team_name]  # type: str
+                game_date = upcoming.df['Date'].astype(str).loc[team_name]  # type: str
                 prediction = (game_date, scoreline, details)
 
             predictions[team_name] = prediction
