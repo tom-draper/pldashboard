@@ -529,8 +529,8 @@ class Visualiser:
                 showline=False,
             ),
             margin=dict(
-                l=38,
-                r=38,
+                l=30,
+                r=30,
                 b=10,
                 t=10,
                 pad=4

@@ -829,8 +829,8 @@
         "2021-10-18": [
             {
                 "id": 80,
-                "prediction": "ARS 2 - 1 CRY",
                 "time": "19:00:00",
+                "prediction": "ARS 2 - 1 CRY",
                 "actual": null,
                 "details": {
                     "starting": {
@@ -909,8 +909,8 @@
         "2021-10-22": [
             {
                 "id": 84,
-                "prediction": "ARS 1 - 1 AVL",
                 "time": "19:00:00",
+                "prediction": "ARS 1 - 1 AVL",
                 "actual": null,
                 "details": {
                     "starting": {
@@ -975,8 +975,8 @@
         "2021-10-23": [
             {
                 "id": 86,
-                "prediction": "CHE 4 - 1 NOR",
                 "time": "11:30:00",
+                "prediction": "CHE 4 - 1 NOR",
                 "actual": null,
                 "details": {
                     "starting": {
@@ -1025,8 +1025,8 @@
             },
             {
                 "id": 82,
-                "prediction": "LEE 0 - 1 WOL",
                 "time": "14:00:00",
+                "prediction": "LEE 0 - 1 WOL",
                 "actual": null,
                 "details": {
                     "starting": {
@@ -1075,8 +1075,8 @@
             },
             {
                 "id": 83,
-                "prediction": "EVE 2 - 1 WAT",
                 "time": "14:00:00",
+                "prediction": "EVE 2 - 1 WAT",
                 "actual": null,
                 "details": {
                     "starting": {
@@ -1139,8 +1139,8 @@
             },
             {
                 "id": 85,
-                "prediction": "SOU 1 - 1 BUR",
                 "time": "14:00:00",
+                "prediction": "SOU 1 - 1 BUR",
                 "actual": null,
                 "details": {
                     "starting": {
@@ -1217,8 +1217,8 @@
             },
             {
                 "id": 88,
-                "prediction": "CRY 1 - 1 NEW",
                 "time": "14:00:00",
+                "prediction": "CRY 1 - 1 NEW",
                 "actual": null,
                 "details": {
                     "starting": {
@@ -1295,8 +1295,8 @@
             },
             {
                 "id": 87,
-                "prediction": "BHA 1 - 3 MCI",
                 "time": "16:30:00",
+                "prediction": "BHA 1 - 3 MCI",
                 "actual": null,
                 "details": {
                     "starting": {
@@ -1375,8 +1375,8 @@
         "2021-10-24": [
             {
                 "id": 79,
-                "prediction": "BRE 1 - 1 LEI",
                 "time": "13:00:00",
+                "prediction": "BRE 1 - 1 LEI",
                 "actual": null,
                 "details": {
                     "starting": {
@@ -1410,8 +1410,8 @@
             },
             {
                 "id": 89,
-                "prediction": "WHU 2 - 2 TOT",
                 "time": "13:00:00",
+                "prediction": "WHU 2 - 2 TOT",
                 "actual": null,
                 "details": {
                     "starting": {
@@ -1488,8 +1488,8 @@
             },
             {
                 "id": 81,
-                "prediction": "MUN 1 - 3 LIV",
                 "time": "15:30:00",
+                "prediction": "MUN 1 - 3 LIV",
                 "actual": null,
                 "details": {
                     "starting": {
