@@ -149,7 +149,6 @@ a.kofi-button {
 .header {
   padding: 30px 15px;
   text-align: center;
-  /* margin-bottom: 10px; */
 }
 
 #back-button {
@@ -922,6 +921,7 @@ img {
   font-size: 0.8em;
   cursor: pointer;
   outline: inherit;
+  position: relative;
 }
 .medium-predictions-divider {
   align-self: center;
@@ -940,9 +940,11 @@ img {
   display: none;
 }
 .prediction-time {
-  text-align: center;
-  font-size: 1.2em;
-  margin-bottom: 6px;
+  color: grey;
+  font-size: 0.7em;
+  position: absolute;
+  right: -34px;
+  top: calc(50% - 7px);
 }
 .prediction-detail {
   margin: 3px 0 3px 30px;
@@ -953,7 +955,7 @@ img {
 }
 .detailed-predicted-score {
   font-size: 1.2em;
-  margin: 4px 0 0 0;
+  margin: 6px 0 0 0;
   text-align: center;
 }
 
@@ -963,8 +965,15 @@ img {
   .predictions-container {
     width: 80%;
   }
+  .prediction-container {
+    width: min(80%, 300px);
+  }
   .page-content {
     font-size: 1.1em;
+  }
+  .prediction-time {
+    right: -28px;
+    top: calc(50% - 6px);
   }
 }
 

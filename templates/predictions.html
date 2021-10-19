@@ -30,6 +30,7 @@
               <div class="medium-predictions-divider"></div>
               {% for pred in preds %}
                 <button class="prediction-container {{ pred['colour'] }}" onclick="toggleDetailsDisplay({{ pred['id'] }})">
+
                   <div class="prediction prediction-item">
                     <div class="prediction-label">Predicted:</div>
                     <div class="prediction-value">{{ pred['prediction'] }}</div>
@@ -39,12 +40,13 @@
                       <div class="prediction-label">Actual:</div>
                       <div class="prediction-value">{{ pred['actual'] }}</div>
                     </div>
+                  {% else %}
+                  <div class="prediction-time">
+                    {{ pred['time'] }}
+                  </div>
                   {% endif %}
                   {% if pred['details'] != None %}
                     <div class="prediction-details" id="{{ pred['id'] }}">
-                      <div class="prediction-time">
-                        {{ pred['time'] }}
-                      </div>
                       <div class="prediction-detail">
                         {{ pred['details']['starting']['description'] }}:
                         {{ pred['details']['starting']['homeGoals'] }} - {{ pred['details']['starting']['awayGoals'] }}
