@@ -5,8 +5,8 @@ from typing import Optional
 import numpy as np
 import plotly
 import plotly.graph_objects as go
-from pandas.core.frame import DataFrame
 from plotly.missing_ipywidgets import FigureWidget
+from pandas.core.frame import DataFrame
 from timebudget import timebudget
 
 from data import Fixtures, Form, HomeAdvantages, PositionOverTime, TeamRatings
@@ -16,22 +16,18 @@ utils = Utilities()
 
 
 class Visualiser:
-    def __init__(self):
-        # Fixture graph
-        self.fixtures_colour_scale = ['#01c626', '#08a825',  '#0b7c20', '#0a661b',
-                                      '#064411', '#000000', '#5b1d15', '#85160f',
-                                      '#ad1a10', '#db1a0d', '#fc1303']
-
     # ---------------------------- FIXTURES GRAPHS -----------------------------
-
     def plot_fixtures_points(self, x: list[datetime], y: list[float], 
                              sizes: list[int], details: list[str]):
+        fixtures_colour_scale = ['#01c626', '#08a825',  '#0b7c20', '#0a661b',
+                                 '#064411', '#000000', '#5b1d15', '#85160f',
+                                 '#ad1a10', '#db1a0d', '#fc1303']
         fig = go.Figure(data=go.Scatter(x=x,
                                         y=y,
                                         mode='lines+markers',
                                         marker=dict(size=sizes,
                                                     color=y,
-                                                    colorscale=self.fixtures_colour_scale),
+                                                    colorscale=fixtures_colour_scale),
                                         line=dict(color='#737373'),
                                         text=details,
                                         hovertemplate='<b>%{text}</b><br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>',
@@ -94,7 +90,9 @@ class Visualiser:
                              home_advantages: HomeAdvantages, sizes: list[int],
                              NOW: datetime, N_MATCHES: int,
                              BIG_MARKER_SIZE: int) -> tuple[list[datetime], list[float], list[str]]:
-        x, y, details = [], [], []
+        x = []
+        y = []
+        details = []
         for match_n in range(N_MATCHES):
             match = team_fixtures[match_n+1]
 
@@ -700,8 +698,7 @@ class Visualiser:
     def update_goals_scored_and_conceded(self, position_over_time: PositionOverTime, 
                                          team: str = '', display: bool = False):        
         if position_over_time.df.empty:
-            print(
-                'Error: Cannot generate goals scored and conceded graph; position over time dataframe is empty')
+            print('Error: Cannot generate goals scored and conceded graph; position over time dataframe is empty')
         else:
             if not team:
                 print('📊 Updating all teams goals scored and conceded over time graphs...')

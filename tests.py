@@ -1,5 +1,6 @@
-from updater import Updater
 import pytest
+
+from updater import Updater
 
 
 current_season = 2021
