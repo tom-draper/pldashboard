@@ -7,6 +7,7 @@ from utilities import Utilities
 
 util = Utilities()
 
+
 class PredictionsAnalysis:
     def __init__(self, current_season):
         self.current_season = current_season
