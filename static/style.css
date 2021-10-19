@@ -1,7 +1,7 @@
 /* -------------------------------- Global ------------------------------------- */
 
 :root {
-  --border-radius: 5px;
+  --border-radius: 6px;
   --ssp1-offset: 0;
   --ssp2-offset: 0;
   --ssp3-offset: 0;
@@ -130,8 +130,7 @@ h1 {
 
 a.kofi-button {
   font-size: 16px !important;
-  font-weight: 500;
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius) !important;
 }
 
 .kofitext img.kofiimg {
@@ -915,7 +914,7 @@ img {
   margin: 2px 0;
   width: min(90%, 300px);
   align-self: center;
-  border-radius: 6px;
+  border-radius: var(--border-radius);
   color: inherit;
   border: none;
   font-size: 0.8em;

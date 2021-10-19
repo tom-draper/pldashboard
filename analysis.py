@@ -1,9 +1,9 @@
 import json
 
-from numpy import sign
-from utilities import Utilities
+import numpy as np
 from matplotlib import pyplot as plt
 
+from utilities import Utilities
 
 util = Utilities()
 
@@ -121,7 +121,9 @@ class PredictionsAnalysis:
         # Home on x-axis, away on y-axis
         xs = []
         ys = []
-        total_d = 0
+        ds = []
+        vs = []
+        count = 0
         for preds in predictions.values():
             for pred in preds:
                 if pred['details'] != None and pred['actual'] != None:
@@ -129,27 +131,34 @@ class PredictionsAnalysis:
                     pa = pred['details']['score']['awayGoals']
                     ah, aa = util.extract_int_score_from_scoreline(pred['actual'])
                     
-                    print('Predicted', ph, '-', pa)
-                    print('Actual', ah, '-', aa)
-                    
+                    # Two points
                     x = (ph, ah)
-                    y= (pa, aa)
+                    y = (pa, aa)
                     xs.append(x)
                     ys.append(y)
-                    
-                    total_d += ((ph - ah)**2 + (pa - aa)**2)**0.5
-        print('Average distance', total_d/len(x))
+                    vector = (ah-ph, aa-pa)
+                    vs.append(vector)
+                    distance = ((ph - ah)**2 + (pa - aa)**2)**0.5
+                    ds.append(distance)
+                    count += 1
+        print('n =', count)
+        print('Mean distance', np.mean(ds))
+        print('S.d. distance', np.std(ds))
+        print('Median distance', np.median(ds))
+        rv = np.mean([v[0] for v in vs]), np.mean([v[1] for v in vs])
+        print('Resulting vector:', rv)
 
         _, ax = plt.subplots()
         for x, y in zip(xs, ys):
-            ax.scatter(x[0], y[0], c='r', s=5)
-            ax.scatter(x[1], y[1], c='g', s=5)
-            ax.plot(x, y, 'gray', linestyle=':', marker='')
+            ax.plot(x, y, 'gray', linestyle='--')
+            # ax.scatter(x[0], y[0], c='r', s=20, marker='x')
+            ax.scatter(x[1], y[1], c='g', s=25, marker='x')  # Display actual score
+            ax.plot((0, rv[0]), (0, rv[1]), 'blue', linestyle='solid')
+            ax.scatter(rv[0], rv[1], c='b', marker='x', s=25)
+            
         plt.show()
 
 
-                    
-                
 if __name__ == '__main__':
     current_season = 2021
     pa = PredictionsAnalysis(current_season)
