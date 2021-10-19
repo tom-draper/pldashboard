@@ -58,6 +58,8 @@ class Fixtures(DF):
                 or None - None if status is 'SCHEDULED' or 'IN-PLAY'
         
         Args:
+            json_data dict: the json data storage used to build the dataframe
+            season int: the year of the current season
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
@@ -180,10 +182,14 @@ class TeamRatings(DF):
             TotalRating: a final normalised rating value incorporating the values 
                 from all three normalised columns
                 
-        Dependencies:
-            standings dataframe
-                
         Args:
+            standings DataFrame: a completed dataframe filled with standings data 
+                for the last n_seasons seasons
+            season int: the year of the current season
+            games_threshold: the minimum number of home games all teams must have 
+                played in any given season for the home advantage calculated for 
+                each team during that season to be incorporated into the total home
+                advantage value
             n_seasons (int, optional): number of seasons to include. Defaults to 3.
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
@@ -527,11 +533,14 @@ class Form(DF):
                 is 'FINISHED' or None - None if status is 'SCHEDULED', with the 
                 most left-most value the most recent game played
                 
-        Dependencies:
-            fixtures dataframe
-            team_ratings dataframe
-                
         Args:
+            fixtures DataFrame: a completed dataframe contining all past and 
+                future fixtures for the current season
+            team_ratings DataFrame: a completed dataframe containing long-term 
+                ratings for each team based on the current season and recent seasons 
+            star_team_threshold: the minimum team rating for a team to be 
+                considered a 'star team'. If a team wins against a star team,
+                it is recorded, and the achievement is highlighted in the UI.
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
@@ -757,7 +766,11 @@ class Standings(DF):
             GF: goals for - the number of goals a team has scored in this season
             GA: goals against - the number of games a team has lost in the season
             GD: the number of games a team has lost in the season
+            
         Args:
+            json_data dict: the json data storage used to build the dataframe
+            team_names list: the team names of the teams within the current season
+            season: the year of the current season
             no_seasons (int): number of previous seasons to include. Defaults to 3.
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
@@ -912,12 +925,13 @@ class Upcoming(DF):
             PreviousMatches: list of (String Date, Home Team, Away Team, Home Score, 
                 Away Score, Winning Team) tuples of each previous game between the
                 two teams
-        
-        Dependencies:
-            fixtures dataframe
-            team_names list 
                 
         Args:
+            json_dict dict: the json data storage used to build the dataframe
+            fixtures DataFrame: a completed dataframe contining all past and 
+                future fixtures for the current season
+            team_names list:
+            season int: the year of the current season
             n_seasons (int, optional): number of seasons to include. Defaults to 3.
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
@@ -1031,11 +1045,11 @@ class SeasonStats(DF):
                 the number of games played
             ConcededPerGame: the total number of goals conceded this season divided 
                 by the number of games played
-        
-        Dependencies:
-            position_over_time dataframe
                 
         Args:
+            position_over_time DataFrame: a completed dataframe containing a snapshot 
+                of each team's league position at each completed matchday so far 
+                this season
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
@@ -1152,12 +1166,12 @@ class PositionOverTime(DF):
             Points: the points the team held after that matchday
             Position: the position in the table that the team held after that 
                 matchday
-        
-        Dependencies:
-            fixtures dataframe
-            standings dataframe
                 
         Args:
+            fixtures DataFrame: a completed dataframe contining all past and 
+                future fixtures for the current season
+            standings DataFrame: a completed dataframe filled with standings data 
+                for the last n_seasons seasons
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
@@ -1318,7 +1332,7 @@ class HomeAdvantages(DF):
                in the table: the average home wins ratio / wins ratio.
                 
         Args:
-            json_data dict: the json data storage to use to build the dataframe
+            json_data dict: the json data storage used to build the dataframe
             season int: the year of the current season
             threshold float: the minimum number of home games played to incorporate
                 a season's home advantage calculation for all teams into the 

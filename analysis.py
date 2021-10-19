@@ -1,5 +1,9 @@
 import json
+
+from numpy import sign
 from utilities import Utilities
+from matplotlib import pyplot as plt
+
 
 util = Utilities()
 
@@ -110,8 +114,44 @@ class PredictionsAnalysis:
         self.display_if_predicted_by_draw(data['predictions'])
 
 
+    def analyse_predictions(self):
+        data = self.get_data()
+        predictions = data['predictions']
+        
+        # Home on x-axis, away on y-axis
+        xs = []
+        ys = []
+        total_d = 0
+        for preds in predictions.values():
+            for pred in preds:
+                if pred['details'] != None and pred['actual'] != None:
+                    ph = pred['details']['score']['homeGoals']
+                    pa = pred['details']['score']['awayGoals']
+                    ah, aa = util.extract_int_score_from_scoreline(pred['actual'])
+                    
+                    print('Predicted', ph, '-', pa)
+                    print('Actual', ah, '-', aa)
+                    
+                    x = (ph, ah)
+                    y= (pa, aa)
+                    xs.append(x)
+                    ys.append(y)
+                    
+                    total_d += ((ph - ah)**2 + (pa - aa)**2)**0.5
+        print('Average distance', total_d/len(x))
 
+        _, ax = plt.subplots()
+        for x, y in zip(xs, ys):
+            ax.scatter(x[0], y[0], c='r', s=5)
+            ax.scatter(x[1], y[1], c='g', s=5)
+            ax.plot(x, y, 'gray', linestyle=':', marker='')
+        plt.show()
+
+
+                    
+                
 if __name__ == '__main__':
     current_season = 2021
     pa = PredictionsAnalysis(current_season)
     pa.possible_predictions()
+    pa.analyse_predictions()
