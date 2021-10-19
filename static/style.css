@@ -939,6 +939,11 @@ img {
   height: 0;
   display: none;
 }
+.prediction-time {
+  text-align: center;
+  font-size: 1.2em;
+  margin-bottom: 6px;
+}
 .prediction-detail {
   margin: 3px 0 3px 30px;
 }

@@ -454,7 +454,7 @@ class Predictor:
         for dt, new_prediction, details in new_predictions:
             date = datetime.strftime(dt, '%Y-%m-%d')
             if not self.exact_prediction_already_made(date, new_prediction, predictions):
-                time = datetime.strftime(dt, '%H:%M:%S')
+                time = datetime.strftime(dt, '%H:%M')
                 if self.insert_new_prediction(date, time, prediction_id, new_prediction, 
                                               details, predictions):
                     prediction_id += 1

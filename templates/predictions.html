@@ -42,6 +42,9 @@
                   {% endif %}
                   {% if pred['details'] != None %}
                     <div class="prediction-details" id="{{ pred['id'] }}">
+                      <div class="prediction-time">
+                        {{ pred['time'] }}
+                      </div>
                       <div class="prediction-detail">
                         {{ pred['details']['starting']['description'] }}:
                         {{ pred['details']['starting']['homeGoals'] }} - {{ pred['details']['starting']['awayGoals'] }}
