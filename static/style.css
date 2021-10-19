@@ -970,13 +970,13 @@ img {
   font-weight: 700;
 }
 .data-table-container {
-  font-size: 0.6em;
+  font-size: 0.55em;
   margin: 20px auto;
   overflow-x: auto;
   overflow-y: auto;
   width: max-content;
   max-width: 95%;
-  height: 500px;
+  height: auto;
 }
 
 table {
@@ -984,5 +984,5 @@ table {
   border-collapse: collapse; 
 }
 th, td { 	
-  padding: 3px 4px; 
+  padding: 2px 4px; 
 } 
