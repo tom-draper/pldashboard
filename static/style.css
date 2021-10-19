@@ -926,7 +926,7 @@ img {
 .medium-predictions-divider {
   align-self: center;
   border-bottom: 3px solid black;
-  width: min(100%, 360px);
+  width: min(100%, 375px);
   margin-bottom: 2px;
 }
 
