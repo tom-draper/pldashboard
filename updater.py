@@ -76,12 +76,12 @@ class Updater:
             with open(f'data/standings_{season}.json', 'r') as json_file:
                 return json.load(json_file)
         
-    def fetch_current_season(self, request_new):
+    def fetch_current_season(self, request_new: bool):
         # Fetch data from API (max this season and last season)
         self.json_data['fixtures'][self.season] = self.fixtures_data(self.season, request_new)
         self.json_data['standings'][self.season] = self.standings_data(self.season, request_new)
     
-    def load_previous_fixtures(self, n_seasons):
+    def load_previous_fixtures(self, n_seasons: int):
         for i in range(1, n_seasons):
             season = self.season - i
             self.json_data['fixtures'][season] = self.fixtures_data(season, request_new=False)
@@ -92,7 +92,7 @@ class Updater:
         self.load_previous_fixtures(n_seasons)
 
         if request_new:
-            self.last_updated = datetime.now().strftime('Last updated: %d-%m-%y %H:%M:%S')
+            self.last_updated = datetime.now().strftime('Last updated: %Y-%m-%d %H:%M:%S')
 
     def save_data(self):
         """Save current season fixtures and standings data in self.json_data to 
@@ -112,7 +112,7 @@ class Updater:
 
         return logo_urls
 
-    def update_all_dataframes(self, n_seasons, display_tables: bool = False):
+    def update_all_dataframes(self, n_seasons: int, display_tables: bool = False):
         # Standings for the last [n_seasons] seasons
         self.data.standings.update(self.json_data,
                                    self.logo_urls.keys(),  # Current season team names
@@ -174,8 +174,9 @@ class Updater:
 
 
     @timebudget
-    def update_all(self, n_seasons: int = 4, team_name: str = '', display_tables: bool = False,
-                   display_graphs: bool = False, request_new: bool = True):
+    def update_all(self, n_seasons: int = 4, team_name: str = '', 
+                   display_tables: bool = False, display_graphs: bool = False, 
+                   request_new: bool = True):
         try:
             self.fetch_data(n_seasons, request_new)
         except ValueError as e:
