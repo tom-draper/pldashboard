@@ -118,3 +118,28 @@ class Utilities:
         return (pred_home_goals == pred_away_goals and act_home_goals == act_away_goals) or \
             (pred_home_goals > pred_away_goals and act_home_goals > act_away_goals) or \
             (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)
+
+    def format_scoreline_str_from_str(self, team_name: str, opp_team_name: str, 
+                                      score: str, home_away: str) -> str:
+        team_name_initials = self.convert_team_name_or_initials(team_name)
+        opp_team_name_initials = self.convert_team_name_or_initials(opp_team_name)
+
+        if home_away == 'Home':
+            scoreline = f'{team_name_initials} {score} {opp_team_name_initials}'
+        else:
+            scoreline = f'{opp_team_name_initials} {score} {team_name_initials}'
+
+        return scoreline
+
+    def format_scoreline_str(self, team_name: str, opp_team_name: str, scored: int, 
+                             conceded: int, home_away: str) -> str:
+        team_name_initials = self.convert_team_name_or_initials(team_name)
+        opp_team_name_initials = self.convert_team_name_or_initials(opp_team_name)
+        
+        # Construct prediction string for display...
+        if home_away == "Home":
+            scoreline = f'{team_name_initials} {scored} - {conceded} {opp_team_name_initials}'
+        else:
+            scoreline = f'{opp_team_name_initials} {conceded} - {scored} {team_name_initials}'
+
+        return scoreline

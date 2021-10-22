@@ -97,7 +97,7 @@ def get_team(team_name_hyphen: str) -> Team:
     team_name_full = team_name + ' FC'
     names = TeamNames(team_name_full, team_name, team_name_hyphen)
     
-    team_logo_url = updater.logo_urls[team_name_full]
+    team_logo_url = updater.data.logo_urls[team_name_full]
     position = updater.data.standings.get_position(team_name_full, season)
     return Team(names, position, team_logo_url)
 
@@ -116,18 +116,17 @@ def get_next_game(team_name: str) -> NextGame:
     names = TeamNames(opp_team_name_full, opp_team_name, opp_team_name_hyphen)
         
     opp_form_rating = updater.data.form.get_current_form_rating(opp_team_name_full)
-    opp_logo_url = updater.logo_urls[opp_team_name_full]
+    opp_logo_url = updater.data.logo_urls[opp_team_name_full]
     opp_team = OppTeam(names, opp_form_rating, opp_logo_url)
     return NextGame(opp_team, home_away, prev_matches)
 
 def get_prediction(team_name: str) -> Prediction:
-    score_prediction = updater.predictor.get_next_game_prediction(team_name)
-    accuracy, results_accuracy = updater.predictor.get_accuracy()
+    score_prediction = updater.data.predictions.get_next_game_prediction(team_name)
+    accuracy, results_accuracy = updater.data.predictions.get_accuracy()
     return Prediction(score_prediction, accuracy, results_accuracy)
 
 def get_table_snippet(team_name: str) -> TableSnippet:
-    rows, team_table_idx = updater.data.standings.get_table_snippet(
-        team_name, season)
+    rows, team_table_idx = updater.data.standings.get_table_snippet(team_name, season)
     return TableSnippet(rows, team_table_idx)
 
 def get_params(team_name_hyphen: str) -> TeamParams:
@@ -205,11 +204,11 @@ def insert_predictions_colours(predictions: dict):
 
 @app.route('/predictions')
 def predictions() -> str:
-    predictions = updater.predictor.get_predictions()
+    predictions = updater.data.predictions.get_predictions()
     predictions = dict(sorted(predictions.items(), reverse=True))
     insert_predictions_colours(predictions)
 
-    accuracy, results_accuracy = updater.predictor.get_accuracy()
+    accuracy, results_accuracy = updater.data.predictions.get_accuracy()
 
     last_updated = updater.last_updated
 
@@ -237,11 +236,11 @@ def thread_function(time=3600):
         print(f'Refreshing data in {time} seconds...')
         sleep(time)
         print('Refreshing data...')
-        updater.update_all()
+        updater.update()
 
 updater = Updater(season)
 data_updater_thread = Thread(target=thread_function, args=(3600,))
-updater.update_all()
+updater.update()
 data_updater_thread.start()
 
 if __name__ == '__main__':

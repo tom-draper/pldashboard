@@ -728,25 +728,14 @@ class Visualiser:
 
                     self.save_fig(fig, team_name, 'clean-sheets')
 
-    def update_all(self,
-                   fixtures: Fixtures,
-                   team_ratings: TeamRatings,
-                   home_advantages: HomeAdvantages,
-                   form: Form,
-                   position_over_time: PositionOverTime,
-                   team: str = '',
-                   display_graphs: bool = False):
-        self.update_fixtures(fixtures,
-                             team_ratings,
-                             home_advantages,
-                             team=team,
+    def update(self, fixtures: Fixtures, team_ratings: TeamRatings,
+               home_advantages: HomeAdvantages, form: Form, 
+               position_over_time: PositionOverTime, team: str = '', 
+               display_graphs: bool = False):
+        self.update_fixtures(fixtures, team_ratings, home_advantages, team=team,
                              display=display_graphs)
-        self.update_form_over_time(form,
-                                   team=team,
-                                   display=display_graphs)
-        self.update_position_over_time(position_over_time,
-                                       team=team,
+        self.update_form_over_time(form, team=team, display=display_graphs)
+        self.update_position_over_time(position_over_time, team=team,
                                        display=display_graphs)
-        self.update_goals_scored_and_conceded(position_over_time,
-                                              team=team,
+        self.update_goals_scored_and_conceded(position_over_time, team=team,
                                               display=display_graphs)
