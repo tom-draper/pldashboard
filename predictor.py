@@ -204,7 +204,7 @@ class Predictor:
                 home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]
                 opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]
                 home_away = upcoming.df['HomeAway'].loc[team_name]  # type: dict[str, str]
-                prev_matches = upcoming.df.loc[team_name]['PreviousMatches']  # type: list[tuple]
+                prev_matches = upcoming.df['PreviousMatches'].loc[team_name]  # type: list[tuple]
 
                 pred_scored, pred_conceded, details = self.calc_score_prediction(
                     team_name, home_advantage,opp_home_advantage, home_away, 

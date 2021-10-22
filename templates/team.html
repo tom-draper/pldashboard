@@ -232,22 +232,22 @@
         <div class="season-stats">
           <div class="season-stat clean-sheet-ratio">
             <div class="season-stat-value">
-              {{ params.season_stats.clean_sheet_ratio }}
-              <div class="season-stat-position ssp-{{params.season_stats.csr_position}}" id="ssp1">{{ params.season_stats.csr_position }}</div>
+              {{ params.season_stats.clean_sheets.ratio }}
+              <div class="season-stat-position ssp-{{ params.season_stats.clean_sheets.position }}" id="ssp1">{{ params.season_stats.clean_sheets.position }}</div>
             </div>
             <div class="season-stat-text">clean sheets</div>
           </div>
           <div class="season-stat goals-per-game">
             <div class="season-stat-value">
-              {{ params.season_stats.goals_per_game }}
-              <div class="season-stat-position ssp-{{params.season_stats.gpg_position}}" id="ssp2">{{ params.season_stats.gpg_position }}</div>
+              {{ params.season_stats.goals_per_game.ratio }}
+              <div class="season-stat-position ssp-{{ params.season_stats.goals_per_game.position }}" id="ssp2">{{ params.season_stats.goals_per_game.position }}</div>
             </div>
             <div class="season-stat-text">goals per game</div>
           </div>
           <div class="season-stat conceded-per-game">
             <div class="season-stat-value">
-              {{ params.season_stats.conceded_per_game }}
-              <div class="season-stat-position ssp-{{params.season_stats.cpg_position}}" id="ssp3">{{ params.season_stats.cpg_position }}</div>
+              {{ params.season_stats.conceded_per_game.ratio }}
+              <div class="season-stat-position ssp-{{ params.season_stats.conceded_per_game.position }}" id="ssp3">{{ params.season_stats.conceded_per_game.position }}</div>
             </div>
             <div class="season-stat-text">conceded per game</div>
           </div>

@@ -53,13 +53,15 @@ class Form:
     won_against_star_team: list[str]
 
 @dataclass
+class Stat:
+    ratio: float
+    position: str  # Ordinal position e.g. '1st'
+
+@dataclass
 class SeasonStats:
-    clean_sheet_ratio: float
-    csr_position: str  # Ordinal position e.g. '1st'
-    goals_per_game: float
-    gpg_position: str
-    conceded_per_game: float
-    cpg_position: str
+    clean_sheets: Stat
+    goals_per_game: Stat
+    conceded_per_game: Stat
 
 @dataclass
 class OppTeam:
@@ -106,8 +108,8 @@ def get_form(team_name: str) -> Form:
     return Form(form_str, recent_teams_played, rating, won_against_star_team)
 
 def get_season_stats(team_name: str) -> SeasonStats:
-    csr, csr_position, gpg, gpg_position, cpg, cpg_position= updater.data.season_stats.get_season_stats(team_name)
-    return SeasonStats(csr, csr_position, gpg, gpg_position, cpg, cpg_position)
+    clean_sheets, goals_per_game, conceded_per_game = updater.data.season_stats.get_season_stats(team_name)
+    return SeasonStats(Stat(*clean_sheets), Stat(*goals_per_game), Stat(*conceded_per_game))
 
 def get_next_game(team_name: str) -> NextGame:
     opp_team_name_full, home_away, prev_matches = updater.data.upcoming.get_details(team_name)
