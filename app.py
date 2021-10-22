@@ -77,7 +77,7 @@ class NextGame:
 
 @dataclass
 class Prediction:
-    score_prediction: tuple[str, str]
+    scoreline: str
     accuracy: float
     results_accuracy: float
 
@@ -124,9 +124,9 @@ def get_next_game(team_name: str) -> NextGame:
     return NextGame(opp_team, home_away, prev_matches)
 
 def get_prediction(team_name: str) -> Prediction:
-    score_prediction = updater.data.predictions.get_next_game_prediction(team_name)
+    scoreline = updater.data.predictions.get_next_game_prediction_scoreline(team_name)
     accuracy, results_accuracy = updater.data.predictions.get_accuracy()
-    return Prediction(score_prediction, accuracy, results_accuracy)
+    return Prediction(scoreline, accuracy, results_accuracy)
 
 def get_table_snippet(team_name: str) -> TableSnippet:
     rows, team_table_idx = updater.data.standings.get_table_snippet(team_name, season)
@@ -186,10 +186,7 @@ def extract_int_score(scoreline: str) -> tuple[int, int]:
     _, home_goals, _, away_goals, _ = scoreline.split(' ')
     return int(home_goals), int(away_goals) 
 
-def correct_result(scoreline1: str, scoreline2: str) -> bool:
-    h1, a1 = extract_int_score(scoreline1)
-    h2, a2 = extract_int_score(scoreline2)
-
+def correct_result(h1, a1, h2, a2) -> bool:
     # If identical results (both a home win, draw, or away win)
     return (h1 > a1 and h2 > a2) or (h1 == a1 and h2 == a2) or (h1 < a1 and h2 < a2)
 
@@ -198,9 +195,9 @@ def insert_predictions_colours(predictions: dict):
         for pred in predictions[date]:
             if pred['actual'] == None:
                 pred['colour'] = ''  # No colour
-            elif pred['prediction'] == pred['actual']:
+            elif pred['prediction']['xGHome'] == pred['actual']['homeGoals'] and pred['prediction']['xGAway'] == pred['actual']['awayGoals']:
                 pred['colour'] = 'green'
-            elif correct_result(pred['prediction'], pred['actual']):
+            elif correct_result(pred['prediction']['xGHome'], pred['actual']['homeGoals'], pred['prediction']['xGAway'], pred['actual']['awayGoals']):
                 pred['colour'] = 'yellow'
             else:
                 pred['colour'] = 'red'
@@ -214,7 +211,7 @@ def predictions() -> str:
     accuracy, results_accuracy = updater.data.predictions.get_accuracy()
 
     last_updated = updater.last_updated
-
+    
     params = PredictionsParams(predictions, accuracy, results_accuracy, last_updated)
     return render_template('predictions.html', params=params)
 

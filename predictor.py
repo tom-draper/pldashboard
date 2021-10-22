@@ -182,8 +182,8 @@ class Predictor:
         return int(round(pred_scored)), int(round(pred_conceded)), details
     
     def prediction_details(self, team_name, opp_team_name, pred_scored, pred_conceded, at_home):
-        team_name_initials = self.convert_team_name_or_initials(team_name)
-        opp_team_name_initials = self.convert_team_name_or_initials(opp_team_name)
+        team_name_initials = util.convert_team_name_or_initials(team_name)
+        opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
         
         # Construct prediction string for display...
         if at_home:

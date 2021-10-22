@@ -16,8 +16,8 @@ utilities = Utilities()
 
 class Updater:
     def __init__(self, current_season: int):
-        self.season = current_season
-        self.data = Data(current_season=current_season)
+        self.current_season = current_season
+        self.data = Data(current_season)
         self.visualiser = Visualiser()
 
         # Import environment variables
@@ -77,12 +77,12 @@ class Updater:
         
     def fetch_current_season(self, request_new: bool):
         # Fetch data from API (max this season and last season)
-        self.json_data['fixtures'][self.season] = self.fixtures_data(self.season, request_new)
-        self.json_data['standings'][self.season] = self.standings_data(self.season, request_new)
+        self.json_data['fixtures'][self.current_season] = self.fixtures_data(self.current_season, request_new)
+        self.json_data['standings'][self.current_season] = self.standings_data(self.current_season, request_new)
     
     def load_previous_fixtures(self, n_seasons: int):
         for i in range(1, n_seasons):
-            season = self.season - i
+            season = self.current_season - i
             self.json_data['fixtures'][season] = self.fixtures_data(season, request_new=False)
             self.json_data['standings'][season] = self.standings_data(season, request_new=False)
 
@@ -97,11 +97,11 @@ class Updater:
         """Save current season fixtures and standings data in self.json_data to 
         json files."""
         for type in ('fixtures', 'standings'):
-            with open(f'data/{type}_{self.season}.json', 'w') as f:
-                json.dump(self.json_data[type][self.season], f)
+            with open(f'data/{type}_{self.current_season}.json', 'w') as f:
+                json.dump(self.json_data[type][self.current_season], f)
 
     def get_logo_urls(self) -> dict[str, str]:
-        data = self.json_data['standings'][self.season]
+        data = self.json_data['standings'][self.current_season]
 
         logo_urls = {}
         for standings_row in data:
@@ -114,14 +114,14 @@ class Updater:
     def update_dataframes(self, n_seasons: int, display_tables: bool = False):
         # Standings for the last [n_seasons] seasons
         self.data.standings.update(self.json_data, self.data.team_names,
-                                   self.season, n_seasons, display=display_tables)
+                                   self.current_season, n_seasons, display=display_tables)
         # Fixtures for the whole season for each team
-        self.data.fixtures.update(self.json_data, self.season, display=display_tables)
+        self.data.fixtures.update(self.json_data, self.current_season, display=display_tables)
         # Ratings for each team, based on last <no_seasons> seasons standings table
-        self.data.team_ratings.update(self.data.standings, self.season,
+        self.data.team_ratings.update(self.data.standings, self.current_season,
                                       self.games_threshold, n_seasons, display=display_tables)
         # Calculated values to represent the personalised advantage each team has at home
-        self.data.home_advantages.update(self.json_data, self.season,
+        self.data.home_advantages.update(self.json_data, self.current_season,
                                          self.home_games_threshold, n_seasons,
                                          display=display_tables)
         # Calculated form values for each team for each matchday played so far
@@ -132,15 +132,14 @@ class Updater:
                                             display=display_tables)
         # Data about the opponent in each team's next game
         self.data.upcoming.update(self.json_data, self.data.fixtures,
-                                  self.data.team_names, self.season, n_seasons,
+                                  self.data.team_names, self.current_season, n_seasons,
                                   display=display_tables)
         # Season metrics
         self.data.season_stats.update(self.data.position_over_time, display=display_tables)
         # Update predictions based on new data
-        self.data.predictions.update(self.data.fixtures,
-                                     self.data.form,
-                                     self.data.upcoming,
-                                     self.data.home_advantages)
+        self.data.predictions.update(self.data.fixtures, self.data.form,
+                                     self.data.upcoming, self.data.home_advantages,
+                                     display=display_tables)
 
     def save_tables(self):
         self.data.standings.save_to_html()
