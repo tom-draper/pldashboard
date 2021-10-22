@@ -181,7 +181,7 @@ class Predictor:
 
         return int(round(pred_scored)), int(round(pred_conceded)), details
 
-    def gen_score_predictions(self, form, upcoming, home_advantages):
+    def gen_score_predictions(self, form, upcoming, home_advantages) -> dict:
         # {"Liverpool FC": ("25-08-21", "LIV  2 - 1 BUR"), ...}
         predictions = {}  # type: dict[str, Optional[tuple[str, str]]]
         team_names = form.df.index.values.tolist()
@@ -195,9 +195,9 @@ class Predictor:
                 opp_form_rating = form.get_current_form_rating(opp_team_name)  # type: float
                 home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]  # type: float
                 opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]  # type: float
-                at_home = upcoming.df['HomeAway'].loc[team_name] == 'Home'  # type: bool
+                at_home = upcoming.df['AtHome'].loc[team_name]  # type: bool
                 prev_matches = upcoming.df['PreviousMatches'].loc[team_name]  # type: list[tuple]
-
+                
                 pred_scored, pred_conceded, details = self.calc_score_prediction(
                     team_name, home_advantage, opp_home_advantage, at_home, 
                     form_rating, opp_form_rating, prev_matches)
@@ -205,7 +205,7 @@ class Predictor:
                 scoreline = util.format_scoreline_str(team_name, opp_team_name, 
                                                       pred_scored, pred_conceded, 
                                                       at_home)
-
+            
                 date = upcoming.df['Date'].loc[team_name].to_pydatetime()
                 prediction = (date, scoreline, details)
 

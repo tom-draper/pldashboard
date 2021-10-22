@@ -48,21 +48,21 @@
                   {% if pred['details'] != None %}
                     <div class="prediction-details" id="{{ pred['id'] }}">
                       <div class="prediction-detail">
-                        {{ pred['details']['starting']['description'] }}:
-                        {{ pred['details']['starting']['homeGoals'] }} - {{ pred['details']['starting']['awayGoals'] }}
+                        {{ pred['details']['initial']['description'] }}:
+                        {{ pred['details']['initial']['xGHome'] }} - {{ pred['details']['initial']['xGAway'] }}
                       </div>
                       <div class="prediction-detail">
                         {{ pred['details']['adjustments'][0]['description'] }}:
-                        {{ pred['details']['adjustments'][0]['homeGoals'] }} - {{ pred['details']['adjustments'][0]['awayGoals'] }}
-                        ({{ pred['details']['adjustments'][0]['homeFormRating'] }} vs {{ pred['details']['adjustments'][0]['awayFormRating'] }})
+                        {{ pred['details']['adjustments'][0]['xGHome'] }} - {{ pred['details']['adjustments'][0]['xGAway'] }}
+                        ({{ pred['details']['adjustments'][0]['formRatingHome'] }} vs {{ pred['details']['adjustments'][0]['formRatingAway'] }})
                       </div>
                       <div class="prediction-detail">
                         {{ pred['details']['adjustments'][1]['description'] }}:
-                        {{ pred['details']['adjustments'][1]['homeGoals'] }} - {{ pred['details']['adjustments'][1]['awayGoals'] }}
+                        {{ pred['details']['adjustments'][1]['xGHome'] }} - {{ pred['details']['adjustments'][1]['xGAway'] }}
                         ({{ pred['details']['adjustments'][1]['homeAdvantage'] }})
                       </div>
                       <div class="detailed-predicted-score">
-                        {{ pred['details']['score']['homeGoals'] }} - {{ pred['details']['score']['awayGoals'] }}
+                        {{ pred['details']['score']['xGHome'] }} - {{ pred['details']['score']['xGAway'] }}
                       </div>
                     </div>
                   {% endif %}

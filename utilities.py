@@ -120,11 +120,11 @@ class Utilities:
             (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)
 
     def format_scoreline_str_from_str(self, team_name: str, opp_team_name: str, 
-                                      score: str, home_away: str) -> str:
+                                      score: str, at_home: bool) -> str:
         team_name_initials = self.convert_team_name_or_initials(team_name)
         opp_team_name_initials = self.convert_team_name_or_initials(opp_team_name)
 
-        if home_away == 'Home':
+        if at_home:
             scoreline = f'{team_name_initials} {score} {opp_team_name_initials}'
         else:
             scoreline = f'{opp_team_name_initials} {score} {team_name_initials}'

@@ -112,7 +112,8 @@ def get_season_stats(team_name: str) -> SeasonStats:
     return SeasonStats(Stat(*clean_sheets), Stat(*goals_per_game), Stat(*conceded_per_game))
 
 def get_next_game(team_name: str) -> NextGame:
-    opp_team_name_full, home_away, prev_matches = updater.data.upcoming.get_details(team_name)
+    opp_team_name_full, at_home, prev_matches = updater.data.upcoming.get_details(team_name)
+    home_away = 'Home' if at_home else 'Away'
     opp_team_name = opp_team_name_full[:-3]  # Remove 'FC' from end
     opp_team_name_hyphen = (opp_team_name.lower()).replace(' ', '-')  # Remove 'FC' from end
     names = TeamNames(opp_team_name_full, opp_team_name, opp_team_name_hyphen)

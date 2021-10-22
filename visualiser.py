@@ -102,17 +102,17 @@ class Visualiser:
             # Get rating of the opposition team
             rating = team_ratings.df.loc[match['Team'], 'TotalRating']
             # Decrease other team's rating if you're playing at home
-            if match['HomeAway'] == 'Home':
-                rating *= (1 -
-                           home_advantages.df.loc[match['Team'], 'TotalHomeAdvantage'][0])
+            if match['AtHome']:
+                rating *= (1 - home_advantages.df.loc[match['Team'], 'TotalHomeAdvantage'][0])
             # Append percentage rating value of opposition team playing on this matchday
             y.append(rating*100)
 
             # Add team played, home or away and the final score if game has already happened
+            home_away = 'Home' if match['AtHome'] else 'Away'
             if match['Score'] != 'None - None':
-                match_detail = f'{match["Team"]} ({match["HomeAway"]})  {match["Score"]}'
+                match_detail = f"{match['Team']} ({home_away})  {match['Score']}"
             else:
-                match_detail = f'{match["Team"]} ({match["HomeAway"]})'
+                match_detail = f"{match['Team']} ({home_away})"
             details.append(match_detail)
 
             # Increase size of point marker if it's the current upcoming match
@@ -635,9 +635,9 @@ class Visualiser:
 
         num_goals_scored = 0
         num_goals_conceded = 0
-        if team_matchday['HomeAway'] == 'Home':
+        if team_matchday['AtHome']:
             num_goals_scored, num_goals_conceded = map(int, (home, away))
-        elif team_matchday['HomeAway'] == 'Away':
+        else:
             num_goals_scored, num_goals_conceded = map(int, (away, home))
 
         y_goals_scored.append(num_goals_scored)
