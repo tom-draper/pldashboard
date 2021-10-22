@@ -1623,7 +1623,6 @@ class Predictions(DF):
 
 @dataclass
 class Data:
-    current_season: int = 2021
     team_names: list[str] = field(default_factory=list)
     logo_urls: dict = defaultdict
     

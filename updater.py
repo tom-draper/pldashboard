@@ -17,7 +17,8 @@ utilities = Utilities()
 class Updater:
     def __init__(self, current_season: int):
         self.season = current_season
-        self.data = Data(current_season=current_season)
+        
+        self.data = Data()
         self.visualiser = Visualiser()
 
         # Import environment variables
