@@ -238,11 +238,11 @@ def thread_function(time=3600):
         print(f'Refreshing data in {time} seconds...')
         sleep(time)
         print('Refreshing data...')
-        updater.update()
+        updater.update_all()
 
 updater = Updater(season)
 data_updater_thread = Thread(target=thread_function, args=(3600,))
-updater.update()
+updater.update_all()
 data_updater_thread.start()
 
 if __name__ == '__main__':

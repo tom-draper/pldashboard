@@ -1,5 +1,4 @@
 from typing import Optional
-from pandas.core.frame import DataFrame
 from utilities import Utilities
 
 util = Utilities()
@@ -48,7 +47,7 @@ class Predictor:
         return avg_scored, avg_conceded
 
     def modify_prediction_by_current_form(self, form_rating: float, opp_form_rating: float, 
-                                          home_away: str, pred_scored: float = 0, 
+                                          at_home: bool, pred_scored: float = 0, 
                                           pred_conceded: float = 0) -> tuple[float, float]:
         # Boost the score of the team better in form based on the absolute difference in form
         form_diff = form_rating - opp_form_rating
@@ -62,30 +61,31 @@ class Predictor:
             operation = f'{round(pred_conceded, 4)} += {round(pred_conceded, 4)} * {round((form_diff/100), 4)} * {self.form_diff_multiplier}'
             pred_conceded += pred_conceded * abs(form_diff/100) * self.form_diff_multiplier
         
-        if home_away == "Home":
-            home_goals = pred_scored
-            away_goals = pred_conceded
-            home_form_rating = form_rating
-            away_form_rating = opp_form_rating
+        if at_home:
+            xg_home = pred_scored
+            xg_away = pred_conceded
+            form_rating_home = form_rating
+            form_rating_away = opp_form_rating
         else:
-            home_goals = pred_conceded
-            away_goals = pred_scored
-            home_form_rating = opp_form_rating
-            away_form_rating = form_rating
+            xg_home = pred_conceded
+            xg_away = pred_scored
+            form_rating_home = opp_form_rating
+            form_rating_away = form_rating
             
         detail = {'description': 'Adjusted by form',
                   'operation': operation,
-                  'homeGoals': round(home_goals, 4),
-                  'awayGoals': round(away_goals, 4),
-                  'homeFormRating': round(home_form_rating, 4),
-                  'awayFormRating': round(away_form_rating, 4)}
+                  'xGHome': round(xg_home, 4),
+                  'xGAway': round(xg_away, 4),
+                  'formRatingHome': round(form_rating_home, 4),
+                  'formRatingAway': round(form_rating_away, 4)}
 
         return pred_scored, pred_conceded, detail
 
-    def modify_prediction_by_home_advantage(self, home_advantage: float, opp_home_advantage: float,
-                                            home_away: str, pred_scored: float = 0, 
+    def modify_prediction_by_home_advantage(self, home_advantage: float, 
+                                            opp_home_advantage: float,
+                                            at_home: bool, pred_scored: float = 0, 
                                             pred_conceded: float = 0) -> tuple[float, float]:
-        if home_away == "Home":
+        if at_home:
             # Decrease conceded (if team has a positive home advantage)
             operation = f'{round(pred_conceded, 4)} *= 1 - ({round(home_advantage, 4)} * {self.home_advantage_multiplier})'
             pred_conceded *= (1 - (home_advantage * self.home_advantage_multiplier))
@@ -102,8 +102,8 @@ class Predictor:
 
         detail = {'description': 'Adjusted by home advantage',
                   'operation': operation,
-                  'homeGoals': round(home_goals, 4), 
-                  'awayGoals': round(away_goals, 4), 
+                  'xGHome': round(home_goals, 4), 
+                  'xGAway': round(away_goals, 4), 
                   'homeAdvantage': round(advantage, 4)}
         
         return pred_scored, pred_conceded, detail
@@ -122,7 +122,7 @@ class Predictor:
         
         return neutral_prev_matches
 
-    def starting_score(self, team_name: str, prev_matches: list[dict[str]], home_away: str):
+    def starting_score(self, team_name: str, prev_matches: list[dict[str, str]], at_home: bool):
         if prev_matches:
             # Begin with average scored and conceded in previous meetings
             pred_scored, pred_conceded = self.avg_previous_result(team_name, prev_matches)
@@ -131,7 +131,7 @@ class Predictor:
             pred_scored, pred_conceded = 1.0, 1.0
             description = 'Default'
         
-        if home_away == "Home":
+        if at_home:
             home_goals = pred_scored
             away_goals = pred_conceded
         else:
@@ -140,56 +140,48 @@ class Predictor:
             
         detail = {'description': description, 
                   'previousMatches': self.neutral_prev_matches(prev_matches),
-                  'homeGoals': round(home_goals, 4), 
-                  'awayGoals': round(away_goals, 4)}
+                  'xGHome': round(home_goals, 4), 
+                  'xGAway': round(away_goals, 4)}
         
         return pred_scored, pred_conceded, detail
 
-    def detailed_score(self, home_away, pred_scored, pred_conceded):
-        if home_away == "Home":
+    def detailed_score(self, pred_scored, pred_conceded, at_home):
+        if at_home:
             home_goals = pred_scored
             away_goals = pred_conceded
         else:
             home_goals = pred_conceded
             away_goals = pred_scored
-        detailed_score = {'homeGoals': round(home_goals, 4), 
-                          'awayGoals': round(away_goals, 4)}
+        detailed_score = {'xGHome': round(home_goals, 4), 
+                          'xGAway': round(away_goals, 4)}
         return detailed_score
 
     def calc_score_prediction(self, team_name: str, home_advantage: float, 
-                              opp_home_advantage: float, home_away: str, 
+                              opp_home_advantage: float, at_home: bool, 
                               form_rating: float, opp_form_rating: float, 
                               prev_matches: list[dict[str, str]]) -> tuple[int, int]:
-        details = {'starting': {}, 'adjustments': [], 'score': {}}
+        details = {'initial': {}, 'adjustments': [], 'score': {}}
         
-        pred_scored, pred_conceded, detail = self.starting_score(team_name, prev_matches, home_away)
-        details['starting'] = detail
+        pred_scored, pred_conceded, detail = self.starting_score(team_name, prev_matches, at_home)
+        details['initial'] = detail
 
         # Modify based on difference in current form between two teams
         pred_scored, pred_conceded, detail = self.modify_prediction_by_current_form(
-            form_rating, opp_form_rating, home_away, pred_scored, pred_conceded)
+            form_rating, opp_form_rating, at_home, pred_scored, pred_conceded)
         details['adjustments'].append(detail)
         
         # Decrese scores conceded if playing at home
         pred_scored, pred_conceded, detail = self.modify_prediction_by_home_advantage(
-            home_advantage, opp_home_advantage, home_away, pred_scored, pred_conceded)
+            home_advantage, opp_home_advantage, at_home, pred_scored, pred_conceded)
         details['adjustments'].append(detail)
         
         # Get unrounded version of predicted score
-        detail = self.detailed_score(home_away, pred_scored, pred_conceded)
+        detail = self.detailed_score(pred_scored, pred_conceded, at_home, )
         details['score'] = detail
 
         return int(round(pred_scored)), int(round(pred_conceded)), details
 
-    def gen_score_predictions(self, form: DataFrame, upcoming: DataFrame, 
-                              home_advantages: DataFrame):
-        """Generate a dictionary
-
-        Args:
-            form ([type]): [description]
-            next_games ([type]): [description]
-            home_advantages ([type]): [description]
-        """
+    def gen_score_predictions(self, form, upcoming, home_advantages):
         # {"Liverpool FC": ("25-08-21", "LIV  2 - 1 BUR"), ...}
         predictions = {}  # type: dict[str, Optional[tuple[str, str]]]
         team_names = form.df.index.values.tolist()
@@ -199,20 +191,20 @@ class Predictor:
             prediction = None
             if upcoming != None:
                 opp_team_name = upcoming.df['NextTeam'].loc[team_name]
-                form_rating = form.get_current_form_rating(team_name)
-                opp_form_rating = form.get_current_form_rating(opp_team_name)
-                home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]
-                opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]
-                home_away = upcoming.df['HomeAway'].loc[team_name]  # type: dict[str, str]
+                form_rating = form.get_current_form_rating(team_name)  # type: float
+                opp_form_rating = form.get_current_form_rating(opp_team_name)  # type: float
+                home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]  # type: float
+                opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]  # type: float
+                at_home = upcoming.df['HomeAway'].loc[team_name] == 'Home'  # type: bool
                 prev_matches = upcoming.df['PreviousMatches'].loc[team_name]  # type: list[tuple]
 
                 pred_scored, pred_conceded, details = self.calc_score_prediction(
-                    team_name, home_advantage,opp_home_advantage, home_away, 
+                    team_name, home_advantage, opp_home_advantage, at_home, 
                     form_rating, opp_form_rating, prev_matches)
 
                 scoreline = util.format_scoreline_str(team_name, opp_team_name, 
                                                       pred_scored, pred_conceded, 
-                                                      home_away)
+                                                      at_home)
 
                 date = upcoming.df['Date'].loc[team_name].to_pydatetime()
                 prediction = (date, scoreline, details)

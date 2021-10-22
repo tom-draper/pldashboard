@@ -1371,7 +1371,7 @@ class HomeAdvantages(DF):
 
 class Predictions(DF):
     def __init__(self, current_season, d: DataFrame = DataFrame()):
-        super().__init__(d, 'home_advantages')
+        super().__init__(d, 'predictions')
         self.predictor = Predictor(current_season)
         self.accuracy = None  # type: dict[str, float]
         self.prediction_file = f'data/predictions_{current_season}.json'

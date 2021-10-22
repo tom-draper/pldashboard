@@ -132,12 +132,12 @@ class Utilities:
         return scoreline
 
     def format_scoreline_str(self, team_name: str, opp_team_name: str, scored: int, 
-                             conceded: int, home_away: str) -> str:
+                             conceded: int, at_home: bool) -> str:
         team_name_initials = self.convert_team_name_or_initials(team_name)
         opp_team_name_initials = self.convert_team_name_or_initials(opp_team_name)
         
         # Construct prediction string for display...
-        if home_away == "Home":
+        if at_home:
             scoreline = f'{team_name_initials} {scored} - {conceded} {opp_team_name_initials}'
         else:
             scoreline = f'{opp_team_name_initials} {conceded} - {scored} {team_name_initials}'

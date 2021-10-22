@@ -1,14 +1,15 @@
-from datetime import datetime
 import json
 import os
+from datetime import datetime
 from os.path import dirname, join
 
 import requests
 from dotenv import load_dotenv
+from timebudget import timebudget
 
 from data import Data
-from visualiser import Visualiser
 from utilities import Utilities
+from visualiser import Visualiser
 
 utilities = Utilities()
 
@@ -34,7 +35,7 @@ class Updater:
 
         # Store for new requested API data or old data from memory
         self.json_data = {'fixtures': {}, 'standings': {}}
-        self.last_updated = ''
+        self.last_updated = None  # type: str
 
     # ----------------------------- DATA API -----------------------------------
 
@@ -156,9 +157,10 @@ class Updater:
         # Using stored data in self.json_data
         self.update_dataframes(n_seasons, display_tables)
     
-    def update(self, n_seasons: int = 4, team_name: str = '', 
-               display_tables: bool = False, display_graphs: bool = False, 
-               request_new: bool = True):
+    @timebudget
+    def update_all(self, n_seasons: int = 4, team_name: str = '', 
+                   display_tables: bool = False, display_graphs: bool = False, 
+                   request_new: bool = True):
         try:
             self.fetch_json_data(n_seasons, request_new)
         except ValueError as e:
@@ -187,4 +189,4 @@ class Updater:
 if __name__ == "__main__":
     # Update all dataframes
     updater = Updater(2021)
-    updater.update(request_new=True, team_name='Liverpool FC', display_tables=True, display_graphs=False)
+    updater.update_all(request_new=True, team_name='Liverpool FC', display_tables=True, display_graphs=False)
