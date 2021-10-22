@@ -103,7 +103,7 @@ class Utilities:
         _, home, _, away, _ = score.split(' ')
         return int(home), int(away)
     
-    def extract_str_score_from_scoreline(self, score: str) -> tuple[int, int]:
+    def extract_str_score_from_scoreline(self, score: str) -> tuple[str, str]:
         _, home, _, away, _ = score.split(' ')
         return home, away
     
@@ -128,7 +128,6 @@ class Utilities:
             scoreline = f'{team_name_initials} {score} {opp_team_name_initials}'
         else:
             scoreline = f'{opp_team_name_initials} {score} {team_name_initials}'
-
         return scoreline
 
     def format_scoreline_str(self, team_name: str, opp_team_name: str, scored: int, 
@@ -141,5 +140,4 @@ class Utilities:
             scoreline = f'{team_name_initials} {scored} - {conceded} {opp_team_name_initials}'
         else:
             scoreline = f'{opp_team_name_initials} {conceded} - {scored} {team_name_initials}'
-
         return scoreline

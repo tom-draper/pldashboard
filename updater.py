@@ -44,11 +44,12 @@ class Updater:
             response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(season),
                                     headers=self.headers)
             
-            if response.status_code == 429 or response.status_code == 403:
-                print('❌  Status:', response.status_code)
+            code = response.status_code
+            if code== 429 or code == 403:
+                print('❌  Status:', code)
                 raise ValueError('❌ ERROR: Data request failed')
             else:
-                print('✔️  Status:', response.status_code)
+                print('✔️  Status:', code)
 
             return response.json()['matches']
         else:
@@ -61,11 +62,12 @@ class Updater:
             response = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(season),
                                     headers=self.headers)
 
-            if response.status_code == 429 or response.status_code == 403:
-                print('❌  Status:', response.status_code)
+            code = response.status_code
+            if code == 429 or code == 403:
+                print('❌  Status:', code)
                 raise ValueError('❌ ERROR: Data request failed')
             else:
-                print('✔️  Status:', response.status_code)
+                print('✔️  Status:', code)
 
             return response.json()['standings'][0]['table']
         else:
