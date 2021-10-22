@@ -10,16 +10,8 @@
             {
                 "id": 0,
                 "time": "00:00",
-                "homeInitials": "BRE",
-                "awayInitials": "ARS",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 0
-                },
+                "prediction": "BRE 0 - 0 ARS",
+                "actual": "BRE 2 - 0 ARS",
                 "details": null
             }
         ],
@@ -27,106 +19,50 @@
             {
                 "id": 1,
                 "time": "00:00",
-                "homeInitials": "WAT",
-                "awayInitials": "AVL",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 3,
-                    "xGAway": 2
-                },
+                "prediction": "WAT 2 - 1 AVL",
+                "actual": "WAT 3 - 2 AVL",
                 "details": null
             },
             {
                 "id": 2,
                 "time": "00:00",
-                "homeInitials": "LEI",
-                "awayInitials": "WOL",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 0
-                },
+                "prediction": "LEI 0 - 0 WOL",
+                "actual": "LEI 1 - 0 WOL",
                 "details": null
             },
             {
                 "id": 3,
                 "time": "00:00",
-                "homeInitials": "EVE",
-                "awayInitials": "SOU",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 3,
-                    "xGAway": 1
-                },
+                "prediction": "EVE 1 - 1 SOU",
+                "actual": "EVE 3 - 1 SOU",
                 "details": null
             },
             {
                 "id": 4,
                 "time": "00:00",
-                "homeInitials": "CHE",
-                "awayInitials": "CRY",
-                "prediction": {
-                    "xGHome": 3,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 3,
-                    "xGAway": 0
-                },
+                "prediction": "CHE 3 - 0 CRY",
+                "actual": "CHE 3 - 0 CRY",
                 "details": null
             },
             {
                 "id": 5,
                 "time": "00:00",
-                "homeInitials": "BUR",
-                "awayInitials": "BHA",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 2
-                },
+                "prediction": "BUR 0 - 1 BHA",
+                "actual": "BUR 1 - 2 BHA",
                 "details": null
             },
             {
                 "id": 6,
                 "time": "00:00",
-                "homeInitials": "NOR",
-                "awayInitials": "LIV",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 3
-                },
+                "prediction": "NOR 0 - 2 LIV",
+                "actual": "NOR 0 - 3 LIV",
                 "details": null
             },
             {
                 "id": 7,
                 "time": "00:00",
-                "homeInitials": "MUN",
-                "awayInitials": "LEE",
-                "prediction": {
-                    "xGHome": 3,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 5,
-                    "xGAway": 1
-                },
+                "prediction": "MUN 3 - 0 LEE",
+                "actual": "MUN 5 - 1 LEE",
                 "details": null
             }
         ],
@@ -134,31 +70,15 @@
             {
                 "id": 8,
                 "time": "00:00",
-                "homeInitials": "NEW",
-                "awayInitials": "WHU",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 4
-                },
+                "prediction": "NEW 2 - 1 WHU",
+                "actual": "NEW 2 - 4 WHU",
                 "details": null
             },
             {
                 "id": 9,
                 "time": "00:00",
-                "homeInitials": "TOT",
-                "awayInitials": "MCI",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 0
-                },
+                "prediction": "TOT 1 - 1 MCI",
+                "actual": "TOT 1 - 0 MCI",
                 "details": null
             }
         ],
@@ -166,91 +86,43 @@
             {
                 "id": 10,
                 "time": "00:00",
-                "homeInitials": "CRY",
-                "awayInitials": "BRE",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
+                "prediction": "CRY 0 - 0 BRE",
+                "actual": "CRY 0 - 0 BRE",
                 "details": null
             },
             {
                 "id": 11,
                 "time": "00:00",
-                "homeInitials": "LEE",
-                "awayInitials": "EVE",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
+                "prediction": "LEE 1 - 2 EVE",
+                "actual": "LEE 2 - 2 EVE",
                 "details": null
             },
             {
                 "id": 12,
                 "time": "00:00",
-                "homeInitials": "LIV",
-                "awayInitials": "BUR",
-                "prediction": {
-                    "xGHome": 3,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 0
-                },
+                "prediction": "LIV 3 - 0 BUR",
+                "actual": "LIV 2 - 0 BUR",
                 "details": null
             },
             {
                 "id": 13,
                 "time": "00:00",
-                "homeInitials": "BHA",
-                "awayInitials": "WAT",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 0
-                },
+                "prediction": "BHA 2 - 1 WAT",
+                "actual": "BHA 2 - 0 WAT",
                 "details": null
             },
             {
                 "id": 14,
                 "time": "00:00",
-                "homeInitials": "MCI",
-                "awayInitials": "NOR",
-                "prediction": {
-                    "xGHome": 4,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 5,
-                    "xGAway": 0
-                },
+                "prediction": "MCI 4 - 1 NOR",
+                "actual": "MCI 5 - 0 NOR",
                 "details": null
             },
             {
                 "id": 15,
                 "time": "00:00",
-                "homeInitials": "AVL",
-                "awayInitials": "NEW",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 0
-                },
+                "prediction": "AVL 2 - 0 NEW",
+                "actual": "AVL 2 - 0 NEW",
                 "details": null
             }
         ],
@@ -258,46 +130,22 @@
             {
                 "id": 16,
                 "time": "00:00",
-                "homeInitials": "SOU",
-                "awayInitials": "MUN",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 7
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
+                "prediction": "SOU 1 - 7 MUN",
+                "actual": "SOU 1 - 1 MUN",
                 "details": null
             },
             {
                 "id": 17,
                 "time": "00:00",
-                "homeInitials": "WOL",
-                "awayInitials": "TOT",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 3
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 1
-                },
+                "prediction": "WOL 1 - 3 TOT",
+                "actual": "WOL 0 - 1 TOT",
                 "details": null
             },
             {
                 "id": 18,
                 "time": "00:00",
-                "homeInitials": "ARS",
-                "awayInitials": "CHE",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 2
-                },
+                "prediction": "ARS 2 - 2 CHE",
+                "actual": "ARS 0 - 2 CHE",
                 "details": null
             }
         ],
@@ -305,16 +153,8 @@
             {
                 "id": 19,
                 "time": "00:00",
-                "homeInitials": "WHU",
-                "awayInitials": "LEI",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 4,
-                    "xGAway": 1
-                },
+                "prediction": "WHU 2 - 2 LEI",
+                "actual": "WHU 4 - 1 LEI",
                 "details": null
             }
         ],
@@ -322,106 +162,50 @@
             {
                 "id": 20,
                 "time": "00:00",
-                "homeInitials": "LIV",
-                "awayInitials": "CHE",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
+                "prediction": "LIV 2 - 1 CHE",
+                "actual": "LIV 1 - 1 CHE",
                 "details": null
             },
             {
                 "id": 21,
                 "time": "00:00",
-                "homeInitials": "BHA",
-                "awayInitials": "EVE",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 2
-                },
+                "prediction": "BHA 1 - 2 EVE",
+                "actual": "BHA 0 - 2 EVE",
                 "details": null
             },
             {
                 "id": 22,
                 "time": "00:00",
-                "homeInitials": "NOR",
-                "awayInitials": "LEI",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 2
-                },
+                "prediction": "NOR 1 - 0 LEI",
+                "actual": "NOR 1 - 2 LEI",
                 "details": null
             },
             {
                 "id": 23,
                 "time": "00:00",
-                "homeInitials": "MCI",
-                "awayInitials": "ARS",
-                "prediction": {
-                    "xGHome": 3,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 5,
-                    "xGAway": 0
-                },
+                "prediction": "MCI 3 - 0 ARS",
+                "actual": "MCI 5 - 0 ARS",
                 "details": null
             },
             {
                 "id": 24,
                 "time": "00:00",
-                "homeInitials": "AVL",
-                "awayInitials": "BRE",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
+                "prediction": "AVL 0 - 0 BRE",
+                "actual": "AVL 1 - 1 BRE",
                 "details": null
             },
             {
                 "id": 25,
                 "time": "00:00",
-                "homeInitials": "NEW",
-                "awayInitials": "SOU",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
+                "prediction": "NEW 2 - 1 SOU",
+                "actual": "NEW 2 - 2 SOU",
                 "details": null
             },
             {
                 "id": 26,
                 "time": "00:00",
-                "homeInitials": "WHU",
-                "awayInitials": "CRY",
-                "prediction": {
-                    "xGHome": 3,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
+                "prediction": "WHU 3 - 2 CRY",
+                "actual": "WHU 2 - 2 CRY",
                 "details": null
             }
         ],
@@ -429,46 +213,22 @@
             {
                 "id": 27,
                 "time": "00:00",
-                "homeInitials": "BUR",
-                "awayInitials": "LEE",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 3
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
+                "prediction": "BUR 0 - 3 LEE",
+                "actual": "BUR 1 - 1 LEE",
                 "details": null
             },
             {
                 "id": 28,
                 "time": "00:00",
-                "homeInitials": "TOT",
-                "awayInitials": "WAT",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 0
-                },
+                "prediction": "TOT 1 - 0 WAT",
+                "actual": "TOT 1 - 0 WAT",
                 "details": null
             },
             {
                 "id": 29,
                 "time": "00:00",
-                "homeInitials": "WOL",
-                "awayInitials": "MUN",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 1
-                },
+                "prediction": "WOL 0 - 2 MUN",
+                "actual": "WOL 0 - 1 MUN",
                 "details": null
             }
         ],
@@ -476,121 +236,57 @@
             {
                 "id": 30,
                 "time": "00:00",
-                "homeInitials": "BRE",
-                "awayInitials": "BHA",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 1
-                },
+                "prediction": "BRE 0 - 0 BHA",
+                "actual": "BRE 0 - 1 BHA",
                 "details": null
             },
             {
                 "id": 31,
                 "time": "00:00",
-                "homeInitials": "ARS",
-                "awayInitials": "NOR",
-                "prediction": {
-                    "xGHome": 3,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 0
-                },
+                "prediction": "ARS 3 - 1 NOR",
+                "actual": "ARS 1 - 0 NOR",
                 "details": null
             },
             {
                 "id": 32,
                 "time": "00:00",
-                "homeInitials": "MUN",
-                "awayInitials": "NEW",
-                "prediction": {
-                    "xGHome": 5,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 4,
-                    "xGAway": 1
-                },
+                "prediction": "MUN 5 - 1 NEW",
+                "actual": "MUN 4 - 1 NEW",
                 "details": null
             },
             {
                 "id": 33,
                 "time": "00:00",
-                "homeInitials": "WAT",
-                "awayInitials": "WOL",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 2
-                },
+                "prediction": "WAT 1 - 1 WOL",
+                "actual": "WAT 0 - 2 WOL",
                 "details": null
             },
             {
                 "id": 34,
                 "time": "00:00",
-                "homeInitials": "CHE",
-                "awayInitials": "AVL",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 3,
-                    "xGAway": 0
-                },
+                "prediction": "CHE 2 - 1 AVL",
+                "actual": "CHE 3 - 0 AVL",
                 "details": null
             },
             {
                 "id": 35,
                 "time": "00:00",
-                "homeInitials": "LEI",
-                "awayInitials": "MCI",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 3
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 1
-                },
+                "prediction": "LEI 2 - 3 MCI",
+                "actual": "LEI 0 - 1 MCI",
                 "details": null
             },
             {
                 "id": 36,
                 "time": "00:00",
-                "homeInitials": "SOU",
-                "awayInitials": "WHU",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 3
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
+                "prediction": "SOU 0 - 3 WHU",
+                "actual": "SOU 0 - 0 WHU",
                 "details": null
             },
             {
                 "id": 37,
                 "time": "00:00",
-                "homeInitials": "CRY",
-                "awayInitials": "TOT",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 5
-                },
-                "actual": {
-                    "xGHome": 3,
-                    "xGAway": 0
-                },
+                "prediction": "CRY 1 - 5 TOT",
+                "actual": "CRY 3 - 0 TOT",
                 "details": null
             }
         ],
@@ -598,16 +294,8 @@
             {
                 "id": 38,
                 "time": "00:00",
-                "homeInitials": "LEE",
-                "awayInitials": "LIV",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 4
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 3
-                },
+                "prediction": "LEE 2 - 4 LIV",
+                "actual": "LEE 0 - 3 LIV",
                 "details": null
             }
         ],
@@ -615,16 +303,8 @@
             {
                 "id": 39,
                 "time": "00:00",
-                "homeInitials": "EVE",
-                "awayInitials": "BUR",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 3,
-                    "xGAway": 1
-                },
+                "prediction": "EVE 1 - 1 BUR",
+                "actual": "EVE 3 - 1 BUR",
                 "details": null
             }
         ],
@@ -632,16 +312,8 @@
             {
                 "id": 40,
                 "time": "00:00",
-                "homeInitials": "NEW",
-                "awayInitials": "LEE",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 3
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
+                "prediction": "NEW 2 - 3 LEE",
+                "actual": "NEW 1 - 1 LEE",
                 "details": null
             }
         ],
@@ -649,91 +321,43 @@
             {
                 "id": 41,
                 "time": "00:00",
-                "homeInitials": "LIV",
-                "awayInitials": "CRY",
-                "prediction": {
-                    "xGHome": 6,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 3,
-                    "xGAway": 0
-                },
+                "prediction": "LIV 6 - 0 CRY",
+                "actual": "LIV 3 - 0 CRY",
                 "details": null
             },
             {
                 "id": 42,
                 "time": "00:00",
-                "homeInitials": "WOL",
-                "awayInitials": "BRE",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 2
-                },
+                "prediction": "WOL 0 - 0 BRE",
+                "actual": "WOL 0 - 2 BRE",
                 "details": null
             },
             {
                 "id": 43,
                 "time": "00:00",
-                "homeInitials": "BUR",
-                "awayInitials": "ARS",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 1
-                },
+                "prediction": "BUR 1 - 1 ARS",
+                "actual": "BUR 0 - 1 ARS",
                 "details": null
             },
             {
                 "id": 44,
                 "time": "00:00",
-                "homeInitials": "NOR",
-                "awayInitials": "WAT",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 3
-                },
+                "prediction": "NOR 0 - 2 WAT",
+                "actual": "NOR 1 - 3 WAT",
                 "details": null
             },
             {
                 "id": 45,
                 "time": "00:00",
-                "homeInitials": "MCI",
-                "awayInitials": "SOU",
-                "prediction": {
-                    "xGHome": 3,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
+                "prediction": "MCI 3 - 1 SOU",
+                "actual": "MCI 0 - 0 SOU",
                 "details": null
             },
             {
                 "id": 46,
                 "time": "00:00",
-                "homeInitials": "AVL",
-                "awayInitials": "EVE",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 3,
-                    "xGAway": 0
-                },
+                "prediction": "AVL 1 - 1 EVE",
+                "actual": "AVL 3 - 0 EVE",
                 "details": null
             }
         ],
@@ -741,46 +365,22 @@
             {
                 "id": 47,
                 "time": "00:00",
-                "homeInitials": "TOT",
-                "awayInitials": "CHE",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 3
-                },
+                "prediction": "TOT 0 - 2 CHE",
+                "actual": "TOT 0 - 3 CHE",
                 "details": null
             },
             {
                 "id": 48,
                 "time": "00:00",
-                "homeInitials": "WHU",
-                "awayInitials": "MUN",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 2
-                },
+                "prediction": "WHU 1 - 1 MUN",
+                "actual": "WHU 1 - 2 MUN",
                 "details": null
             },
             {
                 "id": 49,
                 "time": "00:00",
-                "homeInitials": "BHA",
-                "awayInitials": "LEI",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
+                "prediction": "BHA 0 - 2 LEI",
+                "actual": "BHA 2 - 1 LEI",
                 "details": null
             }
         ],
@@ -788,106 +388,50 @@
             {
                 "id": 50,
                 "time": "00:00",
-                "homeInitials": "BRE",
-                "awayInitials": "LIV",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 3,
-                    "xGAway": 3
-                },
+                "prediction": "BRE 0 - 0 LIV",
+                "actual": "BRE 3 - 3 LIV",
                 "details": null
             },
             {
                 "id": 51,
                 "time": "00:00",
-                "homeInitials": "LEE",
-                "awayInitials": "WHU",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 3
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 2
-                },
+                "prediction": "LEE 0 - 3 WHU",
+                "actual": "LEE 1 - 2 WHU",
                 "details": null
             },
             {
                 "id": 52,
                 "time": "00:00",
-                "homeInitials": "WAT",
-                "awayInitials": "NEW",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
+                "prediction": "WAT 2 - 1 NEW",
+                "actual": "WAT 1 - 1 NEW",
                 "details": null
             },
             {
                 "id": 53,
                 "time": "00:00",
-                "homeInitials": "LEI",
-                "awayInitials": "BUR",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
+                "prediction": "LEI 2 - 1 BUR",
+                "actual": "LEI 2 - 2 BUR",
                 "details": null
             },
             {
                 "id": 54,
                 "time": "00:00",
-                "homeInitials": "EVE",
-                "awayInitials": "NOR",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 0
-                },
+                "prediction": "EVE 1 - 1 NOR",
+                "actual": "EVE 2 - 0 NOR",
                 "details": null
             },
             {
                 "id": 55,
                 "time": "00:00",
-                "homeInitials": "CHE",
-                "awayInitials": "MCI",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 1
-                },
+                "prediction": "CHE 2 - 2 MCI",
+                "actual": "CHE 0 - 1 MCI",
                 "details": null
             },
             {
                 "id": 56,
                 "time": "00:00",
-                "homeInitials": "MUN",
-                "awayInitials": "AVL",
-                "prediction": {
-                    "xGHome": 3,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 1
-                },
+                "prediction": "MUN 3 - 1 AVL",
+                "actual": "MUN 0 - 1 AVL",
                 "details": null
             }
         ],
@@ -895,31 +439,15 @@
             {
                 "id": 57,
                 "time": "00:00",
-                "homeInitials": "ARS",
-                "awayInitials": "TOT",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 3,
-                    "xGAway": 1
-                },
+                "prediction": "ARS 1 - 2 TOT",
+                "actual": "ARS 3 - 1 TOT",
                 "details": null
             },
             {
                 "id": 58,
                 "time": "00:00",
-                "homeInitials": "SOU",
-                "awayInitials": "WOL",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 1
-                },
+                "prediction": "SOU 2 - 2 WOL",
+                "actual": "SOU 0 - 1 WOL",
                 "details": null
             }
         ],
@@ -927,16 +455,8 @@
             {
                 "id": 59,
                 "time": "00:00",
-                "homeInitials": "CRY",
-                "awayInitials": "BHA",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
+                "prediction": "CRY 1 - 1 BHA",
+                "actual": "CRY 1 - 1 BHA",
                 "details": null
             }
         ],
@@ -944,91 +464,43 @@
             {
                 "id": 60,
                 "time": "00:00",
-                "homeInitials": "BHA",
-                "awayInitials": "ARS",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
+                "prediction": "BHA 1 - 1 ARS",
+                "actual": "BHA 0 - 0 ARS",
                 "details": null
             },
             {
                 "id": 61,
                 "time": "00:00",
-                "homeInitials": "MUN",
-                "awayInitials": "EVE",
-                "prediction": {
-                    "xGHome": 3,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
+                "prediction": "MUN 3 - 1 EVE",
+                "actual": "MUN 1 - 1 EVE",
                 "details": null
             },
             {
                 "id": 62,
                 "time": "00:00",
-                "homeInitials": "LEE",
-                "awayInitials": "WAT",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 0
-                },
+                "prediction": "LEE 1 - 1 WAT",
+                "actual": "LEE 1 - 0 WAT",
                 "details": null
             },
             {
                 "id": 63,
                 "time": "00:00",
-                "homeInitials": "WOL",
-                "awayInitials": "NEW",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
+                "prediction": "WOL 1 - 1 NEW",
+                "actual": "WOL 2 - 1 NEW",
                 "details": null
             },
             {
                 "id": 64,
                 "time": "00:00",
-                "homeInitials": "CHE",
-                "awayInitials": "SOU",
-                "prediction": {
-                    "xGHome": 3,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 3,
-                    "xGAway": 1
-                },
+                "prediction": "CHE 3 - 2 SOU",
+                "actual": "CHE 3 - 1 SOU",
                 "details": null
             },
             {
                 "id": 65,
                 "time": "00:00",
-                "homeInitials": "BUR",
-                "awayInitials": "NOR",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
+                "prediction": "BUR 2 - 0 NOR",
+                "actual": "BUR 0 - 0 NOR",
                 "details": null
             }
         ],
@@ -1036,61 +508,29 @@
             {
                 "id": 66,
                 "time": "00:00",
-                "homeInitials": "WHU",
-                "awayInitials": "BRE",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 2
-                },
+                "prediction": "WHU 1 - 1 BRE",
+                "actual": "WHU 1 - 2 BRE",
                 "details": null
             },
             {
                 "id": 67,
                 "time": "00:00",
-                "homeInitials": "TOT",
-                "awayInitials": "AVL",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
+                "prediction": "TOT 2 - 1 AVL",
+                "actual": "TOT 2 - 1 AVL",
                 "details": null
             },
             {
                 "id": 68,
                 "time": "00:00",
-                "homeInitials": "CRY",
-                "awayInitials": "LEI",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
+                "prediction": "CRY 1 - 2 LEI",
+                "actual": "CRY 2 - 2 LEI",
                 "details": null
             },
             {
                 "id": 69,
                 "time": "00:00",
-                "homeInitials": "LIV",
-                "awayInitials": "MCI",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
+                "prediction": "LIV 2 - 2 MCI",
+                "actual": "LIV 2 - 2 MCI",
                 "details": null
             }
         ],
@@ -1098,16 +538,8 @@
             {
                 "id": 70,
                 "time": "00:00",
-                "homeInitials": "BRE",
-                "awayInitials": "CHE",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 1
-                },
+                "prediction": "BRE 1 - 1 CHE",
+                "actual": "BRE 0 - 1 CHE",
                 "details": {
                     "initial": {
                         "description": "Default",
@@ -1138,16 +570,8 @@
             {
                 "id": 71,
                 "time": "00:00",
-                "homeInitials": "LEI",
-                "awayInitials": "MUN",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 4,
-                    "xGAway": 2
-                },
+                "prediction": "LEI 1 - 2 MUN",
+                "actual": "LEI 4 - 2 MUN",
                 "details": {
                     "initial": {
                         "description": "Previous match average",
@@ -1178,16 +602,8 @@
             {
                 "id": 72,
                 "time": "00:00",
-                "homeInitials": "SOU",
-                "awayInitials": "LEE",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 3
-                },
-                "actual": {
-                    "xGHome": 1,
-                    "xGAway": 0
-                },
+                "prediction": "SOU 0 - 3 LEE",
+                "actual": "SOU 1 - 0 LEE",
                 "details": {
                     "initial": {
                         "description": "Previous match average",
@@ -1218,16 +634,8 @@
             {
                 "id": 73,
                 "time": "00:00",
-                "homeInitials": "WAT",
-                "awayInitials": "LIV",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 4
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 5
-                },
+                "prediction": "WAT 1 - 4 LIV",
+                "actual": "WAT 0 - 5 LIV",
                 "details": {
                     "initial": {
                         "description": "Previous match average",
@@ -1258,16 +666,8 @@
             {
                 "id": 74,
                 "time": "00:00",
-                "homeInitials": "AVL",
-                "awayInitials": "WOL",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 3
-                },
+                "prediction": "AVL 1 - 1 WOL",
+                "actual": "AVL 2 - 3 WOL",
                 "details": {
                     "initial": {
                         "description": "Previous match average",
@@ -1298,16 +698,8 @@
             {
                 "id": 75,
                 "time": "00:00",
-                "homeInitials": "MCI",
-                "awayInitials": "BUR",
-                "prediction": {
-                    "xGHome": 6,
-                    "xGAway": 0
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 0
-                },
+                "prediction": "MCI 6 - 0 BUR",
+                "actual": "MCI 2 - 0 BUR",
                 "details": {
                     "initial": {
                         "description": "Previous match average",
@@ -1338,16 +730,8 @@
             {
                 "id": 76,
                 "time": "00:00",
-                "homeInitials": "NOR",
-                "awayInitials": "BHA",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 2
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 0
-                },
+                "prediction": "NOR 0 - 2 BHA",
+                "actual": "NOR 0 - 0 BHA",
                 "details": {
                     "initial": {
                         "description": "Previous match average",
@@ -1380,16 +764,8 @@
             {
                 "id": 77,
                 "time": "00:00",
-                "homeInitials": "EVE",
-                "awayInitials": "WHU",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 0,
-                    "xGAway": 1
-                },
+                "prediction": "EVE 1 - 1 WHU",
+                "actual": "EVE 0 - 1 WHU",
                 "details": {
                     "initial": {
                         "description": "Previous match average",
@@ -1420,16 +796,8 @@
             {
                 "id": 78,
                 "time": "00:00",
-                "homeInitials": "NEW",
-                "awayInitials": "TOT",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 3
-                },
+                "prediction": "NEW 1 - 1 TOT",
+                "actual": "NEW 2 - 3 TOT",
                 "details": {
                     "initial": {
                         "description": "Previous match average",
@@ -1462,16 +830,8 @@
             {
                 "id": 79,
                 "time": "19:00",
-                "homeInitials": "ARS",
-                "awayInitials": "CRY",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
-                "actual": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
+                "prediction": "ARS 2 - 1 CRY",
+                "actual": "ARS 2 - 2 CRY",
                 "details": {
                     "initial": {
                         "description": "Previous match average",
@@ -1550,12 +910,7 @@
             {
                 "id": 80,
                 "time": "19:00",
-                "homeInitials": "ARS",
-                "awayInitials": "AVL",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
+                "prediction": "ARS 1 - 1 AVL",
                 "actual": null,
                 "details": {
                     "initial": {
@@ -1621,12 +976,7 @@
             {
                 "id": 81,
                 "time": "11:30",
-                "homeInitials": "CHE",
-                "awayInitials": "NOR",
-                "prediction": {
-                    "xGHome": 4,
-                    "xGAway": 1
-                },
+                "prediction": "CHE 4 - 1 NOR",
                 "actual": null,
                 "details": {
                     "initial": {
@@ -1676,12 +1026,7 @@
             {
                 "id": 82,
                 "time": "14:00",
-                "homeInitials": "LEE",
-                "awayInitials": "WOL",
-                "prediction": {
-                    "xGHome": 0,
-                    "xGAway": 1
-                },
+                "prediction": "LEE 0 - 1 WOL",
                 "actual": null,
                 "details": {
                     "initial": {
@@ -1731,12 +1076,7 @@
             {
                 "id": 83,
                 "time": "14:00",
-                "homeInitials": "EVE",
-                "awayInitials": "WAT",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 1
-                },
+                "prediction": "EVE 2 - 1 WAT",
                 "actual": null,
                 "details": {
                     "initial": {
@@ -1800,12 +1140,7 @@
             {
                 "id": 84,
                 "time": "14:00",
-                "homeInitials": "SOU",
-                "awayInitials": "BUR",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
+                "prediction": "SOU 1 - 1 BUR",
                 "actual": null,
                 "details": {
                     "initial": {
@@ -1883,12 +1218,7 @@
             {
                 "id": 85,
                 "time": "14:00",
-                "homeInitials": "CRY",
-                "awayInitials": "NEW",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
+                "prediction": "CRY 1 - 1 NEW",
                 "actual": null,
                 "details": {
                     "initial": {
@@ -1966,12 +1296,7 @@
             {
                 "id": 86,
                 "time": "16:30",
-                "homeInitials": "BHA",
-                "awayInitials": "MCI",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 3
-                },
+                "prediction": "BHA 1 - 3 MCI",
                 "actual": null,
                 "details": {
                     "initial": {
@@ -2051,12 +1376,7 @@
             {
                 "id": 87,
                 "time": "13:00",
-                "homeInitials": "BRE",
-                "awayInitials": "LEI",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 1
-                },
+                "prediction": "BRE 1 - 1 LEI",
                 "actual": null,
                 "details": {
                     "initial": {
@@ -2091,12 +1411,7 @@
             {
                 "id": 88,
                 "time": "13:00",
-                "homeInitials": "WHU",
-                "awayInitials": "TOT",
-                "prediction": {
-                    "xGHome": 2,
-                    "xGAway": 2
-                },
+                "prediction": "WHU 2 - 2 TOT",
                 "actual": null,
                 "details": {
                     "initial": {
@@ -2174,12 +1489,7 @@
             {
                 "id": 89,
                 "time": "15:30",
-                "homeInitials": "MUN",
-                "awayInitials": "LIV",
-                "prediction": {
-                    "xGHome": 1,
-                    "xGAway": 3
-                },
+                "prediction": "MUN 1 - 3 LIV",
                 "actual": null,
                 "details": {
                     "initial": {
