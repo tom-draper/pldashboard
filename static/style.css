@@ -920,11 +920,20 @@ img {
   display: flex;
 }
 .prediction-label {
-  flex: 4;
+  flex: 5;
 }
 .prediction-value {
-  flex: 6;
+  flex: 5;
+  display: flex;
   text-align: right;
+}
+.prediction-initials {
+  flex: 1;
+  text-align: center;
+}
+.prediction-score {
+  flex: 1;
+  text-align: center;
 }
 .prediction-container {
   padding: 6px 0 3px 0;
@@ -990,6 +999,9 @@ img {
   .prediction-time {
     right: -28px;
     top: calc(50% - 6px);
+  }
+  .prediction-value {
+    flex: 4;
   }
 }
 

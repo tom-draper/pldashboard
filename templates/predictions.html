@@ -33,12 +33,20 @@
 
                   <div class="prediction prediction-item">
                     <div class="prediction-label">Predicted:</div>
-                    <div class="prediction-value">{{ pred['prediction'] }}</div>
+                    <div class="prediction-value">
+                      <div class="prediction-initials">{{ pred['homeInitials'] }}</div>
+                      <div class="prediction-score">{{ pred['prediction']['xGHome'] }} - {{ pred['prediction']['xGAway'] }}</div>
+                      <div class="prediction-initials">{{ pred['awayInitials'] }}</div>
+                    </div>
                   </div>
                   {% if pred['actual'] != None %}
                     <div class="actual prediction-item">
                       <div class="prediction-label">Actual:</div>
-                      <div class="prediction-value">{{ pred['actual'] }}</div>
+                      <div class="prediction-value">
+                        <div class="prediction-initials">{{ pred['homeInitials'] }}</div>
+                        <div class="prediction-score">{{ pred['actual']['homeGoals'] }} - {{ pred['actual']['awayGoals'] }}</div>
+                        <div class="prediction-initials">{{ pred['awayInitials'] }}</div>
+                      </div>
                     </div>
                   {% else %}
                   <div class="prediction-time">
@@ -81,7 +89,6 @@
         {{ params.last_updated }} UTC
       </div>
     </div>
-
 
     <script>
       function toggleDetailsDisplay(id) {

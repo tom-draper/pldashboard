@@ -2,131 +2,181 @@
   <thead>
     <tr style="text-align: center;">
       <th></th>
-      <th>Time</th>
+      <th>Date</th>
+      <th>HomeInitials</th>
+      <th>AwayInitials</th>
       <th>Prediction</th>
       <th>Details</th>
+    </tr>
+    <tr>
+      <th>Teams</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>Brentford FC</th>
-      <td>2021-10-24 13:00:00</td>
-      <td>BRE 1 - 1 LEI</td>
-      <td>{'initial': {'description': 'Default', 'previousMatches': [], 'xGHome': 1.0, 'xGAway': 1.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.0 += 1.0 * -0.092 * 1.5', 'xGHome': 1.0, 'xGAway': 1.138, 'formRatingHome': 41.5, 'formRatingAway': 50.7}, {'description': 'Adjusted by home advantage', 'operation': '1.138 *= 1 - (0.0 * 1.5)', 'xGHome': 1.0, 'xGAway': 1.138, 'homeAdvantage': 0.0}], 'score': {'xGHome': 1.0, 'xGAway': 1.138}}</td>
+      <td>2021-10-24</td>
+      <td>BRE</td>
+      <td>LEI</td>
+      <td>{'xGHome': 1, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Default', 'previousMatches': [], 'xGHome': 1.0, 'xGAway': 1.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.0 += 1.0 * -0.092 * 1.5', 'xGHome': 1.0, 'xGAway': 1.138, 'formRatingHome': 41.5, 'formRatingAway': 50.7}, {'description': 'Adjusted by home advantage', 'operation': '1.138 *= 1 - (-0.125 * 1.5)', 'xGHome': 1.0, 'xGAway': 1.3514, 'homeAdvantage': -0.125}], 'score': {'xGHome': 1.0, 'xGAway': 1.3514}}</td>
     </tr>
     <tr>
       <th>Arsenal FC</th>
-      <td>2021-10-22 19:00:00</td>
-      <td>ARS 1 - 1 AVL</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-06T12:30:00Z', 'homeTeam': 'Aston Villa FC', 'awayTeam': 'Arsenal FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2020-11-08T19:15:00Z', 'homeTeam': 'Arsenal FC', 'awayTeam': 'Aston Villa FC', 'homeGoals': 0, 'awayGoals': 3}, {'date': '2020-07-21T19:15:00Z', 'homeTeam': 'Aston Villa FC', 'awayTeam': 'Arsenal FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-09-22T15:30:00Z', 'homeTeam': 'Arsenal FC', 'awayTeam': 'Aston Villa FC', 'homeGoals': 3, 'awayGoals': 2}], 'xGHome': 0.75, 'xGAway': 1.75}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '0.75 += 0.75 * 0.308 * 1.5', 'xGHome': 1.0965, 'xGAway': 1.75, 'formRatingHome': 57.3, 'formRatingAway': 26.5}, {'description': 'Adjusted by home advantage', 'operation': '1.75 *= 1 - (0.1711 * 1.5)', 'xGHome': 1.0965, 'xGAway': 1.301, 'homeAdvantage': 0.1711}], 'score': {'xGHome': 1.0965, 'xGAway': 1.301}}</td>
+      <td>2021-10-30</td>
+      <td>LEI</td>
+      <td>ARS</td>
+      <td>{'xGHome': 2, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-28T12:00:00Z', 'homeTeam': 'Leicester City FC', 'awayTeam': 'Arsenal FC', 'homeGoals': 1, 'awayGoals': 3}, {'date': '2020-10-25T19:15:00Z', 'homeTeam': 'Arsenal FC', 'awayTeam': 'Leicester City FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2020-07-07T19:15:00Z', 'homeTeam': 'Arsenal FC', 'awayTeam': 'Leicester City FC', 'homeGoals': 1, 'awayGoals': 1}, {'date': '2019-11-09T17:30:00Z', 'homeTeam': 'Leicester City FC', 'awayTeam': 'Arsenal FC', 'homeGoals': 2, 'awayGoals': 0}, {'date': '2019-04-28T11:00:00Z', 'homeTeam': 'Leicester City FC', 'awayTeam': 'Arsenal FC', 'homeGoals': 3, 'awayGoals': 0}, {'date': '2018-10-22T19:00:00Z', 'homeTeam': 'Arsenal FC', 'awayTeam': 'Leicester City FC', 'homeGoals': 3, 'awayGoals': 1}], 'xGHome': 1.5, 'xGAway': 1.1667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.1667 += 1.1667 * 0.047 * 1.5', 'xGHome': 1.5, 'xGAway': 1.2489, 'formRatingHome': 50.7, 'formRatingAway': 55.4}, {'description': 'Adjusted by home advantage', 'operation': '1.2489 *= 1 - (0.0855 * 1.5)', 'xGHome': 1.5, 'xGAway': 1.0887, 'homeAdvantage': 0.0855}], 'score': {'xGHome': 1.5, 'xGAway': 1.0887}}</td>
     </tr>
     <tr>
       <th>Manchester United FC</th>
-      <td>2021-10-24 15:30:00</td>
-      <td>MUN 1 - 3 LIV</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-05-13T19:15:00Z', 'homeTeam': 'Manchester United FC', 'awayTeam': 'Liverpool FC', 'homeGoals': 2, 'awayGoals': 4}, {'date': '2021-01-17T16:30:00Z', 'homeTeam': 'Liverpool FC', 'awayTeam': 'Manchester United FC', 'homeGoals': 0, 'awayGoals': 0}, {'date': '2020-01-19T16:30:00Z', 'homeTeam': 'Liverpool FC', 'awayTeam': 'Manchester United FC', 'homeGoals': 2, 'awayGoals': 0}, {'date': '2019-10-20T15:30:00Z', 'homeTeam': 'Manchester United FC', 'awayTeam': 'Liverpool FC', 'homeGoals': 1, 'awayGoals': 1}, {'date': '2019-02-24T14:05:00Z', 'homeTeam': 'Manchester United FC', 'awayTeam': 'Liverpool FC', 'homeGoals': 0, 'awayGoals': 0}, {'date': '2018-12-16T16:00:00Z', 'homeTeam': 'Liverpool FC', 'awayTeam': 'Manchester United FC', 'homeGoals': 3, 'awayGoals': 1}], 'xGHome': 0.6667, 'xGAway': 1.6667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.6667 += 1.6667 * -0.499 * 1.5', 'xGHome': 0.6667, 'xGAway': 2.9142, 'formRatingHome': 16.4, 'formRatingAway': 66.3}, {'description': 'Adjusted by home advantage', 'operation': '2.9142 *= 1 - (0.0395 * 1.5)', 'xGHome': 0.6667, 'xGAway': 2.7416, 'homeAdvantage': 0.0395}], 'score': {'xGHome': 0.6667, 'xGAway': 2.7416}}</td>
+      <td>2021-10-24</td>
+      <td>MUN</td>
+      <td>LIV</td>
+      <td>{'xGHome': 1, 'xGAway': 3}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-05-13T19:15:00Z', 'homeTeam': 'Manchester United FC', 'awayTeam': 'Liverpool FC', 'homeGoals': 2, 'awayGoals': 4}, {'date': '2021-01-17T16:30:00Z', 'homeTeam': 'Liverpool FC', 'awayTeam': 'Manchester United FC', 'homeGoals': 0, 'awayGoals': 0}, {'date': '2020-01-19T16:30:00Z', 'homeTeam': 'Liverpool FC', 'awayTeam': 'Manchester United FC', 'homeGoals': 2, 'awayGoals': 0}, {'date': '2019-10-20T15:30:00Z', 'homeTeam': 'Manchester United FC', 'awayTeam': 'Liverpool FC', 'homeGoals': 1, 'awayGoals': 1}, {'date': '2019-02-24T14:05:00Z', 'homeTeam': 'Manchester United FC', 'awayTeam': 'Liverpool FC', 'homeGoals': 0, 'awayGoals': 0}, {'date': '2018-12-16T16:00:00Z', 'homeTeam': 'Liverpool FC', 'awayTeam': 'Manchester United FC', 'homeGoals': 3, 'awayGoals': 1}], 'xGHome': 0.6667, 'xGAway': 1.6667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.6667 += 1.6667 * -0.499 * 1.5', 'xGHome': 0.6667, 'xGAway': 2.9142, 'formRatingHome': 16.4, 'formRatingAway': 66.3}, {'description': 'Adjusted by home advantage', 'operation': '2.9142 *= 1 - (0.0263 * 1.5)', 'xGHome': 0.6667, 'xGAway': 2.7991, 'homeAdvantage': 0.0263}], 'score': {'xGHome': 0.6667, 'xGAway': 2.7991}}</td>
     </tr>
     <tr>
       <th>Leeds United FC</th>
-      <td>2021-10-23 14:00:00</td>
-      <td>LEE 0 - 1 WOL</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-19T20:00:00Z', 'homeTeam': 'Wolverhampton Wanderers FC', 'awayTeam': 'Leeds United FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2020-10-19T19:00:00Z', 'homeTeam': 'Leeds United FC', 'awayTeam': 'Wolverhampton Wanderers FC', 'homeGoals': 0, 'awayGoals': 1}], 'xGHome': 0.0, 'xGAway': 1.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.0 += 1.0 * -0.061 * 1.5', 'xGHome': 0.0, 'xGAway': 1.0915, 'formRatingHome': 23.2, 'formRatingAway': 29.3}, {'description': 'Adjusted by home advantage', 'operation': '1.0915 *= 1 - (0.0 * 1.5)', 'xGHome': 0.0, 'xGAway': 1.0915, 'homeAdvantage': 0.0}], 'score': {'xGHome': 0.0, 'xGAway': 1.0915}}</td>
+      <td>2021-10-23</td>
+      <td>LEE</td>
+      <td>WOL</td>
+      <td>{'xGHome': 0, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-19T20:00:00Z', 'homeTeam': 'Wolverhampton Wanderers FC', 'awayTeam': 'Leeds United FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2020-10-19T19:00:00Z', 'homeTeam': 'Leeds United FC', 'awayTeam': 'Wolverhampton Wanderers FC', 'homeGoals': 0, 'awayGoals': 1}], 'xGHome': 0.0, 'xGAway': 1.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.0 += 1.0 * -0.061 * 1.5', 'xGHome': 0.0, 'xGAway': 1.0915, 'formRatingHome': 23.2, 'formRatingAway': 29.3}, {'description': 'Adjusted by home advantage', 'operation': '1.0915 *= 1 - (0.125 * 1.5)', 'xGHome': 0.0, 'xGAway': 0.8868, 'homeAdvantage': 0.125}], 'score': {'xGHome': 0.0, 'xGAway': 0.8868}}</td>
     </tr>
     <tr>
       <th>Watford FC</th>
-      <td>2021-10-23 14:00:00</td>
-      <td>EVE 2 - 1 WAT</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2020-02-01T15:00:00Z', 'homeTeam': 'Watford FC', 'awayTeam': 'Everton FC', 'homeGoals': 2, 'awayGoals': 3}, {'date': '2019-08-17T14:00:00Z', 'homeTeam': 'Everton FC', 'awayTeam': 'Watford FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-02-09T15:00:00Z', 'homeTeam': 'Watford FC', 'awayTeam': 'Everton FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2018-12-10T20:00:00Z', 'homeTeam': 'Everton FC', 'awayTeam': 'Watford FC', 'homeGoals': 2, 'awayGoals': 2}], 'xGHome': 1.5, 'xGAway': 1.25}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.25 += 1.25 * 0.086 * 1.5', 'xGHome': 1.5, 'xGAway': 1.4112, 'formRatingHome': 0.3, 'formRatingAway': 8.9}, {'description': 'Adjusted by home advantage', 'operation': '1.4112 *= 1 - (0.1053 * 1.5)', 'xGHome': 1.5, 'xGAway': 1.1884, 'homeAdvantage': 0.1053}], 'score': {'xGHome': 1.5, 'xGAway': 1.1884}}</td>
+      <td>2021-10-23</td>
+      <td>EVE</td>
+      <td>WAT</td>
+      <td>{'xGHome': 2, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2020-02-01T15:00:00Z', 'homeTeam': 'Watford FC', 'awayTeam': 'Everton FC', 'homeGoals': 2, 'awayGoals': 3}, {'date': '2019-08-17T14:00:00Z', 'homeTeam': 'Everton FC', 'awayTeam': 'Watford FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-02-09T15:00:00Z', 'homeTeam': 'Watford FC', 'awayTeam': 'Everton FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2018-12-10T20:00:00Z', 'homeTeam': 'Everton FC', 'awayTeam': 'Watford FC', 'homeGoals': 2, 'awayGoals': 2}], 'xGHome': 1.5, 'xGAway': 1.25}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.25 += 1.25 * 0.086 * 1.5', 'xGHome': 1.5, 'xGAway': 1.4112, 'formRatingHome': 0.3, 'formRatingAway': 8.9}, {'description': 'Adjusted by home advantage', 'operation': '1.4112 *= 1 - (0.1535 * 1.5)', 'xGHome': 1.5, 'xGAway': 1.0863, 'homeAdvantage': 0.1535}], 'score': {'xGHome': 1.5, 'xGAway': 1.0863}}</td>
     </tr>
     <tr>
       <th>Aston Villa FC</th>
-      <td>2021-10-22 19:00:00</td>
-      <td>ARS 1 - 1 AVL</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-06T12:30:00Z', 'homeTeam': 'Aston Villa FC', 'awayTeam': 'Arsenal FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2020-11-08T19:15:00Z', 'homeTeam': 'Arsenal FC', 'awayTeam': 'Aston Villa FC', 'homeGoals': 0, 'awayGoals': 3}, {'date': '2020-07-21T19:15:00Z', 'homeTeam': 'Aston Villa FC', 'awayTeam': 'Arsenal FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-09-22T15:30:00Z', 'homeTeam': 'Arsenal FC', 'awayTeam': 'Aston Villa FC', 'homeGoals': 3, 'awayGoals': 2}], 'xGHome': 0.75, 'xGAway': 1.75}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '0.75 += 0.75 * -0.308 * 1.5', 'xGHome': 1.0965, 'xGAway': 1.75, 'formRatingHome': 57.3, 'formRatingAway': 26.5}, {'description': 'Adjusted by home advantage', 'operation': '1.75 *= 1 - (0.1711 * 1.5)', 'xGHome': 1.0965, 'xGAway': 1.301, 'homeAdvantage': 0.1711}], 'score': {'xGHome': 1.0965, 'xGAway': 1.301}}</td>
+      <td>2021-10-31</td>
+      <td>AVL</td>
+      <td>WHU</td>
+      <td>{'xGHome': 1, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-03T20:15:00Z', 'homeTeam': 'Aston Villa FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 1, 'awayGoals': 3}, {'date': '2020-11-30T20:00:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Aston Villa FC', 'homeGoals': 2, 'awayGoals': 1}, {'date': '2020-07-26T15:00:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Aston Villa FC', 'homeGoals': 1, 'awayGoals': 1}, {'date': '2019-09-16T19:00:00Z', 'homeTeam': 'Aston Villa FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 0, 'awayGoals': 0}], 'xGHome': 0.75, 'xGAway': 1.5}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '0.75 += 0.75 * 0.058 * 1.5', 'xGHome': 0.8152, 'xGAway': 1.5, 'formRatingHome': 36.9, 'formRatingAway': 31.1}, {'description': 'Adjusted by home advantage', 'operation': '1.5 *= 1 - (0.1491 * 1.5)', 'xGHome': 0.8152, 'xGAway': 1.1645, 'homeAdvantage': 0.1491}], 'score': {'xGHome': 0.8152, 'xGAway': 1.1645}}</td>
     </tr>
     <tr>
       <th>Leicester City FC</th>
-      <td>2021-10-24 13:00:00</td>
-      <td>BRE 1 - 1 LEI</td>
-      <td>{'initial': {'description': 'Default', 'previousMatches': [], 'xGHome': 1.0, 'xGAway': 1.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.0 += 1.0 * 0.092 * 1.5', 'xGHome': 1.0, 'xGAway': 1.138, 'formRatingHome': 41.5, 'formRatingAway': 50.7}, {'description': 'Adjusted by home advantage', 'operation': '1.138 *= 1 - (0.0 * 1.5)', 'xGHome': 1.0, 'xGAway': 1.138, 'homeAdvantage': 0.0}], 'score': {'xGHome': 1.0, 'xGAway': 1.138}}</td>
+      <td>2021-10-24</td>
+      <td>BRE</td>
+      <td>LEI</td>
+      <td>{'xGHome': 1, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Default', 'previousMatches': [], 'xGHome': 1.0, 'xGAway': 1.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.0 += 1.0 * 0.092 * 1.5', 'xGHome': 1.0, 'xGAway': 1.138, 'formRatingHome': 41.5, 'formRatingAway': 50.7}, {'description': 'Adjusted by home advantage', 'operation': '1.138 *= 1 - (-0.125 * 1.5)', 'xGHome': 1.0, 'xGAway': 1.3514, 'homeAdvantage': -0.125}], 'score': {'xGHome': 1.0, 'xGAway': 1.3514}}</td>
     </tr>
     <tr>
       <th>Wolverhampton Wanderers FC</th>
-      <td>2021-10-23 14:00:00</td>
-      <td>LEE 0 - 1 WOL</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-19T20:00:00Z', 'homeTeam': 'Wolverhampton Wanderers FC', 'awayTeam': 'Leeds United FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2020-10-19T19:00:00Z', 'homeTeam': 'Leeds United FC', 'awayTeam': 'Wolverhampton Wanderers FC', 'homeGoals': 0, 'awayGoals': 1}], 'xGHome': 0.0, 'xGAway': 1.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.0 += 1.0 * 0.061 * 1.5', 'xGHome': 0.0, 'xGAway': 1.0915, 'formRatingHome': 23.2, 'formRatingAway': 29.3}, {'description': 'Adjusted by home advantage', 'operation': '1.0915 *= 1 - (0.0 * 1.5)', 'xGHome': 0.0, 'xGAway': 1.0915, 'homeAdvantage': 0.0}], 'score': {'xGHome': 0.0, 'xGAway': 1.0915}}</td>
+      <td>2021-10-23</td>
+      <td>LEE</td>
+      <td>WOL</td>
+      <td>{'xGHome': 0, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-19T20:00:00Z', 'homeTeam': 'Wolverhampton Wanderers FC', 'awayTeam': 'Leeds United FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2020-10-19T19:00:00Z', 'homeTeam': 'Leeds United FC', 'awayTeam': 'Wolverhampton Wanderers FC', 'homeGoals': 0, 'awayGoals': 1}], 'xGHome': 0.0, 'xGAway': 1.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.0 += 1.0 * 0.061 * 1.5', 'xGHome': 0.0, 'xGAway': 1.0915, 'formRatingHome': 23.2, 'formRatingAway': 29.3}, {'description': 'Adjusted by home advantage', 'operation': '1.0915 *= 1 - (0.125 * 1.5)', 'xGHome': 0.0, 'xGAway': 0.8868, 'homeAdvantage': 0.125}], 'score': {'xGHome': 0.0, 'xGAway': 0.8868}}</td>
     </tr>
     <tr>
       <th>Everton FC</th>
-      <td>2021-10-23 14:00:00</td>
-      <td>EVE 2 - 1 WAT</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2020-02-01T15:00:00Z', 'homeTeam': 'Watford FC', 'awayTeam': 'Everton FC', 'homeGoals': 2, 'awayGoals': 3}, {'date': '2019-08-17T14:00:00Z', 'homeTeam': 'Everton FC', 'awayTeam': 'Watford FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-02-09T15:00:00Z', 'homeTeam': 'Watford FC', 'awayTeam': 'Everton FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2018-12-10T20:00:00Z', 'homeTeam': 'Everton FC', 'awayTeam': 'Watford FC', 'homeGoals': 2, 'awayGoals': 2}], 'xGHome': 1.5, 'xGAway': 1.25}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.25 += 1.25 * -0.086 * 1.5', 'xGHome': 1.5, 'xGAway': 1.4112, 'formRatingHome': 0.3, 'formRatingAway': 8.9}, {'description': 'Adjusted by home advantage', 'operation': '1.4112 *= 1 - (0.1053 * 1.5)', 'xGHome': 1.5, 'xGAway': 1.1884, 'homeAdvantage': 0.1053}], 'score': {'xGHome': 1.5, 'xGAway': 1.1884}}</td>
+      <td>2021-10-23</td>
+      <td>EVE</td>
+      <td>WAT</td>
+      <td>{'xGHome': 2, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2020-02-01T15:00:00Z', 'homeTeam': 'Watford FC', 'awayTeam': 'Everton FC', 'homeGoals': 2, 'awayGoals': 3}, {'date': '2019-08-17T14:00:00Z', 'homeTeam': 'Everton FC', 'awayTeam': 'Watford FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-02-09T15:00:00Z', 'homeTeam': 'Watford FC', 'awayTeam': 'Everton FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2018-12-10T20:00:00Z', 'homeTeam': 'Everton FC', 'awayTeam': 'Watford FC', 'homeGoals': 2, 'awayGoals': 2}], 'xGHome': 1.5, 'xGAway': 1.25}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.25 += 1.25 * -0.086 * 1.5', 'xGHome': 1.5, 'xGAway': 1.4112, 'formRatingHome': 0.3, 'formRatingAway': 8.9}, {'description': 'Adjusted by home advantage', 'operation': '1.4112 *= 1 - (0.1535 * 1.5)', 'xGHome': 1.5, 'xGAway': 1.0863, 'homeAdvantage': 0.1535}], 'score': {'xGHome': 1.5, 'xGAway': 1.0863}}</td>
     </tr>
     <tr>
       <th>Southampton FC</th>
-      <td>2021-10-23 14:00:00</td>
-      <td>SOU 1 - 1 BUR</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-04-04T11:00:00Z', 'homeTeam': 'Southampton FC', 'awayTeam': 'Burnley FC', 'homeGoals': 3, 'awayGoals': 2}, {'date': '2020-09-26T19:00:00Z', 'homeTeam': 'Burnley FC', 'awayTeam': 'Southampton FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2020-02-15T12:30:00Z', 'homeTeam': 'Southampton FC', 'awayTeam': 'Burnley FC', 'homeGoals': 1, 'awayGoals': 2}, {'date': '2019-08-10T14:00:00Z', 'homeTeam': 'Burnley FC', 'awayTeam': 'Southampton FC', 'homeGoals': 3, 'awayGoals': 0}, {'date': '2019-02-02T15:00:00Z', 'homeTeam': 'Burnley FC', 'awayTeam': 'Southampton FC', 'homeGoals': 1, 'awayGoals': 1}, {'date': '2018-08-12T12:30:00Z', 'homeTeam': 'Southampton FC', 'awayTeam': 'Burnley FC', 'homeGoals': 0, 'awayGoals': 0}], 'xGHome': 1.0, 'xGAway': 1.3333}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.0 += 1.0 * 0.227 * 1.5', 'xGHome': 1.3405, 'xGAway': 1.3333, 'formRatingHome': 30.0, 'formRatingAway': 7.3}, {'description': 'Adjusted by home advantage', 'operation': '1.3333 *= 1 - (-0.0263 * 1.5)', 'xGHome': 1.3405, 'xGAway': 1.386, 'homeAdvantage': -0.0263}], 'score': {'xGHome': 1.3405, 'xGAway': 1.386}}</td>
+      <td>2021-10-23</td>
+      <td>SOU</td>
+      <td>BUR</td>
+      <td>{'xGHome': 1, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-04-04T11:00:00Z', 'homeTeam': 'Southampton FC', 'awayTeam': 'Burnley FC', 'homeGoals': 3, 'awayGoals': 2}, {'date': '2020-09-26T19:00:00Z', 'homeTeam': 'Burnley FC', 'awayTeam': 'Southampton FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2020-02-15T12:30:00Z', 'homeTeam': 'Southampton FC', 'awayTeam': 'Burnley FC', 'homeGoals': 1, 'awayGoals': 2}, {'date': '2019-08-10T14:00:00Z', 'homeTeam': 'Burnley FC', 'awayTeam': 'Southampton FC', 'homeGoals': 3, 'awayGoals': 0}, {'date': '2019-02-02T15:00:00Z', 'homeTeam': 'Burnley FC', 'awayTeam': 'Southampton FC', 'homeGoals': 1, 'awayGoals': 1}, {'date': '2018-08-12T12:30:00Z', 'homeTeam': 'Southampton FC', 'awayTeam': 'Burnley FC', 'homeGoals': 0, 'awayGoals': 0}], 'xGHome': 1.0, 'xGAway': 1.3333}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.0 += 1.0 * 0.227 * 1.5', 'xGHome': 1.3405, 'xGAway': 1.3333, 'formRatingHome': 30.0, 'formRatingAway': 7.3}, {'description': 'Adjusted by home advantage', 'operation': '1.3333 *= 1 - (0.0241 * 1.5)', 'xGHome': 1.3405, 'xGAway': 1.2851, 'homeAdvantage': 0.0241}], 'score': {'xGHome': 1.3405, 'xGAway': 1.2851}}</td>
     </tr>
     <tr>
       <th>Chelsea FC</th>
-      <td>2021-10-23 11:30:00</td>
-      <td>CHE 4 - 1 NOR</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2020-07-14T19:15:00Z', 'homeTeam': 'Chelsea FC', 'awayTeam': 'Norwich City FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-08-24T11:30:00Z', 'homeTeam': 'Norwich City FC', 'awayTeam': 'Chelsea FC', 'homeGoals': 2, 'awayGoals': 3}], 'xGHome': 2.0, 'xGAway': 1.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '2.0 += 2.0 * 0.679 * 1.5', 'xGHome': 4.037, 'xGAway': 1.0, 'formRatingHome': 67.9, 'formRatingAway': 0.0}, {'description': 'Adjusted by home advantage', 'operation': '1.0 *= 1 - (0.0658 * 1.5)', 'xGHome': 4.037, 'xGAway': 0.9013, 'homeAdvantage': 0.0658}], 'score': {'xGHome': 4.037, 'xGAway': 0.9013}}</td>
+      <td>2021-10-23</td>
+      <td>CHE</td>
+      <td>NOR</td>
+      <td>{'xGHome': 4, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2020-07-14T19:15:00Z', 'homeTeam': 'Chelsea FC', 'awayTeam': 'Norwich City FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-08-24T11:30:00Z', 'homeTeam': 'Norwich City FC', 'awayTeam': 'Chelsea FC', 'homeGoals': 2, 'awayGoals': 3}], 'xGHome': 2.0, 'xGAway': 1.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '2.0 += 2.0 * 0.679 * 1.5', 'xGHome': 4.037, 'xGAway': 1.0, 'formRatingHome': 67.9, 'formRatingAway': 0.0}, {'description': 'Adjusted by home advantage', 'operation': '1.0 *= 1 - (0.0439 * 1.5)', 'xGHome': 4.037, 'xGAway': 0.9342, 'homeAdvantage': 0.0439}], 'score': {'xGHome': 4.037, 'xGAway': 0.9342}}</td>
     </tr>
     <tr>
       <th>Crystal Palace FC</th>
-      <td>2021-10-23 14:00:00</td>
-      <td>CRY 1 - 1 NEW</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-02T20:15:00Z', 'homeTeam': 'Newcastle United FC', 'awayTeam': 'Crystal Palace FC', 'homeGoals': 1, 'awayGoals': 2}, {'date': '2020-11-27T20:00:00Z', 'homeTeam': 'Crystal Palace FC', 'awayTeam': 'Newcastle United FC', 'homeGoals': 0, 'awayGoals': 2}, {'date': '2020-02-22T15:00:00Z', 'homeTeam': 'Crystal Palace FC', 'awayTeam': 'Newcastle United FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-12-21T15:00:00Z', 'homeTeam': 'Newcastle United FC', 'awayTeam': 'Crystal Palace FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-04-06T14:00:00Z', 'homeTeam': 'Newcastle United FC', 'awayTeam': 'Crystal Palace FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2018-09-22T14:00:00Z', 'homeTeam': 'Crystal Palace FC', 'awayTeam': 'Newcastle United FC', 'homeGoals': 0, 'awayGoals': 0}], 'xGHome': 0.6667, 'xGAway': 0.6667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '0.6667 += 0.6667 * 0.558 * 1.5', 'xGHome': 1.2247, 'xGAway': 0.6667, 'formRatingHome': 55.8, 'formRatingAway': 0.0}, {'description': 'Adjusted by home advantage', 'operation': '0.6667 *= 1 - (-0.0395 * 1.5)', 'xGHome': 1.2247, 'xGAway': 0.7061, 'homeAdvantage': -0.0395}], 'score': {'xGHome': 1.2247, 'xGAway': 0.7061}}</td>
+      <td>2021-10-23</td>
+      <td>CRY</td>
+      <td>NEW</td>
+      <td>{'xGHome': 1, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-02T20:15:00Z', 'homeTeam': 'Newcastle United FC', 'awayTeam': 'Crystal Palace FC', 'homeGoals': 1, 'awayGoals': 2}, {'date': '2020-11-27T20:00:00Z', 'homeTeam': 'Crystal Palace FC', 'awayTeam': 'Newcastle United FC', 'homeGoals': 0, 'awayGoals': 2}, {'date': '2020-02-22T15:00:00Z', 'homeTeam': 'Crystal Palace FC', 'awayTeam': 'Newcastle United FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-12-21T15:00:00Z', 'homeTeam': 'Newcastle United FC', 'awayTeam': 'Crystal Palace FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-04-06T14:00:00Z', 'homeTeam': 'Newcastle United FC', 'awayTeam': 'Crystal Palace FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2018-09-22T14:00:00Z', 'homeTeam': 'Crystal Palace FC', 'awayTeam': 'Newcastle United FC', 'homeGoals': 0, 'awayGoals': 0}], 'xGHome': 0.6667, 'xGAway': 0.6667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '0.6667 += 0.6667 * 0.558 * 1.5', 'xGHome': 1.2247, 'xGAway': 0.6667, 'formRatingHome': 55.8, 'formRatingAway': 0.0}, {'description': 'Adjusted by home advantage', 'operation': '0.6667 *= 1 - (0.0154 * 1.5)', 'xGHome': 1.2247, 'xGAway': 0.6513, 'homeAdvantage': 0.0154}], 'score': {'xGHome': 1.2247, 'xGAway': 0.6513}}</td>
     </tr>
     <tr>
       <th>Burnley FC</th>
-      <td>2021-10-23 14:00:00</td>
-      <td>SOU 1 - 1 BUR</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-04-04T11:00:00Z', 'homeTeam': 'Southampton FC', 'awayTeam': 'Burnley FC', 'homeGoals': 3, 'awayGoals': 2}, {'date': '2020-09-26T19:00:00Z', 'homeTeam': 'Burnley FC', 'awayTeam': 'Southampton FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2020-02-15T12:30:00Z', 'homeTeam': 'Southampton FC', 'awayTeam': 'Burnley FC', 'homeGoals': 1, 'awayGoals': 2}, {'date': '2019-08-10T14:00:00Z', 'homeTeam': 'Burnley FC', 'awayTeam': 'Southampton FC', 'homeGoals': 3, 'awayGoals': 0}, {'date': '2019-02-02T15:00:00Z', 'homeTeam': 'Burnley FC', 'awayTeam': 'Southampton FC', 'homeGoals': 1, 'awayGoals': 1}, {'date': '2018-08-12T12:30:00Z', 'homeTeam': 'Southampton FC', 'awayTeam': 'Burnley FC', 'homeGoals': 0, 'awayGoals': 0}], 'xGHome': 1.0, 'xGAway': 1.3333}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.0 += 1.0 * -0.227 * 1.5', 'xGHome': 1.3405, 'xGAway': 1.3333, 'formRatingHome': 30.0, 'formRatingAway': 7.3}, {'description': 'Adjusted by home advantage', 'operation': '1.3333 *= 1 - (-0.0263 * 1.5)', 'xGHome': 1.3405, 'xGAway': 1.386, 'homeAdvantage': -0.0263}], 'score': {'xGHome': 1.3405, 'xGAway': 1.386}}</td>
+      <td>2021-10-23</td>
+      <td>SOU</td>
+      <td>BUR</td>
+      <td>{'xGHome': 1, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-04-04T11:00:00Z', 'homeTeam': 'Southampton FC', 'awayTeam': 'Burnley FC', 'homeGoals': 3, 'awayGoals': 2}, {'date': '2020-09-26T19:00:00Z', 'homeTeam': 'Burnley FC', 'awayTeam': 'Southampton FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2020-02-15T12:30:00Z', 'homeTeam': 'Southampton FC', 'awayTeam': 'Burnley FC', 'homeGoals': 1, 'awayGoals': 2}, {'date': '2019-08-10T14:00:00Z', 'homeTeam': 'Burnley FC', 'awayTeam': 'Southampton FC', 'homeGoals': 3, 'awayGoals': 0}, {'date': '2019-02-02T15:00:00Z', 'homeTeam': 'Burnley FC', 'awayTeam': 'Southampton FC', 'homeGoals': 1, 'awayGoals': 1}, {'date': '2018-08-12T12:30:00Z', 'homeTeam': 'Southampton FC', 'awayTeam': 'Burnley FC', 'homeGoals': 0, 'awayGoals': 0}], 'xGHome': 1.0, 'xGAway': 1.3333}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.0 += 1.0 * -0.227 * 1.5', 'xGHome': 1.3405, 'xGAway': 1.3333, 'formRatingHome': 30.0, 'formRatingAway': 7.3}, {'description': 'Adjusted by home advantage', 'operation': '1.3333 *= 1 - (0.0241 * 1.5)', 'xGHome': 1.3405, 'xGAway': 1.2851, 'homeAdvantage': 0.0241}], 'score': {'xGHome': 1.3405, 'xGAway': 1.2851}}</td>
     </tr>
     <tr>
       <th>Brighton and Hove Albion FC</th>
-      <td>2021-10-23 16:30:00</td>
-      <td>BHA 1 - 3 MCI</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-05-18T18:00:00Z', 'homeTeam': 'Brighton and Hove Albion FC', 'awayTeam': 'Manchester City FC', 'homeGoals': 3, 'awayGoals': 2}, {'date': '2021-01-13T18:00:00Z', 'homeTeam': 'Manchester City FC', 'awayTeam': 'Brighton and Hove Albion FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2020-07-11T19:00:00Z', 'homeTeam': 'Brighton and Hove Albion FC', 'awayTeam': 'Manchester City FC', 'homeGoals': 0, 'awayGoals': 5}, {'date': '2019-08-31T14:00:00Z', 'homeTeam': 'Manchester City FC', 'awayTeam': 'Brighton and Hove Albion FC', 'homeGoals': 4, 'awayGoals': 0}, {'date': '2019-05-12T14:00:00Z', 'homeTeam': 'Brighton and Hove Albion FC', 'awayTeam': 'Manchester City FC', 'homeGoals': 1, 'awayGoals': 4}, {'date': '2018-09-29T14:00:00Z', 'homeTeam': 'Manchester City FC', 'awayTeam': 'Brighton and Hove Albion FC', 'homeGoals': 2, 'awayGoals': 0}], 'xGHome': 0.6667, 'xGAway': 3.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '3.0 += 3.0 * -0.14 * 1.5', 'xGHome': 0.6667, 'xGAway': 3.63, 'formRatingHome': 55.9, 'formRatingAway': 69.9}, {'description': 'Adjusted by home advantage', 'operation': '3.63 *= 1 - (0.0526 * 1.5)', 'xGHome': 0.6667, 'xGAway': 3.3434, 'homeAdvantage': 0.0526}], 'score': {'xGHome': 0.6667, 'xGAway': 3.3434}}</td>
+      <td>2021-10-23</td>
+      <td>BHA</td>
+      <td>MCI</td>
+      <td>{'xGHome': 1, 'xGAway': 3}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-05-18T18:00:00Z', 'homeTeam': 'Brighton and Hove Albion FC', 'awayTeam': 'Manchester City FC', 'homeGoals': 3, 'awayGoals': 2}, {'date': '2021-01-13T18:00:00Z', 'homeTeam': 'Manchester City FC', 'awayTeam': 'Brighton and Hove Albion FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2020-07-11T19:00:00Z', 'homeTeam': 'Brighton and Hove Albion FC', 'awayTeam': 'Manchester City FC', 'homeGoals': 0, 'awayGoals': 5}, {'date': '2019-08-31T14:00:00Z', 'homeTeam': 'Manchester City FC', 'awayTeam': 'Brighton and Hove Albion FC', 'homeGoals': 4, 'awayGoals': 0}, {'date': '2019-05-12T14:00:00Z', 'homeTeam': 'Brighton and Hove Albion FC', 'awayTeam': 'Manchester City FC', 'homeGoals': 1, 'awayGoals': 4}, {'date': '2018-09-29T14:00:00Z', 'homeTeam': 'Manchester City FC', 'awayTeam': 'Brighton and Hove Albion FC', 'homeGoals': 2, 'awayGoals': 0}], 'xGHome': 0.6667, 'xGAway': 3.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '3.0 += 3.0 * -0.14 * 1.5', 'xGHome': 0.6667, 'xGAway': 3.63, 'formRatingHome': 55.9, 'formRatingAway': 69.9}, {'description': 'Adjusted by home advantage', 'operation': '3.63 *= 1 - (0.0351 * 1.5)', 'xGHome': 0.6667, 'xGAway': 3.4389, 'homeAdvantage': 0.0351}], 'score': {'xGHome': 0.6667, 'xGAway': 3.4389}}</td>
     </tr>
     <tr>
       <th>Norwich City FC</th>
-      <td>2021-10-23 11:30:00</td>
-      <td>CHE 4 - 1 NOR</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2020-07-14T19:15:00Z', 'homeTeam': 'Chelsea FC', 'awayTeam': 'Norwich City FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-08-24T11:30:00Z', 'homeTeam': 'Norwich City FC', 'awayTeam': 'Chelsea FC', 'homeGoals': 2, 'awayGoals': 3}], 'xGHome': 2.0, 'xGAway': 1.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '2.0 += 2.0 * -0.679 * 1.5', 'xGHome': 4.037, 'xGAway': 1.0, 'formRatingHome': 67.9, 'formRatingAway': 0.0}, {'description': 'Adjusted by home advantage', 'operation': '1.0 *= 1 - (0.0658 * 1.5)', 'xGHome': 4.037, 'xGAway': 0.9013, 'homeAdvantage': 0.0658}], 'score': {'xGHome': 4.037, 'xGAway': 0.9013}}</td>
+      <td>2021-10-23</td>
+      <td>CHE</td>
+      <td>NOR</td>
+      <td>{'xGHome': 4, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2020-07-14T19:15:00Z', 'homeTeam': 'Chelsea FC', 'awayTeam': 'Norwich City FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-08-24T11:30:00Z', 'homeTeam': 'Norwich City FC', 'awayTeam': 'Chelsea FC', 'homeGoals': 2, 'awayGoals': 3}], 'xGHome': 2.0, 'xGAway': 1.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '2.0 += 2.0 * -0.679 * 1.5', 'xGHome': 4.037, 'xGAway': 1.0, 'formRatingHome': 67.9, 'formRatingAway': 0.0}, {'description': 'Adjusted by home advantage', 'operation': '1.0 *= 1 - (0.0439 * 1.5)', 'xGHome': 4.037, 'xGAway': 0.9342, 'homeAdvantage': 0.0439}], 'score': {'xGHome': 4.037, 'xGAway': 0.9342}}</td>
     </tr>
     <tr>
       <th>Liverpool FC</th>
-      <td>2021-10-24 15:30:00</td>
-      <td>MUN 1 - 3 LIV</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-05-13T19:15:00Z', 'homeTeam': 'Manchester United FC', 'awayTeam': 'Liverpool FC', 'homeGoals': 2, 'awayGoals': 4}, {'date': '2021-01-17T16:30:00Z', 'homeTeam': 'Liverpool FC', 'awayTeam': 'Manchester United FC', 'homeGoals': 0, 'awayGoals': 0}, {'date': '2020-01-19T16:30:00Z', 'homeTeam': 'Liverpool FC', 'awayTeam': 'Manchester United FC', 'homeGoals': 2, 'awayGoals': 0}, {'date': '2019-10-20T15:30:00Z', 'homeTeam': 'Manchester United FC', 'awayTeam': 'Liverpool FC', 'homeGoals': 1, 'awayGoals': 1}, {'date': '2019-02-24T14:05:00Z', 'homeTeam': 'Manchester United FC', 'awayTeam': 'Liverpool FC', 'homeGoals': 0, 'awayGoals': 0}, {'date': '2018-12-16T16:00:00Z', 'homeTeam': 'Liverpool FC', 'awayTeam': 'Manchester United FC', 'homeGoals': 3, 'awayGoals': 1}], 'xGHome': 0.6667, 'xGAway': 1.6667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.6667 += 1.6667 * 0.499 * 1.5', 'xGHome': 0.6667, 'xGAway': 2.9142, 'formRatingHome': 16.4, 'formRatingAway': 66.3}, {'description': 'Adjusted by home advantage', 'operation': '2.9142 *= 1 - (0.0395 * 1.5)', 'xGHome': 0.6667, 'xGAway': 2.7416, 'homeAdvantage': 0.0395}], 'score': {'xGHome': 0.6667, 'xGAway': 2.7416}}</td>
+      <td>2021-10-24</td>
+      <td>MUN</td>
+      <td>LIV</td>
+      <td>{'xGHome': 1, 'xGAway': 3}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-05-13T19:15:00Z', 'homeTeam': 'Manchester United FC', 'awayTeam': 'Liverpool FC', 'homeGoals': 2, 'awayGoals': 4}, {'date': '2021-01-17T16:30:00Z', 'homeTeam': 'Liverpool FC', 'awayTeam': 'Manchester United FC', 'homeGoals': 0, 'awayGoals': 0}, {'date': '2020-01-19T16:30:00Z', 'homeTeam': 'Liverpool FC', 'awayTeam': 'Manchester United FC', 'homeGoals': 2, 'awayGoals': 0}, {'date': '2019-10-20T15:30:00Z', 'homeTeam': 'Manchester United FC', 'awayTeam': 'Liverpool FC', 'homeGoals': 1, 'awayGoals': 1}, {'date': '2019-02-24T14:05:00Z', 'homeTeam': 'Manchester United FC', 'awayTeam': 'Liverpool FC', 'homeGoals': 0, 'awayGoals': 0}, {'date': '2018-12-16T16:00:00Z', 'homeTeam': 'Liverpool FC', 'awayTeam': 'Manchester United FC', 'homeGoals': 3, 'awayGoals': 1}], 'xGHome': 0.6667, 'xGAway': 1.6667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.6667 += 1.6667 * 0.499 * 1.5', 'xGHome': 0.6667, 'xGAway': 2.9142, 'formRatingHome': 16.4, 'formRatingAway': 66.3}, {'description': 'Adjusted by home advantage', 'operation': '2.9142 *= 1 - (0.0263 * 1.5)', 'xGHome': 0.6667, 'xGAway': 2.7991, 'homeAdvantage': 0.0263}], 'score': {'xGHome': 0.6667, 'xGAway': 2.7991}}</td>
     </tr>
     <tr>
       <th>Newcastle United FC</th>
-      <td>2021-10-23 14:00:00</td>
-      <td>CRY 1 - 1 NEW</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-02T20:15:00Z', 'homeTeam': 'Newcastle United FC', 'awayTeam': 'Crystal Palace FC', 'homeGoals': 1, 'awayGoals': 2}, {'date': '2020-11-27T20:00:00Z', 'homeTeam': 'Crystal Palace FC', 'awayTeam': 'Newcastle United FC', 'homeGoals': 0, 'awayGoals': 2}, {'date': '2020-02-22T15:00:00Z', 'homeTeam': 'Crystal Palace FC', 'awayTeam': 'Newcastle United FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-12-21T15:00:00Z', 'homeTeam': 'Newcastle United FC', 'awayTeam': 'Crystal Palace FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-04-06T14:00:00Z', 'homeTeam': 'Newcastle United FC', 'awayTeam': 'Crystal Palace FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2018-09-22T14:00:00Z', 'homeTeam': 'Crystal Palace FC', 'awayTeam': 'Newcastle United FC', 'homeGoals': 0, 'awayGoals': 0}], 'xGHome': 0.6667, 'xGAway': 0.6667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '0.6667 += 0.6667 * -0.558 * 1.5', 'xGHome': 1.2247, 'xGAway': 0.6667, 'formRatingHome': 55.8, 'formRatingAway': 0.0}, {'description': 'Adjusted by home advantage', 'operation': '0.6667 *= 1 - (-0.0395 * 1.5)', 'xGHome': 1.2247, 'xGAway': 0.7061, 'homeAdvantage': -0.0395}], 'score': {'xGHome': 1.2247, 'xGAway': 0.7061}}</td>
+      <td>2021-10-23</td>
+      <td>CRY</td>
+      <td>NEW</td>
+      <td>{'xGHome': 1, 'xGAway': 1}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-02T20:15:00Z', 'homeTeam': 'Newcastle United FC', 'awayTeam': 'Crystal Palace FC', 'homeGoals': 1, 'awayGoals': 2}, {'date': '2020-11-27T20:00:00Z', 'homeTeam': 'Crystal Palace FC', 'awayTeam': 'Newcastle United FC', 'homeGoals': 0, 'awayGoals': 2}, {'date': '2020-02-22T15:00:00Z', 'homeTeam': 'Crystal Palace FC', 'awayTeam': 'Newcastle United FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-12-21T15:00:00Z', 'homeTeam': 'Newcastle United FC', 'awayTeam': 'Crystal Palace FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2019-04-06T14:00:00Z', 'homeTeam': 'Newcastle United FC', 'awayTeam': 'Crystal Palace FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2018-09-22T14:00:00Z', 'homeTeam': 'Crystal Palace FC', 'awayTeam': 'Newcastle United FC', 'homeGoals': 0, 'awayGoals': 0}], 'xGHome': 0.6667, 'xGAway': 0.6667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '0.6667 += 0.6667 * -0.558 * 1.5', 'xGHome': 1.2247, 'xGAway': 0.6667, 'formRatingHome': 55.8, 'formRatingAway': 0.0}, {'description': 'Adjusted by home advantage', 'operation': '0.6667 *= 1 - (0.0154 * 1.5)', 'xGHome': 1.2247, 'xGAway': 0.6513, 'homeAdvantage': 0.0154}], 'score': {'xGHome': 1.2247, 'xGAway': 0.6513}}</td>
     </tr>
     <tr>
       <th>West Ham United FC</th>
-      <td>2021-10-24 13:00:00</td>
-      <td>WHU 2 - 2 TOT</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-21T12:00:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Tottenham Hotspur FC', 'homeGoals': 2, 'awayGoals': 1}, {'date': '2020-10-18T15:30:00Z', 'homeTeam': 'Tottenham Hotspur FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 3, 'awayGoals': 3}, {'date': '2020-06-23T19:15:00Z', 'homeTeam': 'Tottenham Hotspur FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 2, 'awayGoals': 0}, {'date': '2019-11-23T12:30:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Tottenham Hotspur FC', 'homeGoals': 2, 'awayGoals': 3}, {'date': '2019-04-27T11:30:00Z', 'homeTeam': 'Tottenham Hotspur FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2018-10-20T14:00:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Tottenham Hotspur FC', 'homeGoals': 0, 'awayGoals': 1}], 'xGHome': 1.3333, 'xGAway': 1.6667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.3333 += 1.3333 * 0.311 * 1.5', 'xGHome': 1.9553, 'xGAway': 1.6667, 'formRatingHome': 31.1, 'formRatingAway': 0.0}, {'description': 'Adjusted by home advantage', 'operation': '1.6667 *= 1 - (0.0658 * 1.5)', 'xGHome': 1.9553, 'xGAway': 1.5022, 'homeAdvantage': 0.0658}], 'score': {'xGHome': 1.9553, 'xGAway': 1.5022}}</td>
+      <td>2021-10-24</td>
+      <td>WHU</td>
+      <td>TOT</td>
+      <td>{'xGHome': 2, 'xGAway': 2}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-21T12:00:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Tottenham Hotspur FC', 'homeGoals': 2, 'awayGoals': 1}, {'date': '2020-10-18T15:30:00Z', 'homeTeam': 'Tottenham Hotspur FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 3, 'awayGoals': 3}, {'date': '2020-06-23T19:15:00Z', 'homeTeam': 'Tottenham Hotspur FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 2, 'awayGoals': 0}, {'date': '2019-11-23T12:30:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Tottenham Hotspur FC', 'homeGoals': 2, 'awayGoals': 3}, {'date': '2019-04-27T11:30:00Z', 'homeTeam': 'Tottenham Hotspur FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2018-10-20T14:00:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Tottenham Hotspur FC', 'homeGoals': 0, 'awayGoals': 1}], 'xGHome': 1.3333, 'xGAway': 1.6667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.3333 += 1.3333 * 0.311 * 1.5', 'xGHome': 1.9553, 'xGAway': 1.6667, 'formRatingHome': 31.1, 'formRatingAway': 0.0}, {'description': 'Adjusted by home advantage', 'operation': '1.6667 *= 1 - (-0.0395 * 1.5)', 'xGHome': 1.9553, 'xGAway': 1.7654, 'homeAdvantage': -0.0395}], 'score': {'xGHome': 1.9553, 'xGAway': 1.7654}}</td>
     </tr>
     <tr>
       <th>Tottenham Hotspur FC</th>
-      <td>2021-10-24 13:00:00</td>
-      <td>WHU 2 - 2 TOT</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-21T12:00:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Tottenham Hotspur FC', 'homeGoals': 2, 'awayGoals': 1}, {'date': '2020-10-18T15:30:00Z', 'homeTeam': 'Tottenham Hotspur FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 3, 'awayGoals': 3}, {'date': '2020-06-23T19:15:00Z', 'homeTeam': 'Tottenham Hotspur FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 2, 'awayGoals': 0}, {'date': '2019-11-23T12:30:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Tottenham Hotspur FC', 'homeGoals': 2, 'awayGoals': 3}, {'date': '2019-04-27T11:30:00Z', 'homeTeam': 'Tottenham Hotspur FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2018-10-20T14:00:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Tottenham Hotspur FC', 'homeGoals': 0, 'awayGoals': 1}], 'xGHome': 1.3333, 'xGAway': 1.6667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.3333 += 1.3333 * -0.311 * 1.5', 'xGHome': 1.9553, 'xGAway': 1.6667, 'formRatingHome': 31.1, 'formRatingAway': 0.0}, {'description': 'Adjusted by home advantage', 'operation': '1.6667 *= 1 - (0.0658 * 1.5)', 'xGHome': 1.9553, 'xGAway': 1.5022, 'homeAdvantage': 0.0658}], 'score': {'xGHome': 1.9553, 'xGAway': 1.5022}}</td>
+      <td>2021-10-24</td>
+      <td>WHU</td>
+      <td>TOT</td>
+      <td>{'xGHome': 2, 'xGAway': 2}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-02-21T12:00:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Tottenham Hotspur FC', 'homeGoals': 2, 'awayGoals': 1}, {'date': '2020-10-18T15:30:00Z', 'homeTeam': 'Tottenham Hotspur FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 3, 'awayGoals': 3}, {'date': '2020-06-23T19:15:00Z', 'homeTeam': 'Tottenham Hotspur FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 2, 'awayGoals': 0}, {'date': '2019-11-23T12:30:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Tottenham Hotspur FC', 'homeGoals': 2, 'awayGoals': 3}, {'date': '2019-04-27T11:30:00Z', 'homeTeam': 'Tottenham Hotspur FC', 'awayTeam': 'West Ham United FC', 'homeGoals': 0, 'awayGoals': 1}, {'date': '2018-10-20T14:00:00Z', 'homeTeam': 'West Ham United FC', 'awayTeam': 'Tottenham Hotspur FC', 'homeGoals': 0, 'awayGoals': 1}], 'xGHome': 1.3333, 'xGAway': 1.6667}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '1.3333 += 1.3333 * -0.311 * 1.5', 'xGHome': 1.9553, 'xGAway': 1.6667, 'formRatingHome': 31.1, 'formRatingAway': 0.0}, {'description': 'Adjusted by home advantage', 'operation': '1.6667 *= 1 - (-0.0395 * 1.5)', 'xGHome': 1.9553, 'xGAway': 1.7654, 'homeAdvantage': -0.0395}], 'score': {'xGHome': 1.9553, 'xGAway': 1.7654}}</td>
     </tr>
     <tr>
       <th>Manchester City FC</th>
-      <td>2021-10-23 16:30:00</td>
-      <td>BHA 1 - 3 MCI</td>
-      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-05-18T18:00:00Z', 'homeTeam': 'Brighton and Hove Albion FC', 'awayTeam': 'Manchester City FC', 'homeGoals': 3, 'awayGoals': 2}, {'date': '2021-01-13T18:00:00Z', 'homeTeam': 'Manchester City FC', 'awayTeam': 'Brighton and Hove Albion FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2020-07-11T19:00:00Z', 'homeTeam': 'Brighton and Hove Albion FC', 'awayTeam': 'Manchester City FC', 'homeGoals': 0, 'awayGoals': 5}, {'date': '2019-08-31T14:00:00Z', 'homeTeam': 'Manchester City FC', 'awayTeam': 'Brighton and Hove Albion FC', 'homeGoals': 4, 'awayGoals': 0}, {'date': '2019-05-12T14:00:00Z', 'homeTeam': 'Brighton and Hove Albion FC', 'awayTeam': 'Manchester City FC', 'homeGoals': 1, 'awayGoals': 4}, {'date': '2018-09-29T14:00:00Z', 'homeTeam': 'Manchester City FC', 'awayTeam': 'Brighton and Hove Albion FC', 'homeGoals': 2, 'awayGoals': 0}], 'xGHome': 0.6667, 'xGAway': 3.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '3.0 += 3.0 * 0.14 * 1.5', 'xGHome': 0.6667, 'xGAway': 3.63, 'formRatingHome': 55.9, 'formRatingAway': 69.9}, {'description': 'Adjusted by home advantage', 'operation': '3.63 *= 1 - (0.0526 * 1.5)', 'xGHome': 0.6667, 'xGAway': 3.3434, 'homeAdvantage': 0.0526}], 'score': {'xGHome': 0.6667, 'xGAway': 3.3434}}</td>
+      <td>2021-10-23</td>
+      <td>BHA</td>
+      <td>MCI</td>
+      <td>{'xGHome': 1, 'xGAway': 3}</td>
+      <td>{'initial': {'description': 'Previous match average', 'previousMatches': [{'date': '2021-05-18T18:00:00Z', 'homeTeam': 'Brighton and Hove Albion FC', 'awayTeam': 'Manchester City FC', 'homeGoals': 3, 'awayGoals': 2}, {'date': '2021-01-13T18:00:00Z', 'homeTeam': 'Manchester City FC', 'awayTeam': 'Brighton and Hove Albion FC', 'homeGoals': 1, 'awayGoals': 0}, {'date': '2020-07-11T19:00:00Z', 'homeTeam': 'Brighton and Hove Albion FC', 'awayTeam': 'Manchester City FC', 'homeGoals': 0, 'awayGoals': 5}, {'date': '2019-08-31T14:00:00Z', 'homeTeam': 'Manchester City FC', 'awayTeam': 'Brighton and Hove Albion FC', 'homeGoals': 4, 'awayGoals': 0}, {'date': '2019-05-12T14:00:00Z', 'homeTeam': 'Brighton and Hove Albion FC', 'awayTeam': 'Manchester City FC', 'homeGoals': 1, 'awayGoals': 4}, {'date': '2018-09-29T14:00:00Z', 'homeTeam': 'Manchester City FC', 'awayTeam': 'Brighton and Hove Albion FC', 'homeGoals': 2, 'awayGoals': 0}], 'xGHome': 0.6667, 'xGAway': 3.0}, 'adjustments': [{'description': 'Adjusted by form', 'operation': '3.0 += 3.0 * 0.14 * 1.5', 'xGHome': 0.6667, 'xGAway': 3.63, 'formRatingHome': 55.9, 'formRatingAway': 69.9}, {'description': 'Adjusted by home advantage', 'operation': '3.63 *= 1 - (0.0351 * 1.5)', 'xGHome': 0.6667, 'xGAway': 3.4389, 'homeAdvantage': 0.0351}], 'score': {'xGHome': 0.6667, 'xGAway': 3.4389}}</td>
     </tr>
   </tbody>
 </table>

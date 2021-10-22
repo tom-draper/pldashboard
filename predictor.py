@@ -180,6 +180,21 @@ class Predictor:
         details['score'] = detail
 
         return int(round(pred_scored)), int(round(pred_conceded)), details
+    
+    def prediction_details(self, team_name, opp_team_name, pred_scored, pred_conceded, at_home):
+        team_name_initials = util.convert_team_name_or_initials(team_name)
+        opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
+        
+        # Construct prediction string for display...
+        if at_home:
+            home_initials = team_name_initials
+            away_initials = opp_team_name_initials
+            prediction = {'xGHome': pred_scored, 'xGAway': pred_conceded}
+        else:
+            home_initials = opp_team_name_initials
+            away_initials = team_name_initials
+            prediction = {'xGHome': pred_conceded, 'xGAway': pred_scored}
+        return home_initials, away_initials, prediction
 
     def gen_score_predictions(self, form, upcoming, home_advantages) -> dict:
         # {"Liverpool FC": ("25-08-21", "LIV  2 - 1 BUR"), ...}
@@ -202,12 +217,16 @@ class Predictor:
                     team_name, home_advantage, opp_home_advantage, at_home, 
                     form_rating, opp_form_rating, prev_matches)
 
-                scoreline = util.format_scoreline_str(team_name, opp_team_name, 
-                                                      pred_scored, pred_conceded, 
-                                                      at_home)
+                home_initials, away_initials, pred = self.prediction_details(
+                    team_name, opp_team_name, pred_scored, pred_conceded, at_home)
             
                 date = upcoming.df['Date'].loc[team_name].to_pydatetime()
-                prediction = (date, scoreline, details)
+                
+                prediction = {'Date': date, 
+                              'HomeInitials': home_initials, 
+                              'AwayInitials': away_initials, 
+                              'Prediction': pred, 
+                              'Details': details}
 
             predictions[team_name] = prediction
 
