@@ -1475,35 +1475,38 @@ class Predictions(DF):
     def max_prediction_id(self, predictions: dict) -> int:
         return max([max([pred['id'] for pred in preds]) for preds in predictions.values()])
     
-    def exact_prediction_already_made(self, date: str, new_prediction: str, 
+    def exact_prediction_already_made(self, date: str, home_initials, away_initials, new_prediction: str, 
                                       predictions: dict) -> bool:
         already_made = False
         if date in predictions.keys():
             for prediction in predictions[date]:
                 # Check if prediciton strings match perfectly
                 # i.e. identical fixture and same score predicted
-                if (prediction['prediction'] == new_prediction) and (prediction['actual'] == None):
+                if (prediction['homeInitials'] == home_initials) and (prediction['awayInitials'] == away_initials) and (prediction['prediction'] == new_prediction) and (prediction['actual'] == None):
                     already_made = True
                     break
 
         return already_made
     
-    def update_existing_prediction(self, date: str, new_prediction: str, details: list[str], 
-                                   predictions: dict[str, list]) -> bool:
+    def update_existing_prediction(self, date: str, home_initials: str, 
+                                   away_initials: str, new_prediction: dict, 
+                                   details: list[str], predictions: dict[str, list]) -> bool:
         # Update existing prediction object with new score prediction...
         for prediction in predictions[date]:
             predicted_score = prediction['prediction']
-            if util.identical_fixtures(predicted_score, new_prediction):
+            if (prediction['homeInitials'] == home_initials and 
+                prediction['awayInitials'] == away_initials):
                 # If fixture match perfectly predicted scoreline different (outdated)
-                if (predicted_score != new_prediction) and (prediction['actual'] == None):
+                if predicted_score != new_prediction and prediction['actual'] == None:
                     print("Updating existing prediction:", predicted_score, '-->', new_prediction)
                     prediction['prediction'] = new_prediction
                     prediction['details'] = details
                 return True
         return False
 
-    def insert_new_prediction(self, date: str, time: str, prediction_id: int, 
-                              new_prediction: str, details: list[str], 
+    def insert_new_prediction(self, date: str, time: str, prediction_id: int,
+                              home_initials: str, away_initials: str, 
+                              new_prediction: dict, details: list[str], 
                               predictions: dict[str, list]) -> bool:
         """Attempts to inesrt a prediction into the predictions dictionary.
            Returns True if inserted a NEW predcition
@@ -1513,13 +1516,16 @@ class Predictions(DF):
             predictions[date] = []
 
         # Try to update the existing prediciton if available...
-        if self.update_existing_prediction(date, new_prediction, details, predictions):
+        if self.update_existing_prediction(date, home_initials, away_initials, 
+                                           new_prediction, details, predictions):
             id_used = False
         else:
             # Otherwise add new...
             print("Adding new prediction:", new_prediction)
             predictions[date].append({'id': prediction_id, 
                                       'time': time, 
+                                      'homeInitials': home_initials,
+                                      'awayInitials': away_initials,
                                       'prediction': new_prediction,
                                       'actual': None, 
                                       'details': details})
@@ -1527,17 +1533,18 @@ class Predictions(DF):
         
         return id_used
 
-    def insert_new_predictions(self, new_predictions, predictions: dict):
-        max_id = self.max_prediction_id(predictions)
+    def insert_new_predictions(self, new_predictions, predictions_json: dict):
+        max_id = self.max_prediction_id(predictions_json)
         prediction_id = max_id + 1
         
         n_inserted = 0
-        for dt, new_prediction, details in new_predictions.values():
+        for dt, home_initials, away_initials, prediction, details in new_predictions.values():
             date = datetime.strftime(dt, '%Y-%m-%d')
-            if not self.exact_prediction_already_made(date, new_prediction, predictions):
+            if not self.exact_prediction_already_made(date, home_initials, away_initials, prediction, predictions_json):
                 time = datetime.strftime(dt, '%H:%M')
-                if self.insert_new_prediction(date, time, prediction_id, new_prediction, 
-                                              details, predictions):
+                if self.insert_new_prediction(date, time, prediction_id, home_initials, 
+                                              away_initials, prediction, details, 
+                                              predictions_json):
                     prediction_id += 1
                     n_inserted += 1
 
@@ -1608,7 +1615,6 @@ class Predictions(DF):
         print('🔨 Building predictions dataframe... ')
 
         d = self.predictor.gen_score_predictions(form, upcoming, home_advantages)
-        # print(d)
         actual_scores = self.get_actual_scores(fixtures)
         self.update_json_file(d, actual_scores)
         self.print_accuracy()
