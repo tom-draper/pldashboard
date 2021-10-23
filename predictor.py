@@ -46,7 +46,7 @@ class Predictor:
 
         return avg_scored, avg_conceded
 
-    def modify_prediction_by_current_form(self, form_rating: float, opp_form_rating: float, 
+    def adjust_prediction_by_current_form(self, form_rating: float, opp_form_rating: float, 
                                           at_home: bool, pred_scored: float = 0, 
                                           pred_conceded: float = 0) -> tuple[float, float]:
         # Boost the score of the team better in form based on the absolute difference in form
@@ -81,21 +81,29 @@ class Predictor:
 
         return pred_scored, pred_conceded, detail
 
-    def modify_prediction_by_home_advantage(self, home_advantage: float, 
+    def adjust_prediction_by_home_advantage(self, home_advantage: float, 
                                             opp_home_advantage: float,
                                             at_home: bool, pred_scored: float = 0, 
                                             pred_conceded: float = 0) -> tuple[float, float]:
+        # Use the home advantge to adjust the pred scored and conceded
+        # for a team in opposite directions by an equal amount
         if at_home:
-            # Decrease conceded (if team has a positive home advantage)
-            operation = f'{round(pred_conceded, 4)} *= 1 - ({round(home_advantage, 4)} * {self.home_advantage_multiplier})'
-            pred_conceded *= (1 - (home_advantage * self.home_advantage_multiplier))
+            operation = f'{round(pred_conceded, 4)} *= (1 - ({round(home_advantage, 4)} * {self.home_advantage_multiplier})) * 0.5\n' \
+                        f'{round(pred_scored, 4)} *= (1 + ({round(home_advantage, 4)} * {self.home_advantage_multiplier})) * 0.5'
+            # Decrease conceded (assuming team has a positive home advantage)
+            pred_conceded *= (1 - (home_advantage * self.home_advantage_multiplier)) / 2
+            # Increase scored (assuming team has a positive home advantage)
+            pred_scored *= (1 + (home_advantage * self.home_advantage_multiplier)) / 2
             home_goals = pred_scored
             away_goals = pred_conceded
             advantage = home_advantage
         else:
-            # Decrease scored (if opposition team has a positive home advantage)
-            operation = f'{round(pred_scored, 4)} *= 1 - ({round(opp_home_advantage, 4)} * {self.home_advantage_multiplier})'
-            pred_scored *= (1 - (opp_home_advantage * self.home_advantage_multiplier))
+            operation = f'{round(pred_scored, 4)} *= (1 - ({round(opp_home_advantage, 4)} * {self.home_advantage_multiplier})) * 0.5\n' \
+                        f'{round(pred_conceded, 4)} *= (1 + ({round(home_advantage, 4)} * {self.home_advantage_multiplier})) * 0.5'
+            # Decrease scored (assuming opposition team has a positive home advantage)
+            pred_scored *= (1 - (opp_home_advantage * self.home_advantage_multiplier)) * 0.5
+            # Increase conceded (assuming opposition team has a positive home advantage)
+            pred_conceded *= (1 + (opp_home_advantage * self.home_advantage_multiplier)) * 0.5
             home_goals = pred_conceded
             away_goals = pred_scored
             advantage = opp_home_advantage
@@ -166,12 +174,12 @@ class Predictor:
         details['initial'] = detail
 
         # Modify based on difference in current form between two teams
-        pred_scored, pred_conceded, detail = self.modify_prediction_by_current_form(
+        pred_scored, pred_conceded, detail = self.adjust_prediction_by_current_form(
             form_rating, opp_form_rating, at_home, pred_scored, pred_conceded)
         details['adjustments'].append(detail)
         
         # Decrese scores conceded if playing at home
-        pred_scored, pred_conceded, detail = self.modify_prediction_by_home_advantage(
+        pred_scored, pred_conceded, detail = self.adjust_prediction_by_home_advantage(
             home_advantage, opp_home_advantage, at_home, pred_scored, pred_conceded)
         details['adjustments'].append(detail)
         
