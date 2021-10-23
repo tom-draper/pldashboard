@@ -5,10 +5,11 @@ util = Utilities()
     
 
 class Predictor:
-    def __init__(self, current_season: int):
+    def __init__(self, current_season: int, form_diff_multiplier: int = 1.5, 
+                 home_advantage_multiplier: int = 1.5):
         self.current_season = current_season
-        self.form_diff_multiplier = 1.5
-        self.home_advantage_multiplier = 1.5
+        self.form_diff_multiplier = form_diff_multiplier
+        self.home_advantage_multiplier = home_advantage_multiplier
 
     def outdated_prediction_already_made(self, date: str, new_prediction: str, 
                                          predictions: dict) -> bool:
@@ -88,22 +89,22 @@ class Predictor:
         # Use the home advantge to adjust the pred scored and conceded
         # for a team in opposite directions by an equal amount
         if at_home:
-            operation = f'{round(pred_conceded, 4)} *= (1 - ({round(home_advantage, 4)} * {self.home_advantage_multiplier})) * 0.5\n' \
-                        f'{round(pred_scored, 4)} *= (1 + ({round(home_advantage, 4)} * {self.home_advantage_multiplier})) * 0.5'
+            operation = f'{round(pred_conceded, 4)} *= 1 - ({round(home_advantage, 4)} * {self.home_advantage_multiplier} * 0.5)\n' \
+                        f'{round(pred_scored, 4)} *= 1 + ({round(home_advantage, 4)} * {self.home_advantage_multiplier}  * 0.5)'
             # Decrease conceded (assuming team has a positive home advantage)
-            pred_conceded *= (1 - (home_advantage * self.home_advantage_multiplier)) / 2
+            pred_conceded *= 1 - (home_advantage * self.home_advantage_multiplier * 0.5)
             # Increase scored (assuming team has a positive home advantage)
-            pred_scored *= (1 + (home_advantage * self.home_advantage_multiplier)) / 2
+            pred_scored *= 1 + (home_advantage * self.home_advantage_multiplier * 0.5)
             home_goals = pred_scored
             away_goals = pred_conceded
             advantage = home_advantage
         else:
-            operation = f'{round(pred_scored, 4)} *= (1 - ({round(opp_home_advantage, 4)} * {self.home_advantage_multiplier})) * 0.5\n' \
-                        f'{round(pred_conceded, 4)} *= (1 + ({round(home_advantage, 4)} * {self.home_advantage_multiplier})) * 0.5'
+            operation = f'{round(pred_scored, 4)} *= 1 - ({round(opp_home_advantage, 4)} * {self.home_advantage_multiplier} * 0.5)\n' \
+                        f'{round(pred_conceded, 4)} *= 1 + ({round(home_advantage, 4)} * {self.home_advantage_multiplier} * 0.5) '
             # Decrease scored (assuming opposition team has a positive home advantage)
-            pred_scored *= (1 - (opp_home_advantage * self.home_advantage_multiplier)) * 0.5
+            pred_scored *= 1 - (opp_home_advantage * self.home_advantage_multiplier * 0.5)
             # Increase conceded (assuming opposition team has a positive home advantage)
-            pred_conceded *= (1 + (opp_home_advantage * self.home_advantage_multiplier)) * 0.5
+            pred_conceded *= 1 + (opp_home_advantage * self.home_advantage_multiplier * 0.5)
             home_goals = pred_conceded
             away_goals = pred_scored
             advantage = opp_home_advantage
@@ -120,12 +121,14 @@ class Predictor:
         neutral_prev_matches = []
         for match in prev_matches:
             neutral_match = {}
+            for k, v in match.items():
+                neutral_match[k[0].lower() + k[1:]] = v
             # Rename to match json format
-            neutral_match['date'] = match['Date']
-            neutral_match['homeTeam'] = match['HomeTeam']
-            neutral_match['awayTeam'] = match['AwayTeam']
-            neutral_match['homeGoals'] = match['HomeGoals']
-            neutral_match['awayGoals'] = match['AwayGoals']
+            # neutral_match['date'] = match['Date']
+            # neutral_match['homeTeam'] = match['HomeTeam']
+            # neutral_match['awayTeam'] = match['AwayTeam']
+            # neutral_match['homeGoals'] = match['HomeGoals']
+            # neutral_match['awayGoals'] = match['AwayGoals']
             neutral_prev_matches.append(neutral_match)
         
         return neutral_prev_matches
@@ -220,7 +223,7 @@ class Predictor:
                 opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]  # type: float
                 at_home = upcoming.df['AtHome'].loc[team_name]  # type: bool
                 prev_matches = upcoming.df['PreviousMatches'].loc[team_name]  # type: list[tuple]
-                
+                                
                 pred_scored, pred_conceded, details = self.calc_score_prediction(
                     team_name, home_advantage, opp_home_advantage, at_home, 
                     form_rating, opp_form_rating, prev_matches)

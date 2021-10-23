@@ -923,7 +923,7 @@ img {
   flex: 5;
 }
 .prediction-value {
-  flex: 5;
+  flex: 4.5;
   display: flex;
   text-align: right;
 }

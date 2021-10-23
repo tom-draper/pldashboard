@@ -3,6 +3,7 @@ import json
 import numpy as np
 from matplotlib import pyplot as plt
 
+
 from utilities import Utilities
 
 util = Utilities()
@@ -158,7 +159,7 @@ class PredictionsAnalysis:
             ax.scatter(rv[0], rv[1], c='b', marker='x', s=25)
             
         plt.show()
-
+        
 
 if __name__ == '__main__':
     current_season = 2021

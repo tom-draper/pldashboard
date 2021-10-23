@@ -1,0 +1,12 @@
+FINAL BEST: (0.09302325581395349, 0.5116279069767442, 0.0, 9.795918367346939)
+     Accuracy: 0.06976744186046512
+     Results accuracy: 0.4186046511627907
+
+
+
+
+FINAL BEST: ('form:', 1, 'home advantage:', 25.70707070707071)
+     Results accuracy: 0.5348837209302325
+
+FINAL BEST: ('form:', 0.0, 'home advantage:', 23.75)
+     Accuracy: 0.12790697674418605
