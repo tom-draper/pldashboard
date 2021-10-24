@@ -40,7 +40,7 @@ class Updater:
     # ----------------------------- DATA API -----------------------------------
 
     def fixtures_data(self, season: int, request_new: bool = True) -> dict:
-        if request_new and self.url != None:
+        if request_new and self.url is not None:
             response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(season),
                                     headers=self.headers)
             
@@ -58,7 +58,7 @@ class Updater:
                 return json.load(json_file)
 
     def standings_data(self, season: int, request_new: bool = True) -> dict:
-        if request_new and self.url != None:
+        if request_new and self.url is not None:
             response = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(season),
                                     headers=self.headers)
 

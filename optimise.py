@@ -87,7 +87,7 @@ class OptimisePredictions:
         actual_scores = []
         for predictions in predictions_json.values():
             for prediction in predictions:
-                if prediction['actual'] != None:
+                if prediction['actual'] is not None:
                     actual_score = (util.convert_team_name_or_initials(prediction['homeInitials']), 
                                     util.convert_team_name_or_initials(prediction['awayInitials']),
                                     prediction['actual'])
@@ -132,3 +132,12 @@ if __name__ == '__main__':
     current_season = 2021
     o = OptimisePredictions()
     o.brute_force(current_season)
+
+
+"""Results:
+FINAL BEST: ('form:', 1, 'home advantage:', 25.70707070707071)
+     Results accuracy: 0.5348837209302325
+
+FINAL BEST: ('form:', 0.0, 'home advantage:', 23.75)
+     Accuracy: 0.12790697674418605
+"""

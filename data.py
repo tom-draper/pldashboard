@@ -280,7 +280,7 @@ class Form(DF):
                 # Use previous matchday's form
                 previous_matchday = list(self.df.columns.unique(level=0))[-2]
                 form = self.df[previous_matchday, 'Form'].loc[team_name]
-            if form == None:
+            if form is None:
                 form = []
             else:
                 form = list(form)
@@ -357,7 +357,7 @@ class Form(DF):
     def calc_form_rating(self, teams_played: list[str], form_str: str, gds: list[int],
                          team_ratings: TeamRatings) -> float:
         form_percentage = 0.5  # Default percentage, moves up or down based on performance
-        if form_str != None:  # If games have been played this season
+        if form_str is not None:  # If games have been played this season
             # form_str = form_str.replace(',', '')
             for form_idx, result in enumerate(form_str):
                 # Convert opposition team initials to their name 
@@ -899,9 +899,10 @@ class Upcoming(DF):
 
     def append_season_prev_matches(self, next_games: dict, json_data: dict, 
                                     season: int, team_names: list[str]):
+        if team_names is None:
+            raise ValueError()
+        
         data = json_data['fixtures'][season]
-
-        assert team_names != None
 
         for match in data:
             if match['status'] == 'FINISHED':
@@ -1234,7 +1235,7 @@ class HomeAdvantages(DF):
             home_team = match['homeTeam']['name'].replace('&', 'and')
             away_team = match['awayTeam']['name'].replace('&', 'and')
 
-            if match['score']['winner'] != None:
+            if match['score']['winner'] is not None:
                 if match['score']['fullTime']['homeTeam'] > match['score']['fullTime']['awayTeam']:
                     # Home team wins
                     d[home_team][(season, 'Home', 'Wins')] += 1
@@ -1438,7 +1439,7 @@ class Predictions(DF):
                 predicted_score = prediction['prediction']
                 actual_score = prediction['actual']
                 
-                if predicted_score != None and actual_score != None:
+                if predicted_score is not None and actual_score is not None:
                     total += 1
                     if (predicted_score['xGHome'] == actual_score['homeGoals'] and 
                         predicted_score['xGAway'] == actual_score['awayGoals']):
@@ -1490,7 +1491,7 @@ class Predictions(DF):
             for prediction in predictions[date]:
                 # Check if prediciton strings match perfectly
                 # i.e. identical fixture and same score predicted
-                if (prediction['homeInitials'] == home_initials) and (prediction['awayInitials'] == away_initials) and (prediction['prediction'] == new_prediction) and (prediction['actual'] == None):
+                if (prediction['homeInitials'] == home_initials) and (prediction['awayInitials'] == away_initials) and (prediction['prediction'] == new_prediction) and (prediction['actual'] is None):
                     already_made = True
                     break
 
@@ -1505,7 +1506,7 @@ class Predictions(DF):
             if (prediction['homeInitials'] == home_initials and 
                 prediction['awayInitials'] == away_initials):
                 # If fixture match perfectly predicted scoreline different (outdated)
-                if predicted_score != new_prediction and prediction['actual'] == None:
+                if predicted_score != new_prediction and prediction['actual'] is None:
                     print("Updating existing prediction:", 
                           home_initials, prediction['prediction']['xGHome'], '-', prediction['prediction']['xGAway'], away_initials, 
                           '-->', home_initials, predicted_score['xGHome'], '-',  predicted_score['xGAway'], away_initials,)

@@ -165,7 +165,7 @@ def get_params(team_name_hyphen: str) -> TeamParams:
 # @app.route('/west-bromwich-albion')
 # @app.route('/fulham')
 def team() -> str:
-    if (rule := request.url_rule) != None:
+    if (rule := request.url_rule) is not None:
         # Get hypehenated team name from current URL
         team_name_hyphen = rule.rule[1:]
     params = get_params(team_name_hyphen)
@@ -193,7 +193,7 @@ def correct_result(h1, a1, h2, a2) -> bool:
 def insert_predictions_colours(predictions: dict):
     for date in predictions.keys():
         for pred in predictions[date]:
-            if pred['actual'] == None:
+            if pred['actual'] is None:
                 pred['colour'] = ''  # No colour
             elif pred['prediction']['xGHome'] == pred['actual']['homeGoals'] and pred['prediction']['xGAway'] == pred['actual']['awayGoals']:
                 pred['colour'] = 'green'
@@ -239,7 +239,7 @@ def thread_function(time=3600):
         updater.update_all()
 
 updater = Updater(season)
-data_updater_thread = Thread(target=thread_function, args=(3600,))
+data_updater_thread = Thread(target=thread_function, args=(1800,))
 updater.update_all()
 data_updater_thread.start()
 

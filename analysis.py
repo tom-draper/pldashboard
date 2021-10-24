@@ -31,7 +31,7 @@ class PredictionsAnalysis:
         count = 0
         for prediction in predictions.values():
             for pred in prediction:
-                if pred['actual'] != None and pred['details'] != None:
+                if pred['actual'] is not None and pred['details'] is not None:
                     if self.by_form(pred['actual'], pred['details']['adjustments'][0]['homeFormRating'], pred['details']['adjustments'][0]['awayFormRating']):
                         count += 1
                     total += 1
@@ -47,7 +47,7 @@ class PredictionsAnalysis:
         count = 0
         for prediction in predictions.values():
             for pred in prediction:
-                if pred['actual'] != None and pred['details'] != None:
+                if pred['actual'] is not None and pred['details'] is not None:
                     if pred['details']['starting']['description'] == 'Previous match average':
                         if self.by_prev_matches(pred['actual'], pred['details']['starting']['homeGoals'], pred['details']['starting']['awayGoals']):
                             count += 1
@@ -73,7 +73,7 @@ class PredictionsAnalysis:
         count = 0
         for prediction in predictions.values():
             for pred in prediction:
-                if pred['actual'] != None:
+                if pred['actual'] is not None:
                     if by_function(pred['actual']):
                         count += 1
                     total += 1
@@ -128,7 +128,7 @@ class PredictionsAnalysis:
         count = 0
         for preds in predictions.values():
             for pred in preds:
-                if pred['details'] != None and pred['actual'] != None:
+                if pred['details'] is not None and pred['actual'] is not None:
                     ph = pred['details']['score']['homeGoals']
                     pa = pred['details']['score']['awayGoals']
                     ah, aa = util.extract_int_score_from_scoreline(pred['actual'])

@@ -108,7 +108,7 @@ class Utilities:
         return home, away
     
     def identical_fixtures(self, scoreline1: str, scoreline2: str) -> bool:
-        if scoreline1 != None and scoreline2 != None:
+        if scoreline1 is not None and scoreline2 is not None:
             home_p, _, _, _, away_p = scoreline1.split(' ')
             home_s, _, _, _, away_s = scoreline2.split(' ')
             return (home_p == home_s) and (away_p == away_s)

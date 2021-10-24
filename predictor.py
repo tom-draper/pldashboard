@@ -18,10 +18,10 @@ class Predictor:
             for prediction in predictions[date]:
                 predicted_score = prediction['prediction']
                 actual_score = prediction['actual']
-                if predicted_score != None:
+                if predicted_score is not None:
                     if util.identical_fixtures(predicted_score, new_prediction):
                         # If fixture match perfectly but predicted scoreline different (outdated)
-                        if (predicted_score != new_prediction) and (actual_score == None):
+                        if (predicted_score != new_prediction) and (actual_score is None):
                             already_made = True
                         break
 
@@ -117,18 +117,13 @@ class Predictor:
         
         return pred_scored, pred_conceded, detail
 
-    def neutral_prev_matches(self, prev_matches):
+    def neutral_prev_matches(self, prev_matches: list[dict[str, str]]):
         neutral_prev_matches = []
         for match in prev_matches:
             neutral_match = {}
+            # Rename to match json format
             for k, v in match.items():
                 neutral_match[k[0].lower() + k[1:]] = v
-            # Rename to match json format
-            # neutral_match['date'] = match['Date']
-            # neutral_match['homeTeam'] = match['HomeTeam']
-            # neutral_match['awayTeam'] = match['AwayTeam']
-            # neutral_match['homeGoals'] = match['HomeGoals']
-            # neutral_match['awayGoals'] = match['AwayGoals']
             neutral_prev_matches.append(neutral_match)
         
         return neutral_prev_matches
@@ -215,7 +210,7 @@ class Predictor:
         # Check ALL teams as two teams can have different next games
         for team_name in team_names:
             prediction = None
-            if upcoming != None:
+            if upcoming is not None:
                 opp_team_name = upcoming.df['NextTeam'].loc[team_name]
                 form_rating = form.get_current_form_rating(team_name)  # type: float
                 opp_form_rating = form.get_current_form_rating(opp_team_name)  # type: float
