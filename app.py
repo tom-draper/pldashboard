@@ -124,8 +124,8 @@ def get_next_game(team_name: str) -> NextGame:
     return NextGame(opp_team, home_away, prev_matches)
 
 def get_prediction(team_name: str) -> Prediction:
-    scoreline = updater.data.predictions.get_next_game_prediction_scoreline(team_name)
-    accuracy, results_accuracy = updater.data.predictions.get_accuracy()
+    scoreline = updater.data.upcoming.get_next_game_prediction_scoreline(team_name)
+    accuracy, results_accuracy = updater.data.upcoming.predictions.get_accuracy()
     return Prediction(scoreline, accuracy, results_accuracy)
 
 def get_table_snippet(team_name: str) -> TableSnippet:
@@ -204,11 +204,11 @@ def insert_predictions_colours(predictions: dict):
 
 @app.route('/predictions')
 def predictions() -> str:
-    predictions = updater.data.predictions.get_predictions()
+    predictions = updater.data.upcoming.predictions.get_predictions()
     predictions = dict(sorted(predictions.items(), reverse=True))
     insert_predictions_colours(predictions)
 
-    accuracy, results_accuracy = updater.data.predictions.get_accuracy()
+    accuracy, results_accuracy = updater.data.upcoming.predictions.get_accuracy()
 
     last_updated = updater.last_updated
     

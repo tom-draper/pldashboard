@@ -24,7 +24,7 @@
 
       <div class="predictions-container">
         <div class="predictions">
-          {% if params.predictions is not None %}
+          {% if params.predictions != None %}
             {% for date, preds in params.predictions.items() %}
               <div class="date">{{ date[8:10] }}-{{ date[5:7] }}-{{ date[:4] }}</div>
               <div class="medium-predictions-divider"></div>
@@ -39,7 +39,7 @@
                       <div class="prediction-initials">{{ pred['awayInitials'] }}</div>
                     </div>
                   </div>
-                  {% if pred['actual'] is not None %}
+                  {% if pred['actual'] != None %}
                     <div class="actual prediction-item">
                       <div class="prediction-label">Actual:</div>
                       <div class="prediction-value">
@@ -53,7 +53,7 @@
                     {{ pred['time'] }}
                   </div>
                   {% endif %}
-                  {% if pred['details'] is not None %}
+                  {% if pred['details'] != None %}
                     <div class="prediction-details" id="{{ pred['id'] }}">
                       <div class="prediction-detail">
                         {{ pred['details']['initial']['description'] }}:

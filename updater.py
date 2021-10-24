@@ -131,15 +131,11 @@ class Updater:
         self.data.position_over_time.update(self.data.fixtures, self.data.standings,
                                             display=display_tables)
         # Data about the opponent in each team's next game
-        self.data.upcoming.update(self.json_data, self.data.fixtures,
-                                  self.data.team_names, self.current_season, n_seasons,
-                                  display=display_tables)
+        self.data.upcoming.update(self.json_data, self.data.fixtures, self.data.form, 
+                                  self.data.home_advantages, self.data.team_names, 
+                                  self.current_season, n_seasons, display=display_tables)
         # Season metrics
         self.data.season_stats.update(self.data.position_over_time, display=display_tables)
-        # Update predictions based on new data
-        self.data.predictions.update(self.data.fixtures, self.data.form,
-                                     self.data.upcoming, self.data.home_advantages,
-                                     display=display_tables)
 
     def save_tables(self):
         self.data.standings.save_to_html()
@@ -150,7 +146,6 @@ class Updater:
         self.data.position_over_time.save_to_html()
         self.data.upcoming.save_to_html()
         self.data.season_stats.save_to_html()
-        self.data.predictions.save_to_html()
     
     def update_data(self, n_seasons, display_tables):
         self.data.logo_urls = self.get_logo_urls()

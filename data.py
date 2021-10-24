@@ -10,7 +10,7 @@ import timebudget
 from pandas.core.frame import DataFrame
 from timebudget import timebudget
 
-from predictor import Predictor
+from predictions import Predictions
 from utilities import Utilities
 
 util = Utilities()
@@ -802,177 +802,6 @@ class Standings(DF):
         self.df = standings
 
 
-class Upcoming(DF):
-    def __init__(self, d: DataFrame = DataFrame()):
-        super().__init__(d, 'upcoming')
-
-    def get_opposition(self, team_name: str) -> str:
-        return self.df.at[team_name, 'NextTeam']
-
-    def get_previous_matches(self, team_name: str) -> list:
-        return self.df.at[team_name, 'PreviousMatches']
-
-    def get_at_home(self, team_name: str) -> str:
-        return self.df.at[team_name, 'AtHome']
-
-    def get_details(self, team_name: str) -> tuple[str, str, list]:
-        opp_team_name = ''
-        at_home = ''
-        prev_matches = []
-        if not self.df.empty:
-            # If season not finished
-            opp_team_name = self.get_opposition(team_name)
-            at_home = self.get_at_home(team_name)
-            prev_matches = self.get_previous_matches(team_name)
-
-        return opp_team_name, at_home, prev_matches
-
-    def get_next_game(self, team_name: str, fixtures: Fixtures) -> tuple[Optional[str], 
-                                                                         Optional[str], 
-                                                                         Optional[str]]:
-        date = None  # type: Optional[str]
-        next_team = None  # type: Optional[str]
-        at_home = None  # type: Optional[str]
-        # Scan through list of fixtures to find the first that is 'scheduled'
-        for matchday_no in fixtures.df.columns.unique(level=0):
-            if fixtures.df[matchday_no, 'Status'].loc[team_name] == 'SCHEDULED':
-                date = fixtures.df[matchday_no, 'Date'].loc[team_name]
-                next_team = fixtures.df[matchday_no, 'Team'].loc[team_name]
-                at_home = fixtures.df[matchday_no, 'AtHome'].loc[team_name]
-                break
-
-        return date, next_team, at_home
-
-    def game_result_tuple(self, match: dict) -> tuple[str, str]:
-        home_score = match['score']['fullTime']['homeTeam']
-        away_score = match['score']['fullTime']['awayTeam']
-        if home_score == away_score:
-            result = ('Drew', 'Drew')
-        elif home_score > away_score:
-            result = ('Won', 'Lost')
-        else:
-            result = ('Lost', 'Won')
-
-        return result
-
-    def append_prev_match(self, next_games: dict, home_team: str, away_team: str, 
-                            date: str, result: tuple[str, str], match: dict):
-        readable_date = self.readable_date(date)
-        # From the perspective from the home team
-        # If this match's home team has their next game against this match's away team
-        if next_games[home_team]['NextTeam'] == away_team:
-            prev_match = {'Date': date,
-                          'ReadableDate': readable_date,
-                          'HomeTeam': home_team,
-                          'AwayTeam': away_team,
-                          'HomeGoals': match['score']['fullTime']['homeTeam'],
-                          'AwayGoals': match['score']['fullTime']['awayTeam'],
-                          'Result': result[0]}
-            next_games[home_team]['PreviousMatches'].append(prev_match)
-
-        if next_games[away_team]['NextTeam'] == home_team:
-            prev_match = {'Date': date,
-                          'ReadableDate': readable_date,
-                          'HomeTeam': home_team,
-                          'AwayTeam': away_team,
-                          'HomeGoals': match['score']['fullTime']['homeTeam'],
-                          'AwayGoals': match['score']['fullTime']['awayTeam'],
-                          'Result': result[1]}
-            next_games[away_team]['PreviousMatches'].append(prev_match)
-    
-    def ord(self, n):
-        return str(n) + ("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))
-    
-    def readable_date(self, date):
-        dt = datetime.strptime(date[:10], "%Y-%m-%d")
-        day = self.ord(dt.day)
-        return day + dt.date().strftime(' %B %Y')
-
-    def convert_to_readable_dates(self, next_games: dict):
-        for _, row in next_games.items():
-            for i, prev_match in enumerate(row['PreviousMatches']):
-                row['PreviousMatches'][i]['Date'] = self.readable_date(prev_match['Date'])
-
-    def sort_prev_matches_by_date(self, next_games: dict):
-        for _, row in next_games.items():
-            row['PreviousMatches'] = sorted(row['PreviousMatches'], key=lambda x: x['Date'], reverse=True)
-
-    def append_season_prev_matches(self, next_games: dict, json_data: dict, 
-                                    season: int, team_names: list[str]):
-        if team_names is None:
-            raise ValueError()
-        
-        data = json_data['fixtures'][season]
-
-        for match in data:
-            if match['status'] == 'FINISHED':
-                home_team = match['homeTeam']['name'].replace('&', 'and')  # type: str
-                away_team = match['awayTeam']['name'].replace('&', 'and')  # type: str
-
-                if home_team in team_names and away_team in team_names:
-                    result = self.game_result_tuple(match)
-                    self.append_prev_match(next_games, home_team, away_team, match['utcDate'], result, match)
-
-    @timebudget
-    def update(self, json_data: dict, fixtures: DataFrame, team_names: list[str], 
-               season: int, n_seasons: int = 3, display: bool = False):
-        """ Builds a dataframe for details about the next game each team has to 
-            play and inserts it into the next_games class variable.
-            
-            Rows: the 20 teams participating in the current season
-            Columns:
-            --------------------------------------------
-            | NextGame | AtHome | Previous Meetings |
-            
-            NextGame: name of the opposition team in a team's next game
-            AtHome: whether the team is playing the next match at home or away, 
-                either True or False
-            PreviousMatches: list of (String Date, Home Team, Away Team, Home Score, 
-                Away Score, Winning Team) tuples of each previous game between the
-                two teams
-                
-        Args:
-            json_dict dict: the json data storage used to build the dataframe
-            fixtures DataFrame: a completed dataframe contining all past and 
-                future fixtures for the current season
-            team_names list:
-            season int: the year of the current season
-            n_seasons (int, optional): number of seasons to include. Defaults to 3.
-            display (bool, optional): flag to print the dataframe to console after 
-                creation. Defaults to False.
-        """
-        print('🔨 Building upcoming dataframe... ')
-
-        # Check for dependencies
-        if fixtures.df.empty:
-            raise ValueError('❌ [ERROR] Cannot build upcoming dataframe: Fixtures dataframe empty')
-        elif not team_names:
-            raise ValueError('❌ [ERROR] Cannot build upcoming dataframe: Teams names list empty')
-
-        d = {}  # type: dict[str, dict[str, Optional[str] | list]]
-        for team_name in team_names:
-            date, next_team, at_home = self.get_next_game(team_name, fixtures)
-            d[team_name] = {'Date': date, 
-                            'NextTeam': next_team,  
-                            'AtHome': at_home,
-                            'PreviousMatches': []}
-
-        for i in range(n_seasons):
-            self.append_season_prev_matches(d, json_data, season - i, team_names)
-
-        # Format previous meeting dates as long, readable str
-        self.sort_prev_matches_by_date(d)
-        # self.convert_to_readable_dates(d)
-
-        upcoming = pd.DataFrame.from_dict(d, orient='index')
-        upcoming.index.name = 'Team'
-
-        if display:
-            print(upcoming)
-
-        self.df = upcoming
-
-
 class SeasonStats(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'season_stats')
@@ -1371,33 +1200,58 @@ class HomeAdvantages(DF):
         self.df = home_advantages
 
 
-class Predictions(DF):
+class Upcoming(DF):
     def __init__(self, current_season, d: DataFrame = DataFrame()):
-        super().__init__(d, 'predictions')
-        self.predictor = Predictor(current_season)
-        self.accuracy = None  # type: dict[str, float]
-        self.prediction_file = f'data/predictions_{current_season}.json'
-    
-    @dataclass
-    class PredictionsCount:
-        total: int
-        correct: int
-        result_correct: int
-        n_pred_home: int
-        n_pred_away: int
-        n_act_home: int
-        n_act_away: int
+        super().__init__(d, 'upcoming')
+        self.predictions = Predictions(current_season)
 
-    def get_predictions(self) -> dict:
-        predictions = {}
-        with open(self.prediction_file) as json_file:
-            data = json.load(json_file)
-            predictions = data['predictions']
-        return predictions
-    
+    def get_opposition(self, team_name: str) -> str:
+        return self.df.at[team_name, 'NextTeam']
+
+    def get_previous_matches(self, team_name: str) -> list:
+        return self.df.at[team_name, 'PreviousMatches']
+
+    def get_at_home(self, team_name: str) -> str:
+        return self.df.at[team_name, 'AtHome']
+
+    def get_details(self, team_name: str) -> tuple[str, str, list]:
+        opp_team_name = ''
+        at_home = ''
+        prev_matches = []
+        if not self.df.empty:
+            # If season not finished
+            opp_team_name = self.get_opposition(team_name)
+            at_home = self.get_at_home(team_name)
+            prev_matches = self.get_previous_matches(team_name)
+
+        return opp_team_name, at_home, prev_matches
+
+    def get_next_game(self, team_name: str, fixtures: Fixtures) -> tuple[Optional[str], 
+                                                                         Optional[str], 
+                                                                         Optional[str]]:
+        date = None  # type: Optional[str]
+        next_team = None  # type: Optional[str]
+        at_home = None  # type: Optional[str]
+        # Scan through list of fixtures to find the first that is 'scheduled'
+        for matchday_no in fixtures.df.columns.unique(level=0):
+            if fixtures.df[matchday_no, 'Status'].loc[team_name] == 'SCHEDULED':
+                date = fixtures.df[matchday_no, 'Date'].loc[team_name]
+                next_team = fixtures.df[matchday_no, 'Team'].loc[team_name]
+                at_home = fixtures.df[matchday_no, 'AtHome'].loc[team_name]
+                break
+
+        return date, next_team, at_home
+
     def get_next_game_prediction(self, team_name: str) -> tuple[str, int, str, int]:
-        home_initials = self.df.at[team_name, 'HomeInitials']
-        away_initials = self.df.at[team_name, 'AwayInitials']
+        at_home = self.df.at[team_name, 'AtHome']
+        
+        if at_home:
+            home_initials = util.convert_team_name_or_initials(team_name)
+            away_initials = util.convert_team_name_or_initials(self.df.at[team_name, 'NextTeam'])
+        else:
+            home_initials = util.convert_team_name_or_initials(self.df.at[team_name, 'NextTeam'])
+            away_initials = util.convert_team_name_or_initials(team_name)
+        
         prediction = self.df.at[team_name, 'Prediction']
         xg_home = prediction['xGHome']
         xg_away = prediction['xGAway']
@@ -1407,269 +1261,138 @@ class Predictions(DF):
         home_initials, xg_home, away_initials, xg_away = self.get_next_game_prediction(team_name)
         return f'{home_initials} {xg_home} - {xg_away} {away_initials}'
 
-    def get_accuracy(self) -> tuple[float, float]:
-        accuracy = round(self.accuracy['accuracy']*100, 2)
-        result_accuracy = round(self.accuracy['resultAccuracy']*100, 2)  # As percentage
-        return accuracy, result_accuracy
-
-    def print_accuracy(self):
-        print(f'ℹ️ Predicting with accuracy: {round(self.accuracy["accuracy"]*100, 2)}%')
-        print(f'ℹ️ Predicting correct results with accuracy: {round(self.accuracy["resultAccuracy"]*100, 2)}%')
-        print(f'ℹ️ Net predictions: [{self.signed_float_str(self.accuracy["homeScoredAvgDiff"])}] - [{self.signed_float_str(self.accuracy["awayScoredAvgDiff"])}]')
-            
-    def signed_float_str(self, value: float) -> str:
-        value = round(value, 2)
-        if value >= 0:
-            return f'+{value}'
-        return str(value)
-    
-    def predictions_count(self, predictions) -> tuple[int, int, int, int, int, int, int]:
-        total = 0
-        correct = 0
-        result_correct = 0
-        # Count number of home and away goals (predicted vs actually)
-        n_pred_home = 0
-        n_pred_away = 0
-        n_act_home = 0
-        n_act_away = 0
-
-        # Scan through all current predictions and fill any missing 'actual' scorelines
-        for predictions in predictions.values():
-            for prediction in predictions:
-                predicted_score = prediction['prediction']
-                actual_score = prediction['actual']
-                
-                if predicted_score is not None and actual_score is not None:
-                    total += 1
-                    if (predicted_score['xGHome'] == actual_score['homeGoals'] and 
-                        predicted_score['xGAway'] == actual_score['awayGoals']):
-                        correct += 1
-
-                    # Prediction and actual BOTH a draw or home win or away win
-                    if util.identical_result(predicted_score['xGHome'], predicted_score['xGAway'], 
-                                             actual_score['homeGoals'], actual_score['awayGoals']):
-                        result_correct += 1
-
-                    n_pred_home += predicted_score['xGHome']
-                    n_pred_away += predicted_score['xGAway']
-                    n_act_home += actual_score['homeGoals']
-                    n_act_away += actual_score['awayGoals']
-
-        return self.PredictionsCount(total, correct, result_correct, n_pred_home, 
-                                     n_pred_away, n_act_home, n_act_away)
-    
-    def measure_accuracy(self, predictions):
-        """Sets the class accuracy variables:
-            - accuracy: the proportion of perfectly predicted predicitons
-            - result_accuracy: the proportion of predictions with a correct result 
-                (win, draw, lose)
-            - home_acored_avg_diff: the difference between the predicted average 
-                home goals scored vs the actual average home goals scored
-            - away_acored_avg_diff: the difference between the predicted average 
-                away goals scored vs the actual average away goals scored
-        """
-        counts = self.predictions_count(predictions)
-
-        accuracy = {}
-        if counts.total != 0:
-            accuracy['accuracy'] = counts.correct / counts.total
-            accuracy['resultAccuracy'] = counts.result_correct / counts.total
-            # Aim for both to be zero
-            # Positive -> predicting too many goals
-            # Negative -> predicting too few goals
-            accuracy['homeScoredAvgDiff'] = (counts.n_pred_home - counts.n_act_home) / counts.total
-            accuracy['awayScoredAvgDiff'] = (counts.n_pred_away - counts.n_act_away) / counts.total
-        return accuracy
-    
-    def max_prediction_id(self, predictions: dict) -> int:
-        return max([max([pred['id'] for pred in preds]) for preds in predictions.values()])
-    
-    def exact_prediction_already_made(self, date: str, home_initials, away_initials, new_prediction: str, 
-                                      predictions: dict) -> bool:
-        already_made = False
-        if date in predictions.keys():
-            for prediction in predictions[date]:
-                # Check if prediciton strings match perfectly
-                # i.e. identical fixture and same score predicted
-                if (prediction['homeInitials'] == home_initials) and (prediction['awayInitials'] == away_initials) and (prediction['prediction'] == new_prediction) and (prediction['actual'] is None):
-                    already_made = True
-                    break
-
-        return already_made
-    
-    def update_existing_prediction(self, date: str, home_initials: str, 
-                                   away_initials: str, new_prediction: dict, 
-                                   details: list[str], predictions: dict[str, list]) -> bool:
-        # Update existing prediction object with new score prediction...
-        for prediction in predictions[date]:
-            predicted_score = prediction['prediction']
-            if (prediction['homeInitials'] == home_initials and 
-                prediction['awayInitials'] == away_initials):
-                # If fixture match perfectly predicted scoreline different (outdated)
-                if predicted_score != new_prediction and prediction['actual'] is None:
-                    print("Updating existing prediction:", 
-                          home_initials, prediction['prediction']['xGHome'], '-', prediction['prediction']['xGAway'], away_initials, 
-                          '-->', home_initials, predicted_score['xGHome'], '-',  predicted_score['xGAway'], away_initials,)
-                    prediction['prediction'] = new_prediction
-                    prediction['details'] = details
-                return True
-        return False
-
-    def insert_new_prediction(self, date: str, time: str, prediction_id: int,
-                              home_initials: str, away_initials: str, 
-                              new_prediction: dict, details: list[str], 
-                              predictions: dict[str, list]) -> bool:
-        """Attempts to inesrt a prediction into the predictions dictionary.
-           Returns True if inserted a NEW predcition
-           Return False if a prediction for this fixture already exists"""
-        # Init with empty list if missing...
-        if date not in predictions.keys():
-            predictions[date] = []
-
-        # Try to update the existing prediciton if available...
-        if self.update_existing_prediction(date, home_initials, away_initials, 
-                                           new_prediction, details, predictions):
-            id_used = False
+    def game_result_tuple(self, match: dict) -> tuple[str, str]:
+        home_score = match['score']['fullTime']['homeTeam']
+        away_score = match['score']['fullTime']['awayTeam']
+        if home_score == away_score:
+            result = ('Drew', 'Drew')
+        elif home_score > away_score:
+            result = ('Won', 'Lost')
         else:
-            # Otherwise add new...
-            print("Adding new prediction:", home_initials, new_prediction['xGHome'], '-', new_prediction['xGAway'], away_initials)
-            predictions[date].append({'id': prediction_id, 
-                                      'time': time, 
-                                      'homeInitials': home_initials,
-                                      'awayInitials': away_initials,
-                                      'prediction': new_prediction,
-                                      'actual': None, 
-                                      'details': details})
-            id_used = True
-        
-        return id_used
+            result = ('Lost', 'Won')
 
-    def insert_new_predictions(self, new_predictions, predictions_json: dict):
-        start_id = self.max_prediction_id(predictions_json) + 1
-        
-        n_inserted = 0
-        for new_prediction in new_predictions.values():
-            date = datetime.strftime(new_prediction['Date'], '%Y-%m-%d')
-            if not self.exact_prediction_already_made(date, 
-                                                      new_prediction['HomeInitials'], 
-                                                      new_prediction['AwayInitials'], 
-                                                      new_prediction['Prediction'], 
-                                                      predictions_json):
-                time = datetime.strftime(new_prediction['Date'], '%H:%M')
-                if self.insert_new_prediction(date, time, start_id+n_inserted, 
-                                              new_prediction['HomeInitials'], 
-                                              new_prediction['AwayInitials'], 
-                                              new_prediction['Prediction'], 
-                                              new_prediction['Details'], 
-                                              predictions_json):
-                    n_inserted += 1
+        return result
 
-        if n_inserted > 0:
-            print(f'➡️  Added {n_inserted} new predictions')
+    def append_prev_match(self, next_games: dict, home_team: str, away_team: str, 
+                            date: str, result: tuple[str, str], match: dict):
+        readable_date = self.readable_date(date)
+        # From the perspective from the home team
+        # If this match's home team has their next game against this match's away team
+        if next_games[home_team]['NextTeam'] == away_team:
+            prev_match = {'Date': date,
+                          'ReadableDate': readable_date,
+                          'HomeTeam': home_team,
+                          'AwayTeam': away_team,
+                          'HomeGoals': match['score']['fullTime']['homeTeam'],
+                          'AwayGoals': match['score']['fullTime']['awayTeam'],
+                          'Result': result[0]}
+            next_games[home_team]['PreviousMatches'].append(prev_match)
 
-    def insert_actual_scores(self, actual_scores: set[tuple[str, str]], predictions: dict):
-        n_inserted = 0
-        for dt, home_initials, away_initials, home_goals, away_goals in actual_scores:
-            date = np.datetime_as_string(dt.asm8, unit='D')
-
-            for prediction in predictions[date]:
-                # If the actual scoreline matches this prediction and no actual score has been filled
-                if (home_initials == prediction['homeInitials'] and 
-                    away_initials == prediction['awayInitials'] and 
-                    prediction['actual'] == None):
-                    # Update this prediction with its actual score
-                    prediction['actual'] = {'homeGoals': home_goals, 
-                                            'awayGoals': away_goals}
-                    print("Adding actual score:", home_initials, home_goals, '-', away_goals, away_initials)
-                    n_inserted += 1
-                    break
-
-        if n_inserted > 0:
-            print(f'➡️  Updated {n_inserted} existing predictions with their actual results')
-
-    def sort_predictions(self, data, predictions_json):
-        for date in predictions_json:
-            predictions_json[date] = sorted(predictions_json[date], key=lambda x: x['time'])
-        # Sort by date keys...
-        data['predictions'] = dict(sorted(predictions_json.items(), key=lambda x: x[0]))
-        
-    def update_json_file(self, new_predictions: dict, actual_scores: set[tuple[datetime, str, str, int, int]]):
-        with open(self.prediction_file) as json_file:
-            data = json.load(json_file)
-            predictions_json = data['predictions']  # type: dict[str, list]
-            
-            # Update with new data...
-            self.insert_new_predictions(new_predictions, predictions_json)
-            self.insert_actual_scores(actual_scores, predictions_json)
-            # Sort predictions by date...
-            self.sort_predictions(data, predictions_json)
-            # Update accuracy...
-            self.accuracy = data['accuracy'] = self.measure_accuracy(predictions_json)
-
-        # Overwrite file with new data...
-        with open(self.prediction_file, 'w') as f:
-            json.dump(data, f)
+        if next_games[away_team]['NextTeam'] == home_team:
+            prev_match = {'Date': date,
+                          'ReadableDate': readable_date,
+                          'HomeTeam': home_team,
+                          'AwayTeam': away_team,
+                          'HomeGoals': match['score']['fullTime']['homeTeam'],
+                          'AwayGoals': match['score']['fullTime']['awayTeam'],
+                          'Result': result[1]}
+            next_games[away_team]['PreviousMatches'].append(prev_match)
     
-    def prediction_details(self, team_name, opp_team_name, pred_scored, pred_conceded, at_home):
-        team_name_initials = util.convert_team_name_or_initials(team_name)
-        opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
-        
-        # Construct prediction string for display...
-        if at_home:
-            home_initials = team_name_initials
-            away_initials = opp_team_name_initials
-            prediction = {'xGHome': pred_scored, 'xGAway': pred_conceded}
-        else:
-            home_initials = opp_team_name_initials
-            away_initials = team_name_initials
-            prediction = {'xGHome': pred_conceded, 'xGAway': pred_scored}
-        return home_initials, away_initials, prediction
-        
-    def get_actual_scores(self, fixtures: DataFrame) -> set[tuple[str, str]]:
-        # To contain a tuple for all actual scores so far this season
-        actual_scores = set()  
-        
-        for matchday_no in range(1, 39):
-            matchday = fixtures.df[matchday_no]
-
-            # If whole column is SCHEDULED, skip
-            if not all(matchday['Status'] == 'SCHEDULED'):
-                for team_name, row in fixtures.df[matchday_no].iterrows():
-                    if row['Status'] == 'FINISHED':
-                        date = np.datetime_as_string(row['Date'].asm8, unit='D')
-                        date = row['Date']
-                        team_name_initials = util.convert_team_name_or_initials(team_name)
-                        opp_team_name_initials = util.convert_team_name_or_initials(row['Team'])
-                        home_goals, away_goals = util.extract_int_score(row['Score'])
-                        if row['AtHome']:
-                            home_initials = team_name_initials
-                            away_initials = opp_team_name_initials
-                        else:
-                            home_initials = opp_team_name_initials
-                            away_initials = team_name_initials
-                        actual_scores.add((date, home_initials, away_initials, home_goals, away_goals))
-
-        return actual_scores
+    def ord(self, n):
+        return str(n) + ("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))
     
+    def readable_date(self, date):
+        dt = datetime.strptime(date[:10], "%Y-%m-%d")
+        day = self.ord(dt.day)
+        return day + dt.date().strftime(' %B %Y')
+
+    def convert_to_readable_dates(self, next_games: dict):
+        for _, row in next_games.items():
+            for i, prev_match in enumerate(row['PreviousMatches']):
+                row['PreviousMatches'][i]['Date'] = self.readable_date(prev_match['Date'])
+
+    def sort_prev_matches_by_date(self, next_games: dict):
+        for _, row in next_games.items():
+            row['PreviousMatches'] = sorted(row['PreviousMatches'], key=lambda x: x['Date'], reverse=True)
+
+    def append_season_prev_matches(self, next_games: dict, json_data: dict, 
+                                    season: int, team_names: list[str]):
+        if team_names is None:
+            raise ValueError()
+        
+        data = json_data['fixtures'][season]
+
+        for match in data:
+            if match['status'] == 'FINISHED':
+                home_team = match['homeTeam']['name'].replace('&', 'and')  # type: str
+                away_team = match['awayTeam']['name'].replace('&', 'and')  # type: str
+
+                if home_team in team_names and away_team in team_names:
+                    result = self.game_result_tuple(match)
+                    self.append_prev_match(next_games, home_team, away_team, match['utcDate'], result, match)
+        
     @timebudget
-    def update(self, fixtures: Fixtures, form: Form, upcoming: Upcoming, 
-               home_advantages: HomeAdvantages, display: bool = False):
-        print('🔨 Building predictions dataframe... ')
+    def update(self, json_data: dict, fixtures: Fixtures, form: Form, 
+               home_advantages: HomeAdvantages, team_names: list[str], 
+               season: int, n_seasons: int = 3, display: bool = False):
+        """ Builds a dataframe for details about the next game each team has to 
+            play and inserts it into the next_games class variable.
+            
+            Rows: the 20 teams participating in the current season
+            Columns:
+            --------------------------------------------
+            | NextGame | AtHome | Previous Meetings |
+            
+            NextGame: name of the opposition team in a team's next game
+            AtHome: whether the team is playing the next match at home or away, 
+                either True or False
+            PreviousMatches: list of (String Date, Home Team, Away Team, Home Score, 
+                Away Score, Winning Team) tuples of each previous game between the
+                two teams
+                
+        Args:
+            json_dict dict: the json data storage used to build the dataframe
+            fixtures DataFrame: a completed dataframe contining all past and 
+                future fixtures for the current season
+            team_names list:
+            season int: the year of the current season
+            n_seasons (int, optional): number of seasons to include. Defaults to 3.
+            display (bool, optional): flag to print the dataframe to console after 
+                creation. Defaults to False.
+        """
+        print('🔨 Building upcoming dataframe... ')
 
-        d = self.predictor.gen_score_predictions(form, upcoming, home_advantages)
-        actual_scores = self.get_actual_scores(fixtures)
-        self.update_json_file(d, actual_scores)
-        self.print_accuracy()
+        # Check for dependencies
+        if fixtures.df.empty:
+            raise ValueError('❌ [ERROR] Cannot build upcoming dataframe: Fixtures dataframe empty')
+        elif not team_names:
+            raise ValueError('❌ [ERROR] Cannot build upcoming dataframe: Teams names list empty')
+
+        d = {}  # type: dict[str, dict[str, Optional[str] | list]]
+        for team_name in team_names:
+            date, next_team, at_home = self.get_next_game(team_name, fixtures)
+            d[team_name] = {'Date': date, 
+                            'NextTeam': next_team,  
+                            'AtHome': at_home,
+                            'PreviousMatches': []}
+
+        for i in range(n_seasons):
+            self.append_season_prev_matches(d, json_data, season-i, team_names)
+
+        # Format previous meeting dates as long, readable str
+        self.sort_prev_matches_by_date(d)
         
-        for team in d:
-            d[team]['Date'] = datetime.strftime(d[team]['Date'], '%Y-%m-%d')
-        predictions = pd.DataFrame.from_dict(d, orient='index', columns=['Date', 'HomeInitials', 'AwayInitials', 'Prediction', 'Details'])
-        predictions.index.name = 'Teams'
+        upcoming = pd.DataFrame.from_dict(d, orient='index')
+        
+        predictions = self.predictions.update(fixtures, form, upcoming, home_advantages)
+        upcoming = pd.concat([upcoming, predictions], axis=1)
+        
+        upcoming.index.name = 'Team'
         
         if display:
-            print(predictions)
+            print(upcoming)
 
-        self.df = predictions
+        self.df = upcoming
 
 
 class Data:
@@ -1684,8 +1407,5 @@ class Data:
         self.home_advantages: HomeAdvantages = HomeAdvantages()
         self.form: Form = Form()
         self.position_over_time: PositionOverTime = PositionOverTime()
-        self.upcoming: Upcoming = Upcoming()
-        self.season_stats: SeasonStats = SeasonStats()
-        self.predictions: Predictions = Predictions(current_season)
-        
-
+        self.upcoming: Upcoming = Upcoming(current_season)
+        self.season_stats: SeasonStats = SeasonStats()        
