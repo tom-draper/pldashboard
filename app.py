@@ -230,18 +230,7 @@ def tables() -> str:
     return render_template('tables.html', params=params)
 
 
-
-def thread_function(time=3600):
-    while True:
-        print(f'Refreshing data in {time} seconds...')
-        sleep(time)
-        print('Refreshing data...')
-        updater.update_all()
-
-updater = Updater(season)
-data_updater_thread = Thread(target=thread_function, args=(1800,))
-updater.update_all()
-data_updater_thread.start()
-
 if __name__ == '__main__':
+    updater = Updater(season)
+    updater.update_all()
     app.run(host='0.0.0.0', debug=False)
