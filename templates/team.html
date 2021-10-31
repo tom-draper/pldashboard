@@ -28,8 +28,24 @@
         background-size: contain;
       }
     </style>
+    <script>
+      var matches = document.querySelectorAll('.svg-container');
+      for (let match of matches) {
+        console.log(match)
+        console.log(match.style)
+        match.style.width = 'inherit';
+      }
+    </script>
   </head>
   <body>
+    <script>
+      matches = document.querySelectorAll('.svg-container');
+      for (let match of matches) {
+        console.log(match)
+        console.log(match.style)
+        match.style.width = 'inherit';
+      }
+    </script>
     <div class="header" style="background-color: var(--{{ params.team.names.hyphenated }});">
       <a id="back-button" class="main-link" href="/"></a>
       <a class="main-link title no-decoration" 
@@ -192,7 +208,7 @@
       <div class="row">
         <div class="form-graph row-graph">
           <h1 class="lowered">Form Over Time</h1>
-          <div class="graph full-row-graph">
+          <div class="graph full-row-graph" style="height: auto">
           {% include 'graphs/%s/form-over-time-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %}
           </div>
         </div>
@@ -293,6 +309,23 @@
       }
       f()
       window.addEventListener("resize", f);
+
+      matches = document.querySelectorAll('.svg-container');
+      for (let match of matches) {
+        console.log(match)
+        console.log(match.style)
+        match.style.width = 'inherit';
+      }
+
+      // html.Div([
+      //   html.Div(style={'height': '50vh'}, children=dcc.Graph(figure={
+      //     'data': [{
+      //       'x': [1, 2, 3],
+      //       'y': [3, 1, 2]
+      //     }]
+      //   }, style={})),
+      // ])
+
     </script>
   </body>
 </html>

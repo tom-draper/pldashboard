@@ -50,6 +50,7 @@ class Visualiser:
         y_labels = [i for i in range(0, 101, 10)]
 
         fig.update_layout(
+            # autosize=True,
             yaxis=dict(
                 title_text='Team Rating (%)',
                 ticktext=y_labels,
@@ -228,6 +229,7 @@ class Visualiser:
         y_labels = [i for i in range(0, 101, 10)]
 
         fig.update_layout(
+            # autosize=True,
             yaxis=dict(
                 title_text='Form Rating (%)',
                 ticktext=y_labels,
@@ -372,6 +374,7 @@ class Visualiser:
         positional_values = [i for i in range(1, 21)]
 
         fig.update_layout(
+            # autosize=True,
             yaxis=dict(
                 title_text='League Position',
                 ticktext=positional_values,
@@ -594,6 +597,7 @@ class Visualiser:
 
         # Config graph layout
         fig.update_layout(
+            # autosize=True,
             barmode='group',
             yaxis=dict(
                 title_text='Goals',

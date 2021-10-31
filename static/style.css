@@ -802,10 +802,6 @@ img {
   }
 }
 
-@media only screen and (max-width: 600px) {
-
-}
-
 @media only screen and (max-width: 500px) {
   .season-stat {
     margin-bottom: 1.2em;
@@ -910,7 +906,32 @@ img {
   .teams-footer {
     margin-top: 2em;
   }
+  .next-game-prediction {
+    margin-top: 30px;
+  }
+  /* .main-svg {
+    height: 100%;
+  } */
+  
+  .svg-container {
+    height: 250px !important;
+  }
 }
+
+.plotly-graph-div {
+  height: 80% !important;
+}
+/*
+.row {
+  height: auto;
+} */
+
+@media only screen and (min-width: 500px) {
+  .svg-container {
+    height: 450px !important;
+  }
+}
+
 
 
 /* ----------------------------- Predictions Page -----------------------------*/
