@@ -78,6 +78,9 @@ class Visualiser:
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
         )
+        fig.update_xaxes(fixedrange=True)
+        fig.update_yaxes(fixedrange=True)
+
 
     def fixtures_fig(self, x: list[datetime], y: list[float], details: list[str],
                      sizes: list[int], NOW: datetime) -> FigureWidget:
@@ -253,6 +256,8 @@ class Visualiser:
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
         )
+        fig.update_xaxes(fixedrange=True)
+        fig.update_yaxes(fixedrange=True)
 
     def form_over_time_fig(self, x: list[datetime], ys: list[list[float]],
                            matchday_labels: list[str], team: str,
@@ -396,6 +401,8 @@ class Visualiser:
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
         )
+        fig.update_xaxes(fixedrange=True)
+        fig.update_yaxes(fixedrange=True)
 
     def position_over_time_fig(self, x: list[datetime], ys: list[list[int]],
                                matchday_labels: list[str], team: str,
@@ -536,6 +543,8 @@ class Visualiser:
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
         )
+        fig.update_xaxes(fixedrange=True)
+        fig.update_yaxes(fixedrange=True)
 
     def clean_sheets_fig(self, x: list[datetime], clean_sheets: list[Optional[float]], 
                          not_clean_sheets: list[Optional[float]]) -> FigureWidget:
@@ -619,6 +628,8 @@ class Visualiser:
                 x=0.01
             ),
         )
+        fig.update_xaxes(fixedrange=True)
+        fig.update_yaxes(fixedrange=True)
 
     def goals_scored_and_conceded_fig(self, x: list[datetime], y_goals_scored: list[int], 
                                       y_goals_conceded: list[int], y_avg: list[float], 
