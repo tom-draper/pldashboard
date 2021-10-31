@@ -79,8 +79,8 @@ class Predictor:
             
         detail = {'description': 'Adjusted by form',
                   'operation': operation,
-                  'xGHome': round(xg_home, 4),
-                  'xGAway': round(xg_away, 4),
+                  'homeGoals': round(xg_home, 4),
+                  'awayGoals': round(xg_away, 4),
                   'formRatingHome': round(form_rating_home, 4),
                   'formRatingAway': round(form_rating_away, 4)}
 
@@ -115,8 +115,8 @@ class Predictor:
 
         detail = {'description': 'Adjusted by home advantage',
                   'operation': operation,
-                  'xGHome': round(home_goals, 4), 
-                  'xGAway': round(away_goals, 4), 
+                  'homeGoals': round(home_goals, 4), 
+                  'awayGoals': round(away_goals, 4), 
                   'homeAdvantage': round(advantage, 4)}
         
         return pred_scored, pred_conceded, detail
@@ -150,8 +150,8 @@ class Predictor:
             
         detail = {'description': description, 
                   'previousMatches': self.neutral_prev_matches(prev_matches),
-                  'xGHome': round(home_goals, 4), 
-                  'xGAway': round(away_goals, 4)}
+                  'homeGoals': round(home_goals, 4), 
+                  'awayGoals': round(away_goals, 4)}
         
         return pred_scored, pred_conceded, detail
 
@@ -162,8 +162,8 @@ class Predictor:
         else:
             home_goals = pred_conceded
             away_goals = pred_scored
-        detailed_score = {'xGHome': round(home_goals, 4), 
-                          'xGAway': round(away_goals, 4)}
+        detailed_score = {'homeGoals': round(home_goals, 4), 
+                          'awayGoals': round(away_goals, 4)}
         return detailed_score
 
     def calc_score_prediction(self, team_name: str, home_advantage: float, 
@@ -199,11 +199,11 @@ class Predictor:
         if at_home:
             home_initials = team_name_initials
             away_initials = opp_team_name_initials
-            prediction = {'xGHome': pred_scored, 'xGAway': pred_conceded}
+            prediction = {'homeGoals': pred_scored, 'awayGoals': pred_conceded}
         else:
             home_initials = opp_team_name_initials
             away_initials = team_name_initials
-            prediction = {'xGHome': pred_conceded, 'xGAway': pred_scored}
+            prediction = {'homeGoals': pred_conceded, 'awayGoals': pred_scored}
         return home_initials, away_initials, prediction
 
     def gen_score_predictions(self, form, upcoming: DataFrame, home_advantages) -> dict:
@@ -299,17 +299,17 @@ class Predictions:
                 
                 if predicted_score is not None and actual_score is not None:
                     total += 1
-                    if (predicted_score['xGHome'] == actual_score['homeGoals'] and 
-                        predicted_score['xGAway'] == actual_score['awayGoals']):
+                    if (predicted_score['homeGoals'] == actual_score['homeGoals'] and 
+                        predicted_score['awayGoals'] == actual_score['awayGoals']):
                         correct += 1
 
                     # Prediction and actual BOTH a draw or home win or away win
-                    if util.identical_result(predicted_score['xGHome'], predicted_score['xGAway'], 
+                    if util.identical_result(predicted_score['homeGoals'], predicted_score['awayGoals'], 
                                              actual_score['homeGoals'], actual_score['awayGoals']):
                         result_correct += 1
 
-                    n_pred_home += predicted_score['xGHome']
-                    n_pred_away += predicted_score['xGAway']
+                    n_pred_home += predicted_score['homeGoals']
+                    n_pred_away += predicted_score['awayGoals']
                     n_act_home += actual_score['homeGoals']
                     n_act_away += actual_score['awayGoals']
 
@@ -366,8 +366,8 @@ class Predictions:
                 # If fixture match perfectly predicted scoreline different (outdated)
                 if predicted_score != new_prediction and prediction['actual'] is None:
                     print("Updating existing prediction:", 
-                          home_initials, prediction['prediction']['xGHome'], '-', prediction['prediction']['xGAway'], away_initials, 
-                          '-->', home_initials, predicted_score['xGHome'], '-',  predicted_score['xGAway'], away_initials,)
+                          home_initials, prediction['prediction']['homeGoals'], '-', prediction['prediction']['awayGoals'], away_initials, 
+                          '-->', home_initials, predicted_score['homeGoals'], '-',  predicted_score['awayGoals'], away_initials,)
                     prediction['prediction'] = new_prediction
                     prediction['details'] = details
                 return True
@@ -390,7 +390,7 @@ class Predictions:
             id_used = False
         else:
             # Otherwise add new...
-            print("Adding new prediction:", home_initials, new_prediction['xGHome'], '-', new_prediction['xGAway'], away_initials)
+            print("Adding new prediction:", home_initials, new_prediction['homeGoals'], '-', new_prediction['awayGoals'], away_initials)
             predictions[date].append({'id': prediction_id, 
                                       'time': time, 
                                       'homeInitials': home_initials,
@@ -476,11 +476,11 @@ class Predictions:
         if at_home:
             home_initials = team_name_initials
             away_initials = opp_team_name_initials
-            prediction = {'xGHome': pred_scored, 'xGAway': pred_conceded}
+            prediction = {'homeGoals': pred_scored, 'awayGoals': pred_conceded}
         else:
             home_initials = opp_team_name_initials
             away_initials = team_name_initials
-            prediction = {'xGHome': pred_conceded, 'xGAway': pred_scored}
+            prediction = {'homeGoals': pred_conceded, 'awayGoals': pred_scored}
         return home_initials, away_initials, prediction
         
     def get_actual_scores(self, fixtures: DataFrame) -> set[tuple[str, str]]:

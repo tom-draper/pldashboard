@@ -1253,8 +1253,8 @@ class Upcoming(DF):
             away_initials = util.convert_team_name_or_initials(team_name)
         
         prediction = self.df.at[team_name, 'Prediction']
-        xg_home = prediction['xGHome']
-        xg_away = prediction['xGAway']
+        xg_home = prediction['homeGoals']
+        xg_away = prediction['awayGoals']
         return home_initials, xg_home, away_initials, xg_away
 
     def get_next_game_prediction_scoreline(self, team_name: str) -> str:

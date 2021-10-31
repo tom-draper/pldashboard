@@ -195,9 +195,9 @@ def insert_predictions_colours(predictions: dict):
         for pred in predictions[date]:
             if pred['actual'] is None:
                 pred['colour'] = ''  # No colour
-            elif pred['prediction']['xGHome'] == pred['actual']['homeGoals'] and pred['prediction']['xGAway'] == pred['actual']['awayGoals']:
+            elif pred['prediction']['homeGoals'] == pred['actual']['homeGoals'] and pred['prediction']['awayGoals'] == pred['actual']['awayGoals']:
                 pred['colour'] = 'green'
-            elif correct_result(pred['prediction']['xGHome'], pred['actual']['homeGoals'], pred['prediction']['xGAway'], pred['actual']['awayGoals']):
+            elif correct_result(pred['prediction']['homeGoals'], pred['actual']['homeGoals'], pred['prediction']['awayGoals'], pred['actual']['awayGoals']):
                 pred['colour'] = 'yellow'
             else:
                 pred['colour'] = 'red'

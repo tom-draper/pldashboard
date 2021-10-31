@@ -71,9 +71,9 @@ class OptimisePredictions:
             _, _, pred = predictor.prediction_details(
                 team_name, opp_team_name, pred_scored, pred_conceded, at_home)
             
-            if pred['xGHome'] == actual_score['homeGoals'] and pred['xGAway'] == actual_score['awayGoals']:
+            if pred['homeGoals'] == actual_score['homeGoals'] and pred['awayGoals'] == actual_score['awayGoals']:
                 correct += 1
-            if self.correct_result(pred['xGHome'], pred['xGAway'], actual_score['homeGoals'], actual_score['awayGoals']):
+            if self.correct_result(pred['homeGoals'], pred['awayGoals'], actual_score['homeGoals'], actual_score['awayGoals']):
                 correct_result += 1
             total += 1
 
