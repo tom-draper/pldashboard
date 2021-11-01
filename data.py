@@ -595,7 +595,7 @@ class Form(DF):
         form.index.name = "Team"
 
         if display:
-            print(form)
+            print(form[10])
 
         self.df = form
 
@@ -828,14 +828,19 @@ class FormNew(DF):
             pts_col.append(pts)
         
         if matchday_no != 1:
-            gd_col = form[(matchday_no-1, 'GD')] + np.array(gd_col)
-            pts_col = form[(matchday_no-1, 'Points')] + np.array(pts_col)
+            gd_cum_col = form[(matchday_no-1, 'GD')] + np.array(gd_col)
+            pts_cum_col = form[(matchday_no-1, 'Points')] + np.array(pts_col)
+        else:
+            gd_cum_col = gd_col
+            pts_cum_col = pts_col
         
         form[(matchday_no, 'GD')] = gd_col
         form[(matchday_no, 'Points')] = pts_col
+        form[(matchday_no, 'CumulativeGD')] = gd_cum_col
+        form[(matchday_no, 'CumulativePoints')] = pts_cum_col
     
     def insert_position_col(self, form, matchday_no):
-        form.sort_values(by=[(matchday_no, 'Points'), (matchday_no, 'GD')], ascending=False, inplace=True)
+        form.sort_values(by=[(matchday_no, 'CumulativePoints'), (matchday_no, 'CumulativeGD')], ascending=False, inplace=True)
         form[matchday_no, 'Position'] = list(range(1, 21))
     
     def insert_won_against_star_team_col(self, form, team_ratings, matchday_no, star_team_threshold):
@@ -851,17 +856,17 @@ class FormNew(DF):
     
     def append_to_from_str(self, form_str, home, away, at_home):
         if home == away:
-            form_str.insert(0, 'D')
+            form_str.append('D')
         elif at_home:
             if home > away:
-                form_str.insert(0, 'W')
+                form_str.append('W')
             elif home < away:
-                form_str.insert(0, 'L')
+                form_str.append('L')
         else:
             if home > away:
-                form_str.insert(0, 'L')
+                form_str.append('L')
             elif home < away:
-                form_str.insert(0, 'W')
+                form_str.append('W')
         
     
     def insert_form_string(self, form, matchday_no, n_games):
@@ -882,12 +887,80 @@ class FormNew(DF):
         
         form[(matchday_no, 'Form')] = form_str_col
         
+    def calc_form_rating2(self, team_ratings, team, teams_played, form_str, gds) -> float:
+        team_rating = team_ratings.df.at[team, 'TotalRating']
+        
+        form_rating = 0.5  # Default percentage, moves up or down based on performance
+        if form_str is not None:  # If games have been played this season
+            for form_idx, result in enumerate(form_str):
+                opp_team = teams_played[form_idx]
+                opp_team_rating = team_ratings.df.at[opp_team, 'TotalRating']
+
+                # Increament form score based on rating of the team they've won, drawn or lost against
+                if result == 'W':
+                    # print("Win, add ", (opp_team_rating / len(form_str)) * abs(gds[form_idx]))
+                    form_rating += (opp_team_rating / len(form_str)) * abs(gds[form_idx])
+                elif result == 'D':
+                    # print("Draw, add ", (opp_team_rating - team_rating) / len(form_str))
+                    form_rating += (opp_team_rating - team_rating) / len(form_str)
+                elif result == 'L':
+                    # print("Loss, subtract ", ((team_rating - opp_team_rating) / len(form_str)) * abs(gds[form_idx]))
+                    form_rating -= ((team_rating - opp_team_rating) / len(form_str)) * abs(gds[form_idx])
+
+        # Cap rating
+        form_rating = min(max(0, form_rating), 1)
+
+        return form_rating
+
+    def calc_form_rating(self, team_ratings, team, teams_played, form_str, gds) -> float:
+        form_rating = 0.5  # Default percentage, moves up or down based on performance
+        if form_str is not None:  # If games have been played this season
+            for form_idx, result in enumerate(form_str):
+                # Convert opposition team initials to their name 
+                opp_team = teams_played[form_idx]
+
+                # Increament form score based on rating of the team they've won, drawn or lost against
+                if result == 'W':
+                    if team=='Liverpool FC':
+                        print("Win, add ", (team_ratings.df['TotalRating'].loc[opp_team] / len(form_str)) * abs(gds[form_idx]))
+                    form_rating += (team_ratings.df['TotalRating'].loc[opp_team] / len(form_str)) * abs(gds[form_idx])
+                # elif result == 'D':
+                #     form_rating += (team_ratings.df['TotalRating'].loc[opp_team] - team_ratings.df['TotalRating'].loc[opp_team]) / len(form_str)
+                elif result == 'L':
+                    if team=='Liverpool FC':
+                        print('Lose subtract', ((team_ratings.df['TotalRating'].iloc[0] - team_ratings.df['TotalRating'].loc[opp_team]) / len(form_str)) * abs(gds[form_idx]))
+                    form_rating -= ((team_ratings.df['TotalRating'].iloc[0] - team_ratings.df['TotalRating'].loc[opp_team]) / len(form_str)) * abs(gds[form_idx])
+
+        # Cap rating
+        if form_rating > 1:
+            form_rating = 1
+        elif form_rating < 0:
+            form_rating = 0
+
+        return form_rating
     
     def insert_form_rating_col(self, form, team_ratings, matchday_no):
         form_rating_col = []
-        for opp_team in form[(matchday_no, 'Team')].iteritems():
-            pass
+        for team, form_str in form[(matchday_no, 'Form')].iteritems():
+            gds = self.get_last_n_values(form, team, 'GD', matchday_no, 5)
+            teams_played = self.get_last_n_values(form, team, 'Team', matchday_no, 5)
+            
+            form_rating = self.calc_form_rating(team_ratings, team, teams_played, form_str, gds)
+            if (team == 'Liverpool FC'):
+                print(team, teams_played, form_str, gds, '=>', form_rating)
+            
+            form_rating_col.append(form_rating)
+        form[(matchday_no, 'FormRating')] = form_rating_col
 
+    def get_last_n_values(self, form, team_name, column_name, start_matchday, N):
+        matchday_nos = [start_matchday-i for i in range(N) if start_matchday-i > 0]
+        col_headings = [(n, column_name) for n in matchday_nos]
+
+        values = []        
+        for value in form[col_headings].loc[team_name]:
+            values.append(value)
+            
+        return values
     
     def convert_team_col_to_initials(self, form, matchday_no):
         for team, opp_team in form[(matchday_no, 'Team')].iteritems():
@@ -917,18 +990,21 @@ class FormNew(DF):
             self.insert_position_col(form, matchday_no)
             self.insert_won_against_star_team_col(form, team_ratings, matchday_no, star_team_threshold)
             self.insert_form_string(form, matchday_no, 5)
-            # self.insert_form_rating_col(form, team_ratings, matchday_no)
+            self.insert_form_rating_col(form, team_ratings, matchday_no)
+        
+        for matchday_no in matchday_nos:
             self.convert_team_col_to_initials(form, matchday_no)
         
         # Drop columns used for working
-        form = form.drop(columns=['Score'], level=1)
-        form = form.drop(columns=['Points'], level=1)
+        form = form.drop(columns=['Score', 'Points'], level=1)
         
         form = form.reindex(sorted(form.columns.values), axis=1)
-
+        
+        # print(form)
+        form = form.sort_values(by=[(max(matchday_nos), 'FormRating')])
 
         if display:
-            print(form)
+            print(form[10])
             
         self.df = form
 
@@ -1233,10 +1309,10 @@ class HomeAdvantages(DF):
 
         # Home advantage = percentage wins at home - percentage wins 
         home_advantage = win_ratio_at_home - win_ratio
-        home_advantages[season, 'Home', 'Advantage'] = home_advantage
+        home_advantages[season, 'HomeAdvantage', ''] = home_advantage
 
     def create_total_home_advantage_col(self, home_advantages, season, threshold):
-        home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(2) == 'Advantage']
+        home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(1) == 'HomeAdvantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
         if (home_advantages[season]['Home']['Played'] <= threshold).all():
             print(f"Current season excluded from home advantages calculation -> all teams must have played {threshold} home games.")
@@ -1244,8 +1320,8 @@ class HomeAdvantages(DF):
             home_advantages_cols = home_advantages_cols.iloc[:, 1:]
         
         # Drop pandemic year (anomaly, no fans, data shows neutral home advantage)
-        if (2020, 'Home', 'Advantage') in list(home_advantages_cols.columns):
-            home_advantages_cols = home_advantages_cols.drop((2020, 'Home', 'Advantage'), axis=1)
+        if (2020, 'HomeAdvantage', '') in list(home_advantages_cols.columns):
+            home_advantages_cols = home_advantages_cols.drop((2020, 'HomeAdvantage', ''), axis=1)
 
         home_advantages = home_advantages.sort_index(axis=1)
         home_advantages['TotalHomeAdvantage'] = home_advantages_cols.mean(axis=1).fillna(0)
@@ -1322,6 +1398,9 @@ class HomeAdvantages(DF):
         # Create the final overall home advantage value for each team
         home_advantages = self.create_total_home_advantage_col(home_advantages, season, threshold)
         
+        # Remove working columns
+        home_advantages = home_advantages.drop(columns=['Wins', 'Loses', 'Draws'], level=2)
+
         home_advantages.columns.names = ('Season', None, None)
         home_advantages.index.name = 'Team'
 
