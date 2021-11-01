@@ -127,6 +127,9 @@ class Updater:
         # Calculated form values for each team for each matchday played so far
         self.data.form.update(self.data.fixtures, self.data.team_ratings,
                               self.star_team_threshold, display=display_tables)
+        self.data.form_new.update(self.data.fixtures, self.data.standings, 
+                                  self.data.team_ratings, self.star_team_threshold, 
+                                  display=display_tables)
         # Snapshots of a teams table position and match results for each matchday played so far
         self.data.position_over_time.update(self.data.fixtures, self.data.standings,
                                             display=display_tables)
@@ -143,6 +146,7 @@ class Updater:
         self.data.team_ratings.save_to_html()
         self.data.home_advantages.save_to_html()
         self.data.form.save_to_html()
+        self.data.form_new.save_to_html()
         self.data.position_over_time.save_to_html()
         self.data.upcoming.save_to_html()
         self.data.season_stats.save_to_html()

@@ -356,31 +356,27 @@ class Form(DF):
 
     def calc_form_rating(self, teams_played: list[str], form_str: str, gds: list[int],
                          team_ratings: TeamRatings) -> float:
-        form_percentage = 0.5  # Default percentage, moves up or down based on performance
+        form_rating = 0.5  # Default percentage, moves up or down based on performance
         if form_str is not None:  # If games have been played this season
-            # form_str = form_str.replace(',', '')
             for form_idx, result in enumerate(form_str):
                 # Convert opposition team initials to their name 
-                team_name = util.convert_team_name_or_initials(teams_played[form_idx])
+                opp_team = util.convert_team_name_or_initials(teams_played[form_idx])
 
                 # Increament form score based on rating of the team they've won, drawn or lost against
                 if result == 'W':
-                    form_percentage += (team_ratings.df['TotalRating'].loc[team_name] / len(form_str)) * abs(
-                        gds[form_idx])
-                elif result == 'D':
-                    form_percentage += (team_ratings.df['TotalRating'].loc[team_name] - team_ratings.df[
-                        'TotalRating'].loc[team_name]) / len(form_str)
+                    form_rating += (team_ratings.df['TotalRating'].loc[opp_team] / len(form_str)) * abs(gds[form_idx])
+                # elif result == 'D':
+                #     form_rating += (team_ratings.df['TotalRating'].loc[opp_team] - team_ratings.df['TotalRating'].loc[opp_team]) / len(form_str)
                 elif result == 'L':
-                    form_percentage -= ((team_ratings.df['TotalRating'].iloc[0] - team_ratings.df[
-                        'TotalRating'].loc[team_name]) / len(form_str)) * abs(gds[form_idx])
+                    form_rating -= ((team_ratings.df['TotalRating'].iloc[0] - team_ratings.df['TotalRating'].loc[opp_team]) / len(form_str)) * abs(gds[form_idx])
 
         # Cap rating
-        if form_percentage > 1:
-            form_percentage = 1
-        elif form_percentage < 0:
-            form_percentage = 0
+        if form_rating > 1:
+            form_rating = 1
+        elif form_rating < 0:
+            form_rating = 0
 
-        return form_percentage
+        return form_rating
 
     def calc_won_against_star_team_col(self, played_star_team_col, form_str_col):
         won_against_star_team_col = []
@@ -397,8 +393,7 @@ class Form(DF):
             played_star_team_col.append([team_rating > star_team_threshold for team_rating in ratings])
         return played_star_team_col
 
-    def calc_form_rating_col(self, team_ratings, teams_played_col, form_str_col, 
-                             goal_differences_col):
+    def calc_form_rating_col(self, team_ratings, teams_played_col, form_str_col, goal_differences_col):
         form_rating_col = []
         for teams_played, form_str, gds in zip(teams_played_col, form_str_col, goal_differences_col):
             rating = self.calc_form_rating(teams_played, form_str, gds, team_ratings)
@@ -742,8 +737,7 @@ class Standings(DF):
         
         df.drop(index=df.index.difference(current_teams), inplace=True)
 
-        return df
-            
+        return df    
 
     @timebudget
     def update(self, json_data: dict, team_names: list[str], season: int, 
@@ -800,6 +794,133 @@ class Standings(DF):
             print(standings)
 
         self.df = standings
+
+
+class FormNew(DF):
+    
+    def check_for_dependencies(self, *args):
+        for df_obj in args:
+            if df_obj.df.empty:
+                raise ValueError(f'❌ [ERROR] Cannot form over time dataframe: {df_obj.name.title()} dataframe empty')
+    
+    def insert_gd_col(self, form, matchday_no):
+        gd_col = []
+        pts_col = []
+        for team, score in form[(matchday_no, 'Score')].iteritems():
+            if score == 'None - None':
+                gd = None
+                pts = None
+            else:
+                home, away = util.extract_int_score(score)
+                if form.at[team, (matchday_no, 'AtHome')]:
+                    gd = home-away
+                else:
+                    gd = away-home
+                if gd > 0:
+                    pts = 3
+                elif gd < 0:
+                    pts = 0
+                else:
+                    pts = 1
+            gd_col.append(gd)
+            pts_col.append(pts)
+        
+        if matchday_no != 1:
+            gd_col = form[(matchday_no-1, 'GD')] + np.array(gd_col)
+            pts_col = form[(matchday_no-1, 'Points')] + np.array(pts_col)
+        
+        form[(matchday_no, 'GD')] = gd_col
+        form[(matchday_no, 'Points')] = pts_col
+    
+    def insert_position_col(self, form, matchday_no):
+        form.sort_values(by=[(matchday_no, 'Points'), (matchday_no, 'GD')], ascending=False, inplace=True)
+        form[matchday_no, 'Position'] = list(range(1, 21))
+    
+    def insert_won_against_star_team_col(self, form, team_ratings, matchday_no, star_team_threshold):
+        won_against_star_team_col = []
+        for opp_team in form[(matchday_no, 'Team')]:
+            opp_team_rating = team_ratings.df.at[opp_team, 'TotalRating']
+            won_against_star_team = False
+            if opp_team_rating > star_team_threshold:
+                won_against_star_team = True
+            won_against_star_team_col.append(won_against_star_team)
+        form[(matchday_no, 'WonAgainstStarTeam')] = won_against_star_team_col
+    
+    def insert_form_string(self, form, matchday_no, n_games):
+        last_n_matchday_nos = [matchday_no-i for i in range(n_games) if matchday_no-i > 0]
+        
+        form_str_col = []
+        score_col_headings = [(n, 'Score') for n in last_n_matchday_nos]
+        for team, row in form[score_col_headings].iterrows():
+            form_str = []
+            for i in range(row.size):
+                at_home = form.at[team, (matchday_no-i, 'AtHome')]
+                score = row[(matchday_no-i, 'Score')]
+                if score != 'None - None':
+                    home, away = util.extract_int_score(score)
+                    
+                    if home == away:
+                        form_str.append('D')
+                    elif at_home:
+                        if home > away:
+                            form_str.append('W')
+                        elif home < away:
+                            form_str.append('L')
+                    else:
+                        if home > away:
+                            form_str.append('L')
+                        elif home < away:
+                            form_str.append('W')
+            form_str_col.append(''.join(form_str))
+        
+        form[(matchday_no, 'Form')] = form_str_col
+        
+    
+    def insert_form_rating_col(self, form, team_ratings, matchday_no):
+        form_rating_col = []
+        for opp_team in form[(matchday_no, 'Team')].iteritems():
+            pass
+
+    
+    def convert_team_col_to_initials(self, form, matchday_no):
+        for team, opp_team in form[(matchday_no, 'Team')].iteritems():
+            form.at[team, (matchday_no, 'Team')] = util.convert_team_name_or_initials(opp_team)
+    
+    def get_played_matchdays(self, fixtures: Fixtures):
+        status = fixtures.df.loc[:, (slice(None), 'Status')]
+        # Remove cols for matchdays that haven't played yet
+        status = status.replace("SCHEDULED", np.nan).dropna(axis=1, how='all')
+        matchday_nos = sorted(list(status.columns.get_level_values(0)))
+        return matchday_nos
+        
+    @timebudget
+    def update(self, fixtures: Fixtures, standings: Standings, team_ratings: TeamRatings, 
+               star_team_threshold: float, display: bool = False):
+        print('🔨 Building form (new) dataframe... ')
+        self.check_for_dependencies(fixtures, standings, team_ratings)
+
+        matchday_nos = self.get_played_matchdays(fixtures)
+        
+        form = fixtures.df[matchday_nos]
+            
+        form = form.drop(columns=['Status'], level=1)
+        
+        for matchday_no in matchday_nos:
+            self.insert_gd_col(form, matchday_no)
+            self.insert_position_col(form, matchday_no)
+            self.insert_won_against_star_team_col(form, team_ratings, matchday_no, star_team_threshold)
+            self.insert_form_string(form, matchday_no, 5)
+            # self.insert_form_rating_col(form, team_ratings, matchday_no)
+            self.convert_team_col_to_initials(form, matchday_no)
+        
+        form = form.drop(columns=['Score'], level=1)
+
+            
+
+        if display:
+            print(form)
+            
+        self.df = form
 
 
 class SeasonStats(DF):
@@ -1406,6 +1527,7 @@ class Data:
         self.team_ratings: TeamRatings = TeamRatings()
         self.home_advantages: HomeAdvantages = HomeAdvantages()
         self.form: Form = Form()
+        self.form_new: FormNew = FormNew()
         self.position_over_time: PositionOverTime = PositionOverTime()
         self.upcoming: Upcoming = Upcoming(current_season)
         self.season_stats: SeasonStats = SeasonStats()        
