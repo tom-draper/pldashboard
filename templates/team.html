@@ -284,19 +284,21 @@
 
     <script>
       function setPositionalOffset() {
-        var ssp1 = document.getElementById('ssp1');
-        var ssp2 = document.getElementById('ssp2');
-        var ssp3 = document.getElementById('ssp3');
+        const ssp1 = document.getElementById('ssp1');
+        const ssp2 = document.getElementById('ssp2');
+        const ssp3 = document.getElementById('ssp3');
         document.documentElement.style.setProperty('--ssp1-offset', -ssp1.clientWidth/2 + "px");
         document.documentElement.style.setProperty('--ssp2-offset', -ssp2.clientWidth/2 + "px");
         document.documentElement.style.setProperty('--ssp3-offset', -ssp3.clientWidth/2 + "px");
       }
 
-      const mobileWidth = 550;
+      const mobileWidth = 500;
 
       function resizeGraphs() {
         const width = window.innerWidth;
         const matches = document.querySelectorAll('.svg-container');
+        // Skip final match, as it is the clean sheets graph, the only graph 
+        // intended to have a constant height
         for (let i = 0; i < matches.length-1 ; i++) {
           if (width < mobileWidth) {
             matches[i].style.height = '250px';
@@ -306,27 +308,30 @@
         }
       }
 
-      // To fix plotly bug
-      // Graphs have initial render height of 450px
-      // They remain at that height even if containing div height is changed
-      // via js or css
-      // Requires a resize event for svg files to update height
+      /* To fix a bug with Plotly
+         By default, Plotly graphs have initial render height of 450px
+         They remain at that height even if containing div height is changed
+         via js or css. In this case, only a resize event triggers the svg update
+         to correct the graph height. */
       function triggerResize() {
-        console.log(window.innerWidth)
-        if (window.innerWidth < mobileWidth) {
-          resizeGraphs()
-  
-          // Trigger window resize
-          var evt = document.createEvent('UIEvents'); 
-          evt.initUIEvent('resize', true, false, window, 0); 
-          window.dispatchEvent(evt); 
-        }
+        resizeGraphs()
 
+        // Trigger window resize
+        let evt = document.createEvent('UIEvents'); 
+        evt.initUIEvent('resize', true, false, window, 0); 
+        window.dispatchEvent(evt); 
       }
 
-      triggerResize();
+      // If in mobile view, refresh the Graph svg to snap to the smaller height 
+      // of the containing div
+      if (window.innerWidth < mobileWidth) {
+        triggerResize();
+      }
+
       setPositionalOffset();
+      // Keep positional value the correct offset
       window.addEventListener("resize", setPositionalOffset);
+      // Keep graphs the correct height
       window.addEventListener("resize", resizeGraphs);
     </script>
   </body>
