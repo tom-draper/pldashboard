@@ -595,7 +595,7 @@ class Form(DF):
         form.index.name = "Team"
 
         if display:
-            print(form[10])
+            print(form)
 
         self.df = form
 
@@ -810,8 +810,8 @@ class FormNew(DF):
         pts_col = []
         for team, score in form[(matchday_no, 'Score')].iteritems():
             if score == 'None - None':
-                gd = None
-                pts = None
+                gd = 0
+                pts = 0
             else:
                 home, away = util.extract_int_score(score)
                 if form.at[team, (matchday_no, 'AtHome')]:
@@ -921,14 +921,14 @@ class FormNew(DF):
 
                 # Increament form score based on rating of the team they've won, drawn or lost against
                 if result == 'W':
-                    if team=='Liverpool FC':
-                        print("Win, add ", (team_ratings.df['TotalRating'].loc[opp_team] / len(form_str)) * abs(gds[form_idx]))
+                    # if team=='Liverpool FC':
+                        # print("Win, add ", (team_ratings.df['TotalRating'].loc[opp_team] / len(form_str)) * abs(gds[form_idx]))
                     form_rating += (team_ratings.df['TotalRating'].loc[opp_team] / len(form_str)) * abs(gds[form_idx])
                 # elif result == 'D':
                 #     form_rating += (team_ratings.df['TotalRating'].loc[opp_team] - team_ratings.df['TotalRating'].loc[opp_team]) / len(form_str)
                 elif result == 'L':
-                    if team=='Liverpool FC':
-                        print('Lose subtract', ((team_ratings.df['TotalRating'].iloc[0] - team_ratings.df['TotalRating'].loc[opp_team]) / len(form_str)) * abs(gds[form_idx]))
+                    # if team=='Liverpool FC':
+                        # print('Lose subtract', ((team_ratings.df['TotalRating'].iloc[0] - team_ratings.df['TotalRating'].loc[opp_team]) / len(form_str)) * abs(gds[form_idx]))
                     form_rating -= ((team_ratings.df['TotalRating'].iloc[0] - team_ratings.df['TotalRating'].loc[opp_team]) / len(form_str)) * abs(gds[form_idx])
 
         # Cap rating
@@ -946,8 +946,8 @@ class FormNew(DF):
             teams_played = self.get_last_n_values(form, team, 'Team', matchday_no, 5)
             
             form_rating = self.calc_form_rating(team_ratings, team, teams_played, form_str, gds)
-            if (team == 'Liverpool FC'):
-                print(team, teams_played, form_str, gds, '=>', form_rating)
+            # if (team == 'Liverpool FC'):
+            #     print(team, teams_played, form_str, gds, '=>', form_rating)
             
             form_rating_col.append(form_rating)
         form[(matchday_no, 'FormRating')] = form_rating_col
@@ -1000,11 +1000,14 @@ class FormNew(DF):
         
         form = form.reindex(sorted(form.columns.values), axis=1)
         
-        # print(form)
-        form = form.sort_values(by=[(max(matchday_nos), 'FormRating')])
+        form = form.sort_values(by=[(max(matchday_nos), 'FormRating')], ascending=False)
 
         if display:
-            print(form[10])
+            print(form)
+            
+        for i in range(6):
+            print(form[5+i])
+
             
         self.df = form
 
