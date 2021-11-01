@@ -797,13 +797,15 @@ class Standings(DF):
 
 
 class FormNew(DF):
+    def __init__(self, d: DataFrame = DataFrame()):
+        super().__init__(d, 'form')
     
     def check_for_dependencies(self, *args):
         for df_obj in args:
             if df_obj.df.empty:
                 raise ValueError(f'❌ [ERROR] Cannot form over time dataframe: {df_obj.name.title()} dataframe empty')
     
-    def insert_gd_col(self, form, matchday_no):
+    def insert_gd_and_pts_col(self, form, matchday_no):
         gd_col = []
         pts_col = []
         for team, score in form[(matchday_no, 'Score')].iteritems():
@@ -846,6 +848,22 @@ class FormNew(DF):
             won_against_star_team_col.append(won_against_star_team)
         form[(matchday_no, 'WonAgainstStarTeam')] = won_against_star_team_col
     
+    
+    def append_to_from_str(self, form_str, home, away, at_home):
+        if home == away:
+            form_str.insert(0, 'D')
+        elif at_home:
+            if home > away:
+                form_str.insert(0, 'W')
+            elif home < away:
+                form_str.insert(0, 'L')
+        else:
+            if home > away:
+                form_str.insert(0, 'L')
+            elif home < away:
+                form_str.insert(0, 'W')
+        
+    
     def insert_form_string(self, form, matchday_no, n_games):
         last_n_matchday_nos = [matchday_no-i for i in range(n_games) if matchday_no-i > 0]
         
@@ -858,19 +876,8 @@ class FormNew(DF):
                 score = row[(matchday_no-i, 'Score')]
                 if score != 'None - None':
                     home, away = util.extract_int_score(score)
-                    
-                    if home == away:
-                        form_str.append('D')
-                    elif at_home:
-                        if home > away:
-                            form_str.append('W')
-                        elif home < away:
-                            form_str.append('L')
-                    else:
-                        if home > away:
-                            form_str.append('L')
-                        elif home < away:
-                            form_str.append('W')
+                    self.append_to_from_str(form_str, home, away, at_home)
+
             form_str_col.append(''.join(form_str))
         
         form[(matchday_no, 'Form')] = form_str_col
@@ -906,16 +913,19 @@ class FormNew(DF):
         form = form.drop(columns=['Status'], level=1)
         
         for matchday_no in matchday_nos:
-            self.insert_gd_col(form, matchday_no)
+            self.insert_gd_and_pts_col(form, matchday_no)
             self.insert_position_col(form, matchday_no)
             self.insert_won_against_star_team_col(form, team_ratings, matchday_no, star_team_threshold)
             self.insert_form_string(form, matchday_no, 5)
             # self.insert_form_rating_col(form, team_ratings, matchday_no)
             self.convert_team_col_to_initials(form, matchday_no)
         
+        # Drop columns used for working
         form = form.drop(columns=['Score'], level=1)
+        form = form.drop(columns=['Points'], level=1)
+        
+        form = form.reindex(sorted(form.columns.values), axis=1)
 
-            
 
         if display:
             print(form)
