@@ -3,7 +3,7 @@
   <head>
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='club-colours.css') }}">
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='club-colours.css') }}"> -->
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
     <title>{{ params.team.names.name }}</title>
@@ -28,24 +28,8 @@
         background-size: contain;
       }
     </style>
-    <script>
-      var matches = document.querySelectorAll('.svg-container');
-      for (let match of matches) {
-        console.log(match)
-        console.log(match.style)
-        match.style.width = 'inherit';
-      }
-    </script>
   </head>
   <body>
-    <script>
-      matches = document.querySelectorAll('.svg-container');
-      for (let match of matches) {
-        console.log(match)
-        console.log(match.style)
-        match.style.width = 'inherit';
-      }
-    </script>
     <div class="header" style="background-color: var(--{{ params.team.names.hyphenated }});">
       <a id="back-button" class="main-link" href="/"></a>
       <a class="main-link title no-decoration" 
@@ -299,7 +283,7 @@
     </div>
 
     <script>
-      function f() {
+      function setPositionalOffset() {
         var ssp1 = document.getElementById('ssp1');
         var ssp2 = document.getElementById('ssp2');
         var ssp3 = document.getElementById('ssp3');
@@ -307,25 +291,43 @@
         document.documentElement.style.setProperty('--ssp2-offset', -ssp2.clientWidth/2 + "px");
         document.documentElement.style.setProperty('--ssp3-offset', -ssp3.clientWidth/2 + "px");
       }
-      f()
-      window.addEventListener("resize", f);
 
-      matches = document.querySelectorAll('.svg-container');
-      for (let match of matches) {
-        console.log(match)
-        console.log(match.style)
-        match.style.width = 'inherit';
+      const mobileWidth = 550;
+
+      function resizeGraphs() {
+        const width = window.innerWidth;
+        const matches = document.querySelectorAll('.svg-container');
+        for (let i = 0; i < matches.length-1 ; i++) {
+          if (width < mobileWidth) {
+            matches[i].style.height = '250px';
+          } else {
+            matches[i].style.height = '450px';
+          }
+        }
       }
 
-      // html.Div([
-      //   html.Div(style={'height': '50vh'}, children=dcc.Graph(figure={
-      //     'data': [{
-      //       'x': [1, 2, 3],
-      //       'y': [3, 1, 2]
-      //     }]
-      //   }, style={})),
-      // ])
+      // To fix plotly bug
+      // Graphs have initial render height of 450px
+      // They remain at that height even if containing div height is changed
+      // via js or css
+      // Requires a resize event for svg files to update height
+      function triggerResize() {
+        console.log(window.innerWidth)
+        if (window.innerWidth < mobileWidth) {
+          resizeGraphs()
+  
+          // Trigger window resize
+          var evt = document.createEvent('UIEvents'); 
+          evt.initUIEvent('resize', true, false, window, 0); 
+          window.dispatchEvent(evt); 
+        }
 
+      }
+
+      triggerResize();
+      setPositionalOffset();
+      window.addEventListener("resize", setPositionalOffset);
+      window.addEventListener("resize", resizeGraphs);
     </script>
   </body>
 </html>

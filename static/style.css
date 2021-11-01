@@ -802,7 +802,7 @@ img {
   }
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 550px) {
   .season-stat {
     margin-bottom: 1.2em;
   }
@@ -891,9 +891,6 @@ img {
   .next-game-values {
     margin-top: 5px;
   }
-  .next-game-item {
-    margin: 0;
-  }
   .past-results {
     margin-top: 20px;
   }
@@ -909,26 +906,18 @@ img {
   .next-game-prediction {
     margin-top: 30px;
   }
-  /* .main-svg {
-    height: 100%;
-  } */
-  
-  .svg-container {
-    height: 250px !important;
+  .prev-results-title {
+    font-size: 18px;
   }
-}
-
-.plotly-graph-div {
-  height: 80% !important;
-}
-/*
-.row {
-  height: auto;
-} */
-
-@media only screen and (min-width: 500px) {
-  .svg-container {
-    height: 450px !important;
+  .past-result {
+    font-size: 15px;
+  }
+  .home-team, 
+  .away-team {
+    font-size: 13px;
+  }
+  .past-result-date {
+    font-size: 11px;
   }
 }
 

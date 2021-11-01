@@ -167,7 +167,7 @@ class Updater:
 
         self.update_data(n_seasons, display_tables)
 
-        if request_new or True:
+        if request_new:
             print('💾 Saving new data as JSON files...')
             self.save_data()
             print('💾 Saving tables as HTML files...')
