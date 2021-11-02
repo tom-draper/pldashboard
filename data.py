@@ -798,7 +798,7 @@ class Standings(DF):
 
 class FormNew(DF):
     def __init__(self, d: DataFrame = DataFrame()):
-        super().__init__(d, 'form')
+        super().__init__(d, 'form_new')
     
     def check_for_dependencies(self, *args):
         for df_obj in args:
@@ -946,8 +946,6 @@ class FormNew(DF):
             teams_played = self.get_last_n_values(form, team, 'Team', matchday_no, 5)
             
             form_rating = self.calc_form_rating(team_ratings, team, teams_played, form_str, gds)
-            # if (team == 'Liverpool FC'):
-            #     print(team, teams_played, form_str, gds, '=>', form_rating)
             
             form_rating_col.append(form_rating)
         form[(matchday_no, 'FormRating')] = form_rating_col
@@ -1004,10 +1002,6 @@ class FormNew(DF):
 
         if display:
             print(form)
-            
-        for i in range(6):
-            print(form[5+i])
-
             
         self.df = form
 
