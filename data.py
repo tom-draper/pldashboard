@@ -805,6 +805,21 @@ class FormNew(DF):
             if df_obj.df.empty:
                 raise ValueError(f'❌ [ERROR] Cannot form over time dataframe: {df_obj.name.title()} dataframe empty')
     
+    def get_points(home, away, at_home):
+        if at_home:
+            gd = home-away
+        else:
+            gd = away-home
+            
+        if gd > 0:
+            pts = 3
+        elif gd < 0:
+            pts = 0
+        else:
+            pts = 1
+        return pts
+        
+    
     def insert_gd_and_pts_col(self, form, matchday_no):
         gd_col = []
         pts_col = []
@@ -814,22 +829,14 @@ class FormNew(DF):
                 pts = 0
             else:
                 home, away = util.extract_int_score(score)
-                if form.at[team, (matchday_no, 'AtHome')]:
-                    gd = home-away
-                else:
-                    gd = away-home
-                if gd > 0:
-                    pts = 3
-                elif gd < 0:
-                    pts = 0
-                else:
-                    pts = 1
+                at_home = form.at[team, (matchday_no, 'AtHome')]
+                pts = self.get_points(home, away, at_home)
             gd_col.append(gd)
             pts_col.append(pts)
         
         if matchday_no != 1:
-            gd_cum_col = form[(matchday_no-1, 'GD')] + np.array(gd_col)
-            pts_cum_col = form[(matchday_no-1, 'Points')] + np.array(pts_col)
+            gd_cum_col = form[(matchday_no-1, 'CumulativeGD')] + np.array(gd_col)
+            pts_cum_col = form[(matchday_no-1, 'CumulativePoints')] + np.array(pts_col)
         else:
             gd_cum_col = gd_col
             pts_cum_col = pts_col
@@ -994,7 +1001,7 @@ class FormNew(DF):
             self.convert_team_col_to_initials(form, matchday_no)
         
         # Drop columns used for working
-        form = form.drop(columns=['Score', 'Points'], level=1)
+        form = form.drop(columns=['Points'], level=1)
         
         form = form.reindex(sorted(form.columns.values), axis=1)
         

@@ -306,7 +306,7 @@ img {
 .current-form-row {
   font-size: 0.9em;
   display: flex;
-  width: 100%;
+  width: min(80%, 600px);
 }
 .icon {
   position: relative;
@@ -360,6 +360,9 @@ img {
 .table-row.this-team {
   padding: 13px 5%;
   font-size: 20px;
+}
+.this-team {
+  font-size: 19px !important;
 }
 
 #divider {
@@ -699,6 +702,7 @@ img {
   }
   .form-details {
     width: 80%;
+    align-items: center;
   }
   .table-snippet {
     margin-top: 0;
@@ -799,6 +803,12 @@ img {
   }
   .position-and-badge {
     width: 70%;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .current-form-row {
+    width: 90%;
   }
 }
 

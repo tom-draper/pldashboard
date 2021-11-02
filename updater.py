@@ -181,7 +181,7 @@ class Updater:
                                    self.data.team_ratings,
                                    self.data.home_advantages,
                                    self.data.form,
-                                   self.data.position_over_time,
+                                   self.data.form_new,
                                    display_graphs=display_graphs,
                                    team=team_name)
 

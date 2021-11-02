@@ -418,9 +418,9 @@ class Visualiser:
         self.format_position_over_time_fig(fig, x, matchday_labels)
         return fig
 
-    def position_over_time_data_points(self, position_over_time: PositionOverTime) -> tuple[list[datetime], list[str], list[list[int]]]:
-        x_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(1) == 'Date']
-        y_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(1) == 'Position']
+    def position_over_time_data_points(self, form: Form) -> tuple[list[datetime], list[str], list[list[int]]]:
+        x_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'Date']
+        y_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'Position']
 
         # All ys have the same x date values
         x = []
@@ -436,34 +436,30 @@ class Visualiser:
             ys.append(y)
 
         # Sort the x-axis data by date to remove errors due to match rescheduling
-        matchday_labels = sorted(list(position_over_time.df.columns.unique(level=0)))
+        matchday_labels = sorted(list(form.df.columns.unique(level=0)))
 
         x, matchday_labels, *ys = zip(*sorted(zip(x, matchday_labels, *ys)))
 
         return x, matchday_labels, ys
 
     @timebudget
-    def update_position_over_time(self, position_over_time: PositionOverTime, 
-                                  team: str = '', display: bool = False):
-        if position_over_time.df.empty:
-            print(
-                'Error: Cannot generate position over time graph; position over time dataframe is empty')
+    def update_position_over_time(self, form: Form, team: str = '', display: bool = False):
+        if form.df.empty:
+            print('Error: Cannot generate position over time graph: Form dataframe is empty')
         else:
             if not team:
                 print('📊 Updating all teams positions over time graphs...')
-                teams_to_update = position_over_time.df.index.values.tolist()
+                teams_to_update = form.df.index.values.tolist()
             else:
                 print(f'📊 Updating {team} positions over time graph...')
                 teams_to_update = [team]
 
-            x, matchday_labels, ys = self.position_over_time_data_points(
-                position_over_time)
-            team_names = position_over_time.df.index.values.tolist()
+            x, matchday_labels, ys = self.position_over_time_data_points(form)
+            team_names = form.df.index.values.tolist()
 
             # Create a fig for each team
             for team_name in teams_to_update:
-                fig = self.position_over_time_fig(
-                    x, ys, matchday_labels, team_name, team_names)
+                fig = self.position_over_time_fig(x, ys, matchday_labels, team_name, team_names)
 
                 if display:
                     fig.show()
@@ -473,20 +469,22 @@ class Visualiser:
     # -------------------- GOALS SCORED AND CONCEDED GRAPHS --------------------
 
     def plot_clean_sheets(self, x, clean_sheets, not_clean_sheets):
+        zeros = [0]*len(x)
+        midline = [0.5]*len(x)
         fig = go.Figure(data=[
             go.Bar(name='Goals Scored',
                    x=x, 
-                   y=[0]*len(x), 
+                   y=zeros, 
                    showlegend=False, 
                    marker_line_color='#fafafa'),
             go.Bar(name='Goals Conceded', 
                    x=x, 
-                   y=[0]*len(x), 
+                   y=zeros, 
                    showlegend=False, 
                    marker_line_color='#fafafa'),
             go.Scatter(name='Line', 
                        x=x, 
-                       y=[0.5]*len(x), 
+                       y=midline, 
                        mode='lines', 
                        line=dict(color='#757575', 
                                  width=2), 
@@ -668,31 +666,31 @@ class Visualiser:
         # Append the mean goals scored (equal to mean goals conceded) this gameweek
         y_avg.append(sum(goals_scored) / len(goals_scored))
 
-    def goals_scored_and_conceeded_data_points(self, position_over_time: PositionOverTime, 
+    def goals_scored_and_conceeded_data_points(self, form: Form, 
                                                team: str) -> tuple[list[datetime], 
                                                                    list[int], 
                                                                    list[int], 
                                                                    list[float], 
                                                                    list[str]]:
-        x_cols = position_over_time.df.iloc[:, position_over_time.df.columns.get_level_values(1) == 'Date']
-        # All ys have the same x date values
-        x = [datetime.utcfromtimestamp(date/1e9)
-             for date in x_cols.loc[team].values.tolist()]
+        # Dates of matchdays that have been played
+        x_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'Date']
+        # All y lists have the same x date values
+        x = [datetime.utcfromtimestamp(date/1e9) for date in x_cols.loc[team].values.tolist()]
 
         # Create chart y values (2 bar charts, and the average line)
         y_goals_scored = []  # type: list[int]
         y_goals_conceded = []  # type: list[int]
         y_avg = []  # type: list[float]
 
-        team_position_over_time = position_over_time.df.loc[team]
+        team_form = form.df.loc[team]
 
-        matchday_nums = sorted(list(position_over_time.df.columns.unique(level=0)))
+        matchday_nums = sorted(list(form.df.columns.unique(level=0)))
         for idx, matchday_no in enumerate(matchday_nums):
             # Append the teams number of goals scored and cocneded this matchday
-            team_matchday = team_position_over_time[matchday_no]
+            team_matchday = team_form[matchday_no]
             # If match has been played
             if type(team_matchday['Score']) is str:
-                matchday_scorelines = position_over_time.df[matchday_no]['Score']
+                matchday_scorelines = form.df[matchday_no]['Score']
                 self.append_avg_goals(y_avg, matchday_scorelines)
                 self.append_num_goals(y_goals_scored, y_goals_conceded, team_matchday)
             else:
@@ -710,20 +708,19 @@ class Visualiser:
         return x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels
 
     @timebudget
-    def update_goals_scored_and_conceded(self, position_over_time: PositionOverTime, 
-                                         team: str = '', display: bool = False):        
-        if position_over_time.df.empty:
-            print('Error: Cannot generate goals scored and conceded graph; position over time dataframe is empty')
+    def update_goals_scored_and_conceded(self, form: Form, team: str = '', display: bool = False):        
+        if form.df.empty:
+            print('Error: Cannot generate goals scored and conceded graph: Form dataframe is empty')
         else:
             if not team:
                 print('📊 Updating all teams goals scored and conceded over time graphs...')
-                teams_to_update = position_over_time.df.index.values.tolist()
+                teams_to_update = form.df.index.values.tolist()
             else:
                 print(f'📊 Updating {team} goals scored and conceded over time graph...')
                 teams_to_update = [team]
 
             for team_name in teams_to_update:
-                x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self.goals_scored_and_conceeded_data_points(position_over_time, team_name)
+                x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self.goals_scored_and_conceeded_data_points(form, team_name)
                 if y_goals_scored != [] and y_goals_conceded != []:
                     fig = self.goals_scored_and_conceded_fig(
                         x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels)
@@ -744,13 +741,11 @@ class Visualiser:
                     self.save_fig(fig, team_name, 'clean-sheets')
 
     def update(self, fixtures: Fixtures, team_ratings: TeamRatings,
-               home_advantages: HomeAdvantages, form: Form, 
-               position_over_time: PositionOverTime, team: str = '', 
+               home_advantages: HomeAdvantages, form: Form, form_new, team: str = '', 
                display_graphs: bool = False):
         self.update_fixtures(fixtures, team_ratings, home_advantages, team=team,
                              display=display_graphs)
         self.update_form_over_time(form, team=team, display=display_graphs)
-        self.update_position_over_time(position_over_time, team=team,
-                                       display=display_graphs)
-        self.update_goals_scored_and_conceded(position_over_time, team=team,
+        self.update_position_over_time(form_new, team=team, display=display_graphs)
+        self.update_goals_scored_and_conceded(form_new, team=team,
                                               display=display_graphs)
