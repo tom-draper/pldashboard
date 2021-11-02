@@ -306,13 +306,11 @@ img {
 .this-team {
   font-size: 19px !important;
 }
-
 #divider {
   align-self: center;
   border-bottom: 1px solid grey;
   width: 90%;
 }
-
 #big-divider {
   border-bottom: 2px solid rgb(29 29 29);
   width: 100%;
@@ -527,15 +525,12 @@ img {
   top: -53px;
   letter-spacing: -0.07em;
 }
-
 #ssp1 {
   right: calc(var(--ssp1-offset) - 52px);
 }
-
 #ssp2 {
   right: calc(var(--ssp2-offset) - 52px);
 }
-
 #ssp3 {
   right: calc(var(--ssp3-offset) - 52px);
 }
@@ -572,59 +567,46 @@ img {
 /* Mobile view */
 
 @media only screen and (max-width: 1400px) {
-
   .season-stat-value {
     font-size: 2.5em;
   }
-
   .season-stat {
     margin-bottom: 1.4em;
   }
-
   .season-stats-row {
     margin: 70px 0 0;
   }
-
   .season-stat-text {
     font-size: 0.9em;
   }
-
   .teams-footer {
     margin-top: 0;
   }
-
   .season-stat-position {
     top: -42px;
   }
-
   #ssp1 {
     right: calc(var(--ssp1-offset) - 40px);
   }
-
   #ssp2 {
     right: calc(var(--ssp2-offset) - 40px);
   }
-
   #ssp3 {
     right: calc(var(--ssp3-offset) - 40px);
   }
 }
 
 @media only screen and (max-width: 1200px) {
-
   .row {
     flex-direction: column;
     margin-bottom: 40px;
   }
-
   .row-graph {
     width: auto;
   }
-
   .row-left {
     align-self: center;
   }
-
   .position-and-badge {
     width: 50%;
     max-width: 400px;
@@ -633,221 +615,171 @@ img {
     background-size: auto 330px !important;
     height: 400px;
   }
-
   .position {
     font-size: 350px;
   }
-
   .icon {
     width: 20vw;
   }
-
   .form-details {
     width: 80%;
     align-items: center;
   }
-
   .current-form-row {
     width: min(80%, 600px);
   }
-
   .table-snippet {
     margin-top: 0;
   }
-
   .mini-graph {
-
     /* Reset margin to match other graphs as no longer on row with other items */
     margin-left: 10px;
   }
-
   .next-game-prediction {
     margin: 50px 20px 0;
   }
-
   .next-game-title {
     width: auto;
     border-radius: 0;
   }
-
   .season-stats {
     flex-direction: column;
   }
-
   .season-stat-value {
     font-size: 3em;
   }
-
   .season-stat {
     margin-bottom: 1.4em;
   }
-
   .season-stats-row {
     margin-top: 40px;
   }
-
   .season-stat-position {
     top: -49px;
   }
-
   #ssp1 {
     right: calc(var(--ssp1-offset) - 45px);
   }
-
   #ssp2 {
     right: calc(var(--ssp2-offset) - 45px);
   }
-
   #ssp3 {
     right: calc(var(--ssp3-offset) - 45px);
   }
-
   .season-stat-text {
     font-size: 0.9em;
   }
 }
 
 @media only screen and (max-width: 800px) {
-
   .row-graph {
     margin: 0;
   }
-
   .next-game-prediction {
     margin: 50px 75px 0;
   }
 
   /* Change next game to column orientation */
-
   .next-game-values {
     flex-direction: column;
     margin: 20px;
   }
-
   .predictions-and-logo {
     margin: 0 auto;
     width: 100%;
   }
-
   .past-results {
     margin: 30px auto 0;
     width: 100%;
   }
-
   .next-game-prediction {
     padding-bottom: 0;
   }
-
   .season-stat {
     margin-bottom: 1.2em;
   }
-
   .season-stat-value {
     font-size: 2.5em;
   }
-
   .season-stat-position {
     top: -42px;
   }
-
   #ssp1 {
     right: calc(var(--ssp1-offset) - 40px);
   }
-
   #ssp2 {
     right: calc(var(--ssp2-offset) - 40px);
   }
-
   #ssp3 {
     right: calc(var(--ssp3-offset) - 40px);
   }
-
   .season-stat-text {
     font-size: 0.9em;
   }
 }
 
 @media only screen and (max-width: 700px) {
-
   #back-button {
     display: none;
   }
-
   .position-and-badge {
     width: 70%;
   }
 }
 
 @media only screen and (max-width: 700px) {
-
   .current-form-row {
     width: 90%;
   }
 }
 
 @media only screen and (max-width: 550px) {
-
   .season-stat {
     margin-bottom: 1.2em;
   }
-
   .season-stat-value {
     font-size: 1.9em;
     letter-spacing: 0.01em;
   }
-
   .season-stat-position {
     top: -31px;
   }
-
   #ssp1 {
     right: calc(var(--ssp1-offset) - 28px);
   }
-
   #ssp2 {
     right: calc(var(--ssp2-offset) - 28px);
   }
-
   #ssp3 {
     right: calc(var(--ssp3-offset) - 28px);
   }
-
   .season-stat-text {
     font-size: 0.75em;
   }
-
   .form-details {
     width: 90%;
   }
-
   .teams-footer {
     padding: 0;
   }
-
   .footer-detail {
     margin: 2px 0 !important;
   }
-
   .team-button {
     height: 90px;
   }
-
   .title {
     font-size: 2.2em !important;
   }
-
   .main-link {
     font-size: 1.2em;
   }
-
   .next-game-prediction {
     margin: 50px 10px 0;
   }
-
   .lowered {
     margin: 0 30px;
   }
-
   .position {
     font-size: 12em;
     text-align: center;
@@ -855,7 +787,6 @@ img {
     padding-right: 20px;
     margin: 0;
   }
-
   .position-and-badge {
     background-size: auto 220px !important;
     background-position: center !important;
@@ -864,68 +795,52 @@ img {
     width: 100%;
     height: 270px;
   }
-
   h1 {
     font-size: 1.5em;
   }
-
   .current-form {
     font-size: 1.3em;
   }
-
   .table-element {
     font-size: 14px;
   }
-
   .this-team {
     font-size: 16px;
   }
-
   .table-row.this-team {
     padding: 10px 5%;
   }
-
   .next-game-logo {
     height: 190px;
   }
-
   .next-game-values {
     margin-top: 5px;
   }
-
   .past-results {
     margin-top: 20px;
   }
-
   .season-stats-row {
     margin-top: 20px;
   }
-
   .season-stat {
     margin-bottom: 0.7em;
   }
-
   .teams-footer {
     margin-top: 2em;
   }
-
   .next-game-prediction {
     margin-top: 30px;
   }
-
   .prev-results-title {
     font-size: 18px;
   }
-
   .past-result {
     font-size: 15px;
   }
-
   .home-team,
   .away-team {
     font-size: 13px;
   }
-
   .past-result-date {
     font-size: 11px;
   }
@@ -961,7 +876,6 @@ img {
   font-weight: 800;
 }
 .predictions-container {
-  margin-bottom: 80px;
   width: 50%;
   margin: 0 auto;
 }
@@ -1044,38 +958,31 @@ img {
 /* Mobile view */
 
 @media only screen and (max-width: 800px) {
-
   .predictions-container {
     width: 80%;
   }
-
   .prediction-container {
     width: min(80%, 300px);
   }
-
   .page-content {
     font-size: 1.1em;
   }
-
   .prediction-time {
     right: -28px;
     top: calc(50% - 6px);
   }
-
   .prediction-value {
     flex: 4;
   }
 }
 
 @media only screen and (max-width: 500px) {
-
   .prediction-value {
     flex: 4.5;
   }
 }
 
 @media only screen and (max-width: 400px) {
-
   .prediction-value {
     flex: 6;
   }
@@ -1097,12 +1004,10 @@ img {
   max-width: 95%;
   height: auto;
 }
-
 table {
   margin: 0 auto;
   border-collapse: collapse;
 }
-
 th,
 td {
   padding: 2px 4px;
