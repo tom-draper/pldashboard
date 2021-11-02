@@ -104,7 +104,7 @@ def get_team(team_name_hyphen: str) -> Team:
     return Team(names, position, team_logo_url)
 
 def get_form(team_name: str) -> Form:
-    form_str, recent_teams_played, rating, won_against_star_team = updater.data.form.get_recent_form(team_name)
+    form_str, recent_teams_played, rating, won_against_star_team = updater.data.form_new.get_recent_form(team_name)
     return Form(form_str, recent_teams_played, rating, won_against_star_team)
 
 def get_season_stats(team_name: str) -> SeasonStats:
