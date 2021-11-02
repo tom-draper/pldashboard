@@ -53,21 +53,22 @@ class Visualiser:
             autosize=True,
             yaxis=dict(
                 title_text='Team Rating (%)',
+                range=[-1, 101],
                 ticktext=y_labels,
                 tickvals=y_labels,
                 gridcolor='gray',
                 showline=False,
                 zeroline=False,
-
+                fixedrange=True
             ),
             xaxis=dict(
                 title_text='Matchday',
                 linecolor='black',
                 showgrid=False,
                 showline=False,
-
                 ticktext=[i for i in range(2, len(x)+2, 2)],
                 tickvals=[x[i] for i in range(1, len(x)+1, 2)],
+                fixedrange=True
             ),
             margin=dict(
                 l=50,
@@ -79,8 +80,8 @@ class Visualiser:
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
         )
-        fig.update_xaxes(fixedrange=True)
-        fig.update_yaxes(fixedrange=True)
+        # fig.update_xaxes(fixedrange=True)
+        # fig.update_yaxes(fixedrange=True)
 
 
     def fixtures_fig(self, x: list[datetime], y: list[float], details: list[str],
@@ -410,9 +411,9 @@ class Visualiser:
                                team_names: list[str]) -> FigureWidget:
         fig = go.Figure()
         self.plot_teams_position_over_time(fig, x, ys, team, team_names)
-        self.plot_position_rect(fig, x[0], 4, x[-1], 1, '#03AC13')  # Top 4
-        self.plot_position_rect(fig, x[0], 6, x[-1], 4, '#008080')  # 5-6
-        self.plot_position_rect(fig, x[0], 20, x[-1], 17, '#800000')  # Relegation zone
+        self.plot_position_rect(fig, x[0], 4.5, x[-1], 0.5, '#03AC13')  # Top 4
+        self.plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#008080')  # 5-6
+        self.plot_position_rect(fig, x[0], 20.5, x[-1], 17.5, '#800000')  # Relegation zone
         self.format_position_over_time_fig(fig, x, matchday_labels)
         return fig
 
