@@ -115,10 +115,10 @@ def get_next_game(team_name: str) -> NextGame:
     opp_team_name_full, at_home, prev_matches = updater.data.upcoming.get_details(team_name)
     home_away = 'Home' if at_home else 'Away'
     opp_team_name = opp_team_name_full[:-3]  # Remove 'FC' from end
-    opp_team_name_hyphen = (opp_team_name.lower()).replace(' ', '-')  # Remove 'FC' from end
+    opp_team_name_hyphen = (opp_team_name.lower()).replace(' ', '-')
     names = TeamNames(opp_team_name_full, opp_team_name, opp_team_name_hyphen)
         
-    opp_form_rating = updater.data.form.get_current_form_rating(opp_team_name_full)
+    opp_form_rating = updater.data.form_new.get_current_form_rating(opp_team_name_full)
     opp_logo_url = updater.data.logo_urls[opp_team_name_full]
     opp_team = OppTeam(names, opp_form_rating, opp_logo_url)
     return NextGame(opp_team, home_away, prev_matches)

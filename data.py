@@ -803,6 +803,10 @@ class FormNew(DF):
     def get_current_form_rating(self, team_name: str):
         current_matchday = self.get_current_matchday()
         return self._get_current_form_rating(team_name, current_matchday)
+
+    def get_long_term_form_rating(self, team_name: str):
+        current_matchday = self.get_current_matchday()
+        return self._get_long_term_form_rating(team_name, current_matchday)
         
     def _n_should_have_played(self, current_matchday: int, maximum: int) -> int:
         n_should_have_played = maximum
@@ -810,16 +814,16 @@ class FormNew(DF):
             n_should_have_played = current_matchday
         return n_should_have_played
 
-    def _not_played_current_matchday(self, recent_games: list[str], current_matchday: int) -> bool:
-        n_should_have_played = self._n_should_have_played(current_matchday, 5)
+    def _not_played_current_matchday(self, recent_games: list[str], current_matchday: int, N) -> bool:
+        n_should_have_played = self._n_should_have_played(current_matchday, N)
         return len(recent_games) != n_should_have_played
         
-    def _get_form(self, team_name: str, current_matchday) -> list[str]:
+    def _get_form(self, team_name: str, current_matchday, N) -> list[str]:
         form = []
         if current_matchday is not None:
             form = self.df[current_matchday, 'Form'].loc[team_name]
             
-            if self._not_played_current_matchday(form, current_matchday):
+            if self._not_played_current_matchday(form, current_matchday, N):
                 # Use previous matchday's form
                 previous_matchday = list(self.df.columns.unique(level=0))[-2]
                 form = self.df[previous_matchday, 'Form'].loc[team_name]
@@ -831,38 +835,50 @@ class FormNew(DF):
         form.reverse()
         return form
 
-    def _get_latest_teams_played(self, team_name: str, current_matchday) -> list[str]:
+    def _get_latest_teams_played(self, team_name: str, current_matchday, N) -> list[str]:
         latest_teams_played = []
         if current_matchday is not None:
-            latest_teams_played = self.get_last_n_values(team_name, 'Team', current_matchday, 5)
-            if self._not_played_current_matchday(latest_teams_played, current_matchday):
+            latest_teams_played = self.get_last_n_values(team_name, 'Team', current_matchday, N)
+            if self._not_played_current_matchday(latest_teams_played, current_matchday, N):
                 # Use previous matchday's games played list
                 previous_matchday = self.get_prev_matchday()
-                latest_teams_played = self.get_last_n_values(team_name, 'Team', previous_matchday, 5)
+                latest_teams_played = self.get_last_n_values(team_name, 'Team', previous_matchday, N)
         latest_teams_played.reverse()
         return latest_teams_played
 
     def _get_current_form_rating(self, team_name: str, current_matchday) -> float:
         rating = 0
         if current_matchday is not None:
-            latest_teams_played = self.get_last_n_values(team_name, 'Team', current_matchday, 5)
             matchday = current_matchday
-            if self._not_played_current_matchday(latest_teams_played, current_matchday):
-                # Use previous matchday data
+            form_str = self.df.at[team_name, (current_matchday, 'Form')]
+            if len(form_str) < 5 and current_matchday > 5:
+                # If not played current matchday use previous matchday data
                 matchday = self.get_prev_matchday()
-            rating = (self.df[matchday].loc[team_name]['FormRating'] * 100).round(1)
+            rating = (self.df.at[team_name, (matchday, 'FormRating')] * 100).round(1)
 
         return rating
 
-    def _get_won_against_star_team(self, team_name: str, current_matchday) -> list[str]:
+    def _get_long_term_form_rating(self, team_name: str, current_matchday) -> float:
+        rating = 0
+        if current_matchday is not None:
+            matchday = current_matchday
+            form_str = self.df.at[team_name, (current_matchday, 'Form')]
+            if len(form_str) < 5 and current_matchday > 5:
+                # If not played current matchday use previous matchday data
+                matchday = self.get_prev_matchday()
+            rating = (self.df.at[team_name, (matchday, 'LongTermFormRating')] * 100).round(1)
+
+        return rating
+
+    def _get_won_against_star_team(self, team_name: str, current_matchday, N) -> list[str]:
         won_against_star_team = []  # 'star-team' or 'not-star-team' elements
         if current_matchday is not None:
-            won_against_star_team = self.get_last_n_values(team_name, 'WonAgainstStarTeam', current_matchday, 5)
+            won_against_star_team = self.get_last_n_values(team_name, 'WonAgainstStarTeam', current_matchday, N)
 
-            if self._not_played_current_matchday(won_against_star_team, current_matchday):
+            if self._not_played_current_matchday(won_against_star_team, current_matchday, N):
                 # Use previous matchday data
                 previous_matchday = self.get_prev_matchday()
-                won_against_star_team = self.get_last_n_values(team_name, 'WonAgainstStarTeam', previous_matchday, 5)
+                won_against_star_team = self.get_last_n_values(team_name, 'WonAgainstStarTeam', previous_matchday, N)
 
             # Replace boolean values with CSS tag for super win image
             won_against_star_team = ['star-team' if x else 'not-star-team' for x in won_against_star_team]
@@ -893,11 +909,11 @@ class FormNew(DF):
         
     def get_recent_form(self, team_name: str) -> tuple[list[str], DataFrame, float, list[str]]:
         current_matchday = self.get_current_matchday()
-        form_str = self._get_form(team_name, current_matchday)  # list of five 'W', 'D' or 'L'
-        recent_teams_played = self._get_latest_teams_played(team_name, current_matchday)
+        form = self._get_form(team_name, current_matchday, 5)  # List of five 'W', 'D' or 'L'
+        recent_teams_played = self._get_latest_teams_played(team_name, current_matchday, 5)
         rating = self._get_current_form_rating(team_name, current_matchday)
-        won_against_star_team = self._get_won_against_star_team(team_name, current_matchday)
-        return form_str, recent_teams_played, rating, won_against_star_team
+        won_against_star_team = self._get_won_against_star_team(team_name, current_matchday, 5)
+        return form, recent_teams_played, rating, won_against_star_team
     
     def check_for_dependencies(self, *args):
         for df_obj in args:
@@ -977,7 +993,7 @@ class FormNew(DF):
                 form_str.append('W')
         
     
-    def insert_form_string(self, form, matchday_no, n_games):
+    def insert_form_string(self, form, matchday_no, n_games, col_name):
         last_n_matchday_nos = [matchday_no-i for i in range(n_games) if matchday_no-i > 0]
         
         form_str_col = []
@@ -993,7 +1009,7 @@ class FormNew(DF):
 
             form_str_col.append(''.join(form_str))
         
-        form[(matchday_no, 'Form')] = form_str_col
+        form[(matchday_no, col_name)] = form_str_col
         
     def calc_form_rating2(self, team_ratings, team, teams_played, form_str, gds) -> float:
         team_rating = team_ratings.df.at[team, 'TotalRating']
@@ -1027,7 +1043,7 @@ class FormNew(DF):
                 # Convert opposition team initials to their name 
                 opp_team = teams_played[form_idx]
 
-                # Increament form score based on rating of the team they've won, drawn or lost against
+                # Increment form score based on rating of the team they've won, drawn or lost against
                 if result == 'W':
                     # if team=='Liverpool FC':
                         # print("Win, add ", (team_ratings.df['TotalRating'].loc[opp_team] / len(form_str)) * abs(gds[form_idx]))
@@ -1057,6 +1073,17 @@ class FormNew(DF):
             
             form_rating_col.append(form_rating)
         form[(matchday_no, 'FormRating')] = form_rating_col
+
+    def insert_long_term_form_rating_col(self, form, team_ratings, matchday_no):
+        form_rating_col = []
+        for team, form_str in form[(matchday_no, 'LongForm')].iteritems():
+            gds = self.get_form_last_n_values(form, team, 'GD', matchday_no, 10)
+            teams_played = self.get_form_last_n_values(form, team, 'Team', matchday_no, 10)
+            
+            form_rating = self.calc_form_rating(team_ratings, team, teams_played, form_str, gds)
+            
+            form_rating_col.append(form_rating)
+        form[(matchday_no, 'LongTermFormRating')] = form_rating_col
 
     def get_form_last_n_values(self, form, team_name, column_name, start_matchday, N):
         matchday_nos = [start_matchday-i for i in range(N) if start_matchday-i > 0]
@@ -1095,8 +1122,10 @@ class FormNew(DF):
             self.insert_gd_and_pts_col(form, matchday_no)
             self.insert_position_col(form, matchday_no)
             self.insert_won_against_star_team_col(form, team_ratings, matchday_no, star_team_threshold)
-            self.insert_form_string(form, matchday_no, 5)
+            self.insert_form_string(form, matchday_no, 5, 'Form')
+            self.insert_form_string(form, matchday_no, 10, 'LongForm')
             self.insert_form_rating_col(form, team_ratings, matchday_no)
+            self.insert_long_term_form_rating_col(form, team_ratings, matchday_no)
         
         for matchday_no in matchday_nos:
             self.convert_team_col_to_initials(form, matchday_no)
@@ -1720,7 +1749,7 @@ class Data:
         self.standings: Standings = Standings()
         self.team_ratings: TeamRatings = TeamRatings()
         self.home_advantages: HomeAdvantages = HomeAdvantages()
-        self.form: Form = Form()
+        # self.form: Form = Form()
         self.form_new: FormNew = FormNew()
         self.position_over_time: PositionOverTime = PositionOverTime()
         self.upcoming: Upcoming = Upcoming(current_season)

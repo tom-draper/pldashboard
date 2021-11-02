@@ -61,13 +61,18 @@
                       </div>
                       <div class="prediction-detail">
                         {{ pred['details']['adjustments'][0]['description'] }}:
-                        {{ pred['details']['adjustments'][0]['homeGoals'] }} - {{ pred['details']['adjustments'][0]['awayGoals'] }}
-                        ({{ pred['details']['adjustments'][0]['formRatingHome'] }} vs {{ pred['details']['adjustments'][0]['formRatingAway'] }})
+                        {{ pred['details']['adjustments'][0]['homeGoals'] }} - {{ pred['details']['adjustments'][0]['awayGoals'] }}<br>
+                        <span class="tabbed">({{ pred['details']['adjustments'][0]['formRatingHome'] }} vs {{ pred['details']['adjustments'][0]['formRatingAway'] }})</span>
                       </div>
                       <div class="prediction-detail">
                         {{ pred['details']['adjustments'][1]['description'] }}:
-                        {{ pred['details']['adjustments'][1]['homeGoals'] }} - {{ pred['details']['adjustments'][1]['awayGoals'] }}
-                        ({{ pred['details']['adjustments'][1]['homeAdvantage'] }})
+                        {{ pred['details']['adjustments'][1]['homeGoals'] }} - {{ pred['details']['adjustments'][1]['awayGoals'] }}<br>
+                        <span class="tabbed"></span>({{ pred['details']['adjustments'][1]['formRatingHome'] }} vs {{ pred['details']['adjustments'][1]['formRatingAway'] }})</span>
+                      </div>
+                      <div class="prediction-detail">
+                        {{ pred['details']['adjustments'][2]['description'] }}:
+                        {{ pred['details']['adjustments'][2]['homeGoals'] }} - {{ pred['details']['adjustments'][2]['awayGoals'] }}<br>
+                        <span class="tabbed"></span>({{ pred['details']['adjustments'][2]['homeAdvantage'] }})</span>
                       </div>
                       <div class="detailed-predicted-score">
                         {{ pred['details']['score']['homeGoals'] }} - {{ pred['details']['score']['awayGoals'] }}

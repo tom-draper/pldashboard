@@ -273,8 +273,7 @@ class Visualiser:
                                                               list[str], 
                                                               list[list[float]]]:
         x_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'Date']
-        y_cols = form.df.iloc[:, form.df.columns.get_level_values(
-            1) == 'FormRating']
+        y_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'FormRating']
 
         # All ys have the same x date values
         x = []
@@ -313,8 +312,7 @@ class Visualiser:
             team_names = form.df.index.values.tolist()
 
             for team_name in teams_to_update:
-                fig = self.form_over_time_fig(
-                    x, ys, matchday_labels, team_name, team_names)
+                fig = self.form_over_time_fig(x, ys, matchday_labels, team_name, team_names)
 
                 if display:
                     fig.show()
@@ -741,11 +739,11 @@ class Visualiser:
                     self.save_fig(fig, team_name, 'clean-sheets')
 
     def update(self, fixtures: Fixtures, team_ratings: TeamRatings,
-               home_advantages: HomeAdvantages, form: Form, form_new, team: str = '', 
+               home_advantages: HomeAdvantages, form_new, team: str = '', 
                display_graphs: bool = False):
         self.update_fixtures(fixtures, team_ratings, home_advantages, team=team,
                              display=display_graphs)
-        self.update_form_over_time(form, team=team, display=display_graphs)
+        self.update_form_over_time(form_new, team=team, display=display_graphs)
         self.update_position_over_time(form_new, team=team, display=display_graphs)
         self.update_goals_scored_and_conceded(form_new, team=team,
                                               display=display_graphs)

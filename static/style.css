@@ -7,140 +7,108 @@
   --ssp3-offset: 0;
 
   /* Club colours */
-  --sheffield-united:rgb(238, 39, 55);
-  --sheffield-united-secondary: rgb(13, 23, 26);
-
-  --leeds-united: rgb(255, 205, 0);
-  --leeds-united-secondary: rgb(29, 66, 138);
-
-  --aston-villa: rgb(103, 14, 54);
-  --aston-villa-secondary: rgb(149, 191, 229);
-
-  --fulham: rgb(255, 255, 255);
-  --fulham-secondary: rgb(204, 0, 0);
-
-  --wolverhampton-wanderers: rgb(253, 185, 19);
-  --wolverhampton-wanderers-secondary: rgb(35, 31, 32);
-
-  --west-ham-united: rgb(122, 38, 58);
-  --west-ham-united-secondary: rgb(243, 212, 89);
-
-  --west-bromwich-albion: rgb(18, 47, 103);
-  --west-bromwich-albion-secondary: rgb(255, 255, 255);
-
-  --tottenham-hotspur: rgb(19, 34, 87);
-  --tottenham-hotspur-secondary: rgb(255, 255, 255);
-
-  --southampton: rgb(215, 25, 32);
-  --southampton-secondary: rgb(19, 12, 14);
-
-  --newcastle-united: rgb(45, 41, 38);
-  --newcastle-united-secondary: rgb(255, 255, 255);
-
-  --manchester-united: rgb(218, 41, 28);
-  --manchester-united-secondary: rgb(251, 225, 34);
-  
-  --manchester-city: rgb(108, 171, 221);
-  --manchester-city-secondary: rgb(28, 44, 91);
-  
-  --liverpool: rgb(200, 16, 46);
-  --liverpool-secondary: rgb(0, 178, 169);
-  
-  --leicester-city: rgb(0, 83, 160);
-  --leicester-city-secondary: rgb(253, 190, 17);
-  
-  --everton: rgb(39, 68, 136);
-  --everton-secondary: rgb(255, 255, 255);
-  
-  --crystal-palace: rgb(27, 69, 143);
-  --crystal-palace-secondary: rgb(196, 18, 46);
-  
-  --chelsea: rgb(3, 70, 148);
-  --chelsea-secondary: rgb(0, 0, 0);
-  
-  --burnley: rgb(108, 29, 69);
-  --burnley-secondary: rgb(153, 214, 234);
-  
-  --brighton-and-hove-albion: rgb(0, 87, 184);
-  --brighton-and-hove-albion-secondary: rgb(255, 255, 255);
-  
-  --arsenal: rgb(239, 1, 7);
-  --arsenal-secondary: rgb(255, 255, 255);
-  
-  --norwich-city: rgb(255, 242, 0);
-  --norwich-city-secondary: rgb(0, 166, 80);
-  
-  --cardiff-city: rgb(0, 112, 181);
-  --cardiff-city-secondary: rgb(209, 21, 26);
-  
-  --watford: rgb(251, 238, 35);
-  --watford-secondary: rgb(237, 33, 39);
-  
-  --swansea-city: rgb(18, 18, 18);
-  --swansea-city-secondary: rgb(255, 255, 255);
-  
-  --stoke-city: rgb(224, 58, 62);
-  --stoke-city-secondary: rgb(27, 68, 156);
-  
-  --huddersfield: rgb(14, 99, 173);
-  --huddersfield-secondary: rgb(255, 255, 255);
-  
-  --bournemouth: rgb(218, 41, 28);
-  --bournemouth-secondary: rgb(0, 0, 0);
-
-  --brentford: rgb(227, 6, 19);
-  --brentford-secondary: rgb(255, 255, 255);
+  --sheffield-united: rgb(238 39 55);
+  --sheffield-united-secondary: rgb(13 23 26);
+  --leeds-united: rgb(255 205 0);
+  --leeds-united-secondary: rgb(29 66 138);
+  --aston-villa: rgb(103 14 54);
+  --aston-villa-secondary: rgb(149 191 229);
+  --fulham: rgb(255 255 255);
+  --fulham-secondary: rgb(204 0 0);
+  --wolverhampton-wanderers: rgb(253 185 19);
+  --wolverhampton-wanderers-secondary: rgb(35 31 32);
+  --west-ham-united: rgb(122 38 58);
+  --west-ham-united-secondary: rgb(243 212 89);
+  --west-bromwich-albion: rgb(18 47 103);
+  --west-bromwich-albion-secondary: rgb(255 255 255);
+  --tottenham-hotspur: rgb(19 34 87);
+  --tottenham-hotspur-secondary: rgb(255 255 255);
+  --southampton: rgb(215 25 32);
+  --southampton-secondary: rgb(19 12 14);
+  --newcastle-united: rgb(45 41 38);
+  --newcastle-united-secondary: rgb(255 255 255);
+  --manchester-united: rgb(218 41 28);
+  --manchester-united-secondary: rgb(251 225 34);
+  --manchester-city: rgb(108 171 221);
+  --manchester-city-secondary: rgb(28 44 91);
+  --liverpool: rgb(200 16 46);
+  --liverpool-secondary: rgb(0 178 169);
+  --leicester-city: rgb(0 83 160);
+  --leicester-city-secondary: rgb(253 190 17);
+  --everton: rgb(39 68 136);
+  --everton-secondary: rgb(255 255 255);
+  --crystal-palace: rgb(27 69 143);
+  --crystal-palace-secondary: rgb(196 18 46);
+  --chelsea: rgb(3 70 148);
+  --chelsea-secondary: rgb(0 0 0);
+  --burnley: rgb(108 29 69);
+  --burnley-secondary: rgb(153 214 234);
+  --brighton-and-hove-albion: rgb(0 87 184);
+  --brighton-and-hove-albion-secondary: rgb(255 255 255);
+  --arsenal: rgb(239 1 7);
+  --arsenal-secondary: rgb(255 255 255);
+  --norwich-city: rgb(255 242 0);
+  --norwich-city-secondary: rgb(0 166 80);
+  --cardiff-city: rgb(0 112 181);
+  --cardiff-city-secondary: rgb(209 21 26);
+  --watford: rgb(251 238 35);
+  --watford-secondary: rgb(237 33 39);
+  --swansea-city: rgb(18 18 18);
+  --swansea-city-secondary: rgb(255 255 255);
+  --stoke-city: rgb(224 58 62);
+  --stoke-city-secondary: rgb(27 68 156);
+  --huddersfield: rgb(14 99 173);
+  --huddersfield-secondary: rgb(255 255 255);
+  --bournemouth: rgb(218 41 28);
+  --bournemouth-secondary: rgb(0 0 0);
+  --brentford: rgb(227 6 19);
+  --brentford-secondary: rgb(255 255 255);
 }
 
 @font-face {
-  font-family: "Radikal Medium";
-  src: url("/static/fonts/Radikal-Medium.ttf");
+  font-family: 'Radikal Medium';
+  src: url('/static/fonts/Radikal-Medium.ttf');
 }
 
 * {
-  font-family: "Radikal Medium";
+  font-family: 'Radikal Medium';
 }
 
 body {
-  background: #fafafa;
-  color: #333333;
+  background: #FAFAFA;
+  color: #333;
   margin: 0;
 }
 
 h1 {
-  margin: 25px 0 0 0;
+  margin: 25px 0 0;
   font-size: 1.7em;
 }
-
 .main-link {
   font-size: 1.4em;
   font-weight: 600;
-  color: #333333;
+  color: #333;
   flex: auto;
   align-self: center;
   text-decoration: none;
 }
-
 .no-decoration {
   text-decoration: none;
 }
 
-
 /* Ko-fi button */
 
 a.kofi-button {
-  font-size: 16px !important;
-  border-radius: var(--border-radius) !important;
+  font-size: 16px;
+  border-radius: var(--border-radius);
 }
-
 .kofitext img.kofiimg {
-  height: 18px !important;
-  width: 28px !important;
+  height: 18px;
+  width: 28px;
   padding-right: 2px;
 }
-
 .kofitext {
-  font-family: 'Quicksand', Helvetica, Century Gothic, sans-serif !important;
+  font-family: 'Quicksand', Helvetica, Century Gothic, sans-serif;
 }
 
 /* -------------------------------- Layout ------------------------------------- */
@@ -149,7 +117,6 @@ a.kofi-button {
   padding: 30px 15px;
   text-align: center;
 }
-
 #back-button {
   position: absolute;
   top: 20px;
@@ -157,7 +124,6 @@ a.kofi-button {
   width: 100px;
   height: 60px;
 }
-
 .title {
   font-size: 2.6em;
   font-weight: 600;
@@ -168,13 +134,12 @@ a.kofi-button {
 .teams {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  background-color: #000000;
-  margin: 0 auto 0 auto;
+  background-color: #000;
+  margin: 0 auto;
   width: 90%;
-  border: 8px solid rgb(46, 46, 46);
+  border: 8px solid rgb(46 46 46);
   border-radius: var(--border-radius);
 }
-
 .team-button {
   text-align: center;
   font-size: 20px;
@@ -184,9 +149,8 @@ a.kofi-button {
   align-content: center;
   height: 145px;
 }
-
 .home-page-footer {
-  padding: 20px 0 30px 0;
+  padding: 20px 0 30px;
   height: auto;
   margin-top: 1%;
   display: flex;
@@ -198,6 +162,7 @@ a.kofi-button {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 @media only screen and (max-width: 500px) {
   .teams {
     grid-template-columns: repeat(1, 1fr);
@@ -211,16 +176,14 @@ a.kofi-button {
   flex-direction: column;
   text-align: center;
 }
-
 .row {
   position: relative;
   display: flex;
   margin-bottom: 25px;
   height: auto;
 }
-
 .top-left {
-  border-radius: 3px 0 0 0;
+  border-radius: 3px 0 0;
 }
 .top-right {
   border-radius: 0 3px 0 0;
@@ -229,27 +192,23 @@ a.kofi-button {
   border-radius: 3px 3px 0 0;
 }
 .bottom-right {
-  border-radius: 0 0 3px 0;
+  border-radius: 0 0 3px;
 }
 .bottom-left {
   border-radius: 0 0 0 3px;
 }
 .bottom-both {
   border-radius: 0 0 3px 3px;
-
 }
-
 .no-bottom-margin {
   margin-bottom: 0;
 }
-
 .clean-sheets-row {
   position: relative;
   display: flex;
   margin-bottom: 25px;
   height: 30%;
 }
-
 .row-left {
   display: flex;
   flex-direction: column;
@@ -259,54 +218,40 @@ a.kofi-button {
   padding-left: 40px;
   text-justify: center;
 }
-
 .position-and-badge {
   height: 500px;
 }
-
 img {
   height: 450px;
   position: relative;
 }
-
 .row-graph {
   width: 100%;
   margin: 0 20px;
 }
-
 .full-row-graph {
   margin-left: 10px;
 }
-
 .clean-sheets.body {
   margin: 0;
 }
-
-
 .fixtures-graph {
   display: flex;
   flex-direction: column;
 }
-
 .position {
-  text-shadow: 9px 9px #000000;
+  text-shadow: 9px 9px #000;
   margin-top: 10px;
   font-weight: 800;
   font-size: 450px;
   text-align: left;
-
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
-
-
 .current-form-row {
   font-size: 0.9em;
   display: flex;
   width: min(80%, 600px);
+  width: 100%;
 }
 .icon {
   position: relative;
@@ -314,7 +259,6 @@ img {
   height: 0;
   padding-bottom: 20%;
   margin: 0 5px;
-
   background-repeat: no-repeat;
   background-size: contain;
 }
@@ -324,26 +268,24 @@ img {
   margin: 0 5px;
 }
 .pos-4 {  /* Most recent game */
-  opacity: 1;
+  opacity: 100%;
 }
 .pos-3 {
-  opacity: 0.9;
+  opacity: 90%;
 }
 .pos-2 {
-  opacity: 0.8;
+  opacity: 80%;
 }
 .pos-1 {
-  opacity: 0.7;
+  opacity: 70%;
 }
 .pos-0 {  /* Least recent game */
-  opacity: 0.5;
+  opacity: 50%;
 }
-
 .current-form {
   font-size: 1.6em;
   margin: 20px 10px;
 }
-
 .table-snippet {
   position: relative;
   margin-top: 20px;
@@ -370,8 +312,9 @@ img {
   border-bottom: 1px solid grey;
   width: 90%;
 }
-#big-divider{
-  border-bottom: 2px solid rgb(29, 29, 29);
+
+#big-divider {
+  border-bottom: 2px solid rgb(29 29 29);
   width: 100%;
   width: 0%;
 }
@@ -395,7 +338,6 @@ img {
 .table-points {
   width: 15%;
 }
-
 .next-game-title {
   width: max-content;
   padding: 6px 20px;
@@ -415,7 +357,10 @@ img {
 }
 .predictions-link {
   text-decoration: none;
-  color: #333333;
+  color: #333;
+}
+.predictions-link:hover {
+  color: rgb(120 120 120);
 }
 .past-results {
   font-size: 22px;
@@ -435,19 +380,17 @@ img {
 .past-result {
   font-size: 17px;
   display: flex;
-  margin: 0 5% 2px 5%;
+  margin: 0 5% 2px;
 }
-
 .Drew {
-  background-color: #e1ae2d60;
+  background-color: #E1AE2D60;
 }
 .Won {
-  background-color:#4ee1253a
+  background-color: #4EE1253A;
 }
 .Lost {
-  background-color: #d3232345
+  background-color: #D3232345;
 }
-
 .past-result-date {
   font-size: 13px;
   color: grey;
@@ -458,7 +401,7 @@ img {
   margin: 0 !important;
 }
 .next-game-item {
-  padding: 8px 0 4px 0;
+  padding: 8px 0 4px;
   border-radius: var(--border-radius);
   margin: 2px 0;
 }
@@ -467,10 +410,9 @@ img {
 }
 .accuracy-item {
   font-size: 14px;
-  color: rgb(120, 120, 120);
+  color: rgb(120 120 120);
   margin-bottom: 5px;
 }
-
 .home-team {
   float: left;
   width: calc(50% - 18px);
@@ -481,19 +423,17 @@ img {
   min-width: 37px;
   margin: 0 4px;
   text-align: center;
-  font-weight: 800
+  font-weight: 800;
 }
 .away-team {
- float: left;
- width: calc(50% - 18px);
- text-align: right;
+  float: left;
+  width: calc(50% - 18px);
+  text-align: right;
 }
-
 .home-team,
 .away-team {
-  font-size: 16px; 
+  font-size: 16px;
 }
-
 
 /* Footer general */
 
@@ -515,11 +455,10 @@ img {
   font-size: 16px;
 }
 
-
 /* Teams page footer */
 
 .teams-footer {
-  padding: 50px 0 4px 0;
+  padding: 50px 0 4px;
   height: auto;
   margin-top: 50px;
   width: 100%;
@@ -540,19 +479,16 @@ img {
 .version {
   margin: 0 10px;
 }
-
 .predictions-footer {
   align-items: center;
   font-size: 0.8em;
   margin-top: 30px;
   text-align: center;
 }
-
 .last-updated {
   margin: 20px 0;
   text-align: center;
 }
-
 .underline {
   text-decoration: underline;
 }
@@ -564,21 +500,18 @@ img {
   display: flex;
 }
 .footer-text-colour {
-  color: rgba(0, 0, 0, 0.37);
+  color: rgb(0 0 0 / 37%);
 }
-
 .season-stats-row {
-  margin: 100px 100px 0 100px;
+  margin: 100px 100px 0;
   height: auto;
 }
-
 .season-stats {
   display: flex;
   font-size: 50px;
   width: 100%;
   letter-spacing: -0.06em;
 }
-
 .season-stat-value {
   font-size: 3.2em;
   line-height: 0.6em;
@@ -587,189 +520,220 @@ img {
   margin: 0 auto;
   position: relative;
 }
-
 .season-stat-position {
   font-size: 0.3em;
-  color: rgb(162, 162, 162);
+  color: rgb(162 162 162);
   position: absolute;
   top: -53px;
   letter-spacing: -0.07em;
 }
+
 #ssp1 {
   right: calc(var(--ssp1-offset) - 52px);
 }
+
 #ssp2 {
   right: calc(var(--ssp2-offset) - 52px);
 }
+
 #ssp3 {
   right: calc(var(--ssp3-offset) - 52px);
 }
-.ssp-1st {color:#6cff68;}
-.ssp-2nd {color:#78f570;}
-.ssp-3rd {color:#81eb78;}
-.ssp-4th {color:#89e07f;}
-.ssp-5th {color:#8fd686;}
-.ssp-6th {color:#95cc8c;}
-.ssp-7th {color:#99c192;}
-.ssp-8th {color:#9db797;}
-.ssp-9th {color:#a0ad9d;}
-.ssp-10th {color:#a2a2a2;}
-.ssp-11th {color:#a2a2a2;}
-.ssp-12th {color:#af9d9b;}
-.ssp-13th {color:#bc9895;}
-.ssp-14th {color:#c7928e;}
-.ssp-15th {color:#d18d88;}
-.ssp-16th {color:#db8681;}
-.ssp-17th {color:#e5807b;}
-.ssp-18th {color:#ee7975;}
-.ssp-19th {color:#f7716e;}
-.ssp-20th {color:#FF6868;}
-
+.ssp-1st { color: #6CFF68; }
+.ssp-2nd { color: #78F570; }
+.ssp-3rd { color: #81EB78; }
+.ssp-4th { color: #89E07F; }
+.ssp-5th { color: #8FD686; }
+.ssp-6th { color: #95CC8C; }
+.ssp-7th { color: #99C192; }
+.ssp-8th { color: #9DB797; }
+.ssp-9th { color: #A0AD9D; }
+.ssp-10th { color: #A2A2A2; }
+.ssp-11th { color: #A2A2A2; }
+.ssp-12th { color: #AF9D9B; }
+.ssp-13th { color: #BC9895; }
+.ssp-14th { color: #C7928E; }
+.ssp-15th { color: #D18D88; }
+.ssp-16th { color: #DB8681; }
+.ssp-17th { color: #E5807B; }
+.ssp-18th { color: #EE7975; }
+.ssp-19th { color: #F7716E; }
+.ssp-20th { color: #FF6868; }
 .season-stat {
   flex: 1;
 }
-
 .lowered {
   margin-bottom: -9px;
 }
-
 .debug {
-  border: 4px solid rgb(46, 46, 46);
+  border: 4px solid rgb(46 46 46);
 }
-
 
 /* Mobile view */
 
 @media only screen and (max-width: 1400px) {
+
   .season-stat-value {
     font-size: 2.5em;
   }
+
   .season-stat {
     margin-bottom: 1.4em;
   }
+
   .season-stats-row {
-    margin: 70px 0 0 0;
+    margin: 70px 0 0;
   }
+
   .season-stat-text {
     font-size: 0.9em;
   }
+
   .teams-footer {
     margin-top: 0;
   }
+
   .season-stat-position {
     top: -42px;
   }
+
   #ssp1 {
     right: calc(var(--ssp1-offset) - 40px);
   }
+
   #ssp2 {
     right: calc(var(--ssp2-offset) - 40px);
   }
+
   #ssp3 {
     right: calc(var(--ssp3-offset) - 40px);
   }
 }
 
 @media only screen and (max-width: 1200px) {
+
   .row {
     flex-direction: column;
     margin-bottom: 40px;
   }
+
   .row-graph {
     width: auto;
   }
+
   .row-left {
     align-self: center;
   }
+
   .position-and-badge {
     width: 50%;
     max-width: 400px;
     min-width: 150px;
     padding-right: 3% !important;
-    /* padding-left: 10% !important; */
-
     background-size: auto 330px !important;
-    /* padding: 0 !important;
-    margin: 0 !important; */
     height: 400px;
-    /* width: 100%; */
   }
+
   .position {
     font-size: 350px;
   }
+
   .icon {
     width: 20vw;
   }
+
   .form-details {
     width: 80%;
     align-items: center;
   }
+
+  .current-form-row {
+    width: min(80%, 600px);
+  }
+
   .table-snippet {
     margin-top: 0;
   }
+
   .mini-graph {
+
     /* Reset margin to match other graphs as no longer on row with other items */
     margin-left: 10px;
   }
+
   .next-game-prediction {
-    margin: 50px 20px 0 20px;
+    margin: 50px 20px 0;
   }
 
-  
   .next-game-title {
     width: auto;
     border-radius: 0;
   }
+
   .season-stats {
     flex-direction: column;
   }
+
   .season-stat-value {
     font-size: 3em;
   }
+
   .season-stat {
     margin-bottom: 1.4em;
   }
+
   .season-stats-row {
     margin-top: 40px;
   }
+
   .season-stat-position {
     top: -49px;
   }
+
   #ssp1 {
     right: calc(var(--ssp1-offset) - 45px);
   }
+
   #ssp2 {
     right: calc(var(--ssp2-offset) - 45px);
   }
+
   #ssp3 {
     right: calc(var(--ssp3-offset) - 45px);
   }
+
   .season-stat-text {
     font-size: 0.9em;
   }
 }
 
-
 @media only screen and (max-width: 800px) {
+
   .row-graph {
     margin: 0;
   }
+
   .next-game-prediction {
-    margin: 50px 75px 0 75px;
+    margin: 50px 75px 0;
   }
+
   /* Change next game to column orientation */
+
   .next-game-values {
     flex-direction: column;
     margin: 20px;
   }
+
   .predictions-and-logo {
     margin: 0 auto;
     width: 100%;
   }
+
   .past-results {
-    margin: 30px auto 0 auto;
+    margin: 30px auto 0;
     width: 100%;
   }
+
   .next-game-prediction {
     padding-bottom: 0;
   }
@@ -777,61 +741,77 @@ img {
   .season-stat {
     margin-bottom: 1.2em;
   }
+
   .season-stat-value {
     font-size: 2.5em;
   }
+
   .season-stat-position {
     top: -42px;
   }
+
   #ssp1 {
     right: calc(var(--ssp1-offset) - 40px);
   }
+
   #ssp2 {
     right: calc(var(--ssp2-offset) - 40px);
   }
+
   #ssp3 {
     right: calc(var(--ssp3-offset) - 40px);
   }
+
   .season-stat-text {
     font-size: 0.9em;
   }
 }
 
 @media only screen and (max-width: 700px) {
+
   #back-button {
     display: none;
   }
+
   .position-and-badge {
     width: 70%;
   }
 }
 
 @media only screen and (max-width: 700px) {
+
   .current-form-row {
     width: 90%;
   }
 }
 
 @media only screen and (max-width: 550px) {
+
   .season-stat {
     margin-bottom: 1.2em;
   }
+
   .season-stat-value {
     font-size: 1.9em;
     letter-spacing: 0.01em;
   }
+
   .season-stat-position {
     top: -31px;
   }
+
   #ssp1 {
     right: calc(var(--ssp1-offset) - 28px);
   }
+
   #ssp2 {
     right: calc(var(--ssp2-offset) - 28px);
   }
+
   #ssp3 {
     right: calc(var(--ssp3-offset) - 28px);
   }
+
   .season-stat-text {
     font-size: 0.75em;
   }
@@ -839,9 +819,11 @@ img {
   .form-details {
     width: 90%;
   }
+
   .teams-footer {
     padding: 0;
   }
+
   .footer-detail {
     margin: 2px 0 !important;
   }
@@ -849,15 +831,17 @@ img {
   .team-button {
     height: 90px;
   }
+
   .title {
     font-size: 2.2em !important;
   }
+
   .main-link {
     font-size: 1.2em;
   }
 
   .next-game-prediction {
-    margin: 50px 10px 0 10px;
+    margin: 50px 10px 0;
   }
 
   .lowered {
@@ -871,6 +855,7 @@ img {
     padding-right: 20px;
     margin: 0;
   }
+
   .position-and-badge {
     background-size: auto 220px !important;
     background-position: center !important;
@@ -879,18 +864,23 @@ img {
     width: 100%;
     height: 270px;
   }
+
   h1 {
     font-size: 1.5em;
   }
+
   .current-form {
     font-size: 1.3em;
   }
+
   .table-element {
     font-size: 14px;
   }
+
   .this-team {
     font-size: 16px;
   }
+
   .table-row.this-team {
     padding: 10px 5%;
   }
@@ -898,53 +888,59 @@ img {
   .next-game-logo {
     height: 190px;
   }
+
   .next-game-values {
     margin-top: 5px;
   }
+
   .past-results {
     margin-top: 20px;
   }
+
   .season-stats-row {
     margin-top: 20px;
   }
+
   .season-stat {
     margin-bottom: 0.7em;
   }
+
   .teams-footer {
     margin-top: 2em;
   }
+
   .next-game-prediction {
     margin-top: 30px;
   }
+
   .prev-results-title {
     font-size: 18px;
   }
+
   .past-result {
     font-size: 15px;
   }
-  .home-team, 
+
+  .home-team,
   .away-team {
     font-size: 13px;
   }
+
   .past-result-date {
     font-size: 11px;
   }
 }
 
-
-
-/* ----------------------------- Predictions Page -----------------------------*/
+/* ----------------------------- Predictions Page ----------------------------- */
 
 .predictions-header {
-  padding: 40px 40px 0 40px;
+  padding: 40px 40px 0;
   text-align: center;
 }
-
 .predictions {
   display: flex;
   flex-direction: column;
 }
-
 .predictions-gap {
   margin: 15px 0;
 }
@@ -952,13 +948,13 @@ img {
   font-size: 1.3em;
 }
 .green {
-  background-color: #77dd77;
+  background-color: #7D7;
 }
 .yellow {
-  background-color:#ffb347;
+  background-color: #FFB347;
 }
 .red {
-  background-color: #c23b22;
+  background-color: #C23B22;
 }
 .predictions-title {
   font-size: 3em;
@@ -996,7 +992,7 @@ img {
   text-align: center;
 }
 .prediction-container {
-  padding: 6px 0 3px 0;
+  padding: 6px 0 3px;
   margin: 2px 0;
   width: min(90%, 300px);
   align-self: center;
@@ -1014,13 +1010,11 @@ img {
   width: min(100%, 375px);
   margin-bottom: 2px;
 }
-
 .prediction-details {
   font-size: 0.65em;
   color: black;
   margin: 5px 0;
   text-align: left;
-  
   height: 0;
   display: none;
 }
@@ -1040,44 +1034,55 @@ img {
 }
 .detailed-predicted-score {
   font-size: 1.2em;
-  margin: 6px 0 0 0;
+  margin: 6px 0 0;
   text-align: center;
+}
+.tabbed {
+  padding-left: 2em;
 }
 
 /* Mobile view */
 
 @media only screen and (max-width: 800px) {
+
   .predictions-container {
     width: 80%;
   }
+
   .prediction-container {
     width: min(80%, 300px);
   }
+
   .page-content {
     font-size: 1.1em;
   }
+
   .prediction-time {
     right: -28px;
     top: calc(50% - 6px);
   }
+
   .prediction-value {
     flex: 4;
   }
 }
 
 @media only screen and (max-width: 500px) {
+
   .prediction-value {
     flex: 4.5;
   }
 }
 
 @media only screen and (max-width: 400px) {
+
   .prediction-value {
     flex: 6;
   }
 }
 
-/* -------------------------------- Data Page ----------------------------------*/
+/* -------------------------------- Data Page ---------------------------------- */
+
 .table-title {
   margin-top: 30px;
   font-size: 1.3em;
@@ -1095,8 +1100,10 @@ img {
 
 table {
   margin: 0 auto;
-  border-collapse: collapse; 
+  border-collapse: collapse;
 }
-th, td { 	
-  padding: 2px 4px; 
-} 
+
+th,
+td {
+  padding: 2px 4px;
+}
