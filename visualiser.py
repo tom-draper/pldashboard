@@ -9,14 +9,16 @@ from plotly.missing_ipywidgets import FigureWidget
 from pandas.core.frame import DataFrame
 from timebudget import timebudget
 
-from data import Fixtures, Form, HomeAdvantages, PositionOverTime, TeamRatings
+from data import Fixtures, Form, HomeAdvantages, TeamRatings
 from utilities import Utilities
 
 utils = Utilities()
 
 
 class Visualiser:
+    
     # ---------------------------- FIXTURES GRAPHS -----------------------------
+    
     def plot_fixtures_points(self, x: list[datetime], y: list[float], 
                              sizes: list[int], details: list[str]):
         fixtures_colour_scale = ['#01c626', '#08a825',  '#0b7c20', '#0a661b',
@@ -80,8 +82,6 @@ class Visualiser:
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
         )
-        # fig.update_xaxes(fixedrange=True)
-        # fig.update_yaxes(fixedrange=True)
 
 
     def fixtures_fig(self, x: list[datetime], y: list[float], details: list[str],

@@ -248,7 +248,7 @@ class Predictor:
             prediction = {'homeGoals': pred_conceded, 'awayGoals': pred_scored}
         return home_initials, away_initials, prediction
 
-    def gen_score_predictions(self, form, upcoming: DataFrame, home_advantages) -> dict:
+    def gen_score_predictions(self, form, upcoming, home_advantages) -> dict:
         predictions = {}
         team_names = form.df.index.values.tolist()
 

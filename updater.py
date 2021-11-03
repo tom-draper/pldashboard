@@ -125,28 +125,22 @@ class Updater:
                                          self.home_games_threshold, n_seasons,
                                          display=display_tables)
         # Calculated form values for each team for each matchday played so far
-        # self.data.form.update(self.data.fixtures, self.data.team_ratings,
-        #                       self.star_team_threshold, display=display_tables)
-        self.data.form_new.update(self.data.fixtures, self.data.standings, 
-                                  self.data.team_ratings, self.star_team_threshold, 
-                                  display=display_tables)
-        # Snapshots of a teams table position and match results for each matchday played so far
-        self.data.position_over_time.update(self.data.fixtures, self.data.standings,
-                                            display=display_tables)
+        self.data.form.update(self.data.fixtures, self.data.standings, 
+                            self.data.team_ratings, self.star_team_threshold, 
+                            display=display_tables)
         # Data about the opponent in each team's next game
-        self.data.upcoming.update(self.json_data, self.data.fixtures, self.data.form_new, 
+        self.data.upcoming.update(self.json_data, self.data.fixtures, self.data.form, 
                                   self.data.home_advantages, self.data.team_names, 
                                   self.current_season, n_seasons, display=display_tables)
         # Season metrics
-        self.data.season_stats.update(self.data.position_over_time, display=display_tables)
+        self.data.season_stats.update(self.data.form, display=display_tables)
 
     def save_tables(self):
         self.data.standings.save_to_html()
         self.data.fixtures.save_to_html()
         self.data.team_ratings.save_to_html()
         self.data.home_advantages.save_to_html()
-        self.data.form_new.save_to_html()
-        self.data.position_over_time.save_to_html()
+        self.data.form.save_to_html()
         self.data.upcoming.save_to_html()
         self.data.season_stats.save_to_html()
     
@@ -179,7 +173,7 @@ class Updater:
             self.visualiser.update(self.data.fixtures,
                                    self.data.team_ratings,
                                    self.data.home_advantages,
-                                   self.data.form_new,
+                                   self.data.form,
                                    display_graphs=display_graphs,
                                    team=team_name)
 

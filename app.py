@@ -104,7 +104,7 @@ def get_team(team_name_hyphen: str) -> Team:
     return Team(names, position, team_logo_url)
 
 def get_form(team_name: str) -> Form:
-    form_str, recent_teams_played, rating, won_against_star_team = updater.data.form_new.get_recent_form(team_name)
+    form_str, recent_teams_played, rating, won_against_star_team = updater.data.form.get_recent_form(team_name)
     return Form(form_str, recent_teams_played, rating, won_against_star_team)
 
 def get_season_stats(team_name: str) -> SeasonStats:
@@ -118,7 +118,7 @@ def get_next_game(team_name: str) -> NextGame:
     opp_team_name_hyphen = (opp_team_name.lower()).replace(' ', '-')
     names = TeamNames(opp_team_name_full, opp_team_name, opp_team_name_hyphen)
         
-    opp_form_rating = updater.data.form_new.get_current_form_rating(opp_team_name_full)
+    opp_form_rating = updater.data.form.get_current_form_rating(opp_team_name_full)
     opp_logo_url = updater.data.logo_urls[opp_team_name_full]
     opp_team = OppTeam(names, opp_form_rating, opp_logo_url)
     return NextGame(opp_team, home_away, prev_matches)
