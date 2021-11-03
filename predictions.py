@@ -256,7 +256,7 @@ class Predictor:
         for team_name in team_names:
             prediction = None
             if upcoming is not None:
-                opp_team_name = upcoming['NextTeam'].loc[team_name]
+                opp_team_name = upcoming.at[team_name, 'NextTeam']
                 
                 form_rating = form.get_current_form_rating(team_name)
                 long_term_form_rating = form.get_long_term_form_rating(team_name)
@@ -266,8 +266,8 @@ class Predictor:
                 home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]
                 opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]
                 
-                at_home = upcoming['AtHome'].loc[team_name]
-                prev_matches = upcoming['PreviousMatches'].loc[team_name]
+                at_home = upcoming.at[team_name, 'AtHome']
+                prev_matches = upcoming.at[team_name, 'PreviousMatches']
                                 
                 pred_scored, pred_conceded, details = self.calc_score_prediction(
                     team_name, home_advantage, opp_home_advantage, at_home, 
@@ -277,7 +277,7 @@ class Predictor:
                 home_initials, away_initials, pred = self.prediction_details(
                     team_name, opp_team_name, pred_scored, pred_conceded, at_home)
             
-                date = upcoming['Date'].loc[team_name].to_pydatetime()
+                date = upcoming.at[team_name, 'Date'].to_pydatetime()
                 
                 prediction = {'Date': date, 
                               'HomeInitials': home_initials, 
