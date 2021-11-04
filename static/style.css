@@ -91,6 +91,7 @@ h1 {
   flex: auto;
   align-self: center;
   text-decoration: none;
+  letter-spacing: 0em;
 }
 .no-decoration {
   text-decoration: none;

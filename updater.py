@@ -30,7 +30,7 @@ class Updater:
 
         # Number of games played in a season for season data to be used
         self.games_threshold = 4
-        self.home_games_threshold = 4
+        self.home_games_threshold = 10
         self.star_team_threshold = 0.75  # Rating over 75% to be a star team
 
         # Store for new requested API data or old data from memory

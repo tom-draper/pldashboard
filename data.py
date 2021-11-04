@@ -447,6 +447,7 @@ class Standings(DF):
 class Form(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'form')
+        self.current_matchday = None
 
     def get_current_form_rating(self, team_name: str):
         current_matchday = self.get_current_matchday()
@@ -529,9 +530,10 @@ class Form(DF):
         won_against_star_team.reverse()
         return won_against_star_team
     
-    def get_last_n_values(self, team_name, column_name, start_matchday, N): 
+    def get_last_n_values(self, team_name, column_name, start_matchday, N):
         col_headings = [(start_matchday-i, column_name) for i in range(N) if start_matchday-i > 0]
-        return self.df[col_headings].loc[team_name].tolist() 
+        values = [self.df.at[team_name, col] for col in col_headings]
+        return values
 
     def get_prev_matchday(self):
         current_matchday = self.get_current_matchday()
@@ -693,7 +695,7 @@ class Form(DF):
         # Cap rating
         form_rating = min(max(0, form_rating), 1)
         return form_rating
-    
+
     def insert_form_rating_col(self, form, team_ratings, matchday_no):
         form_rating_col = []
         col = form[(matchday_no, 'Form')]
@@ -716,13 +718,18 @@ class Form(DF):
     
     def get_form_last_n_values(self, form, team_name, column_name, start_matchday, N):
         col_headings = [(start_matchday-i, column_name) for i in range(N) if start_matchday-i > 0]
+        values = [form.at[team_name, col] for col in col_headings]
+        return values
+    
+    def get_form_last_n_values2(self, form, team_name, column_name, start_matchday, N):
+        col_headings = [(start_matchday-i, column_name) for i in range(N) if start_matchday-i > 0]
         values = form[col_headings].loc[team_name].tolist()
         return values
     
     def convert_team_cols_to_initials(self, form, matchday_nos):
         for matchday_no in matchday_nos:
-            for team, opp_team in form[(matchday_no, 'Team')].iteritems():
-                form.at[team, (matchday_no, 'Team')] = util.convert_team_name_or_initials(opp_team)
+            team_initials = [util.convert_team_name_or_initials(opp_team) for opp_team in form[(matchday_no, 'Team')]]
+            form[(matchday_no, 'Team')] = team_initials
     
     def get_played_matchdays(self, fixtures: Fixtures):
         status = fixtures.df.loc[:, (slice(None), 'Status')]
@@ -747,6 +754,7 @@ class Form(DF):
         form = form.drop(columns=['Points'], level=1)
         form = form.reindex(sorted(form.columns.values), axis=1)
         form = form.sort_values(by=[(max(matchday_nos), 'FormRating')], ascending=False)
+        return form
         
     @timebudget
     def update(self, fixtures: Fixtures, standings: Standings, team_ratings: TeamRatings, 
@@ -759,11 +767,11 @@ class Form(DF):
         
         self.add_form_columns(form, team_ratings, matchday_nos, star_team_threshold)
         
-        self.clean_dataframe(form, matchday_nos)
+        form = self.clean_dataframe(form, matchday_nos)
 
         if display:
             print(form)
-            
+                        
         self.df = form
 
 
@@ -921,8 +929,7 @@ class HomeAdvantages(DF):
 
         # Percentage wins = total wins / total games played
         win_ratio = (home_advantages[season]['Home']['Wins']
-                     + home_advantages[season]['Away']['Wins']) \
-                    / played
+                     + home_advantages[season]['Away']['Wins']) / played
         home_advantages[season, 'Overall', 'WinRatio'] = win_ratio
 
         # Home advantage = percentage wins at home - percentage wins 
@@ -935,7 +942,7 @@ class HomeAdvantages(DF):
         if (home_advantages[season]['Home']['Played'] <= threshold).all():
             print(f"Current season excluded from home advantages calculation -> all teams must have played {threshold} home games.")
             # Drop this current seasons column (start from previous season)
-            home_advantages_cols = home_advantages_cols.iloc[:, 1:]
+            home_advantages_cols = home_advantages_cols.drop(season, level=0, axis=1)
         
         # Drop pandemic year (anomaly, no fans, data shows neutral home advantage)
         if (2020, 'HomeAdvantage', '') in list(home_advantages_cols.columns):
