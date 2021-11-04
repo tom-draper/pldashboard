@@ -238,6 +238,7 @@ class Visualiser:
                 showgrid=False,
                 showline=False,
                 zeroline=False,
+                fixedrange=True
             ),
             xaxis=dict(
                 title_text='Matchday',
@@ -248,6 +249,7 @@ class Visualiser:
                 tickvals=x,
                 showgrid=False,
                 showline=False,
+                fixedrange=True
             ),
             margin=dict(
                 l=50,
@@ -259,8 +261,6 @@ class Visualiser:
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
         )
-        fig.update_xaxes(fixedrange=True)
-        fig.update_yaxes(fixedrange=True)
 
     def form_over_time_fig(self, x: list[datetime], ys: list[list[float]],
                            matchday_labels: list[str], team: str,
@@ -382,6 +382,7 @@ class Visualiser:
                 showgrid=False,
                 showline=False,
                 zeroline=False,
+                fixedrange=True
             ),
             xaxis=dict(
                 title_text='Matchday',
@@ -392,6 +393,7 @@ class Visualiser:
                 tickvals=x,
                 showgrid=False,
                 showline=False,
+                fixedrange=True
             ),
             margin=dict(
                 l=50,
@@ -403,8 +405,6 @@ class Visualiser:
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
         )
-        fig.update_xaxes(fixedrange=True)
-        fig.update_yaxes(fixedrange=True)
 
     def position_over_time_fig(self, x: list[datetime], ys: list[list[int]],
                                matchday_labels: list[str], team: str,
@@ -525,6 +525,7 @@ class Visualiser:
                 showline=False,
                 zeroline=False,
                 dtick=1,
+                fixedrange=True
             ),
             xaxis=dict(
                 tickmode='array',
@@ -532,6 +533,7 @@ class Visualiser:
                 tickvals=x,
                 showgrid=False,
                 showline=False,
+                fixedrange=True
             ),
             margin=dict(
                 l=30,
@@ -543,8 +545,6 @@ class Visualiser:
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
         )
-        fig.update_xaxes(fixedrange=True)
-        fig.update_yaxes(fixedrange=True)
 
     def clean_sheets_fig(self, x: list[datetime], clean_sheets: list[Optional[float]], 
                          not_clean_sheets: list[Optional[float]]) -> FigureWidget:
@@ -604,6 +604,7 @@ class Visualiser:
                 showline=False,
                 zeroline=False,
                 dtick=1,
+                fixedrange=True
             ),
             xaxis=dict(
                 title_text='Matchday',
@@ -612,6 +613,7 @@ class Visualiser:
                 tickvals=x,
                 showgrid=False,
                 showline=False,
+                fixedrange=True
             ),
             margin=dict(
                 l=50,
@@ -629,8 +631,6 @@ class Visualiser:
                 x=0.01
             ),
         )
-        fig.update_xaxes(fixedrange=True)
-        fig.update_yaxes(fixedrange=True)
 
     def goals_scored_and_conceded_fig(self, x: list[datetime], y_goals_scored: list[int], 
                                       y_goals_conceded: list[int], y_avg: list[float], 
@@ -740,11 +740,10 @@ class Visualiser:
                     self.save_fig(fig, team_name, 'clean-sheets')
 
     def update(self, fixtures: Fixtures, team_ratings: TeamRatings,
-               home_advantages: HomeAdvantages, form_new, team: str = '', 
+               home_advantages: HomeAdvantages, form: Form, team: str = '', 
                display_graphs: bool = False):
         self.update_fixtures(fixtures, team_ratings, home_advantages, team=team,
                              display=display_graphs)
-        self.update_form_over_time(form_new, team=team, display=display_graphs)
-        self.update_position_over_time(form_new, team=team, display=display_graphs)
-        self.update_goals_scored_and_conceded(form_new, team=team,
-                                              display=display_graphs)
+        self.update_form_over_time(form, team=team, display=display_graphs)
+        self.update_position_over_time(form, team=team, display=display_graphs)
+        self.update_goals_scored_and_conceded(form, team=team, display=display_graphs)

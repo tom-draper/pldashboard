@@ -400,7 +400,7 @@ img {
   margin: 0 !important;
 }
 .next-game-item {
-  padding: 8px 0 4px;
+  padding: 7px 0 4px;
   border-radius: var(--border-radius);
   margin: 2px 0;
 }
@@ -419,7 +419,7 @@ img {
 }
 .score {
   float: left;
-  min-width: 37px;
+  min-width: 40px;
   margin: 0 4px;
   text-align: center;
   font-weight: 800;

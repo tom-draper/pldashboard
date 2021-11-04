@@ -126,8 +126,8 @@ class Updater:
                                          display=display_tables)
         # Calculated form values for each team for each matchday played so far
         self.data.form.update(self.data.fixtures, self.data.standings, 
-                            self.data.team_ratings, self.star_team_threshold, 
-                            display=display_tables)
+                              self.data.team_ratings, self.star_team_threshold, 
+                              display=display_tables)
         # Data about the opponent in each team's next game
         self.data.upcoming.update(self.json_data, self.data.fixtures, self.data.form, 
                                   self.data.home_advantages, self.data.team_names, 
@@ -170,12 +170,9 @@ class Updater:
             print('💾 Saving tables as HTML files...')
             self.save_tables()
             # Use dataframes to update all graph HTML files
-            self.visualiser.update(self.data.fixtures,
-                                   self.data.team_ratings,
-                                   self.data.home_advantages,
-                                   self.data.form,
-                                   display_graphs=display_graphs,
-                                   team=team_name)
+            self.visualiser.update(self.data.fixtures, self.data.team_ratings,
+                                   self.data.home_advantages, self.data.form,
+                                   display_graphs=display_graphs, team=team_name)
 
 
 if __name__ == "__main__":

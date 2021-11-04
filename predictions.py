@@ -400,12 +400,12 @@ class Predictions:
                 if (prediction['homeInitials'] == home_initials) and (prediction['awayInitials'] == away_initials) and (prediction['prediction'] == new_prediction) and (prediction['actual'] is None):
                     already_made = True
                     break
-
         return already_made
     
     def update_existing_prediction(self, date: str, home_initials: str, 
                                    away_initials: str, new_prediction: dict, 
                                    details: list[str], predictions: dict[str, list]) -> bool:
+        updated = False
         # Update existing prediction object with new score prediction...
         for prediction in predictions[date]:
             predicted_score = prediction['prediction']
@@ -418,8 +418,9 @@ class Predictions:
                           '-->', home_initials, predicted_score['homeGoals'], '-',  predicted_score['awayGoals'], away_initials,)
                     prediction['prediction'] = new_prediction
                     prediction['details'] = details
-                return True
-        return False
+                updated = True
+                break
+        return updated
 
     def insert_new_prediction(self, date: str, time: str, prediction_id: int,
                               home_initials: str, away_initials: str, 
