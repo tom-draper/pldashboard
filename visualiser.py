@@ -659,7 +659,7 @@ class Visualiser:
         # Append the average goals for this matchday to average goals list
         goals_scored = []
         for scoreline in matchday_scorelines.values.tolist():
-            if type(scoreline) is str:
+            if scoreline != 'None - None':
                 home, _, away = scoreline.split(' ')
                 goals_scored.extend([int(home), int(away)])
         # Append the mean goals scored (equal to mean goals conceded) this gameweek
@@ -688,7 +688,7 @@ class Visualiser:
             # Append the teams number of goals scored and cocneded this matchday
             team_matchday = team_form[matchday_no]
             # If match has been played
-            if type(team_matchday['Score']) is str:
+            if team_matchday['Score'] != 'None - None':
                 matchday_scorelines = form.df[matchday_no]['Score']
                 self.append_avg_goals(y_avg, matchday_scorelines)
                 self.append_num_goals(y_goals_scored, y_goals_conceded, team_matchday)
