@@ -946,7 +946,7 @@ img {
   margin-bottom: 2px;
 }
 .prediction-details {
-  font-size: 0.65em;
+  font-size: 0.75em;
   color: black;
   margin: 5px 0;
   text-align: left;
@@ -969,6 +969,7 @@ img {
 }
 .detailed-predicted-score {
   font-size: 1.2em;
+  /* font-weight: 800; */
   margin: 6px 0 0;
   text-align: center;
 }

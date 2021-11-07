@@ -56,8 +56,8 @@
                   {% if pred['details'] != None %}
                     <div class="prediction-details" id="{{ pred['id'] }}">
                       <div class="prediction-detail">
-                        {{ pred['details']['initial']['description'] }}:
-                        {{ pred['details']['initial']['homeGoals'] }} - {{ pred['details']['initial']['awayGoals'] }}
+                        {{ pred['details']['initial']['description'] }}:<br>
+                        <span class="tabbed">{{ pred['details']['initial']['homeGoals'] }} - {{ pred['details']['initial']['awayGoals'] }}</span>
                       </div>
                       <div class="prediction-detail">
                         {{ pred['details']['adjustments'][0]['description'] }}:<br>
@@ -74,8 +74,8 @@
                         <span class="tabbed">{{ pred['details']['adjustments'][2]['homeGoals'] }} - {{ pred['details']['adjustments'][2]['awayGoals'] }}</span><br>
                         <span class="tabbed">({{ pred['details']['adjustments'][2]['homeAdvantage'] }})</span>
                       </div>
-                      <div class="detailed-predicted-score">
-                        {{ pred['details']['score']['homeGoals'] }} - {{ pred['details']['score']['awayGoals'] }}
+                      <div class="detailed-predicted-score"><b>
+                        {{ pred['details']['score']['homeGoals'] }} - {{ pred['details']['score']['awayGoals'] }}</b>
                       </div>
                     </div>
                   {% endif %}

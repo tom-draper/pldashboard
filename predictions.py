@@ -11,7 +11,7 @@ util = Utilities()
     
 
 class Predictor:
-    def __init__(self, form_diff_multiplier: int = 1, home_advantage_multiplier: int = 1.5):
+    def __init__(self, form_diff_multiplier: int = 0.5, home_advantage_multiplier: int = 1.5):
         self.form_diff_multiplier = form_diff_multiplier
         self.home_advantage_multiplier = home_advantage_multiplier
 
@@ -60,11 +60,15 @@ class Predictor:
         if form_diff > 0:
             # This team in better form -> increase predicted scored
             operation = f'{round(pred_scored, 4)} += {round(pred_scored, 4)} * {round((form_diff/100), 4)} * {self.form_diff_multiplier}'
-            pred_scored += pred_scored * (form_diff/100) * self.form_diff_multiplier
+            increased_separation = pred_scored * (form_diff/100) * self.form_diff_multiplier
+            pred_scored += increased_separation/2
+            pred_conceded -= increased_separation/2
         else:
             # Opposition team in better form -> increase predicted coneded
             operation = f'{round(pred_conceded, 4)} += {round(pred_conceded, 4)} * {round((form_diff/100), 4)} * {self.form_diff_multiplier}'
-            pred_conceded += pred_conceded * abs(form_diff/100) * self.form_diff_multiplier
+            increased_separation = pred_conceded * abs(form_diff/100) * self.form_diff_multiplier
+            pred_conceded += increased_separation/2
+            pred_scored -= increased_separation/2
         
         if at_home:
             xg_home = pred_scored
