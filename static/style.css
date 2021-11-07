@@ -230,6 +230,10 @@ img {
   width: 100%;
   margin: 0 20px;
 }
+.resizable-graph {
+  width: 100% !important;
+  height: 450px !important;
+}
 .full-row-graph {
   margin-left: 10px;
 }
@@ -402,7 +406,7 @@ img {
 .next-game-item {
   padding: 7px 0 4px;
   border-radius: var(--border-radius);
-  margin: 2px 0;
+  margin-top: 4px;
 }
 .accuracy {
   margin-bottom: 30px;
@@ -735,27 +739,35 @@ img {
 }
 
 @media only screen and (max-width: 550px) {
+  .row {
+    margin-bottom: 30px;
+  }
+  .full-row-graph,
+  .mini-graph {
+    margin-left: 7px;
+  }
   .season-stat {
     margin-bottom: 1.2em;
   }
   .season-stat-value {
-    font-size: 1.9em;
+    font-size: 1.7em;
     letter-spacing: 0.01em;
   }
   .season-stat-position {
-    top: -31px;
+    top: -28px;
   }
   #ssp1 {
-    right: calc(var(--ssp1-offset) - 28px);
+    right: calc(var(--ssp1-offset) - 20px);
   }
   #ssp2 {
-    right: calc(var(--ssp2-offset) - 28px);
+    right: calc(var(--ssp2-offset) - 20px);
   }
   #ssp3 {
-    right: calc(var(--ssp3-offset) - 28px);
+    right: calc(var(--ssp3-offset) - 20px);
   }
   .season-stat-text {
-    font-size: 0.75em;
+    font-size: 0.65em;
+    letter-spacing: -0.04em;
   }
   .form-details {
     width: 90%;
@@ -782,19 +794,20 @@ img {
     margin: 0 30px;
   }
   .position {
-    font-size: 12em;
+    font-size: 10.5em;
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.6;
     padding-right: 20px;
     margin: 0;
+    text-shadow: 7px 7px #000;
   }
   .position-and-badge {
-    background-size: auto 220px !important;
+    background-size: auto 210px !important;
     background-position: center !important;
     padding: 0 !important;
     margin: 0 !important;
     width: 100%;
-    height: 270px;
+    height: 250px;
   }
   h1 {
     font-size: 1.5em;
@@ -835,15 +848,22 @@ img {
   .prev-results-title {
     font-size: 18px;
   }
-  .past-result {
-    font-size: 15px;
-  }
+  .score,
   .home-team,
   .away-team {
-    font-size: 13px;
+    font-size: 0.85em;
   }
   .past-result-date {
     font-size: 11px;
+  }
+
+
+  .page-content {
+    overflow-x: hidden;
+  }
+  .resizable-graph {
+    width: 105% !important;
+    height: 250px !important;
   }
 }
 

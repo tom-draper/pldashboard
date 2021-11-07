@@ -172,7 +172,7 @@ class Predictor:
         if prev_matches:
             # Begin with average scored and conceded in previous meetings
             pred_scored, pred_conceded = self.avg_previous_result(team_name, prev_matches)
-            description = 'Previous match average'
+            description = 'Previous average'
         else:
             pred_scored, pred_conceded = 1.0, 1.0
             description = 'Default'

@@ -60,19 +60,19 @@
                         {{ pred['details']['initial']['homeGoals'] }} - {{ pred['details']['initial']['awayGoals'] }}
                       </div>
                       <div class="prediction-detail">
-                        {{ pred['details']['adjustments'][0]['description'] }}:
-                        {{ pred['details']['adjustments'][0]['homeGoals'] }} - {{ pred['details']['adjustments'][0]['awayGoals'] }}<br>
+                        {{ pred['details']['adjustments'][0]['description'] }}:<br>
+                        <span class="tabbed">{{ pred['details']['adjustments'][0]['homeGoals'] }} - {{ pred['details']['adjustments'][0]['awayGoals'] }}</span><br>
                         <span class="tabbed">({{ pred['details']['adjustments'][0]['formRatingHome'] }} vs {{ pred['details']['adjustments'][0]['formRatingAway'] }})</span>
                       </div>
                       <div class="prediction-detail">
-                        {{ pred['details']['adjustments'][1]['description'] }}:
-                        {{ pred['details']['adjustments'][1]['homeGoals'] }} - {{ pred['details']['adjustments'][1]['awayGoals'] }}<br>
-                        <span class="tabbed"></span>({{ pred['details']['adjustments'][1]['formRatingHome'] }} vs {{ pred['details']['adjustments'][1]['formRatingAway'] }})</span>
+                        {{ pred['details']['adjustments'][1]['description'] }}:<br>
+                        <span class="tabbed">{{ pred['details']['adjustments'][1]['homeGoals'] }} - {{ pred['details']['adjustments'][1]['awayGoals'] }}</span><br>
+                        <span class="tabbed">({{ pred['details']['adjustments'][1]['formRatingHome'] }} vs {{ pred['details']['adjustments'][1]['formRatingAway'] }})</span>
                       </div>
                       <div class="prediction-detail">
-                        {{ pred['details']['adjustments'][2]['description'] }}:
-                        {{ pred['details']['adjustments'][2]['homeGoals'] }} - {{ pred['details']['adjustments'][2]['awayGoals'] }}<br>
-                        <span class="tabbed"></span>({{ pred['details']['adjustments'][2]['homeAdvantage'] }})</span>
+                        {{ pred['details']['adjustments'][2]['description'] }}:<br>
+                        <span class="tabbed">{{ pred['details']['adjustments'][2]['homeGoals'] }} - {{ pred['details']['adjustments'][2]['awayGoals'] }}</span><br>
+                        <span class="tabbed">({{ pred['details']['adjustments'][2]['homeAdvantage'] }})</span>
                       </div>
                       <div class="detailed-predicted-score">
                         {{ pred['details']['score']['homeGoals'] }} - {{ pred['details']['score']['awayGoals'] }}

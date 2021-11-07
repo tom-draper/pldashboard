@@ -307,6 +307,13 @@
         }
       }
 
+      function attachClass() {
+        const matches = document.querySelectorAll('.plotly-graph-div');
+        for (let i = 0; i < matches.length-1 ; i++) {
+            matches[i].classList.add('resizable-graph');
+        }
+      }
+
       /* To fix a bug with Plotly
          By default, Plotly graphs have initial render height of 450px
          They remain at that height even if containing div height is changed
@@ -323,6 +330,7 @@
 
       // If in mobile view, refresh the Graph svg to snap to the smaller height 
       // of the containing div
+      attachClass()
       if (window.innerWidth < mobileWidth) {
         triggerResize();
       }
@@ -331,7 +339,7 @@
       // Keep positional value the correct offset
       window.addEventListener("resize", setPositionalOffset);
       // Keep graphs the correct height
-      window.addEventListener("resize", resizeGraphs);
+      // window.addEventListener("resize", resizeGraphs);
     </script>
   </body>
 </html>

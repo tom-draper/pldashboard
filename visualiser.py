@@ -536,8 +536,8 @@ class Visualiser:
                 fixedrange=True
             ),
             margin=dict(
-                l=30,
-                r=30,
+                l=10,
+                r=10,
                 b=10,
                 t=10,
                 pad=4

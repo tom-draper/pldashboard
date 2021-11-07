@@ -815,7 +815,6 @@ class SeasonStats(DF):
         for matchday in matchdays:
             match = row[matchday]
             if match['Score'] != 'None - None':
-                print(match['Score'])
                 home, away = util.extract_int_score(match['Score'])
                 if match['AtHome']:
                     goals_scored += home
