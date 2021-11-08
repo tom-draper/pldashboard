@@ -274,7 +274,7 @@ class Visualiser:
                                                               list[str], 
                                                               list[list[float]]]:
         x_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'Date']
-        y_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'FormRating']
+        y_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'FormRating5']
 
         # All ys have the same x date values
         x = []
