@@ -291,22 +291,6 @@
         document.documentElement.style.setProperty('--ssp3-offset', -ssp3.clientWidth/2 + "px");
       }
 
-      const mobileWidth = 500;
-
-      function resizeGraphs() {
-        const width = window.innerWidth;
-        const matches = document.querySelectorAll('.svg-container');
-        // Skip final match, as it is the clean sheets graph, the only graph 
-        // intended to have a constant height
-        for (let i = 0; i < matches.length-1 ; i++) {
-          if (width < mobileWidth) {
-            matches[i].style.height = '250px';
-          } else {
-            matches[i].style.height = '450px';
-          }
-        }
-      }
-
       function attachClass() {
         const matches = document.querySelectorAll('.plotly-graph-div');
         for (let i = 0; i < matches.length-1 ; i++) {
@@ -320,8 +304,6 @@
          via js or css. In this case, only a resize event triggers the svg update
          to correct the graph height. */
       function triggerResize() {
-        resizeGraphs()
-
         // Trigger window resize
         let evt = document.createEvent('UIEvents'); 
         evt.initUIEvent('resize', true, false, window, 0); 
@@ -331,15 +313,13 @@
       // If in mobile view, refresh the Graph svg to snap to the smaller height 
       // of the containing div
       attachClass()
-      if (window.innerWidth < mobileWidth) {
+      if (window.innerWidth < 1200) {
         triggerResize();
       }
 
       setPositionalOffset();
       // Keep positional value the correct offset
       window.addEventListener("resize", setPositionalOffset);
-      // Keep graphs the correct height
-      // window.addEventListener("resize", resizeGraphs);
     </script>
   </body>
 </html>

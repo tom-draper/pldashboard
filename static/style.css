@@ -91,7 +91,7 @@ h1 {
   flex: auto;
   align-self: center;
   text-decoration: none;
-  letter-spacing: 0em;
+  letter-spacing: -1px;
 }
 .no-decoration {
   text-decoration: none;
@@ -673,6 +673,10 @@ img {
   }
   .season-stat-text {
     font-size: 0.9em;
+  }
+
+  .resizable-graph {
+    height: 400px !important;
   }
 }
 
