@@ -97,14 +97,17 @@
         let width = window.innerWidth;
         removeBorderRadius();
         if (width < 500) {
+          // 20 rows of 1 column
           document.getElementById('team-1').classList.add('top-both');
           document.getElementById('team-20').classList.add('bottom-both');
         } else if (width < 1100) {
+          // 10 rows of 2 columns
           document.getElementById('team-1').classList.add('top-left');
           document.getElementById('team-2').classList.add('top-right');
           document.getElementById('team-19').classList.add('bottom-left');
           document.getElementById('team-20').classList.add('bottom-right');
         } else {
+          // 5 rows of 4 columns
           document.getElementById('team-1').classList.add('top-left');
           document.getElementById('team-4').classList.add('top-right');
           document.getElementById('team-17').classList.add('bottom-left');

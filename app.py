@@ -1,8 +1,9 @@
+import json
 from dataclasses import dataclass
 from threading import Thread
 from time import sleep
 
-from flask import Flask, render_template, request
+from flask import Flask, jsonify, render_template, request
 from flask_compress import Compress
 from pandas.core.frame import DataFrame
 
@@ -186,9 +187,9 @@ def extract_int_score(scoreline: str) -> tuple[int, int]:
     _, home_goals, _, away_goals, _ = scoreline.split(' ')
     return int(home_goals), int(away_goals) 
 
-def correct_result(h1, a1, h2, a2) -> bool:
+def correct_result(ph, pa, ah, aa) -> bool:
     # If identical results (both a home win, draw, or away win)
-    return (h1 > a1 and h2 > a2) or (h1 == a1 and h2 == a2) or (h1 < a1 and h2 < a2)
+    return (ph > pa and ah > aa) or (ph == pa and ah == aa) or (ph < pa and ah < aa)
 
 def insert_predictions_colours(predictions: dict):
     for date in predictions.keys():
@@ -197,7 +198,7 @@ def insert_predictions_colours(predictions: dict):
                 pred['colour'] = ''  # No colour
             elif pred['prediction']['homeGoals'] == pred['actual']['homeGoals'] and pred['prediction']['awayGoals'] == pred['actual']['awayGoals']:
                 pred['colour'] = 'green'
-            elif correct_result(pred['prediction']['homeGoals'], pred['actual']['homeGoals'], pred['prediction']['awayGoals'], pred['actual']['awayGoals']):
+            elif correct_result(pred['prediction']['homeGoals'], pred['prediction']['awayGoals'], pred['actual']['homeGoals'], pred['actual']['awayGoals']):
                 pred['colour'] = 'yellow'
             else:
                 pred['colour'] = 'red'
@@ -214,6 +215,12 @@ def predictions() -> str:
     
     params = PredictionsParams(predictions, accuracy, results_accuracy, last_updated)
     return render_template('predictions.html', params=params)
+
+@app.route('/predictions/json')
+def predictions_json() -> str:
+    with open(f'data/predictions_{season}.json') as f:
+        json_data = json.load(f)
+    return jsonify(json_data)
 
 
 # --------------------------------- DATA PAGE ----------------------------------
