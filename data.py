@@ -365,7 +365,6 @@ class Standings(DF):
 
         # Drop any rows with columns not in the current season
         df = df.drop(df[~df.index.isin(team_names)].index)
-
         return df
 
     def season_standings(self, json_data: dict, current_teams: list[str], season: int) -> DataFrame:
@@ -384,8 +383,7 @@ class Standings(DF):
         df.columns = pd.MultiIndex.from_product([[season], col_headings])
         
         df = df.drop(index=df.index.difference(current_teams))
-
-        return df    
+        return df
 
     @timebudget
     def update(self, json_data: dict, team_names: list[str], season: int, 
@@ -504,12 +502,6 @@ class Form(DF):
         if matchday is not None:
             rating = (self.df.at[team_name, (matchday, f'FormRating{n_games}')] * 100).round(1)
         return rating
-
-    # def _get_long_term_form_rating(self, team_name: str, matchday) -> float:
-    #     rating = 0
-    #     if matchday is not None:
-    #         rating = (self.df.at[team_name, (matchday, 'FormRating10')] * 100).round(1)
-    #     return rating
 
     def _get_won_against_star_team(self, team_name: str, matchday, N) -> list[str]:
         won_against_star_team = []  # 'star-team' or 'not-star-team' elements
@@ -699,16 +691,6 @@ class Form(DF):
             form_rating_col.append(form_rating)
         form[(matchday_no, f'FormRating{n_games}')] = form_rating_col
     
-    # def insert_long_term_form_rating_col(self, form, team_ratings, matchday_no):
-    #     form_rating_col = []
-    #     col = form[(matchday_no, 'LongForm')]
-    #     for team, form_str in col.iteritems():
-    #         gds = self.get_form_last_n_values(form, team, 'GD', matchday_no, 10)
-    #         teams_played = self.get_form_last_n_values(form, team, 'Team', matchday_no, 10)
-    #         form_rating = self.calc_form_rating(team_ratings, teams_played, form_str, gds)
-    #         form_rating_col.append(form_rating)
-    #     form[(matchday_no, 'LongTermFormRating')] = form_rating_col
-    
     def get_form_last_n_values(self, form, team_name, column_name, start_matchday, N):
         col_headings = [(start_matchday-i, column_name) for i in range(N) if start_matchday-i > 0]
         values = [form.at[team_name, col] for col in col_headings]
@@ -727,7 +709,7 @@ class Form(DF):
     def get_played_matchdays(self, fixtures: Fixtures):
         status = fixtures.df.loc[:, (slice(None), 'Status')]
         # Remove cols for matchdays that haven't played yet
-        status = status.replace("SCHEDULED", np.nan).dropna(axis=1, how='all')
+        status = status.loc[:, (status == 'FINISHED').any()]
         matchday_nos = sorted(list(status.columns.get_level_values(0)))
         return matchday_nos
     
@@ -740,7 +722,6 @@ class Form(DF):
             self.insert_form_string(form, matchday_no, 10)
             self.insert_form_rating_col(form, team_ratings, matchday_no, 5)
             self.insert_form_rating_col(form, team_ratings, matchday_no, 10)
-            # self.insert_long_term_form_rating_col(form, team_ratings, matchday_no)
     
     def clean_dataframe(self, form, matchday_nos):
         self.convert_team_cols_to_initials(form, matchday_nos)
