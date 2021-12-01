@@ -158,7 +158,7 @@ class Updater:
             self.fetch_json_data(n_seasons, request_new)
         except ValueError as e:
             print(e)
-            print('🔄 Retrying with saved data...')
+            print('🔁 Retrying with saved data...')
             request_new = False
             self.fetch_json_data(n_seasons, request_new)
 

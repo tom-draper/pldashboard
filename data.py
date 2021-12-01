@@ -87,7 +87,7 @@ class Fixtures(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🔨 Building fixtures dataframe... ')
+        print('🛠️ Building fixtures dataframe... ')
 
         data = json_data['fixtures'][season]
 
@@ -204,7 +204,7 @@ class TeamRatings(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🔨 Building team ratings dataframe... ')
+        print('🛠️ Building team ratings dataframe... ')
         self.check_dependencies(standings)
 
         # Add current season team names to the object team dataframe
@@ -419,7 +419,7 @@ class Standings(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🔨 Building standings dataframe...')
+        print('🛠️ Building standings dataframe...')
 
         # Check for dependencies
         if not team_names:
@@ -734,7 +734,7 @@ class Form(DF):
     @timebudget
     def update(self, fixtures: Fixtures, standings: Standings, team_ratings: TeamRatings, 
                star_team_threshold: float, display: bool = False):
-        print('🔨 Building form dataframe... ')
+        print('🛠️ Building form dataframe... ')
         self.check_dependencies(fixtures, standings, team_ratings)
 
         matchday_nos = self.get_played_matchdays(fixtures)
@@ -831,7 +831,7 @@ class SeasonStats(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🔨 Building season stats dataframe... ')
+        print('🛠️ Building season stats dataframe... ')
         self.check_dependencies(form)
 
         if form.df.empty:
@@ -979,7 +979,7 @@ class HomeAdvantages(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🔨 Building home advantages dataframe... ')
+        print('🛠️ Building home advantages dataframe... ')
 
         d = defaultdict(lambda: self.row_template(season, no_seasons))
         for i in range(no_seasons):
@@ -1170,7 +1170,7 @@ class Upcoming(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🔨 Building upcoming dataframe... ')
+        print('🛠️ Building upcoming dataframe... ')
         self.check_dependencies(fixtures, form)
         if not team_names:
             raise ValueError('❌ [ERROR] Cannot build upcoming dataframe: Teams names list empty')

@@ -41,9 +41,9 @@ class Visualiser:
                                       yref='paper',
                                       xref='x',
                                       x0=NOW,
-                                      y0=0.04,
+                                      y0=0.01,
                                       x1=NOW,
-                                      y1=1.01,
+                                      y1=0.99,
                                       line=dict(color='black',
                                                 width=1,
                                                 dash='dot')))
@@ -162,10 +162,10 @@ class Visualiser:
                         home_advantages: HomeAdvantages, team: str = '',
                         display: bool = False):
         if not team:
-            print('📊 Updating all team fixtures graphs...')
+            print('📊 Updating all team\'s \'fixtures\' graphs...')
             teams_to_update = fixtures.df.index.values.tolist()
         else:
-            print(f'📊 Updating {team} fixture graph...')
+            print(f'📊 Updating {team} \'fixture\' graph...')
             teams_to_update = [team]
 
         DEFAULT_MARKER_SIZE = 14
@@ -303,10 +303,10 @@ class Visualiser:
             print('Error: Cannot generate form over time graph; Form dataframe is empty')
         else:
             if not team:
-                print('📊 Updating all teams form over time graphs...')
+                print('📊 Updating all teams \'form over time\' graphs...')
                 teams_to_update = form.df.index.values.tolist()
             else:
-                print(f'📊 Updating {team} form over time graph...')
+                print(f'📊 Updating {team} \'form over time\' graph...')
                 teams_to_update = [team]
 
             x, matchday_labels, ys = self.form_over_time_data_points(form)
@@ -447,10 +447,10 @@ class Visualiser:
             print('Error: Cannot generate position over time graph: Form dataframe is empty')
         else:
             if not team:
-                print('📊 Updating all teams positions over time graphs...')
+                print('📊 Updating all team\'s \'position over time\' graphs...')
                 teams_to_update = form.df.index.values.tolist()
             else:
-                print(f'📊 Updating {team} positions over time graph...')
+                print(f'📊 Updating {team} \'position over time\' graph...')
                 teams_to_update = [team]
 
             x, matchday_labels, ys = self.position_over_time_data_points(form)
@@ -712,10 +712,10 @@ class Visualiser:
             print('Error: Cannot generate goals scored and conceded graph: Form dataframe is empty')
         else:
             if not team:
-                print('📊 Updating all teams goals scored and conceded over time graphs...')
+                print('📊 Updating all team\'s \'goals scored and conceded\' graphs...')
                 teams_to_update = form.df.index.values.tolist()
             else:
-                print(f'📊 Updating {team} goals scored and conceded over time graph...')
+                print(f'📊 Updating {team} \'goals scored and conceded\' graph...')
                 teams_to_update = [team]
 
             for team_name in teams_to_update:
