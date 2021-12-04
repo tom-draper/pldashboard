@@ -56,6 +56,30 @@ class Fixtures(DF):
         matchday[(match["matchday"], 'Status')].append(match['status'])
         matchday[(match["matchday"], 'Score')].append(f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}")
         team_names.append(match['awayTeam']['name'].replace('&', 'and'))
+        
+    def get_avg_result(self, team_name):
+        avg_scored = 0
+        avg_conceded = 0
+        total = 0
+        for matchday_no in self.df.columns.unique(level=0):
+            if self.df.at[team_name, (matchday_no, 'Status')] == 'FINISHED':
+                score = self.df.at[team_name, (matchday_no, 'Score')]
+                at_home = self.df.at[team_name, (matchday_no, 'AtHome')]
+                h, a = util.extract_int_score(score)
+                if at_home:
+                    avg_scored += h
+                    avg_conceded += a
+                else:
+                    avg_conceded += h
+                    avg_scored += a
+                total += 1
+                
+        avg_scored = avg_scored / total
+        avg_conceded = avg_conceded / total
+        
+        return avg_scored, avg_conceded
+                    
+                
 
     @timebudget
     def update(self, json_data: dict, season: int, display: bool = False):

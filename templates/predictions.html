@@ -2,20 +2,30 @@
 <html>
   <head>
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
     <title>Predictions</title>
   </head>
   <body>
     <div class="predictions-header">
-      <a class="predictions-title main-link" style="text-decoration: none;" href="/predictions">Predictions</a>
+      <a
+        class="predictions-title main-link"
+        style="text-decoration: none"
+        href="/predictions"
+        >Predictions</a
+      >
     </div>
 
     <div class="page-content">
       <div class="accuracy-display">
         <div class="accuracy">
           <span class="accuracy-item">
-          Predicting with accuracy: <b>{{ params.accuracy }}%</b></span><br>
+            Predicting with accuracy: <b>{{ params.accuracy }}%</b></span
+          ><br />
           <div class="accuracy-item">
             General results accuracy: <b>{{ params.results_accuracy}}%</b>
           </div>
@@ -24,75 +34,189 @@
 
       <div class="predictions-container">
         <div class="predictions">
-          {% if params.predictions != None %}
-            {% for date, preds in params.predictions.items() %}
-              <div class="date">{{ date[8:10] }}-{{ date[5:7] }}-{{ date[:4] }}</div>
-              <div class="medium-predictions-divider"></div>
-              {% for pred in preds %}
-                <button class="prediction-container {{ pred['colour'] }}" onclick="toggleDetailsDisplay({{ pred['id'] }})">
+          {% if params.predictions != None %} {% for date, preds in
+          params.predictions.items() %}
+          <div class="date">
+            {{ date[8:10] }}-{{ date[5:7] }}-{{ date[:4] }}
+          </div>
+          <div class="medium-predictions-divider"></div>
+          {% for pred in preds %}
+          <button
+            class="prediction-container {{ pred['colour'] }}"
+            onclick="toggleDetailsDisplay({{ pred['id'] }})"
+          >
+            <div class="prediction prediction-item">
+              <div class="prediction-label">Predicted:</div>
+              <div class="prediction-value">
+                <div class="prediction-initials">
+                  {{ pred['homeInitials'] }}
+                </div>
+                <div class="prediction-score">
+                  {{ pred['prediction']['homeGoals'] }} - {{
+                  pred['prediction']['awayGoals'] }}
+                </div>
+                <div class="prediction-initials">
+                  {{ pred['awayInitials'] }}
+                </div>
+              </div>
+            </div>
+            {% if pred['actual'] != None %}
+            <div class="actual prediction-item">
+              <div class="prediction-label">Actual:</div>
+              <div class="prediction-value">
+                <div class="prediction-initials">
+                  {{ pred['homeInitials'] }}
+                </div>
+                <div class="prediction-score">
+                  {{ pred['actual']['homeGoals'] }} - {{
+                  pred['actual']['awayGoals'] }}
+                </div>
+                <div class="prediction-initials">
+                  {{ pred['awayInitials'] }}
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <div class="prediction-time">{{ pred['time'] }}</div>
+            {% endif %} {% if pred['details'] != None %}
+            <div class="prediction-details" id="{{ pred['id'] }}">
+              <div class="prediction-detail">
+                {{ pred['details']['initial']['description'] }}:<br />
+                <span class="tabbed"
+                  >{{ pred['details']['initial']['homeGoals'] }} - {{
+                  pred['details']['initial']['awayGoals'] }}</span
+                >
+              </div>
 
-                  <div class="prediction prediction-item">
-                    <div class="prediction-label">Predicted:</div>
-                    <div class="prediction-value">
-                      <div class="prediction-initials">{{ pred['homeInitials'] }}</div>
-                      <div class="prediction-score">{{ pred['prediction']['homeGoals'] }} - {{ pred['prediction']['awayGoals'] }}</div>
-                      <div class="prediction-initials">{{ pred['awayInitials'] }}</div>
-                    </div>
-                  </div>
-                  {% if pred['actual'] != None %}
-                    <div class="actual prediction-item">
-                      <div class="prediction-label">Actual:</div>
-                      <div class="prediction-value">
-                        <div class="prediction-initials">{{ pred['homeInitials'] }}</div>
-                        <div class="prediction-score">{{ pred['actual']['homeGoals'] }} - {{ pred['actual']['awayGoals'] }}</div>
-                        <div class="prediction-initials">{{ pred['awayInitials'] }}</div>
-                      </div>
-                    </div>
-                  {% else %}
-                  <div class="prediction-time">
-                    {{ pred['time'] }}
-                  </div>
-                  {% endif %}
-                  {% if pred['details'] != None %}
-                    <div class="prediction-details" id="{{ pred['id'] }}">
-                      <div class="prediction-detail">
-                        {{ pred['details']['initial']['description'] }}:<br>
-                        <span class="tabbed">{{ pred['details']['initial']['homeGoals'] }} - {{ pred['details']['initial']['awayGoals'] }}</span>
-                      </div>
-                      <div class="prediction-detail">
-                        {{ pred['details']['adjustments'][0]['description'] }}:<br>
-                        <span class="tabbed">{{ pred['details']['adjustments'][0]['homeGoals'] }} - {{ pred['details']['adjustments'][0]['awayGoals'] }}</span><br>
-                        <span class="tabbed">({{ pred['details']['adjustments'][0]['formRatingHome'] }} vs {{ pred['details']['adjustments'][0]['formRatingAway'] }})</span>
-                      </div>
-                      <div class="prediction-detail">
-                        {{ pred['details']['adjustments'][1]['description'] }}:<br>
-                        <span class="tabbed">{{ pred['details']['adjustments'][1]['homeGoals'] }} - {{ pred['details']['adjustments'][1]['awayGoals'] }}</span><br>
-                        <span class="tabbed">({{ pred['details']['adjustments'][1]['formRatingHome'] }} vs {{ pred['details']['adjustments'][1]['formRatingAway'] }})</span>
-                      </div>
-                      <div class="prediction-detail">
-                        {{ pred['details']['adjustments'][2]['description'] }}:<br>
-                        <span class="tabbed">{{ pred['details']['adjustments'][2]['homeGoals'] }} - {{ pred['details']['adjustments'][2]['awayGoals'] }}</span><br>
-                        <span class="tabbed">({{ pred['details']['adjustments'][2]['homeAdvantage'] }})</span>
-                      </div>
-                      <div class="detailed-predicted-score"><b>
-                        {{ pred['details']['score']['homeGoals'] }} - {{ pred['details']['score']['awayGoals'] }}</b>
-                      </div>
-                    </div>
-                  {% endif %}
-                </button>
-              {% endfor %}
-              <div class="predictions-gap"></div>
-            {% endfor %}
-          {% endif %}
+              <!-- Newer version -->
+              {% if pred['details']['adjustments']|length == 4 %}
+              <!-- Previous meetings -->
+              <div class="prediction-detail">
+                {{ pred['details']['adjustments'][0]['description'] }}:<br />
+                <span class="tabbed"
+                  >{{ pred['details']['adjustments'][0]['homeGoals'] }} - {{
+                  pred['details']['adjustments'][0]['awayGoals'] }}</span
+                ><br />
+                <span class="tabbed"
+                  >({{ pred['details']['adjustments'][0]['prevMatchesHomeGoals'] }} - {{
+                  pred['details']['adjustments'][0]['prevMatchesAwayGoals'] }})</span
+                ><br />
+              </div>
+              <!-- Form rating (5 games) -->
+              <div class="prediction-detail">
+                {{ pred['details']['adjustments'][1]['description'] }}:<br />
+                <span class="tabbed"
+                  >{{ pred['details']['adjustments'][1]['homeGoals'] }} - {{
+                  pred['details']['adjustments'][1]['awayGoals'] }}</span
+                ><br />
+                <span class="tabbed"
+                  >({{ pred['details']['adjustments'][1]['formRatingHome'] }} vs
+                  {{ pred['details']['adjustments'][1]['formRatingAway']
+                  }})</span
+                >
+              </div>
+              <!-- Form rating (10 games) -->
+              <div class="prediction-detail">
+                {{ pred['details']['adjustments'][2]['description'] }}:<br />
+                <span class="tabbed"
+                  >{{ pred['details']['adjustments'][2]['homeGoals'] }} - {{
+                  pred['details']['adjustments'][2]['awayGoals'] }}</span
+                ><br />
+                <span class="tabbed"
+                  >({{ pred['details']['adjustments'][2]['formRatingHome'] }} vs
+                  {{ pred['details']['adjustments'][2]['formRatingAway']
+                  }})</span
+                >
+              </div>
+              <!-- Home advantage -->
+              <div class="prediction-detail">
+                {{ pred['details']['adjustments'][3]['description'] }}:<br />
+                <span class="tabbed"
+                  >{{ pred['details']['adjustments'][3]['homeGoals'] }} - {{
+                  pred['details']['adjustments'][3]['awayGoals'] }}</span
+                ><br />
+                <span class="tabbed"
+                  >({{ pred['details']['adjustments'][3]['homeAdvantage']
+                  }})</span
+                >
+              </div>
+              <div class="detailed-predicted-score">
+                <b>
+                  {{ pred['details']['score']['homeGoals'] }} - {{
+                  pred['details']['score']['awayGoals'] }}</b
+                >
+              </div>
+              {% endif %}
+              
+              <!-- Old - to be removed once all stored adjustments are 
+                length 4 (next season) -->
+              {% if pred['details']['adjustments']|length == 3 %}
+              <!-- Form rating (5 games) -->
+              <div class="prediction-detail">
+                {{ pred['details']['adjustments'][0]['description'] }}:<br />
+                <span class="tabbed"
+                  >{{ pred['details']['adjustments'][0]['homeGoals'] }} - {{
+                  pred['details']['adjustments'][0]['awayGoals'] }}</span
+                ><br />
+                <span class="tabbed"
+                  >({{ pred['details']['adjustments'][0]['formRatingHome'] }} vs
+                  {{ pred['details']['adjustments'][0]['formRatingAway']
+                  }})</span
+                >
+              </div>
+              <!-- Form rating (10 games) -->
+              <div class="prediction-detail">
+                {{ pred['details']['adjustments'][1]['description'] }}:<br />
+                <span class="tabbed"
+                  >{{ pred['details']['adjustments'][1]['homeGoals'] }} - {{
+                  pred['details']['adjustments'][1]['awayGoals'] }}</span
+                ><br />
+                <span class="tabbed"
+                  >({{ pred['details']['adjustments'][1]['formRatingHome'] }} vs
+                  {{ pred['details']['adjustments'][1]['formRatingAway']
+                  }})</span
+                >
+              </div>
+              <!-- Home advantage -->
+              <div class="prediction-detail">
+                {{ pred['details']['adjustments'][2]['description'] }}:<br />
+                <span class="tabbed"
+                  >{{ pred['details']['adjustments'][2]['homeGoals'] }} - {{
+                  pred['details']['adjustments'][2]['awayGoals'] }}</span
+                ><br />
+                <span class="tabbed"
+                  >({{ pred['details']['adjustments'][2]['homeAdvantage']
+                  }})</span
+                >
+              </div>
+              <div class="detailed-predicted-score">
+                <b>
+                  {{ pred['details']['score']['homeGoals'] }} - {{
+                  pred['details']['score']['awayGoals'] }}</b
+                >
+              </div>
+              {% endif %}
+            </div>
+
+            {% endif %}
+          </button>
+          {% endfor %}
+          <div class="predictions-gap"></div>
+          {% endfor %} {% endif %}
         </div>
       </div>
     </div>
 
     <div class="predictions-footer footer-text-colour">
-      <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me', '#d9534f', 'C0C069FOI');kofiwidget2.draw();</script> 
-      <div class="last-updated">
-        {{ params.last_updated }} UTC
-      </div>
+      <script
+        type="text/javascript"
+        src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"
+      ></script>
+      <script type="text/javascript">
+        kofiwidget2.init("Support Me", "#d9534f", "C0C069FOI");
+        kofiwidget2.draw();
+      </script>
+      <div class="last-updated">{{ params.last_updated }} UTC</div>
     </div>
 
     <script>
@@ -105,7 +229,5 @@
     </script>
   </body>
 </html>
-
-
 
 '
