@@ -30,7 +30,7 @@ class Updater:
 
         # Number of games played in a season for season data to be used
         self.games_threshold = 4
-        self.home_games_threshold = 10
+        self.home_games_threshold = 6
         self.star_team_threshold = 0.75  # Rating over 75% to be a star team
 
         # Store for new requested API data or old data from memory
@@ -136,13 +136,13 @@ class Updater:
         self.data.season_stats.update(self.data.form, display=display_tables)
 
     def save_tables(self):
-        self.data.standings.save_to_html()
-        self.data.fixtures.save_to_html()
-        self.data.team_ratings.save_to_html()
-        self.data.home_advantages.save_to_html()
-        self.data.form.save_to_html()
-        self.data.upcoming.save_to_html()
-        self.data.season_stats.save_to_html()
+        self.data.standings._save_to_html()
+        self.data.fixtures._save_to_html()
+        self.data.team_ratings._save_to_html()
+        self.data.home_advantages._save_to_html()
+        self.data.form._save_to_html()
+        self.data.upcoming._save_to_html()
+        self.data.season_stats._save_to_html()
     
     def update_data(self, n_seasons, display_tables):
         self.data.logo_urls = self.get_logo_urls()
