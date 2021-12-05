@@ -67,6 +67,36 @@ class Fixtures(DF):
         avg_conceded = avg_conceded / total
         
         return avg_scored, avg_conceded
+
+    def n_goals_distribution(self):
+        dist = defaultdict(lambda: 0)
+        
+        for matchday_no in self.df.columns.unique(level=0):
+            for _, row in self.df[matchday_no].iterrows():
+                score = row['Score']
+                if score != 'None - None':
+                    h, a = util.extract_int_score(score)
+                    dist[h+a] += 1
+                    
+        total_goals = sum(dist.values())
+        for k, v in dist.items():
+            dist[k] = v/total_goals
+        
+        import matplotlib.pyplot as plt
+        
+        x = list(range(10))
+        y = []
+        for x_ in x:
+            y.append(dist[x_])
+        
+        print('Over 0.5:', sum(y[1:]))
+        print('Over 1.5:', sum(y[2:]))
+        print('Over 2.5:', sum(y[3:]))
+        print('Over 3.5:', sum(y[4:]))
+        print('Over 4.5:', sum(y[5:]))
+        
+        plt.bar(x, y)
+        plt.show()
     
     def _insert_home_team_row(self, matchday, match, team_names):
         matchday[(match["matchday"], 'Date')].append(datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ"))
@@ -152,7 +182,7 @@ class Fixtures(DF):
         fixtures.index = team_names_index
         fixtures.columns.names = ("Matchday", None)
         fixtures.index.name = 'Team'
-
+        
         if display:
             print(fixtures)
 

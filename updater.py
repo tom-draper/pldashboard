@@ -134,6 +134,8 @@ class Updater:
                                   self.current_season, n_seasons, display=display_tables)
         # Season metrics
         self.data.season_stats.update(self.data.form, display=display_tables)
+        
+        
 
     def save_tables(self):
         self.data.standings._save_to_html()
