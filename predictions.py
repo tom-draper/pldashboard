@@ -317,10 +317,8 @@ class Predictor:
                     opp_team_name)
                 avg_result = fixtures.get_avg_result(team_name)
                 opp_avg_result = fixtures.get_avg_result(opp_team_name)
-                home_advantage = home_advantages.df.loc[team_name,
-                                                        'TotalHomeAdvantage'][0]
-                opp_home_advantage = home_advantages.df.loc[opp_team_name,
-                                                            'TotalHomeAdvantage'][0]
+                home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]
+                opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]
                 at_home = upcoming.at[team_name, 'AtHome']
                 prev_matches = upcoming.at[team_name, 'PreviousMatches']
 
@@ -454,7 +452,10 @@ class Predictions:
             for prediction in predictions[date]:
                 # Check if prediciton strings match perfectly
                 # i.e. identical fixture and same score predicted
-                if (prediction['homeInitials'] == home_initials) and (prediction['awayInitials'] == away_initials) and (prediction['prediction'] == new_prediction) and (prediction['actual'] is None):
+                if (prediction['homeInitials'] == home_initials) and \
+                        (prediction['awayInitials'] == away_initials) and \
+                        (prediction['prediction'] == new_prediction) and \
+                        (prediction['actual'] is None):
                     already_made = True
                     break
         return already_made
@@ -578,8 +579,7 @@ class Predictions:
             # Sort predictions by date...
             self._sort_predictions(data, predictions_json)
             # Update accuracy...
-            self.accuracy = data['accuracy'] = self._measure_accuracy(
-                predictions_json)
+            self.accuracy = data['accuracy'] = self._measure_accuracy(predictions_json)
 
         # Overwrite file with new data...
         with open(self.prediction_file, 'w') as f:
@@ -587,8 +587,7 @@ class Predictions:
 
     def prediction_details(self, team_name, opp_team_name, pred_scored, pred_conceded, at_home):
         team_name_initials = util.convert_team_name_or_initials(team_name)
-        opp_team_name_initials = util.convert_team_name_or_initials(
-            opp_team_name)
+        opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
 
         # Construct prediction string for display...
         if at_home:
@@ -613,12 +612,9 @@ class Predictions:
                 for team_name, row in fixtures.df[matchday_no].iterrows():
                     if row['Status'] == 'FINISHED':
                         date = row['Date']
-                        team_name_initials = util.convert_team_name_or_initials(
-                            team_name)
-                        opp_team_name_initials = util.convert_team_name_or_initials(
-                            row['Team'])
-                        home_goals, away_goals = util.extract_int_score(
-                            row['Score'])
+                        team_name_initials = util.convert_team_name_or_initials(team_name)
+                        opp_team_name_initials = util.convert_team_name_or_initials(row['Team'])
+                        home_goals, away_goals = util.extract_int_score(row['Score'])
 
                         if row['AtHome']:
                             home_initials = team_name_initials
@@ -627,8 +623,7 @@ class Predictions:
                             home_initials = opp_team_name_initials
                             away_initials = team_name_initials
 
-                        actual_scores.add(
-                            (date, home_initials, away_initials, home_goals, away_goals))
+                        actual_scores.add((date, home_initials, away_initials, home_goals, away_goals))
 
         return actual_scores
 
