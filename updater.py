@@ -128,12 +128,12 @@ class Updater:
         self.data.form.update(self.data.fixtures, self.data.standings, 
                               self.data.team_ratings, self.star_team_threshold, 
                               display=display_tables)
+        # Season metrics
+        self.data.season_stats.update(self.data.form, display=display_tables)
         # Data about the opponent in each team's next game
         self.data.upcoming.update(self.json_data, self.data.fixtures, self.data.form, 
                                   self.data.home_advantages, self.data.team_names, 
                                   self.current_season, n_seasons, display=display_tables)
-        # Season metrics
-        self.data.season_stats.update(self.data.form, display=display_tables)
         
         
 

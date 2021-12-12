@@ -495,7 +495,7 @@ class Predictions:
            Returns True if inserted a NEW predcition
            Return False if a prediction for this fixture already exists"""
         # Init with empty list if missing...
-        if date not in predictions.keys():
+        if date not in predictions:
             predictions[date] = []
 
         # Try to update the existing prediciton if available...
