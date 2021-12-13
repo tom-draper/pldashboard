@@ -834,8 +834,8 @@ class SeasonStats(DF):
                                                         tuple[float, str], 
                                                         tuple[float, str]]:
         clean_sheets = self._get_stat(team_name, 'CleanSheetRatio', False)
-        goals_per_game = self._get_stat(team_name, 'GoalsPerGame', False)
-        conceded_per_game = self._get_stat(team_name, 'ConcededPerGame', True)
+        goals_per_game = self._get_stat(team_name, 'xG', False)
+        conceded_per_game = self._get_stat(team_name, 'xC', True)
         return clean_sheets, goals_per_game, conceded_per_game
 
     def _row_season_goals(self, row: pd.Series, matchdays: list[str]) -> tuple[int, int, int, int]:
@@ -901,23 +901,22 @@ class SeasonStats(DF):
 
         matchdays = list(form.df.columns.unique(level=0))
 
-        season_stats = {'CleanSheetRatio': {},
-                        'FailedToScoreRatio': {},
-                        'GoalsPerGame': {},
-                        'ConcededPerGame': {}}  # type: dict[str, dict[str, float]]
+        season_stats = {'xG': {},
+                        'xC': {},
+                        'CleanSheetRatio': {},
+                        'FailedToScoreRatio': {}}  # type: dict[str, dict[str, float]]
         for team_name, row in form.df.iterrows():
             n_games, clean_sheets, failed_to_score, goals_scored, goals_conceded = self._row_season_goals(row, matchdays)
             
-            season_stats['CleanSheetRatio'][team_name] = 0
-            season_stats['FailedToScoreRatio'][team_name] = 0
-            season_stats['GoalsPerGame'][team_name] = 0
-            season_stats['ConcededPerGame'][team_name] = 0
+            # Initialise
+            for d in season_stats.values():
+                d[team_name] = 0.0
 
             if n_games > 0:
+                season_stats['xG'][team_name] = round(goals_scored / n_games, 2)
+                season_stats['xC'][team_name] = round(goals_conceded / n_games, 2)
                 season_stats['CleanSheetRatio'][team_name] = round(clean_sheets / n_games, 2)
                 season_stats['FailedToScoreRatio'][team_name] = round(failed_to_score / n_games, 2)
-                season_stats['GoalsPerGame'][team_name] = round(goals_scored / n_games, 2)
-                season_stats['ConcededPerGame'][team_name] = round(goals_conceded / n_games, 2)
 
         season_stats = pd.DataFrame.from_dict(season_stats)
         season_stats.index.name = 'Team'
@@ -938,11 +937,13 @@ class HomeAdvantages(DF):
             away_team = match['awayTeam']['name'].replace('&', 'and')
 
             if match['score']['winner'] is not None:
-                if match['score']['fullTime']['homeTeam'] > match['score']['fullTime']['awayTeam']:
+                home_goals = match['score']['fullTime']['homeTeam']
+                away_goals = match['score']['fullTime']['awayTeam']
+                if home_goals > away_goals:
                     # Home team wins
                     d[home_team][(season, 'Home', 'Wins')] += 1
                     d[away_team][(season, 'Away', 'Loses')] += 1
-                elif match['score']['fullTime']['homeTeam'] < match['score']['fullTime']['awayTeam']:
+                elif home_goals < away_goals:
                     # Away team wins
                     d[home_team][(season, 'Home', 'Loses')] += 1
                     d[away_team][(season, 'Away', 'Wins')] += 1

@@ -1,10 +1,13 @@
+import json
 from dataclasses import dataclass
 from datetime import datetime
-import json
+from typing import Union
+
 import numpy as np
 import pandas as pd
-
 from pandas.core.frame import DataFrame
+
+from database import Database
 from utilities import Utilities
 
 util = Utilities()
@@ -198,7 +201,8 @@ class Predictor:
         return pred_scored, pred_conceded, detail
 
     def _adjust_by_prev_matches(self, team_name: str, pred_scored: float, pred_conceded: float,
-                                prev_matches: list[dict[str, str]], at_home: bool, prev_meeting_weight: float = 0.5):
+                                prev_matches: list[dict[str, str]], at_home: bool, 
+                                prev_meeting_weight: float = 0.5) -> tuple[float, float, dict[str, str]]:
         prev_meeting_scored = 0
         prev_meeting_conceded = 0
         if prev_matches:
@@ -300,8 +304,8 @@ class Predictor:
 
         return home_initials, away_initials, prediction
 
-    def gen_score_predictions(self, fixtures, form, upcoming, home_advantages) -> dict:
-        predictions = {}
+    def gen_score_predictions(self, fixtures, form, upcoming, home_advantages) -> dict[dict[str, Union[datetime, str, float]]]:
+        predictions = {}  # type: dict[dict[str, Union[datetime, str, float]]]
         team_names = form.df.index.values.tolist()
 
         # Check ALL teams as two teams can have different next games
@@ -348,6 +352,8 @@ class Predictions:
         self.predictor = Predictor()
         self.accuracy = None  # type: dict[str, float]
         self.prediction_file = f'data/predictions_{current_season}.json'
+        self.database = Database()
+
 
     @dataclass
     class PredictionsCount:
@@ -562,11 +568,9 @@ class Predictions:
 
     def _sort_predictions(self, data, predictions_json):
         for date in predictions_json:
-            predictions_json[date] = sorted(
-                predictions_json[date], key=lambda x: x['time'])
+            predictions_json[date] = sorted(predictions_json[date], key=lambda x: x['time'])
         # Sort by date keys...
-        data['predictions'] = dict(
-            sorted(predictions_json.items(), key=lambda x: x[0]))
+        data['predictions'] = dict(sorted(predictions_json.items(), key=lambda x: x[0]))
 
     def _update_json_file(self, new_predictions: dict, actual_scores: set[tuple[datetime, str, str, int, int]]):
         with open(self.prediction_file) as json_file:
@@ -600,7 +604,7 @@ class Predictions:
             prediction = {'homeGoals': pred_conceded, 'awayGoals': pred_scored}
         return home_initials, away_initials, prediction
 
-    def _get_actual_scores(self, fixtures: DataFrame) -> set[tuple[str, str]]:
+    def _get_actual_scores(self, fixtures: DataFrame) -> set[tuple[datetime, str, str, float, float]]:
         # To contain a tuple for all actual scores so far this season
         actual_scores = set()
 
@@ -628,14 +632,15 @@ class Predictions:
         return actual_scores
 
     def update(self, fixtures, form, upcoming, home_advantages):
-        d = self.predictor.gen_score_predictions(
-            fixtures, form, upcoming, home_advantages)
+        d = self.predictor.gen_score_predictions(fixtures, form, upcoming, home_advantages)
         actual_scores = self._get_actual_scores(fixtures)
+        
+        self.database.update_database(d, actual_scores)
+        
         self._update_json_file(d, actual_scores)
         self._print_accuracy()
 
-        upcoming_predictions = pd.DataFrame.from_dict(
-            d, orient='index')[['Prediction', 'Details']]
+        upcoming_predictions = pd.DataFrame.from_dict(d, orient='index')[['Prediction', 'Details']]
         upcoming_predictions.columns = ['Prediction', 'PredictionDetails']
 
         return upcoming_predictions
