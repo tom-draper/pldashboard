@@ -1,3 +1,4 @@
+from collections import defaultdict, deque
 import json
 from dataclasses import dataclass
 from threading import Thread
@@ -213,23 +214,44 @@ def correct_result(ph, pa, ah, aa) -> bool:
     return (ph > pa and ah > aa) or (ph == pa and ah == aa) or (ph < pa and ah < aa)
 
 
-def insert_predictions_colours(predictions: dict):
+def insert_predictions_colours(predictions: list):
     for pred in predictions:
         if pred['actual'] is None:
             pred['colour'] = ''  # No colour
-        elif pred['prediction']['homeGoals'] == pred['actual']['homeGoals'] and pred['prediction']['awayGoals'] == pred['actual']['awayGoals']:
-            pred['colour'] = 'green'
-        elif correct_result(pred['prediction']['homeGoals'], pred['prediction']['awayGoals'], pred['actual']['homeGoals'], pred['actual']['awayGoals']):
-            pred['colour'] = 'yellow'
         else:
-            pred['colour'] = 'red'
+            ph = pred['prediction']['homeGoals']
+            pa = pred['prediction']['awayGoals']
+            ah = pred['actual']['homeGoals']
+            aa = pred['actual']['awayGoals']
+            
+            if ph == ah and pa == aa:
+                pred['colour'] = 'green'  # Predicted perfectly
+            elif correct_result(ph, pa, ah, aa):
+                pred['colour'] = 'yellow'  # Predicted result
+            else:
+                pred['colour'] = 'red'  # Prediction failed
 
+def insert_time(predictions: list):
+    for pred in predictions:
+        pred['time'] = pred['datetime'].strftime('%H:%M')
+
+def group_by_date(predictions: dict) -> defaultdict:
+    grouped_predictions = defaultdict(deque)
+    
+    for prediction in predictions:
+        date = prediction['datetime'].strftime('%Y-%m-%d')
+        grouped_predictions[date].appendleft(prediction)
+        
+    return grouped_predictions
 
 @app.route('/predictions')
 def predictions() -> str:
     predictions = updater.data.upcoming.predictions.get_predictions()
-    # predictions = dict(sorted(predictions.items(), reverse=True))
+    
     insert_predictions_colours(predictions)
+    insert_time(predictions)
+    
+    predictions = group_by_date(predictions)
 
     accuracy, results_accuracy = updater.data.upcoming.predictions.get_accuracy()
 

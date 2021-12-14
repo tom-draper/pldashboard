@@ -194,12 +194,12 @@ class Predictor:
             home = team_name_initials
             away = opp_team_name_initials
             prediction = {'homeGoals': int(round(pred_scored)), 'awayGoals':  int(round(pred_conceded))}
-            detailed_prediction = {'homeGoals': pred_scored, 'awayGoals': pred_conceded}
+            detailed_prediction = {'homeGoals': round(pred_scored, 4), 'awayGoals': round(pred_conceded, 4)}
         else:
             home = opp_team_name_initials
             away = team_name_initials
             prediction = {'homeGoals':  int(round(pred_conceded)), 'awayGoals':  int(round(pred_scored))}
-            detailed_prediction = {'homeGoals': pred_conceded, 'awayGoals': pred_scored}
+            detailed_prediction = {'homeGoals': round(pred_conceded, 4), 'awayGoals': round(pred_scored, 4)}
 
         return home, away, prediction, detailed_prediction
 
@@ -249,9 +249,9 @@ class Predictor:
 class Predictions:
     def __init__(self, current_season):
         self.predictor = Predictor()
+        self.database = Database()
         self.accuracy = None  # type: dict[str, float]
         self.prediction_file = f'data/predictions_{current_season}.json'
-        self.database = Database()
 
 
     @dataclass
@@ -275,12 +275,12 @@ class Predictions:
         return predictions
 
     def get_accuracy(self) -> tuple[float, float]:
-        accuracy = round(self.accuracy['accuracy']*100, 2)
+        accuracy = round(self.accuracy['scoreAccuracy']*100, 2)
         result_accuracy = round(self.accuracy['resultAccuracy']*100, 2)  # As percentage
         return accuracy, result_accuracy
 
     def _print_accuracy(self):
-        print(f' ℹ️ Predicting with accuracy: {round(self.accuracy["accuracy"]*100, 2)}%')
+        print(f' ℹ️ Predicting with accuracy: {round(self.accuracy["scoreAccuracy"]*100, 2)}%')
         print(f' ℹ️ Predicting correct results with accuracy: {round(self.accuracy["resultAccuracy"]*100, 2)}%')
         print(f' ℹ️ Net predictions: [{self._signed_float_str(self.accuracy["homeGoalsAvgDiff"])}] - [{self._signed_float_str(self.accuracy["awayGoalsAvgDiff"])}]')
 
