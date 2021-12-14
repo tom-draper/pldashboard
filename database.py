@@ -21,13 +21,15 @@ class Database:
         MONGODB_DATABASE = getenv('MONGODB_DATABASE')
         self.connection_string = f"mongodb+srv://{USERNAME}:{PASSWORD}@main.pvnry.mongodb.net/{MONGODB_DATABASE}?retryWrites=true&w=majority&authSource=admin"
     
+    
     def get_predictions(self):
         client = MongoClient(self.connection_string)
         collection = client.PremierLeague.Predictions
         predictions = list(collection.find().sort('datetime', pymongo.DESCENDING))
+        client.close()
         return predictions
     
-    def accuracy_counts(self, played):
+    def _accuracy_counts(self, played):
         score_correct = 0
         result_correct = 0
         home_goals_diff = 0
@@ -46,7 +48,7 @@ class Database:
 
         return score_correct, result_correct, home_goals_diff, away_goals_diff
     
-    def avg_accuracy(self, n_played, correct, result_correct, home_goals_diff, away_goals_diff):
+    def _avg_accuracy(self, n_played, correct, result_correct, home_goals_diff, away_goals_diff):
         score_accuracy = 0
         results_accuracy = 0
         home_goals_avg_diff = 0
@@ -58,13 +60,13 @@ class Database:
             away_goals_avg_diff = away_goals_diff / n_played
         return score_accuracy, results_accuracy, home_goals_avg_diff, away_goals_avg_diff
     
-    def calc_accuracy(self, database):
+    def _calc_accuracy(self, database):
         collection = database.Predictions
         played = collection.find({'actual': { '$ne': None }}, {'_id': 0, 'prediction': 1, 'actual': 1})
         
-        score_correct, result_correct, home_goals_diff, away_goals_diff = self.accuracy_counts(played)
+        score_correct, result_correct, home_goals_diff, away_goals_diff = self._accuracy_counts(played)
         
-        score_accuracy, results_accuracy, home_goals_avg_diff, away_goals_avg_diff = self.avg_accuracy(played.retrieved, score_correct, result_correct, home_goals_diff, away_goals_diff)
+        score_accuracy, results_accuracy, home_goals_avg_diff, away_goals_avg_diff = self._avg_accuracy(played.retrieved, score_correct, result_correct, home_goals_diff, away_goals_diff)
         
         accuracy = {'scoreAccuracy': score_accuracy, 
                     'resultAccuracy': results_accuracy, 
@@ -72,7 +74,7 @@ class Database:
                     'awayGoalsAvgDiff': away_goals_avg_diff}
         return accuracy
     
-    def save_accuracy(self, database, accuracy):
+    def _save_accuracy(self, database, accuracy):
         collection = database.Accuracy
         collection.replace_one({'_id': 'accuracy'}, accuracy)
         
@@ -80,22 +82,24 @@ class Database:
         client = MongoClient(self.connection_string)
         database = client.PremierLeague
         
-        accuracy = self.calc_accuracy(database)
+        accuracy = self._calc_accuracy(database)
         
-        self.save_accuracy(database, accuracy)
+        self._save_accuracy(database, accuracy)
+        
+        client.close()
         
         return accuracy
     
-    def get_actual_score(self, home_initials, away_initials, actual_scores):
+    def _get_actual_score(self, home_initials, away_initials, actual_scores):
         for score in actual_scores:
             if score[1] == home_initials and score[2] == away_initials:
                 return {'homeGoals': score[3], 'awayGoals': score[4]}
         return None
     
-    def build_predictions(self, preds, actual_scores):
+    def _build_predictions(self, preds, actual_scores):
         predictions = []
         for _, p in preds.items():
-            actual_score = self.get_actual_score(p['homeInitials'], p['awayInitials'], actual_scores)
+            actual_score = self._get_actual_score(p['homeInitials'], p['awayInitials'], actual_scores)
             prediction = {
                 '_id': f"{p['homeInitials']} vs {p['awayInitials']}",
                 'datetime': p['date'],
@@ -108,19 +112,19 @@ class Database:
             predictions.append(prediction) 
         return predictions
     
-    def save_predictions(self, database, predictions):
+    def _save_predictions(self, database, predictions):
         print('Saving predictions to database...')
         collection = database.Predictions
         for prediction in predictions:
             collection.replace_one({'_id': prediction['_id']}, prediction, upsert=True)
     
     def update_database(self, preds, actual_scores):
-        predictions = self.build_predictions(preds, actual_scores)
+        predictions = self._build_predictions(preds, actual_scores)
         
         client = MongoClient(self.connection_string)
         database = client.PremierLeague
         
-        self.save_predictions(database, predictions)
+        self._save_predictions(database, predictions)
 
         client.close()
     
@@ -154,4 +158,6 @@ class Database:
         client = MongoClient(self.connection_string)
         database = client.PremierLeague
         
-        self.save_predictions(database, predictions)
+        self._save_predictions(database, predictions)
+        
+        client.close()

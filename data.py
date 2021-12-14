@@ -687,6 +687,8 @@ class Form(DF):
                 if score != 'None - None':
                     home, away = util.extract_int_score(score)
                     self._append_to_from_str(form_str, home, away, at_home)
+                else:
+                    form_str.append('N')
 
             form_str_col.append(''.join(form_str))
         
