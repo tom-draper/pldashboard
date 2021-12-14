@@ -279,7 +279,7 @@ class Predictions:
     def _print_accuracy(self):
         print(f' ℹ️ Predicting with accuracy: {round(self.accuracy["accuracy"]*100, 2)}%')
         print(f' ℹ️ Predicting correct results with accuracy: {round(self.accuracy["resultAccuracy"]*100, 2)}%')
-        print(f' ℹ️ Net predictions: [{self._signed_float_str(self.accuracy["homeScoredAvgDiff"])}] - [{self._signed_float_str(self.accuracy["awayScoredAvgDiff"])}]')
+        print(f' ℹ️ Net predictions: [{self._signed_float_str(self.accuracy["homeGoalsAvgDiff"])}] - [{self._signed_float_str(self.accuracy["awayGoalsAvgDiff"])}]')
 
     def _signed_float_str(self, value: float) -> str:
         value = round(value, 2)
@@ -536,11 +536,11 @@ class Predictions:
         
         self.database.update_database(predictions, actual_scores)
         
-        self.database.update_accuracy()
+        self.accuracy = self.database.update_accuracy()
         # self.database.add_json_data_to_database()
         
         # self._update_json_file(predictions, actual_scores)
-        # self._print_accuracy()
+        self._print_accuracy()
 
         upcoming_predictions = pd.DataFrame.from_dict(predictions, orient='index')[['prediction', 'detailedPrediction']]
         upcoming_predictions.columns = ['Prediction', 'DetailedPrediction']

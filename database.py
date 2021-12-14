@@ -20,10 +20,7 @@ class Database:
         MONGODB_DATABASE = getenv('MONGODB_DATABASE')
         self.connection_string = f"mongodb+srv://{USERNAME}:{PASSWORD}@main.pvnry.mongodb.net/{MONGODB_DATABASE}?retryWrites=true&w=majority&authSource=admin"
     
-    def calc_accuracy(self, database):
-        collection = database.Predictions
-        played = collection.find({'actual': { '$ne': None }}, {'_id': 0, 'prediction': 1, 'actual': 1})
-        
+    def accuracy_counts(self, played):
         correct = 0
         result_correct = 0
         home_goals_diff = 0
@@ -39,38 +36,51 @@ class Database:
                 result_correct += 1
             home_goals_diff += (ph - ah)
             away_goals_diff += (pa - aa)
+
+        return correct, result_correct, home_goals_diff, away_goals_diff
+    
+    def calc_accuracy(self, database):
+        collection = database.Predictions
+        played = collection.find({'actual': { '$ne': None }}, {'_id': 0, 'prediction': 1, 'actual': 1})
+        
+        correct, result_correct, home_goals_diff, away_goals_diff = self.accuracy_counts(played)
         
         accuracy = 0
         results_accuracy = 0
         home_goals_avg_diff = 0
-        home_goals_avg_diff = 0
+        away_goals_avg_diff = 0
         n_played = played.retrieved
         if n_played > 0:
             accuracy = correct / n_played
             results_accuracy = result_correct / n_played
             home_goals_avg_diff = home_goals_diff / n_played
-            home_goals_avg_diff = away_goals_diff / n_played
+            away_goals_avg_diff = away_goals_diff / n_played
         
-        return accuracy, results_accuracy, home_goals_avg_diff, home_goals_avg_diff
+        return {'accuracy': accuracy, 'resultAccuracy': results_accuracy, 
+                'homeGoalsAvgDiff': home_goals_avg_diff, 'awayGoalsAvgDiff': away_goals_avg_diff}
     
-    def save_accuracy(self, database, accuracy, results_accuracy, home_goals_avg_diff, away_goals_avg_diff):
+    def save_accuracy(self, database, accuracy):
         collection = database.Accuracy
         
-        collection.update({'_id': 'accuracy'}, 
-                          {"$set": {'accuracy': accuracy, 
-                                    'resultsAccuracy': results_accuracy,
-                                    'homeGoalsAvgDiff': home_goals_avg_diff,
-                                    'awayGoalsAvgDiff': away_goals_avg_diff
-                          }}, upsert=False)
+        collection.replace_one({'_id': 'accuracy'}, accuracy)
+        
+        # collection.update({'_id': 'accuracy'}, 
+        #                   {"$set": {'accuracy': accuracy, 
+        #                             'resultsAccuracy': results_accuracy,
+        #                             'homeGoalsAvgDiff': home_goals_avg_diff,
+        #                             'awayGoalsAvgDiff': away_goals_avg_diff}
+        #                    }, upsert=False)
 
         
     def update_accuracy(self):
         client = MongoClient(self.connection_string)
         database = client.PremierLeague
         
-        accuracy, result_accuracy, home_goals_avg_diff, home_goals_avg_diff = self.calc_accuracy(database)
+        accuracy = self.calc_accuracy(database)
         
-        self.save_accuracy(database, accuracy, result_accuracy, home_goals_avg_diff, home_goals_avg_diff)
+        self.save_accuracy(database, accuracy)
+        
+        return accuracy
     
     def get_actual_score(self, home_initials, away_initials, actual_scores):
         for score in actual_scores:
@@ -81,7 +91,7 @@ class Database:
     def get_predictions(self, preds, actual_scores):
         predictions = []
         for _, p in preds.items():
-            actual_score = self.get_actual_score(p['homeInitials'], p['awayInitials'],actual_scores)
+            actual_score = self.get_actual_score(p['homeInitials'], p['awayInitials'], actual_scores)
             prediction = {
                 '_id': f"{p['homeInitials']} vs {p['awayInitials']}",
                 'datetime': p['date'],
