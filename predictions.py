@@ -265,6 +265,9 @@ class Predictions:
         n_act_away: int
 
     def get_predictions(self) -> dict:
+        return self.database.get_predictions()
+
+    def get_predictions2(self) -> dict:
         predictions = {}
         with open(self.prediction_file) as json_file:
             data = json.load(json_file)

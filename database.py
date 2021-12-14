@@ -5,6 +5,7 @@ from os.path import dirname, join
 
 from dotenv import load_dotenv
 from pymongo import MongoClient
+import pymongo
 
 from utilities import Utilities
 
@@ -19,6 +20,12 @@ class Database:
         PASSWORD = getenv('MONGODB_PASSWORD')
         MONGODB_DATABASE = getenv('MONGODB_DATABASE')
         self.connection_string = f"mongodb+srv://{USERNAME}:{PASSWORD}@main.pvnry.mongodb.net/{MONGODB_DATABASE}?retryWrites=true&w=majority&authSource=admin"
+    
+    def get_predictions(self):
+        client = MongoClient(self.connection_string)
+        collection = client.PremierLeague.Predictions
+        predictions = list(collection.find().sort('datetime', pymongo.DESCENDING))
+        return predictions
     
     def accuracy_counts(self, played):
         correct = 0
@@ -88,7 +95,7 @@ class Database:
                 return {'homeGoals': score[3], 'awayGoals': score[4]}
         return None
     
-    def get_predictions(self, preds, actual_scores):
+    def build_predictions(self, preds, actual_scores):
         predictions = []
         for _, p in preds.items():
             actual_score = self.get_actual_score(p['homeInitials'], p['awayInitials'], actual_scores)
@@ -111,7 +118,7 @@ class Database:
             collection.replace_one({'_id': prediction['_id']}, prediction, upsert=True)
     
     def update_database(self, preds, actual_scores):
-        predictions = self.get_predictions(preds, actual_scores)
+        predictions = self.build_predictions(preds, actual_scores)
         
         client = MongoClient(self.connection_string)
         database = client.PremierLeague

@@ -196,7 +196,7 @@ def team() -> str:
 
 @dataclass
 class PredictionsParams:
-    predictions: dict
+    predictions: list
     accuracy: float
     results_accuracy: float
     last_updated: str
@@ -214,30 +214,28 @@ def correct_result(ph, pa, ah, aa) -> bool:
 
 
 def insert_predictions_colours(predictions: dict):
-    for date in predictions.keys():
-        for pred in predictions[date]:
-            if pred['actual'] is None:
-                pred['colour'] = ''  # No colour
-            elif pred['prediction']['homeGoals'] == pred['actual']['homeGoals'] and pred['prediction']['awayGoals'] == pred['actual']['awayGoals']:
-                pred['colour'] = 'green'
-            elif correct_result(pred['prediction']['homeGoals'], pred['prediction']['awayGoals'], pred['actual']['homeGoals'], pred['actual']['awayGoals']):
-                pred['colour'] = 'yellow'
-            else:
-                pred['colour'] = 'red'
+    for pred in predictions:
+        if pred['actual'] is None:
+            pred['colour'] = ''  # No colour
+        elif pred['prediction']['homeGoals'] == pred['actual']['homeGoals'] and pred['prediction']['awayGoals'] == pred['actual']['awayGoals']:
+            pred['colour'] = 'green'
+        elif correct_result(pred['prediction']['homeGoals'], pred['prediction']['awayGoals'], pred['actual']['homeGoals'], pred['actual']['awayGoals']):
+            pred['colour'] = 'yellow'
+        else:
+            pred['colour'] = 'red'
 
 
 @app.route('/predictions')
 def predictions() -> str:
     predictions = updater.data.upcoming.predictions.get_predictions()
-    predictions = dict(sorted(predictions.items(), reverse=True))
+    # predictions = dict(sorted(predictions.items(), reverse=True))
     insert_predictions_colours(predictions)
 
     accuracy, results_accuracy = updater.data.upcoming.predictions.get_accuracy()
 
     last_updated = updater.last_updated
 
-    params = PredictionsParams(
-        predictions, accuracy, results_accuracy, last_updated)
+    params = PredictionsParams(predictions, accuracy, results_accuracy, last_updated)
     return render_template('predictions.html', params=params)
 
 
