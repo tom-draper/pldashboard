@@ -3,11 +3,11 @@ from datetime import datetime
 from os import getenv
 from os.path import dirname, join
 
-from dotenv import load_dotenv
-from pymongo import MongoClient
 import pymongo
+from dotenv import load_dotenv
 
 from utilities import Utilities
+
 
 util = Utilities()
 
@@ -23,7 +23,7 @@ class Database:
     
     
     def get_predictions(self):
-        client = MongoClient(self.connection_string)
+        client = pymongo.MongoClient(self.connection_string)
         collection = client.PremierLeague.Predictions
         predictions = list(collection.find().sort('datetime', pymongo.DESCENDING))
         client.close()
@@ -79,7 +79,7 @@ class Database:
         collection.replace_one({'_id': 'accuracy'}, accuracy)
         
     def update_accuracy(self):
-        client = MongoClient(self.connection_string)
+        client = pymongo.MongoClient(self.connection_string)
         database = client.PremierLeague
         
         accuracy = self._calc_accuracy(database)
@@ -121,7 +121,7 @@ class Database:
     def update_database(self, preds, actual_scores):
         predictions = self._build_predictions(preds, actual_scores)
         
-        client = MongoClient(self.connection_string)
+        client = pymongo.MongoClient(self.connection_string)
         database = client.PremierLeague
         
         self._save_predictions(database, predictions)
@@ -154,7 +154,7 @@ class Database:
                 predictions.append(prediction)
             
             
-        client = MongoClient(self.connection_string)
+        client = pymongo.MongoClient(self.connection_string)
         database = client.PremierLeague
         
         self._save_predictions(database, predictions)

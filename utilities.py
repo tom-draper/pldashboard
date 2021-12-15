@@ -108,11 +108,12 @@ class Utilities:
         return home, away
     
     def identical_fixtures(self, scoreline1: str, scoreline2: str) -> bool:
+        iden_fix = False
         if scoreline1 is not None and scoreline2 is not None:
             home_p, _, _, _, away_p = scoreline1.split(' ')
             home_s, _, _, _, away_s = scoreline2.split(' ')
-            return (home_p == home_s) and (away_p == away_s)
-        return False
+            iden_fix = (home_p == home_s) and (away_p == away_s)
+        return iden_fix
 
     def identical_result(self, pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
         return (pred_home_goals == pred_away_goals and act_home_goals == act_away_goals) or \

@@ -1,7 +1,7 @@
 import json
 import numpy as np
 
-from predictor import Predictor
+from predictions import Predictor
 from updater import Updater
 from utilities import Utilities
 

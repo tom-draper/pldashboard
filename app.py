@@ -1,5 +1,5 @@
-from collections import defaultdict, deque
 import json
+from collections import defaultdict, deque
 from dataclasses import dataclass
 from threading import Thread
 from time import sleep
