@@ -159,9 +159,9 @@ class Visualiser:
 
     @timebudget
     def update_fixtures(self, fixtures: Fixtures, team_ratings: TeamRatings,
-                        home_advantages: HomeAdvantages, team: str = '',
+                        home_advantages: HomeAdvantages, team: str = None,
                         display: bool = False):
-        if not team:
+        if team is None:
             print('📊 Updating all team\'s \'fixtures\' graphs...')
             teams_to_update = fixtures.df.index.values.tolist()
         else:
@@ -298,11 +298,11 @@ class Visualiser:
         return x, matchday_labels, ys
 
     @timebudget
-    def update_form_over_time(self, form: Form, team: str = '', display: bool = False):
+    def update_form_over_time(self, form: Form, team: str = None, display: bool = False):
         if form.df.empty:
             print('Error: Cannot generate form over time graph; Form dataframe is empty')
         else:
-            if not team:
+            if team is None:
                 print('📊 Updating all teams \'form over time\' graphs...')
                 teams_to_update = form.df.index.values.tolist()
             else:
@@ -442,11 +442,11 @@ class Visualiser:
         return x, matchday_labels, ys
 
     @timebudget
-    def update_position_over_time(self, form: Form, team: str = '', display: bool = False):
+    def update_position_over_time(self, form: Form, team: str = None, display: bool = False):
         if form.df.empty:
             print('Error: Cannot generate position over time graph: Form dataframe is empty')
         else:
-            if not team:
+            if team is None:
                 print('📊 Updating all team\'s \'position over time\' graphs...')
                 teams_to_update = form.df.index.values.tolist()
             else:
@@ -707,11 +707,11 @@ class Visualiser:
         return x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels
 
     @timebudget
-    def update_goals_scored_and_conceded(self, form: Form, team: str = '', display: bool = False):        
+    def update_goals_scored_and_conceded(self, form: Form, team: str = None, display: bool = False):        
         if form.df.empty:
             print('Error: Cannot generate goals scored and conceded graph: Form dataframe is empty')
         else:
-            if not team:
+            if team is None:
                 print('📊 Updating all team\'s \'goals scored and conceded\' graphs...')
                 teams_to_update = form.df.index.values.tolist()
             else:
@@ -740,7 +740,7 @@ class Visualiser:
                     self.save_fig(fig, team_name, 'clean-sheets')
 
     def update(self, fixtures: Fixtures, team_ratings: TeamRatings,
-               home_advantages: HomeAdvantages, form: Form, team: str = '', 
+               home_advantages: HomeAdvantages, form: Form, team: str = None, 
                display_graphs: bool = False):
         self.update_fixtures(fixtures, team_ratings, home_advantages, team=team,
                              display=display_graphs)
