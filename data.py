@@ -389,13 +389,8 @@ class TeamRatings(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'team_ratings')
 
-    def _calc_rating(self, position: int, points: int, gd: int) -> float:
-        rating = (20 - position) / 2
-        if gd != 0:
-            rating *= gd
-        if points != 0:
-            rating *= points
-        return rating
+    def _calc_rating(self, points: int, gd: int) -> float:
+        return points + gd
 
     def _get_season_weightings(self, no_seasons: int) -> list[float]:
         mult = 2.5  # High = recent weighted more
@@ -465,7 +460,7 @@ class TeamRatings(DF):
         # Insert rating values for each row
         for team_name, row in standings.df.iterrows():
             for n in range(n_seasons):
-                rating = self._calc_rating(row[season - n]['Position'], row[season - n]['Points'], row[season - n]['GD'])
+                rating = self._calc_rating(row[season-n]['Points'], row[season-n]['GD'])
                 team_ratings.loc[team_name, f'Rating{n}YAgo'] = rating
 
         # Replace any NaN with the lowest rating in the same column

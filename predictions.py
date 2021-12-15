@@ -13,7 +13,7 @@ util = Utilities()
 
 
 class Predictor:
-    def __init__(self, form_diff_multiplier: int = 0.5, home_advantage_multiplier: int = 1.5):
+    def __init__(self, form_diff_multiplier: int = 0.5, home_advantage_multiplier: int = 1):
         self.form_diff_multiplier = form_diff_multiplier
         self.home_advantage_multiplier = home_advantage_multiplier
 
