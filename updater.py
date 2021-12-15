@@ -8,11 +8,7 @@ from dotenv import load_dotenv
 from timebudget import timebudget
 
 from data import Data
-from utilities import Utilities
 from visualiser import Visualiser
-
-utilities = Utilities()
-
 
 class Updater:
     def __init__(self, current_season: int):
@@ -25,7 +21,6 @@ class Updater:
         dotenv_path = join(dirname(__file__), '.env')
         load_dotenv(dotenv_path)
         self.url = os.getenv('URL')
-        self.api = os.getenv('API')
         self.headers = {'X-Auth-Token': os.getenv('X_AUTH_TOKEN')}
 
         # Number of games played in a season for season data to be used

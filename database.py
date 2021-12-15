@@ -113,7 +113,7 @@ class Database:
         return predictions
     
     def _save_predictions(self, database, predictions):
-        print('Saving predictions to database...')
+        print('💾  Saving predictions to database...')
         collection = database.Predictions
         for prediction in predictions:
             collection.replace_one({'_id': prediction['_id']}, prediction, upsert=True)
@@ -138,10 +138,9 @@ class Database:
                 time = p['time']
                 dt = datetime.strptime(date + ' ' + time, "%Y-%m-%d %H:%M")
                 
+                detailed_prediction = None
                 if p['details']:
                     detailed_prediction = p['details']['score']
-                else:
-                    detailed_prediction = None
                 
                 prediction = {
                     '_id': f"{p['homeInitials']} vs {p['awayInitials']}",
