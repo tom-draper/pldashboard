@@ -91,10 +91,9 @@ class Database:
         
         return accuracy
     
-    def _get_actual_score(self, home_initials, away_initials, actual_scores):
-        for score in actual_scores:
-            if score[1] == home_initials and score[2] == away_initials:
-                return {'homeGoals': score[3], 'awayGoals': score[4]}
+    def _get_actual_score(self, home_initials: str, away_initials: str, actual_scores: dict):
+        if (home_initials, away_initials) in actual_scores:
+            return actual_scores[(home_initials, away_initials)]
         return None
     
     def _build_predictions(self, preds, actual_scores):
@@ -113,13 +112,13 @@ class Database:
             predictions.append(prediction) 
         return predictions
     
-    def _save_predictions(self, database, predictions):
+    def _save_predictions(self, database, predictions: list):
         print('💾 Saving predictions to database...')
         collection = database.Predictions
         for prediction in predictions:
             collection.replace_one({'_id': prediction['_id']}, prediction, upsert=True)
     
-    def update_predictions(self, preds, actual_scores):
+    def update_predictions(self, preds: dict, actual_scores: dict[tuple[str, str]: dict[str, int]]):
         predictions = self._build_predictions(preds, actual_scores)
         
         client = pymongo.MongoClient(self.connection_string)
@@ -162,29 +161,25 @@ class Database:
         
         client.close()
         
-    def update_actual_scores(self, actual_scores: tuple[datetime, str, str, int, int]):        
+    def update_actual_scores(self, actual_scores: dict[tuple[str, str]: dict[str, int]]):        
         client = pymongo.MongoClient(self.connection_string)
         collection = client.PremierLeague.Predictions
         
         no_actual_scores = collection.find({'actual': None}, {'_id': 1, 'home': 1, 'away': 1})
         
-        for nas in no_actual_scores:
-            actual_score = self._get_actual_score(nas['home'], nas['away'], actual_scores)
-            if actual_scores is not None:
-                collection.update_one({'_id': nas['_id']}, {'$set': {'actual': actual_score}})
+        for d in no_actual_scores:
+            actual = self._get_actual_score(d['home'], d['away'], actual_scores)
+            if actual is not None:
+                collection.update_one({'_id': d['_id']}, {'$set': {'actual': actual}})
                     
         client.close()
     
-    def update_all_actual_scores(self, actual_scores: tuple[datetime, str, str, int, int]):        
+    def update_all_actual_scores(self, actual_scores: dict[tuple[str, str]: dict[str, int]]):
         client = pymongo.MongoClient(self.connection_string)
         collection = client.PremierLeague.Predictions
         
-        for actual_score in actual_scores:
-            _, home_initial, away_initial, home_goals, away_goals = actual_score
-            
-            pred_id = f'{home_initial} vs {away_initial}'
-            actual = {'homeGoals': home_goals, 'awayGoals': away_goals}
-            
-            collection.update_one({'_id': pred_id}, {'$set': {'actual': actual}})
+        for initials, actual in actual_scores.items():
+            prediction_id = f'{initials[0]} vs {initials[1]}'
+            collection.update_one({'_id': prediction_id}, {'$set': {'actual': actual}})
         
         client.close()

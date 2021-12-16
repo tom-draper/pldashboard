@@ -285,26 +285,27 @@ class Predictions:
             return f'+{value}'
         return str(value)
 
-    def _get_actual_scores(self, fixtures: Fixtures) -> set[tuple[datetime, str, 
-                                                                  str, float, float]]:
+    def _get_actual_scores(self, fixtures: Fixtures) -> dict[tuple[str, str], dict]:
         # To contain a tuple for all actual scores so far this season
-        actual_scores = set()
+        actual_scores = {}
 
         for matchday_no in range(1, 39):
-            matchday_status = fixtures.df[matchday_no]['Status'] 
+            matchday = fixtures.df[matchday_no]
+            matchday_status = matchday['Status'] 
 
             # If whole column is SCHEDULED, skip
             if not all(matchday_status == 'SCHEDULED'):
-                for team_name, row in fixtures.df[matchday_no].iterrows():
+                for team_name, row in matchday.iterrows():
                     if row['Status'] == 'FINISHED':
-                        home_initials = util.convert_team_name_or_initials(team_name)
-                        away_initials = util.convert_team_name_or_initials(row['Team'])
                         home_goals, away_goals = util.extract_int_score(row['Score'])
 
+                        home_initials = util.convert_team_name_or_initials(team_name)
+                        away_initials = util.convert_team_name_or_initials(row['Team'])
                         if not row['AtHome']:
                             home_initials, away_initials = away_initials, home_initials
 
-                        actual_scores.add((row['Date'], home_initials, away_initials, home_goals, away_goals))
+                        actual_scores[(home_initials, away_initials)] = {'home_goals': home_goals, 
+                                                                         'away_goals': away_goals}
 
         return actual_scores
 
@@ -319,7 +320,6 @@ class Predictions:
         
         self.database.update_actual_scores(actual_scores)
         
-        # self._update_json_file(predictions, actual_scores)
         self._print_accuracy()
 
         upcoming_predictions = pd.DataFrame.from_dict(predictions, orient='index')[['prediction', 'detailedPrediction']]
