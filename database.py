@@ -119,6 +119,25 @@ class Database:
             collection.replace_one({'_id': prediction['_id']}, prediction, upsert=True)
     
     def update_predictions(self, preds: dict, actual_scores: dict[tuple[str, str]: dict[str, int]]):
+        """
+        Update the MongoDB database with predictions in the preds dict, including
+        any actual scores that have been recorded.
+        
+        preds: prediction dictionary for each team (added to Upcoming DataFrame)
+        dict[team_name] = {'date': datetime,
+                           'homeInitials': str,
+                           'awayInitials': str,
+                           'prediction': {
+                                'homeGoals': int,
+                                'awayGoals' int
+                                }
+                           'detailedPrediction': {
+                                'homeGoals': float,
+                                'awayGoals' float
+                                }
+                           }
+        """
+        
         predictions = self._build_predictions(preds, actual_scores)
         
         client = pymongo.MongoClient(self.connection_string)
