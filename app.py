@@ -204,7 +204,7 @@ class PredictionsParams:
 
 
 def extract_int_score(scoreline: str) -> tuple[int, int]:
-    # Scoreline: [home_team_initials] [home_goals] - [away_goals] [away_team_initials]
+    # Scoreline: "[home_team_initials] [home_goals] - [away_goals] [away_team_initials]"
     _, home_goals, _, away_goals, _ = scoreline.split(' ')
     return int(home_goals), int(away_goals)
 
@@ -283,7 +283,7 @@ def tables() -> str:
     return render_template('tables.html', params=params)
 
 
-def thread_function(time=3600):
+def thread_function(time: int = 3600):
     while True:
         print(f'Refreshing data in {time} seconds...')
         sleep(time)

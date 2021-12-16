@@ -148,7 +148,7 @@ class Updater:
         self.update_dataframes(n_seasons, display_tables)
     
     @timebudget
-    def update_all(self, n_seasons: int = 4, team_name: str = '', 
+    def update_all(self, n_seasons: int = 4, team_name: str = None, 
                    display_tables: bool = False, display_graphs: bool = False, 
                    request_new: bool = True):
         try:

@@ -8,7 +8,6 @@ import pandas as pd
 from pandas.core.frame import DataFrame
 from timebudget import timebudget
 
-from predictions import Predictions
 from utilities import Utilities
 
 util = Utilities()
@@ -1093,6 +1092,7 @@ class HomeAdvantages(DF):
 class Upcoming(DF):
     def __init__(self, current_season, d: DataFrame = DataFrame()):
         super().__init__(d, 'upcoming')
+        from predictions import Predictions
         self.predictions = Predictions(current_season)
 
     def _get_opposition(self, team_name: str) -> str:

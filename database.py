@@ -5,6 +5,7 @@ from os.path import dirname, join
 
 import pymongo
 from dotenv import load_dotenv
+from pymongo import collection
 
 from utilities import Utilities
 
@@ -113,12 +114,12 @@ class Database:
         return predictions
     
     def _save_predictions(self, database, predictions):
-        print('💾  Saving predictions to database...')
+        print('💾 Saving predictions to database...')
         collection = database.Predictions
         for prediction in predictions:
             collection.replace_one({'_id': prediction['_id']}, prediction, upsert=True)
     
-    def update_database(self, preds, actual_scores):
+    def update_predictions(self, preds, actual_scores):
         predictions = self._build_predictions(preds, actual_scores)
         
         client = pymongo.MongoClient(self.connection_string)
@@ -128,7 +129,7 @@ class Database:
 
         client.close()
     
-    def add_json_data_to_database(self):
+    def update_with_json_data(self):
         with open('data/predictions_2021.json', 'r') as f:
             data = json.loads(f.read())
             
@@ -158,5 +159,32 @@ class Database:
         database = client.PremierLeague
         
         self._save_predictions(database, predictions)
+        
+        client.close()
+        
+    def update_actual_scores(self, actual_scores: tuple[datetime, str, str, int, int]):        
+        client = pymongo.MongoClient(self.connection_string)
+        collection = client.PremierLeague.Predictions
+        
+        no_actual_scores = collection.find({'actual': None}, {'_id': 1, 'home': 1, 'away': 1})
+        
+        for nas in no_actual_scores:
+            actual_score = self._get_actual_score(nas['home'], nas['away'], actual_scores)
+            if actual_scores is not None:
+                collection.update_one({'_id': nas['_id']}, {'$set': {'actual': actual_score}})
+                    
+        client.close()
+    
+    def update_all_actual_scores(self, actual_scores: tuple[datetime, str, str, int, int]):        
+        client = pymongo.MongoClient(self.connection_string)
+        collection = client.PremierLeague.Predictions
+        
+        for actual_score in actual_scores:
+            _, home_initial, away_initial, home_goals, away_goals = actual_score
+            
+            pred_id = f'{home_initial} vs {away_initial}'
+            actual = {'homeGoals': home_goals, 'awayGoals': away_goals}
+            
+            collection.update_one({'_id': pred_id}, {'$set': {'actual': actual}})
         
         client.close()

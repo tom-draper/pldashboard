@@ -135,7 +135,7 @@ a.kofi-button {
 .teams {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  background-color: #000;
+  background-color: rgb(46 46 46);
   margin: 0 auto;
   width: 90%;
   border: 8px solid rgb(46 46 46);
