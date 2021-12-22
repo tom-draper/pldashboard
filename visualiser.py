@@ -482,98 +482,83 @@ class PositionOverTime(Graph):
 class GoalsScoredAndConceded(Graph):
     # -------------------- GOALS SCORED AND CONCEDED GRAPHS --------------------
 
-    def plot_clean_sheets(self, x, clean_sheets, not_clean_sheets):
-        zeros = [0]*len(x)
+    def plot_clean_sheets(self, x, clean_sheets, y_goals_scored, y_goals_conceded, y_avg):
         midline = [0.5]*len(x)
+                
         fig = go.Figure(data=[
-            go.Bar(name='Goals Scored',
-                   x=x, 
-                   y=zeros, 
-                   showlegend=False, 
-                   marker_line_color='#fafafa'),
-            go.Bar(name='Goals Conceded', 
-                   x=x, 
-                   y=zeros, 
-                   showlegend=False, 
-                   marker_line_color='#fafafa'),
+            go.Bar(name='Clean Sheets', x=x, y=clean_sheets,
+                   marker_color='#77DD77',
+                   marker_line_color='#006400',
+                   marker_line_width=2,
+                   hovertemplate='Clean sheet<extra></extra>',
+                   yaxis='y2'),
+            go.Bar(name='Goals Conceded', x=x, y=1-clean_sheets,
+                   marker_color='#C23B22',
+                   marker_line_color='#8B0000',
+                   marker_line_width=2,
+                   hovertemplate='Goals conceded<extra></extra>',
+                   yaxis='y2'),
             go.Scatter(name='Line', 
                        x=x, 
                        y=midline, 
                        mode='lines', 
                        line=dict(color='#757575', 
-                                 width=2), 
-                       showlegend=False),
-            go.Scatter(name='Clean Sheet', 
-                       x=x, 
-                       y=clean_sheets, 
-                       mode='markers',
-                       hovertemplate='Clean sheet<extra></extra>',
-                       marker_color='#77DD77', 
-                       marker_line_color='#006400',
-                       marker_line_width=1, 
-                       showlegend=False,
-                       marker=dict(size=26)),
-            go.Scatter(name='Goals Conceded', 
-                       x=x, 
-                       y=not_clean_sheets, 
-                       mode='markers',
-                       hovertemplate='Goal(s) conceded<extra></extra>', 
-                       marker_color='#C23B22', 
-                       marker_line_color='#8B0000', 
-                       marker_line_width=1, 
-                       showlegend=False, 
-                       marker=dict(size=26)),
+                                 width=2),
+                       hoverinfo='skip'),
         ])
 
         return fig
 
-    def format_clean_sheets_fig(self, fig, x):
+    def format_clean_sheets_fig(self, fig, x, y_goals_scored, y_goals_conceded, matchday_labels):
+        # Config graph layout
         fig.update_layout(
-            barmode='relative',
-            height=65,
+            height=60,
+            autosize=True,
+            barmode='stack',
             yaxis=dict(
                 autorange=False,
-                range=[0, 1],
-                ticktext=[''],
-                tickvals=[0],
+                range=[-0.2, 1.2],
                 showgrid=False,
                 showline=False,
                 zeroline=False,
+                showticklabels=False,
                 dtick=1,
                 fixedrange=True
             ),
             xaxis=dict(
+                title_text='Matchday',
                 tickmode='array',
-                ticktext=['']*len(x),
+                ticktext=matchday_labels,
                 tickvals=x,
                 showgrid=False,
                 showline=False,
                 fixedrange=True
             ),
             margin=dict(
-                l=10,
-                r=10,
-                b=10,
-                t=10,
+                l=50,
+                r=50,
+                b=40,
+                t=0,
                 pad=4
             ),
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
+            showlegend=False,
+            yaxis2=dict(overlaying='y',
+                        showticklabels=False, 
+                        zeroline=False, 
+                        showline=False,
+                        showgrid=False)
         )
 
     def clean_sheets_fig(self, x: list[datetime], clean_sheets: list[Optional[float]], 
-                         not_clean_sheets: list[Optional[float]]) -> FigureWidget:
-        fig = self.plot_clean_sheets(x, clean_sheets, not_clean_sheets)
-        self.format_clean_sheets_fig(fig, x)
+                         y_goals_scored, y_goals_conceded, y_avg, matchday_labels) -> FigureWidget:
+        fig = self.plot_clean_sheets(x, clean_sheets, y_goals_scored, y_goals_conceded, y_avg)
+        self.format_clean_sheets_fig(fig, x,  y_goals_scored, y_goals_conceded, matchday_labels)
         return fig
 
-    def clean_sheets_data_points(self, y_goals_conceded: list[int]) -> tuple[list[Optional[float]], 
-                                                                             list[Optional[float]]]:
-        y_value = 0.5  # Line in the centre of the graph
-        not_clean_sheets = [y_value if goals != 0 else None for goals in y_goals_conceded]
-        clean_sheets = [y_value if goals == 0 else None for goals in y_goals_conceded]
-
-        return clean_sheets, not_clean_sheets
+    def clean_sheets_data_points(self, y_goals_conceded: list[int]) -> list[int]:
+        return (np.array(y_goals_conceded) == 0).astype(int)
 
     # ---------------------- GOALS SCORED AND CONCEDED -------------------------
 
@@ -584,16 +569,16 @@ class GoalsScoredAndConceded(Graph):
                    marker_color='#77DD77',
                    marker_line_color='#006400',
                    marker_line_width=2,
-                   hovertemplate='Matchday %{x}<br>%{y} goals scored<extra></extra>',
-                   hoverinfo=('x+y')),
+                   hovertemplate='%{y} goals scored<extra></extra>',
+                   hoverinfo=('y')),
             go.Bar(name='Goals Conceded', x=x, y=y_goals_conceded,
                    marker_color='#C23B22',
                    marker_line_color='#8B0000',
                    marker_line_width=2,
-                   hovertemplate='Matchday %{x}<br>%{y} goals conceded<extra></extra>',
-                   hoverinfo=('x+y')),
+                   hovertemplate='%{y} goals conceded<extra></extra>',
+                   hoverinfo=('y')),
             go.Scatter(name='Avg', x=x, y=y_avg, mode='lines',
-                       hovertemplate='Matchday %{x}<br>%{y} goals scored on average<extra></extra>',
+                       hovertemplate='%{y} goals<extra></extra>',
                        line=dict(color='#0080FF', width=2))
         ])
 
@@ -609,7 +594,7 @@ class GoalsScoredAndConceded(Graph):
         # Config graph layout
         fig.update_layout(
             autosize=True,
-            barmode='relative',
+            barmode='stack',
             yaxis=dict(
                 title_text='Goals',
                 autorange=False,
@@ -621,12 +606,13 @@ class GoalsScoredAndConceded(Graph):
                 fixedrange=True
             ),
             xaxis=dict(
-                title_text='Matchday',
+                # title_text='Matchday',
                 tickmode='array',
-                ticktext=matchday_labels,
+                # ticktext=matchday_labels,
                 tickvals=x,
                 showgrid=False,
                 showline=False,
+                showticklabels=False,
                 fixedrange=True
             ),
             margin=dict(
@@ -644,6 +630,7 @@ class GoalsScoredAndConceded(Graph):
                 xanchor='left',
                 x=0.01
             ),
+            # yaxis_title=None
         )
 
     def goals_scored_and_conceded_fig(self, x: list[datetime], y_goals_scored: list[int], 
@@ -720,7 +707,7 @@ class GoalsScoredAndConceded(Graph):
         return x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels
 
     @timebudget
-    def update(self, form: Form, team: str = None, display: bool = False):        
+    def update(self, form: Form, team: str = None, display: bool = False):
         if form.df.empty:
             print('Error: Cannot generate goals scored and conceded graph: Form dataframe is empty')
         else:
@@ -734,8 +721,9 @@ class GoalsScoredAndConceded(Graph):
             for team_name in teams_to_update:
                 x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self.goals_scored_and_conceeded_data_points(form, team_name)
                 if y_goals_scored and y_goals_conceded:
-                    fig = self.goals_scored_and_conceded_fig(
-                        x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels)
+                    fig = self.goals_scored_and_conceded_fig(x, y_goals_scored, 
+                                                             y_goals_conceded, y_avg, 
+                                                             matchday_labels)
 
                     if display:
                         fig.show()
@@ -743,9 +731,9 @@ class GoalsScoredAndConceded(Graph):
                     self.save_fig(fig, team_name, 'goals-scored-and-conceded')
 
                 # EXTRA GRAPH FROM SAME DATA: CLEAN SHEETS
-                clean_sheets, not_clean_sheets = self.clean_sheets_data_points(y_goals_conceded)
                 if x:
-                    fig = self.clean_sheets_fig(x, clean_sheets, not_clean_sheets)
+                    clean_sheets = self.clean_sheets_data_points(y_goals_conceded)
+                    fig = self.clean_sheets_fig(x, clean_sheets, y_goals_scored, y_goals_conceded, y_avg, matchday_labels)
 
                     if display:
                         fig.show()

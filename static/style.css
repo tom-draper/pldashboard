@@ -870,8 +870,10 @@ img {
     overflow-x: hidden;
   }
   .resizable-graph {
-    width: 105% !important;
     height: 250px !important;
+  }
+  .plotly-graph-div {
+    width: 105% !important;
   }
 }
 
