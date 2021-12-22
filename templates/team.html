@@ -305,10 +305,11 @@
   </div>
   </div>
   <script>
+    let ssp1 = document.getElementById('ssp1');
+    let ssp2 = document.getElementById('ssp2');
+    let ssp3 = document.getElementById('ssp3');
+
     function setPositionalOffset() {
-      const ssp1 = document.getElementById('ssp1');
-      const ssp2 = document.getElementById('ssp2');
-      const ssp3 = document.getElementById('ssp3');
       document.documentElement.style.setProperty('--ssp1-offset', -ssp1.clientWidth / 2 + "px");
       document.documentElement.style.setProperty('--ssp2-offset', -ssp2.clientWidth / 2 + "px");
       document.documentElement.style.setProperty('--ssp3-offset', -ssp3.clientWidth / 2 + "px");
@@ -333,8 +334,8 @@
       window.dispatchEvent(evt);
     }
 
-    // If in mobile view, refresh the Graph svg to snap to the smaller height 
-    // of the containing div
+    // If initial loaded window width is small, refresh Plotly svg to snap
+    // to smaller height of contianing div
     attachClass()
     if (window.innerWidth < 1200) {
       triggerResize();

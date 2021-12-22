@@ -752,29 +752,29 @@ img {
   }
   .full-row-graph,
   .mini-graph {
-    margin-left: 7px;
+    margin-left: 10px;
   }
   .season-stat {
     margin-bottom: 1.2em;
   }
   .season-stat-value {
-    font-size: 1.7em;
+    font-size: 1.4em;
     letter-spacing: 0.01em;
   }
   .season-stat-position {
-    top: -28px;
+    top: -22px;
   }
   #ssp1 {
-    right: calc(var(--ssp1-offset) - 20px);
+    right: calc(var(--ssp1-offset) - 18px);
   }
   #ssp2 {
-    right: calc(var(--ssp2-offset) - 20px);
+    right: calc(var(--ssp2-offset) - 18px);
   }
   #ssp3 {
-    right: calc(var(--ssp3-offset) - 20px);
+    right: calc(var(--ssp3-offset) - 18px);
   }
   .season-stat-text {
-    font-size: 0.65em;
+    font-size: 0.55em;
     letter-spacing: -0.04em;
   }
   .form-details {
@@ -830,7 +830,7 @@ img {
     font-size: 16px;
   }
   .table-row.this-team {
-    padding: 10px 5%;
+    padding: 10px 5% 8px 5%;
   }
   .next-game-logo {
     height: 190px;

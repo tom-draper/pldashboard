@@ -304,8 +304,8 @@ class Predictions:
                         if not row['AtHome']:
                             home_initials, away_initials = away_initials, home_initials
 
-                        actual_scores[(home_initials, away_initials)] = {'home_goals': home_goals, 
-                                                                         'away_goals': away_goals}
+                        actual_scores[(home_initials, away_initials)] = {'homeGoals': home_goals, 
+                                                                         'awayGoals': away_goals}
 
         return actual_scores
 
