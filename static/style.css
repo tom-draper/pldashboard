@@ -387,16 +387,20 @@ img {
 }
 .Drew {
   background-color: #E1AE2D60;
+  background-color: #ffb2477e;
+  
 }
 .Won {
   background-color: #4EE1253A;
+  background-color: #77dd7798;
 }
 .Lost {
-  background-color: #D3232345;
+  background-color: #ff454588;
+  /* background-color: #ff492990; */
 }
 .past-result-date {
   font-size: 13px;
-  color: grey;
+  color: rgb(104, 104, 104);
 }
 .prev-results-title {
   font-weight: 700;
@@ -592,7 +596,7 @@ img {
     margin-top: 0;
   }
   .season-stat-position {
-    top: -42px;
+    top: -40px;
   }
   #ssp1 {
     right: calc(var(--ssp1-offset) - 40px);
@@ -894,14 +898,13 @@ img {
   font-size: 1.3em;
 }
 .green {
-  background-color: #7D7;
+  background-color: #77DD77;
 }
 .yellow {
   background-color: #FFB347;
 }
 .red {
   background-color: #C23B22;
-  background-color: #db492f;
 }
 /* .green {
   background-color: #54FE68;
