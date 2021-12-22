@@ -482,7 +482,7 @@ class PositionOverTime(Graph):
 class GoalsScoredAndConceded(Graph):
     # -------------------- GOALS SCORED AND CONCEDED GRAPHS --------------------
 
-    def plot_clean_sheets(self, x, clean_sheets, y_goals_scored, y_goals_conceded, y_avg):
+    def plot_clean_sheets(self, x, clean_sheets):
         midline = [0.5]*len(x)
                 
         fig = go.Figure(data=[
@@ -509,7 +509,7 @@ class GoalsScoredAndConceded(Graph):
 
         return fig
 
-    def format_clean_sheets_fig(self, fig, x, y_goals_scored, y_goals_conceded, matchday_labels):
+    def format_clean_sheets_fig(self, fig, x, matchday_labels):
         # Config graph layout
         fig.update_layout(
             height=60,
@@ -551,10 +551,9 @@ class GoalsScoredAndConceded(Graph):
                         showgrid=False)
         )
 
-    def clean_sheets_fig(self, x: list[datetime], clean_sheets: list[Optional[float]], 
-                         y_goals_scored, y_goals_conceded, y_avg, matchday_labels) -> FigureWidget:
-        fig = self.plot_clean_sheets(x, clean_sheets, y_goals_scored, y_goals_conceded, y_avg)
-        self.format_clean_sheets_fig(fig, x,  y_goals_scored, y_goals_conceded, matchday_labels)
+    def clean_sheets_fig(self, x: list[datetime], clean_sheets: list[Optional[float]], matchday_labels) -> FigureWidget:
+        fig = self.plot_clean_sheets(x, clean_sheets)
+        self.format_clean_sheets_fig(fig, x, matchday_labels)
         return fig
 
     def clean_sheets_data_points(self, y_goals_conceded: list[int]) -> list[int]:
@@ -586,7 +585,7 @@ class GoalsScoredAndConceded(Graph):
 
     def format_goals_scored_and_conceded_fig(self, fig: FigureWidget, 
             x: list[datetime], y_goals_scored: list[int], 
-            y_goals_conceded: list[int], matchday_labels: list[str]):
+            y_goals_conceded: list[int]):
         # Get the maximum y-axis value (6 goals unless a higher value found)
         # max_y = max(max(y_goals_scored), max(y_goals_conceded), 6)
         max_y = max(np.max(np.array(y_goals_scored) + np.array(y_goals_conceded)), 8)
@@ -634,12 +633,11 @@ class GoalsScoredAndConceded(Graph):
         )
 
     def goals_scored_and_conceded_fig(self, x: list[datetime], y_goals_scored: list[int], 
-                                      y_goals_conceded: list[int], y_avg: list[float], 
-                                      matchday_labels: list[str]) -> FigureWidget:
+            y_goals_conceded: list[int], y_avg: list[float]) -> FigureWidget:
         fig = self.plot_goals_scored_and_conceded(x, y_goals_scored, 
                                                   y_goals_conceded, y_avg)
         self.format_goals_scored_and_conceded_fig(fig, x, y_goals_scored, 
-                                                  y_goals_conceded, matchday_labels)
+                                                  y_goals_conceded)
         return fig
 
     def _num_goals(self, team_matchday: dict):
@@ -722,8 +720,7 @@ class GoalsScoredAndConceded(Graph):
                 x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self.goals_scored_and_conceeded_data_points(form, team_name)
                 if y_goals_scored and y_goals_conceded:
                     fig = self.goals_scored_and_conceded_fig(x, y_goals_scored, 
-                                                             y_goals_conceded, y_avg, 
-                                                             matchday_labels)
+                                                             y_goals_conceded, y_avg)
 
                     if display:
                         fig.show()
@@ -733,7 +730,7 @@ class GoalsScoredAndConceded(Graph):
                 # EXTRA GRAPH FROM SAME DATA: CLEAN SHEETS
                 if x:
                     clean_sheets = self.clean_sheets_data_points(y_goals_conceded)
-                    fig = self.clean_sheets_fig(x, clean_sheets, y_goals_scored, y_goals_conceded, y_avg, matchday_labels)
+                    fig = self.clean_sheets_fig(x, clean_sheets, matchday_labels)
 
                     if display:
                         fig.show()
