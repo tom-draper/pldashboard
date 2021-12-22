@@ -269,7 +269,7 @@ class Fixtures(DF):
         for matchday_no in self.df.columns.unique(level=0):
             for _, row in self.df[matchday_no].iterrows():
                 score = row['Score']
-                if score != 'None - None':
+                if score is not None:
                     h, a = util.extract_int_score(score)
                     dist[h+a] += 1
                     
@@ -294,20 +294,52 @@ class Fixtures(DF):
         plt.show()
     
     def _insert_home_team_row(self, matchday, match, team_names):
+        score = None
+        if match['score']['fullTime']['homeTeam'] is not None:
+            score = f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}"
+        
         matchday[(match["matchday"], 'Date')].append(datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ"))
         matchday[(match["matchday"], 'AtHome')].append(True)
         matchday[(match["matchday"], 'Team')].append(match['awayTeam']['name'].replace('&', 'and'))
         matchday[(match["matchday"], 'Status')].append(match['status'])
-        matchday[(match["matchday"], 'Score')].append(f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}")
+        matchday[(match["matchday"], 'Score')].append(score)
         team_names.append(match['homeTeam']['name'].replace('&', 'and'))
     
     def _insert_away_team_row(self, matchday, match, team_names):
+        score = None
+        if match['score']['fullTime']['homeTeam'] is not None:
+            score = f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}"
+
         matchday[(match["matchday"], 'Date')].append(datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ"))
         matchday[(match["matchday"], 'AtHome')].append(False)
         matchday[(match["matchday"], 'Team')].append(match['homeTeam']['name'].replace('&', 'and'))
         matchday[(match["matchday"], 'Status')].append(match['status'])
-        matchday[(match["matchday"], 'Score')].append(f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}")
+        matchday[(match["matchday"], 'Score')].append(score)
         team_names.append(match['awayTeam']['name'].replace('&', 'and'))
+    
+    def _insert_team_row(self, matchday: int, match: dict, team_names: list[str], 
+                         home_team: bool):
+        date = datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ")
+        
+        if home_team:
+            team_name = match['homeTeam']['name'].replace('&', 'and')
+            opp_team_name = match['awayTeam']['name'].replace('&', 'and')
+        else:
+            team_name = match['awayTeam']['name'].replace('&', 'and')
+            opp_team_name = match['homeTeam']['name'].replace('&', 'and')
+        
+        score = None
+        if match['score']['fullTime']['homeTeam'] is not None:
+            score = f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}"
+        
+        matchday[(match['matchday'], 'Date')].append(date)
+        matchday[(match['matchday'], 'AtHome')].append(home_team)
+        matchday[(match['matchday'], 'Team')].append(opp_team_name)
+        matchday[(match['matchday'], 'Status')].append(match['status'])
+        matchday[(match['matchday'], 'Score')].append(score)
+        team_names.append(team_name)
+        
+        
 
     @timebudget
     def update(self, json_data: dict, season: int, display: bool = False):
@@ -331,7 +363,7 @@ class Fixtures(DF):
             Status: the current status of that match, either 'FINISHED', 'IN PLAY' 
                 or 'SCHEDULED'
             Score: the score of that game, either 'X - Y' if status is 'FINISHED'
-                or None - None if status is 'SCHEDULED' or 'IN-PLAY'
+                or None if status is 'SCHEDULED' or 'IN-PLAY'
         
         Args:
             json_data dict: the json data storage used to build the dataframe
@@ -364,8 +396,8 @@ class Fixtures(DF):
                 prev_matchday = match['matchday']
                 team_names = []
 
-            self._insert_home_team_row(matchday, match, team_names)
-            self._insert_away_team_row(matchday, match, team_names)
+            self._insert_team_row(matchday, match, team_names, True)
+            self._insert_team_row(matchday, match, team_names, False)
 
         # Add last matchday (38) dataframe to list
         df_matchday = pd.DataFrame(matchday)
@@ -535,7 +567,7 @@ class Form(DF):
         return form
     
     def _not_played_current_matchday(self, team_name: str, current_matchday: int) -> bool:
-        return self.df.at[team_name, (current_matchday, 'Score')] == 'None - None'
+        return self.df.at[team_name, (current_matchday, 'Score')] == None
 
     def _get_latest_teams_played(self, team_name: str, matchday: int, N: int) -> list[str]:
         latest_teams_played = []
@@ -605,7 +637,7 @@ class Form(DF):
         pts_col = []
         col = form[(matchday_no, 'Score')]
         for team, score in col.iteritems():
-            if score == 'None - None':
+            if score is None:
                 gd = 0
                 pts = 0
             else:
@@ -669,7 +701,7 @@ class Form(DF):
             for i in range(row.size):
                 at_home = form.at[team, (matchday_no-i, 'AtHome')]
                 score = row[(matchday_no-i, 'Score')]
-                if score != 'None - None':
+                if score is not None:
                     home, away = util.extract_int_score(score)
                     self._append_to_from_str(form_str, home, away, at_home)
                 else:
@@ -859,7 +891,7 @@ class SeasonStats(DF):
         for matchday in matchdays:
             at_home = row[matchday]['AtHome']
             score = row[matchday]['Score']
-            if score != 'None - None':
+            if score is not None:
                 home, away = util.extract_int_score(score)
                 
                 if at_home:

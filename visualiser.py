@@ -137,7 +137,7 @@ class Fixtures(Graph):
 
             # Add team played, home or away and the final score if game has already happened
             home_away = 'Home' if match['AtHome'] else 'Away'
-            if match['Score'] != 'None - None':
+            if match['Score'] is not None:
                 match_detail = f"{match['Team']} ({home_away})  {match['Score']}"
             else:
                 match_detail = f"{match['Team']} ({home_away})"
@@ -644,7 +644,6 @@ class GoalsScoredAndConceded(Graph):
         home, _, away = team_matchday['Score'].split(' ')
 
         num_goals_scored, num_goals_conceded = map(int, (home, away))
-
         if not team_matchday['AtHome']:
             num_goals_scored, num_goals_conceded = num_goals_conceded, num_goals_scored 
 
@@ -654,19 +653,20 @@ class GoalsScoredAndConceded(Graph):
         # Append the average goals for this matchday to average goals list
         goals_scored = []
         for scoreline in matchday_scorelines.values.tolist():
-            if scoreline != 'None - None':
+            if scoreline is not None:
                 home, _, away = scoreline.split(' ')
                 goals_scored.append(int(home) + int(away))
         # Append the mean goals scored (equal to mean goals conceded) this gameweek
         y_avg = sum(goals_scored) / len(goals_scored)
         return y_avg
-
-    def goals_scored_and_conceeded_data_points(self, form: Form, 
-                                               team: str) -> tuple[list[datetime], 
-                                                                   list[int], 
-                                                                   list[int], 
-                                                                   list[float], 
-                                                                   list[str]]:
+    
+    def sort_by_x_axis(self, x, y_goals_scored, y_goals_conceded, y_avg):
+        if x and y_goals_scored and y_goals_conceded and y_avg:
+            x, y_goals_scored, y_goals_conceded, y_avg = map(
+                list, zip(*sorted(zip(x, y_goals_scored, y_goals_conceded, y_avg))))
+        return x, y_goals_scored, y_goals_conceded, y_avg
+    
+    def _data_points(self, form, team):
         # Dates of matchdays that have been played
         x_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'Date']
         # All y lists have the same x date values
@@ -684,7 +684,7 @@ class GoalsScoredAndConceded(Graph):
             # Append the teams number of goals scored and cocneded this matchday
             team_matchday = team_form[matchday_no]
             # If match has been played
-            if team_matchday['Score'] != 'None - None':
+            if team_matchday['Score'] is not None:
                 matchday_scorelines = form.df[matchday_no]['Score']
                 y_avg.append(self._avg_goals(matchday_scorelines))
                 gs, gc = self._num_goals( team_matchday)
@@ -695,12 +695,22 @@ class GoalsScoredAndConceded(Graph):
                 # Remove elements from other lists to ensure all lists will be same length
                 del x[idx]
                 del matchday_nums[idx]
+        
+        matchday_labels = list(map(str, matchday_nums))  # x labels
+        
+        return x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels
+        
+    
+    def goals_scored_and_conceeded_data_points(self, form: Form, 
+                                               team: str) -> tuple[list[datetime], 
+                                                                   list[int], 
+                                                                   list[int], 
+                                                                   list[float], 
+                                                                   list[str]]:
+        
+        x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self._data_points(form, team)
 
-        if x and y_goals_scored and y_goals_conceded and y_avg:
-            x, y_goals_scored, y_goals_conceded, y_avg = map(
-                list, zip(*sorted(zip(x, y_goals_scored, y_goals_conceded, y_avg))))
-
-        matchday_labels = list(map(str, matchday_nums))
+        x, y_goals_scored, y_goals_conceded, y_avg = self.sort_by_x_axis(x, y_goals_scored, y_goals_conceded, y_avg)
 
         return x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels
 
@@ -748,7 +758,9 @@ class Visualiser:
     def update(self, fixtures: Fixtures, team_ratings: TeamRatings,
                home_advantages: HomeAdvantages, form: Form, team: str = None, 
                display_graphs: bool = False):
-        self.fixtures_graph.update(fixtures, team_ratings, home_advantages, team=team, display=display_graphs)
+        self.fixtures_graph.update(fixtures, team_ratings, home_advantages, 
+                                   team=team, display=display_graphs)
         self.form_over_time_graph.update(form, team=team, display=display_graphs)
         self.position_over_time_graph.update(form, team=team, display=display_graphs)
-        self.goals_scored_and_conceded_graph.update(form, team=team, display=display_graphs)
+        self.goals_scored_and_conceded_graph.update(form, team=team, 
+                                                    display=display_graphs)
