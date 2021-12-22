@@ -572,7 +572,8 @@ class Form(DF):
     def _get_latest_teams_played(self, team_name: str, matchday: int, N: int) -> list[str]:
         latest_teams_played = []
         if matchday is not None:
-            latest_teams_played = self._get_last_n_values(team_name, 'Team', matchday, N).reverse()
+            latest_teams_played = self._get_last_n_values(team_name, 'Team', matchday, N)
+        latest_teams_played.reverse()
         return latest_teams_played
 
     def _get_form_rating(self, team_name: str, matchday: int, n_games: int) -> float:
@@ -586,8 +587,8 @@ class Form(DF):
         if matchday is not None:
             won_against_star_team = self._get_last_n_values(team_name, 'WonAgainstStarTeam', matchday, N)
             # Replace boolean values with CSS tag for super win image
-            won_against_star_team = ['star-team' if x else 'not-star-team' for x in won_against_star_team].reverse()
-
+            won_against_star_team = ['star-team' if x else 'not-star-team' for x in won_against_star_team]
+        won_against_star_team.reverse()
         return won_against_star_team
     
     def _get_last_n_values(self, team_name: str, column_name: str, start_matchday: int, 
