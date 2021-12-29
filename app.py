@@ -160,7 +160,8 @@ def get_params(team_name_hyphen: str) -> TeamParams:
     prediction = get_prediction(team.names.full_name)
     table_snippet = get_table_snippet(team.names.full_name)
     last_updated = updater.last_updated
-    return TeamParams(season, team, form, season_stats, next_game, prediction, table_snippet, last_updated)
+    return TeamParams(season, team, form, season_stats, next_game, prediction, 
+                      table_snippet, last_updated)
 
 
 @app.route('/liverpool')

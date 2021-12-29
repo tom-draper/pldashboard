@@ -24,7 +24,7 @@ class Graph:
             path: str = './templates/graphs/', 
             auto_open: bool = False,
             display_mode_bar: bool = False, 
-            scroll_zoom: bool = False
+            scroll_zoom: bool = False,
         ):
         file_team_name = '-'.join(team.lower().split()
                                   [:-1]).replace('&', 'and')
@@ -54,7 +54,7 @@ class Fixtures(Graph):
             x: list[datetime], 
             y: list[float],
             sizes: list[int], 
-            details: list[str]
+            details: list[str],
         ) -> FigureWidget:
         FIXTURES_COLOUR_SCALE = ['#01c626', '#08a825',  '#0b7c20', '#0a661b',
                                  '#064411', '#000000', '#5b1d15', '#85160f',
@@ -124,7 +124,7 @@ class Fixtures(Graph):
             y: list[float], 
             details: list[str],
             sizes: list[int], 
-            NOW: datetime
+            NOW: datetime,
         ) -> FigureWidget:
         fig = self._plot_fixtures_points(x, y, sizes, details)
         self._plot_current_day(fig, NOW)
@@ -135,7 +135,7 @@ class Fixtures(Graph):
             self, 
             match: dict, 
             team_ratings: TeamRatings, 
-            home_advantages: HomeAdvantages
+            home_advantages: HomeAdvantages,
         ):
         # Get rating of the opposition team
         rating = team_ratings.df.loc[match['Team'], 'TotalRating']
@@ -161,7 +161,7 @@ class Fixtures(Graph):
             match_n: int, 
             NOW: datetime, 
             N_MATCHES: int, 
-            BIG_MARKER_SIZE: int
+            BIG_MARKER_SIZE: int,
         ):
         if match_n == 0:
             # If haven't played first game of season
@@ -178,7 +178,7 @@ class Fixtures(Graph):
             NOW: datetime, 
             N_MATCHES: int,
             DEFAULT_MARKER_SIZE: int, 
-            BIG_MARKER_SIZE: int
+            BIG_MARKER_SIZE: int,
         )-> tuple[list[datetime], list[float], list[str], list[int]]:
         x = []
         y = []
@@ -223,7 +223,7 @@ class Fixtures(Graph):
             team_ratings: TeamRatings,
             home_advantages: HomeAdvantages, 
             team: str = None,
-            display: bool = False
+            display: bool = False,
         ):
 
         teams_to_update = self._teams_to_update(team, fixtures)
@@ -259,7 +259,8 @@ class FormOverTime(Graph):
             x: list[datetime],
             ys: list[list[float]], 
             team: str, 
-            team_names: list[str]):
+            team_names: list[str],
+        ):
         for idx, y in enumerate(ys):
             if team_names[idx] != team:
                 fig.add_trace(go.Scatter(x=x,
@@ -292,7 +293,7 @@ class FormOverTime(Graph):
             self, 
             fig: FigureWidget, 
             x: list[datetime],
-            matchday_labels: list[str]
+            matchday_labels: list[str],
         ):
         y_labels = [i for i in range(0, 101, 10)]
 
@@ -335,7 +336,7 @@ class FormOverTime(Graph):
             ys: list[list[float]],
             matchday_labels: list[str], 
             team: str, 
-            team_names: list[str]
+            team_names: list[str],
         ) -> FigureWidget:
         fig = go.Figure()
         self._plot_teams_form(fig, x, ys, team, team_names)
@@ -366,7 +367,7 @@ class FormOverTime(Graph):
 
     def _form_over_time_data_points(
             self, 
-            form: Form
+            form: Form,
         ) -> tuple[list[datetime], list[str], list[list[float]]]:
         # All ys have the same x date values
         x = self._x_data_points(form)
@@ -415,7 +416,7 @@ class PositionOverTime(Graph):
             x: list[datetime],
             ys: list[list[float]], 
             team: str,
-            team_names: list[str]
+            team_names: list[str],
         ):
         for idx, y in enumerate(ys):
             if team_names[idx] != team:
@@ -629,7 +630,7 @@ class GoalsScoredAndConceded(Graph):
             self, 
             fig: FigureWidget, 
             x: list[datetime],
-            matchday_labels: list[str]
+            matchday_labels: list[str],
         ):
         # Config graph layout
         fig.update_layout(
@@ -676,7 +677,7 @@ class GoalsScoredAndConceded(Graph):
             self, 
             x: list[datetime], 
             clean_sheets: list[Optional[float]],
-            matchday_labels: list[str]
+            matchday_labels: list[str],
         ) -> FigureWidget:
         fig = self._plot_clean_sheets(x, clean_sheets)
         self._format_clean_sheets_fig(fig, x, matchday_labels)
@@ -692,7 +693,7 @@ class GoalsScoredAndConceded(Graph):
             x: list[datetime], 
             y_goals_scored: list[int],
             y_goals_conceded: list[int], 
-            y_avg: list[float]
+            y_avg: list[float],
         ):
         fig = go.Figure(data=[
             go.Bar(name='Goals Scored', x=x, y=y_goals_scored,
@@ -719,7 +720,7 @@ class GoalsScoredAndConceded(Graph):
             fig: FigureWidget,
             x: list[datetime], 
             y_goals_scored: list[int], 
-            y_goals_conceded: list[int]
+            y_goals_conceded: list[int],
         ):
         # Get the maximum y-axis value (6 goals unless a higher value found)
         max_y = max(np.max(np.array(y_goals_scored) +
@@ -769,7 +770,7 @@ class GoalsScoredAndConceded(Graph):
             x: list[datetime], 
             y_goals_scored: list[int],
             y_goals_conceded: list[int], 
-            y_avg: list[float]
+            y_avg: list[float],
         ) -> FigureWidget:
         fig = self._plot_goals_scored_and_conceded(x, y_goals_scored,
                                                   y_goals_conceded, y_avg)
@@ -802,7 +803,7 @@ class GoalsScoredAndConceded(Graph):
             x: list[datetime], 
             y_goals_scored: list[int],
             y_goals_conceded: list[int], 
-            y_avg: list[float]
+            y_avg: list[float],
         ):
         if x and y_goals_scored and y_goals_conceded and y_avg:
             x, y_goals_scored, y_goals_conceded, y_avg = map(
@@ -812,7 +813,7 @@ class GoalsScoredAndConceded(Graph):
     def _data_points(
             self, 
             form: Form, 
-            team: str
+            team: str,
         ) -> tuple[list[datetime], list[int], list[int], list[float], list[str]]:
         # Dates of matchdays that have been played
         x_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'Date']
@@ -851,7 +852,7 @@ class GoalsScoredAndConceded(Graph):
     def _goals_scored_and_conceeded_data_points(
             self, 
             form: Form,
-            team: str
+            team: str,
         ) -> tuple[list[datetime], list[int], list[int], list[float], list[str]]:
 
         x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self._data_points(

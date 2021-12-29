@@ -89,8 +89,8 @@ class Updater:
             self.last_updated = datetime.now().strftime('Last updated: %Y-%m-%d %H:%M:%S')
 
     def save_data(self):
-        """Save current season fixtures and standings data in self.json_data to 
-        json files."""
+        """ Save current season fixtures and standings data in self.json_data to 
+            json files. """
         for type in ('fixtures', 'standings'):
             with open(f'data/{type}_{self.current_season}.json', 'w') as f:
                 json.dump(self.json_data[type][self.current_season], f)
@@ -108,27 +108,59 @@ class Updater:
 
     def update_dataframes(self, n_seasons: int, display_tables: bool = False):
         # Standings for the last [n_seasons] seasons
-        self.data.standings.update(self.json_data, self.data.team_names,
-                                   self.current_season, n_seasons, display=display_tables)
+        self.data.standings.update(
+            self.json_data, 
+            self.data.team_names,
+            self.current_season, 
+            n_seasons, 
+            display=display_tables
+        )
         # Fixtures for the whole season for each team
-        self.data.fixtures.update(self.json_data, self.current_season, display=display_tables)
+        self.data.fixtures.update(
+            self.json_data, 
+            self.current_season, 
+            display=display_tables
+        )
         # Ratings for each team, based on last <no_seasons> seasons standings table
-        self.data.team_ratings.update(self.data.standings, self.current_season,
-                                      self.games_threshold, n_seasons, display=display_tables)
+        self.data.team_ratings.update(
+            self.data.standings, 
+            self.current_season,
+            self.games_threshold, 
+            n_seasons,
+            display=display_tables
+        )
         # Calculated values to represent the personalised advantage each team has at home
-        self.data.home_advantages.update(self.json_data, self.current_season,
-                                         self.home_games_threshold, n_seasons,
-                                         display=display_tables)
+        self.data.home_advantages.update(
+            self.json_data, 
+            self.current_season,
+            self.home_games_threshold, 
+            n_seasons,
+            display=display_tables
+        )
         # Calculated form values for each team for each matchday played so far
-        self.data.form.update(self.data.fixtures, self.data.standings, 
-                              self.data.team_ratings, self.star_team_threshold, 
-                              display=display_tables)
+        self.data.form.update(
+            self.data.fixtures, 
+            self.data.standings, 
+            self.data.team_ratings,
+            self.star_team_threshold, 
+            display=display_tables
+        )
         # Season metrics
-        self.data.season_stats.update(self.data.form, display=display_tables)
+        self.data.season_stats.update(
+            self.data.form, 
+            display=display_tables
+        )
         # Data about the opponent in each team's next game
-        self.data.upcoming.update(self.json_data, self.data.fixtures, self.data.form, 
-                                  self.data.home_advantages, self.data.team_names, 
-                                  self.current_season, n_seasons, display=display_tables)
+        self.data.upcoming.update(
+            self.json_data, 
+            self.data.fixtures, 
+            self.data.form, 
+            self.data.home_advantages, 
+            self.data.team_names, 
+            self.current_season, 
+            n_seasons, 
+            display=display_tables
+        )
         
         
 
@@ -148,9 +180,14 @@ class Updater:
         self.update_dataframes(n_seasons, display_tables)
     
     @timebudget
-    def update_all(self, n_seasons: int = 4, team_name: str = None, 
-                   display_tables: bool = False, display_graphs: bool = False, 
-                   request_new: bool = True):
+    def update_all(
+            self, 
+            n_seasons: int = 4, 
+            team_name: str = None, 
+            display_tables: bool = False, 
+            display_graphs: bool = False, 
+            request_new: bool = True
+        ):
         try:
             self.fetch_json_data(n_seasons, request_new)
         except ValueError as e:
@@ -167,12 +204,22 @@ class Updater:
             print('💾 Saving tables as HTML files...')
             self.save_tables()
             # Use dataframes to update all graph HTML files
-            self.visualiser.update(self.data.fixtures, self.data.team_ratings,
-                                   self.data.home_advantages, self.data.form,
-                                   display_graphs=display_graphs, team=team_name)
+            self.visualiser.update(
+                self.data.fixtures, 
+                self.data.team_ratings,
+                self.data.home_advantages, 
+                self.data.form,
+                display_graphs=display_graphs, 
+                team=team_name
+            )
 
 
 if __name__ == "__main__":
     # Update all dataframes
     updater = Updater(2021)
-    updater.update_all(request_new=True, team_name='Liverpool FC', display_tables=True, display_graphs=False)
+    updater.update_all(
+        request_new=True, 
+        team_name='Liverpool FC', 
+        display_tables=True, 
+        display_graphs=False
+    )
