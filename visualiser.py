@@ -78,7 +78,7 @@ class Fixtures(Graph):
             autosize=True,
             yaxis=dict(
                 title_text='Team Rating (%)',
-                range=[-1, 101],
+                range=[-6, 106],  # Create gap 6 point gap either side for 0% or 100% rated team marker
                 ticktext=y_labels,
                 tickvals=y_labels,
                 gridcolor='gray',
