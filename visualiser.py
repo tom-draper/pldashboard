@@ -42,7 +42,7 @@ class Graph:
 
 
 class Fixtures(Graph):
-    def plot_fixtures_points(self, x: list[datetime], y: list[float],
+    def _plot_fixtures_points(self, x: list[datetime], y: list[float],
                              sizes: list[int], details: list[str]):
         FIXTURES_COLOUR_SCALE = ['#01c626', '#08a825',  '#0b7c20', '#0a661b',
                                  '#064411', '#000000', '#5b1d15', '#85160f',
@@ -59,7 +59,7 @@ class Fixtures(Graph):
                                         hoverinfo=('x+y+text')))
         return fig
 
-    def plot_current_day(self, fig: FigureWidget, NOW: datetime):
+    def _plot_current_day(self, fig: FigureWidget, NOW: datetime):
         fig.add_shape(go.layout.Shape(type='line',
                                       yref='paper',
                                       xref='x',
@@ -71,7 +71,7 @@ class Fixtures(Graph):
                                                 width=1,
                                                 dash='dot')))
 
-    def format_fixtures_fig(self, fig: FigureWidget, x: list[datetime]):
+    def _format_fixtures_fig(self, fig: FigureWidget, x: list[datetime]):
         y_labels = [i for i in range(0, 101, 10)]
 
         fig.update_layout(
@@ -106,11 +106,11 @@ class Fixtures(Graph):
             paper_bgcolor='#fafafa',
         )
 
-    def fixtures_fig(self, x: list[datetime], y: list[float], details: list[str],
+    def _fixtures_fig(self, x: list[datetime], y: list[float], details: list[str],
                      sizes: list[int], NOW: datetime) -> FigureWidget:
-        fig = self.plot_fixtures_points(x, y, sizes, details)
-        self.plot_current_day(fig, NOW)
-        self.format_fixtures_fig(fig, x)
+        fig = self._plot_fixtures_points(x, y, sizes, details)
+        self._plot_current_day(fig, NOW)
+        self._format_fixtures_fig(fig, x)
         return fig
 
     def _rating(self, match, team_ratings, home_advantages):
@@ -139,13 +139,15 @@ class Fixtures(Graph):
         elif (match_n != N_MATCHES) and (x[-2] < NOW <= x[-1]):
             sizes[match_n] = BIG_MARKER_SIZE
 
-    def fixtures_data_points(self, team_fixtures: DataFrame, team_ratings: TeamRatings,
-                             home_advantages: HomeAdvantages, sizes: list[int],
-                             NOW: datetime, N_MATCHES: int,
-                             BIG_MARKER_SIZE: int) -> tuple[list[datetime], list[float], list[str]]:
+    def _fixtures_data_points(self, team_fixtures: DataFrame, team_ratings: TeamRatings,
+                             home_advantages: HomeAdvantages, NOW: datetime, N_MATCHES: int,
+                             DEFAULT_MARKER_SIZE: int, BIG_MARKER_SIZE: int) -> tuple[list[datetime], list[float], list[str]]:
         x = []
         y = []
         details = []
+        # Sizes of each data point marker
+        sizes = [DEFAULT_MARKER_SIZE] * N_MATCHES
+        
         for match_n in range(N_MATCHES):
             match = team_fixtures[match_n+1]
 
@@ -160,13 +162,12 @@ class Fixtures(Graph):
             details.append(match_detail)
 
             # Increase size of point marker if it's the current upcoming match
-            self._increase_next_game_size(
-                sizes, x, match_n, NOW, N_MATCHES, BIG_MARKER_SIZE)
+            self._increase_next_game_size(sizes, x, match_n, NOW, N_MATCHES, BIG_MARKER_SIZE)
 
         # Sort the data by date to remove errors due to match rescheduling
         x, y, details = zip(*sorted(zip(x, y, details)))
 
-        return x, y, details
+        return x, y, details, sizes
 
     def _teams_to_update(self, team: str, fixtures: Fixtures) -> list[str]:
         if team is None:
@@ -188,21 +189,19 @@ class Fixtures(Graph):
         BIG_MARKER_SIZE = 26  # Used to highlight next game
         NOW = datetime.now()
         N_MATCHES = 38
-        # Sizes of each data point marker
-        sizes = [DEFAULT_MARKER_SIZE] * N_MATCHES
 
         for team_name in teams_to_update:
             # Get row of fixtures dataframe
             team_fixtures = fixtures.df.loc[team_name]
-            x, y, details = self.fixtures_data_points(team_fixtures,
-                                                      team_ratings,
-                                                      home_advantages,
-                                                      sizes,
-                                                      NOW,
-                                                      N_MATCHES,
-                                                      BIG_MARKER_SIZE)
+            x, y, details, sizes = self._fixtures_data_points(team_fixtures,
+                                                             team_ratings,
+                                                             home_advantages,
+                                                             NOW,
+                                                             N_MATCHES,
+                                                             DEFAULT_MARKER_SIZE,
+                                                             BIG_MARKER_SIZE)
 
-            fig = self.fixtures_fig(x, y, details, sizes, NOW)
+            fig = self._fixtures_fig(x, y, details, sizes, NOW)
 
             if display:
                 fig.show()
@@ -211,8 +210,7 @@ class Fixtures(Graph):
 
 
 class FormOverTime(Graph):
-
-    def plot_teams_form(self, fig: FigureWidget, x: list[datetime],
+    def _plot_teams_form(self, fig: FigureWidget, x: list[datetime],
                         ys: list[list[float]], team: str, team_names: list[str]):
         for idx, y in enumerate(ys):
             if team_names[idx] != team:
@@ -242,7 +240,7 @@ class FormOverTime(Graph):
                                  hoverinfo=('x+y'),
                                  ))
 
-    def format_form_over_time_fig(self, fig: FigureWidget, x: list[datetime],
+    def _format_form_over_time_fig(self, fig: FigureWidget, x: list[datetime],
                                   matchday_labels: list[str]):
         y_labels = [i for i in range(0, 101, 10)]
 
@@ -279,15 +277,15 @@ class FormOverTime(Graph):
             paper_bgcolor='#fafafa',
         )
 
-    def form_over_time_fig(self, x: list[datetime], ys: list[list[float]],
+    def _form_over_time_fig(self, x: list[datetime], ys: list[list[float]],
                            matchday_labels: list[str], team: str,
                            team_names: list[str]) -> FigureWidget:
         fig = go.Figure()
-        self.plot_teams_form(fig, x, ys, team, team_names)
-        self.format_form_over_time_fig(fig, x, matchday_labels)
+        self._plot_teams_form(fig, x, ys, team, team_names)
+        self._format_form_over_time_fig(fig, x, matchday_labels)
         return fig
 
-    def x_data_points(self, form):
+    def _x_data_points(self, form):
         x_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'Date']
 
         x = []
@@ -298,7 +296,7 @@ class FormOverTime(Graph):
             x.append(datetime.utcfromtimestamp(median_date/1e9))
         return x
 
-    def y_data_points(self, form):
+    def _y_data_points(self, form):
         y_cols = form.df.iloc[:, form.df.columns.get_level_values(
             1) == 'FormRating5']
 
@@ -309,12 +307,12 @@ class FormOverTime(Graph):
             ys.append(y)
         return ys
 
-    def form_over_time_data_points(self, form: Form) -> tuple[list[datetime],
+    def _form_over_time_data_points(self, form: Form) -> tuple[list[datetime],
                                                               list[str],
                                                               list[list[float]]]:
         # All ys have the same x date values
-        x = self.x_data_points(form)
-        ys = self.y_data_points(form)
+        x = self._x_data_points(form)
+        ys = self._y_data_points(form)
 
         # Sort the x-axis data by date to remove errors due to match rescheduling
         matchday_labels = sorted(list(form.df.columns.unique(level=0)))
@@ -339,11 +337,11 @@ class FormOverTime(Graph):
 
         teams_to_update = self._teams_to_update(team, form)
 
-        x, matchday_labels, ys = self.form_over_time_data_points(form)
+        x, matchday_labels, ys = self._form_over_time_data_points(form)
         team_names = form.df.index.values.tolist()
 
         for team_name in teams_to_update:
-            fig = self.form_over_time_fig(
+            fig = self._form_over_time_fig(
                 x, ys, matchday_labels, team_name, team_names)
 
             if display:
@@ -353,8 +351,7 @@ class FormOverTime(Graph):
 
 
 class PositionOverTime(Graph):
-
-    def plot_teams_position_over_time(self, fig: FigureWidget, x: list[datetime],
+    def _plot_teams_position_over_time(self, fig: FigureWidget, x: list[datetime],
                                       ys: list[list[float]], team: str,
                                       team_names: list[str]):
         for idx, y in enumerate(ys):
@@ -386,7 +383,7 @@ class PositionOverTime(Graph):
                                  hoverinfo=('x+y'),
                                  ))
 
-    def plot_position_rect(self, fig: FigureWidget, x0: float, y0: float, 
+    def _plot_position_rect(self, fig: FigureWidget, x0: float, y0: float, 
                            x1: float, y1: float, colour: str):
         fig.add_shape(type='rect',
                       x0=x0,
@@ -400,7 +397,7 @@ class PositionOverTime(Graph):
                       opacity=0.3,
                       layer='below')
 
-    def format_position_over_time_fig(self, fig: FigureWidget, x: list[datetime],
+    def _format_position_over_time_fig(self, fig: FigureWidget, x: list[datetime],
                                       matchday_labels: list[str]):
         positional_values = [i for i in range(1, 21)]
 
@@ -438,19 +435,19 @@ class PositionOverTime(Graph):
             paper_bgcolor='#fafafa',
         )
 
-    def position_over_time_fig(self, x: list[datetime], ys: list[list[int]],
+    def _position_over_time_fig(self, x: list[datetime], ys: list[list[int]],
                                matchday_labels: list[str], team: str,
                                team_names: list[str]) -> FigureWidget:
         fig = go.Figure()
-        self.plot_teams_position_over_time(fig, x, ys, team, team_names)
-        self.plot_position_rect(fig, x[0], 4.5, x[-1], 0.5, '#03AC13')  # Top 4
-        self.plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#008080')  # 5-6
-        self.plot_position_rect(
+        self._plot_teams_position_over_time(fig, x, ys, team, team_names)
+        self._plot_position_rect(fig, x[0], 4.5, x[-1], 0.5, '#03AC13')  # Top 4
+        self._plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#008080')  # 5-6
+        self._plot_position_rect(
             fig, x[0], 20.5, x[-1], 17.5, '#800000')  # Relegation zone
-        self.format_position_over_time_fig(fig, x, matchday_labels)
+        self._format_position_over_time_fig(fig, x, matchday_labels)
         return fig
 
-    def x_data_points(self, form):
+    def _x_data_points(self, form):
         x_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'Date']
 
         x = []
@@ -461,7 +458,7 @@ class PositionOverTime(Graph):
             x.append(datetime.utcfromtimestamp(median_date/1e9))
         return x
 
-    def ys_data_points(self, form):
+    def _ys_data_points(self, form):
         y_cols = form.df.iloc[:,
                               form.df.columns.get_level_values(1) == 'Position']
 
@@ -471,10 +468,10 @@ class PositionOverTime(Graph):
             ys.append(y)
         return ys
 
-    def position_over_time_data_points(self, form: Form) -> tuple[list[datetime], list[str], list[list[int]]]:
+    def _position_over_time_data_points(self, form: Form) -> tuple[list[datetime], list[str], list[list[int]]]:
         # All ys have the same x date values
-        x = self.x_data_points(form)
-        ys = self.ys_data_points(form)
+        x = self._x_data_points(form)
+        ys = self._ys_data_points(form)
 
         # Sort the x-axis data by date to remove errors due to match rescheduling
         matchday_labels = sorted(list(form.df.columns.unique(level=0)))
@@ -500,12 +497,12 @@ class PositionOverTime(Graph):
 
         teams_to_update = self._teams_to_update(team, form)
 
-        x, matchday_labels, ys = self.position_over_time_data_points(form)
+        x, matchday_labels, ys = self._position_over_time_data_points(form)
         team_names = form.df.index.values.tolist()
 
         # Create a fig for each team
         for team_name in teams_to_update:
-            fig = self.position_over_time_fig(
+            fig = self._position_over_time_fig(
                 x, ys, matchday_labels, team_name, team_names)
 
             if display:
@@ -515,8 +512,7 @@ class PositionOverTime(Graph):
 
 
 class GoalsScoredAndConceded(Graph):
-
-    def plot_clean_sheets(self, x: list[datetime], clean_sheets: list[int]):
+    def _plot_clean_sheets(self, x: list[datetime], clean_sheets: list[int]):
         midline = [0.5]*len(x)
 
         fig = go.Figure(data=[
@@ -547,7 +543,7 @@ class GoalsScoredAndConceded(Graph):
 
         return fig
 
-    def format_clean_sheets_fig(self, fig: FigureWidget, x: list[datetime],
+    def _format_clean_sheets_fig(self, fig: FigureWidget, x: list[datetime],
                                 matchday_labels: list[str]):
         # Config graph layout
         fig.update_layout(
@@ -590,18 +586,18 @@ class GoalsScoredAndConceded(Graph):
                         showgrid=False)
         )
 
-    def clean_sheets_fig(self, x: list[datetime], clean_sheets: list[Optional[float]],
+    def _clean_sheets_fig(self, x: list[datetime], clean_sheets: list[Optional[float]],
                          matchday_labels: list[str]) -> FigureWidget:
-        fig = self.plot_clean_sheets(x, clean_sheets)
-        self.format_clean_sheets_fig(fig, x, matchday_labels)
+        fig = self._plot_clean_sheets(x, clean_sheets)
+        self._format_clean_sheets_fig(fig, x, matchday_labels)
         return fig
 
-    def clean_sheets_data_points(self, y_goals_conceded: list[int]) -> list[int]:
+    def _clean_sheets_data_points(self, y_goals_conceded: list[int]) -> list[int]:
         return (np.array(y_goals_conceded) == 0).astype(int)
 
     # ---------------------- GOALS SCORED AND CONCEDED -------------------------
 
-    def plot_goals_scored_and_conceded(self, x: list[datetime], y_goals_scored: list[int],
+    def _plot_goals_scored_and_conceded(self, x: list[datetime], y_goals_scored: list[int],
                                        y_goals_conceded: list[int], y_avg: list[float]):
         fig = go.Figure(data=[
             go.Bar(name='Goals Scored', x=x, y=y_goals_scored,
@@ -623,7 +619,7 @@ class GoalsScoredAndConceded(Graph):
 
         return fig
 
-    def format_goals_scored_and_conceded_fig(self, fig: FigureWidget,
+    def _format_goals_scored_and_conceded_fig(self, fig: FigureWidget,
                                              x: list[datetime], y_goals_scored: list[int], y_goals_conceded: list[int]):
         # Get the maximum y-axis value (6 goals unless a higher value found)
         max_y = max(np.max(np.array(y_goals_scored) +
@@ -668,11 +664,11 @@ class GoalsScoredAndConceded(Graph):
             ),
         )
 
-    def goals_scored_and_conceded_fig(self, x: list[datetime], y_goals_scored: list[int],
+    def _goals_scored_and_conceded_fig(self, x: list[datetime], y_goals_scored: list[int],
                                       y_goals_conceded: list[int], y_avg: list[float]) -> FigureWidget:
-        fig = self.plot_goals_scored_and_conceded(x, y_goals_scored,
+        fig = self._plot_goals_scored_and_conceded(x, y_goals_scored,
                                                   y_goals_conceded, y_avg)
-        self.format_goals_scored_and_conceded_fig(fig, x, y_goals_scored,
+        self._format_goals_scored_and_conceded_fig(fig, x, y_goals_scored,
                                                   y_goals_conceded)
         return fig
 
@@ -696,7 +692,7 @@ class GoalsScoredAndConceded(Graph):
         y_avg = sum(goals_scored) / len(goals_scored)
         return y_avg
 
-    def sort_by_x_axis(self, x: list[datetime], y_goals_scored: list[int],
+    def _sort_by_x_axis(self, x: list[datetime], y_goals_scored: list[int],
                        y_goals_conceded: list[int], y_avg: list[float]):
         if x and y_goals_scored and y_goals_conceded and y_avg:
             x, y_goals_scored, y_goals_conceded, y_avg = map(
@@ -738,7 +734,7 @@ class GoalsScoredAndConceded(Graph):
 
         return x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels
 
-    def goals_scored_and_conceeded_data_points(self, form: Form,
+    def _goals_scored_and_conceeded_data_points(self, form: Form,
                                                team: str) -> tuple[list[datetime],
                                                                    list[int],
                                                                    list[int],
@@ -747,7 +743,7 @@ class GoalsScoredAndConceded(Graph):
 
         x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self._data_points(
             form, team)
-        x, y_goals_scored, y_goals_conceded, y_avg = self.sort_by_x_axis(
+        x, y_goals_scored, y_goals_conceded, y_avg = self._sort_by_x_axis(
             x, y_goals_scored, y_goals_conceded, y_avg)
 
         return x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels
@@ -769,10 +765,10 @@ class GoalsScoredAndConceded(Graph):
         teams_to_update = self._teams_to_update(team, form)
 
         for team_name in teams_to_update:
-            x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self.goals_scored_and_conceeded_data_points(
+            x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self._goals_scored_and_conceeded_data_points(
                 form, team_name)
             if y_goals_scored and y_goals_conceded:
-                fig = self.goals_scored_and_conceded_fig(x, y_goals_scored,
+                fig = self._goals_scored_and_conceded_fig(x, y_goals_scored,
                                                          y_goals_conceded, y_avg)
 
                 if display:
@@ -782,8 +778,8 @@ class GoalsScoredAndConceded(Graph):
 
             # EXTRA GRAPH FROM SAME DATA: CLEAN SHEETS
             if x:
-                clean_sheets = self.clean_sheets_data_points(y_goals_conceded)
-                fig = self.clean_sheets_fig(x, clean_sheets, matchday_labels)
+                clean_sheets = self._clean_sheets_data_points(y_goals_conceded)
+                fig = self._clean_sheets_fig(x, clean_sheets, matchday_labels)
 
                 if display:
                     fig.show()
