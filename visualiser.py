@@ -5,8 +5,8 @@ from typing import Optional
 import numpy as np
 import plotly
 import plotly.graph_objects as go
-from plotly.missing_ipywidgets import FigureWidget
 from pandas.core.frame import DataFrame
+from plotly.missing_ipywidgets import FigureWidget
 from timebudget import timebudget
 
 from data import Fixtures, Form, HomeAdvantages, TeamRatings

@@ -2,7 +2,6 @@ import pytest
 
 from updater import Updater
 
-
 current_season = 2021
 
 updater_old = Updater(current_season)

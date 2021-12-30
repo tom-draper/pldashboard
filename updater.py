@@ -10,6 +10,7 @@ from timebudget import timebudget
 from data import Data
 from visualiser import Visualiser
 
+
 class Updater:
     def __init__(self, current_season: int):
         self.current_season = current_season

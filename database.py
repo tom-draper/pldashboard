@@ -6,9 +6,8 @@ from typing import Optional
 
 import pymongo
 from dotenv import load_dotenv
-from pymongo import collection
-from utilities import Utilities
 
+from utilities import Utilities
 
 util = Utilities()
 

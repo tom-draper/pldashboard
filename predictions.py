@@ -4,11 +4,10 @@ from typing import Union
 
 import pandas as pd
 from pandas.core.frame import DataFrame
-from data import HomeAdvantages
 
+from data import Fixtures, Form, HomeAdvantages, Upcoming
 from database import Database
 from utilities import Utilities
-from data import Fixtures, Form, Upcoming, HomeAdvantages
 
 util = Utilities()
 
