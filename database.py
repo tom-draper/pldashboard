@@ -2,11 +2,11 @@ import json
 from datetime import datetime
 from os import getenv
 from os.path import dirname, join
+from typing import Optional
 
 import pymongo
 from dotenv import load_dotenv
 from pymongo import collection
-
 from utilities import Utilities
 
 
@@ -22,15 +22,15 @@ class Database:
         MONGODB_DATABASE = getenv('MONGODB_DATABASE')
         self.connection_string = f"mongodb+srv://{USERNAME}:{PASSWORD}@main.pvnry.mongodb.net/{MONGODB_DATABASE}?retryWrites=true&w=majority&authSource=admin"
     
-    
-    def get_predictions(self):
+    def get_predictions(self) -> list[dict]:
         client = pymongo.MongoClient(self.connection_string)
         collection = client.PremierLeague.Predictions
         predictions = list(collection.find().sort('datetime', pymongo.DESCENDING))
         client.close()
         return predictions
     
-    def _accuracy_counts(self, played):
+    @staticmethod
+    def _accuracy_counts(played: list[dict]) -> tuple[int, int, float, float]:
         score_correct = 0
         result_correct = 0
         home_goals_diff = 0
@@ -49,7 +49,14 @@ class Database:
 
         return score_correct, result_correct, home_goals_diff, away_goals_diff
     
-    def _avg_accuracy(self, n_played, correct, result_correct, home_goals_diff, away_goals_diff):
+    @staticmethod
+    def _avg_accuracy(
+            n_played: float, 
+            correct: float, 
+            result_correct: float, 
+            home_goals_diff: float, 
+            away_goals_diff: float,
+        ) -> tuple[float, float, float, float]:
         score_accuracy = 0
         results_accuracy = 0
         home_goals_avg_diff = 0
@@ -61,7 +68,7 @@ class Database:
             away_goals_avg_diff = away_goals_diff / n_played
         return score_accuracy, results_accuracy, home_goals_avg_diff, away_goals_avg_diff
     
-    def _calc_accuracy(self, database):
+    def _calc_accuracy(self, database) -> dict[str, float]:
         collection = database.Predictions
         played = collection.find({'actual': { '$ne': None }}, {'_id': 0, 'prediction': 1, 'actual': 1})
         
@@ -75,7 +82,7 @@ class Database:
                     'awayGoalsAvgDiff': away_goals_avg_diff}
         return accuracy
     
-    def _save_accuracy(self, database, accuracy):
+    def _save_accuracy(self, database, accuracy: float):
         collection = database.Accuracy
         collection.replace_one({'_id': 'accuracy'}, accuracy)
         
@@ -91,12 +98,17 @@ class Database:
         
         return accuracy
     
-    def _get_actual_score(self, home_initials: str, away_initials: str, actual_scores: dict):
+    @staticmethod
+    def _get_actual_score(
+            home_initials: str, 
+            away_initials: str, 
+            actual_scores: dict[tuple[str, str], dict[str, int]]
+        ) -> Optional[str]:
         if (home_initials, away_initials) in actual_scores:
             return actual_scores[(home_initials, away_initials)]
         return None
     
-    def _build_predictions(self, preds, actual_scores):
+    def _build_predictions(self, preds: dict, actual_scores: dict[tuple[str, str], dict[str, int]]):
         predictions = []
         for _, p in preds.items():
             actual_score = self._get_actual_score(p['homeInitials'], p['awayInitials'], actual_scores)
@@ -112,13 +124,14 @@ class Database:
             predictions.append(prediction) 
         return predictions
     
-    def _save_predictions(self, database, predictions: list):
+    @staticmethod
+    def _save_predictions(database, predictions: list):
         print('💾 Saving predictions to database...')
         collection = database.Predictions
         for prediction in predictions:
             collection.replace_one({'_id': prediction['_id']}, prediction, upsert=True)
     
-    def update_predictions(self, preds: dict, actual_scores: dict[tuple[str, str]: dict[str, int]]):
+    def update_predictions(self, preds: dict, actual_scores: dict[tuple[str, str], dict[str, int]]):
         """
         Update the MongoDB database with predictions in the preds dict, including
         any actual scores that have been recorded.
@@ -180,7 +193,7 @@ class Database:
         
         client.close()
         
-    def update_actual_scores(self, actual_scores: dict[tuple[str, str]: dict[str, int]]):        
+    def update_actual_scores(self, actual_scores: dict[tuple[str, str], dict[str, int]]):        
         client = pymongo.MongoClient(self.connection_string)
         collection = client.PremierLeague.Predictions
         
@@ -193,7 +206,7 @@ class Database:
                     
         client.close()
     
-    def update_all_actual_scores(self, actual_scores: dict[tuple[str, str]: dict[str, int]]):
+    def update_all_actual_scores(self, actual_scores: dict[tuple[str, str], dict[str, int]]):
         client = pymongo.MongoClient(self.connection_string)
         collection = client.PremierLeague.Predictions
         

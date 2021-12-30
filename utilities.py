@@ -1,4 +1,7 @@
 
+from os import stat
+
+
 class TwoWayDict(dict):
     def __init__(self, dict):
         super().__init__()
@@ -91,23 +94,28 @@ class Utilities:
             # If no match found and input is team name, shorten team name
             return team_name[:3].upper()
 
-    def extract_int_score(self, score: str) -> tuple[int, int]:
+    @staticmethod
+    def extract_int_score(score: str) -> tuple[int, int]:
         home, _, away = score.split(' ')
         return int(home), int(away)
 
-    def extract_str_score(self, score: str) -> tuple[str, str]:
+    @staticmethod
+    def extract_str_score(score: str) -> tuple[str, str]:
         home, _, away = score.split(' ')
         return home, away
     
-    def extract_int_score_from_scoreline(self, score: str) -> tuple[int, int]:
+    @staticmethod
+    def extract_int_score_from_scoreline(score: str) -> tuple[int, int]:
         _, home, _, away, _ = score.split(' ')
         return int(home), int(away)
     
-    def extract_str_score_from_scoreline(self, score: str) -> tuple[str, str]:
+    @staticmethod
+    def extract_str_score_from_scoreline(score: str) -> tuple[str, str]:
         _, home, _, away, _ = score.split(' ')
         return home, away
     
-    def identical_fixtures(self, scoreline1: str, scoreline2: str) -> bool:
+    @staticmethod
+    def identical_fixtures(scoreline1: str, scoreline2: str) -> bool:
         iden_fix = False
         if scoreline1 is not None and scoreline2 is not None:
             home_p, _, _, _, away_p = scoreline1.split(' ')
@@ -115,7 +123,8 @@ class Utilities:
             iden_fix = (home_p == home_s) and (away_p == away_s)
         return iden_fix
 
-    def identical_result(self, pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
+    @staticmethod
+    def identical_result(pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
         return (pred_home_goals == pred_away_goals and act_home_goals == act_away_goals) or \
             (pred_home_goals > pred_away_goals and act_home_goals > act_away_goals) or \
             (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)

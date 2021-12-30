@@ -18,8 +18,8 @@ class Predictor:
         self.form_diff_multiplier = form_diff_multiplier
         self.home_adv_multiplier = home_adv_multiplier
 
+    @staticmethod
     def _outdated_prediction_already_made(
-            self, 
             date: str,
             new_prediction: str,
             predictions: dict
@@ -38,8 +38,8 @@ class Predictor:
 
         return already_made
 
+    @staticmethod
     def _avg_previous_result(
-            self, 
             team_name: str,
             prev_matches: list[dict[str, str]]
         ) -> tuple[float, float]:
@@ -149,7 +149,8 @@ class Predictor:
 
         return pred_scored, pred_conceded
 
-    def _neutral_prev_matches(self, prev_matches: list[dict[str, str]]):
+    @staticmethod
+    def _neutral_prev_matches(prev_matches: list[dict[str, str]]):
         neutral_prev_matches = []
         for match in prev_matches:
             neutral_match = {}
@@ -161,11 +162,11 @@ class Predictor:
 
         return neutral_prev_matches
 
+    @staticmethod
     def _starting_score(
-            self, 
             avg_result: tuple[float, float],
             opp_avg_result: tuple[float, float]
-        ):
+        ) -> tuple[float, float]:
         # Midway between team's avg scored and opposition's avg conceded
         pred_scored = (avg_result[0] + opp_avg_result[1]) / 2
         pred_conceded = (avg_result[1] + opp_avg_result[0]) / 2
@@ -179,7 +180,7 @@ class Predictor:
             pred_conceded: float,
             prev_matches: list[dict[str, str]], 
             prev_meeting_weight: float = 0.5
-        ) -> tuple[float, float, dict[str, str]]:
+        ) -> tuple[float, float]:
         prev_meeting_scored = 0
         prev_meeting_conceded = 0
         if prev_matches:
@@ -229,8 +230,8 @@ class Predictor:
 
         return pred_scored, pred_conceded
 
+    @staticmethod
     def _prediction_details(
-            self, 
             team_name: str, 
             opp_team_name: str,
             pred_scored: float, 
@@ -334,13 +335,15 @@ class Predictions:
         print(f' ℹ️ Predicting correct results with accuracy: {round(self.accuracy["resultAccuracy"]*100, 2)}%')
         print(f' ℹ️ Net predictions: [{self._signed_float_str(self.accuracy["homeGoalsAvgDiff"])}] - [{self._signed_float_str(self.accuracy["awayGoalsAvgDiff"])}]')
 
-    def _signed_float_str(self, value: float) -> str:
+    @staticmethod
+    def _signed_float_str(value: float) -> str:
         value = round(value, 2)
         if value >= 0:
             return f'+{value}'
         return str(value)
 
-    def _get_actual_scores(self, fixtures: Fixtures) -> dict[tuple[str, str], dict]:
+    @staticmethod
+    def _get_actual_scores(fixtures: Fixtures) -> dict[tuple[str, str], dict[str, int]]:
         # To contain a tuple for all actual scores so far this season
         actual_scores = {}
 
@@ -373,10 +376,8 @@ class Predictions:
             upcoming: Upcoming, 
             home_advantages: HomeAdvantages
         ) -> DataFrame:
-        predictions = self.predictor.gen_score_predictions(fixtures, 
-                                                           form, 
-                                                           upcoming, 
-                                                           home_advantages)
+        predictions = self.predictor.gen_score_predictions(
+            fixtures, form, upcoming, home_advantages)
         actual_scores = self._get_actual_scores(fixtures)
         
         self.database.update_predictions(predictions, actual_scores)

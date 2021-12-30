@@ -81,7 +81,8 @@ class Standings(DF):
 
         return table_snippet, team_idx
 
-    def _fill_rows_from_data(self, data: dict) -> dict[str, dict[str, int]]:
+    @staticmethod
+    def _fill_rows_from_data(data: dict) -> dict[str, dict[str, int]]:
         df_rows = {}  # type: dict[str, dict[str, int]]
         for match in data:
             home_team = match['homeTeam']['name'].replace('&', 'and')
@@ -126,11 +127,13 @@ class Standings(DF):
 
         return df_rows
 
-    def _add_gd_col(self, df_rows: dict):
+    @staticmethod
+    def _add_gd_col(df_rows: dict):
         for team in df_rows.keys():
             df_rows[team]['GD'] = df_rows[team]['GF'] - df_rows[team]['GA']
 
-    def _add_position_col(self, df_rows: dict):
+    @staticmethod
+    def _add_position_col(df_rows: dict):
         for idx, team in enumerate(df_rows.keys()):
             # Position is index as they have been sorted by points
             df_rows[team]['Position'] = idx + 1
@@ -160,8 +163,8 @@ class Standings(DF):
         df = df.drop(df[~df.index.isin(team_names)].index)
         return df
 
+    @staticmethod
     def _season_standings(
-            self, 
             json_data: dict, 
             current_teams: list[str], 
             season: int
@@ -254,8 +257,8 @@ class Fixtures(DF):
     def get_n_games_played(self, team_name: str) -> int:
         return (self.df.loc[team_name, (slice(None), 'Status')] == 'FINISHED').values.sum()
     
+    @staticmethod
     def _inc_avg_scored_conceded(
-            self, 
             avg_scored: float, 
             avg_conceded: float, 
             h: int, 
@@ -318,7 +321,8 @@ class Fixtures(DF):
         plt.bar(x, y)
         plt.show()
     
-    def _insert_home_team_row(self, matchday: dict, match: dict, team_names: list[str]):
+    @staticmethod
+    def _insert_home_team_row(matchday: dict, match: dict, team_names: list[str]):
         score = None
         if match['score']['fullTime']['homeTeam'] is not None:
             score = f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}"
@@ -330,7 +334,8 @@ class Fixtures(DF):
         matchday[(match["matchday"], 'Score')].append(score)
         team_names.append(match['homeTeam']['name'].replace('&', 'and'))
     
-    def _insert_away_team_row(self, matchday: dict, match: dict, team_names: list[str]):
+    @staticmethod
+    def _insert_away_team_row(matchday: dict, match: dict, team_names: list[str]):
         score = None
         if match['score']['fullTime']['homeTeam'] is not None:
             score = f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}"
@@ -342,8 +347,8 @@ class Fixtures(DF):
         matchday[(match["matchday"], 'Score')].append(score)
         team_names.append(match['awayTeam']['name'].replace('&', 'and'))
     
+    @staticmethod
     def _insert_team_row(
-            self, 
             matchday: int, 
             match: dict, 
             team_names: list[str], 
@@ -450,10 +455,12 @@ class TeamRatings(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'team_ratings')
 
-    def _calc_rating(self, points: int, gd: int) -> float:
+    @staticmethod
+    def _calc_rating(points: int, gd: int) -> float:
         return points + gd
 
-    def _get_season_weightings(self, no_seasons: int) -> list[float]:
+    @staticmethod
+    def _get_season_weightings(no_seasons: int) -> list[float]:
         mult = 2.5  # High = recent weighted more
         season_weights = [0.01*(mult**3), 0.01*(mult**2), 0.01*mult, 0.01]
         weights = np.array(season_weights[:no_seasons])
@@ -580,7 +587,8 @@ class Form(DF):
 
         return self._get_form_rating(team_name, matchday, 10)
         
-    def _n_should_have_played(self, current_matchday: int, maximum: int) -> int:
+    @staticmethod
+    def _n_should_have_played(current_matchday: int, maximum: int) -> int:
         return min(maximum, current_matchday)
 
     def _not_played_current_matchday(
@@ -683,7 +691,8 @@ class Form(DF):
         won_against_star_team = self._get_won_against_star_team(team_name, matchday, 5)
         return form, latest_teams_played, rating, won_against_star_team
     
-    def _get_points(self, gd: int) -> int:
+    @staticmethod
+    def _get_points(gd: int) -> int:
         if gd > 0:
             pts = 3
         elif gd < 0:
@@ -692,7 +701,8 @@ class Form(DF):
             pts = 1
         return pts
     
-    def _get_gd(self, score: str, at_home: bool) -> int:
+    @staticmethod
+    def _get_gd(score: str, at_home: bool) -> int:
         home, away = util.extract_int_score(score)
         if at_home:
             gd = home - away
@@ -727,12 +737,13 @@ class Form(DF):
         form[(matchday_no, 'CumulativeGD')] = gd_cum_col
         form[(matchday_no, 'CumulativePoints')] = pts_cum_col
     
-    def _insert_position_col(self, form: DataFrame, matchday_no: int):
+    @staticmethod
+    def _insert_position_col(form: DataFrame, matchday_no: int):
         form.sort_values(by=[(matchday_no, 'CumulativePoints'), (matchday_no, 'CumulativeGD')], ascending=False, inplace=True)
         form[matchday_no, 'Position'] = list(range(1, 21))
     
+    @staticmethod    
     def _insert_won_against_star_team_col(
-            self, 
             form: DataFrame, 
             team_ratings: TeamRatings, 
             matchday_no: int, 
@@ -748,7 +759,8 @@ class Form(DF):
             won_against_star_team_col.append(won_against_star_team)
         form[(matchday_no, 'WonAgainstStarTeam')] = won_against_star_team_col
     
-    def _append_to_from_str(self, form_str: list, home: int, away: int, at_home: bool):
+    @staticmethod
+    def _append_to_from_str(form_str: list, home: int, away: int, at_home: bool):
         if home == away:
             result = 'D'
         elif at_home:
@@ -784,8 +796,8 @@ class Form(DF):
         
         form[(matchday_no, f'Form{n_games}')] = form_str_col
 
+    @staticmethod
     def _calc_form_rating(
-            self, 
             team_ratings: TeamRatings, 
             teams_played: list[str], 
             form_str: str,
@@ -827,8 +839,8 @@ class Form(DF):
             
         form[(matchday_no, f'FormRating{n_games}')] = form_rating_col
     
+    @staticmethod    
     def _get_form_last_n_values(
-            self,
             form: DataFrame,
             team_name: str,
             column_name: str, 
@@ -839,12 +851,14 @@ class Form(DF):
         values = [form.at[team_name, col] for col in col_headings]
         return values
     
-    def _convert_team_cols_to_initials(self, form: DataFrame, matchday_nos: list[int]):
+    @staticmethod
+    def _convert_team_cols_to_initials(form: DataFrame, matchday_nos: list[int]):
         for matchday_no in matchday_nos:
             team_initials = [util.convert_team_name_or_initials(opp_team) for opp_team in form[(matchday_no, 'Team')]]
             form[(matchday_no, 'Team')] = team_initials
     
-    def _get_played_matchdays(self, fixtures: Fixtures) -> list[int]:
+    @staticmethod
+    def _get_played_matchdays(fixtures: Fixtures) -> list[int]:
         status = fixtures.df.loc[:, (slice(None), 'Status')]
         # Remove cols for matchdays that haven't played yet
         status = status.loc[:, (status == 'FINISHED').any()]
@@ -951,7 +965,8 @@ class SeasonStats(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'season_stats')
 
-    def _format_position(self, position: int) -> str:
+    @staticmethod
+    def _format_position(position: int) -> str:
         j = position % 10
         k = position % 100
 
@@ -987,8 +1002,8 @@ class SeasonStats(DF):
         conceded_per_game = self._get_stat(team_name, 'xC', True)
         return clean_sheets, goals_per_game, conceded_per_game
 
+    @staticmethod
     def _row_season_goals(
-            self, 
             row: pd.Series,
             matchdays: list[str]
         ) -> tuple[int, int, int, int]:
@@ -1085,7 +1100,8 @@ class HomeAdvantages(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'home_advantages')
 
-    def _home_advantages_for_season(self, d: defaultdict, data: dict, season: int):
+    @staticmethod
+    def _home_advantages_for_season(d: defaultdict, data: dict, season: int):
         for match in data:
             home_team = match['homeTeam']['name'].replace('&', 'and')
             away_team = match['awayTeam']['name'].replace('&', 'and')
@@ -1106,8 +1122,8 @@ class HomeAdvantages(DF):
                     d[home_team][(season, 'Home', 'Draws')] += 1
                     d[away_team][(season, 'Away', 'Draws')] += 1
 
+    @staticmethod
     def _create_season_home_advantage_col(
-            self,
             home_advantages: DataFrame,
             season: int
         ):
@@ -1135,8 +1151,8 @@ class HomeAdvantages(DF):
         home_advantage = win_ratio_at_home - win_ratio
         home_advantages[season, 'HomeAdvantage', ''] = home_advantage
 
+    @staticmethod
     def _create_total_home_advantage_col(
-            self, 
             home_advantages: DataFrame, 
             season: int,
             threshold: float
@@ -1157,9 +1173,9 @@ class HomeAdvantages(DF):
         home_advantages = home_advantages.sort_values(by='TotalHomeAdvantage', ascending=False)
         
         return home_advantages
-        
+    
+    @staticmethod        
     def _row_template(
-            self, 
             season: int,
             no_seasons: int
         ) -> dict[tuple[int, str, str], int]:
@@ -1173,7 +1189,8 @@ class HomeAdvantages(DF):
                              (season-i, 'Away', 'Loses'): 0})
         return template
     
-    def _clean_dataframe(self, home_advantages: DataFrame) -> DataFrame:
+    @staticmethod
+    def _clean_dataframe(home_advantages: DataFrame) -> DataFrame:
         home_advantages = home_advantages.drop(columns=['Wins', 'Loses', 'Draws'], level=2)
         home_advantages.columns.names = ('Season', None, None)
         home_advantages.index.name = 'Team'
@@ -1276,8 +1293,8 @@ class Upcoming(DF):
 
         return opp_team_name, at_home, prev_matches
 
+    @staticmethod
     def _get_next_game(
-            self, 
             team_name: str, 
             fixtures: Fixtures
         ) -> tuple[Optional[str], Optional[str], Optional[str]]:
@@ -1317,7 +1334,8 @@ class Upcoming(DF):
         home_initials, xg_home, away_initials, xg_away = self._get_next_game_prediction(team_name)
         return f'{home_initials} {xg_home} - {xg_away} {away_initials}'
 
-    def _game_result_tuple(self, match: dict) -> tuple[str, str]:
+    @staticmethod
+    def _game_result_tuple(match: dict) -> tuple[str, str]:
         home_score = match['score']['fullTime']['homeTeam']
         away_score = match['score']['fullTime']['awayTeam']
         if home_score == away_score:
@@ -1368,7 +1386,8 @@ class Upcoming(DF):
             prev_match = self._prev_match(date, home_team, away_team, home_goals, away_goals, result[1])
             next_games[away_team]['PreviousMatches'].append(prev_match)
     
-    def _ord(self, n: int) -> str:
+    @staticmethod
+    def _ord(n: int) -> str:
         return str(n) + ("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))
     
     def _readable_date(self, date: datetime) -> str:
@@ -1376,7 +1395,8 @@ class Upcoming(DF):
         day = self._ord(dt.day)
         return day + dt.date().strftime(' %B %Y')
 
-    def _sort_prev_matches_by_date(self, next_games: dict):
+    @staticmethod
+    def _sort_prev_matches_by_date(next_games: dict):
         for _, row in next_games.items():
             row['PreviousMatches'] = sorted(row['PreviousMatches'], key=lambda x: x['Date'], reverse=True)
 

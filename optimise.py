@@ -8,7 +8,9 @@ from utilities import Utilities
 util = Utilities()
 
 class OptimisePredictions:
-    def correct_result(self, ph, pa, ah, aa):
+    
+    @staticmethod
+    def correct_result(ph, pa, ah, aa):
         if ph > pa and ah > aa:
             return True
         elif ph == pa and ah == aa:
@@ -17,7 +19,8 @@ class OptimisePredictions:
             return True
         return False
     
-    def game_result_tuple(self, match: dict) -> tuple[str, str]:
+    @staticmethod
+    def game_result_tuple(match: dict) -> tuple[str, str]:
         home_score = match['score']['fullTime']['homeTeam']
         away_score = match['score']['fullTime']['awayTeam']
         if home_score == away_score:
@@ -77,9 +80,12 @@ class OptimisePredictions:
                 correct_result += 1
             total += 1
 
-        return correct/total, correct_result/total
+        accuracy = correct/total
+        results_accuracy = correct_result/total
+        return accuracy, results_accuracy
     
-    def get_actual_scores(self, current_season):
+    @staticmethod
+    def get_actual_scores(current_season):
         with open(f'data/predictions_{current_season}.json') as json_file:
             data = json.load(json_file)
             predictions_json = data['predictions']
@@ -132,12 +138,3 @@ if __name__ == '__main__':
     current_season = 2021
     o = OptimisePredictions()
     o.brute_force(current_season)
-
-
-"""Results:
-FINAL BEST: ('form:', 1, 'home advantage:', 25.70707070707071)
-     Results accuracy: 0.5348837209302325
-
-FINAL BEST: ('form:', 0.0, 'home advantage:', 23.75)
-     Accuracy: 0.12790697674418605
-"""
