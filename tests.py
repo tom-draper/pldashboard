@@ -35,6 +35,22 @@ def test_dfs_filled(updater):
 
     # Check all dataframes are filled
     assert all([not df.empty for df in dataframes])
+    
+
+@pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
+def test_index_identical(updater):
+    dataframes = [updater.data.standings.df,
+                  updater.data.fixtures.df,
+                  updater.data.team_ratings.df,
+                  updater.data.team_ratings.df,
+                  updater.data.home_advantages.df,
+                  updater.data.form.df,
+                  updater.data.upcoming.df,
+                  updater.data.season_stats.df]
+
+    pairs = [(dataframes[i], dataframes[i+1]) for i in range(len(dataframes)-1)]
+    for pair in pairs:
+        assert set(pair[0].index.values.tolist()) == set(pair[1].index.values.tolist())
 
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
@@ -48,7 +64,7 @@ def test_standings_df(updater):
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
 def test_fixtures_df(updater):
     # 20 teams with [38 matchdays x 5] columns
-    assert updater.data.fixtures.df.shape == (20, 190)
+    assert updater.data.fixtures.df.shape == (20, (38*5))
 
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
@@ -61,7 +77,7 @@ def test_team_ratings_df(updater):
 def test_team_ratings_df_not_alphabetical(updater):
     # If alphabetical, it means standings dataframe is incorrect
     index = updater.data.team_ratings.df.index.tolist()
-    assert(not is_sorted(index))
+    assert (not is_sorted(index))
 
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
@@ -78,7 +94,7 @@ def test_form_df(updater):
     # 20 teams with upto 38(x12) matchday columns
     assert updater.data.form.df.shape[0] == 20
     # Maximum of [38 matchday x 12] columns
-    assert 0 <= updater.data.form.df.shape[1] <= (38*8)
+    assert 0 <= updater.data.form.df.shape[1] <= (38*13)
     assert updater.data.form.df.shape[1] % 13 == 0
 
 
@@ -99,11 +115,11 @@ def test_form_df_early_matchdays_(matchday_no):
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
 def test_upcoming_df(updater):
-    # 20 teams with 3 columns
+    # 20 teams with 6 columns
     assert updater.data.upcoming.df.shape == (20, 6)
 
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
 def test_season_stats_df(updater):
-    # 20 teams with 3 columns
+    # 20 teams with 4 columns
     assert updater.data.season_stats.df.shape == (20, 4)
