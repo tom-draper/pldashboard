@@ -1190,12 +1190,23 @@ class HomeAdvantages(DF):
         return template
     
     @staticmethod
-    def _clean_dataframe(home_advantages: DataFrame) -> DataFrame:
+    def _clean_dataframe(home_advantages: DataFrame, current_season_teams: list[str]) -> DataFrame:
         home_advantages = home_advantages.drop(columns=['Wins', 'Loses', 'Draws'], level=2)
+        home_advantages = home_advantages.loc[current_season_teams]    
         home_advantages.columns.names = ('Season', None, None)
         home_advantages.index.name = 'Team'
-        
         return home_advantages
+    
+    @staticmethod
+    def get_season_teams(season_fixtures_data):
+        current_season_teams = set()
+        for match in season_fixtures_data:
+            home_team = match['homeTeam']['name'].replace('&', 'and')
+            away_team = match['awayTeam']['name'].replace('&', 'and')
+            current_season_teams.add(home_team)
+            current_season_teams.add(away_team)
+        return current_season_teams
+        
 
     @timebudget
     def update(
@@ -1246,8 +1257,6 @@ class HomeAdvantages(DF):
             self._home_advantages_for_season(d, data, season-i)
 
         home_advantages = pd.DataFrame.from_dict(d, orient='index')
-        # Drop teams from previous seasons
-        home_advantages = home_advantages.dropna(subset=home_advantages.loc[[], [season]].columns)
         home_advantages = home_advantages.fillna(0).astype(int)
 
         # Calculate home advantages for each season
@@ -1258,7 +1267,8 @@ class HomeAdvantages(DF):
         home_advantages = self._create_total_home_advantage_col(home_advantages, season, threshold)
         
         # Remove working columns
-        home_advantages = self._clean_dataframe(home_advantages)
+        current_season_teams = self.get_season_teams(json_data['fixtures'][season])
+        home_advantages = self._clean_dataframe(home_advantages, current_season_teams)
 
         if display:
             print(home_advantages)
