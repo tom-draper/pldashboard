@@ -1,3 +1,4 @@
+from collections import defaultdict
 import os
 from datetime import datetime
 from typing import Optional
@@ -763,8 +764,8 @@ class GoalsScoredAndConceded(Graph):
             legend=dict(
                 yanchor='top',
                 y=0.99,
-                xanchor='left',
-                x=0.01
+                xanchor='right',
+                x=0.99
             ),
         )
 
@@ -887,7 +888,7 @@ class GoalsScoredAndConceded(Graph):
 
                 self.save_fig(fig, team_name, 'goals-scored-and-conceded')
 
-            # EXTRA GRAPH FROM SAME DATA: CLEAN SHEETS
+            # EXTENSION GRAPH FROM SAME DATA: CLEAN SHEETS YES/NO + X-AXIS LABELS
             if x:
                 clean_sheets = self._clean_sheets_data_points(y_goals_conceded)
                 fig = self._clean_sheets_fig(x, clean_sheets, matchday_labels)
@@ -896,6 +897,156 @@ class GoalsScoredAndConceded(Graph):
                     fig.show()
 
                 self.save_fig(fig, team_name, 'clean-sheets')
+                
+                
+class GoalsScoredFrequency(Graph): 
+    
+    @staticmethod
+    def _format_fig(
+            fig: FigureWidget,
+            avg_y,
+            scored_y,
+            conceded_y
+        ):
+        
+        max_y = max(max(avg_y), max(scored_y), max(conceded_y)) + 0.5
+
+        # Config graph layout
+        fig.update_layout(
+            autosize=True,
+            barmode='group',
+            yaxis=dict(
+                title_text='Frequency',
+                showgrid=False,
+                showline=False,
+                zeroline=False,
+                dtick=1,
+                fixedrange=True,
+                range=[0, max_y]
+            ),
+            xaxis=dict(
+                title_text='Goals',
+                tickmode='array',
+                showgrid=False,
+                showline=False,
+                fixedrange=True
+            ),
+            margin=dict(
+                l=50,
+                r=50,
+                b=10,
+                t=10,
+                pad=4
+            ),
+            plot_bgcolor='#fafafa',
+            paper_bgcolor='#fafafa',
+            legend=dict(
+                yanchor='top',
+                y=0.99,
+                xanchor='right',
+                x=0.99
+            ),
+        ) 
+        
+    @staticmethod
+    def avg_goals_dict(goals_scored_freq_dict):
+        avg_goals_scored = defaultdict(lambda: 0)
+        for goals_scored_freq in goals_scored_freq_dict.values():
+            for goals_scored, freq in goals_scored_freq.items():
+                avg_goals_scored[goals_scored] += freq
+        
+        for goals_scored in avg_goals_scored:
+            avg_goals_scored[goals_scored] /= 20
+        
+        return avg_goals_scored
+    
+    def _frequency_dicts(self, form: Form):
+        goals_scored_freq_dict = {}  # (goals scored : frequency) for each team
+        goals_conceded_freq_dict = {}  # (goals scored : frequency) for each team
+        
+        for row in form.df.iterrows():
+            team_name = row[0]
+            goals_scored_freq_dict[team_name] = defaultdict(lambda: 0)
+            goals_conceded_freq_dict[team_name] = defaultdict(lambda: 0)
+            
+            for matchday_n in row[1].index.get_level_values(0).unique():
+                score = row[1][(matchday_n, 'Score')]
+                if score is not None:
+                    h, a = utils.extract_int_score(score)
+                    at_home = row[1][(matchday_n, 'AtHome')]
+                    if at_home:
+                        goals_scored_freq_dict[team_name][h] += 1
+                        goals_conceded_freq_dict[team_name][a] += 1
+                    else:
+                        goals_scored_freq_dict[team_name][a] += 1
+                        goals_conceded_freq_dict[team_name][h] += 1
+        
+        avg_goals_dict = self.avg_goals_dict(goals_scored_freq_dict)
+        
+        return goals_scored_freq_dict, goals_conceded_freq_dict, avg_goals_dict
+    
+    @staticmethod
+    def _data_points(goals_scored_freq, goals_conceded_freq, avg_goals_scored_freq, team_name):
+        avg_xypairs = sorted([(k, v) for k, v in avg_goals_scored_freq.items()])
+        x = [v[0] for v in avg_xypairs]  # Same x for both graphs
+        avg_y = [v[1] for v in avg_xypairs]
+        
+        scored_xypairs = sorted([(k, v) for k, v in goals_scored_freq[team_name].items()])
+        scored_y = [v[1] for v in scored_xypairs]
+        
+        conceded_xypairs = sorted([(k, v) for k, v in goals_conceded_freq[team_name].items()])
+        conceded_y = [v[1] for v in conceded_xypairs]
+        
+        return x, scored_y, conceded_y, avg_y
+    
+    def update(self, form: Form, team: str = None, display: bool = False):
+        if form.df.empty:
+            raise ValueError('❌ [ERROR] Cannot generate goals scored and conceded graph: Form dataframe is empty')
+        
+        team_names = form.df.index.values.tolist()
+        
+        teams_to_update = self._teams_to_update(
+            team, team_names, 'goals frequency')
+        
+        goals_scored_freq, goals_conceded_freq, avg_goals_freq = self._frequency_dicts(form)
+        
+        for team_name in teams_to_update:
+            x, scored_y, conceded_y, avg_y = self._data_points(
+                goals_scored_freq, goals_conceded_freq, avg_goals_freq, team_name)
+            
+            
+            fig = go.Figure(data=[
+                go.Bar(name='Avg', x=x, y=avg_y,
+                    marker_color='#d3d3d3',
+                    marker_line_color='#8f8f8f',
+                    marker_line_width=2,
+                    hovertemplate='%{x} goals scored: %{y}<extra></extra>',
+                    hoverinfo=('x+y')),
+                go.Bar(name='Scored', x=x, y=scored_y,
+                    # marker_color=utils.team_colours[team_name],
+                    # marker_line_color='#333333',
+                    marker_color='#77DD77',
+                    marker_line_color='#006400',
+                    marker_line_width=2,
+                    hovertemplate='%{x} goals scored: %{y}<extra></extra>',
+                    hoverinfo=('x+y')),
+                go.Bar(name='Conceded', x=x, y=conceded_y,
+                    marker_color='#C23B22',
+                    marker_line_color='#8B0000',
+                    marker_line_width=2,
+                    hovertemplate='%{x} goals scored: %{y}<extra></extra>',
+                    hoverinfo=('x+y')),
+            ])
+            
+            self._format_fig(fig, avg_y, scored_y, conceded_y)
+            
+            if display:
+                fig.show()
+            
+            self.save_fig(fig, team_name, 'goals-frequency')
+
+        
+        
 
 
 class Visualiser:
@@ -904,6 +1055,7 @@ class Visualiser:
         self.form_over_time_graph = FormOverTime()
         self.position_over_time_graph = PositionOverTime()
         self.goals_scored_and_conceded_graph = GoalsScoredAndConceded()
+        self.goals_scored_frequency_graph = GoalsScoredFrequency()
 
     def update(
             self, 
@@ -936,3 +1088,9 @@ class Visualiser:
             team=team,
             display=display_graphs
         )
+        self.goals_scored_frequency_graph.update(
+            form, 
+            team=team, 
+            display=display_graphs
+        )
+        

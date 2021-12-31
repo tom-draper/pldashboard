@@ -210,6 +210,9 @@ a.kofi-button {
   margin-bottom: 25px;
   height: 30%;
 }
+.clean-sheets {
+  height: 60px;
+}
 .row-left {
   display: flex;
   flex-direction: column;
@@ -584,7 +587,7 @@ img {
     font-size: 2.5em;
   }
   .season-stat {
-    margin-bottom: 1.4em;
+    margin: 0.4em 0 1em 0;
   }
   .season-stats-row {
     margin: 70px 0 0;
@@ -662,7 +665,7 @@ img {
     font-size: 3em;
   }
   .season-stat {
-    margin-bottom: 1.4em;
+    margin: 0.4em 0 1em 0;
   }
   .season-stats-row {
     margin-top: 40px;
@@ -713,7 +716,7 @@ img {
     padding-bottom: 0;
   }
   .season-stat {
-    margin-bottom: 1.2em;
+    margin: 0.4em 0 0.8em 0;
   }
   .season-stat-value {
     font-size: 2.5em;
@@ -759,7 +762,7 @@ img {
     margin-left: 10px;
   }
   .season-stat {
-    margin-bottom: 1.2em;
+    margin: 0.4em 0 0.8em 0;
   }
   .season-stat-value {
     font-size: 1.4em;
@@ -849,7 +852,7 @@ img {
     margin-top: 20px;
   }
   .season-stat {
-    margin-bottom: 0.7em;
+    margin: 0.25em 0 0.45em 0;
   }
   .teams-footer {
     margin-top: 2em;

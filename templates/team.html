@@ -237,8 +237,8 @@
 
 
   <div class="row">
-    <div class="clean-sheets row-graph">
-      <div class="graph full-row-graph">
+    <div class="row-graph">
+      <div class="clean-sheets graph full-row-graph">
         {% include 'graphs/%s/clean-sheets-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %}
       </div>
     </div>
@@ -273,6 +273,16 @@
       </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="goals-freq-row row-graph">
+      <h1 >Goals Frequency</h1>
+      <div class="graph full-row-graph">
+        {% include 'graphs/%s/goals-frequency-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %}
+      </div>
+    </div>
+  </div>
+
   <div class="teams-footer footer-text-colour">
     <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
     <script type='text/javascript'>kofiwidget2.init('Support Me', '#d9534f', 'C0C069FOI'); kofiwidget2.draw();</script>
@@ -317,8 +327,11 @@
 
     function attachClass() {
       const matches = document.querySelectorAll('.plotly-graph-div');
-      for (let i = 0; i < matches.length - 1; i++) {
-        matches[i].classList.add('resizable-graph');
+      for (let i = 0; i < matches.length; i++) {
+        if (i != 4) {
+          // Avoid changing clean sheets graph (4th graph)
+          matches[i].classList.add('resizable-graph');
+        } 
       }
     }
 
