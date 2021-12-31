@@ -445,6 +445,14 @@ img {
   font-size: 16px;
 }
 
+.two-graphs {
+  display: flex;
+  margin: 0 8%;
+}
+.freq-graph {
+  width: 50%;
+}
+
 /* Footer general */
 
 .donation {
@@ -517,7 +525,7 @@ img {
   color: rgb(0 0 0 / 37%);
 }
 .season-stats-row {
-  margin: 100px 100px 0;
+  margin: 100px 100px 50px;
   height: auto;
 }
 .season-stats {
@@ -688,6 +696,11 @@ img {
 
   .resizable-graph {
     height: 400px !important;
+  }
+
+  .two-graphs {
+    display: flex;
+    margin: 0;
   }
 }
 

@@ -914,7 +914,8 @@ class GoalsScoredFrequency(Graph):
         # Config graph layout
         fig.update_layout(
             autosize=True,
-            barmode='group',
+            barmode='overlay',
+            bargap=0,
             yaxis=dict(
                 title_text='Frequency',
                 showgrid=False,
@@ -1016,26 +1017,21 @@ class GoalsScoredFrequency(Graph):
             
             
             fig = go.Figure(data=[
-                go.Bar(name='Avg', x=x, y=avg_y,
-                    marker_color='#d3d3d3',
-                    marker_line_color='#8f8f8f',
-                    marker_line_width=2,
-                    hovertemplate='%{x} goals scored: %{y}<extra></extra>',
-                    hoverinfo=('x+y')),
-                go.Bar(name='Scored', x=x, y=scored_y,
-                    # marker_color=utils.team_colours[team_name],
-                    # marker_line_color='#333333',
-                    marker_color='#77DD77',
-                    marker_line_color='#006400',
-                    marker_line_width=2,
-                    hovertemplate='%{x} goals scored: %{y}<extra></extra>',
-                    hoverinfo=('x+y')),
-                go.Bar(name='Conceded', x=x, y=conceded_y,
-                    marker_color='#C23B22',
-                    marker_line_color='#8B0000',
-                    marker_line_width=2,
-                    hovertemplate='%{x} goals scored: %{y}<extra></extra>',
-                    hoverinfo=('x+y')),
+                go.Bar(name='Avg',
+                       x=x,
+                       y=avg_y,
+                       marker_color='#d3d3d3',
+                       marker_line_width=0,
+                       hovertemplate='%{x} goals: %{y}<extra></extra>',
+                       hoverinfo=('x+y')),
+                go.Bar(name='Scored',
+                       x=x,
+                       y=scored_y,
+                       marker_color='#77DD77',
+                       marker_line_width=0,
+                       hovertemplate='%{x} goals scored: %{y}<extra></extra>',
+                       hoverinfo=('x+y'),
+                       opacity=0.6),
             ])
             
             self._format_fig(fig, avg_y, scored_y, conceded_y)
@@ -1043,7 +1039,32 @@ class GoalsScoredFrequency(Graph):
             if display:
                 fig.show()
             
-            self.save_fig(fig, team_name, 'goals-frequency')
+            self.save_fig(fig, team_name, 'goals-scored-frequency')
+            
+            fig = go.Figure(data=[
+                go.Bar(name='Avg',
+                       x=x,
+                       y=avg_y,
+                       marker_color='#d3d3d3',
+                       marker_line_width=0,
+                       hovertemplate='%{x} goals: %{y}<extra></extra>',
+                       hoverinfo=('x+y')),
+                go.Bar(name='Conceded',
+                       x=x,
+                       y=conceded_y,
+                       marker_color='#C23B22',
+                       marker_line_width=0,
+                       hovertemplate='%{x} goals conceded: %{y}<extra></extra>',
+                       hoverinfo=('x+y'),
+                       opacity=0.6),
+            ])
+            
+            self._format_fig(fig, avg_y, scored_y, conceded_y)
+            
+            if display:
+                fig.show()
+            
+            self.save_fig(fig, team_name, 'goals-conceded-frequency')
 
         
         

@@ -276,9 +276,14 @@
 
   <div class="row">
     <div class="goals-freq-row row-graph">
-      <h1 >Goals Frequency</h1>
-      <div class="graph full-row-graph">
-        {% include 'graphs/%s/goals-frequency-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %}
+      <h1>Goals Frequency</h1>
+      <div class="two-graphs">
+        <div class="graph freq-graph mini-graph">
+          {% include 'graphs/%s/goals-scored-frequency-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %}
+        </div>
+        <div class="graph freq-graph mini-graphh">
+          {% include 'graphs/%s/goals-conceded-frequency-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %}
+        </div>
       </div>
     </div>
   </div>
