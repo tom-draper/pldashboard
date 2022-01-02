@@ -63,7 +63,7 @@ class Graph:
 class Fixtures(Graph):
     
     @staticmethod    
-    def _plot_fixtures_points(
+    def _plot_points(
             x: list[datetime], 
             y: list[float],
             sizes: list[int], 
@@ -98,7 +98,7 @@ class Fixtures(Graph):
                                                 dash='dot')))
 
     @staticmethod
-    def _format_fixtures_fig(fig: FigureWidget, x: list[datetime]):
+    def _format_fig(fig: FigureWidget, x: list[datetime]):
         y_labels = [i for i in range(0, 101, 10)]
 
         fig.update_layout(
@@ -133,7 +133,7 @@ class Fixtures(Graph):
             paper_bgcolor='#fafafa',
         )
 
-    def _fixtures_fig(
+    def _get_fig(
             self, 
             x: list[datetime], 
             y: list[float], 
@@ -141,9 +141,9 @@ class Fixtures(Graph):
             sizes: list[int], 
             NOW: datetime,
         ) -> FigureWidget:
-        fig = self._plot_fixtures_points(x, y, sizes, details)
+        fig = self._plot_points(x, y, sizes, details)
         self._plot_current_day(fig, NOW)
-        self._format_fixtures_fig(fig, x)
+        self._format_fig(fig, x)
         return fig
 
     @staticmethod
@@ -186,7 +186,7 @@ class Fixtures(Graph):
         elif (match_n != N_MATCHES) and (x[-2] < NOW <= x[-1]):
             sizes[match_n] = BIG_MARKER_SIZE
 
-    def _fixtures_data_points(
+    def _data_points(
             self, 
             team_fixtures: DataFrame, 
             team_ratings: TeamRatings,
@@ -245,7 +245,7 @@ class Fixtures(Graph):
         for team_name in teams_to_update:
             # Get row of fixtures dataframe
             team_fixtures = fixtures.df.loc[team_name]
-            x, y, details, sizes = self._fixtures_data_points(team_fixtures,
+            x, y, details, sizes = self._data_points(team_fixtures,
                                                               team_ratings,
                                                               home_advantages,
                                                               NOW,
@@ -253,7 +253,7 @@ class Fixtures(Graph):
                                                               DEFAULT_MARKER_SIZE,
                                                               BIG_MARKER_SIZE)
 
-            fig = self._fixtures_fig(x, y, details, sizes, NOW)
+            fig = self._get_fig(x, y, details, sizes, NOW)
 
             if display:
                 fig.show()
@@ -300,7 +300,7 @@ class FormOverTime(Graph):
                                  ))
 
     @staticmethod
-    def _format_form_over_time_fig(
+    def _format_fig(
             fig: FigureWidget, 
             x: list[datetime],
             matchday_labels: list[str],
@@ -340,7 +340,7 @@ class FormOverTime(Graph):
             paper_bgcolor='#fafafa',
         )
 
-    def _form_over_time_fig(
+    def _get_fig(
             self, 
             x: list[datetime], 
             ys: list[list[float]],
@@ -350,7 +350,7 @@ class FormOverTime(Graph):
         ) -> FigureWidget:
         fig = go.Figure()
         self._plot_teams_form(fig, x, ys, team, team_names)
-        self._format_form_over_time_fig(fig, x, matchday_labels)
+        self._format_fig(fig, x, matchday_labels)
         return fig
 
     @staticmethod
@@ -377,7 +377,7 @@ class FormOverTime(Graph):
             ys.append(y)
         return ys
 
-    def _form_over_time_data_points(
+    def _data_points(
             self, 
             form: Form,
         ) -> tuple[list[datetime], list[str], list[list[float]]]:
@@ -402,10 +402,10 @@ class FormOverTime(Graph):
         teams_to_update = self._teams_to_update(
             team, team_names, 'form over time')
 
-        x, matchday_labels, ys = self._form_over_time_data_points(form)
+        x, matchday_labels, ys = self._data_points(form)
 
         for team_name in teams_to_update:
-            fig = self._form_over_time_fig(
+            fig = self._get_fig(
                 x, ys, matchday_labels, team_name, team_names)
 
             if display:
@@ -417,7 +417,7 @@ class FormOverTime(Graph):
 class PositionOverTime(Graph):
     
     @staticmethod
-    def _plot_teams_position_over_time(
+    def _plot_positions(
             fig: FigureWidget, 
             x: list[datetime],
             ys: list[list[float]], 
@@ -475,7 +475,7 @@ class PositionOverTime(Graph):
                       layer='below')
 
     @staticmethod
-    def _format_position_over_time_fig(
+    def _format_fig(
             fig: FigureWidget, 
             x: list[datetime],
             matchday_labels: list[str],
@@ -516,7 +516,7 @@ class PositionOverTime(Graph):
             paper_bgcolor='#fafafa',
         )
 
-    def _position_over_time_fig(
+    def _get_fig(
             self, 
             x: list[datetime], 
             ys: list[list[int]],
@@ -525,7 +525,7 @@ class PositionOverTime(Graph):
             team_names: list[str],
         ) -> FigureWidget:
         fig = go.Figure()
-        self._plot_teams_position_over_time(fig, x, ys, team, team_names)
+        self._plot_positions(fig, x, ys, team, team_names)
         # self._plot_position_rect(fig, x[0], 4.5, x[-1], 0.5, '#03AC13')  # Top 4
         self._plot_position_rect(fig, x[0], 4.5, x[-1], 0.5, '#77DD77')  # Top 4
         # self._plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#008080)  # 5-6
@@ -533,7 +533,7 @@ class PositionOverTime(Graph):
         # self._plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#0080FF')  # 5-6
         # self._plot_position_rect(fig, x[0], 20.5, x[-1], 17.5, '#800000')  # Relegation zone
         self._plot_position_rect(fig, x[0], 20.5, x[-1], 17.5, '#C23B22')  # Relegation zone
-        self._format_position_over_time_fig(fig, x, matchday_labels)
+        self._format_fig(fig, x, matchday_labels)
         return fig
 
     @staticmethod
@@ -559,7 +559,7 @@ class PositionOverTime(Graph):
             ys.append(y)
         return ys
 
-    def _position_over_time_data_points(
+    def _data_points(
             self, 
             form: Form
         ) -> tuple[list[datetime], list[str], list[list[int]]]:
@@ -585,11 +585,11 @@ class PositionOverTime(Graph):
         teams_to_update = self._teams_to_update(
             team, team_names, 'position over time')
 
-        x, matchday_labels, ys = self._position_over_time_data_points(form)
+        x, matchday_labels, ys = self._data_points(form)
 
         # Create a fig for each team
         for team_name in teams_to_update:
-            fig = self._position_over_time_fig(
+            fig = self._get_fig(
                 x, ys, matchday_labels, team_name, team_names)
 
             if display:
@@ -755,13 +755,7 @@ class GoalsScoredAndConceded(Graph):
                 showticklabels=False,
                 fixedrange=True
             ),
-            margin=dict(
-                l=50,
-                r=50,
-                b=10,
-                t=10,
-                pad=4
-            ),
+            margin=dict(l=50, r=50, b=10, t=10, pad=4),
             plot_bgcolor='#fafafa',
             paper_bgcolor='#fafafa',
             legend=dict(
@@ -772,17 +766,17 @@ class GoalsScoredAndConceded(Graph):
             ),
         )
 
-    def _goals_scored_and_conceded_fig(
+    def _scored_and_conceded_fig(
             self, 
             x: list[datetime], 
             y_goals_scored: list[int],
             y_goals_conceded: list[int], 
             y_avg: list[float],
         ) -> FigureWidget:
-        fig = self._plot_goals_scored_and_conceded(x, y_goals_scored,
-                                                  y_goals_conceded, y_avg)
-        self._format_goals_scored_and_conceded_fig(fig, x, y_goals_scored,
-                                                  y_goals_conceded)
+        fig = self._plot_goals_scored_and_conceded(
+            x, y_goals_scored, y_goals_conceded, y_avg)
+        self._format_goals_scored_and_conceded_fig(
+            fig, x, y_goals_scored, y_goals_conceded)
         return fig
 
     @staticmethod
@@ -813,18 +807,19 @@ class GoalsScoredAndConceded(Graph):
             y_goals_scored: list[int],
             y_goals_conceded: list[int], 
             y_avg: list[float],
-        ):
+        ) -> tuple[list[datetime], list[int], list[int], list[float]]:
         if x and y_goals_scored and y_goals_conceded and y_avg:
             x, y_goals_scored, y_goals_conceded, y_avg = map(
                 list, zip(*sorted(zip(x, y_goals_scored, y_goals_conceded, y_avg))))
         return x, y_goals_scored, y_goals_conceded, y_avg
 
     def _data_points(
-            self, 
-            form: Form, 
+            self,
+            form: Form,
             team: str,
         ) -> tuple[list[datetime], list[int], list[int], list[float], list[str]]:
-        # Dates of matchdays that have been played
+
+                # Dates of matchdays that have been played
         x_cols = form.df.iloc[:, form.df.columns.get_level_values(1) == 'Date']
         # All y lists have the same x date values
         x = [datetime.utcfromtimestamp(date/1e9)
@@ -855,17 +850,7 @@ class GoalsScoredAndConceded(Graph):
                 del matchday_nos[idx]
 
         matchday_labels = list(map(str, matchday_nos))  # x labels
-
-        return x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels
-
-    def _goals_scored_and_conceeded_data_points(
-            self,
-            form: Form,
-            team: str,
-        ) -> tuple[list[datetime], list[int], list[int], list[float], list[str]]:
-
-        x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self._data_points(
-            form, team)
+        
         x, y_goals_scored, y_goals_conceded, y_avg = self._sort_by_x_axis(
             x, y_goals_scored, y_goals_conceded, y_avg)
 
@@ -880,11 +865,9 @@ class GoalsScoredAndConceded(Graph):
             team, form.df.index.values.tolist(), 'goals scored and conceded')
 
         for team_name in teams_to_update:
-            x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self._goals_scored_and_conceeded_data_points(
-                form, team_name)
+            x, y_goals_scored, y_goals_conceded, y_avg, matchday_labels = self._data_points(form, team_name)
             if y_goals_scored and y_goals_conceded:
-                fig = self._goals_scored_and_conceded_fig(x, y_goals_scored,
-                                                         y_goals_conceded, y_avg)
+                fig = self._scored_and_conceded_fig(x, y_goals_scored, y_goals_conceded, y_avg)
 
                 if display:
                     fig.show()
@@ -953,7 +936,7 @@ class GoalsScoredFrequency(Graph):
         ) 
         
     @staticmethod
-    def avg_goals_dict(goals_scored_freq_dict):
+    def _avg_goals_dict(goals_scored_freq_dict):
         avg_goals_scored = defaultdict(lambda: 0)
         for goals_scored_freq in goals_scored_freq_dict.values():
             for goals_scored, freq in goals_scored_freq.items():
@@ -985,7 +968,7 @@ class GoalsScoredFrequency(Graph):
                         goals_scored_freq_dict[team_name][a] += 1
                         goals_conceded_freq_dict[team_name][h] += 1
         
-        avg_goals_dict = self.avg_goals_dict(goals_scored_freq_dict)
+        avg_goals_dict = self._avg_goals_dict(goals_scored_freq_dict)
         
         return goals_scored_freq_dict, goals_conceded_freq_dict, avg_goals_dict
     
