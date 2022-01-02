@@ -525,7 +525,7 @@ img {
   color: rgb(0 0 0 / 37%);
 }
 .season-stats-row {
-  margin: 100px 100px 50px;
+  margin: 100px 100px 80px;
   height: auto;
 }
 .season-stats {
@@ -598,7 +598,7 @@ img {
     margin: 0.4em 0 1em 0;
   }
   .season-stats-row {
-    margin: 70px 0 0;
+    margin: 70px 0 10px;
   }
   .season-stat-text {
     font-size: 0.9em;

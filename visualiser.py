@@ -526,10 +526,13 @@ class PositionOverTime(Graph):
         ) -> FigureWidget:
         fig = go.Figure()
         self._plot_teams_position_over_time(fig, x, ys, team, team_names)
-        self._plot_position_rect(fig, x[0], 4.5, x[-1], 0.5, '#03AC13')  # Top 4
-        self._plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#008080')  # 5-6
-        self._plot_position_rect(
-            fig, x[0], 20.5, x[-1], 17.5, '#800000')  # Relegation zone
+        # self._plot_position_rect(fig, x[0], 4.5, x[-1], 0.5, '#03AC13')  # Top 4
+        self._plot_position_rect(fig, x[0], 4.5, x[-1], 0.5, '#77DD77')  # Top 4
+        # self._plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#008080)  # 5-6
+        self._plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#00d1e7')  # 5-6
+        # self._plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#0080FF')  # 5-6
+        # self._plot_position_rect(fig, x[0], 20.5, x[-1], 17.5, '#800000')  # Relegation zone
+        self._plot_position_rect(fig, x[0], 20.5, x[-1], 17.5, '#C23B22')  # Relegation zone
         self._format_position_over_time_fig(fig, x, matchday_labels)
         return fig
 
@@ -606,16 +609,16 @@ class GoalsScoredAndConceded(Graph):
                    x=x,
                    y=[v if v == 1 else None for v in clean_sheets],
                    marker_color='#77DD77',
-                   marker_line_color='#006400',
-                   marker_line_width=2,
+                #    marker_line_color='#006400',
+                #    marker_line_width=2,
                    hovertemplate='Clean sheet<extra></extra>',
                    yaxis='y2'),
             go.Bar(name='Goals Conceded',
                    x=x,
                    y=[v if v == 1 else None for v in 1-clean_sheets],
                    marker_color='#C23B22',
-                   marker_line_color='#8B0000',
-                   marker_line_width=2,
+                #    marker_line_color='#8B0000',
+                #    marker_line_width=2,
                    hovertemplate='Goals conceded<extra></extra>',
                    yaxis='y2'),
             go.Scatter(name='Line',
@@ -702,14 +705,14 @@ class GoalsScoredAndConceded(Graph):
         fig = go.Figure(data=[
             go.Bar(name='Goals Scored', x=x, y=y_goals_scored,
                    marker_color='#77DD77',
-                   marker_line_color='#006400',
-                   marker_line_width=2,
+                #    marker_line_color='#006400',
+                #    marker_line_width=2,
                    hovertemplate='%{y} goals scored<extra></extra>',
                    hoverinfo=('y')),
             go.Bar(name='Goals Conceded', x=x, y=y_goals_conceded,
                    marker_color='#C23B22',
-                   marker_line_color='#8B0000',
-                   marker_line_width=2,
+                #    marker_line_color='#8B0000',
+                #    marker_line_width=2,
                    hovertemplate='%{y} goals conceded<extra></extra>',
                    hoverinfo=('y')),
             go.Scatter(name='Avg', x=x, y=y_avg, mode='lines',
