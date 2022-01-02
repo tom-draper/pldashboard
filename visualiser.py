@@ -529,7 +529,7 @@ class PositionOverTime(Graph):
         # self._plot_position_rect(fig, x[0], 4.5, x[-1], 0.5, '#03AC13')  # Top 4
         self._plot_position_rect(fig, x[0], 4.5, x[-1], 0.5, '#77DD77')  # Top 4
         # self._plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#008080)  # 5-6
-        self._plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#00d1e7')  # 5-6
+        self._plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#4cdeee')  # 5-6
         # self._plot_position_rect(fig, x[0], 6.5, x[-1], 4.5, '#0080FF')  # 5-6
         # self._plot_position_rect(fig, x[0], 20.5, x[-1], 17.5, '#800000')  # Relegation zone
         self._plot_position_rect(fig, x[0], 20.5, x[-1], 17.5, '#C23B22')  # Relegation zone
