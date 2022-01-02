@@ -88,7 +88,6 @@ h1 {
   font-size: 1.4em;
   font-weight: 600;
   color: #333;
-  color: #e90052;
   flex: auto;
   align-self: center;
   text-decoration: none;
@@ -142,6 +141,8 @@ a.kofi-button {
   /* border: 8px solid rgb(46 46 46); */
   margin: 8px auto;
   /* border-radius: var(--border-radius); */
+  box-shadow: 0 0 1em 0.6em rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .team-button {
   text-align: center;
@@ -162,6 +163,9 @@ a.kofi-button {
 
 .pl-background {
   background: #3d195b;
+}
+.pl-text {
+  color: #e90052;
 }
 
 @media only screen and (max-width: 1100px) {
@@ -900,6 +904,11 @@ img {
   }
   .plotly-graph-div {
     width: 105% !important;
+  }
+
+  .teams {
+    box-shadow: none;
+    background-color: rgba(0, 0, 0, 0);
   }
 }
 

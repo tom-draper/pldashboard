@@ -1429,11 +1429,18 @@ class Upcoming(DF):
 
                 if home_team in team_names and away_team in team_names:
                     home_goals = match['score']['fullTime']['homeTeam']
-                    away_goals = match['score']['fullTime']['homeTeam']
+                    away_goals = match['score']['fullTime']['awayTeam']
                     date = match['utcDate']
                     result = self._game_result_tuple(match)
-                    self._append_prev_match(next_games, home_team, away_team, 
-                                            home_goals, away_goals, date, result)
+                    self._append_prev_match(
+                        next_games, 
+                        home_team, 
+                        away_team, 
+                        home_goals, 
+                        away_goals, 
+                        date, 
+                        result
+                    )
         
     @timebudget
     def update(
@@ -1485,10 +1492,12 @@ class Upcoming(DF):
         d = {}  # type: dict[str, dict[str, Optional[str] | list]]
         for team_name in team_names:
             date, next_team, at_home = self._get_next_game(team_name, fixtures)
-            d[team_name] = {'Date': date, 
-                            'NextTeam': next_team,  
-                            'AtHome': at_home,
-                            'PreviousMatches': []}
+            d[team_name] = {
+                'Date': date, 
+                'NextTeam': next_team,  
+                'AtHome': at_home,
+                'PreviousMatches': []
+            }
 
         for i in range(n_seasons):
             self._append_season_prev_matches(d, json_data, season-i, team_names)
