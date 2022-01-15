@@ -135,13 +135,9 @@ a.kofi-button {
 .teams {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  /* background-color: rgb(46 46 46); */
-  /* margin: 0 auto; */
   width: 90%;
-  /* border: 8px solid rgb(46 46 46); */
   margin: 8px auto;
-  /* border-radius: var(--border-radius); */
-  box-shadow: 0 0 1em 0.6em rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0.5em 0.1em rgba(0, 0, 0, 0.2);
   background-color: rgba(0, 0, 0, 0.1);
 }
 .team-button {
