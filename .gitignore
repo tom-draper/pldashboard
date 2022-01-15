@@ -1,11 +1,7 @@
 .gitignore
 tempCodeRunnerFile.py
 __pycache__
-# templates/graphs
-# static/graphs
 .env
 .pytest_cache
 venv
-.idea
-venv2
-venv3
+.styleintrc.json

@@ -1,106 +1,104 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <title>Predictions</title>
-  </head>
-  <body>
-    <div class="predictions-header">
-      <a class="predictions-title main-link" style="text-decoration: none;" href="/predictions">Predictions</a>
+
+<head>
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+  <title>Predictions</title>
+</head>
+
+<body>
+  <div class="predictions-header">
+    <a class="predictions-title main-link" style="text-decoration: none" href="/predictions">Predictions</a>
+  </div>
+
+  <div class="page-content">
+    <div class="accuracy-display">
+      <div class="accuracy">
+        <span class="accuracy-item">
+          Predicting with accuracy: <b>{{ params.accuracy }}%</b></span><br />
+        <div class="accuracy-item">
+          General results accuracy: <b>{{ params.results_accuracy}}%</b>
+        </div>
+      </div>
     </div>
 
-    <div class="page-content">
-      <div class="accuracy-display">
-        <div class="accuracy">
-          <span class="accuracy-item">
-          Predicting with accuracy: <b>{{ params.accuracy }}%</b></span><br>
-          <div class="accuracy-item">
-            General results accuracy: <b>{{ params.results_accuracy}}%</b>
+    <div class="predictions-container">
+      <div class="predictions">
+        {% if params.predictions != None %} {% for date, preds in
+        params.predictions.items() %}
+        <div class="date">
+          {{ date[8:10] }}-{{ date[5:7] }}-{{ date[:4] }}
+        </div>
+        <div class="medium-predictions-divider"></div>
+        {% for pred in preds %}
+        <button class="prediction-container {{ pred['colour'] }}" onclick="toggleDetailsDisplay('{{ pred['_id'] }}')">
+          <div class="prediction prediction-item">
+            <div class="prediction-label">Predicted:</div>
+            <div class="prediction-value">
+              <div class="prediction-initials">{{ pred['home'] }}</div>
+              <div class="prediction-score">
+                {{ pred['prediction']['homeGoals'] }} - {{
+                pred['prediction']['awayGoals'] }}
+              </div>
+              <div class="prediction-initials">{{ pred['away'] }}</div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div class="predictions-container">
-        <div class="predictions">
-          {% if params.predictions != None %}
-            {% for date, preds in params.predictions.items() %}
-              <div class="date">{{ date[8:10] }}-{{ date[5:7] }}-{{ date[:4] }}</div>
-              <div class="medium-predictions-divider"></div>
-              {% for pred in preds %}
-                <button class="prediction-container {{ pred['colour'] }}" onclick="toggleDetailsDisplay({{ pred['id'] }})">
-
-                  <div class="prediction prediction-item">
-                    <div class="prediction-label">Predicted:</div>
-                    <div class="prediction-value">
-                      <div class="prediction-initials">{{ pred['homeInitials'] }}</div>
-                      <div class="prediction-score">{{ pred['prediction']['xGHome'] }} - {{ pred['prediction']['xGAway'] }}</div>
-                      <div class="prediction-initials">{{ pred['awayInitials'] }}</div>
-                    </div>
-                  </div>
-                  {% if pred['actual'] != None %}
-                    <div class="actual prediction-item">
-                      <div class="prediction-label">Actual:</div>
-                      <div class="prediction-value">
-                        <div class="prediction-initials">{{ pred['homeInitials'] }}</div>
-                        <div class="prediction-score">{{ pred['actual']['homeGoals'] }} - {{ pred['actual']['awayGoals'] }}</div>
-                        <div class="prediction-initials">{{ pred['awayInitials'] }}</div>
-                      </div>
-                    </div>
-                  {% else %}
-                  <div class="prediction-time">
-                    {{ pred['time'] }}
-                  </div>
-                  {% endif %}
-                  {% if pred['details'] != None %}
-                    <div class="prediction-details" id="{{ pred['id'] }}">
-                      <div class="prediction-detail">
-                        {{ pred['details']['initial']['description'] }}:
-                        {{ pred['details']['initial']['xGHome'] }} - {{ pred['details']['initial']['xGAway'] }}
-                      </div>
-                      <div class="prediction-detail">
-                        {{ pred['details']['adjustments'][0]['description'] }}:
-                        {{ pred['details']['adjustments'][0]['xGHome'] }} - {{ pred['details']['adjustments'][0]['xGAway'] }}
-                        ({{ pred['details']['adjustments'][0]['formRatingHome'] }} vs {{ pred['details']['adjustments'][0]['formRatingAway'] }})
-                      </div>
-                      <div class="prediction-detail">
-                        {{ pred['details']['adjustments'][1]['description'] }}:
-                        {{ pred['details']['adjustments'][1]['xGHome'] }} - {{ pred['details']['adjustments'][1]['xGAway'] }}
-                        ({{ pred['details']['adjustments'][1]['homeAdvantage'] }})
-                      </div>
-                      <div class="detailed-predicted-score">
-                        {{ pred['details']['score']['xGHome'] }} - {{ pred['details']['score']['xGAway'] }}
-                      </div>
-                    </div>
-                  {% endif %}
-                </button>
-              {% endfor %}
-              <div class="predictions-gap"></div>
-            {% endfor %}
+          {% if pred['actual'] != None %}
+          <div class="actual prediction-item">
+            <div class="prediction-label">Actual:</div>
+            <div class="prediction-value">
+              <div class="prediction-initials">{{ pred['home'] }}</div>
+              <div class="prediction-score">
+                {{ pred['actual']['homeGoals'] }} - {{
+                pred['actual']['awayGoals'] }}
+              </div>
+              <div class="prediction-initials">{{ pred['away'] }}</div>
+            </div>
+          </div>
+          {% else %}
+          <div class="prediction-time">{{ pred['time'] }}</div>
           {% endif %}
-        </div>
+
+          <!-- Toggle to see detailed score (float version) -->
+          {% if pred['detailedPrediction'] != None %}
+          <div class="prediction-details" id="{{ pred['_id'] }}">
+            <div class="detailed-predicted-score">
+              <b>
+                {{ pred['detailedPrediction']['homeGoals'] }} - {{
+                pred['detailedPrediction']['awayGoals']}}</b>
+            </div>
+          </div>
+          {% endif %}
+        </button>
+        {% endfor %}
+        <div class="predictions-gap"></div>
+        {% endfor %} {% endif %}
       </div>
     </div>
+  </div>
 
-    <div class="predictions-footer footer-text-colour">
-      <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me', '#d9534f', 'C0C069FOI');kofiwidget2.draw();</script> 
-      <div class="last-updated">
-        {{ params.last_updated }} UTC
-      </div>
-    </div>
+  <div class="predictions-footer footer-text-colour">
+    <script type="text/javascript" src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"></script>
+    <script type="text/javascript">
+      kofiwidget2.init("Support Me", "#d9534f", "C0C069FOI");
+      kofiwidget2.draw();
+      </script>
+    <div class="method-description">Predictions are calculated using previous results and then adjusting by recent form and home advantage.</div>
+    <div class="last-updated">{{ params.last_updated }} UTC</div>
+  </div>
 
-    <script>
-      function toggleDetailsDisplay(id) {
-        let prediction = document.getElementById(id);
-        if (prediction != null) {
-          prediction.classList.toggle("expanded");
-        }
+  <script>
+    function toggleDetailsDisplay(id) {
+      let prediction = document.getElementById(id);
+      if (prediction != null) {
+        prediction.classList.toggle("expanded");
       }
-    </script>
-  </body>
+    }
+  </script>
+</body>
+
 </html>
-
-
 
 '

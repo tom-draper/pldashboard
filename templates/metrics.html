@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+  <title>Metrics</title>
+</head>
+
+<body>
+  <div class="predictions-header">
+    <a class="predictions-title main-link" style="text-decoration: none;" href="/metrics">
+      Metrics
+    </a>
+  </div>
+
+  <div class="page-content">
+    <div class="metrics-intro">
+      A range of metrics are calculated and used within the dashboard:
+    </div>
+    <div class="metric-container">
+      <div class="metric">Team Rating</div>
+      <div class="metric-used-in-container">
+        <div class="metric-used-in">Used within the y-axis in the Fixtures table</div>
+        <div class="metric-used-in">Used in the calculation for the form rating metric</div>
+      </div>
+      <div class="metric-explanation">A quantification of a team's long-term performance.
+
+        The metric is calculated by first calculating a rating for each team, for each of the last 4 seasons (including
+        the current season). The ratings consider the a team's position, points and goal difference for each given
+        season. A team's overall team rating is calculated by taking a weighted average of the teams individal season
+        ratings, with a greater weighting for more recent seasons.
+
+        The metric is normalised, making each rating relative to the other temas in the Premier League. If a team
+        performs top in <b>all</b> of the seasons used to calculate this metric, their team rating will be 1.</div>
+      <div class="metric-calculation"></div>
+    </div>
+    <div class="metric-container">
+      <div class="metric">Team Form Rating</div>
+      <div class="metric-used-in">Prediction</div>
+      <div class="metric-explanation">A quantification of each team's recent current performance based on the results of
+        their last 5 games.
+
+        To calculate the form rating for Team A, for each of the 5 most recent games, the absolute difference between
+        Team A's team rating and the team rating of the opposition is multiplied by the goal difference achieved against
+        the opposition team.
+
+        For each of the 5 games if Team A plays and
+        Team A wins:
+        That game will add
+        the form rating of the opposition team multiplied by the goal difference achieved
+        towards Team A's form rating
+        Team A draws:
+        That game will add (or subtract if negative)
+        the difference in Team A's form rating and the opposition team's form ratings
+        towards Team A's form rating
+        Team A loses:
+        That game will subtract
+        the form rating of the opposition team multiplied by the goal difference achieved
+        from Team A's form rating
+
+        These 5 positive or negative values for the last 5 games are summed to create the form rating. The rating is
+        capped between 0 and 1.
+      </div>
+      <div class="metric-calculation"></div>
+    </div>
+    <div class="metric-container">
+      <div class="metric">Home Advantage</div>
+      <div class="metric-used-in">Used within the y-axis in the Fixtures table</div>
+      <div class="metric-explanation">A quantification of the home advantage a team recieves from playing at home</div>
+      <div class="metric-calculation"></div>
+    </div>
+    <div class="metric-container">
+      <div class="metric">Score Predictions</div>
+      <div class="metric-used-in">Team Rating</div>
+      <div class="metric-explanation">A quantification of the home advantage a team recieves from playing at home</div>
+      <div class="metric-calculation"></div>
+    </div>
+  </div>
+
+  <div class="predictions-footer footer-text-colour">
+    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+    <script type='text/javascript'>kofiwidget2.init('Support Me', '#d9534f', 'C0C069FOI'); kofiwidget2.draw();</script>
+  </div>
+</body>
+
+</html>
