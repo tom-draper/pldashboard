@@ -437,7 +437,7 @@ img {
 .score {
   float: left;
   min-width: 40px;
-  margin: 0 4px;
+  margin: 0 6px;
   text-align: center;
   font-weight: 800;
 }
