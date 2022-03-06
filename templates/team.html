@@ -75,7 +75,7 @@
           <div class="icon-name pos-3">{{ params.form.recent_teams_played[3] }}</div>
           <div class="icon-name pos-4">{{ params.form.recent_teams_played[4] }}</div>
         </div>
-        <div class="current-form">Current Form: {{ params.form.rating }}%</div>
+        <div class="current-form">Current form: {{ params.form.rating }}%</div>
         <div class="table-snippet">
           <div class="divider"></div>
           <div class="table-row">
@@ -139,7 +139,10 @@
             Next Game:
             <a href="/{{params.next_game.opp_team.names.hyphenated}}" class="no-decoration" style="color:inherit;">
               {{ params.next_game.opp_team.names.name }}
-            </a> ({{ params.next_game.home_away }})
+            </a> 
+            <span class="parenthesis">(</span>
+            {{ params.next_game.home_away }}
+            <span class="parenthesis">)</span>
           </h1>
         </div>
         {% else %}

@@ -1342,7 +1342,7 @@ class Upcoming(DF):
 
     def _get_next_game_prediction_scoreline(self, team_name: str) -> str:
         home_initials, xg_home, away_initials, xg_away = self._get_next_game_prediction(team_name)
-        return f'{home_initials} {xg_home} - {xg_away} {away_initials}'
+        return f'{home_initials} {round(xg_home)} - {round(xg_away)} {away_initials}'
 
     @staticmethod
     def _game_result_tuple(match: dict) -> tuple[str, str]:
@@ -1459,15 +1459,20 @@ class Upcoming(DF):
             
             Rows: the 20 teams participating in the current season
             Columns:
-            --------------------------------------------
-            | NextGame | AtHome | Previous Meetings |
+            --------------------------------------------------------------------------------
+            | Date | NextGame | AtHome | PreviousMatches | Prediction | DetailedPrediction |
             
+            Date: the datetime of the upcoming match.
             NextGame: name of the opposition team in a team's next game
             AtHome: whether the team is playing the next match at home or away, 
                 either True or False
-            PreviousMatches: list of (String Date, Home Team, Away Team, Home Score, 
-                Away Score, Winning Team) tuples of each previous game between the
-                two teams
+            PreviousMatches: list of previous match dictionaries containing the 
+                date, home team, away team, home goals, away goals, match result 
+                for each match between the two teams
+            Prediction: a {'homeGoals': X, 'awayGoals': Y} dictionary holding the
+                predicted integer goals for each team
+            DetailedPrediction: a {'homeGoals': X, 'awayGoals': Y} dictionary holding the
+                predicted float goals for each team
                 
         Args:
             json_dict dict: the json data storage used to build the dataframe.
@@ -1514,7 +1519,7 @@ class Upcoming(DF):
         
         if display:
             print(upcoming)
-
+            
         self.df = upcoming
 
 

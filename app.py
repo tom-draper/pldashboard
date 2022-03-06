@@ -186,6 +186,8 @@ def get_params(team_name_hyphen: str) -> TeamParams:
 @app.route('/brentford')
 # @app.route('/west-bromwich-albion')
 # @app.route('/fulham')
+# @app.route('/bournemouth')
+# @app.route('/huddersfield-town')
 def team() -> str:
     if (rule := request.url_rule) is not None:
         # Get hypehenated team name from current URL

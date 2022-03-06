@@ -39,8 +39,8 @@
             <div class="prediction-value">
               <div class="prediction-initials">{{ pred['home'] }}</div>
               <div class="prediction-score">
-                {{ pred['prediction']['homeGoals'] }} - {{
-                pred['prediction']['awayGoals'] }}
+                {{ pred['prediction']['homeGoals']|round|int }} - {{
+                pred['prediction']['awayGoals']|round|int }}
               </div>
               <div class="prediction-initials">{{ pred['away'] }}</div>
             </div>
@@ -62,12 +62,12 @@
           {% endif %}
 
           <!-- Toggle to see detailed score (float version) -->
-          {% if pred['detailedPrediction'] != None %}
+          {% if pred['prediction'] != None %}
           <div class="prediction-details" id="{{ pred['_id'] }}">
             <div class="detailed-predicted-score">
               <b>
-                {{ pred['detailedPrediction']['homeGoals'] }} - {{
-                pred['detailedPrediction']['awayGoals']}}</b>
+                {{ pred['prediction']['homeGoals'] }} - {{
+                pred['prediction']['awayGoals']}}</b>
             </div>
           </div>
           {% endif %}

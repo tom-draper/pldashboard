@@ -118,7 +118,6 @@ class Database:
                 'away': p['awayInitials'],
                 'prediction': p['prediction'],
                 'actual': actual_score,
-                'detailedPrediction': p['detailedPrediction']
             }
             predictions.append(prediction) 
         return predictions
@@ -140,10 +139,6 @@ class Database:
                            'homeInitials': str,
                            'awayInitials': str,
                            'prediction': {
-                                'homeGoals': int,
-                                'awayGoals' int
-                                }
-                           'detailedPrediction': {
                                 'homeGoals': float,
                                 'awayGoals' float
                                 }
