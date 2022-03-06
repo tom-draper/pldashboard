@@ -625,7 +625,8 @@ class GoalsScoredAndConceded(Graph):
                        x=x,
                        y=midline,
                        mode='lines',
-                       line=dict(color='#757575',
+                    #    line=dict(color='#757575',
+                       line=dict(color='#9b9b9b',
                                  width=2),
                        hoverinfo='skip'),
         ])

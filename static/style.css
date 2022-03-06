@@ -120,7 +120,7 @@ a.kofi-button {
 }
 #back-button {
   position: absolute;
-  top: 20px;
+  top: 15px;
   left: 40px;
   width: 100px;
   height: 60px;
@@ -148,6 +148,9 @@ a.kofi-button {
   justify-content: center;
   align-content: center;
   height: 145px;
+}
+.main-link {
+  margin: 10px;
 }
 .home-page-footer {
   padding: 20px 0 30px;
@@ -436,7 +439,7 @@ img {
 }
 .score {
   float: left;
-  min-width: 42px;
+  min-width: 44px;
   margin: 0 4px;
   text-align: center;
   font-weight: 800;
