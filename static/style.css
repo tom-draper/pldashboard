@@ -268,8 +268,6 @@ img {
   font-weight: 800;
   font-size: 450px;
   text-align: left;
-  /* align-self: center; */
-  /* margin-right: 90px; */
   margin-left: 30px;
   user-select: none;
   max-width: 500px;
@@ -408,17 +406,14 @@ img {
   margin: 0 5% 2px;
 }
 .Drew {
-  background-color: #E1AE2D60;
   background-color: #ffb2477e;
   
 }
 .Won {
-  background-color: #4EE1253A;
   background-color: #77dd7798;
 }
 .Lost {
   background-color: #f3363688;
-  /* background-color: #ff492990; */
 }
 .past-result-date {
   font-size: 13px;

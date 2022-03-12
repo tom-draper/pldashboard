@@ -118,8 +118,8 @@ def get_team(team_name_hyphen: str) -> Team:
 
 
 def get_form(team_name: str) -> Form:
-    recent_form = updater.data.form.get_recent_form(team_name)
-    return Form(*recent_form)
+    form = updater.data.form.get_recent_form(team_name)
+    return Form(*form)
 
 
 def get_season_stats(team_name: str) -> SeasonStats:
