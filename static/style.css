@@ -555,6 +555,10 @@ img {
   width: fit-content;
   margin: 0 auto;
   position: relative;
+  user-select: none;
+}
+h1 {
+  user-select: none;
 }
 .season-stat-position {
   font-size: 0.3em;
@@ -604,10 +608,6 @@ img {
 
 .parenthesis {
   font-family: 'Courier New', Courier, monospace !important;
-}
-
-.svg-container {
-  z-index: -1;
 }
 
 /* Mobile view */
