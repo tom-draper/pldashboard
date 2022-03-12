@@ -118,8 +118,10 @@ def get_team(team_name_hyphen: str) -> Team:
 
 
 def get_form(team_name: str) -> Form:
-    form = updater.data.form.get_recent_form(team_name)
-    return Form(*form)
+    *rest, won_against_star_team = updater.data.form.get_recent_form(team_name)
+    # Replace boolean value with css tags
+    won_against_star_team = ['star-team' if val else 'not-star-team' for val in won_against_star_team]
+    return Form(*rest, won_against_star_team)
 
 
 def get_season_stats(team_name: str) -> SeasonStats:

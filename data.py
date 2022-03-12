@@ -675,7 +675,6 @@ class Form(DF):
         won_against_star_team = []  # 'star-team' or 'not-star-team' elements
         if matchday is not None:
             won_against_star_team = self._get_last_n_values(team_name, 'WonAgainstStarTeam', matchday, N)
-            won_against_star_team = ['star-team' if x else 'not-star-team' for x in won_against_star_team]
         won_against_star_team.reverse()
         return won_against_star_team
 
