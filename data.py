@@ -854,7 +854,7 @@ class Form(DF):
     def _last_n_matchdays(self, team_name: str, matchday_no: int, n: int):
         # All matchday numbers sorted by date
         all_matchdays = self.df.loc[team_name][(slice(None), 'Date')][self.df.loc[team_name][(slice(None), 'Score')] != None]
-        # all_matchdays = all_matchdays.sort_values(inplace=False)
+        all_matchdays = all_matchdays.sort_values(inplace=False)
         all_matchdays = all_matchdays.index.values
         
         matchday_no_idx = self._get_idx(all_matchdays, matchday_no)
@@ -873,7 +873,7 @@ class Form(DF):
 
     def _form_last_n_matchdays(self, form: DataFrame, team_name: str, matchday_no: int, n: int):
         all_matchdays = form.loc[team_name][(slice(None), 'Date')][form.loc[team_name][(slice(None), 'Score')] != None]
-        # all_matchdays = all_matchdays.sort_values(inplace=False)
+        all_matchdays = all_matchdays.sort_values(inplace=False)
         all_matchdays = all_matchdays.index.values
 
         matchday_no_idx = self._get_idx(all_matchdays, matchday_no)
@@ -887,7 +887,7 @@ class Form(DF):
         # Get the last n
         if len(all_matchdays) > n:
             last_n_matchdays = last_n_matchdays[-n:]  # Return last n
-
+            
         return last_n_matchdays
 
     def _build_form_str(self, form, team, last_n_matchday_nos):
@@ -999,20 +999,107 @@ class Form(DF):
         for matchday_n in matchday_ns:
             self._insert_gd_and_pts_col(form, matchday_n)
             self._insert_position_col(form, matchday_n)
-            self._insert_won_against_star_team_col(
-                form, team_ratings, matchday_n, star_team_threshold)
+            self._insert_won_against_star_team_col(form, team_ratings, matchday_n, star_team_threshold)
             self._insert_form_string_col(form, matchday_n, 5)
             self._insert_form_string_col(form, matchday_n, 10)
             self._insert_form_rating_col(form, team_ratings, matchday_n, 5)
             self._insert_form_rating_col(form, team_ratings, matchday_n, 10)
+    
+    def _insert_gd_pts(self, d, team, matchday_no, form, teams_matchdays, idx):
+        if form.at[team, (matchday_no, 'Score')] is None:
+            gd = 0
+            pts = 0
+        else:
+            at_home = form.at[team, (matchday_no, 'AtHome')]
+            gd = self._get_gd(form.at[team, (matchday_no, 'Score')], at_home)
+            pts = self._get_points(gd)
+        d[(matchday_no, 'GD')].append(gd)
+        d[(matchday_no, 'Points')].append(pts)
+        
+        if idx > 0:
+            prev_gd = d[(teams_matchdays[idx-1], 'CumulativeGD')][-1]
+            prev_pts = d[(teams_matchdays[idx-1], 'CumulativePoints')][-1]
+            d[(matchday_no, 'CumulativeGD')].append(gd + prev_gd)
+            d[(matchday_no, 'CumulativePoints')].append(pts + prev_pts)
+        else:
+            d[(matchday_no, 'CumulativeGD')].append(gd)
+            d[(matchday_no, 'CumulativePoints')].append(pts)
+        
+        return gd, pts
+    
+    def _insert_won_against_star_team(self, d, form, team_ratings, team, matchday_no, star_team_threshold):
+        won_against_star_team = False
+        if form.at[team, (matchday_no, 'Score')] is not None:
+            opp_team = form.at[team, (matchday_no, 'Team')]
+            opp_team_rating = team_ratings.df.at[opp_team, 'TotalRating']
+            won_against_star_team = opp_team_rating > star_team_threshold
+            
+        d[(matchday_no, 'WonAgainstStarTeam')].append(won_against_star_team)
+    
+    def _insert_position_columns(self, df, all_matchdays):
+        for matchday_no in all_matchdays:
+            df.sort_values(by=[(matchday_no, 'CumulativePoints'),
+                               (matchday_no, 'CumulativeGD')],
+                           ascending=False, 
+                           inplace=True)
+            df[matchday_no, 'Position'] = list(range(1, 21))
+    
+    def _insert_form(self, d, form, team_ratings, team, matchday_no, teams_matchdays, idx, N):
+        # Get last idx of matchday that has been played
+        while idx >= 0 and form.at[team, (teams_matchdays[idx], 'Score')] is None:
+            idx -= 1
+        
+        # Insert form string for last N games
+        last_n_matchday_nos = teams_matchdays[max(0, idx-N):idx]
+        form_str = self._build_form_str(form, team, last_n_matchday_nos)
+        d[(matchday_no, 'Form' + str(N))].append(form_str)
+
+        # Insert form rating for last N games
+        gds = [d[(md, 'GD')][-1] for md in last_n_matchday_nos]
+        teams_played = self._get_form_matchday_range_values(form, team, 'Team', last_n_matchday_nos)
+        form_rating = self._calc_form_rating(team_ratings, teams_played, form_str, gds)
+        d[(matchday_no, 'FormRating' + str(N))].append(form_rating)
+
+    def _form_columns(
+        self,
+        form: DataFrame,
+        team_ratings: TeamRatings,
+        star_team_threshold: float
+    ):
+        all_matchdays = set(form.columns.get_level_values(0).unique())
+        columns = ['GD', 'Points', 'CumulativeGD', 'CumulativePoints', 
+                   'WonAgainstStarTeam', 'Form5', 'FormRating5', 'Form10', 'FormRating10']
+        
+        d = defaultdict(lambda: [])
+        for team, row in form.iterrows():
+            teams_matchdays = row[(slice(None), 'Date')][row[(slice(None), 'Score')] != None]
+            # Matchdays sorted by date played
+            teams_matchdays = teams_matchdays.sort_values(inplace=False).index.values
+            
+            for idx, matchday_no in enumerate(teams_matchdays):
+                self._insert_gd_pts(d, team, matchday_no, form, teams_matchdays, idx)
+                self._insert_won_against_star_team(d, form, team_ratings, team, matchday_no, star_team_threshold)
+                self._insert_form(d, form, team_ratings, team, matchday_no, teams_matchdays, idx, 5) 
+                self._insert_form(d, form, team_ratings, team, matchday_no, teams_matchdays, idx, 10) 
+            
+            # Fill in any empty (non-played) matchdays
+            for matchday_no in all_matchdays - set(teams_matchdays):
+                for col in columns:
+                    d[(matchday_no, col)].append(np.nan)
+        
+        df = pd.DataFrame.from_dict(d)
+        df.index = form.index
+        
+        self._insert_position_columns(df, all_matchdays)
+                
+        return df
 
     def _clean_dataframe(self, form: DataFrame, matchday_nos: list[int]) -> DataFrame:
         self._convert_team_cols_to_initials(form, matchday_nos)
         # Drop columns used for working
         form = form.drop(columns=['Points'], level=1)
         form = form.reindex(sorted(form.columns.values), axis=1)
-        form = form.sort_values(
-            by=[(max(matchday_nos), 'FormRating5')], ascending=False)
+        form = form.sort_values(by=[(max(matchday_nos), 'FormRating5')], ascending=False)
         return form
 
     @timebudget
@@ -1077,8 +1164,9 @@ class Form(DF):
         matchday_nos = self._get_played_matchdays(fixtures)
         form = fixtures.df[matchday_nos].drop(columns=['Status'], level=1)
 
-        self._add_form_columns(
-            form, team_ratings, matchday_nos, star_team_threshold)
+        form_rows = self._form_columns(form, team_ratings, star_team_threshold)
+        
+        form = pd.concat([form, form_rows], axis=1)
 
         form = self._clean_dataframe(form, matchday_nos)
 
