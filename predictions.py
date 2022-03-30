@@ -240,11 +240,10 @@ class Predictor:
         team_name_initials = util.convert_team_name_or_initials(team_name)
         opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
 
-        # Construct prediction string for display...
+        # Construct prediction string for display
         if at_home:
             home = team_name_initials
             away = opp_team_name_initials
-            prediction = {'homeGoals': int(round(pred_scored)), 'awayGoals':  int(round(pred_conceded))}
             prediction = {'homeGoals': round(pred_scored, 4), 'awayGoals': round(pred_conceded, 4)}
         else:
             home = opp_team_name_initials
