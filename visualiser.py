@@ -1002,7 +1002,6 @@ class GoalsScoredFrequency(Graph):
             x, scored_y, conceded_y, avg_y = self._data_points(
                 goals_scored_freq, goals_conceded_freq, avg_goals_freq, team_name)
             
-            
             fig = go.Figure(data=[
                 go.Bar(name='Avg',
                        x=x,
