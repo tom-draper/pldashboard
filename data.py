@@ -94,7 +94,8 @@ class Standings(DF):
             # Init teams if doesn't already exits
             for team in [home_team, away_team]:
                 if team not in df_rows:
-                    df_rows[team] = {'Position': None, 'Played': 0, 'Won': 0, 'Drawn': 0, 'Lost': 0, 'GF': 0, 'GA': 0,
+                    df_rows[team] = {'Position': None, 'Played': 0, 'Won': 0, 
+                                     'Drawn': 0, 'Lost': 0, 'GF': 0, 'GA': 0,
                                      'GD': 0, 'Points': 0}
 
             if match['status'] == 'FINISHED':
@@ -301,36 +302,6 @@ class Fixtures(DF):
         avg_conceded = avg_conceded / total
 
         return avg_scored, avg_conceded
-
-    def n_goals_distribution(self):
-        dist = defaultdict(lambda: 0)
-
-        for matchday_no in self.df.columns.unique(level=0):
-            for _, row in self.df[matchday_no].iterrows():
-                score = row['Score']
-                if score is not None:
-                    h, a = utils.extract_int_score(score)
-                    dist[h+a] += 1
-
-        total_goals = sum(dist.values())
-        for k, v in dist.items():
-            dist[k] = v/total_goals
-
-        import matplotlib.pyplot as plt
-
-        x = list(range(10))
-        y = []
-        for x_ in x:
-            y.append(dist[x_])
-
-        print('Over 0.5:', sum(y[1:]))
-        print('Over 1.5:', sum(y[2:]))
-        print('Over 2.5:', sum(y[3:]))
-        print('Over 3.5:', sum(y[4:]))
-        print('Over 4.5:', sum(y[5:]))
-
-        plt.bar(x, y)
-        plt.show()
 
     @staticmethod
     def _insert_home_team_row(matchday: dict, match: dict, team_names: list[str]):
@@ -598,13 +569,11 @@ class Form(DF):
     def get_current_form_rating(self, team_name: str):
         current_matchday = self._get_current_matchday()
         matchday = self._get_last_played_matchday(current_matchday, team_name)
-
         return self._get_form_rating(team_name, matchday, 5)
 
     def get_long_term_form_rating(self, team_name: str):
         current_matchday = self._get_current_matchday()
         matchday = self._get_last_played_matchday(current_matchday, team_name)
-
         return self._get_form_rating(team_name, matchday, 10)
 
     @staticmethod
@@ -706,16 +675,16 @@ class Form(DF):
         current_matchday = self._get_current_matchday()
         matchday = self._get_last_played_matchday(current_matchday, team_name)
 
-        # Get precomputed form string, list of five 'W', 'D' or 'L'
-        form_list = self._get_form(team_name, matchday)
+        # Get precomputed form list and rating
+        form_lst = self._get_form(team_name, matchday)  # List of five 'W', 'D' or 'L'
         rating = self._get_form_rating(team_name, matchday, 5)
 
-        # Construct equivalent list to form for other attributes
+        # Construct equivalent list to form list for other attributes
         matchdays = self._last_n_matchdays(team_name, matchday, 5)
         teams_played = self._get_latest_teams_played(team_name, matchday, matchdays)
         won_against_star_team = self._get_won_against_star_team(team_name, matchday, matchdays)
 
-        return form_list, teams_played, rating, won_against_star_team
+        return form_lst, teams_played, rating, won_against_star_team
 
     @staticmethod
     def _get_points(gd: int) -> int:
@@ -739,17 +708,10 @@ class Form(DF):
     def _append_to_from_str(form_str: list, home: int, away: int, at_home: bool):
         if home == away:
             result = 'D'
-        elif at_home:
-            if home > away:
-                result = 'W'
-            elif home < away:
-                result = 'L'
-        else:
-            if home > away:
-                result = 'L'
-            elif home < away:
-                result = 'W'
-
+        elif (at_home and home > away) or (not at_home and home < away):
+            result = 'W'
+        elif (at_home and home < away) or (not at_home and home > away):
+            result = 'L'
         form_str.append(result)
 
     @staticmethod
@@ -840,27 +802,28 @@ class Form(DF):
         matchday_nos = sorted(list(status.columns.get_level_values(0)))
         return matchday_nos
     
+    def _insert_cum_gd_pts(self, d, gd, pts, matchday_no, teams_matchdays, idx):
+        cum_gd = gd
+        cum_pts = pts
+        if idx > 0:
+            prev_gd = d[(teams_matchdays[idx-1], 'CumGD')][-1]
+            prev_pts = d[(teams_matchdays[idx-1], 'CumPoints')][-1]
+            cum_gd = gd + prev_gd
+            cum_pts = pts + prev_pts
+        d[(matchday_no, 'CumGD')].append(cum_gd)
+        d[(matchday_no, 'CumPoints')].append(cum_pts)
+    
     def _insert_gd_pts(self, d, team, matchday_no, form, teams_matchdays, idx):
-        if form.at[team, (matchday_no, 'Score')] is None:
-            gd = 0
-            pts = 0
-        else:
+        gd = 0
+        pts = 0
+        if form.at[team, (matchday_no, 'Score')] is not None:
             at_home = form.at[team, (matchday_no, 'AtHome')]
             gd = self._get_gd(form.at[team, (matchday_no, 'Score')], at_home)
             pts = self._get_points(gd)
         d[(matchday_no, 'GD')].append(gd)
         d[(matchday_no, 'Points')].append(pts)
         
-        if idx > 0:
-            prev_gd = d[(teams_matchdays[idx-1], 'CumGD')][-1]
-            prev_pts = d[(teams_matchdays[idx-1], 'CumPoints')][-1]
-            d[(matchday_no, 'CumGD')].append(gd + prev_gd)
-            d[(matchday_no, 'CumPoints')].append(pts + prev_pts)
-        else:
-            d[(matchday_no, 'CumGD')].append(gd)
-            d[(matchday_no, 'CumPoints')].append(pts)
-        
-        return gd, pts
+        self._insert_cum_gd_pts(d, gd, pts, matchday_no, teams_matchdays, idx)
     
     def _insert_won_against_star_team(self, d, form, team_ratings, team, matchday_no, star_team_threshold):
         won_against_star_team = False
@@ -868,7 +831,6 @@ class Form(DF):
             opp_team = form.at[team, (matchday_no, 'Team')]
             opp_team_rating = team_ratings.df.at[opp_team, 'TotalRating']
             won_against_star_team = opp_team_rating > star_team_threshold
-            
         d[(matchday_no, 'WonAgainstStarTeam')].append(won_against_star_team)
     
     def _insert_position_columns(self, df, all_matchdays):
@@ -1002,7 +964,6 @@ class Form(DF):
         form = fixtures.df[matchday_nos].drop(columns=['Status'], level=1)
 
         form_rows = self._form_columns(form, team_ratings, star_team_threshold)
-        
         form = pd.concat([form, form_rows], axis=1)
 
         form = self._clean_dataframe(form, matchday_nos)
@@ -1162,10 +1123,9 @@ class HomeAdvantages(DF):
     @staticmethod
     def _home_advantages_for_season(d: defaultdict, data: dict, season: int):
         for match in data:
-            home_team = match['homeTeam']['name'].replace('&', 'and')
-            away_team = match['awayTeam']['name'].replace('&', 'and')
-
             if match['score']['winner'] is not None:
+                home_team = match['homeTeam']['name'].replace('&', 'and')
+                away_team = match['awayTeam']['name'].replace('&', 'and')
                 home_goals = match['score']['fullTime']['homeTeam']
                 away_goals = match['score']['fullTime']['awayTeam']
                 if home_goals > away_goals:
@@ -1221,8 +1181,7 @@ class HomeAdvantages(DF):
             1) == 'HomeAdvantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
         if (home_advantages[season]['Home']['Played'] <= threshold).all():
-            print(
-                f"Current season excluded from home advantages calculation -> all teams must have played {threshold} home games.")
+            print(f"Current season excluded from home advantages calculation -> all teams must have played {threshold} home games.")
             # Drop this current seasons column (start from previous season)
             home_advantages_cols = home_advantages_cols.drop(
                 season, level=0, axis=1)
@@ -1587,6 +1546,7 @@ class Upcoming(DF):
 
         upcoming = pd.DataFrame.from_dict(d, orient='index')
 
+        # Generate and insert new predictions for upcoming games
         predictions = self.predictions.update(fixtures, form, upcoming, home_advantages)
         upcoming = pd.concat([upcoming, predictions], axis=1)
 
