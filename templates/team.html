@@ -19,7 +19,6 @@
     .D {
       background-image: url("static/img/form_img/draw.png");
     }
-
     .L {
       background-image: url("static/img/form_img/lose.png");
     }
@@ -277,7 +276,7 @@
 
   <div class="row">
     <div class="goals-freq-row row-graph">
-      <h1>Goals Frequency</h1>
+      <h1>Goals Per Game</h1>
       <div class="two-graphs">
         <div class="graph freq-graph mini-graph">
           {% include 'graphs/%s/goals-scored-frequency-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %}
