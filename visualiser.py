@@ -1,6 +1,6 @@
 from collections import defaultdict
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 import numpy as np
@@ -174,18 +174,21 @@ class Fixtures(Graph):
     def _increase_next_game_size(
             sizes: list[int], 
             x: list[datetime], 
-            match_n: int, 
             NOW: datetime, 
-            N_MATCHES: int, 
             BIG_MARKER_SIZE: int,
         ):
-        if match_n == 0:
-            # If haven't played first game of season
-            if NOW < x[-1]:
-                sizes[match_n] = BIG_MARKER_SIZE
-        elif (match_n != N_MATCHES) and (x[-2] < NOW <= x[-1]):
-            sizes[match_n] = BIG_MARKER_SIZE
-
+        # Get matchday date with smallest time different to now
+        min_time_diff = np.inf
+        idx = None
+        for i, match_date in enumerate(x):
+            time_diff = (match_date - NOW).days
+            if 0 < time_diff < min_time_diff:
+                min_time_diff = time_diff
+                idx = i  # Save index of possible next game
+        
+        if idx is not None:
+            sizes[idx] = BIG_MARKER_SIZE
+    
     def _data_points(
             self, 
             team_fixtures: DataFrame, 
@@ -215,11 +218,11 @@ class Fixtures(Graph):
             match_detail = self._match_detail(match)
             details.append(match_detail)
 
-            # Increase size of point marker if it's the current upcoming match
-            self._increase_next_game_size(sizes, x, match_n, NOW, N_MATCHES, BIG_MARKER_SIZE)
+        # Increase size of point marker if it's the current upcoming match
+        self._increase_next_game_size(sizes, x, NOW, BIG_MARKER_SIZE)
 
         # Sort the data by date to remove errors due to match rescheduling
-        x, y, details = zip(*sorted(zip(x, y, details)))
+        x, y, details, sizes = zip(*sorted(zip(x, y, details, sizes)))
 
         return x, y, details, sizes
     
@@ -246,12 +249,12 @@ class Fixtures(Graph):
             # Get row of fixtures dataframe
             team_fixtures = fixtures.df.loc[team_name]
             x, y, details, sizes = self._data_points(team_fixtures,
-                                                              team_ratings,
-                                                              home_advantages,
-                                                              NOW,
-                                                              N_MATCHES,
-                                                              DEFAULT_MARKER_SIZE,
-                                                              BIG_MARKER_SIZE)
+                                                     team_ratings,
+                                                     home_advantages,
+                                                     NOW,
+                                                     N_MATCHES,
+                                                     DEFAULT_MARKER_SIZE,
+                                                     BIG_MARKER_SIZE)
 
             fig = self._get_fig(x, y, details, sizes, NOW)
 

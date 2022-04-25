@@ -220,7 +220,7 @@ if __name__ == "__main__":
     updater = Updater(2021)
     updater.update_all(
         request_new=True, 
-        team_name='Liverpool FC', 
+        team_name='Leicester City FC', 
         display_tables=True, 
         display_graphs=False
     )
