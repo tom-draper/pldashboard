@@ -4,4 +4,4 @@ A football dashboard to show the recent, relative state of each Premier League t
 
 Available at: https://pldashboard.com
 
-![Leicester-City](https://user-images.githubusercontent.com/41476809/115970455-5bb1d780-a53a-11eb-88fc-9c5a697cbc76.png)
+![Leicester-City](https://user-images.githubusercontent.com/41476809/167265224-6d525bbb-ccad-4cf6-bad1-b508c0278ba6.png)
