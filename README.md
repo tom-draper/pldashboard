@@ -1,6 +1,6 @@
 # Premier-League
 
-A football dashboard to show the recent, relative state of each Premier League team, with a focus on a simple, efficient, yet expressive and intuitive design. It includes visualisations, metrics and predictions. Created with Python, Flask, Plotly and football-data.org. The application aims for clarity and transpareny within the metrics, predictions and visualisations so you can interact with it as a tool, rather than a black box.
+A football dashboard to show the recent performance of each Premier League team, including interactive visualisations, key metrics and predictions. Created with Python, Flask, Plotly and football-data.org. 
 
 Available at: https://pldashboard.com
 
