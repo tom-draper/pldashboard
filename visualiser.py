@@ -181,7 +181,7 @@ class Fixtures(Graph):
         min_time_diff = np.inf
         idx = None
         for i, match_date in enumerate(x):
-            time_diff = (match_date - NOW).days
+            time_diff = (match_date - NOW).total_seconds()
             if 0 < time_diff < min_time_diff:
                 min_time_diff = time_diff
                 idx = i  # Save index of possible next game
