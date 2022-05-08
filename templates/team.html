@@ -28,7 +28,7 @@
     }
 
     #back-button {
-      background: url("static/img/back.png") no-repeat;
+      background: url("static/img/Back3.png") no-repeat;
       background-size: contain;
     }
   </style>
@@ -136,10 +136,7 @@
           <h1 class="next-game-title-text"
             style="color: var(--{{ params.next_game.opp_team.names.hyphenated  }}-secondary);">
             Next Game:
-            <a href="/{{params.next_game.opp_team.names.hyphenated}}" class="no-decoration" style="color:inherit;">
-              {{ params.next_game.opp_team.names.name }}
-            </a> 
-            <span class="parenthesis">(</span>{{ params.next_game.home_away }}<span class="parenthesis">)</span>
+            <a href="/{{params.next_game.opp_team.names.hyphenated}}" class="no-decoration" style="color:inherit;">{{ params.next_game.opp_team.names.name }}</a><span class="parenthesis">(</span>{{ params.next_game.home_away }}<span class="parenthesis">)</span>
           </h1>
         </div>
         {% else %}

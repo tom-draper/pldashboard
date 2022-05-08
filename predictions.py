@@ -370,19 +370,18 @@ class Predictions:
             fixtures: Fixtures, 
             form: Form, 
             upcoming: Upcoming, 
-            home_advantages: HomeAdvantages
+            home_advantages: HomeAdvantages,
+            update_db: bool = True
         ) -> DataFrame:
         predictions = self.predictor.gen_score_predictions(
             fixtures, form, upcoming, home_advantages)
         actual_scores = self._get_actual_scores(fixtures)
         
-        self.database.update_predictions(predictions, actual_scores)
-        
-        self.accuracy = self.database.update_accuracy()
-        
-        self.database.update_actual_scores(actual_scores)
-        
-        self._print_accuracy()
+        if update_db:
+            self.database.update_predictions(predictions, actual_scores)
+            self.accuracy = self.database.update_accuracy()
+            self.database.update_actual_scores(actual_scores)
+            self._print_accuracy()
 
         upcoming_predictions = pd.DataFrame.from_dict(
             predictions, 

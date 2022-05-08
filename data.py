@@ -1,7 +1,6 @@
 from collections import defaultdict
 from dataclasses import field
 from datetime import datetime
-from multiprocessing.sharedctypes import Value
 from typing import Optional
 from xmlrpc.client import Boolean
 
@@ -589,11 +588,17 @@ class Form(DF):
         n_should_have_played = self._n_should_have_played(current_matchday, N)
         return len(recent_games) != n_should_have_played
 
-    def _get_last_played_matchday(self, current_matchday: int, team_name: str) -> int:
+    def _get_last_played_matchday2(self, current_matchday: int, team_name: str) -> int:
         matchday = current_matchday
         if self._not_played_current_matchday(team_name, current_matchday):
             # Use previous matchday's form
             matchday = self._get_prev_matchday()
+        return matchday
+
+    def _get_last_played_matchday(self, current_matchday: int, team_name: str) -> int:
+        matchday = current_matchday
+        while matchday > 0 and self.df.at[team_name, (matchday, 'Score')] is None:
+            matchday -= 1
         return matchday
 
     def _get_form(self, team_name: str, matchday: int) -> list[str]:
@@ -1486,7 +1491,8 @@ class Upcoming(DF):
         team_names: list[str],
         season: int,
         n_seasons: int = 3,
-        display: bool = False
+        display: bool = False,
+        update_db: bool = True
     ):
         """ Assigns self.df a dataframe for details about the next game each team 
             has to play.
@@ -1547,7 +1553,7 @@ class Upcoming(DF):
         upcoming = pd.DataFrame.from_dict(d, orient='index')
 
         # Generate and insert new predictions for upcoming games
-        predictions = self.predictions.update(fixtures, form, upcoming, home_advantages)
+        predictions = self.predictions.update(fixtures, form, upcoming, home_advantages, update_db)
         upcoming = pd.concat([upcoming, predictions], axis=1)
 
         upcoming.index.name = 'Team'

@@ -107,7 +107,8 @@ class Updater:
 
         return logo_urls
 
-    def update_dataframes(self, n_seasons: int, display_tables: bool = False):
+    def update_dataframes(self, n_seasons: int, display_tables: bool = False, 
+                          update_db: bool = True):
         # Standings for the last [n_seasons] seasons
         self.data.standings.update(
             self.json_data, 
@@ -160,7 +161,8 @@ class Updater:
             self.data.team_names, 
             self.current_season, 
             n_seasons, 
-            display=display_tables
+            display=display_tables,
+            update_db=update_db
         )
         
         
@@ -174,11 +176,11 @@ class Updater:
         self.data.upcoming._save_to_html()
         self.data.season_stats._save_to_html()
     
-    def update_data(self, n_seasons, display_tables):
+    def update_data(self, n_seasons, display_tables, update_db):
         self.data.logo_urls = self.get_logo_urls()
         self.data.team_names = self.data.logo_urls.keys()
         # Using stored data in self.json_data
-        self.update_dataframes(n_seasons, display_tables)
+        self.update_dataframes(n_seasons, display_tables, update_db)
     
     @timebudget
     def update_all(
@@ -187,7 +189,8 @@ class Updater:
             team_name: str = None, 
             display_tables: bool = False, 
             display_graphs: bool = False, 
-            request_new: bool = True
+            request_new: bool = True,
+            update_db: bool = True
         ):
         try:
             self.fetch_json_data(n_seasons, request_new)
@@ -197,7 +200,7 @@ class Updater:
             request_new = False
             self.fetch_json_data(n_seasons, request_new)
 
-        self.update_data(n_seasons, display_tables)
+        self.update_data(n_seasons, display_tables, update_db)
 
         if request_new:
             print('💾 Saving new data as JSON files...')

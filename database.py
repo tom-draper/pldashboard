@@ -96,7 +96,7 @@ class Database:
         client.close()
         
         return accuracy
-    
+            
     @staticmethod
     def _get_actual_score(
             home_initials: str, 
