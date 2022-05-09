@@ -244,14 +244,6 @@
 
   <div class="season-stats-row">
     <div class="season-stats">
-      <div class="season-stat clean-sheet-ratio">
-        <div class="season-stat-value">
-          {{ params.season_stats.clean_sheets.ratio }}
-          <div class="season-stat-position ssp-{{ params.season_stats.clean_sheets.position }}" id="ssp1">{{
-            params.season_stats.clean_sheets.position }}</div>
-        </div>
-        <div class="season-stat-text">clean sheets</div>
-      </div>
       <div class="season-stat goals-per-game">
         <div class="season-stat-value">
           {{ params.season_stats.goals_per_game.ratio }}
@@ -267,6 +259,14 @@
             params.season_stats.conceded_per_game.position }}</div>
         </div>
         <div class="season-stat-text">conceded per game</div>
+      </div>
+      <div class="season-stat clean-sheet-ratio">
+        <div class="season-stat-value">
+          {{ params.season_stats.clean_sheets.ratio }}
+          <div class="season-stat-position ssp-{{ params.season_stats.clean_sheets.position }}" id="ssp1">{{
+            params.season_stats.clean_sheets.position }}</div>
+        </div>
+        <div class="season-stat-text">clean sheets</div>
       </div>
     </div>
   </div>

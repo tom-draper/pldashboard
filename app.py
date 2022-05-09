@@ -229,11 +229,10 @@ def insert_predictions_colours(predictions: list):
         if pred['actual'] is None:
             pred['colour'] = ''  # No colour
         else:
-            ph = pred['prediction']['homeGoals']
-            pa = pred['prediction']['awayGoals']
+            ph = round(pred['prediction']['homeGoals'])
+            pa = round(pred['prediction']['awayGoals'])
             ah = pred['actual']['homeGoals']
             aa = pred['actual']['awayGoals']
-            
             if ph == ah and pa == aa:
                 pred['colour'] = 'green'  # Predicted perfectly
             elif correct_result(ph, pa, ah, aa):

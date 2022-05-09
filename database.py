@@ -35,8 +35,8 @@ class Database:
         home_goals_diff = 0
         away_goals_diff = 0
         for p in played:
-            ph = p['prediction']['homeGoals']
-            pa = p['prediction']['awayGoals']
+            ph = round(p['prediction']['homeGoals'])
+            pa = round(p['prediction']['awayGoals'])
             ah = p['actual']['homeGoals']
             aa = p['actual']['awayGoals']
             if ph == ah and pa == aa:

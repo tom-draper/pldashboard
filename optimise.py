@@ -102,10 +102,10 @@ class OptimisePredictions:
         updater = Updater(current_season)
         updater.update_all(request_new=True)
         
-        n = 50
+        n = 100
         home_advantage_multiplier = 1
         best = (-1, -1, -1, home_advantage_multiplier)
-        for form_diff_multiplier in np.linspace(1.5, 10, n):
+        for form_diff_multiplier in np.linspace(0, 1.5, n):
             predictor = Predictor(home_advantage_multiplier, form_diff_multiplier)
             accuracy, results_accuracy = self.score_predictions(predictor, 
                                                                 actual_scores,
@@ -114,7 +114,7 @@ class OptimisePredictions:
                                                                 updater.data.form, 
                                                                 updater.data.fixtures,
                                                                 updater.data.home_advantages)
-            if results_accuracy > best[1]:
+            if accuracy + results_accuracy > best[0] + best[1]:
                 best = (accuracy, results_accuracy, form_diff_multiplier, home_advantage_multiplier)
                 print('New best found:', best)
                 
