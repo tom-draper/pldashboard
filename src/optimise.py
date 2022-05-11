@@ -4,7 +4,7 @@ import numpy as np
 from predictions import Predictor
 from updater import Updater
 from utilities import Utilities
-from tqdm import tqdm
+from database import Database
 
 util = Utilities()
 
@@ -46,9 +46,10 @@ class OptimisePredictions:
                         prev_matches.append(prev_match)
         return prev_matches
     
-    def score_predictions(self, predictor, actual_scores, json_data, team_names, form, fixtures, home_advantages) -> dict:
+    def prediction_performance(self, predictor, actual_scores, json_data, team_names, form, fixtures, home_advantages) -> dict:
         correct = 0
         correct_result = 0
+        loss = 0
         # Check ALL teams as two teams can have different next games
         for team_name, opp_team_name, actual_score in actual_scores:
             form_rating = form.get_current_form_rating(team_name)
@@ -73,50 +74,50 @@ class OptimisePredictions:
                 correct += 1
             if self.correct_result(pred_scored, pred_conceded, actual_score['homeGoals'], actual_score['awayGoals']):
                 correct_result += 1
+            loss += (abs(pred_scored - actual_score['homeGoals']) + abs(pred_conceded - actual_score['awayGoals']))**2
 
         accuracy = correct / len(actual_scores)
         results_accuracy = correct_result / len(actual_scores)
+        loss = loss / len(actual_scores)
         
-        return accuracy, results_accuracy
+        return accuracy, results_accuracy, loss
     
     @staticmethod
-    def get_actual_scores(current_season):
-        with open(f'data/predictions_{current_season}.json') as json_file:
-            data = json.load(json_file)
-            predictions_json = data['predictions']
+    def get_actual_scores():
+        database = Database()
+        predictions = database.get_predictions()
         
         actual_scores = []
-        for predictions in predictions_json.values():
-            for prediction in predictions:
-                if prediction['actual'] is not None:
-                    actual_score = (util.convert_team_name_or_initials(prediction['homeInitials']), 
-                                    util.convert_team_name_or_initials(prediction['awayInitials']),
-                                    prediction['actual'])
-                    actual_scores.append(actual_score)
+        for prediction in predictions:
+            if prediction['actual'] is not None:
+                actual_score = (util.convert_team_name_or_initials(prediction['home']), 
+                                util.convert_team_name_or_initials(prediction['away']),
+                                prediction['actual'])
+                actual_scores.append(actual_score)
         return actual_scores
             
     
     def brute_force(self, current_season):
-        actual_scores = self.get_actual_scores(current_season)
-        
         updater = Updater(current_season)
-        updater.update_all(request_new=True)
+        updater.update_all(request_new=True, update_db=False)
         
-        n = 100
+        actual_scores = self.get_actual_scores()
+        
         home_advantage_multiplier = 1
-        best = (-1, -1, -1, home_advantage_multiplier)
-        for form_diff_multiplier in np.linspace(0, 1.5, n):
-            predictor = Predictor(home_advantage_multiplier, form_diff_multiplier)
-            accuracy, results_accuracy = self.score_predictions(predictor, 
-                                                                actual_scores,
-                                                                updater.json_data,
-                                                                updater.data.team_names,
-                                                                updater.data.form, 
-                                                                updater.data.fixtures,
-                                                                updater.data.home_advantages)
-            if accuracy + results_accuracy > best[0] + best[1]:
-                best = (accuracy, results_accuracy, form_diff_multiplier, home_advantage_multiplier)
-                print('New best found:', best)
+        best = (np.inf, -1, home_advantage_multiplier)
+        for home_advantage_multiplier in np.linspace(0, 5, 20):
+            for form_diff_multiplier in np.linspace(0, 5, 20):
+                predictor = Predictor(home_advantage_multiplier, form_diff_multiplier)
+                accuracy, results_accuracy, loss = self.prediction_performance(predictor, 
+                                                                               actual_scores,
+                                                                               updater.json_data,
+                                                                               updater.data.team_names,
+                                                                               updater.data.form, 
+                                                                               updater.data.fixtures,
+                                                                               updater.data.home_advantages)
+                if loss < best[0]:
+                    best = (loss, form_diff_multiplier, home_advantage_multiplier)
+                    print('New best found:', best)
                 
         print('FINAL BEST:', best)
 
