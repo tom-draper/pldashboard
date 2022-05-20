@@ -1,20 +1,21 @@
 import json
 from collections import defaultdict, deque
 from dataclasses import dataclass
-from threading import Thread
-from time import sleep
 
 from flask import Flask, jsonify, render_template, request
 from flask_compress import Compress
 from pandas.core.frame import DataFrame
 
 from updater import Updater
+from utilities import Utilities
 
 season = 2021
 
 compress = Compress()
 app = Flask(__name__)
 compress.init_app(app)
+
+utils = Utilities()
 
 
 # ----------------------------- HOME PAGE --------------------------------------
@@ -118,8 +119,12 @@ def get_team(team_name_hyphen: str) -> Team:
 
 
 def get_form(team_name: str) -> Form:
-    recent_form = updater.data.form.get_recent_form(team_name)
-    return Form(*recent_form)
+    form, teams_played, rating, won_against_star_team = updater.data.form.get_recent_form(team_name)
+    # Replace boolean value with css tags
+    won_against_star_team = ['star-team' if val else 'not-star-team' for val in won_against_star_team]
+    # Replace team names with initials
+    teams_played = [utils.convert_team_name_or_initials(team_name) for team_name in teams_played]
+    return Form(form, teams_played, rating, won_against_star_team)
 
 
 def get_season_stats(team_name: str) -> SeasonStats:
@@ -186,6 +191,8 @@ def get_params(team_name_hyphen: str) -> TeamParams:
 @app.route('/brentford')
 # @app.route('/west-bromwich-albion')
 # @app.route('/fulham')
+# @app.route('/bournemouth')
+# @app.route('/huddersfield-town')
 def team() -> str:
     if (rule := request.url_rule) is not None:
         # Get hypehenated team name from current URL
@@ -220,11 +227,10 @@ def insert_predictions_colours(predictions: list):
         if pred['actual'] is None:
             pred['colour'] = ''  # No colour
         else:
-            ph = pred['prediction']['homeGoals']
-            pa = pred['prediction']['awayGoals']
+            ph = round(pred['prediction']['homeGoals'])
+            pa = round(pred['prediction']['awayGoals'])
             ah = pred['actual']['homeGoals']
             aa = pred['actual']['awayGoals']
-            
             if ph == ah and pa == aa:
                 pred['colour'] = 'green'  # Predicted perfectly
             elif correct_result(ph, pa, ah, aa):

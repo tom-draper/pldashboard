@@ -35,8 +35,8 @@ class Database:
         home_goals_diff = 0
         away_goals_diff = 0
         for p in played:
-            ph = p['prediction']['homeGoals']
-            pa = p['prediction']['awayGoals']
+            ph = round(p['prediction']['homeGoals'])
+            pa = round(p['prediction']['awayGoals'])
             ah = p['actual']['homeGoals']
             aa = p['actual']['awayGoals']
             if ph == ah and pa == aa:
@@ -96,7 +96,7 @@ class Database:
         client.close()
         
         return accuracy
-    
+            
     @staticmethod
     def _get_actual_score(
             home_initials: str, 
@@ -118,7 +118,6 @@ class Database:
                 'away': p['awayInitials'],
                 'prediction': p['prediction'],
                 'actual': actual_score,
-                'detailedPrediction': p['detailedPrediction']
             }
             predictions.append(prediction) 
         return predictions
@@ -140,10 +139,6 @@ class Database:
                            'homeInitials': str,
                            'awayInitials': str,
                            'prediction': {
-                                'homeGoals': int,
-                                'awayGoals' int
-                                }
-                           'detailedPrediction': {
                                 'homeGoals': float,
                                 'awayGoals' float
                                 }

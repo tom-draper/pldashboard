@@ -240,19 +240,17 @@ class Predictor:
         team_name_initials = util.convert_team_name_or_initials(team_name)
         opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
 
-        # Construct prediction string for display...
+        # Construct prediction string for display
         if at_home:
             home = team_name_initials
             away = opp_team_name_initials
-            prediction = {'homeGoals': int(round(pred_scored)), 'awayGoals':  int(round(pred_conceded))}
-            detailed_prediction = {'homeGoals': round(pred_scored, 4), 'awayGoals': round(pred_conceded, 4)}
+            prediction = {'homeGoals': round(pred_scored, 4), 'awayGoals': round(pred_conceded, 4)}
         else:
             home = opp_team_name_initials
             away = team_name_initials
-            prediction = {'homeGoals':  int(round(pred_conceded)), 'awayGoals':  int(round(pred_scored))}
-            detailed_prediction = {'homeGoals': round(pred_conceded, 4), 'awayGoals': round(pred_scored, 4)}
+            prediction = {'homeGoals': round(pred_conceded, 4), 'awayGoals': round(pred_scored, 4)}
 
-        return home, away, prediction, detailed_prediction
+        return home, away, prediction
 
     def gen_score_predictions(
             self, 
@@ -287,7 +285,7 @@ class Predictor:
                     opp_home_advantage, at_home, form_rating, long_term_form_rating,
                     opp_form_rating, opp_long_term_form_rating, prev_matches)
 
-                home_initials, away_initials, pred, detailed_pred = self._prediction_details(
+                home_initials, away_initials, pred = self._prediction_details(
                     team_name, opp_team_name, pred_scored, pred_conceded, at_home)
 
                 date = upcoming.at[team_name, 'Date'].to_pydatetime()
@@ -295,8 +293,7 @@ class Predictor:
                 prediction = {'date': date,
                               'homeInitials': home_initials,
                               'awayInitials': away_initials,
-                              'prediction': pred,
-                              'detailedPrediction': detailed_pred}
+                              'prediction': pred}
 
             predictions[team_name] = prediction
 
@@ -373,24 +370,22 @@ class Predictions:
             fixtures: Fixtures, 
             form: Form, 
             upcoming: Upcoming, 
-            home_advantages: HomeAdvantages
+            home_advantages: HomeAdvantages,
+            update_db: bool = True
         ) -> DataFrame:
         predictions = self.predictor.gen_score_predictions(
             fixtures, form, upcoming, home_advantages)
         actual_scores = self._get_actual_scores(fixtures)
         
-        self.database.update_predictions(predictions, actual_scores)
-        
-        self.accuracy = self.database.update_accuracy()
-        
-        self.database.update_actual_scores(actual_scores)
-        
-        self._print_accuracy()
+        if update_db:
+            self.database.update_predictions(predictions, actual_scores)
+            self.accuracy = self.database.update_accuracy()
+            self.database.update_actual_scores(actual_scores)
+            self._print_accuracy()
 
         upcoming_predictions = pd.DataFrame.from_dict(
             predictions, 
             orient='index'
-        )[['prediction', 'detailedPrediction']]
-        upcoming_predictions.columns = ['Prediction', 'DetailedPrediction']
+        )[['prediction']].rename(columns={'prediction': 'Prediction'})
 
         return upcoming_predictions

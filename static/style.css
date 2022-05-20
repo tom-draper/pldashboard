@@ -120,7 +120,7 @@ a.kofi-button {
 }
 #back-button {
   position: absolute;
-  top: 20px;
+  top: 15px;
   left: 40px;
   width: 100px;
   height: 60px;
@@ -135,7 +135,7 @@ a.kofi-button {
 .teams {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  width: 90%;
+  width: 80%;
   margin: 8px auto;
   box-shadow: 0 0 0.5em 0.1em rgba(0, 0, 0, 0.2);
   background-color: rgba(0, 0, 0, 0.1);
@@ -147,7 +147,10 @@ a.kofi-button {
   display: flex;
   justify-content: center;
   align-content: center;
-  height: 145px;
+  height: 125px;
+}
+.main-link {
+  margin: 10px;
 }
 .home-page-footer {
   padding: 20px 0 30px;
@@ -162,6 +165,12 @@ a.kofi-button {
 }
 .pl-text {
   color: #e90052;
+}
+
+@media only screen and (max-width: 1250px) {
+  .teams {
+    width: 90%;
+  }
 }
 
 @media only screen and (max-width: 1100px) {
@@ -259,7 +268,9 @@ img {
   font-weight: 800;
   font-size: 450px;
   text-align: left;
+  margin-left: 30px;
   user-select: none;
+  max-width: 500px;
 }
 .current-form-row {
   font-size: 0.9em;
@@ -395,17 +406,14 @@ img {
   margin: 0 5% 2px;
 }
 .Drew {
-  background-color: #E1AE2D60;
   background-color: #ffb2477e;
   
 }
 .Won {
-  background-color: #4EE1253A;
   background-color: #77dd7798;
 }
 .Lost {
   background-color: #f3363688;
-  /* background-color: #ff492990; */
 }
 .past-result-date {
   font-size: 13px;
@@ -436,7 +444,7 @@ img {
 }
 .score {
   float: left;
-  min-width: 40px;
+  min-width: 44px;
   margin: 0 4px;
   text-align: center;
   font-weight: 800;
@@ -547,6 +555,10 @@ img {
   width: fit-content;
   margin: 0 auto;
   position: relative;
+  user-select: none;
+}
+h1 {
+  user-select: none;
 }
 .season-stat-position {
   font-size: 0.3em;
@@ -592,6 +604,10 @@ img {
 }
 .debug {
   border: 4px solid rgb(46 46 46);
+}
+
+.parenthesis {
+  font-family: 'Courier New', Courier, monospace !important;
 }
 
 /* Mobile view */
@@ -933,15 +949,7 @@ img {
 .red {
   background-color: #C23B22;
 }
-/* .green {
-  background-color: #54FE68;
-}
-.yellow {
-  background-color: #EDEC55;
-}
-.red {
-  background-color: #FF6566;
-} */
+
 .predictions-title {
   font-size: 3em;
   font-weight: 800;
