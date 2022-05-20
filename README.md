@@ -2,7 +2,7 @@
 
 A football dashboard to show the recent performance of each Premier League team, including interactive visualisations, key metrics and predictions.
 
-Created with Python, Flask, Plotly and football-data.org. 
+Created with Python, Flask, Plotly Pandas and football-data.org. 
 
 Available at: https://pldashboard.com
 
