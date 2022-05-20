@@ -2,7 +2,6 @@ from collections import defaultdict
 from dataclasses import field
 from datetime import datetime
 from typing import Optional
-from xmlrpc.client import Boolean
 
 import numpy as np
 import pandas as pd
@@ -597,7 +596,7 @@ class Form(DF):
 
     def _get_last_played_matchday(self, current_matchday: int, team_name: str) -> int:
         matchday = current_matchday
-        while matchday > 0 and self.df.at[team_name, (matchday, 'Score')] is None:
+        while self.df.at[team_name, (matchday, 'Score')] is None and matchday > 0:
             matchday -= 1
         return matchday
 
@@ -655,7 +654,7 @@ class Form(DF):
         team_name: str,
         column_name: str,
         matchday_ns: list[int]
-    ) -> list[Boolean]:
+    ) -> list[bool]:
         col_headings = [(matchday, column_name) for matchday in matchday_ns]
         values = [self.df.at[team_name, col] for col in col_headings]
         return values
@@ -672,14 +671,32 @@ class Form(DF):
         if len(matchdays) != 0:
             current_matchday = matchdays[-(n_back+1)]
         return current_matchday
+    
+    def get_recent_form(self, team_name: str):
+        matchday = self._get_current_matchday()
+        team_row = self.df.loc[team_name]
+        # Played games sorted by date
+        games = sorted([team_row[i] for i in range(1, matchday) if team_row[i]['Score'] != 'None - None'], key=lambda x: x['Date'])
+        if len(games) > 5:
+            games = games[-5:]  # Take last 5 games
+        
+        # Take most recent form values
+        form_lst = list(reversed(games[-1]['Form5']))
+        rating = (games[-1]['FormRating5'] * 100).round(1)
+        
+        # Construct lists of last 5 values
+        teams_played = [game['Team'] for game in games]
+        won_against_star_team = [game['WonAgainstStarTeam'] for game in games]
+        
+        return form_lst, teams_played, rating, won_against_star_team
 
-    def get_recent_form(
+    def get_recent_form2(
         self,
         team_name: str
     ) -> tuple[list[str], DataFrame, float, list[str]]:
         current_matchday = self._get_current_matchday()
         matchday = self._get_last_played_matchday(current_matchday, team_name)
-
+        
         # Get precomputed form list and rating
         form_lst = self._get_form(team_name, matchday)  # List of five 'W', 'D' or 'L'
         rating = self._get_form_rating(team_name, matchday, 5)
