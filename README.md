@@ -1,7 +1,9 @@
 # Premier-League
 
-A football dashboard to show the recent, relative state of each Premier League team, with a focus on a simple, efficient, yet expressive and intuitive design. It includes visualisations, metrics and predictions. Created with Python, Flask, Plotly and football-data.org. The application aims for clarity and transpareny within the metrics, predictions and visualisations so you can interact with it as a tool, rather than a black box.
+A football dashboard to show the recent performance of each Premier League team, including interactive visualisations, key metrics and predictions.
 
-Deployed at https://pldashboard.herokuapp.com/
+Created with Python, Flask, Plotly Pandas and football-data.org. 
 
-![Leicester-City](https://user-images.githubusercontent.com/41476809/115970455-5bb1d780-a53a-11eb-88fc-9c5a697cbc76.png)
+Available at: https://pldashboard.com
+
+![Leicester-City](https://user-images.githubusercontent.com/41476809/167265224-6d525bbb-ccad-4cf6-bad1-b508c0278ba6.png)
