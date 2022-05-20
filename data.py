@@ -710,20 +710,18 @@ class Form(DF):
 
     @staticmethod
     def _get_points(gd: int) -> int:
-        pts = 0
         if gd > 0:
             pts = 3
         elif gd == 0:
             pts = 1
+        else:
+            pts = 0
         return pts
 
     @staticmethod
     def _get_gd(score: str, at_home: bool) -> int:
         home, away = utils.extract_int_score(score)
-        if at_home:
-            gd = home - away
-        else:
-            gd = away - home
+        gd = home - away if at_home else away - home
         return gd
 
     @staticmethod

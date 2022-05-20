@@ -267,18 +267,20 @@ class Predictor:
             prediction = None
             if upcoming is not None:
                 form_rating = form.get_current_form_rating(team_name)
-                long_term_form_rating = form.get_long_term_form_rating(
-                    team_name)
+                long_term_form_rating = form.get_long_term_form_rating(team_name)
+                
                 opp_team_name = upcoming.at[team_name, 'NextTeam']
-                opp_form_rating = form.get_current_form_rating(opp_team_name)
-                opp_long_term_form_rating = form.get_long_term_form_rating(
-                    opp_team_name)
-                avg_result = fixtures.get_avg_result(team_name)
-                opp_avg_result = fixtures.get_avg_result(opp_team_name)
-                home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]
-                opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]
                 at_home = upcoming.at[team_name, 'AtHome']
                 prev_matches = upcoming.at[team_name, 'PreviousMatches']
+                
+                opp_form_rating = form.get_current_form_rating(opp_team_name)
+                opp_long_term_form_rating = form.get_long_term_form_rating(opp_team_name)
+
+                avg_result = fixtures.get_avg_result(team_name)
+                opp_avg_result = fixtures.get_avg_result(opp_team_name)
+                
+                home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]
+                opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]
 
                 pred_scored, pred_conceded = self._calc_score_prediction(
                     team_name, avg_result, opp_avg_result, home_advantage,
@@ -289,7 +291,7 @@ class Predictor:
                     team_name, opp_team_name, pred_scored, pred_conceded, at_home)
 
                 date = upcoming.at[team_name, 'Date'].to_pydatetime()
-
+                
                 prediction = {'date': date,
                               'homeInitials': home_initials,
                               'awayInitials': away_initials,
