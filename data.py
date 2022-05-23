@@ -676,7 +676,7 @@ class Form(DF):
         matchday = self.get_current_matchday()
         team_row = self.df.loc[team_name]
         # Played games sorted by date
-        games = sorted([team_row[i] for i in range(1, matchday) if team_row[i]['Score'] != 'None - None'], key=lambda x: x['Date'])
+        games = sorted([team_row[i] for i in range(1, matchday+1) if team_row[i]['Score'] != 'None - None'], key=lambda x: x['Date'])
         if len(games) > 5:
             games = games[-5:]  # Take last 5 games
         

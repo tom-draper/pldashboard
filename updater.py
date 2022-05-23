@@ -222,7 +222,7 @@ if __name__ == "__main__":
     # Update all dataframes
     updater = Updater(2021)
     updater.update_all(
-        request_new=True, 
+        request_new=False, 
         team_name='Leicester City FC', 
         display_tables=True, 
         display_graphs=False
