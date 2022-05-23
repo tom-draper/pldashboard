@@ -528,8 +528,10 @@ img {
   margin: 20px auto 15px;
   width: 80%;
 }
+.footer-gap {
+  height: 40px;
+}
 .last-updated {
-  margin: 20px 0;
   text-align: center;
 }
 .underline {
