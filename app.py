@@ -135,7 +135,11 @@ def get_season_stats(team_name: str) -> SeasonStats:
 
 
 def get_next_game(team_name: str) -> NextGame:
+    if updater.data.upcoming.finished_season:
+        return NextGame(OppTeam(TeamNames('', '', ''), '', []), '', [])
+        
     opp_team_name_full, at_home, prev_matches = updater.data.upcoming.get_details(team_name)
+    
     opp_team_name = opp_team_name_full[:-3]  # Remove 'FC' from end
     opp_team_name_hyphen = (opp_team_name.lower()).replace(' ', '-')
     names = TeamNames(opp_team_name_full, opp_team_name, opp_team_name_hyphen)
@@ -149,6 +153,9 @@ def get_next_game(team_name: str) -> NextGame:
 
 
 def get_prediction(team_name: str) -> Prediction:
+    if updater.data.upcoming.finished_season:
+        return Prediction(None, None, None)
+    
     scoreline = updater.data.upcoming._get_next_game_prediction_scoreline(team_name)
     accuracy, results_accuracy = updater.data.upcoming.predictions.get_accuracy()
     return Prediction(scoreline, accuracy, results_accuracy)

@@ -366,9 +366,16 @@ img {
   padding: 6px 20px;
   border-radius: 0 0 var(--border-radius) 0;
 }
+.next-game-season-complete {
+  display: grid;
+  place-items: center;
+  border: rgb(181, 181, 181) solid 5px;
+  border-radius: var(--border-radius);
+  height: 98%;
+}
 .next-game-title-text {
-  align-self: center;
-  margin: auto;
+  margin: 0;
+  color: rgb(181, 181, 181);
 }
 .next-game-logo {
   height: 225px;

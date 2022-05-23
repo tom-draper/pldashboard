@@ -651,7 +651,7 @@ class Form(DF):
         won_against_star_team = []  # 'star-team' or 'not-star-team' elements
         if matchday is not None:
             won_against_star_team = self._get_matchday_range_values(
-                team_name, 'WonAgainstStarTeam', last_n_matchdays)
+                team_name, 'BeatStarTeam', last_n_matchdays)
         return won_against_star_team
 
     def _get_matchday_range_values(
@@ -686,7 +686,7 @@ class Form(DF):
         
         # Construct lists of last 5 values
         teams_played = [game['Team'] for game in games]
-        won_against_star_team = [game['WonAgainstStarTeam'] for game in games]
+        won_against_star_team = [game['BeatStarTeam'] for game in games]
         
         return form_lst, teams_played, rating, won_against_star_team
 
@@ -851,7 +851,7 @@ class Form(DF):
             opp_team = form.at[team, (matchday_no, 'Team')]
             opp_team_rating = team_ratings.df.at[opp_team, 'TotalRating']
             won_against_star_team = opp_team_rating > star_team_threshold
-        d[(matchday_no, 'WonAgainstStarTeam')].append(won_against_star_team)
+        d[(matchday_no, 'BeatStarTeam')].append(won_against_star_team)
     
     def _insert_position_columns(self, df, all_matchdays):
         for matchday_no in all_matchdays:
@@ -884,7 +884,7 @@ class Form(DF):
         star_team_threshold: float
     ):
         all_matchdays = set(form.columns.get_level_values(0).unique())
-        columns = ['GD', 'Points', 'CumGD', 'CumPoints', 'WonAgainstStarTeam', 
+        columns = ['GD', 'Points', 'CumGD', 'CumPoints', 'BeatStarTeam', 
                    'Form5', 'FormRating5', 'Form10', 'FormRating10']
         
         d = defaultdict(lambda: [])
@@ -933,10 +933,10 @@ class Form(DF):
 
             Rows: the 20 teams participating in the current season.
             Columns (multi-index):
-            ---------------------------------------------------------------------------------------------------------------------------------------
-            |                                                            [MATCHDAY NUMBER]                                                        |
-            |-------------------------------------------------------------------------------------------------------------------------------------|
-            | Date | Team | Score | GD | Points | Position | Form5 | Form10 | FormRating5 | FormRating10 | CumGD | CumPoints | WonAgainstStarTeam |
+            ---------------------------------------------------------------------------------------------------------------------------------
+            |                                                            [MATCHDAY NUMBER]                                                  |
+            |-------------------------------------------------------------------------------------------------------------------------------|
+            | Date | Team | Score | GD | Points | Position | Form5 | Form10 | FormRating5 | FormRating10 | CumGD | CumPoints | BeatStarTeam |
 
             [MATCHDAY NUMBER] int: the numbers of the matchdays that have been 
                 played.
@@ -962,7 +962,7 @@ class Form(DF):
                 and all matchdays prior.
             CumPoints: the cumulative points aquired across the current matchday
                 and all matchdays prior.
-            WonAgainstStarTeam bool: whether the team beat the opposition team
+            BeatStarTeam bool: whether the team beat the opposition team
                 and that team was considered a 'star team'
 
         Args:
@@ -1079,7 +1079,7 @@ class SeasonStats(DF):
             Rows: the 20 teams participating in the current season.
             Columns (multi-index):
             --------------------------------------------------
-            | XG | XC | CleanSheetRatio | FailedToScoreRatio |
+            | XG | XC | CleanSheetRatio | NoGoalRatio |
 
             xG: the total number of goals scored this season divided by 
                 the number of games played.
@@ -1087,7 +1087,7 @@ class SeasonStats(DF):
                 by the number of games played.
             CleanSheetRatio: the number of games without a goal conceded this 
                 season divided by the number of games played.
-            FailedToScoreRatio: the number of games without a goal scored this 
+            NoGoalRatio: the number of games without a goal scored this 
                 season divided by the number of games played.
 
         Args:
@@ -1108,7 +1108,7 @@ class SeasonStats(DF):
         season_stats = {'xG': {},
                         'xC': {},
                         'CleanSheetRatio': {},
-                        'FailedToScoreRatio': {}}  # type: dict[str, dict[str, float]]
+                        'NoGoalRatio': {}}  # type: dict[str, dict[str, float]]
         for team_name, row in form.df.iterrows():
             n_games, clean_sheets, failed_to_score, goals_scored, goals_conceded = self._row_season_goals(
                 row, matchdays)
@@ -1124,7 +1124,7 @@ class SeasonStats(DF):
                     goals_conceded / n_games, 2)
                 season_stats['CleanSheetRatio'][team_name] = round(
                     clean_sheets / n_games, 2)
-                season_stats['FailedToScoreRatio'][team_name] = round(
+                season_stats['NoGoalRatio'][team_name] = round(
                     failed_to_score / n_games, 2)
 
         season_stats = pd.DataFrame.from_dict(season_stats)
@@ -1329,6 +1329,7 @@ class Upcoming(DF):
         super().__init__(d, 'upcoming')
         from predictions import Predictions
         self.predictions = Predictions(current_season)
+        self.finished_season = False
 
     def _get_opposition(self, team_name: str) -> str:
         return self.df.at[team_name, 'NextTeam']
@@ -1568,7 +1569,9 @@ class Upcoming(DF):
         upcoming = pd.DataFrame.from_dict(d, orient='index')
 
         # Generate and insert new predictions for upcoming games
-        if form.get_current_matchday() < 38:    
+        if form.get_current_matchday() == 38:    
+            self.finished_season = True
+        else:
             predictions = self.predictions.update(fixtures, form, upcoming, home_advantages, update_db)
             upcoming = pd.concat([upcoming, predictions], axis=1)
 
