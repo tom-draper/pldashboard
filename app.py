@@ -304,12 +304,12 @@ def thread_function(time: int = 3600):
         print(f'Refreshing data in {time} seconds...')
         sleep(time)
         print('Refreshing data...')
-        updater.update_all()
+        updater.update_all(request_new=False, update_db=False)
 
 
 updater = Updater(season)
 data_updater_thread = Thread(target=thread_function, args=(1800,))
-updater.update_all()
+updater.update_all(request_new=False, update_db=False)
 data_updater_thread.start()
 
 if __name__ == '__main__':

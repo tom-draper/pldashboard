@@ -1568,10 +1568,10 @@ class Upcoming(DF):
 
         upcoming = pd.DataFrame.from_dict(d, orient='index')
 
-        # Generate and insert new predictions for upcoming games
         if form.get_current_matchday() == 38:    
             self.finished_season = True
         else:
+            # Generate and insert new predictions for upcoming games
             predictions = self.predictions.update(fixtures, form, upcoming, home_advantages, update_db)
             upcoming = pd.concat([upcoming, predictions], axis=1)
 
