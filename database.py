@@ -28,6 +28,14 @@ class Database:
         client.close()
         return predictions
     
+    def get_accuracy(self) -> dict:
+        client = pymongo.MongoClient(self.connection_string)
+        collection = client.PremierLeague.Accuracy
+        accuracy = list(collection.find())
+        client.close()
+        return accuracy
+    
+    
     @staticmethod
     def _accuracy_counts(played: list[dict]) -> tuple[int, int, float, float]:
         score_correct = 0

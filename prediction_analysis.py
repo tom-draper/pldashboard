@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 
 
 from utilities import Utilities
+from database import Database
 
 util = Utilities()
 
@@ -13,12 +14,10 @@ class PredictionsAnalysis:
     def __init__(self, current_season):
         self.current_season = current_season
         self.prediction_file = f'data/predictions_{current_season}.json'
+        self.database = Database()
     
     def get_data(self):
-        data = {}
-        with open(self.prediction_file) as json_file:
-            data = json.load(json_file)
-            data = data
+        data = self.database.get_predictions()
         return data
     
     def by_form(self, actual_scoreline, home_form_rating, away_form_rating):
@@ -48,6 +47,7 @@ class PredictionsAnalysis:
         for prediction in predictions.values():
             for pred in prediction:
                 if pred['actual'] is not None and pred['details'] is not None:
+                    print(pred)
                     if pred['details']['starting']['description'] == 'Previous match average':
                         if self.by_prev_matches(pred['actual'], pred['details']['starting']['homeGoals'], pred['details']['starting']['awayGoals']):
                             count += 1
@@ -56,33 +56,31 @@ class PredictionsAnalysis:
     
     
     
-    def by_home_team(self, actual_scoreline):
-        act_home_goals, act_away_goals = util.extract_int_score_from_scoreline(actual_scoreline)
+    def by_home_team(self, actual):
+        act_home_goals, act_away_goals = actual['homeGoals'], actual['awayGoals']
         return act_home_goals > act_away_goals
 
-    def by_away_team(self, actual_scoreline):
-        act_home_goals, act_away_goals = util.extract_int_score_from_scoreline(actual_scoreline)
+    def by_away_team(self, actual):
+        act_home_goals, act_away_goals = actual['homeGoals'], actual['awayGoals']
         return act_home_goals < act_away_goals
 
-    def by_draw(self, actual_scoreline):
-        act_home_goals, act_away_goals = util.extract_int_score_from_scoreline(actual_scoreline)
+    def by_draw(self, actual):
+        act_home_goals, act_away_goals = actual['homeGoals'], actual['awayGoals']
         return act_home_goals == act_away_goals
     
     def if_predicted_by(self, predictions, by_function):
         total = 0
         count = 0
-        for prediction in predictions.values():
-            for pred in prediction:
-                if pred['actual'] is not None:
-                    if by_function(pred['actual']):
-                        count += 1
-                    total += 1
+        for prediction in predictions:
+            if prediction['actual'] is not None:
+                if by_function(prediction['actual']):
+                    count += 1
+                total += 1
         return count / total
 
         
-    def display_current_accuracy(self, data):
-        print('Current score accuracy:', data['accuracy']['accuracy'])
-        print('Current results accuracy:', data['accuracy']['resultAccuracy'])
+    def display_current_accuracy(self):
+        print(self.database.get_accuracy())
         print()
     
     def display_if_predicted_by_prev_matches(self, predictions):
@@ -108,17 +106,16 @@ class PredictionsAnalysis:
     
     def possible_predictions(self):
         data = self.get_data()
-        self.display_current_accuracy(data)
-        self.display_if_predicted_by_prev_matches(data['predictions'])
-        self.display_if_predicted_by_form(data['predictions'])
-        self.display_if_predicted_by_home_team(data['predictions'])
-        self.display_if_predicted_by_away_team(data['predictions'])
-        self.display_if_predicted_by_draw(data['predictions'])
+        self.display_current_accuracy()
+        # self.display_if_predicted_by_prev_matches(data['predictions'])
+        # self.display_if_predicted_by_form(data['predictions'])
+        self.display_if_predicted_by_home_team(data)
+        self.display_if_predicted_by_away_team(data)
+        self.display_if_predicted_by_draw(data)
 
 
     def analyse_predictions(self):
-        data = self.get_data()
-        predictions = data['predictions']
+        predictions = self.get_data()
         
         # Home on x-axis, away on y-axis
         xs = []
@@ -126,23 +123,23 @@ class PredictionsAnalysis:
         ds = []
         vs = []
         count = 0
-        for preds in predictions.values():
-            for pred in preds:
-                if pred['details'] is not None and pred['actual'] is not None:
-                    ph = pred['details']['score']['homeGoals']
-                    pa = pred['details']['score']['awayGoals']
-                    ah, aa = util.extract_int_score_from_scoreline(pred['actual'])
-                    
-                    # Two points
-                    x = (ph, ah)
-                    y = (pa, aa)
-                    xs.append(x)
-                    ys.append(y)
-                    vector = (ah-ph, aa-pa)
-                    vs.append(vector)
-                    distance = ((ph - ah)**2 + (pa - aa)**2)**0.5
-                    ds.append(distance)
-                    count += 1
+        for pred in predictions:
+            if pred['actual'] is not None:
+                ph = pred['prediction']['homeGoals']
+                pa = pred['prediction']['awayGoals']
+                ah = pred['actual']['homeGoals']
+                aa = pred['actual']['awayGoals']
+                
+                # Two points
+                x = (ph, ah)
+                y = (pa, aa)
+                xs.append(x)
+                ys.append(y)
+                vector = (ah-ph, aa-pa)
+                vs.append(vector)
+                distance = ((ph - ah)**2 + (pa - aa)**2)**0.5
+                ds.append(distance)
+                count += 1
         print('n =', count)
         print('Mean distance', np.mean(ds))
         print('S.d. distance', np.std(ds))
