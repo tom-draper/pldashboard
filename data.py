@@ -562,15 +562,20 @@ class TeamRatings(DF):
 class Form(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'form')
-        self.current_matchday = None
+        
+    def get_prev_matchday(self):
+        return self._get_matchday(n_back=1)
+
+    def get_current_matchday(self):
+        return self._get_matchday(n_back=0)
 
     def get_current_form_rating(self, team_name: str):
-        current_matchday = self._get_current_matchday()
+        current_matchday = self.get_current_matchday()
         matchday = self._get_last_played_matchday(current_matchday, team_name)
         return self._get_form_rating(team_name, matchday, 5)
 
     def get_long_term_form_rating(self, team_name: str):
-        current_matchday = self._get_current_matchday()
+        current_matchday = self.get_current_matchday()
         matchday = self._get_last_played_matchday(current_matchday, team_name)
         return self._get_form_rating(team_name, matchday, 10)
 
@@ -591,7 +596,7 @@ class Form(DF):
         matchday = current_matchday
         if self._not_played_current_matchday(team_name, current_matchday):
             # Use previous matchday's form
-            matchday = self._get_prev_matchday()
+            matchday = self.get_prev_matchday()
         return matchday
 
     def _get_last_played_matchday(self, current_matchday: int, team_name: str) -> int:
@@ -659,11 +664,6 @@ class Form(DF):
         values = [self.df.at[team_name, col] for col in col_headings]
         return values
 
-    def _get_prev_matchday(self):
-        return self._get_matchday(n_back=1)
-
-    def _get_current_matchday(self):
-        return self._get_matchday(n_back=0)
 
     def _get_matchday(self, n_back=0):
         current_matchday = None
@@ -673,7 +673,7 @@ class Form(DF):
         return current_matchday
     
     def get_recent_form(self, team_name: str):
-        matchday = self._get_current_matchday()
+        matchday = self.get_current_matchday()
         team_row = self.df.loc[team_name]
         # Played games sorted by date
         games = sorted([team_row[i] for i in range(1, matchday) if team_row[i]['Score'] != 'None - None'], key=lambda x: x['Date'])
@@ -690,23 +690,23 @@ class Form(DF):
         
         return form_lst, teams_played, rating, won_against_star_team
 
-    def get_recent_form2(
-        self,
-        team_name: str
-    ) -> tuple[list[str], DataFrame, float, list[str]]:
-        current_matchday = self._get_current_matchday()
-        matchday = self._get_last_played_matchday(current_matchday, team_name)
+    # def get_recent_form2(
+    #     self,
+    #     team_name: str
+    # ) -> tuple[list[str], DataFrame, float, list[str]]:
+    #     current_matchday = self.get_current_matchday()
+    #     matchday = self._get_last_played_matchday(current_matchday, team_name)
         
-        # Get precomputed form list and rating
-        form_lst = self._get_form(team_name, matchday)  # List of five 'W', 'D' or 'L'
-        rating = self._get_form_rating(team_name, matchday, 5)
+    #     # Get precomputed form list and rating
+    #     form_lst = self._get_form(team_name, matchday)  # List of five 'W', 'D' or 'L'
+    #     rating = self._get_form_rating(team_name, matchday, 5)
 
-        # Construct equivalent list to form list for other attributes
-        matchdays = self._last_n_matchdays(team_name, matchday, 5)
-        teams_played = self._get_latest_teams_played(team_name, matchday, matchdays)
-        won_against_star_team = self._get_won_against_star_team(team_name, matchday, matchdays)
+    #     # Construct equivalent list to form list for other attributes
+    #     matchdays = self._last_n_matchdays(team_name, matchday, 5)
+    #     teams_played = self._get_latest_teams_played(team_name, matchday, matchdays)
+    #     won_against_star_team = self._get_won_against_star_team(team_name, matchday, matchdays)
 
-        return form_lst, teams_played, rating, won_against_star_team
+    #     return form_lst, teams_played, rating, won_against_star_team
 
     @staticmethod
     def _get_points(gd: int) -> int:
@@ -1568,8 +1568,9 @@ class Upcoming(DF):
         upcoming = pd.DataFrame.from_dict(d, orient='index')
 
         # Generate and insert new predictions for upcoming games
-        predictions = self.predictions.update(fixtures, form, upcoming, home_advantages, update_db)
-        upcoming = pd.concat([upcoming, predictions], axis=1)
+        if form.get_current_matchday() < 38:    
+            predictions = self.predictions.update(fixtures, form, upcoming, home_advantages, update_db)
+            upcoming = pd.concat([upcoming, predictions], axis=1)
 
         upcoming.index.name = 'Team'
 
