@@ -120,10 +120,11 @@ a.kofi-button {
 }
 #back-button {
   position: absolute;
-  top: 15px;
+  top: 20px;
   left: 40px;
-  width: 100px;
-  height: 60px;
+  width: 80px;
+  height: 48px;
+  /* height: 60px; */
 }
 .title {
   font-size: 2.6em;
@@ -503,6 +504,9 @@ img {
   width: 100%;
   font-size: 0.65em;
   align-items: center;
+}
+.teams-footer-bottom {
+  margin-top: 30px;
 }
 .footer-details {
   display: flex;

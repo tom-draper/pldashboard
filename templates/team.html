@@ -330,8 +330,10 @@
         kofiwidget2.init("Support Me", "#d9534f", "C0C069FOI");
         kofiwidget2.draw();
       </script>
-      <div class="last-updated">{{ params.last_updated }} UTC</div>
       <div class="teams-footer-bottom">
+        {% if params.last_updated is not none %}
+          <div class="last-updated">{{ params.last_updated }} UTC</div>
+        {% endif %}
         <div class="footer-details">
           <div class="footer-detail footer-text-colour">
             Data provided by

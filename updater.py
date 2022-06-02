@@ -164,8 +164,6 @@ class Updater:
             display=display_tables,
             update_db=update_db
         )
-        
-        
 
     def save_tables(self):
         self.data.standings._save_to_html()
