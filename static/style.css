@@ -537,6 +537,7 @@ img {
 }
 .last-updated {
   text-align: center;
+  margin-bottom: 4px;
 }
 .underline {
   text-decoration: underline;
