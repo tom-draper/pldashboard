@@ -310,7 +310,7 @@ def thread_function(time: int = 3600):
 updater = Updater(season)
 data_updater_thread = Thread(target=thread_function, args=(1800,))
 updater.update_all(request_new=False, update_db=False)
-data_updater_thread.start()
+# data_updater_thread.start()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=False)

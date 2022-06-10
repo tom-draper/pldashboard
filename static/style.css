@@ -1,12 +1,10 @@
 /* -------------------------------- Global ------------------------------------- */
 
-:root {
-  --border-radius: 6px;
-  --ssp1-offset: 0;
-  --ssp2-offset: 0;
-  --ssp3-offset: 0;
-
-  /* Club colours */
+/* 
+Club colours - KEEP SEPARATED AT TOP OF FILE
+Read by Python to use within program
+*/
+:root{
   --sheffield-united: rgb(238 39 55);
   --sheffield-united-secondary: rgb(13 23 26);
   --leeds-united: rgb(255 205 0);
@@ -64,6 +62,14 @@
   --brentford: rgb(227 6 19);
   --brentford-secondary: rgb(255 255 255);
 }
+
+:root {
+  --border-radius: 6px;
+  --ssp1-offset: 0;
+  --ssp2-offset: 0;
+  --ssp3-offset: 0;
+}
+
 
 @font-face {
   font-family: 'Radikal Medium';
