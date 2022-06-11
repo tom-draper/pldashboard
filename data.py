@@ -464,7 +464,7 @@ class TeamRatings(DF):
 
         for n in range(start_n, no_seasons):
             team_ratings['TotalRating'] += w[n - start_n] * \
-                team_ratings[f'NormalisedRating{n}YAgo']
+                team_ratings[f'NormRating{n}YAgo']
 
     @timebudget
     def build(
@@ -482,7 +482,7 @@ class TeamRatings(DF):
                 descending by the team's rating
             Columns (multi-index):
             ---------------------------------------------------------------------------------------------------
-            | RatingCurrent | Rating[N]YAgo | NormalisedRatingCurrent | NormalisedRating[N]YAgo | TotalRating |
+            | RatingCurrent | Rating[N]YAgo | NormRatingCurrent | NormRating[N]YAgo | TotalRating |
 
             RatingCurrent: a calculated positive or negative value that represents
                 the team's rating based on the state of the current season's 
@@ -490,8 +490,8 @@ class TeamRatings(DF):
             Rating[N]YAgo: a calculated positive or negative value that represents 
                 the team's rating based on the state of the standings table [N]
                 seasons ago.
-            NormalisedRatingCurrent: the Rating Current column value normalised
-            NormalisedRating[N]YAgo: the Rating [N]Y Ago column values normalised
+            NormRatingCurrent: the Rating Current column value normalised
+            NormRating[N]YAgo: the Rating [N]Y Ago column values normalised
             TotalRating: a final normalised rating value incorporating the values 
                 from all normalised columns.
 
@@ -531,7 +531,7 @@ class TeamRatings(DF):
 
         # Create normalised versions of the three ratings columns
         for n in range(0, n_seasons):
-            team_ratings[f'NormalisedRating{n}YAgo'] = (team_ratings[f'Rating{n}YAgo']
+            team_ratings[f'NormRating{n}YAgo'] = (team_ratings[f'Rating{n}YAgo']
                                                         - team_ratings[f'Rating{n}YAgo'].min()) \
                 / (team_ratings[f'Rating{n}YAgo'].max()
                    - team_ratings[f'Rating{n}YAgo'].min())
@@ -550,7 +550,7 @@ class TeamRatings(DF):
         team_ratings = team_ratings.sort_values(
             by="TotalRating", ascending=False)
         team_ratings = team_ratings.rename(columns={'Rating0YAgo': 'RatingCurrent',
-                                                    'NormalisedRating0YAgo': 'NormalisedRatingCurrent'})
+                                                    'NormRating0YAgo': 'NormRatingCurrent'})
 
         if display:
             print(team_ratings)
@@ -1605,27 +1605,6 @@ class Data:
     def to_one_dataframe(self) -> DataFrame:
         return pd.concat((self.fixtures.df, self.standings.df, self.team_ratings.df, self.home_advantages.df, self.form.df, self.upcoming.df, self.season_stats.df), 1)
 
-    def snake_case(self, s: str) -> str:
-        if len(s) == 0 or s.islower():
-            return s
-        
-        if s.isupper():
-            return s.lower()
-
-        if s[0].isupper():
-            s = s[0].lower() + s[1:]
-        
-        s = s.replace(' ', '_')
-        
-        # Convert capitals to underscore prefix + lowercase  
-        s = list(s)
-        for i in range(len(s)-1, 0, -1):
-            if (s[i].isupper() and s[i] != '_' and i != 0 and s[i-1].islower() and not s[i-1].isdigit()) or (i != 0 and s[i-1] != '_' and not s[i-1].isdigit() and s[i].isdigit()):
-                s[i] = '_' + s[i].lower()
-        s = ''.join(s).lower()
-            
-        return s
-
     def collapse_tuple_keys(self, d):
         if type(d) is not dict:
             return d
@@ -1633,8 +1612,8 @@ class Data:
         new_d = {}
         for k, v in d.items():
             if type(k) is tuple:
-                k1 = str(k[0]) if type(k[0]) is int else self.snake_case(k[0])
-                k2 = str(k[1]) if type(k[1]) is int else self.snake_case(k[1])
+                k1 = str(k[0]) if type(k[0]) is int else utils.snake_case(k[0])
+                k2 = str(k[1]) if type(k[1]) is int else utils.snake_case(k[1])
                 if k1 in new_d:
                     new_d[k1][k2] = self.collapse_tuple_keys(v)
                 else:
@@ -1643,7 +1622,7 @@ class Data:
                 if type(k) is int:
                     new_d[str(k)] = self.collapse_tuple_keys(v)
                 else:
-                    new_d[self.snake_case(k)] = self.collapse_tuple_keys(v)
+                    new_d[utils.snake_case(k)] = self.collapse_tuple_keys(v)
         
         return new_d
     
@@ -1651,6 +1630,10 @@ class Data:
         # Build one dict containing all dataframes
         if self.built_all_dataframes():
             d = {
+                'last_updated': self.last_updated,
+                'current_season': self.current_season,
+                'team_names': self.team_names,
+                'logo_urls': self.logo_urls,
                 'fixtures': self.fixtures.df.to_dict(),
                 'standings': self.standings.df.to_dict(),
                 'team_ratings': self.team_ratings.df.to_dict(),

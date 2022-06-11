@@ -98,16 +98,6 @@ class Updater:
             with open(f'data/{type}_{self.current_season}.json', 'w') as f:
                 json.dump(self.json_data[type][self.current_season], f)
 
-    def get_logo_urls(self) -> dict[str, str]:
-        data = self.json_data['standings'][self.current_season]
-
-        logo_urls = {}
-        for standings_row in data:
-            team_name = standings_row['team']['name'].replace('&', 'and')
-            crest_url = standings_row['team']['crestUrl']
-            logo_urls[team_name] = crest_url
-
-        return logo_urls
 
     def _build_dataframes(self, n_seasons: int, display_tables: bool = False, 
                           update_db: bool = True):
@@ -176,14 +166,27 @@ class Updater:
         self.data.upcoming._save_to_html()
         self.data.season_stats._save_to_html()
     
+    
     def save_team_data_to_database(self):
         team_data = self.data.to_one_dict()            
         self.database.update_team_data(team_data)
+        
+    def get_logo_urls(self) -> dict[str, str]:       
+        data = self.json_data['standings'][self.current_season]
+
+        logo_urls = {}
+        for standings_row in data:
+            team_name = standings_row['team']['name'].replace('&', 'and')
+            crest_url = standings_row['team']['crestUrl']
+            logo_urls[team_name] = crest_url
+
+        return logo_urls
     
     def build_dataframes(self, n_seasons, display_tables, update_db):
+        self.data.last_updated = self.last_updated
         self.data.logo_urls = self.get_logo_urls()
-        self.data.team_names = self.data.logo_urls.keys()
-        # Using stored data in self.json_data
+        self.data.team_names = list(self.data.logo_urls.keys())
+        # Build using stored data in self.json_data
         self._build_dataframes(n_seasons, display_tables, update_db)
     
     @timebudget
@@ -206,17 +209,16 @@ class Updater:
             
         self.build_dataframes(n_seasons, display_tables, update_db)
         
-        print('💾 Saving new data to database...')
         self.save_team_data_to_database()
-        if update_db:
-            pass
-            # TODO: Save predictions to database...
-            #self.predictions.save_to_database()
 
         if request_new:
             print('💾 Saving new data as JSON files...')
             self.save_data_to_json()
             print('💾 Saving tables as HTML files...')
+            if update_db:
+                print('💾 Saving new data to database...')
+                # TODO: Save predictions to database...
+                #self.predictions.save_to_database()
             self.save_tables()
             # Use dataframes to update all graph HTML files
             self.visualiser.update(
