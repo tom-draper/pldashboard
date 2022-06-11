@@ -1,5 +1,7 @@
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import json
-import os
 from datetime import datetime
 from os.path import dirname, join
 
@@ -8,7 +10,7 @@ from dotenv import load_dotenv
 from timebudget import timebudget
 
 from data import Data
-from database import Database
+from database.database import Database
 from visualiser import Visualiser
 
 

@@ -1,10 +1,12 @@
-import json
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import numpy as np
 
 from predictions import Predictor
 from updater import Updater
-from utilities import Utilities
-from database import Database
+from utils.utilities import Utilities
+from database.database import Database
 
 util = Utilities()
 

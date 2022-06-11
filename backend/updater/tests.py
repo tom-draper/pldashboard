@@ -1,6 +1,9 @@
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import pytest
 
-from updater import Updater
+from updater.updater import Updater
 
 current_season = 2021
 

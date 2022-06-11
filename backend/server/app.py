@@ -1,6 +1,9 @@
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from flask import Flask, jsonify
-from utilities import Utilities
-from database import Database
+from utils.utilities import Utilities
+from database.database import Database
 
 season = 2021
 

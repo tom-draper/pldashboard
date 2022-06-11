@@ -1,6 +1,8 @@
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from collections import defaultdict
-import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 
 import numpy as np
@@ -11,7 +13,7 @@ from plotly.missing_ipywidgets import FigureWidget
 from timebudget import timebudget
 
 from data import Fixtures, Form, HomeAdvantages, TeamRatings
-from utilities import Utilities
+from utils.utilities import Utilities
 
 utils = Utilities()
 

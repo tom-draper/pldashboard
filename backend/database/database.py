@@ -7,7 +7,7 @@ from typing import Optional
 import pymongo
 from dotenv import load_dotenv
 
-from utilities import Utilities
+from utils.utilities import Utilities
 
 util = Utilities()
 
@@ -15,7 +15,7 @@ util = Utilities()
 class Database:
     def __init__(self):
         __file__ = 'database.py'
-        dotenv_path = join(dirname(__file__), '.env')
+        dotenv_path = join(dirname(__file__), '../.env')
         load_dotenv(dotenv_path)
         USERNAME = getenv('MONGODB_USERNAME')
         PASSWORD = getenv('MONGODB_PASSWORD')

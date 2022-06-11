@@ -52,25 +52,25 @@ class Utilities:
         'WOL': 'Wolverhampton Wanderers FC',
     })
 
-    def __init__(self):
-        self.team_colours = self._read_team_colours()
+    # def __init__(self):
+    #     self.team_colours = self._read_team_colours()
     
-    def _read_team_colours(self):
-        team_colours = {}
-        with open('./static/style.css', 'r') as f:
-            match = re.search(r':root\s*{[^\}]*}', f.read()).group(0)
-            css_vars = re.findall(r'\-\-[^;]*;', match)
-            for css_var in css_vars:
-                # Get team name from css variable
-                team = re.search(r'\-\-([^:]*):', css_var).group(1)
-                team = team.replace('-', ' ').title() + ' FC'
-                # Get team colour from css variable
-                colour = re.search(r':\s*([^;]*);', css_var).group(1)
-                # Insert commas if missing
-                if ',' not in colour:
-                    colour = colour.replace(' ', ', ')
-                team_colours[team] = colour
-        return team_colours
+    # def _read_team_colours(self):
+    #     team_colours = {}
+    #     with open('./static/style.css', 'r') as f:
+    #         match = re.search(r':root\s*{[^\}]*}', f.read()).group(0)
+    #         css_vars = re.findall(r'\-\-[^;]*;', match)
+    #         for css_var in css_vars:
+    #             # Get team name from css variable
+    #             team = re.search(r'\-\-([^:]*):', css_var).group(1)
+    #             team = team.replace('-', ' ').title() + ' FC'
+    #             # Get team colour from css variable
+    #             colour = re.search(r':\s*([^;]*);', css_var).group(1)
+    #             # Insert commas if missing
+    #             if ',' not in colour:
+    #                 colour = colour.replace(' ', ', ')
+    #             team_colours[team] = colour
+    #     return team_colours
 
     def convert_team_name_or_initials(self, team_name: str) -> str:
         if team_name in self.names_and_initials.keys():
