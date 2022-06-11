@@ -3,32 +3,18 @@ from collections import defaultdict, deque
 from dataclasses import dataclass
 
 from flask import Flask, jsonify, render_template, request
-# from flask_compress import Compress
 from pandas.core.frame import DataFrame
 
 from updater import Updater
 from utilities import Utilities
+from database import Database
 
 season = 2021
 
 app = Flask(__name__)
 
 utils = Utilities()
-
-
-# ----------------------------- HOME PAGE --------------------------------------
-
-@dataclass
-class HomeParams:
-    title: str
-
-@app.route('/')
-@app.route('/home')
-def home() -> str:
-    params = HomeParams('Premier League')
-    return render_template('home.html', params=params)
-
-
+database = Database()
 
 # ------------------------------- TEAM PAGE ------------------------------------
 
@@ -208,44 +194,68 @@ def team() -> str:
 
 # ------------------------------ PREDICTIONS PAGE ------------------------------
 
-@dataclass
-class PredictionsParams:
-    predictions: list
-    accuracy: float
-    results_accuracy: float
-    last_updated: str
+# @dataclass
+# class PredictionsParams:
+#     predictions: list
+#     accuracy: float
+#     results_accuracy: float
+#     last_updated: str
 
 
-def extract_int_score(scoreline: str) -> tuple[int, int]:
-    # Scoreline: "[home_team_initials] [home_goals] - [away_goals] [away_team_initials]"
-    _, home_goals, _, away_goals, _ = scoreline.split(' ')
-    return int(home_goals), int(away_goals)
+# def extract_int_score(scoreline: str) -> tuple[int, int]:
+#     # Scoreline: "[home_team_initials] [home_goals] - [away_goals] [away_team_initials]"
+#     _, home_goals, _, away_goals, _ = scoreline.split(' ')
+#     return int(home_goals), int(away_goals)
 
 
-def correct_result(ph, pa, ah, aa) -> bool:
-    # If identical results (both a home win, draw, or away win)
-    return (ph > pa and ah > aa) or (ph == pa and ah == aa) or (ph < pa and ah < aa)
+# def correct_result(ph, pa, ah, aa) -> bool:
+#     # If identical results (both a home win, draw, or away win)
+#     return (ph > pa and ah > aa) or (ph == pa and ah == aa) or (ph < pa and ah < aa)
 
 
-def insert_predictions_colours(predictions: list):
-    for pred in predictions:
-        if pred['actual'] is None:
-            pred['colour'] = ''  # No colour
-        else:
-            ph = round(pred['prediction']['homeGoals'])
-            pa = round(pred['prediction']['awayGoals'])
-            ah = pred['actual']['homeGoals']
-            aa = pred['actual']['awayGoals']
-            if ph == ah and pa == aa:
-                pred['colour'] = 'green'  # Predicted perfectly
-            elif correct_result(ph, pa, ah, aa):
-                pred['colour'] = 'yellow'  # Predicted result
-            else:
-                pred['colour'] = 'red'  # Prediction failed
+# def insert_predictions_colours(predictions: list):
+#     for pred in predictions:
+#         if pred['actual'] is None:
+#             pred['colour'] = ''  # No colour
+#         else:
+#             ph = round(pred['prediction']['homeGoals'])
+#             pa = round(pred['prediction']['awayGoals'])
+#             ah = pred['actual']['homeGoals']
+#             aa = pred['actual']['awayGoals']
+#             if ph == ah and pa == aa:
+#                 pred['colour'] = 'green'  # Predicted perfectly
+#             elif correct_result(ph, pa, ah, aa):
+#                 pred['colour'] = 'yellow'  # Predicted result
+#             else:
+#                 pred['colour'] = 'red'  # Prediction failed
 
-def insert_time(predictions: list):
-    for pred in predictions:
-        pred['time'] = pred['datetime'].strftime('%H:%M')
+# def insert_time(predictions: list):
+#     for pred in predictions:
+#         pred['time'] = pred['datetime'].strftime('%H:%M')
+
+
+# # @app.route('/predictions')
+# def predictions2() -> str:
+#     predictions = updater.data.upcoming.predictions.get_predictions()
+    
+#     insert_predictions_colours(predictions)
+#     insert_time(predictions)
+    
+#     predictions = group_by_date(predictions)
+
+#     accuracy, results_accuracy = updater.data.upcoming.predictions.get_accuracy()
+
+#     last_updated = updater.last_updated
+
+#     params = PredictionsParams(predictions, accuracy, results_accuracy, last_updated)
+#     return render_template('predictions.html', params=params)
+
+
+# @app.route('/predictions/json')
+# def predictions_json() -> str:
+#     with open(f'data/predictions_{season}.json') as f:
+#         json_data = json.load(f)
+#     return jsonify(json_data)
 
 def group_by_date(predictions: dict) -> defaultdict:
     grouped_predictions = defaultdict(deque)
@@ -253,46 +263,38 @@ def group_by_date(predictions: dict) -> defaultdict:
     for prediction in predictions:
         date = prediction['datetime'].strftime('%Y-%m-%d')
         grouped_predictions[date].appendleft(prediction)
+    
+    for date in grouped_predictions:
+        grouped_predictions[date] = list(grouped_predictions[date])
         
     return grouped_predictions
 
 @app.route('/predictions')
 def predictions() -> str:
-    predictions = updater.data.upcoming.predictions.get_predictions()
+    predictions = database.get_predictions()
+    accuracy = database.get_prediction_accuracy()
     
-    insert_predictions_colours(predictions)
-    insert_time(predictions)
+    predictions_data = {
+        'predictions': predictions,
+        'accuracy': accuracy
+    }
     
-    predictions = group_by_date(predictions)
-
-    accuracy, results_accuracy = updater.data.upcoming.predictions.get_accuracy()
-
-    last_updated = updater.last_updated
-
-    params = PredictionsParams(predictions, accuracy, results_accuracy, last_updated)
-    return render_template('predictions.html', params=params)
-
-
-@app.route('/predictions/json')
-def predictions_json() -> str:
-    with open(f'data/predictions_{season}.json') as f:
-        json_data = json.load(f)
-    return jsonify(json_data)
+    return jsonify(predictions_data)
 
 
 # --------------------------------- DATA PAGE ----------------------------------
 
-@dataclass
-class TableParams:
-    last_updated: str
+# @dataclass
+# class TableParams:
+#     last_updated: str
 
 
-@app.route('/tables')
-@app.route('/data')
-def tables() -> str:
-    last_updated = updater.last_updated
-    params = TableParams(last_updated)
-    return render_template('tables.html', params=params)
+# @app.route('/tables')
+# @app.route('/data')
+# def tables() -> str:
+#     last_updated = updater.last_updated
+#     params = TableParams(last_updated)
+#     return render_template('tables.html', params=params)
 
 
 # def thread_function(time: int = 3600):
@@ -305,7 +307,7 @@ def tables() -> str:
 
 updater = Updater(season)
 # data_updater_thread = Thread(target=thread_function, args=(1800,))
-updater.update_all(request_new=False, update_db=False)
+# updater.update_all(request_new=False, update_db=False)
 # data_updater_thread.start()
 
 if __name__ == '__main__':

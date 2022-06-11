@@ -1612,17 +1612,22 @@ class Data:
         new_d = {}
         for k, v in d.items():
             if type(k) is tuple:
+                k = [x for x in k if x != '']  # Remove blank multi-index levels
+                if len(k) == 1:
+                    k = k[0]  # If only one level remains, take single heading
+            
+            if type(k) is list:
+                # Separate multi-index into a nested dict
                 k1 = str(k[0]) if type(k[0]) is int else utils.snake_case(k[0])
                 k2 = str(k[1]) if type(k[1]) is int else utils.snake_case(k[1])
                 if k1 in new_d:
                     new_d[k1][k2] = self.collapse_tuple_keys(v)
                 else:
                     new_d[k1] = {k2: self.collapse_tuple_keys(v)}
+            elif type(k) is int:
+                new_d[str(k)] = self.collapse_tuple_keys(v)
             else:
-                if type(k) is int:
-                    new_d[str(k)] = self.collapse_tuple_keys(v)
-                else:
-                    new_d[utils.snake_case(k)] = self.collapse_tuple_keys(v)
+                new_d[utils.snake_case(k)] = self.collapse_tuple_keys(v)
         
         return new_d
     
