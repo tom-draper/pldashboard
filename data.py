@@ -15,8 +15,7 @@ utils = Utilities()
 
 class DF:
     def __init__(self, d: DataFrame = DataFrame(), name: str = None):
-        if not d.empty:
-            self.df = DataFrame(d)
+        self.df = DataFrame(d) if not d.empty else None
         self.name = name
         self.last_updated = None  # type: datetime
 
@@ -194,7 +193,7 @@ class Standings(DF):
         return df
 
     @timebudget
-    def update(
+    def build(
         self,
         json_data: dict,
         team_names: list[str],
@@ -359,7 +358,7 @@ class Fixtures(DF):
         team_names.append(team_name)
 
     @timebudget
-    def update(self, json_data: dict, season: int, display: bool = False):
+    def build(self, json_data: dict, season: int, display: bool = False):
         """ Builds a dataframe containing the past and future fixtures for the 
             current season (matchday 1 to 38) and inserts it into the fixtures 
             class variable.
@@ -468,7 +467,7 @@ class TeamRatings(DF):
                 team_ratings[f'NormalisedRating{n}YAgo']
 
     @timebudget
-    def update(
+    def build(
         self,
         standings: Standings,
         season: int,
@@ -920,7 +919,7 @@ class Form(DF):
         return form
 
     @timebudget
-    def update(
+    def build(
         self,
         fixtures: Fixtures,
         standings: Standings,
@@ -1032,8 +1031,8 @@ class SeasonStats(DF):
         team_name: str
     ) -> tuple[tuple[float, str], tuple[float, str], tuple[float, str]]:
         clean_sheets = self._get_stat(team_name, 'CleanSheetRatio', False)
-        goals_per_game = self._get_stat(team_name, 'xG', False)
-        conceded_per_game = self._get_stat(team_name, 'xC', True)
+        goals_per_game = self._get_stat(team_name, 'XG', False)
+        conceded_per_game = self._get_stat(team_name, 'XC', True)
         return clean_sheets, goals_per_game, conceded_per_game
 
     @staticmethod
@@ -1072,7 +1071,7 @@ class SeasonStats(DF):
         return n_games, clean_sheets, failed_to_score, goals_scored, goals_conceded
 
     @timebudget
-    def update(self, form: Form, display: bool = False):
+    def build(self, form: Form, display: bool = False):
         """ Assigns self.df a dataframe for basic season statistics for the current 
             season.
 
@@ -1081,9 +1080,9 @@ class SeasonStats(DF):
             --------------------------------------------------
             | XG | XC | CleanSheetRatio | NoGoalRatio |
 
-            xG: the total number of goals scored this season divided by 
+            XG: the total number of goals scored this season divided by 
                 the number of games played.
-            xC: the total number of goals conceded this season divided 
+            XC: the total number of goals conceded this season divided 
                 by the number of games played.
             CleanSheetRatio: the number of games without a goal conceded this 
                 season divided by the number of games played.
@@ -1105,8 +1104,8 @@ class SeasonStats(DF):
 
         matchdays = list(form.df.columns.unique(level=0))
 
-        season_stats = {'xG': {},
-                        'xC': {},
+        season_stats = {'XG': {},
+                        'XC': {},
                         'CleanSheetRatio': {},
                         'NoGoalRatio': {}}  # type: dict[str, dict[str, float]]
         for team_name, row in form.df.iterrows():
@@ -1118,9 +1117,9 @@ class SeasonStats(DF):
                 d[team_name] = 0.0
 
             if n_games > 0:
-                season_stats['xG'][team_name] = round(
+                season_stats['XG'][team_name] = round(
                     goals_scored / n_games, 2)
-                season_stats['xC'][team_name] = round(
+                season_stats['XC'][team_name] = round(
                     goals_conceded / n_games, 2)
                 season_stats['CleanSheetRatio'][team_name] = round(
                     clean_sheets / n_games, 2)
@@ -1254,7 +1253,7 @@ class HomeAdvantages(DF):
         return current_season_teams
 
     @timebudget
-    def update(
+    def build(
         self,
         json_data: dict,
         season: int,
@@ -1498,7 +1497,7 @@ class Upcoming(DF):
                     )
 
     @timebudget
-    def update(
+    def build(
         self,
         json_data: dict,
         fixtures: Fixtures,
@@ -1571,9 +1570,8 @@ class Upcoming(DF):
         if form.get_current_matchday() == 38:   
             self.finished_season = True
         else:
-            print(form.get_current_matchday())
             # Generate and insert new predictions for upcoming games
-            predictions = self.predictions.update(fixtures, form, upcoming, home_advantages, update_db)
+            predictions = self.predictions.build(fixtures, form, upcoming, home_advantages, update_db)
             upcoming = pd.concat([upcoming, predictions], axis=1)
 
         upcoming.index.name = 'Team'
@@ -1597,3 +1595,72 @@ class Data:
         self.form: Form = Form()
         self.upcoming: Upcoming = Upcoming(current_season)
         self.season_stats: SeasonStats = SeasonStats()
+    
+    def built_all_dataframes(self) -> bool:
+        return (self.fixtures.df is not None and self.standings.df is not None 
+                and self.team_ratings.df is not None and self.home_advantages.df is not None 
+                and self.form.df is not None and self.upcoming is not None 
+                and self.season_stats is not None)
+    
+    def to_one_dataframe(self) -> DataFrame:
+        return pd.concat((self.fixtures.df, self.standings.df, self.team_ratings.df, self.home_advantages.df, self.form.df, self.upcoming.df, self.season_stats.df), 1)
+
+    def snake_case(self, s: str) -> str:
+        if len(s) == 0 or s.islower():
+            return s
+        
+        if s.isupper():
+            return s.lower()
+
+        if s[0].isupper():
+            s = s[0].lower() + s[1:]
+        
+        s = s.replace(' ', '_')
+        
+        # Convert capitals to underscore prefix + lowercase  
+        s = list(s)
+        for i in range(len(s)-1, 0, -1):
+            if (s[i].isupper() and s[i] != '_' and i != 0 and s[i-1].islower() and not s[i-1].isdigit()) or (i != 0 and s[i-1] != '_' and not s[i-1].isdigit() and s[i].isdigit()):
+                s[i] = '_' + s[i].lower()
+        s = ''.join(s).lower()
+            
+        return s
+
+    def collapse_tuple_keys(self, d):
+        if type(d) is not dict:
+            return d
+        
+        new_d = {}
+        for k, v in d.items():
+            if type(k) is tuple:
+                k1 = str(k[0]) if type(k[0]) is int else self.snake_case(k[0])
+                k2 = str(k[1]) if type(k[1]) is int else self.snake_case(k[1])
+                if k1 in new_d:
+                    new_d[k1][k2] = self.collapse_tuple_keys(v)
+                else:
+                    new_d[k1] = {k2: self.collapse_tuple_keys(v)}
+            else:
+                if type(k) is int:
+                    new_d[str(k)] = self.collapse_tuple_keys(v)
+                else:
+                    new_d[self.snake_case(k)] = self.collapse_tuple_keys(v)
+        
+        return new_d
+    
+    def to_one_dict(self) -> dict:
+        # Build one dict containing all dataframes
+        if self.built_all_dataframes():
+            d = {
+                'fixtures': self.fixtures.df.to_dict(),
+                'standings': self.standings.df.to_dict(),
+                'team_ratings': self.team_ratings.df.to_dict(),
+                'home_advantages': self.home_advantages.df.to_dict(),
+                'form': self.form.df.to_dict(),
+                'upcoming': self.upcoming.df.to_dict(),
+                'season_stats': self.season_stats.df.to_dict(),
+            }
+            # Collapse tuple keys and remove int keys
+            d = self.collapse_tuple_keys(d)
+            return d
+        else:
+            raise ValueError('❌ [ERROR] Cannot build one team data dict: A dataframe is empty')

@@ -367,7 +367,7 @@ class Predictions:
 
         return actual_scores
 
-    def update(
+    def build(
             self, 
             fixtures: Fixtures, 
             form: Form, 

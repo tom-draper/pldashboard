@@ -1,8 +1,6 @@
 import json
 from collections import defaultdict, deque
 from dataclasses import dataclass
-from threading import Thread
-from time import sleep
 
 from flask import Flask, jsonify, render_template, request
 from flask_compress import Compress
@@ -299,16 +297,16 @@ def tables() -> str:
     return render_template('tables.html', params=params)
 
 
-def thread_function(time: int = 3600):
-    while True:
-        print(f'Refreshing data in {time} seconds...')
-        sleep(time)
-        print('Refreshing data...')
-        updater.update_all(request_new=False, update_db=False)
+# def thread_function(time: int = 3600):
+#     while True:
+#         print(f'Refreshing data in {time} seconds...')
+#         sleep(time)
+#         print('Refreshing data...')
+#         updater.update_all(request_new=False, update_db=False)
 
 
 updater = Updater(season)
-data_updater_thread = Thread(target=thread_function, args=(1800,))
+# data_updater_thread = Thread(target=thread_function, args=(1800,))
 updater.update_all(request_new=False, update_db=False)
 # data_updater_thread.start()
 

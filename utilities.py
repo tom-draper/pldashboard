@@ -53,17 +53,20 @@ class Utilities:
     })
 
     def __init__(self):
-        self.team_colours = self.read_team_colours()
+        self.team_colours = self._read_team_colours()
     
-    def read_team_colours(self):
+    def _read_team_colours(self):
         team_colours = {}
         with open('./static/style.css', 'r') as f:
             match = re.search(r':root\s*{[^\}]*}', f.read()).group(0)
             css_vars = re.findall(r'\-\-[^;]*;', match)
             for css_var in css_vars:
+                # Get team name from css variable
                 team = re.search(r'\-\-([^:]*):', css_var).group(1)
                 team = team.replace('-', ' ').title() + ' FC'
+                # Get team colour from css variable
                 colour = re.search(r':\s*([^;]*);', css_var).group(1)
+                # Insert commas if missing
                 if ',' not in colour:
                     colour = colour.replace(' ', ', ')
                 team_colours[team] = colour
@@ -101,18 +104,18 @@ class Utilities:
     
     @staticmethod
     def identical_fixtures(scoreline1: str, scoreline2: str) -> bool:
-        iden_fix = False
+        identical = False
         if scoreline1 is not None and scoreline2 is not None:
             home_p, _, _, _, away_p = scoreline1.split(' ')
             home_s, _, _, _, away_s = scoreline2.split(' ')
-            iden_fix = (home_p == home_s) and (away_p == away_s)
-        return iden_fix
+            identical = (home_p == home_s) and (away_p == away_s)
+        return identical
 
     @staticmethod
     def identical_result(pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
         return (pred_home_goals == pred_away_goals and act_home_goals == act_away_goals) or \
-            (pred_home_goals > pred_away_goals and act_home_goals > act_away_goals) or \
-            (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)
+               (pred_home_goals > pred_away_goals and act_home_goals > act_away_goals) or \
+               (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)
 
     def format_scoreline_str_from_str(self, team_name: str, opp_team_name: str, 
                                       score: str, at_home: bool) -> str:

@@ -98,7 +98,6 @@ class Database:
         database = client.PremierLeague
         
         accuracy = self._calc_accuracy(database)
-        
         self._save_accuracy(database, accuracy)
         
         client.close()
@@ -217,3 +216,11 @@ class Database:
             collection.update_one({'_id': prediction_id}, {'$set': {'actual': actual}})
         
         client.close()
+
+    def update_team_data(self, team_data: dict):
+        client = pymongo.MongoClient(self.connection_string)
+        collection = client.PremierLeague.TeamData
+        collection.replace_one({'_id': 'team_data'}, team_data)
+        
+        client.close()
+        
