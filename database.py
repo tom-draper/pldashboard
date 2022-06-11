@@ -41,11 +41,11 @@ class Database:
             accuracy = collection.find_one()
         return accuracy
 
-    def get_team_data(self) -> dict:
+    def get_teams_data(self) -> dict:
         team_data = None
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData
-            team_data = dict(collection.find())
+            team_data = list(collection.find())
         return team_data
 
     @staticmethod

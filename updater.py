@@ -209,6 +209,7 @@ class Updater:
             
         self.build_dataframes(n_seasons, display_tables, update_db)
         
+        print('💾 Saving new data to database...')
         self.save_team_data_to_database()
 
         if request_new:
@@ -216,7 +217,7 @@ class Updater:
             self.save_data_to_json()
             print('💾 Saving tables as HTML files...')
             if update_db:
-                print('💾 Saving new data to database...')
+                pass
                 # TODO: Save predictions to database...
                 #self.predictions.save_to_database()
             self.save_tables()

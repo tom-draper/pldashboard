@@ -184,12 +184,17 @@ def get_params(team_name_hyphen: str) -> TeamParams:
 # @app.route('/fulham')
 # @app.route('/bournemouth')
 # @app.route('/huddersfield-town')
-def team() -> str:
+def team2() -> str:
     if (rule := request.url_rule) is not None:
         # Get hypehenated team name from current URL
         team_name_hyphen = rule.rule[1:]
     params = get_params(team_name_hyphen)
     return render_template('team.html', params=params)
+
+@app.route('/teams')
+def team() -> str:
+    teams_data = database.get_teams_data()
+    return jsonify(teams_data)
 
 
 # ------------------------------ PREDICTIONS PAGE ------------------------------

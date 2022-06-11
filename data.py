@@ -1,6 +1,7 @@
 from collections import defaultdict
 from dataclasses import field
 from datetime import datetime
+import math
 from typing import Optional
 
 import numpy as np
@@ -1607,6 +1608,9 @@ class Data:
 
     def collapse_tuple_keys(self, d):
         if type(d) is not dict:
+            if type(d) is float and math.isnan(d):
+                # Remove NaN values
+                return None
             return d
         
         new_d = {}
@@ -1639,13 +1643,13 @@ class Data:
                 'current_season': self.current_season,
                 'team_names': self.team_names,
                 'logo_urls': self.logo_urls,
-                'fixtures': self.fixtures.df.to_dict(),
-                'standings': self.standings.df.to_dict(),
-                'team_ratings': self.team_ratings.df.to_dict(),
-                'home_advantages': self.home_advantages.df.to_dict(),
-                'form': self.form.df.to_dict(),
-                'upcoming': self.upcoming.df.to_dict(),
-                'season_stats': self.season_stats.df.to_dict(),
+                'fixtures': self.fixtures.df.to_dict(orient='index'),
+                'standings': self.standings.df.to_dict(orient='index'),
+                'team_ratings': self.team_ratings.df.to_dict(orient='index'),
+                'home_advantages': self.home_advantages.df.to_dict(orient='index'),
+                'form': self.form.df.to_dict(orient='index'),
+                'upcoming': self.upcoming.df.to_dict(orient='index'),
+                'season_stats': self.season_stats.df.to_dict(orient='index'),
             }
             # Collapse tuple keys and remove int keys
             d = self.collapse_tuple_keys(d)
