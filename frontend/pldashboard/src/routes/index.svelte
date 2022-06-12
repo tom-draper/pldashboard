@@ -1,5 +1,47 @@
-<script context="module" lang="ts">
-  export const prerender = true;
+<script lang="ts">
+  // export const prerender = true;
+
+  import { onMount } from "svelte";
+
+  function removeBorderRadius() {
+    document.getElementById('team-1').classList.remove('top-left');
+    document.getElementById('team-1').classList.remove('top-right');
+    document.getElementById('team-2').classList.remove('top-right');
+    document.getElementById('team-4').classList.remove('top-right');
+    document.getElementById('team-17').classList.remove('bottom-left');
+    document.getElementById('team-18').classList.remove('bottom-left');
+    document.getElementById('team-19').classList.remove('bottom-left');
+    document.getElementById('team-20').classList.remove('bottom-left');
+    document.getElementById('team-20').classList.remove('bottom-right');
+  }
+
+  function setBorderRadius() {
+    let width = window.innerWidth;
+    removeBorderRadius();
+    if (width < 500) {
+      // 20 rows of 1 column
+      document.getElementById('team-1').classList.add('top-both');
+      document.getElementById('team-20').classList.add('bottom-both');
+    } else if (width < 1100) {
+      // 10 rows of 2 columns
+      document.getElementById('team-1').classList.add('top-left');
+      document.getElementById('team-2').classList.add('top-right');
+      document.getElementById('team-19').classList.add('bottom-left');
+      document.getElementById('team-20').classList.add('bottom-right');
+    } else {
+      // 5 rows of 4 columns
+      document.getElementById('team-1').classList.add('top-left');
+      document.getElementById('team-4').classList.add('top-right');
+      document.getElementById('team-17').classList.add('bottom-left');
+      document.getElementById('team-20').classList.add('bottom-right');
+    }
+  }
+
+  onMount(() => {
+    window.addEventListener('resize', setBorderRadius, true);
+    setBorderRadius();
+  })
+
 </script>
 
 <svelte:head>
@@ -234,4 +276,5 @@
     text-align: center;
     width: 100%;
   }
+
 </style>
