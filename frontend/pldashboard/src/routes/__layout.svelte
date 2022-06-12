@@ -3,18 +3,18 @@
   import '../app.css';
 </script>
 
-<Header />
+<!-- <Header /> -->
 
 <main>
   <slot />
 </main>
 
-<footer>
+<!-- <footer>
   <p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
-</footer>
+</footer> -->
 
 <style>
-  main {
+  /* main {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -41,5 +41,5 @@
     footer {
       padding: 40px 0;
     }
-  }
+  } */
 </style>
