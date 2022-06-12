@@ -167,6 +167,7 @@ a.kofi-button {
   margin-top: 1%;
   display: flex;
   align-self: center;
+  background: red;
 }
 
 .pl-background {

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Router, Route } from "svelte-routing";
+  import NavLink from "../components/NavLink.svelte";
   import { onMount } from "svelte";
 
   function removeBorderRadius() {
@@ -35,26 +37,26 @@
     }
   }
 
-  onMount(() => {
-    window.addEventListener('resize', setBorderRadius, true);
-    setBorderRadius();
-  })
+  // onMount(() => {
+  //   // window.addEventListener('resize', setBorderRadius, true);
+  //   // setBorderRadius();
+  // })
 
 </script>
 
-<svelte:head>d
+<!-- <svelte:head>
   <title>Premier League</title>
   <meta name="description" content="Svelte demo app" />
-</svelte:head>
+</svelte:head> -->
 
-<main>
+<Router>
   <div class="header">
-    <a class="title main-link no-decoration" href="/">Premier League</a>
+    <NavLink class="title main-link no-decoration" href="/">Premier League</NavLink>
   </div>
   <div class="page-content">
     <div class="teams">
-      <a
-        href="/manchester-city"
+      <NavLink
+        to="/manchester-city"
         class="team-button"
         id="team-1"
         style="background-color: var(--manchester-city);"
@@ -62,7 +64,7 @@
         <div class="main-link" style="color: var(--manchester-city-secondary);">
           Manchester City
         </div>
-      </a>
+      </NavLink>
       <a
         href="/manchester-united"
         class="team-button"
@@ -195,9 +197,13 @@
         <div class="main-link" style="color: var(--brentford-secondary);">Brentford</div>
       </a>
     </div>
-
-</div>
-</main>
+      <!-- <script type="text/javascript" src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"></script>
+      <script type="text/javascript">
+        kofiwidget2.init("Support Me", "#d9534f", "C0C069FOI");
+        kofiwidget2.draw();
+      </script> -->
+  </div>
+</Router>
 
 <!-- <style>
   section {
@@ -206,7 +212,7 @@
     justify-content: center;
     align-items: center;
     flex: 1;
-  }
+  } 
 
   .main-link {
     font-size: 1.4em;
@@ -255,7 +261,8 @@
     .teams {
       grid-template-columns: repeat(1, 1fr);
     }
-  }
+  } 
+  
   .title {
     font-size: 2.6em;
     font-weight: 600;
@@ -263,7 +270,7 @@
   .header {
     padding: 30px 15px;
     text-align: center;
-  }
+  } 
 
   .page-content {
     display: flex;
@@ -272,5 +279,4 @@
     width: 100%;
   }
 
-</style>
- -->
+</style> -->
