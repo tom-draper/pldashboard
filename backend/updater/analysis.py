@@ -1,8 +1,11 @@
-import os, sys
+import os
+import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from updater import Updater
 from utils.utilities import Utilities
+
+from updater import Updater
 
 util = Utilities()
 
@@ -10,7 +13,7 @@ util = Utilities()
 class Analysis:
     def __init__(self, season=2021):
         self.updater = Updater(season)
-        self.updater.update_all(
+        self.updater.build_all(
             request_new=False,
             team_name=None, 
             display_tables=False, 

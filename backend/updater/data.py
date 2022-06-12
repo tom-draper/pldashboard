@@ -1,17 +1,18 @@
-import os, sys
+import os
+import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import math
 from collections import defaultdict
 from dataclasses import field
 from datetime import datetime
-import math
 from typing import Optional
 
 import numpy as np
 import pandas as pd
 from pandas.core.frame import DataFrame
 from timebudget import timebudget
-
 from utils.utilities import Utilities
 
 utils = Utilities()

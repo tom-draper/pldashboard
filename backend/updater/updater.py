@@ -1,4 +1,6 @@
-import os, sys
+import os
+import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import json
@@ -6,11 +8,11 @@ from datetime import datetime
 from os.path import dirname, join
 
 import requests
+from database.database import Database
 from dotenv import load_dotenv
 from timebudget import timebudget
 
 from data import Data
-from database.database import Database
 from visualiser import Visualiser
 
 
@@ -192,12 +194,10 @@ class Updater:
         self._build_dataframes(n_seasons, display_tables, update_db)
     
     @timebudget
-    def update_all(
+    def build_all(
             self, 
             n_seasons: int = 4, 
-            team_name: str = None, 
             display_tables: bool = False, 
-            display_graphs: bool = False, 
             request_new: bool = True,
             update_db: bool = True
         ):
@@ -222,24 +222,12 @@ class Updater:
                 pass
                 # TODO: Save predictions to database...
                 #self.predictions.save_to_database()
-            self.save_tables()
-            # Use dataframes to update all graph HTML files
-            self.visualiser.update(
-                self.data.fixtures, 
-                self.data.team_ratings,
-                self.data.home_advantages, 
-                self.data.form,
-                display_graphs=display_graphs, 
-                team=team_name
-            )
 
 
 if __name__ == "__main__":
-    # Update all dataframes
+    # Build all dataframes and save to database
     updater = Updater(2021)
-    updater.update_all(
+    updater.build_all(
         request_new=False, 
-        team_name='Leicester City FC', 
         display_tables=True, 
-        display_graphs=False
     )

@@ -1,11 +1,12 @@
-import os, sys
+import os
+import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import matplotlib.pyplot as plt
 import numpy as np
-
-
-from backend.utils.utilities import Utilities
-from backend.database.database import Database
+from database.database import Database
+from utils.utilities import Utilities
 
 util = Utilities()
 

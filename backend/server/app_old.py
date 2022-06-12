@@ -305,7 +305,7 @@ def tables() -> str:
 
 updater = Updater(season)
 # data_updater_thread = Thread(target=thread_function, args=(1800,))
-updater.update_all(request_new=False, update_db=False)
+updater.build_all(request_new=False, update_db=False)
 # data_updater_thread.start()
 
 if __name__ == '__main__':

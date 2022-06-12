@@ -101,7 +101,7 @@ class OptimisePredictions:
     
     def brute_force(self, current_season):
         updater = Updater(current_season)
-        updater.update_all(request_new=True, update_db=False)
+        updater.build_all(request_new=True, update_db=False)
         
         actual_scores = self.get_actual_scores()
         

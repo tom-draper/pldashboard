@@ -1,4 +1,6 @@
-import os, sys
+import os
+import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from collections import defaultdict
@@ -11,9 +13,9 @@ import plotly.graph_objects as go
 from pandas.core.frame import DataFrame
 from plotly.missing_ipywidgets import FigureWidget
 from timebudget import timebudget
+from utils.utilities import Utilities
 
 from data import Fixtures, Form, HomeAdvantages, TeamRatings
-from utils.utilities import Utilities
 
 utils = Utilities()
 
