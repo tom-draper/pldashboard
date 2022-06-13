@@ -1,5 +1,3 @@
-import re
-
 
 class TwoWayDict(dict):
     def __init__(self, dict):
@@ -161,3 +159,8 @@ class Utilities:
         s = ''.join(s).lower()
             
         return s
+
+    @staticmethod
+    def camel_case(s: str) -> str:
+        s = s.title().replace(' ', '')
+        return s[0].lower() + s[1:]

@@ -1626,8 +1626,8 @@ class Data:
             
             if type(k) is list:
                 # Separate multi-index into a nested dict
-                k1 = str(k[0]) if type(k[0]) is int else utils.snake_case(k[0])
-                k2 = str(k[1]) if type(k[1]) is int else utils.snake_case(k[1])
+                k1 = str(k[0]) if type(k[0]) is int else utils.camel_case(k[0])
+                k2 = str(k[1]) if type(k[1]) is int else utils.camel_case(k[1])
                 if k1 in new_d:
                     new_d[k1][k2] = self.collapse_tuple_keys(v)
                 else:
@@ -1635,7 +1635,7 @@ class Data:
             elif type(k) is int:
                 new_d[str(k)] = self.collapse_tuple_keys(v)
             else:
-                new_d[utils.snake_case(k)] = self.collapse_tuple_keys(v)
+                new_d[utils.camel_case(k)] = self.collapse_tuple_keys(v)
         
         return new_d
     
@@ -1643,19 +1643,19 @@ class Data:
         # Build one dict containing all dataframes
         if self.built_all_dataframes():
             d = {
-                'last_updated': self.last_updated,
-                'current_season': self.current_season,
-                'team_names': self.team_names,
-                'logo_urls': self.logo_urls,
+                'lastUpdated': self.last_updated,
+                'currentSeason': self.current_season,
+                'teamNames': self.team_names,
+                'logoURLs': self.logo_urls,
                 'fixtures': self.fixtures.df.to_dict(orient='index'),
                 'standings': self.standings.df.to_dict(orient='index'),
-                'team_ratings': self.team_ratings.df.to_dict(orient='index'),
-                'home_advantages': self.home_advantages.df.to_dict(orient='index'),
+                'teamRatings': self.team_ratings.df.to_dict(orient='index'),
+                'homeAdvantages': self.home_advantages.df.to_dict(orient='index'),
                 'form': self.form.df.to_dict(orient='index'),
                 'upcoming': self.upcoming.df.to_dict(orient='index'),
-                'season_stats': self.season_stats.df.to_dict(orient='index'),
+                'seasonStats': self.season_stats.df.to_dict(orient='index'),
             }
-            # Collapse tuple keys and remove int keys
+            # Collapse tuple keys, convert int key to str and remove NaN values
             d = self.collapse_tuple_keys(d)
             return d
         else:

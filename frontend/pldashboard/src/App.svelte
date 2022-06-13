@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import { Router, Route } from "svelte-routing";
   import NavLink from "./components/NavLink.svelte";
   import Home from "./routes/Home.svelte";

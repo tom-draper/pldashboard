@@ -15,10 +15,11 @@ util = Utilities()
 class Database:
     def __init__(self):
         __file__ = 'database.py'
-        dotenv_path = join(dirname(__file__), '../.env')
+        dotenv_path = join(dirname(__file__), '.env')
         load_dotenv(dotenv_path)
         USERNAME = getenv('MONGODB_USERNAME')
         PASSWORD = getenv('MONGODB_PASSWORD')
+        print(USERNAME, PASSWORD)
         MONGODB_DATABASE = getenv('MONGODB_DATABASE')
         self.connection_string = f"mongodb+srv://{USERNAME}:{PASSWORD}@main.pvnry.mongodb.net/{MONGODB_DATABASE}?retryWrites=true&w=majority&authSource=admin"
 
@@ -45,7 +46,7 @@ class Database:
         team_data = None
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData
-            team_data = list(collection.find())
+            team_data = dict(collection.find().next())
         return team_data
 
     @staticmethod

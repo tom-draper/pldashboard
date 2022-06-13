@@ -1,6 +1,6 @@
-<script lang="ts">
-  import { Router, Route } from "svelte-routing";
-  import NavLink from "../components/NavLink.svelte";
+<script>
+  import { Router, Route, Link } from "svelte-routing";
+  // import NavLink from "../components/NavLink.svelte";
   import { onMount } from "svelte";
 
   function removeBorderRadius() {
@@ -51,11 +51,11 @@
 
 <Router>
   <div class="header">
-    <NavLink class="title main-link no-decoration" href="/">Premier League</NavLink>
+    <Link class="title main-link no-decoration" href="/">Premier League</Link>
   </div>
   <div class="page-content">
     <div class="teams">
-      <NavLink
+      <Link
         to="/manchester-city"
         class="team-button"
         id="team-1"
@@ -64,7 +64,7 @@
         <div class="main-link" style="color: var(--manchester-city-secondary);">
           Manchester City
         </div>
-      </NavLink>
+      </Link>
       <a
         href="/manchester-united"
         class="team-button"

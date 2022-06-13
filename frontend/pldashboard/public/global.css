@@ -1,9 +1,5 @@
 /* -------------------------------- Global ------------------------------------- */
 
-/* 
-Club colours - KEEP SEPARATED AT TOP OF FILE
-Read by Python to use within program
-*/
 :root{
   --sheffield-united: rgb(238 39 55);
   --sheffield-united-secondary: rgb(13 23 26);
@@ -63,9 +59,7 @@ Read by Python to use within program
   --brentford-secondary: rgb(255 255 255);
   --nottingham-forst: rgb(229 50 51);
   --nottingham-forst-secondary: rgb(255 255 255);
-}
 
-:root {
   --border-radius: 6px;
   --ssp1-offset: 0;
   --ssp2-offset: 0;
@@ -107,6 +101,11 @@ h1 {
 
 /* Ko-fi button */
 
+a {
+  color: blue;
+  text-decoration: none; /* no underline */
+}
+
 a.kofi-button {
   font-size: 16px;
   border-radius: var(--border-radius);
@@ -123,8 +122,9 @@ a.kofi-button {
 /* -------------------------------- Layout ------------------------------------- */
 
 .header {
-  padding: 30px 15px;
+  padding: 20px 15px;
   text-align: center;
+  height: 72px;
 }
 #back-button {
   position: absolute;
@@ -132,7 +132,8 @@ a.kofi-button {
   left: 40px;
   width: 80px;
   height: 48px;
-  /* height: 60px; */
+  background: url("img/Back3.png");
+  background-size: contain;
 }
 .title {
   font-size: 2.6em;
@@ -196,6 +197,25 @@ a.kofi-button {
 }
 
 /* ------------------------------- Teams Page ---------------------------------- */
+
+.W {
+  background-image: url("img/form_img/win.png");
+}
+
+.star-team {
+  background-image: url("img/form_img/super.png");
+}
+
+.D {
+  background-image: url("img/form_img/draw.png");
+}
+.L {
+  background-image: url("img/form_img/lose.png");
+}
+
+.N {
+  background-image: url("img/form_img/none.png");
+}
 
 .page-content {
   display: flex;
