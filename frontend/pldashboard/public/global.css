@@ -364,7 +364,6 @@ img {
 #divider {
   align-self: center;
   border-bottom: 1px solid grey;
-  width: 90%;
 }
 #big-divider {
   border-bottom: 2px solid rgb(29 29 29);
@@ -611,13 +610,13 @@ h1 {
   letter-spacing: -0.07em;
 }
 #ssp1 {
-  right: calc(var(--ssp1-offset) - 52px);
+  right: calc(var(--ssp1-offset) - 48px);
 }
 #ssp2 {
-  right: calc(var(--ssp2-offset) - 52px);
+  right: calc(var(--ssp2-offset) - 48px);
 }
 #ssp3 {
-  right: calc(var(--ssp3-offset) - 52px);
+  right: calc(var(--ssp3-offset) - 48px);
 }
 .ssp-1st { color: #6CFF68; }
 .ssp-2nd { color: #78F570; }

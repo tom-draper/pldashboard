@@ -37,10 +37,10 @@
     }
   }
 
-  // onMount(() => {
-  //   // window.addEventListener('resize', setBorderRadius, true);
-  //   // setBorderRadius();
-  // })
+  onMount(() => {
+    window.addEventListener('resize', setBorderRadius, true);
+    setBorderRadius();
+  })
 
 </script>
 
@@ -65,8 +65,8 @@
           Manchester City
         </div>
       </Link>
-      <a
-        href="/manchester-united"
+      <Link
+        to="/manchester-united"
         class="team-button"
         id="team-2"
         style="background-color: var(--manchester-united);"
@@ -74,45 +74,45 @@
         <div class="main-link" style="color: var(--manchester-united-secondary);">
           Manchester United
         </div>
-      </a>
-      <a
-        href="/liverpool"
+      </Link>
+      <Link
+        to="/liverpool"
         class="team-button"
         id="team-3"
         style="background-color: var(--liverpool);"
       >
         <div class="main-link" style="color: var(--liverpool-secondary);">Liverpool</div>
-      </a>
-      <a href="/chelsea" class="team-button" id="team-4" style="background-color: var(--chelsea);">
+    </Link>
+      <Link to="/chelsea" class="team-button" id="team-4" style="background-color: var(--chelsea);">
         <div class="main-link" style="color: var(--chelsea-secondary);">Chelsea</div>
-      </a>
-      <a
-        href="/leicester-city"
+      </Link>
+      <Link
+        to="/leicester-city"
         class="team-button"
         id="team-5"
         style="background-color: var(--leicester-city);"
       >
         <div class="main-link" style="color: var(--leicester-city-secondary);">Leicester</div>
-      </a>
-      <a
-        href="/west-ham-united"
+    </Link>
+      <Link
+        to="/west-ham-united"
         class="team-button"
         id="team-6"
         style="background-color: var(--west-ham-united);"
       >
         <div class="main-link" style="color: var(--west-ham-united-secondary);">West Ham</div>
-      </a>
-      <a
-        href="/tottenham-hotspur"
+      </Link>
+      <Link
+        to="/tottenham-hotspur"
         class="team-button"
         id="team-7"
         style="background-color: var(--tottenham-hotspur);"
       >
         <div class="main-link" style="color: var(--tottenham-hotspur-secondary);">Spurs</div>
-      </a>
-      <a href="/arsenal" class="team-button" id="team-8" style="background-color: var(--arsenal);">
+    </Link>
+      <Link to="/arsenal" class="team-button" id="team-8" style="background-color: var(--arsenal);">
         <div class="main-link" style="color: var(--arsenal-secondary);">Arsenal</div>
-      </a>
+      </Link>
       <a
         href="/leeds-united"
         class="team-button"
