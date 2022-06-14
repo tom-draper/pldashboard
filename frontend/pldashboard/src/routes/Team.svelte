@@ -35,7 +35,7 @@
     }
     return rank;
   }
-  
+
   function getStatsRankings(data, teamIdx) {
     let xGRank = ordinal(getStatsRank(data, "xG", teamIdx, false));
     // Reverse - lower rank the better
@@ -43,7 +43,7 @@
     let cleanSheetRatioRank = ordinal(
       getStatsRank(data, "cleanSheetRatio", teamIdx, false)
     );
-    return {xG: xGRank, xC: xCRank, cleanSheetRatio: cleanSheetRatioRank};
+    return { xG: xGRank, xC: xCRank, cleanSheetRatio: cleanSheetRatioRank };
   }
 
   function tableSnippetRange(sortedTeams, teamIdx) {
@@ -54,24 +54,33 @@
     if (low < 0) {
       let overflow = low;
       high -= overflow;
-      low = 0
+      low = 0;
     }
     if (high > sortedTeams.length - 1) {
       let overflow = high - sortedTeams.length;
       low -= overflow;
       high = sortedTeams.length;
     }
-    
+
     return [low, high];
   }
 
   function teamIdxToFullName(teamIdx) {
-    return teamIdx.charAt(0).toUpperCase() + teamIdx.slice(1).replace(/([A-Z])/g, ' $1').replace(' F C', ' FC')
+    return (
+      teamIdx.charAt(0).toUpperCase() +
+      teamIdx
+        .slice(1)
+        .replace(/([A-Z])/g, " $1")
+        .replace(" F C", " FC")
+    );
   }
 
   function getTableSnippet(data, teamIdx) {
     let sortedTeams = Object.keys(data.standings).sort(function (teamA, teamB) {
-      return data.standings[teamB][data.currentSeason].points - data.standings[teamA][data.currentSeason].points;
+      return (
+        data.standings[teamB][data.currentSeason].points -
+        data.standings[teamA][data.currentSeason].points
+      );
     });
 
     let [low, high] = tableSnippetRange(sortedTeams, teamIdx);
@@ -82,30 +91,27 @@
       if (sortedTeams[i] == teamIdx) {
         teamTableIdx = i;
       }
-      console.log(data.standings[sortedTeams[i]][data.currentSeason])
+      console.log(data.standings[sortedTeams[i]][data.currentSeason]);
       rows.push({
-          name: teamIdxToFullName(sortedTeams[i]),
-          position: data.standings[sortedTeams[i]][data.currentSeason].position,
-          points: data.standings[sortedTeams[i]][data.currentSeason].points,
-          gd: data.standings[sortedTeams[i]][data.currentSeason].gD,
-      })
-    };
-
+        name: teamIdxToFullName(sortedTeams[i]),
+        position: data.standings[sortedTeams[i]][data.currentSeason].position,
+        points: data.standings[sortedTeams[i]][data.currentSeason].points,
+        gd: data.standings[sortedTeams[i]][data.currentSeason].gD,
+      });
+    }
 
     return {
       teamTableIdx: teamTableIdx,
-      rows: rows
-    }
+      rows: rows,
+    };
   }
 
-  function getTeamData(json) {
-    let fullTeamName = toTitleCase(team.replace("-", " ")) + " FC";
+  function getTeamData(fullTeamName, json) {
     let teamIdx = createTeamIdx(team);
     let currentMatchday = getCurrentMatchday(json, teamIdx);
     let rank = getStatsRankings(json, teamIdx);
     let tableSnippet = getTableSnippet(json, teamIdx);
-    return {fullTeamName, teamIdx, currentMatchday, rank, tableSnippet}
-
+    return { fullTeamName, teamIdx, currentMatchday, rank, tableSnippet };
   }
 
   function toInitials(fullTeamName) {
@@ -131,7 +137,7 @@
       data.form[teamIdx][a] > data.form[teamIdx][b] ? a : b
     );
   }
-  
+
   function setPositionalOffset() {
     document.documentElement.style.setProperty(
       "--ssp1-offset",
@@ -152,22 +158,17 @@
     let json = await response.json();
     return json;
   }
-  
-  let ssp1;
-  let ssp2;
-  let ssp3;
-  // let fullTeamName = "";
-  // let teamIdx;
-  // let currentMatchday;
-  // let rank;
-  // let tableSnippet;
+
+  let ssp1, ssp2, ssp3;
+  let fullTeamName = "";
   let teamData;
   let data;
   onMount(() => {
+    fullTeamName = toTitleCase(team.replace("-", " ")) + " FC"
     fetchData("http://127.0.0.1:5000/teams")
-    .then((json) => {
+      .then((json) => {
         // Build teamData package from json data
-        teamData = getTeamData(json);
+        teamData = getTeamData(fullTeamName, json);
         data = json;
       })
       .then((_) => {
@@ -182,20 +183,22 @@
   export let team;
 </script>
 
+<svelte:head>
+  <title>{fullTeamName}</title>
+  <meta name="description" content="Premier League Statistics Dashboard" />
+</svelte:head>
+
 <Router>
   <div class="header" style="background-color: var(--{team});">
-    <!-- <NavLink id="back-button" class="main-link" to="/" /> -->
-    <Link to="/ ">
+    <!-- <Link to="/ ">
       <div id="back-button" class="main-link" />
-    </Link>
+    </Link> -->
     <Link to="/{team}">
       <div
         class="main-link title no-decoration"
         style="color: var(--{team + '-secondary'});"
       >
-      {#if teamData != undefined}
-        {teamData.fullTeamName}
-      {/if}
+        {fullTeamName}
       </div>
     </Link>
   </div>
@@ -228,64 +231,80 @@
             <div
               class="icon pos-0 {data.form[teamData.teamIdx][
                 teamData.currentMatchday
-              ].form5.charAt(0)} {data.form[teamData.teamIdx][teamData.currentMatchday]
-                .beatStarTeam
+              ].form5.charAt(0)} {data.form[teamData.teamIdx][
+                teamData.currentMatchday
+              ].beatStarTeam
                 ? 'star-team'
                 : ''}"
             />
             <div
               class="icon pos-1 {data.form[teamData.teamIdx][
                 teamData.currentMatchday
-              ].form5.charAt(1)} {data.form[teamData.teamIdx][teamData.currentMatchday - 1]
-                .beatStarTeam
+              ].form5.charAt(1)} {data.form[teamData.teamIdx][
+                teamData.currentMatchday - 1
+              ].beatStarTeam
                 ? 'star-team'
                 : ''}"
             />
             <div
               class="icon pos-2 {data.form[teamData.teamIdx][
                 teamData.currentMatchday
-              ].form5.charAt(2)} {data.form[teamData.teamIdx][teamData.currentMatchday - 2]
-                .beatStarTeam
+              ].form5.charAt(2)} {data.form[teamData.teamIdx][
+                teamData.currentMatchday - 2
+              ].beatStarTeam
                 ? 'star-team'
                 : ''}"
             />
             <div
               class="icon pos-3 {data.form[teamData.teamIdx][
                 teamData.currentMatchday
-              ].form5.charAt(3)} {data.form[teamData.teamIdx][teamData.currentMatchday - 3]
-                .beatStarTeam
+              ].form5.charAt(3)} {data.form[teamData.teamIdx][
+                teamData.currentMatchday - 3
+              ].beatStarTeam
                 ? 'star-team'
                 : ''}"
             />
             <div
               class="icon pos-4 {data.form[teamData.teamIdx][
                 teamData.currentMatchday
-              ].form5.charAt(4)} {data.form[teamData.teamIdx][teamData.currentMatchday - 4]
-                .beatStarTeam
+              ].form5.charAt(4)} {data.form[teamData.teamIdx][
+                teamData.currentMatchday - 4
+              ].beatStarTeam
                 ? 'star-team'
                 : ''}"
             />
           </div>
           <div class="current-form-row">
             <div class="icon-name pos-0">
-              {toInitials(data.form[teamData.teamIdx][teamData.currentMatchday].team)}
+              {toInitials(
+                data.form[teamData.teamIdx][teamData.currentMatchday].team
+              )}
             </div>
             <div class="icon-name pos-1">
-              {toInitials(data.form[teamData.teamIdx][teamData.currentMatchday - 1].team)}
+              {toInitials(
+                data.form[teamData.teamIdx][teamData.currentMatchday - 1].team
+              )}
             </div>
             <div class="icon-name pos-2">
-              {toInitials(data.form[teamData.teamIdx][teamData.currentMatchday - 2].team)}
+              {toInitials(
+                data.form[teamData.teamIdx][teamData.currentMatchday - 2].team
+              )}
             </div>
             <div class="icon-name pos-3">
-              {toInitials(data.form[teamData.teamIdx][teamData.currentMatchday - 3].team)}
+              {toInitials(
+                data.form[teamData.teamIdx][teamData.currentMatchday - 3].team
+              )}
             </div>
             <div class="icon-name pos-4">
-              {toInitials(data.form[teamData.teamIdx][teamData.currentMatchday - 4].team)}
+              {toInitials(
+                data.form[teamData.teamIdx][teamData.currentMatchday - 4].team
+              )}
             </div>
           </div>
           <div class="current-form">
             Current form: {(
-              data.form[teamData.teamIdx][teamData.currentMatchday].formRating5 * 100
+              data.form[teamData.teamIdx][teamData.currentMatchday]
+                .formRating5 * 100
             ).toFixed(2)}%
           </div>
 
@@ -313,29 +332,29 @@
                 <!-- Highlighted row for the team of the current page -->
                 <div
                   class="table-row this-team"
-                  style="background-color: var(--{ team });"
+                  style="background-color: var(--{team});"
                 >
                   <div
                     class="table-element table-position this-team"
-                    style="color: var(--{ team }-secondary);"
+                    style="color: var(--{team}-secondary);"
                   >
                     {teamData.tableSnippet.rows[i].position}
                   </div>
                   <div
                     class="table-element table-team-name this-team"
-                    style="color: var(--{ team }-secondary);"
+                    style="color: var(--{team}-secondary);"
                   >
                     {teamData.tableSnippet.rows[i].name}
                   </div>
                   <div
                     class="table-element table-gd this-team"
-                    style="color: var(--{ team }-secondary);"
+                    style="color: var(--{team}-secondary);"
                   >
                     {teamData.tableSnippet.rows[i].gd}
                   </div>
                   <div
                     class="table-element table-points this-team"
-                    style="color: var(--{ team }-secondary);"
+                    style="color: var(--{team}-secondary);"
                   >
                     {teamData.tableSnippet.rows[i].points}
                   </div>
@@ -366,13 +385,16 @@
 
         <div
           class="next-game-prediction row-graph"
-          style="border: 6px solid var(--{data.upcoming[teamData.teamIdx].nextTeam});"
+          style="border: 6px solid var(--{data.upcoming[teamData.teamIdx]
+            .nextTeam});"
         >
           {#if data.upcoming[teamData.teamIdx].nextTeam != null}
             <!-- Pre or mid season -->
             <div
               class="next-game-title"
-              style="background-color: var(--{data.upcoming[teamData.teamIdx].nextTeam
+              style="background-color: var(--{data.upcoming[
+                teamData.teamIdx
+              ].nextTeam
                 .replace(' FC', '')
                 .toLowerCase()
                 .replace(' ', '-')});"
@@ -394,8 +416,9 @@
                   style="color: inherit"
                 >
                   {data.upcoming[teamData.teamIdx].nextTeam}
-                </a><span class="parenthesis">(</span>{data.upcoming[teamData.teamIdx]
-                  .atHome}<span class="parenthesis">)</span>
+                </a><span class="parenthesis">(</span>{data.upcoming[
+                  teamData.teamIdx
+                ].atHome}<span class="parenthesis">)</span>
               </h1>
             </div>
           {:else}
@@ -438,11 +461,15 @@
                   <br />
                   <span class="accuracy-item">
                     Predicting with accuracy:
-                    <b>{data.upcoming.prediction[teamData.teamIdx].accuracy}%</b></span
+                    <b>{data.upcoming.prediction[teamData.teamIdx].accuracy}%</b
+                    ></span
                   ><br />
                   <div class="accuracy-item">
                     General results accuracy:
-                    <b>{data.upcoming.prediction[teamData.teamIdx].resultsAccuracy}%</b>
+                    <b
+                      >{data.upcoming.prediction[teamData.teamIdx]
+                        .resultsAccuracy}%</b
+                    >
                   </div>
                 </div>
               </div>
@@ -521,7 +548,11 @@
           <div class="season-stat goals-per-game">
             <div class="season-stat-value">
               {data.seasonStats[teamData.teamIdx].xG}
-              <div class="season-stat-position ssp-{teamData.rank.xG}" id="ssp1" bind:this={ssp1}>
+              <div
+                class="season-stat-position ssp-{teamData.rank.xG}"
+                id="ssp1"
+                bind:this={ssp1}
+              >
                 {teamData.rank.xG}
               </div>
             </div>
@@ -530,7 +561,11 @@
           <div class="season-stat conceded-per-game">
             <div class="season-stat-value">
               {data.seasonStats[teamData.teamIdx].xC}
-              <div class="season-stat-position ssp-{teamData.rank.xC}" id="ssp2" bind:this={ssp2}>
+              <div
+                class="season-stat-position ssp-{teamData.rank.xC}"
+                id="ssp2"
+                bind:this={ssp2}
+              >
                 {teamData.rank.xC}
               </div>
             </div>
@@ -539,7 +574,11 @@
           <div class="season-stat clean-sheet-ratio">
             <div class="season-stat-value">
               {data.seasonStats[teamData.teamIdx].cleanSheetRatio}
-              <div class="season-stat-position ssp-{teamData.rank.cleanSheetRatio}" id="ssp3" bind:this={ssp3}>
+              <div
+                class="season-stat-position ssp-{teamData.rank.cleanSheetRatio}"
+                id="ssp3"
+                bind:this={ssp3}
+              >
                 {teamData.rank.cleanSheetRatio}
               </div>
             </div>
@@ -563,11 +602,10 @@
       </div>
 
       <div class="teams-footer footer-text-colour">
-        <!-- <script type="text/javascript" src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"></script>
-        <script type="text/javascript">
-          kofiwidget2.init("Support Me", "#d9534f", "C0C069FOI");
-          kofiwidget2.draw();
-        </script> -->
+        <a class="ko-fi" href="https://ko-fi.com/C0C069FOI" target="_blank">
+          <img class="ko-fi-img" src="img/kofi.png" alt="" />
+          <div class="ko-fi-text">Support Me</div>
+        </a>
         <div class="teams-footer-bottom">
           {#if data.lastUpdated != null}
             <div class="last-updated">{data.lastUpdated} UTC</div>
@@ -598,10 +636,14 @@
             <div class="created-by footer-text-colour">
               Created by Tom Draper
             </div>
-            <div class="version footer-text-colour">v1.0</div>
+            <div class="version footer-text-colour">v2.0</div>
           </div>
         </div>
       </div>
+    </div>
+  {:else}
+    <div class="loading-spinner-container">
+      <div class="loading-spinner" />
     </div>
   {/if}
 </Router>

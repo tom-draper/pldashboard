@@ -102,8 +102,30 @@ h1 {
 /* Ko-fi button */
 
 a {
-  color: blue;
-  text-decoration: none; /* no underline */
+  text-decoration: none;
+}
+
+.ko-fi {
+  width: 120px;
+  /* height: 100px; */
+  background: #ff5f5f;
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  display: flex;
+  margin: auto;
+}
+
+.ko-fi-text {
+  margin: 4px 0 auto;
+  font-size: 1.05em;
+}
+
+.ko-fi-img {
+  width: 25px;
+  height: 25px;
+  margin-right: 15px;
 }
 
 a.kofi-button {
@@ -364,6 +386,8 @@ img {
 #divider {
   align-self: center;
   border-bottom: 1px solid grey;
+  width: 90%;
+  margin: auto;
 }
 #big-divider {
   border-bottom: 2px solid rgb(29 29 29);
@@ -1133,3 +1157,29 @@ th,
 td {
   padding: 2px 4px;
 }
+
+/* Spinner */
+
+.loading-spinner-container {
+  display: grid;
+  place-items: center;
+  margin-top: 30vh;
+}
+
+.loading-spinner {
+  height: 48px;
+  width: 48px;
+  color: rgba(90, 90, 90, 0.2);
+  position: relative;
+  display: inline-block;
+  border: 5px solid;
+  border-radius: 50%;
+  border-right-color: #5a5a5a;
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0); }
+  100% {
+    transform: rotate(360deg); } }

@@ -44,14 +44,18 @@
 
 </script>
 
-<!-- <svelte:head>
+<svelte:head>
   <title>Premier League</title>
-  <meta name="description" content="Svelte demo app" />
-</svelte:head> -->
+  <meta name="description" content="Premier League Statistics Dashboard" />
+</svelte:head>
 
 <Router>
   <div class="header">
-    <Link class="title main-link no-decoration" href="/">Premier League</Link>
+    <Link to="/">
+      <div class="title main-link no-decoration">
+        Premier League
+      </div>
+    </Link>
   </div>
   <div class="page-content">
     <div class="teams">
@@ -197,11 +201,6 @@
         <div class="main-link" style="color: var(--brentford-secondary);">Brentford</div>
       </a>
     </div>
-      <!-- <script type="text/javascript" src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"></script>
-      <script type="text/javascript">
-        kofiwidget2.init("Support Me", "#d9534f", "C0C069FOI");
-        kofiwidget2.draw();
-      </script> -->
   </div>
 </Router>
 
