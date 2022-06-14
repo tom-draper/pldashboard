@@ -1,6 +1,9 @@
 <script>
   import { Router, Link } from "svelte-routing";
   import { onMount } from "svelte";
+  import Fixtures from "../components/Fixtures.svelte";
+
+  let graphData = {x: [1, 2, 3], y: [1, 2, 3], type: "bar"}
 
   function toTitleCase(str) {
     return str
@@ -12,42 +15,35 @@
       .join(" ");
   }
 
-  function createTeamIdx(team) {
-    // Creates camel case team name compatible with API data indexing
-    let teamIdx = toTitleCase(team.replace("-", " ")).replace(" ", "");
-    teamIdx = teamIdx.charAt(0).toLowerCase() + teamIdx.slice(1) + "FC";
-    return teamIdx;
-  }
-
   function ordinal(n) {
     var ord = [, "st", "nd", "rd"];
     var a = n % 100;
     return n + (ord[a > 20 ? a % 10 : a] || "th");
   }
 
-  function getStatsRank(data, attribute, teamIdx, reverse) {
+  function getStatsRank(data, attribute, fullTeamName, reverse) {
     let sorted = Object.keys(data.seasonStats).sort(function (a, b) {
       return data.seasonStats[b][attribute] - data.seasonStats[a][attribute];
     });
-    let rank = sorted.indexOf(teamIdx) + 1;
+    let rank = sorted.indexOf(fullTeamName) + 1;
     if (reverse) {
       rank = 21 - rank;
     }
     return rank;
   }
 
-  function getStatsRankings(data, teamIdx) {
-    let xGRank = ordinal(getStatsRank(data, "xG", teamIdx, false));
+  function getStatsRankings(data, fullTeamName) {
+    let xGRank = ordinal(getStatsRank(data, "xG", fullTeamName, false));
     // Reverse - lower rank the better
-    let xCRank = ordinal(getStatsRank(data, "xC", teamIdx, true));
+    let xCRank = ordinal(getStatsRank(data, "xC", fullTeamName, true));
     let cleanSheetRatioRank = ordinal(
-      getStatsRank(data, "cleanSheetRatio", teamIdx, false)
+      getStatsRank(data, "cleanSheetRatio", fullTeamName, false)
     );
     return { xG: xGRank, xC: xCRank, cleanSheetRatio: cleanSheetRatioRank };
   }
 
-  function tableSnippetRange(sortedTeams, teamIdx) {
-    let teamStandingsIdx = sortedTeams.indexOf(teamIdx);
+  function tableSnippetRange(sortedTeams, fullTeamName) {
+    let teamStandingsIdx = sortedTeams.indexOf(fullTeamName);
 
     let low = teamStandingsIdx - 3;
     let high = teamStandingsIdx + 4;
@@ -65,17 +61,7 @@
     return [low, high];
   }
 
-  function teamIdxToFullName(teamIdx) {
-    return (
-      teamIdx.charAt(0).toUpperCase() +
-      teamIdx
-        .slice(1)
-        .replace(/([A-Z])/g, " $1")
-        .replace(" F C", " FC")
-    );
-  }
-
-  function getTableSnippet(data, teamIdx) {
+  function getTableSnippet(data, fullTeamName) {
     let sortedTeams = Object.keys(data.standings).sort(function (teamA, teamB) {
       return (
         data.standings[teamB][data.currentSeason].points -
@@ -83,17 +69,16 @@
       );
     });
 
-    let [low, high] = tableSnippetRange(sortedTeams, teamIdx);
+    let [low, high] = tableSnippetRange(sortedTeams, fullTeamName);
 
     let teamTableIdx;
     let rows = [];
     for (let i = low; i < high; i++) {
-      if (sortedTeams[i] == teamIdx) {
+      if (sortedTeams[i] == fullTeamName) {
         teamTableIdx = i;
       }
-      console.log(data.standings[sortedTeams[i]][data.currentSeason]);
       rows.push({
-        name: teamIdxToFullName(sortedTeams[i]),
+        name: sortedTeams[i],
         position: data.standings[sortedTeams[i]][data.currentSeason].position,
         points: data.standings[sortedTeams[i]][data.currentSeason].points,
         gd: data.standings[sortedTeams[i]][data.currentSeason].gD,
@@ -107,11 +92,10 @@
   }
 
   function getTeamData(fullTeamName, json) {
-    let teamIdx = createTeamIdx(team);
-    let currentMatchday = getCurrentMatchday(json, teamIdx);
-    let rank = getStatsRankings(json, teamIdx);
-    let tableSnippet = getTableSnippet(json, teamIdx);
-    return { fullTeamName, teamIdx, currentMatchday, rank, tableSnippet };
+    let currentMatchday = getCurrentMatchday(json, fullTeamName);
+    let rank = getStatsRankings(json, fullTeamName);
+    let tableSnippet = getTableSnippet(json, fullTeamName);
+    return { currentMatchday, rank, tableSnippet };
   }
 
   function toInitials(fullTeamName) {
@@ -132,9 +116,9 @@
     return fullTeamName.slice(0, 3).toUpperCase();
   }
 
-  function getCurrentMatchday(data, teamIdx) {
-    return Object.keys(data.form[teamIdx]).reduce((a, b) =>
-      data.form[teamIdx][a] > data.form[teamIdx][b] ? a : b
+  function getCurrentMatchday(data, fullTeamName) {
+    return Object.keys(data.form[fullTeamName]).reduce((a, b) =>
+      data.form[fullTeamName][a] > data.form[fullTeamName][b] ? a : b
     );
   }
 
@@ -153,6 +137,81 @@
     );
   }
 
+  function getMatchDetail(match) {
+    let matchDetail;
+    let homeAway = match.atHome ? 'Home' : 'Away';
+    if (match.score != null) {
+      matchDetail = `${match.team} (${homeAway}) ${match.score}`
+    } else {
+      matchDetail = `${match.team} (${homeAway})`
+    }
+    return matchDetail
+  }
+
+  function sortByMatchDate(x, y, details) {
+    let list = [];
+    for (let i = 0; i < x.length; i++) {
+      list.push({x: x[i], y: y[i], details: details[i]});
+    }
+
+    list.sort(function(a, b) {
+        return ((a.x < b.x) ? -1 : ((a.x == b.x) ? 0 : 1));
+    });
+
+    for (let i = 0; i < list.length; i++) {
+        x[i] = list[i].x;
+        y[i] = list[i].y;
+        details[i] = list[i].details;
+    }
+  }
+
+  function increaseNextGameMarker(sizes, x, now, bigMarkerSize) {    
+    // Get matchday date with smallest time difference to now
+    let nextGameIdx;
+    let minDiff = Number.POSITIVE_INFINITY;
+    for (let i = 0; i < x.length; i++) {
+      let diff = (x[i] - now)
+      if (0 < diff && diff < minDiff) {
+        minDiff = diff;
+        nextGameIdx = i;
+      }
+    }
+
+    // Increase marker size of next game
+    if (nextGameIdx != undefined) {
+      sizes[nextGameIdx] = bigMarkerSize;
+    }
+
+    return sizes;
+  }
+
+  function getFixturesGraphData(data, fullTeamName) {
+    // Build data to create a fixtures line graph displaying the date along the 
+    // x-axis and opponent strength along the y-axis
+    let x = [];
+    let y = [];
+    let details = [];
+    for (let i = 1; i < Object.keys(data.fixtures[fullTeamName]).length; i++) {
+      let match = data.fixtures[fullTeamName][i];
+      x.push(new Date(match.date));
+
+      let oppTeamRating = data.teamRatings[match.team].totalRating;
+      y.push(oppTeamRating * 100);
+
+      let matchDetail = getMatchDetail(match);
+      details.push(matchDetail);
+    }
+    
+    sortByMatchDate(x, y, details);
+
+    let now = Date.now()
+    
+    let sizes = Array(x.length).fill(14);
+    sizes = increaseNextGameMarker(sizes, x, now, 26);
+
+    return {x, y, details, sizes, now}
+  }
+
   async function fetchData(address) {
     const response = await fetch(address);
     let json = await response.json();
@@ -163,6 +222,11 @@
   let fullTeamName = "";
   let teamData;
   let data;
+  let fixturesData;
+  let formData;
+  let positionGraphData;
+  let goalsScoredAndConcededGraphData;
+  let goalsPerGameGraphData;
   onMount(() => {
     fullTeamName = toTitleCase(team.replace("-", " ")) + " FC"
     fetchData("http://127.0.0.1:5000/teams")
@@ -170,13 +234,16 @@
         // Build teamData package from json data
         teamData = getTeamData(fullTeamName, json);
         data = json;
+        console.log(data);
       })
-      .then((_) => {
+      .then(_ => {
         setPositionalOffset();
         // Keep positional value the correct offset
         window.addEventListener("resize", setPositionalOffset);
+      })
+      .then(_ => {
         // Generate graphs
-        console.log(data);
+        fixturesData = getFixturesGraphData(data, fullTeamName);
       });
   });
 
@@ -209,18 +276,21 @@
         <div
           class="row-left position-and-badge"
           style="background-image: url('{data.logoURLs[
-            teamData.teamIdx
+            fullTeamName
           ]}'); background-repeat: no-repeat; background-size: auto 450px; background-position: right center;"
         >
           <div class="position">
-            {data.standings[teamData.teamIdx][data.currentSeason].position}
+            {data.standings[fullTeamName][data.currentSeason].position}
           </div>
         </div>
         <div class="fixtures-graph row-graph">
           <h1 class="lowered">Fixtures</h1>
           <!-- Not included in an iframe to ensure it loads before page is rendered -->
           <div class="graph mini-graph">
+            {#if fixturesData != undefined}
+              <Fixtures graphData={fixturesData}/>
             <!-- {% include 'graphs/%s/fixtures-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
+            {/if}
           </div>
         </div>
       </div>
@@ -229,45 +299,45 @@
         <div class="row-left form-details">
           <div class="current-form-row">
             <div
-              class="icon pos-0 {data.form[teamData.teamIdx][
+              class="icon pos-0 {data.form[fullTeamName][
                 teamData.currentMatchday
-              ].form5.charAt(0)} {data.form[teamData.teamIdx][
+              ].form5.charAt(0)} {data.form[fullTeamName][
                 teamData.currentMatchday
               ].beatStarTeam
                 ? 'star-team'
                 : ''}"
             />
             <div
-              class="icon pos-1 {data.form[teamData.teamIdx][
+              class="icon pos-1 {data.form[fullTeamName][
                 teamData.currentMatchday
-              ].form5.charAt(1)} {data.form[teamData.teamIdx][
+              ].form5.charAt(1)} {data.form[fullTeamName][
                 teamData.currentMatchday - 1
               ].beatStarTeam
                 ? 'star-team'
                 : ''}"
             />
             <div
-              class="icon pos-2 {data.form[teamData.teamIdx][
+              class="icon pos-2 {data.form[fullTeamName][
                 teamData.currentMatchday
-              ].form5.charAt(2)} {data.form[teamData.teamIdx][
+              ].form5.charAt(2)} {data.form[fullTeamName][
                 teamData.currentMatchday - 2
               ].beatStarTeam
                 ? 'star-team'
                 : ''}"
             />
             <div
-              class="icon pos-3 {data.form[teamData.teamIdx][
+              class="icon pos-3 {data.form[fullTeamName][
                 teamData.currentMatchday
-              ].form5.charAt(3)} {data.form[teamData.teamIdx][
+              ].form5.charAt(3)} {data.form[fullTeamName][
                 teamData.currentMatchday - 3
               ].beatStarTeam
                 ? 'star-team'
                 : ''}"
             />
             <div
-              class="icon pos-4 {data.form[teamData.teamIdx][
+              class="icon pos-4 {data.form[fullTeamName][
                 teamData.currentMatchday
-              ].form5.charAt(4)} {data.form[teamData.teamIdx][
+              ].form5.charAt(4)} {data.form[fullTeamName][
                 teamData.currentMatchday - 4
               ].beatStarTeam
                 ? 'star-team'
@@ -277,33 +347,33 @@
           <div class="current-form-row">
             <div class="icon-name pos-0">
               {toInitials(
-                data.form[teamData.teamIdx][teamData.currentMatchday].team
+                data.form[fullTeamName][teamData.currentMatchday].team
               )}
             </div>
             <div class="icon-name pos-1">
               {toInitials(
-                data.form[teamData.teamIdx][teamData.currentMatchday - 1].team
+                data.form[fullTeamName][teamData.currentMatchday - 1].team
               )}
             </div>
             <div class="icon-name pos-2">
               {toInitials(
-                data.form[teamData.teamIdx][teamData.currentMatchday - 2].team
+                data.form[fullTeamName][teamData.currentMatchday - 2].team
               )}
             </div>
             <div class="icon-name pos-3">
               {toInitials(
-                data.form[teamData.teamIdx][teamData.currentMatchday - 3].team
+                data.form[fullTeamName][teamData.currentMatchday - 3].team
               )}
             </div>
             <div class="icon-name pos-4">
               {toInitials(
-                data.form[teamData.teamIdx][teamData.currentMatchday - 4].team
+                data.form[fullTeamName][teamData.currentMatchday - 4].team
               )}
             </div>
           </div>
           <div class="current-form">
             Current form: {(
-              data.form[teamData.teamIdx][teamData.currentMatchday]
+              data.form[fullTeamName][teamData.currentMatchday]
                 .formRating5 * 100
             ).toFixed(2)}%
           </div>
@@ -385,15 +455,15 @@
 
         <div
           class="next-game-prediction row-graph"
-          style="border: 6px solid var(--{data.upcoming[teamData.teamIdx]
+          style="border: 6px solid var(--{data.upcoming[fullTeamName]
             .nextTeam});"
         >
-          {#if data.upcoming[teamData.teamIdx].nextTeam != null}
+          {#if data.upcoming[fullTeamName].nextTeam != null}
             <!-- Pre or mid season -->
             <div
               class="next-game-title"
               style="background-color: var(--{data.upcoming[
-                teamData.teamIdx
+                fullTeamName
               ].nextTeam
                 .replace(' FC', '')
                 .toLowerCase()
@@ -401,23 +471,23 @@
             >
               <h1
                 class="next-game-title-text"
-                style="color: var(--{data.upcoming[teamData.teamIdx].nextTeam
+                style="color: var(--{data.upcoming[fullTeamName].nextTeam
                   .replace(' FC', '')
                   .toLowerCase()
                   .replace(' ', '-')}-secondary);"
               >
                 Next Game:
                 <a
-                  href="/{data.upcoming[teamData.teamIdx].nextTeam
+                  href="/{data.upcoming[fullTeamName].nextTeam
                     .replace(' FC', '')
                     .toLowerCase()
                     .replace(' ', '-')}"
                   class="no-decoration"
                   style="color: inherit"
                 >
-                  {data.upcoming[teamData.teamIdx].nextTeam}
+                  {data.upcoming[fullTeamName].nextTeam}
                 </a><span class="parenthesis">(</span>{data.upcoming[
-                  teamData.teamIdx
+                  fullTeamName
                 ].atHome}<span class="parenthesis">)</span>
               </h1>
             </div>
@@ -431,13 +501,13 @@
           {/if}
         </div>
 
-        {#if data.upcoming[teamData.teamIdx].nextTeam != null}
+        {#if data.upcoming[fullTeamName].nextTeam != null}
           <div class="next-game-values">
             <div class="predictions-and-logo">
               <div
                 class="next-game-logo opposition-badge"
                 style="background-image: url('{data.logoURLs[
-                  data.upcoming[teamData.teamIdx].nextTeam
+                  data.upcoming[fullTeamName].nextTeam
                 ]}');
                             background-repeat: no-repeat;
                             background-size: contain;
@@ -447,7 +517,7 @@
                 <div class="next-game-item">
                   Current form:
                   <b
-                    >{data.form[data.upcoming[teamData.teamIdx].nextTeam][
+                    >{data.form[data.upcoming[fullTeamName].nextTeam][
                       teamData.currentMatchday
                     ].formRating5}%</b
                   >
@@ -461,13 +531,13 @@
                   <br />
                   <span class="accuracy-item">
                     Predicting with accuracy:
-                    <b>{data.upcoming.prediction[teamData.teamIdx].accuracy}%</b
+                    <b>{data.upcoming.prediction[fullTeamName].accuracy}%</b
                     ></span
                   ><br />
                   <div class="accuracy-item">
                     General results accuracy:
                     <b
-                      >{data.upcoming.prediction[teamData.teamIdx]
+                      >{data.upcoming.prediction[fullTeamName]
                         .resultsAccuracy}%</b
                     >
                   </div>
@@ -475,7 +545,7 @@
               </div>
             </div>
             <div class="past-results">
-              {#if data.upcoming[teamData.teamIdx].previousMatches.length == 0}
+              {#if data.upcoming[fullTeamName].previousMatches.length == 0}
                 <div class="next-game-item prev-results-title">
                   No Previous Results
                 </div>
@@ -486,7 +556,7 @@
               {/if}
 
               <!-- Display table of previous results against the next team this team is playing -->
-              {#each data.upcoming[teamData.teamIdx].previousMatches as prevMatch}
+              {#each data.upcoming[fullTeamName].previousMatches as prevMatch}
                 <div class="next-game-item {prevMatch.oppTeam}">
                   <div class="past-result">
                     <div class="home-team">{prevMatch.homeTeam}</div>
@@ -547,7 +617,7 @@
         <div class="season-stats">
           <div class="season-stat goals-per-game">
             <div class="season-stat-value">
-              {data.seasonStats[teamData.teamIdx].xG}
+              {data.seasonStats[fullTeamName].xG}
               <div
                 class="season-stat-position ssp-{teamData.rank.xG}"
                 id="ssp1"
@@ -560,7 +630,7 @@
           </div>
           <div class="season-stat conceded-per-game">
             <div class="season-stat-value">
-              {data.seasonStats[teamData.teamIdx].xC}
+              {data.seasonStats[fullTeamName].xC}
               <div
                 class="season-stat-position ssp-{teamData.rank.xC}"
                 id="ssp2"
@@ -573,7 +643,7 @@
           </div>
           <div class="season-stat clean-sheet-ratio">
             <div class="season-stat-value">
-              {data.seasonStats[teamData.teamIdx].cleanSheetRatio}
+              {data.seasonStats[fullTeamName].cleanSheetRatio}
               <div
                 class="season-stat-position ssp-{teamData.rank.cleanSheetRatio}"
                 id="ssp3"

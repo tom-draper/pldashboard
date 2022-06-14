@@ -162,5 +162,6 @@ class Utilities:
 
     @staticmethod
     def camel_case(s: str) -> str:
-        s = s.title().replace(' ', '')
+        if ' FC' in s:
+            return s
         return s[0].lower() + s[1:]

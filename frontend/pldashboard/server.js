@@ -14,9 +14,9 @@ server.get("*", function(req, res) {
     
     <link rel='stylesheet' href='/global.css'>
     <link rel='stylesheet' href='/bundle.css'>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js" type="text/javascript"></script>
     <div id="app">${html}</div>
     <script src="/bundle.js"></script>
-    <script type="text/javascript" src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"></script>
   `);
 
   res.end();

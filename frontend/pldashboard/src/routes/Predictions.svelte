@@ -71,6 +71,11 @@
   });
 </script>
 
+<svelte:head>
+  <title>Predictions</title>
+  <meta name="description" content="Premier League Statistics Dashboard" />
+</svelte:head>
+
 <Router>
   <div class="predictions-header">
     <Link
@@ -154,6 +159,10 @@
         recent form and home advantage.
       </div>
       <!-- <div class="last-updated">{data.lastUpdated} UTC</div> -->
+    </div>
+  {:else}
+    <div class="loading-spinner-container">
+      <div class="loading-spinner"></div>
     </div>
   {/if}
 </Router>
