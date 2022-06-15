@@ -49,74 +49,86 @@
     return sizes;
   }
 
+  function getLine(data, x, teamName, isMainTeam) {
+    let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
+
+    let y = [];
+    for (let i = 1; i <= 38; i++) {
+      let form = data.form[teamName][i].formRating5;
+      y.push(form * 100);
+    }
+
+    let lineVal;
+    if (isMainTeam) {
+      // Get team primary colour from css variable
+      let teamKey = teamName.replace(' FC', '');
+      teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
+      teamKey = teamKey.replace(/([A-Z])/, '-$1').toLowerCase();
+      let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`)
+      lineVal = {color: lineColor, width: 4}
+    } else {
+      lineVal = {color: '#d3d3d3'};
+    }
+
+    let line = {
+      x: x,
+      y: y,
+      name: teamName,
+      mode: 'lines',
+      line: lineVal,
+      text: matchdays,
+      hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
+      hoverinfo: 'x+y',
+      showlegend: false
+    };
+    return line;
+  }
+
+  function getMatchdayDates(data) {
+    // Find median matchday date across all teams for each matchday
+    let x = [];
+    for (let i = 1; i <= 38; i++) {
+      let matchdayDates = [];
+      data.teamNames.forEach(team => {
+        matchdayDates.push(data.fixtures[team][i].date)
+      })
+      matchdayDates.map(val => {new Date(val)})
+      matchdayDates = matchdayDates.sort();
+      x.push(matchdayDates[Math.floor(matchdayDates.length/2)]);
+    }
+    return x;
+  }
+
   function getGraphData(data, fullTeamName) {
     // Build data to create a fixtures line graph displaying the date along the
     // x-axis and opponent strength along the y-axis
-    let x = [];
-    let y = [];
-    let details = [];
-    for (let i = 1; i < Object.keys(data.fixtures[fullTeamName]).length; i++) {
-      let match = data.fixtures[fullTeamName][i];
-      x.push(new Date(match.date));
 
-      let oppTeamRating = data.teamRatings[match.team].totalRating;
-      if (match.atHome) {
-        // If team playing at home, decrease opposition rating by the amount of home advantage the team gains
-        oppTeamRating *= 1 - data.homeAdvantages[match.team].totalHomeAdvantage;
+    let x = getMatchdayDates(data);  // All lines use the same x
+    let lines = [];
+    for (let i = 0; i < data.teamNames.length; i++) {
+      if (data.teamNames[i] != fullTeamName) {
+        let line = getLine(data, x, data.teamNames[i], false)
+        lines.push(line)
       }
-      y.push(oppTeamRating * 100);
-
-      let matchDetail = getMatchDetail(match);
-      details.push(matchDetail);
     }
 
-    sortByMatchDate(x, y, details);
+    // Add this team last
+    let line = getLine(data, x, fullTeamName, true)
+    lines.push(line);
 
-    let now = Date.now();
-
-    let sizes = Array(x.length).fill(14);
-    sizes = increaseNextGameMarker(sizes, x, now, 26);
-
-    let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
+    console.log(lines);
 
     let yLabels = Array.from(Array(11), (_, i) => i*10)
 
-    let minX = new Date(x[0]);
-    minX.setDate(minX.getDate() - 10);
-    let maxX = new Date(Math.max(x[x.length - 1], now));
-    maxX.setDate(maxX.getDate() + 10);
+    // sortByMatchDate(x, y, details);
+
+    // let now = Date.now();
+
+    // let sizes = Array(x.length).fill(14);
+    // sizes = increaseNextGameMarker(sizes, x, now, 26);
 
     let graphData = {
-      data: [{
-        x: x,
-        y: y,
-        type: "scatter",
-        mode: "lines+markers",
-        text: details,
-        line: {
-          color: "#737373",
-        },
-        marker: {
-          size: sizes,
-          colorscale: [
-            [0, "#01c626"],
-            [0.1, "#08a825"],
-            [0.2, "#0b7c20"],
-            [0.3, "#0a661b"],
-            [0.4, "#064411"],
-            [0.5, "#000000"],
-            [0.6, "#5b1d15"],
-            [0.7, "#85160f"],
-            [0.8, "#ad1a10"],
-            [0.9, "#db1a0d"],
-            [1, "#fc1303"],
-          ],
-          color: y,
-        },
-        customdata: matchdays,
-        hovertemplate:
-          "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
-      }],
+      data: lines,
       layout: {
         title: false,
         autosize: true,
@@ -125,36 +137,22 @@
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
         yaxis: {
-          title: { text: "Team Rating" },
+          title: { text: "Form Rating" },
           gridcolor: "gray",
+          showgrid: false,
           showline: false,
           zeroline: false,
           fixedrange: true,
           ticktext: yLabels,
-          tickvals: yLabels,
+          tickvals: yLabels
         },
         xaxis: {
           // title: { text: "Matchday" },
           linecolor: "black",
           showgrid: false,
           showline: false,
-          range: [minX, maxX],
           fixedrange: true,
-        },
-        shapes: [
-          {
-            type: "line",
-            x0: now,
-            y0: -4,
-            x1: now,
-            y1: 104,
-            line: {
-              color: "black",
-              dash: "dot",
-              width: 1,
-            },
-          },
-        ],
+        },        
       },
       config: {
         responsive: true,

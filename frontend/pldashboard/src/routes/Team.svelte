@@ -1,12 +1,13 @@
 <script>
   import { Router } from "svelte-routing";
   import { onMount } from "svelte";
+  import CurrentForm from "../components/CurrentForm.svelte";
+  import TableSnippet from "../components/TableSnippet.svelte";
+  import NextGame from "../components/NextGame.svelte";
+  import SeasonStats from "../components/SeasonStats.svelte";
+  import TeamsFooter from "../components/TeamsFooter.svelte";
   import Fixtures from "../components/Fixtures.svelte";
-  import TableSnippet from '../components/TableSnippet.svelte';
-  import CurrentForm from '../components/CurrentForm.svelte';
-  import SeasonStats from '../components/SeasonStats.svelte';
-  import NextGame from '../components/NextGame.svelte';
-  import TeamsFooter from '../components/TeamsFooter.svelte';
+  import FormOverTime from "../components/FormOverTime.svelte";
 
   function toTitleCase(str) {
     return str
@@ -35,13 +36,12 @@
   let data;
   onMount(() => {
     fullTeamName = toTitleCase(team.replace("-", " ")) + " FC";
-    fetchData("http://127.0.0.1:5000/teams")
-      .then((json) => {
-        // Build teamData package from json data
-        currentMatchday = getCurrentMatchday(json, fullTeamName);
-        data = json;
-        console.log(data);
-      })
+    fetchData("http://127.0.0.1:5000/teams").then((json) => {
+      // Build teamData package from json data
+      currentMatchday = getCurrentMatchday(json, fullTeamName);
+      data = json;
+      console.log(data);
+    });
   });
 
   export let team;
@@ -54,17 +54,12 @@
 
 <Router>
   <div class="header" style="background-color: var(--{team});">
-    <!-- <Link to="/ ">
-      <div id="back-button" class="main-link" />
-    </Link> -->
-    <!-- <Link to="/{team}"> -->
-      <div
-        class="main-link title no-decoration"
-        style="color: var(--{team + '-secondary'});"
-      >
-        {fullTeamName}
-      </div>
-    <!-- </Link> -->
+    <div
+      class="main-link title no-decoration"
+      style="color: var(--{team + '-secondary'});"
+    >
+      {fullTeamName}
+    </div>
   </div>
 
   {#if data != undefined}
@@ -83,23 +78,23 @@
           <!-- Not included in an iframe to ensure it loads before page is rendered -->
           <div class="graph mini-graph">
             <Fixtures {data} {fullTeamName} />
-            <!-- {% include 'graphs/%s/fixtures-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
           </div>
         </div>
       </div>
 
       <div class="row">
         <div class="row-left form-details">
-          <CurrentForm {data} {currentMatchday} {fullTeamName}></CurrentForm>
-          <TableSnippet {data} {team} {fullTeamName}></TableSnippet>
+          <CurrentForm {data} {currentMatchday} {fullTeamName} />
+          <TableSnippet {data} {team} {fullTeamName} />
         </div>
-        <NextGame {data} {currentMatchday} {fullTeamName}></NextGame>
+        <NextGame {data} {currentMatchday} {fullTeamName} />
       </div>
 
       <div class="row">
         <div class="form-graph row-graph">
           <h1 class="lowered">Form Over Time</h1>
           <div class="graph full-row-graph" style="height: auto">
+            <FormOverTime {data} {fullTeamName} />
             <!-- {% include 'graphs/%s/form-over-time-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
           </div>
         </div>
@@ -134,7 +129,7 @@
       </div>
 
       <div class="season-stats-row">
-        <SeasonStats {data} {fullTeamName}></SeasonStats>
+        <SeasonStats {data} {fullTeamName} />
       </div>
 
       <div class="row">
@@ -151,7 +146,7 @@
         </div>
       </div>
 
-      <TeamsFooter lastUpdated={data.lastUpdated}></TeamsFooter>
+      <TeamsFooter lastUpdated={data.lastUpdated} />
     </div>
   {:else}
     <div class="loading-spinner-container">
