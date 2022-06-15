@@ -215,6 +215,11 @@
 
     let matchdays = Array.from({length: 38}, (_, index) => (index + 1));
 
+    let minX = new Date(x[0]);
+    minX.setDate(minX.getDate() - 10)
+    let maxX = new Date(Math.max(x[x.length-1], now));
+    maxX.setDate(maxX.getDate() + 10)
+
     let graphData = {
       data: {
         x: x,
@@ -265,8 +270,23 @@
           linecolor: "black",
           showgrid: false,
           showline: false,
+          range: [minX, maxX],
           fixedrange: true,
         },
+        shapes: [
+        {
+            type: 'line',
+            x0: now,
+            y0: -4,
+            x1: now,
+            y1: 104,
+            line: {
+                color: 'black',
+                dash: 'dot',
+                width: 1
+            },
+        }
+    ],
       },
       config: {
         responsive: true,
