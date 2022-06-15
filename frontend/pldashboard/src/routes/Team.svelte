@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import Fixtures from "../components/Fixtures.svelte";
 
-  let graphData = {x: [1, 2, 3], y: [1, 2, 3], type: "bar"}
+  let graphData = { x: [1, 2, 3], y: [1, 2, 3], type: "bar" };
 
   function toTitleCase(str) {
     return str
@@ -139,38 +139,38 @@
 
   function getMatchDetail(match) {
     let matchDetail;
-    let homeAway = match.atHome ? 'Home' : 'Away';
+    let homeAway = match.atHome ? "Home" : "Away";
     if (match.score != null) {
-      matchDetail = `${match.team} (${homeAway}) ${match.score}`
+      matchDetail = `${match.team} (${homeAway}) ${match.score}`;
     } else {
-      matchDetail = `${match.team} (${homeAway})`
+      matchDetail = `${match.team} (${homeAway})`;
     }
-    return matchDetail
+    return matchDetail;
   }
 
   function sortByMatchDate(x, y, details) {
     let list = [];
     for (let i = 0; i < x.length; i++) {
-      list.push({x: x[i], y: y[i], details: details[i]});
+      list.push({ x: x[i], y: y[i], details: details[i] });
     }
 
-    list.sort(function(a, b) {
-        return ((a.x < b.x) ? -1 : ((a.x == b.x) ? 0 : 1));
+    list.sort(function (a, b) {
+      return a.x < b.x ? -1 : a.x == b.x ? 0 : 1;
     });
 
     for (let i = 0; i < list.length; i++) {
-        x[i] = list[i].x;
-        y[i] = list[i].y;
-        details[i] = list[i].details;
+      x[i] = list[i].x;
+      y[i] = list[i].y;
+      details[i] = list[i].details;
     }
   }
 
-  function increaseNextGameMarker(sizes, x, now, bigMarkerSize) {    
+  function increaseNextGameMarker(sizes, x, now, bigMarkerSize) {
     // Get matchday date with smallest time difference to now
     let nextGameIdx;
     let minDiff = Number.POSITIVE_INFINITY;
     for (let i = 0; i < x.length; i++) {
-      let diff = (x[i] - now)
+      let diff = x[i] - now;
       if (0 < diff && diff < minDiff) {
         minDiff = diff;
         nextGameIdx = i;
@@ -186,7 +186,7 @@
   }
 
   function getFixturesGraphData(data, fullTeamName) {
-    // Build data to create a fixtures line graph displaying the date along the 
+    // Build data to create a fixtures line graph displaying the date along the
     // x-axis and opponent strength along the y-axis
     let x = [];
     let y = [];
@@ -196,20 +196,85 @@
       x.push(new Date(match.date));
 
       let oppTeamRating = data.teamRatings[match.team].totalRating;
+      if (match.atHome) {
+        // If team playing at home, decrease opposition rating by the amount of home advantage the team gains
+        oppTeamRating *= (1 - data.homeAdvantages[match.team].totalHomeAdvantage)
+      }
       y.push(oppTeamRating * 100);
 
       let matchDetail = getMatchDetail(match);
       details.push(matchDetail);
     }
-    
+
     sortByMatchDate(x, y, details);
 
-    let now = Date.now()
-    
+    let now = Date.now();
+
     let sizes = Array(x.length).fill(14);
     sizes = increaseNextGameMarker(sizes, x, now, 26);
 
-    return {x, y, details, sizes, now}
+    let matchdays = Array.from({length: 38}, (_, index) => (index + 1));
+
+    let graphData = {
+      data: {
+        x: x,
+        y: y,
+        type: "scatter",
+        mode: "lines+markers",
+        text: details,
+        line: {
+          color: "#737373",
+        },
+        marker: {
+          size: sizes,
+          colorscale: [
+            [0, "#01c626"],
+            [0.1, "#08a825"],
+            [0.2, "#0b7c20"],
+            [0.3, "#0a661b"],
+            [0.4, "#064411"],
+            [0.5, "#000000"],
+            [0.6, "#5b1d15"],
+            [0.7, "#85160f"],
+            [0.8, "#ad1a10"],
+            [0.9, "#db1a0d"],
+            [1, "#fc1303"],
+          ],
+          color: y,
+        },
+        customdata: matchdays,
+        hovertemplate:
+          "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>"
+      },
+      layout: {
+        title: false,
+        autosize: true,
+        margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
+        hovermode: 'closest',
+        plot_bgcolor: "#fafafa",
+        paper_bgcolor: "#fafafa",
+        yaxis: {
+          title: { text: "Team Rating" },
+          gridcolor: "gray",
+          showline: false,
+          zeroline: false,
+          fixedrange: true,
+        },
+        xaxis: {
+          // title: { text: "Matchday" },
+          linecolor: "black",
+          showgrid: false,
+          showline: false,
+          fixedrange: true,
+        },
+      },
+      config: {
+        responsive: true,
+        showSendToCloud: false,
+        displayModeBar: false,
+      },
+    };
+    return graphData;
   }
 
   async function fetchData(address) {
@@ -228,7 +293,7 @@
   let goalsScoredAndConcededGraphData;
   let goalsPerGameGraphData;
   onMount(() => {
-    fullTeamName = toTitleCase(team.replace("-", " ")) + " FC"
+    fullTeamName = toTitleCase(team.replace("-", " ")) + " FC";
     fetchData("http://127.0.0.1:5000/teams")
       .then((json) => {
         // Build teamData package from json data
@@ -236,12 +301,12 @@
         data = json;
         console.log(data);
       })
-      .then(_ => {
+      .then((_) => {
         setPositionalOffset();
         // Keep positional value the correct offset
         window.addEventListener("resize", setPositionalOffset);
       })
-      .then(_ => {
+      .then((_) => {
         // Generate graphs
         fixturesData = getFixturesGraphData(data, fullTeamName);
       });
@@ -288,8 +353,8 @@
           <!-- Not included in an iframe to ensure it loads before page is rendered -->
           <div class="graph mini-graph">
             {#if fixturesData != undefined}
-              <Fixtures graphData={fixturesData}/>
-            <!-- {% include 'graphs/%s/fixtures-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
+              <Fixtures graphData={fixturesData} />
+              <!-- {% include 'graphs/%s/fixtures-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
             {/if}
           </div>
         </div>
@@ -373,8 +438,8 @@
           </div>
           <div class="current-form">
             Current form: {(
-              data.form[fullTeamName][teamData.currentMatchday]
-                .formRating5 * 100
+              data.form[fullTeamName][teamData.currentMatchday].formRating5 *
+              100
             ).toFixed(2)}%
           </div>
 
