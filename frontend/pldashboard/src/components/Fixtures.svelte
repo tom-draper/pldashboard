@@ -85,9 +85,6 @@
     minX.setDate(minX.getDate() - 10);
     let maxX = new Date(Math.max(x[x.length - 1], now));
     maxX.setDate(maxX.getDate() + 10);
-    
-    console.log(x[0], typeof x[0])
-
 
     let graphData = {
       data: [{

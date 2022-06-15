@@ -6,8 +6,8 @@
 
     let y = [];
     for (let i = 1; i <= 38; i++) {
-      let form = data.form[teamName][i].formRating5;
-      y.push(form * 100);
+      let position = data.form[teamName][i].position;
+      y.push(position);
     }
 
     let lineVal;
@@ -29,7 +29,7 @@
       mode: 'lines',
       line: lineVal,
       text: matchdays,
-      hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
+      hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
       // hoverinfo: 'x+y',
       showlegend: false
     };
@@ -68,7 +68,7 @@
     let line = getLine(data, x, fullTeamName, true);
     lines.push(line);
 
-    let yLabels = Array.from(Array(11), (_, i) => i*10)
+    let yLabels = Array.from(Array(20), (_, i) => i+1);
 
     let graphData = {
       data: lines,
@@ -85,6 +85,7 @@
           showgrid: false,
           showline: false,
           zeroline: false,
+          autorange: 'reversed',
           fixedrange: true,
           ticktext: yLabels,
           tickvals: yLabels
@@ -94,7 +95,48 @@
           showgrid: false,
           showline: false,
           fixedrange: true,
-        },        
+        },
+        shapes: [
+          {
+            type: "rect",
+            x0: x[0],
+            y0: 4.5,
+            x1: x[x.length-1],
+            y1: 0.5,
+            line: {
+              width: 0,
+            },
+            fillcolor: '#77DD77',
+            opacity: 0.3,
+            layer: 'below'
+          },
+          {
+            type: "rect",
+            x0: x[0],
+            y0: 6.5,
+            x1: x[x.length-1],
+            y1: 4.5,
+            line: {
+              width: 0,
+            },
+            fillcolor: '#4CDEEE',
+            opacity: 0.3,
+            layer: 'below'
+          },
+          {
+            type: "rect",
+            x0: x[0],
+            y0: 20.5,
+            x1: x[x.length-1],
+            y1: 17.5,
+            line: {
+              width: 0,
+            },
+            fillcolor: '#C23B22',
+            opacity: 0.3,
+            layer: 'below'
+          },
+        ],
       },
       config: {
         responsive: true,

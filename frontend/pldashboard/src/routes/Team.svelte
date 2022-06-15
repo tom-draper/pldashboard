@@ -8,6 +8,7 @@
   import TeamsFooter from "../components/TeamsFooter.svelte";
   import Fixtures from "../components/Fixtures.svelte";
   import FormOverTime from "../components/FormOverTime.svelte";
+  import PositionOverTime from "../components/PositionOverTime.svelte";
 
   function toTitleCase(str) {
     return str
@@ -107,6 +108,7 @@
         <div class="position-over-time-graph row-graph">
           <h1 class="lowered">Position Over Time</h1>
           <div class="graph full-row-graph">
+            <PositionOverTime {data} {fullTeamName} />
             <!-- {% include 'graphs/%s/position-over-time-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
           </div>
         </div>
