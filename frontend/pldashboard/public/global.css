@@ -291,6 +291,9 @@ a.kofi-button {
 }
 .position-and-badge {
   height: 500px;
+  background-repeat: no-repeat;
+  background-size: auto 450px; 
+  background-position: right center;
 }
 img {
   height: 450px;
