@@ -1,54 +1,6 @@
 <script>
   import { onMount } from "svelte";
 
-  function getMatchDetail(match) {
-    let matchDetail;
-    let homeAway = match.atHome ? "Home" : "Away";
-    if (match.score != null) {
-      matchDetail = `${match.team} (${homeAway}) ${match.score}`;
-    } else {
-      matchDetail = `${match.team} (${homeAway})`;
-    }
-    return matchDetail;
-  }
-
-  function sortByMatchDate(x, y, details) {
-    let list = [];
-    for (let i = 0; i < x.length; i++) {
-      list.push({ x: x[i], y: y[i], details: details[i] });
-    }
-
-    list.sort(function (a, b) {
-      return a.x < b.x ? -1 : a.x == b.x ? 0 : 1;
-    });
-
-    for (let i = 0; i < list.length; i++) {
-      x[i] = list[i].x;
-      y[i] = list[i].y;
-      details[i] = list[i].details;
-    }
-  }
-
-  function increaseNextGameMarker(sizes, x, now, bigMarkerSize) {
-    // Get matchday date with smallest time difference to now
-    let nextGameIdx;
-    let minDiff = Number.POSITIVE_INFINITY;
-    for (let i = 0; i < x.length; i++) {
-      let diff = x[i] - now;
-      if (0 < diff && diff < minDiff) {
-        minDiff = diff;
-        nextGameIdx = i;
-      }
-    }
-
-    // Increase marker size of next game
-    if (nextGameIdx != undefined) {
-      sizes[nextGameIdx] = bigMarkerSize;
-    }
-
-    return sizes;
-  }
-
   function getLine(data, x, teamName, isMainTeam) {
     let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
 
@@ -63,8 +15,9 @@
       // Get team primary colour from css variable
       let teamKey = teamName.replace(' FC', '');
       teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
-      teamKey = teamKey.replace(/([A-Z])/, '-$1').toLowerCase();
+      teamKey = teamKey.replace(/ ([A-Z])/g, '-$1').toLowerCase();
       let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`)
+      console.log(teamKey, lineColor);
       lineVal = {color: lineColor, width: 4}
     } else {
       lineVal = {color: '#d3d3d3'};
@@ -77,8 +30,8 @@
       mode: 'lines',
       line: lineVal,
       text: matchdays,
-      hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
-      hoverinfo: 'x+y',
+      hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
+      // hoverinfo: 'x+y',
       showlegend: false
     };
     return line;
@@ -92,10 +45,13 @@
       data.teamNames.forEach(team => {
         matchdayDates.push(data.fixtures[team][i].date)
       })
-      matchdayDates.map(val => {new Date(val)})
+      matchdayDates = matchdayDates.map(val => {return new Date(val)})
       matchdayDates = matchdayDates.sort();
       x.push(matchdayDates[Math.floor(matchdayDates.length/2)]);
     }
+    x.sort(function (a, b) {
+      return a - b;
+    })
     return x;
   }
 
@@ -113,10 +69,8 @@
     }
 
     // Add this team last
-    let line = getLine(data, x, fullTeamName, true)
+    let line = getLine(data, x, fullTeamName, true);
     lines.push(line);
-
-    console.log(lines);
 
     let yLabels = Array.from(Array(11), (_, i) => i*10)
 

@@ -20,6 +20,7 @@
   }
 
   function getCurrentMatchday(data, fullTeamName) {
+    console.log(fullTeamName);
     return Object.keys(data.form[fullTeamName]).reduce((a, b) =>
       data.form[fullTeamName][a] > data.form[fullTeamName][b] ? a : b
     );
@@ -35,7 +36,7 @@
   let currentMatchday;
   let data;
   onMount(() => {
-    fullTeamName = toTitleCase(team.replace("-", " ")) + " FC";
+    fullTeamName = toTitleCase(team.replace(/\-/g, " ")) + " FC";
     fetchData("http://127.0.0.1:5000/teams").then((json) => {
       // Build teamData package from json data
       currentMatchday = getCurrentMatchday(json, fullTeamName);

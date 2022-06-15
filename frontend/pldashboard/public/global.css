@@ -425,6 +425,7 @@ img {
 .next-game-season-complete {
   display: grid;
   place-items: center;
+  background: #f3f3f3;
   border: rgb(181, 181, 181) solid 5px;
   border-radius: var(--border-radius);
   height: 98%;

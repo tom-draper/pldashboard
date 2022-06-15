@@ -34,7 +34,7 @@
     let rows = [];
     for (let i = low; i < high; i++) {
       if (sortedTeams[i] == fullTeamName) {
-        teamTableIdx = i;
+        teamTableIdx = i - low;
       }
       rows.push({
         name: sortedTeams[i],
