@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
-  import GoalsScored from "../components/GoalsScored.svelte";
-  import GoalsConceded from "../components/GoalsConceded.svelte";
+  import GoalsScoredFreq from "./GoalsScoredFreq.svelte";
+  import GoalsConcededFreq from "./GoalsConcededFreq.svelte";
 
   function avgGoalFrequencies(data) {
     let goalFreq = {};
@@ -98,12 +98,12 @@
 <div class="two-graphs">
   <div class="graph freq-graph mini-graph">
     {#if teamScoredFreq != undefined}
-      <GoalsScored {goalFreq} {teamScoredFreq} />
+      <GoalsScoredFreq {goalFreq} {teamScoredFreq} />
     {/if}
   </div>
   <div class="graph freq-graph mini-graphh">
     {#if teamConcededFreq != undefined}
-      <GoalsConceded {goalFreq} {teamConcededFreq} />
+      <GoalsConcededFreq {goalFreq} {teamConcededFreq} />
     {/if}
   </div>
 </div>

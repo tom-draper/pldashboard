@@ -10,6 +10,7 @@
   import FormOverTime from "../components/FormOverTime.svelte";
   import PositionOverTime from "../components/PositionOverTime.svelte";
   import GoalsScoredAndConceded from "../components/GoalsScoredAndConceded.svelte";
+  import CleanSheets from "../components/CleanSheets.svelte";
   import GoalFrequencies from "../components/GoalFrequencies.svelte";
 
   function toTitleCase(str) {
@@ -118,10 +119,11 @@
           </div>
         </div>
       </div>
-
+      
       <div class="row">
         <div class="row-graph">
           <div class="clean-sheets graph full-row-graph">
+            <CleanSheets {data} {fullTeamName} />
             <!-- {% include 'graphs/%s/clean-sheets-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
           </div>
         </div>

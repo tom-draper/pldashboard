@@ -58,7 +58,7 @@
         legend: {
           x: 1,
           xanchor: 'right',
-          y: 1
+          y: 0.95 
         }
       },
       config: {
