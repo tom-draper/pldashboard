@@ -1,7 +1,1 @@
-.gitignore
-tempCodeRunnerFile.py
-__pycache__
-.env
-.pytest_cache
-venv
 .styleintrc.json
