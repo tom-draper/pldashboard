@@ -75,21 +75,21 @@ import { object_without_properties } from "svelte/internal";
     let graphData = {
       data: [
         {
-          name: 'Conceded',
-          type: 'bar',
-          x: x,
-          y: Object.values(teamConceded),
-          text: matchdays,
-          marker: {color: 'C23B22'},
-          hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>',
-        },
-        {
           name: 'Scored',
           type: 'bar',
           x: x,
           y: Object.values(teamScored),
           text: matchdays,
           marker: {color: '#77DD77'},
+          hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>',
+        },
+        {
+          name: 'Conceded',
+          type: 'bar',
+          x: x,
+          y: Object.values(teamConceded),
+          text: matchdays,
+          marker: {color: 'C23B22'},
           hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>',
         },
         {
