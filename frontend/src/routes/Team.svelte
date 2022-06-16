@@ -40,7 +40,7 @@
   let data;
   onMount(() => {
     fullTeamName = toTitleCase(team.replace(/\-/g, " ")) + " FC";
-    fetchData("http://127.0.0.1:5000/teams").then((json) => {
+    fetchData("https://pldashboard.herokuapp.com/teams").then((json) => {
       // Build teamData package from json data
       currentMatchday = getCurrentMatchday(json, fullTeamName);
       data = json;
