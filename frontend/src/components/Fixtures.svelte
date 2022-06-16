@@ -55,8 +55,8 @@
     let x = [];
     let y = [];
     let details = [];
-    for (let i = 1; i < Object.keys(data.fixtures[fullTeamName]).length; i++) {
-      let match = data.fixtures[fullTeamName][i];
+    for (let matchday = 1; matchday <= 38; matchday++) {
+      let match = data.fixtures[fullTeamName][matchday];
       x.push(new Date(match.date));
 
       let oppTeamRating = data.teamRatings[match.team].totalRating;
@@ -134,7 +134,6 @@
           tickvals: yLabels,
         },
         xaxis: {
-          // title: { text: "Matchday" },
           linecolor: "black",
           showgrid: false,
           showline: false,

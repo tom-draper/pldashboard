@@ -19,7 +19,6 @@ class Database:
         load_dotenv(dotenv_path)
         USERNAME = getenv('MONGODB_USERNAME')
         PASSWORD = getenv('MONGODB_PASSWORD')
-        print(USERNAME, PASSWORD)
         MONGODB_DATABASE = getenv('MONGODB_DATABASE')
         self.connection_string = f"mongodb+srv://{USERNAME}:{PASSWORD}@main.pvnry.mongodb.net/{MONGODB_DATABASE}?retryWrites=true&w=majority&authSource=admin"
 

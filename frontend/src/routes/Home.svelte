@@ -1,6 +1,5 @@
 <script>
   import { Router, Link } from "svelte-routing";
-  // import NavLink from "../components/NavLink.svelte";
   import { onMount } from "svelte";
 
   function removeBorderRadius() {

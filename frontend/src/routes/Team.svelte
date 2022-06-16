@@ -9,6 +9,9 @@
   import Fixtures from "../components/Fixtures.svelte";
   import FormOverTime from "../components/FormOverTime.svelte";
   import PositionOverTime from "../components/PositionOverTime.svelte";
+  import GoalsScoredAndConceded from "../components/GoalsScoredAndConceded.svelte";
+  import GoalsScored from "../components/GoalsScored.svelte";
+  import GoalsConceded from "../components/GoalsConceded.svelte";
 
   function toTitleCase(str) {
     return str
@@ -118,6 +121,7 @@
         <div class="goals-scored-vs-conceded-graph row-graph">
           <h1 class="lowered">Goals Scored and Conceded</h1>
           <div class="graph full-row-graph">
+            <GoalsScoredAndConceded {data} {fullTeamName} />
             <!-- {% include 'graphs/%s/goals-scored-and-conceded-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
           </div>
         </div>
@@ -140,9 +144,11 @@
           <h1>Goals Per Game</h1>
           <div class="two-graphs">
             <div class="graph freq-graph mini-graph">
+              <GoalsScored {data} {fullTeamName} />
               <!-- {% include 'graphs/%s/goals-scored-frequency-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
             </div>
             <div class="graph freq-graph mini-graphh">
+              <GoalsConceded {data} {fullTeamName} />
               <!-- {% include 'graphs/%s/goals-conceded-frequency-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
             </div>
           </div>
