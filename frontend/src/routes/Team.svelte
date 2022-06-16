@@ -43,7 +43,6 @@
     fetchData("https://pldashboard.herokuapp.com/teams").then((json) => {
       // Build teamData package from json data
       currentMatchday = getCurrentMatchday(json, fullTeamName);
-      console.log(currentMatchday);
       data = json;
       console.log(data);
     });
