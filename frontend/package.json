@@ -8,7 +8,6 @@
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "~7.0.0",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.32.1",
     "sirv-cli": "^1.0.10",
     "svelte": "^3.31.1",
     "svelte-routing": "^1.6.0"
@@ -17,16 +16,10 @@
     "start": "run-p watch server",
     "build": "rollup -c",
     "watch": "rollup -c -w",
-    "server": "nodemon server.js --watch server.js --watch public/App.js",
-    "lint": "eslint . --ext .js,.svelte --fix"
+    "server": "nodemon server.js --watch server.js --watch public/App.js"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
-    "@rollup/plugin-node-resolve": "^11.0.0",
-    "eslint": "^8.17.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-standard": "^5.0.0",
-    "eslint-plugin-svelte3": "^4.0.0"
+    "@rollup/plugin-node-resolve": "^11.0.0"
   }
 }
