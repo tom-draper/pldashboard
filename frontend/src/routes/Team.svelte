@@ -10,8 +10,7 @@
   import FormOverTime from "../components/FormOverTime.svelte";
   import PositionOverTime from "../components/PositionOverTime.svelte";
   import GoalsScoredAndConceded from "../components/GoalsScoredAndConceded.svelte";
-  import GoalsScored from "../components/GoalsScored.svelte";
-  import GoalsConceded from "../components/GoalsConceded.svelte";
+  import GoalFrequencies from "../components/GoalFrequencies.svelte";
 
   function toTitleCase(str) {
     return str
@@ -24,7 +23,6 @@
   }
 
   function getCurrentMatchday(data, fullTeamName) {
-    console.log(fullTeamName);
     return Object.keys(data.form[fullTeamName]).reduce((a, b) =>
       data.form[fullTeamName][a] > data.form[fullTeamName][b] ? a : b
     );
@@ -142,16 +140,7 @@
       <div class="row">
         <div class="goals-freq-row row-graph">
           <h1>Goals Per Game</h1>
-          <div class="two-graphs">
-            <div class="graph freq-graph mini-graph">
-              <GoalsScored {data} {fullTeamName} />
-              <!-- {% include 'graphs/%s/goals-scored-frequency-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
-            </div>
-            <div class="graph freq-graph mini-graphh">
-              <GoalsConceded {data} {fullTeamName} />
-              <!-- {% include 'graphs/%s/goals-conceded-frequency-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
-            </div>
-          </div>
+          <GoalFrequencies {data} {fullTeamName} />
         </div>
       </div>
 

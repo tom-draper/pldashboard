@@ -1,70 +1,8 @@
 <script>
   import { onMount } from "svelte";
 
-  function avgGoalFrequencies(data) {
-    let goalFreq = {};
-    for (let team of data.teamNames) {
-      for (let matchday of Object.keys(data.form[team])) {
-        let score = data.form[team][matchday].score;
-        if (score != "None - None") {
-          let [h, _, a] = score.split(' ');
-          // Also collect opposition goals scored
-          if (data.form[team][matchday].atHome) {
-            if (h in goalFreq) {
-              goalFreq[h] += 1;
-            } else {
-              goalFreq[h] = 1;
-            }
-            if (a in goalFreq) {
-              goalFreq[a] += 1;
-            } else {
-              goalFreq[a] = 1;
-            }
-          }
-        }
-      }
-    }
-
-    // Divide by number of teams to get avg
-    for (let goals of Object.keys(goalFreq)) {
-      goalFreq[goals] /= 20;
-    }
-
-    return goalFreq;
-  }
-
-  function teamGoalFrequencies(data, team) {
-    let goalFreq = {};
-    for (let matchday of Object.keys(data.form[team])) {
-      let score = data.form[team][matchday].score;
-      if (score != "None - None") {
-        let [h, _, a] = score.split(' ');
-        if (data.form[team][matchday].atHome) {
-          if (h in goalFreq) {
-            goalFreq[h] += 1;
-          } else {
-            goalFreq[h] = 1;
-          }
-        } else {
-          if (a in goalFreq) {
-            goalFreq[a] += 1;
-          } else {
-            goalFreq[a] = 1;
-          }
-        }
-      }
-    }
-
-    return goalFreq;
-  }
-
-  function getGraphData(data, fullTeamName) {
-    let goalFreq = avgGoalFrequencies(data);
-    let teamGoalFreq = teamGoalFrequencies(data, fullTeamName);
-
+  function getGraphData() {
     let xLabels = Object.keys(goalFreq);
-    console.log(xLabels);
-
 
     let graphData = {
       data: [
@@ -79,8 +17,8 @@
           hoverinfo: 'x+y'
         },
         {
-          x: Object.keys(teamGoalFreq),
-          y: Object.values(teamGoalFreq),
+          x: Object.keys(teamScoredFreq),
+          y: Object.values(teamScoredFreq),
           type: 'bar',
           name: 'Goals scored',
           marker: {color: '#77DD77'},
@@ -131,10 +69,9 @@
     return graphData;
   }
 
-  let plotDiv;
-  let graphData;
+  let plotDiv, graphData;
   onMount(() => {
-    graphData = getGraphData(data, fullTeamName);
+    graphData = getGraphData();
     let Plot = new Plotly.newPlot(
       plotDiv,
       graphData.data,
@@ -143,7 +80,7 @@
     );
   });
 
-  export let data, fullTeamName;
+  export let goalFreq, teamScoredFreq;
 </script>
 
 <div id="plotly">
