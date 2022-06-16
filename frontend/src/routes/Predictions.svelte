@@ -16,7 +16,7 @@
   }
 
   function identicalScore(prediction, actual) {
-    return prediction.homeGoals == actual.homeGoals && prediction.awayGoals == actual.awayGoals;
+    return Math.round(prediction.homeGoals) == actual.homeGoals && Math.round(prediction.awayGoals) == actual.awayGoals;
   }
 
   function sameResult(prediction, actual) {
@@ -67,6 +67,7 @@
       insertColours(json);
       console.log(json);
       data = json;
+      console.log(data.predictions);
     });
   });
 </script>
