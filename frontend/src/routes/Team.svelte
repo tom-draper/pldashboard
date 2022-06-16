@@ -78,7 +78,6 @@
         </div>
         <div class="fixtures-graph row-graph">
           <h1 class="lowered">Fixtures</h1>
-          <!-- Not included in an iframe to ensure it loads before page is rendered -->
           <div class="graph mini-graph">
             <Fixtures {data} {fullTeamName} />
           </div>
@@ -98,19 +97,15 @@
           <h1 class="lowered">Form Over Time</h1>
           <div class="graph full-row-graph" style="height: auto">
             <FormOverTime {data} {fullTeamName} />
-            <!-- {% include 'graphs/%s/form-over-time-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
           </div>
         </div>
       </div>
-
-      <!-- </div> -->
 
       <div class="row">
         <div class="position-over-time-graph row-graph">
           <h1 class="lowered">Position Over Time</h1>
           <div class="graph full-row-graph">
             <PositionOverTime {data} {fullTeamName} />
-            <!-- {% include 'graphs/%s/position-over-time-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
           </div>
         </div>
       </div>
@@ -120,7 +115,6 @@
           <h1 class="lowered">Goals Scored and Conceded</h1>
           <div class="graph full-row-graph">
             <GoalsScoredAndConceded {data} {fullTeamName} />
-            <!-- {% include 'graphs/%s/goals-scored-and-conceded-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
           </div>
         </div>
       </div>

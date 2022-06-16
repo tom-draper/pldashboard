@@ -41,9 +41,9 @@
     let x = [];
     for (let i = 1; i <= 38; i++) {
       let matchdayDates = [];
-      data.teamNames.forEach(team => {
+      for (let team of data.teamNames) {
         matchdayDates.push(data.fixtures[team][i].date)
-      })
+      } 
       matchdayDates = matchdayDates.map(val => {return new Date(val)})
       matchdayDates = matchdayDates.sort();
       x.push(matchdayDates[Math.floor(matchdayDates.length/2)]);

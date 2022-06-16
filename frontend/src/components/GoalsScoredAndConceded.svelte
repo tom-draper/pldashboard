@@ -1,49 +1,59 @@
 <script>
   import { onMount } from "svelte";
+import { object_without_properties } from "svelte/internal";
 
-  function getLine(data, x, teamName, isMainTeam) {
-    let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
+  function getAvgGoalsPerGame(data) {
+    let avgGoals = {};
 
-    let y = [];
-    for (let i = 1; i <= 38; i++) {
-      let position = data.form[teamName][i].position;
-      y.push(position);
+    for (let team of data.teamNames) {
+      for (let matchday of Object.keys(data.form[team])) {
+        let [h, _, a] = data.form[team][matchday].score.split(' ');
+        h = parseInt(h);
+        a = parseInt(a)
+        if (matchday in avgGoals) {
+          avgGoals[matchday] += h + a;
+        } else {
+          avgGoals[matchday] = h + a;
+        }
+      }
     }
-
-    let lineVal;
-    if (isMainTeam) {
-      // Get team primary colour from css variable
-      let teamKey = teamName.replace(' FC', '');
-      teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
-      teamKey = teamKey.replace(/ ([A-Z])/g, '-$1').toLowerCase();
-      let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`)
-      lineVal = {color: lineColor, width: 4}
-    } else {
-      lineVal = {color: '#d3d3d3'};
+    
+    // Divide by number of teams to get avg goals per gameweek
+    for (let matchday of Object.keys(avgGoals)) {
+      avgGoals[matchday] /= 20;
     }
-
-    let line = {
-      x: x,
-      y: y,
-      name: teamName,
-      mode: 'lines',
-      line: lineVal,
-      text: matchdays,
-      hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
-      // hoverinfo: 'x+y',
-      showlegend: false
-    };
-    return line;
+    
+    
+    return avgGoals;
+  }
+  
+  function getTeamGoalsPerGame(data, team) {
+    let scored = {};
+    let conceded = {};
+    for (let matchday of Object.keys(data.form[team])) {
+      let [h, _, a] = data.form[team][matchday].score.split(' ');
+      h = parseInt(h);
+      a = parseInt(a)
+      if (data.form[team][matchday].atHome) {
+        scored[matchday] = h;
+        conceded[matchday] = a;
+      } else {
+        scored[matchday] = a;
+        conceded[matchday] = h;
+      }
+    }
+    
+    return [scored, conceded];
   }
 
-  function getMatchdayDates(data) {
+   function getMatchdayDates(data) {
     // Find median matchday date across all teams for each matchday
     let x = [];
     for (let i = 1; i <= 38; i++) {
       let matchdayDates = [];
-      data.teamNames.forEach(team => {
+      for (let team of data.teamNames) {
         matchdayDates.push(data.fixtures[team][i].date)
-      })
+      } 
       matchdayDates = matchdayDates.map(val => {return new Date(val)})
       matchdayDates = matchdayDates.sort();
       x.push(matchdayDates[Math.floor(matchdayDates.length/2)]);
@@ -55,40 +65,58 @@
   }
 
   function getGraphData(data, fullTeamName) {
-    let x = getMatchdayDates(data);  // All lines use the same x
-    let lines = [];
-    for (let i = 0; i < data.teamNames.length; i++) {
-      if (data.teamNames[i] != fullTeamName) {
-        let line = getLine(data, x, data.teamNames[i], false)
-        lines.push(line)
-      }
-    }
+    let avgGoals = getAvgGoalsPerGame(data);
+    let x = getMatchdayDates(data);
 
-    // Add this team last to ensure it overlaps all other lines
-    let line = getLine(data, x, fullTeamName, true);
-    lines.push(line);
+    let matchdays = Object.keys(avgGoals);
 
-    let yLabels = Array.from(Array(20), (_, i) => i+1);
+    let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName); 
 
     let graphData = {
-      data: lines,
+      data: [
+        {
+          name: 'Scored',
+          type: 'bar',
+          x: x,
+          y: Object.values(teamScored),
+          text: matchdays,
+          marker: {color: '#77DD77'},
+          hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>',
+        },
+        {
+          name: 'Conceded',
+          type: 'bar',
+          x: x,
+          y: Object.values(teamConceded),
+          text: matchdays,
+          marker: {color: 'C23B22'},
+          hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>',
+        },
+        {
+          name: 'Avg',
+          type: 'line',
+          x: x,
+          y: Object.values(avgGoals),
+          text: matchdays,
+          hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals<extra></extra>',
+          line: {color: '#0080FF', width: 2},
+        },
+      ],
       layout: {
         title: false,
         autosize: true,
         margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
-        hovermode: "closest",
+        barmode: 'stack',
+        hovermode: 'closest',
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
         yaxis: {
-          title: { text: "Form Rating" },
+          title: { text: "Goals Scored" },
           gridcolor: "gray",
           showgrid: false,
           showline: false,
           zeroline: false,
-          autorange: 'reversed',
           fixedrange: true,
-          ticktext: yLabels,
-          tickvals: yLabels
         },
         xaxis: {
           linecolor: "black",
@@ -96,47 +124,11 @@
           showline: false,
           fixedrange: true,
         },
-        shapes: [
-          {
-            type: "rect",
-            x0: x[0],
-            y0: 4.5,
-            x1: x[x.length-1],
-            y1: 0.5,
-            line: {
-              width: 0,
-            },
-            fillcolor: '#77DD77',
-            opacity: 0.3,
-            layer: 'below'
-          },
-          {
-            type: "rect",
-            x0: x[0],
-            y0: 6.5,
-            x1: x[x.length-1],
-            y1: 4.5,
-            line: {
-              width: 0,
-            },
-            fillcolor: '#4CDEEE',
-            opacity: 0.3,
-            layer: 'below'
-          },
-          {
-            type: "rect",
-            x0: x[0],
-            y0: 20.5,
-            x1: x[x.length-1],
-            y1: 17.5,
-            line: {
-              width: 0,
-            },
-            fillcolor: '#C23B22',
-            opacity: 0.3,
-            layer: 'below'
-          },
-        ],
+        legend: {
+          x: 1,
+          xanchor: 'right',
+          y: 1
+        }
       },
       config: {
         responsive: true,

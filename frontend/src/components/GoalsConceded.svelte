@@ -56,8 +56,9 @@
           tickvals: xLabels,
         },
         legend: {
-          y: 0.95,
-          x: 0.7
+          x: 1,
+          xanchor: 'right',
+          y: 1
         }
       },
       config: {
