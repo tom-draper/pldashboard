@@ -1,1 +1,2862 @@
-"use strict";function e(){}function t(e){return e()}function a(e){e.forEach(t)}function o(t,...a){if(null==t)return e;const o=t.subscribe(...a);return o.unsubscribe?()=>o.unsubscribe():o}let n;function r(e){n=e}function i(){if(!n)throw new Error("Function called outside component initialization");return n}function s(e){i().$$.on_mount.push(e)}function l(){const e=i();return(t,a,{cancelable:o=!1}={})=>{const n=e.$$.callbacks[t];if(n){const r=function(e,t,{bubbles:a=!1,cancelable:o=!1}={}){const n=document.createEvent("CustomEvent");return n.initCustomEvent(e,a,o,t),n}(t,a,{cancelable:o});return n.slice().forEach((t=>{t.call(e,r)})),!r.defaultPrevented}return!0}}function d(e,t){return i().$$.context.set(e,t),t}function c(e){return i().$$.context.get(e)}Promise.resolve();const u=new Set(["allowfullscreen","allowpaymentrequest","async","autofocus","autoplay","checked","controls","default","defer","disabled","formnovalidate","hidden","ismap","loop","multiple","muted","nomodule","novalidate","open","playsinline","readonly","required","reversed","selected"]),m=/[\s'">/=\u{FDD0}-\u{FDEF}\u{FFFE}\u{FFFF}\u{1FFFE}\u{1FFFF}\u{2FFFE}\u{2FFFF}\u{3FFFE}\u{3FFFF}\u{4FFFE}\u{4FFFF}\u{5FFFE}\u{5FFFF}\u{6FFFE}\u{6FFFF}\u{7FFFE}\u{7FFFF}\u{8FFFE}\u{8FFFF}\u{9FFFE}\u{9FFFF}\u{AFFFE}\u{AFFFF}\u{BFFFE}\u{BFFFF}\u{CFFFE}\u{CFFFF}\u{DFFFE}\u{DFFFF}\u{EFFFE}\u{EFFFF}\u{FFFFE}\u{FFFFF}\u{10FFFE}\u{10FFFF}]/u;const v={'"':"&quot;","'":"&#39;","&":"&amp;","<":"&lt;",">":"&gt;"};function p(e){return String(e).replace(/["'&<>]/g,(e=>v[e]))}function f(e){return"string"==typeof e?p(e):e}function h(e){const t={};for(const a in e)t[a]=f(e[a]);return t}function y(e,t){let a="";for(let o=0;o<e.length;o+=1)a+=t(e[o],o);return a}const g={$$render:()=>""};function b(e,t){if(!e||!e.$$render)throw"svelte:component"===t&&(t+=" this={...}"),new Error(`<${t}> is not a valid SSR component. You may need to review your build config to ensure that dependencies are compiled, rather than imported as pre-compiled modules`);return e}let $;function x(e){function t(t,a,o,i,s){const l=n;r({$$:{on_destroy:$,context:new Map(s||(l?l.$$.context:[])),on_mount:[],before_update:[],after_update:[],callbacks:Object.create(null)}});const d=e(t,a,o,i);return r(l),d}return{render:(e={},{$$slots:o={},context:n=new Map}={})=>{$=[];const r={title:"",head:"",css:new Set},i=t(r,e,{},o,n);return a($),{html:i,css:{code:Array.from(r.css).map((e=>e.code)).join("\n"),map:null},head:r.title+r.head}},$$render:t}}function w(e,t,a){if(null==t||a&&!t)return"";return` ${e}${a&&!0===t?"":`="${f(t.toString())}"`}`}function F(e){return Object.keys(e).filter((t=>e[t])).map((t=>`${t}: ${e[t]};`)).join(" ")}const k=[];function T(t,a=e){let o;const n=new Set;function r(e){if(r=e,((a=t)!=a?r==r:a!==r||a&&"object"==typeof a||"function"==typeof a)&&(t=e,o)){const e=!k.length;for(const e of n)e[1](),k.push(e,t);if(e){for(let e=0;e<k.length;e+=2)k[e][0](k[e+1]);k.length=0}}var a,r}return{set:r,update:function(e){r(e(t))},subscribe:function(i,s=e){const l=[i,s];return n.add(l),1===n.size&&(o=a(r)||e),i(t),()=>{n.delete(l),0===n.size&&(o(),o=null)}}}}function C(t,n,r){const i=!Array.isArray(t),s=i?[t]:t,l=n.length<2;return d=t=>{let r=!1;const d=[];let c=0,u=e;const m=()=>{if(c)return;u();const a=n(i?d[0]:d,t);l?t(a):u="function"==typeof a?a:e},v=s.map(((e,t)=>o(e,(e=>{d[t]=e,c&=~(1<<t),r&&m()}),(()=>{c|=1<<t}))));return r=!0,m(),function(){a(v),u()}},{subscribe:T(r,d).subscribe};var d}const N={},S={};function E(e){return{...e.location,state:e.history.state,key:e.history.state&&e.history.state.key||"initial"}}const L=function(e,t){const a=[];let o=E(e);return{get location(){return o},listen(t){a.push(t);const n=()=>{o=E(e),t({location:o,action:"POP"})};return e.addEventListener("popstate",n),()=>{e.removeEventListener("popstate",n);const o=a.indexOf(t);a.splice(o,1)}},navigate(t,{state:n,replace:r=!1}={}){n={...n,key:Date.now()+""};try{r?e.history.replaceState(n,null,t):e.history.pushState(n,null,t)}catch(a){e.location[r?"replace":"assign"](t)}o=E(e),a.forEach((e=>e({location:o,action:"PUSH"})))}}}(Boolean("undefined"!=typeof window&&window.document&&window.document.createElement)?window:function(e="/"){let t=0;const a=[{pathname:e,search:""}],o=[];return{get location(){return a[t]},addEventListener(e,t){},removeEventListener(e,t){},history:{get entries(){return a},get index(){return t},get state(){return o[t]},pushState(e,n,r){const[i,s=""]=r.split("?");t++,a.push({pathname:i,search:s}),o.push(e)},replaceState(e,n,r){const[i,s=""]=r.split("?");a[t]={pathname:i,search:s},o[t]=e}}}}()),P=/^:(.+)/;function G(e,t){return e.substr(0,t.length)===t}function D(e){return"*"===e[0]}function M(e){return e.replace(/(^\/+|\/+$)/g,"").split("/")}function O(e){return e.replace(/(^\/+|\/+$)/g,"")}function A(e,t){return{route:e,score:e.default?0:M(e.path).reduce(((e,t)=>(e+=4,!function(e){return""===e}(t)?!function(e){return P.test(e)}(t)?D(t)?e-=5:e+=3:e+=2:e+=1,e)),0),index:t}}function B(e,t){let a,o;const[n]=t.split("?"),r=M(n),i=""===r[0],s=function(e){return e.map(A).sort(((e,t)=>e.score<t.score?1:e.score>t.score?-1:e.index-t.index))}(e);for(let e=0,n=s.length;e<n;e++){const n=s[e].route;let l=!1;if(n.default){o={route:n,params:{},uri:t};continue}const d=M(n.path),c={},u=Math.max(r.length,d.length);let m=0;for(;m<u;m++){const e=d[m],t=r[m];if(void 0!==e&&D(e)){c["*"===e?"*":e.slice(1)]=r.slice(m).map(decodeURIComponent).join("/");break}if(void 0===t){l=!0;break}let a=P.exec(e);if(a&&!i){const e=decodeURIComponent(t);c[a[1]]=e}else if(e!==t){l=!0;break}}if(!l){a={route:n,params:c,uri:"/"+r.slice(0,m).join("/")};break}}return a||o||null}function j(e,t){return e+(t?`?${t}`:"")}function I(e,t){return`${O("/"===t?e:`${O(e)}/${O(t)}`)}/`}const R=x(((e,t,a,n)=>{let r,i,l,u,m,v,{basepath:p="/"}=t,{url:f=null}=t;const h=c(N),y=c(S),g=T([]);u=o(g,(e=>l=e));const b=T(null);let $=!1;const x=h||T(f?{pathname:f}:L.location);i=o(x,(e=>r=e));const w=y?y.routerBase:T({path:p,uri:p});v=o(w,(e=>m=e));const F=C([w,b],(([e,t])=>{if(null===t)return e;const{path:a}=e,{route:o,uri:n}=t;return{path:o.default?a:o.path.replace(/\*.*$/,""),uri:n}}));h||(s((()=>L.listen((e=>{x.set(e.location)})))),d(N,x)),d(S,{activeRoute:b,base:w,routerBase:F,registerRoute:function(e){const{path:t}=m;let{path:a}=e;if(e._path=a,e.path=I(t,a),"undefined"==typeof window){if($)return;const t=function(e,t){return B([e],t)}(e,r.pathname);t&&(b.set(t),$=!0)}else g.update((t=>(t.push(e),t)))},unregisterRoute:function(e){g.update((t=>{const a=t.indexOf(e);return t.splice(a,1),t}))}}),void 0===t.basepath&&a.basepath&&void 0!==p&&a.basepath(p),void 0===t.url&&a.url&&void 0!==f&&a.url(f);{const{path:e}=m;g.update((t=>(t.forEach((t=>t.path=I(e,t._path))),t)))}{const e=B(l,r.pathname);b.set(e)}return i(),u(),v(),`${n.default?n.default({}):""}`})),q=x(((e,t,a,n)=>{let r,s,l,d,{path:u=""}=t,{component:m=null}=t;const{registerRoute:v,unregisterRoute:p,activeRoute:f}=c(S);s=o(f,(e=>r=e));d=o(c(N),(e=>l=e));const h={path:u,default:""===u};let y={},$={};var x;v(h),"undefined"!=typeof window&&(x=()=>{p(h)},i().$$.on_destroy.push(x)),void 0===t.path&&a.path&&void 0!==u&&a.path(u),void 0===t.component&&a.component&&void 0!==m&&a.component(m),r&&r.route===h&&(y=r.params);{const{path:e,component:a,...o}=t;$=o}return s(),d(),""+(null!==r&&r.route===h?""+(null!==m?`${b(m||g,"svelte:component").$$render(e,Object.assign({location:l},y,$),{},{})}`:`${n.default?n.default({params:y,location:l}):""}`):"")})),_=x(((e,t,a,n)=>{let r,i,s,d,v,p=function(e,t){const a={};t=new Set(t);for(const o in e)t.has(o)||"$"===o[0]||(a[o]=e[o]);return a}(t,["to","replace","state","getProps"]),{to:y="#"}=t,{replace:g=!1}=t,{state:b={}}=t,{getProps:$=(()=>({}))}=t;const{base:x}=c(S);v=o(x,(e=>d=e));let w,k,T,C;return s=o(c(N),(e=>i=e)),l(),void 0===t.to&&a.to&&void 0!==y&&a.to(y),void 0===t.replace&&a.replace&&void 0!==g&&a.replace(g),void 0===t.state&&a.state&&void 0!==b&&a.state(b),void 0===t.getProps&&a.getProps&&void 0!==$&&a.getProps($),w="/"===y?d.uri:function(e,t){if(G(e,"/"))return e;const[a,o]=e.split("?"),[n]=t.split("?"),r=M(a),i=M(n);if(""===r[0])return j(n,o);if(!G(r[0],"."))return j(("/"===n?"":"/")+i.concat(r).join("/"),o);const s=i.concat(r),l=[];return s.forEach((e=>{".."===e?l.pop():"."!==e&&l.push(e)})),j("/"+l.join("/"),o)}(y,d.uri),k=G(i.pathname,w),T=w===i.pathname,r=T?"page":void 0,C=$({location:i,href:w,isPartiallyCurrent:k,isCurrent:T}),s(),v(),`<a${function(e,t){const a=Object.assign({},...e);if(t){const e=t.classes,o=t.styles;e&&(null==a.class?a.class=e:a.class+=" "+e),o&&(null==a.style?a.style=F(o):a.style=F(function(e,t){const a={};for(const t of e.split(";")){const e=t.indexOf(":"),o=t.slice(0,e).trim(),n=t.slice(e+1).trim();o&&(a[o]=n)}for(const e in t){const o=t[e];o?a[e]=o:delete a[e]}return a}(a.style,o)))}let o="";return Object.keys(a).forEach((e=>{if(m.test(e))return;const t=a[e];!0===t?o+=" "+e:u.has(e.toLowerCase())?t&&(o+=" "+e):null!=t&&(o+=` ${e}="${t}"`)})),o}([{href:f(w)},{"aria-current":f(r)},h(C),h(p)],{})}>${n.default?n.default({}):""}</a>`}));function U(){let e=window.innerWidth;document.getElementById("team-1").classList.remove("top-left"),document.getElementById("team-1").classList.remove("top-right"),document.getElementById("team-2").classList.remove("top-right"),document.getElementById("team-4").classList.remove("top-right"),document.getElementById("team-17").classList.remove("bottom-left"),document.getElementById("team-18").classList.remove("bottom-left"),document.getElementById("team-19").classList.remove("bottom-left"),document.getElementById("team-20").classList.remove("bottom-left"),document.getElementById("team-20").classList.remove("bottom-right"),e<500?(document.getElementById("team-1").classList.add("top-both"),document.getElementById("team-20").classList.add("bottom-both")):e<1100?(document.getElementById("team-1").classList.add("top-left"),document.getElementById("team-2").classList.add("top-right"),document.getElementById("team-19").classList.add("bottom-left"),document.getElementById("team-20").classList.add("bottom-right")):(document.getElementById("team-1").classList.add("top-left"),document.getElementById("team-4").classList.add("top-right"),document.getElementById("team-17").classList.add("bottom-left"),document.getElementById("team-20").classList.add("bottom-right"))}const z=x(((e,t,a,o)=>(s((()=>{window.addEventListener("resize",U,!0),U()})),`${e.head+=(e.title="<title>Premier League</title>","")+'<meta name="description" content="Premier League Statistics Dashboard">',""}\n\n${b(R,"Router").$$render(e,{},{},{default:()=>`<div class="header">${b(_,"Link").$$render(e,{to:"/"},{},{default:()=>'<div class="title main-link no-decoration">Premier League</div>'})}</div>\n  <div class="page-content"><div class="teams">${b(_,"Link").$$render(e,{to:"/manchester-city",class:"team-button",id:"team-1",style:"background-color: var(--manchester-city);"},{},{default:()=>'<div class="main-link" style="color: var(--manchester-city-secondary);">Manchester City\n        </div>'})}\n      ${b(_,"Link").$$render(e,{to:"/manchester-united",class:"team-button",id:"team-2",style:"background-color: var(--manchester-united);"},{},{default:()=>'<div class="main-link" style="color: var(--manchester-united-secondary);">Manchester United\n        </div>'})}\n      ${b(_,"Link").$$render(e,{to:"/liverpool",class:"team-button",id:"team-3",style:"background-color: var(--liverpool);"},{},{default:()=>'<div class="main-link" style="color: var(--liverpool-secondary);">Liverpool\n        </div>'})}\n      ${b(_,"Link").$$render(e,{to:"/chelsea",class:"team-button",id:"team-4",style:"background-color: var(--chelsea);"},{},{default:()=>'<div class="main-link" style="color: var(--chelsea-secondary);">Chelsea\n        </div>'})}\n      ${b(_,"Link").$$render(e,{to:"/leicester-city",class:"team-button",id:"team-5",style:"background-color: var(--leicester-city);"},{},{default:()=>'<div class="main-link" style="color: var(--leicester-city-secondary);">Leicester\n        </div>'})}\n      ${b(_,"Link").$$render(e,{to:"/west-ham-united",class:"team-button",id:"team-6",style:"background-color: var(--west-ham-united);"},{},{default:()=>'<div class="main-link" style="color: var(--west-ham-united-secondary);">West Ham\n        </div>'})}\n      ${b(_,"Link").$$render(e,{to:"/tottenham-hotspur",class:"team-button",id:"team-7",style:"background-color: var(--tottenham-hotspur);"},{},{default:()=>'<div class="main-link" style="color: var(--tottenham-hotspur-secondary);">Spurs\n        </div>'})}\n      ${b(_,"Link").$$render(e,{to:"/arsenal",class:"team-button",id:"team-8",style:"background-color: var(--arsenal);"},{},{default:()=>'<div class="main-link" style="color: var(--arsenal-secondary);">Arsenal\n        </div>'})}\n      <a href="/leeds-united" class="team-button" id="team-9" style="background-color: var(--leeds-united);"><div class="main-link" style="color: var(--leeds-united-secondary);">Leeds United\n        </div></a>\n      <a href="/everton" class="team-button" id="team-10" style="background-color: var(--everton);"><div class="main-link" style="color: var(--everton-secondary);">Everton\n        </div></a>\n      <a href="/aston-villa" class="team-button" id="team-11" style="background-color: var(--aston-villa);"><div class="main-link" style="color: var(--aston-villa-secondary);">Aston Villa\n        </div></a>\n      <a href="/newcastle-united" class="team-button" id="team-12" style="background-color: var(--newcastle-united);"><div class="main-link" style="color: var(--newcastle-united-secondary);">Newcastle\n        </div></a>\n      <a href="/wolverhampton-wanderers" class="team-button" id="team-13" style="background-color: var(--wolverhampton-wanderers);"><div class="main-link" style="color: var(--wolverhampton-wanderers-secondary);">Wolves\n        </div></a>\n      <a href="/crystal-palace" class="team-button" id="team-14" style="background-color: var(--crystal-palace);"><div class="main-link" style="color: var(--crystal-palace-secondary);">Crystal Palace\n        </div></a>\n      <a href="/southampton" class="team-button" id="team-15" style="background-color: var(--southampton);"><div class="main-link" style="color: var(--southampton-secondary);">Southampton\n        </div></a>\n      <a href="/brighton-and-hove-albion" class="team-button" id="team-16" style="background-color: var(--brighton-and-hove-albion);"><div class="main-link" style="color: var(--brighton-and-hove-albion-secondary);">Brighton\n        </div></a>\n      <a href="/burnley" class="team-button" id="team-17" style="background-color: var(--burnley);"><div class="main-link" style="color: var(--burnley-secondary);">Burnley\n        </div></a>\n      <a href="/norwich-city" class="team-button" id="team-18" style="background-color: var(--norwich-city);"><div class="main-link" style="color: var(--norwich-city-secondary);">Norwich City\n        </div></a>\n      <a href="/watford" class="team-button" id="team-19" style="background-color: var(--watford);"><div class="main-link" style="color: var(--watford-secondary);">Watford\n        </div></a>\n      <a href="/brentford" class="team-button" id="team-20" style="background-color: var(--brentford);"><div class="main-link" style="color: var(--brentford-secondary);">Brentford\n        </div></a></div></div>`})}\n\n`)));function H(e){switch(e){case"Brighton and Hove Albion FC":return"BHA";case"Manchester City FC":return"MCI";case"Manchester United FC":return"MUN";case"Aston Villa FC":return"AVL";case"Sheffield United FC":return"SHU";case"West Bromwich Albion FC":return"WBA";case"West Ham United FC":return"WHU"}return e.slice(0,3).toUpperCase()}const W=x(((e,t,a,o)=>{let{data:n,currentMatchday:r,fullTeamName:i}=t;return void 0===t.data&&a.data&&void 0!==n&&a.data(n),void 0===t.currentMatchday&&a.currentMatchday&&void 0!==r&&a.currentMatchday(r),void 0===t.fullTeamName&&a.fullTeamName&&void 0!==i&&a.fullTeamName(i),`<div class="current-form-row"><div class="${"icon pos-0 "+p(n.form[i][r].form5.charAt(0))+" "+p(n.form[i][r].beatStarTeam?"star-team":"")}"></div>\n  <div class="${"icon pos-1 "+p(n.form[i][r].form5.charAt(1))+" "+p(n.form[i][r-1].beatStarTeam?"star-team":"")}"></div>\n  <div class="${"icon pos-2 "+p(n.form[i][r].form5.charAt(2))+" "+p(n.form[i][r-2].beatStarTeam?"star-team":"")}"></div>\n  <div class="${"icon pos-3 "+p(n.form[i][r].form5.charAt(3))+" "+p(n.form[i][r-3].beatStarTeam?"star-team":"")}"></div>\n  <div class="${"icon pos-4 "+p(n.form[i][r].form5.charAt(4))+" "+p(n.form[i][r-4].beatStarTeam?"star-team":"")}"></div></div>\n<div class="current-form-row"><div class="icon-name pos-0">${p(H(n.form[i][r].team))}</div>\n  <div class="icon-name pos-1">${p(H(n.form[i][r-1].team))}</div>\n  <div class="icon-name pos-2">${p(H(n.form[i][r-2].team))}</div>\n  <div class="icon-name pos-3">${p(H(n.form[i][r-3].team))}</div>\n  <div class="icon-name pos-4">${p(H(n.form[i][r-4].team))}</div></div>\n<div class="current-form">Current form: ${p((100*n.form[i][r].formRating5).toFixed(2))}%\n</div>`}));const V=x(((e,t,a,o)=>{let n;s((()=>{n=function(e,t){let a,o=Object.keys(e.standings).sort((function(t,a){return e.standings[a][e.currentSeason].points-e.standings[t][e.currentSeason].points})),[n,r]=function(e,t){let a=e.indexOf(t),o=a-3,n=a+4;return o<0&&(n-=o,o=0),n>e.length-1&&(o-=n-e.length,n=e.length),[o,n]}(o,t),i=[];for(let s=n;s<r;s++)o[s]==t&&(a=s-n),i.push({name:o[s],position:e.standings[o[s]][e.currentSeason].position,points:e.standings[o[s]][e.currentSeason].points,gd:e.standings[o[s]][e.currentSeason].gD});return{teamTableIdx:a,rows:i}}(r,l)}));let{data:r,team:i,fullTeamName:l}=t;return void 0===t.data&&a.data&&void 0!==r&&a.data(r),void 0===t.team&&a.team&&void 0!==i&&a.team(i),void 0===t.fullTeamName&&a.fullTeamName&&void 0!==l&&a.fullTeamName(l),`<div class="table-snippet">${null!=n?`<div class="divider"></div>\n    <div class="table-row"><div class="table-element table-position column-title"></div>\n      <div class="table-element table-team-name column-title">Team</div>\n      <div class="table-element table-gd column-title">GD</div>\n      <div class="table-element table-points column-title">Points</div></div>\n\n    ${y(Array(n.rows.length),((e,t)=>`\n      ${0==t?""+(t!=n.teamTableIdx?'<div id="divider"></div>':""):""+(t-1!=n.teamTableIdx&&t!=n.teamTableIdx?'<div id="divider"></div>':"")}\n\n      \n      ${t==n.teamTableIdx?`\n        <div class="table-row this-team" style="${"background-color: var(--"+p(i)+");"}"><div class="table-element table-position this-team" style="${"color: var(--"+p(i)+"-secondary);"}">${p(n.rows[t].position)}</div>\n          <div class="table-element table-team-name this-team" style="${"color: var(--"+p(i)+"-secondary);"}">${p(n.rows[t].name)}</div>\n          <div class="table-element table-gd this-team" style="${"color: var(--"+p(i)+"-secondary);"}">${p(n.rows[t].gd)}</div>\n          <div class="table-element table-points this-team" style="${"color: var(--"+p(i)+"-secondary);"}">${p(n.rows[t].points)}</div>\n        </div>`:`\n        <div class="table-row"><div class="table-element table-position">${p(n.rows[t].position)}</div>\n          <div class="table-element table-team-name">${p(n.rows[t].name)}</div>\n          <div class="table-element table-gd">${p(n.rows[t].gd)}</div>\n          <div class="table-element table-points">${p(n.rows[t].points)}</div>\n        </div>`}`))}\n    ${6!=n.teamTableIdx?'<div id="divider"></div>':""}`:""}</div>`})),Y=x(((e,t,a,o)=>{let{data:n,currentMatchday:r,fullTeamName:i}=t;return void 0===t.data&&a.data&&void 0!==n&&a.data(n),void 0===t.currentMatchday&&a.currentMatchday&&void 0!==r&&a.currentMatchday(r),void 0===t.fullTeamName&&a.fullTeamName&&void 0!==i&&a.fullTeamName(i),`<div class="next-game-prediction row-graph" style="${"border: 6px solid var(--"+p(n.upcoming[i].nextTeam)+");"}">${null!=n.upcoming[i].nextTeam?`\n    <div class="next-game-title" style="${"background-color: var(--"+p(n.upcoming[i].nextTeam.replace(" FC","").toLowerCase().replace(" ","-"))+");"}"><h1 class="next-game-title-text" style="${"color: var(--"+p(n.upcoming[i].nextTeam.replace(" FC","").toLowerCase().replace(" ","-"))+"-secondary);"}">Next Game:\n        ${b(_,"Link").$$render(e,{to:"/"+n.upcoming[i].nextTeam.replace(" FC","").toLowerCase().replace(" ","-")},{},{default:()=>`<div class="no-decoration" style="color: inherit">${p(n.upcoming[i].nextTeam)}</div>`})}<span class="parenthesis">(</span>${p(n.upcoming[i].atHome)}<span class="parenthesis">)</span></h1></div>`:`\n    <div class="next-game-season-complete"><h1 class="next-game-title-text">${p(n.currentSeason)}/${p(n.currentSeason+1)} SEASON COMPLETE\n      </h1></div>`}</div>\n\n${null!=n.upcoming[i].nextTeam?`<div class="next-game-values"><div class="predictions-and-logo"><div class="next-game-logo opposition-badge" style="${"background-image: url('"+p(n.logoURLs[n.upcoming[i].nextTeam])+"'); background-repeat: no-repeat; background-size: contain; background-position: center;"}"></div>\n      <div class="predictions"><div class="next-game-item">Current form:\n          <b>${p(n.form[n.upcoming[i].nextTeam][r].formRating5)}%</b></div>\n        <div class="next-game-item">Score prediction\n          <br>\n          <a class="predictions-link" href="/predictions"><b>${p(n.upcoming.prediction.scoreline)}</b></a>\n          <br>\n          <span class="accuracy-item">Predicting with accuracy:\n            <b>${p(n.upcoming.prediction[i].accuracy)}%</b></span><br>\n          <div class="accuracy-item">General results accuracy:\n            <b>${p(n.upcoming.prediction[i].resultsAccuracy)}%</b></div></div></div></div>\n    <div class="past-results">${0==n.upcoming[i].previousMatches.length?'<div class="next-game-item prev-results-title">No Previous Results</div>':'<div class="next-game-item prev-results-title">Previous Results</div>'}\n\n      \n      ${y(n.upcoming[i].previousMatches,(e=>`<div class="${"next-game-item "+p(e.oppTeam)}"><div class="past-result"><div class="home-team">${p(e.homeTeam)}</div>\n            <div class="score">${p(e.homeGoals)} - ${p(e.awayGoals)}</div>\n            <div class="away-team">${p(e.awayTeam)}</div></div>\n          <div style="clear: both"></div>\n          <div class="past-result-date">${p(e.date)}</div>\n        </div>`))}</div></div>`:""}`}));function Z(e){var t=e%100;return e+([,"st","nd","rd"][t>20?t%10:t]||"th")}function J(e,t,a,o){let n=Object.keys(e.seasonStats).sort((function(a,o){return e.seasonStats[o][t]-e.seasonStats[a][t]})).indexOf(a)+1;return o&&(n=21-n),n}const K=x(((e,t,a,o)=>{function n(){document.documentElement.style.setProperty("--ssp1-offset",-r.clientWidth/2+"px"),document.documentElement.style.setProperty("--ssp2-offset",-i.clientWidth/2+"px"),document.documentElement.style.setProperty("--ssp3-offset",-l.clientWidth/2+"px")}let r,i,l,d={xG:"",xC:"",cleanSheetRatio:""};s((()=>{d=function(e,t){return{xG:Z(J(e,"xG",t,!1)),xC:Z(J(e,"xC",t,!0)),cleanSheetRatio:Z(J(e,"cleanSheetRatio",t,!1))}}(c,u),window.addEventListener("resize",n),setTimeout((function(){n()}),0)}));let{data:c,fullTeamName:u}=t;return void 0===t.data&&a.data&&void 0!==c&&a.data(c),void 0===t.fullTeamName&&a.fullTeamName&&void 0!==u&&a.fullTeamName(u),`<div class="season-stats"><div class="season-stat goals-per-game"><div class="season-stat-value">${p(c.seasonStats[u].xG)}\n      <div class="${"season-stat-position ssp-"+p(d.xG)}" id="ssp1"${w("this",r,0)}>${p(d.xG)}</div></div>\n      <div class="season-stat-text">goals per game</div></div>\n    <div class="season-stat conceded-per-game"><div class="season-stat-value">${p(c.seasonStats[u].xC)}\n        <div class="${"season-stat-position ssp-"+p(d.xC)}" id="ssp2"${w("this",i,0)}>${p(d.xC)}</div></div>\n      <div class="season-stat-text">conceded per game</div></div>\n    <div class="season-stat clean-sheet-ratio"><div class="season-stat-value">${p(c.seasonStats[u].cleanSheetRatio)}\n        <div class="${"season-stat-position ssp-"+p(d.cleanSheetRatio)}" id="ssp3"${w("this",l,0)}>${p(d.cleanSheetRatio)}</div></div>\n      <div class="season-stat-text">clean sheets</div></div></div>`})),Q=x(((e,t,a,o)=>{let{lastUpdated:n}=t;return void 0===t.lastUpdated&&a.lastUpdated&&void 0!==n&&a.lastUpdated(n),`<div class="teams-footer footer-text-colour"><a class="ko-fi" href="https://ko-fi.com/C0C069FOI" target="_blank"><img class="ko-fi-img" src="img/kofi.png" alt="">\n    <div class="ko-fi-text">Support Me</div></a>\n  <div class="teams-footer-bottom">${null!=n?`<div class="last-updated">${p(n)} UTC</div>`:""}\n    <div class="footer-details"><div class="footer-detail footer-text-colour">Data provided by\n        <a class="footer-text-colour underline" href="https://www.football-data.org/">football-data.org</a></div>\n      <div class="footer-detail footer-text-colour">Graphs created using\n        <a class="footer-text-colour underline" href="https://plotly.com/">Plotly</a></div>\n      <div class="footer-detail footer-text-colour">Font made from\n        <a class="footer-text-colour" href="http://www.onlinewebfonts.com">oNline Web Fonts</a>\n        is licensed by CC BY 3.0\n      </div></div>\n    <div class="footer-bottom"><div class="created-by footer-text-colour">Created by Tom Draper</div>\n      <div class="version footer-text-colour">v2.0</div></div></div></div>`}));function X(e){let t,a=e.atHome?"Home":"Away";return t=null!=e.score?`${e.team} (${a}) ${e.score}`:`${e.team} (${a})`,t}function ee(e,t){let a=[],o=[],n=[];for(let r=1;r<=38;r++){let i=e.fixtures[t][r];a.push(new Date(i.date));let s=e.teamRatings[i.team].totalRating;i.atHome&&(s*=1-e.homeAdvantages[i.team].totalHomeAdvantage),o.push(100*s);let l=X(i);n.push(l)}!function(e,t,a){let o=[];for(let n=0;n<e.length;n++)o.push({x:e[n],y:t[n],details:a[n]});o.sort((function(e,t){return e.x<t.x?-1:e.x==t.x?0:1}));for(let n=0;n<o.length;n++)e[n]=o[n].x,t[n]=o[n].y,a[n]=o[n].details}(a,o,n);let r=Date.now(),i=Array(a.length).fill(14);i=function(e,t,a,o){let n,r=Number.POSITIVE_INFINITY;for(let e=0;e<t.length;e++){let o=t[e]-a;0<o&&o<r&&(r=o,n=e)}return null!=n&&(e[n]=o),e}(i,a,r,26);let s=Array.from({length:38},((e,t)=>t+1)),l=Array.from(Array(11),((e,t)=>10*t)),d=new Date(a[0]);d.setDate(d.getDate()-10);let c=new Date(Math.max(a[a.length-1],r));return c.setDate(c.getDate()+10),{data:[{x:a,y:o,type:"scatter",mode:"lines+markers",text:n,line:{color:"#737373"},marker:{size:i,colorscale:[[0,"#01c626"],[.1,"#08a825"],[.2,"#0b7c20"],[.3,"#0a661b"],[.4,"#064411"],[.5,"#000000"],[.6,"#5b1d15"],[.7,"#85160f"],[.8,"#ad1a10"],[.9,"#db1a0d"],[1,"#fc1303"]],color:o},customdata:s,hovertemplate:"<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>"}],layout:{title:!1,autosize:!0,margin:{r:20,l:50,t:0,b:40,pad:5},hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Team Rating"},gridcolor:"gray",showline:!1,zeroline:!1,fixedrange:!0,ticktext:l,tickvals:l},xaxis:{linecolor:"black",showgrid:!1,showline:!1,range:[d,c],fixedrange:!0},shapes:[{type:"line",x0:r,y0:-4,x1:r,y1:104,line:{color:"black",dash:"dot",width:1}}]},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}const te=x(((e,t,a,o)=>{let n,r;s((()=>{r=ee(i,l),new Plotly.newPlot(n,r.data,r.layout,r.config)}));let{data:i,fullTeamName:l}=t;return void 0===t.data&&a.data&&void 0!==i&&a.data(i),void 0===t.fullTeamName&&a.fullTeamName&&void 0!==l&&a.fullTeamName(l),`<div id="plotly"><div id="plotDiv"${w("this",n,0)}></div></div>`}));function ae(e,t,a,o){let n,r=Array.from({length:38},((e,t)=>t+1)),i=[];for(let t=1;t<=38;t++){let o=e.form[a][t].formRating5;i.push(100*o)}if(o){let e=a.replace(" FC","");e=e[0].toLowerCase()+e.slice(1),e=e.replace(/ ([A-Z])/g,"-$1").toLowerCase(),n={color:getComputedStyle(document.documentElement).getPropertyValue(`--${e}`),width:4}}else n={color:"#d3d3d3"};return{x:t,y:i,name:a,mode:"lines",line:n,text:r,hovertemplate:`<b>${a}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,showlegend:!1}}function oe(e,t){let a=function(e){let t=[];for(let a=1;a<=38;a++){let o=[];for(let t of e.teamNames)o.push(e.fixtures[t][a].date);o=o.map((e=>new Date(e))),o=o.sort(),t.push(o[Math.floor(o.length/2)])}return t.sort((function(e,t){return e-t})),t}(e),o=[];for(let n=0;n<e.teamNames.length;n++)if(e.teamNames[n]!=t){let t=ae(e,a,e.teamNames[n],!1);o.push(t)}let n=ae(e,a,t,!0);o.push(n);let r=Array.from(Array(11),((e,t)=>10*t));return{data:o,layout:{title:!1,autosize:!0,margin:{r:20,l:50,t:0,b:40,pad:5},hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Form Rating"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0,ticktext:r,tickvals:r},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0}},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}const ne=x(((e,t,a,o)=>{let n,r;s((()=>{r=oe(i,l),new Plotly.newPlot(n,r.data,r.layout,r.config)}));let{data:i,fullTeamName:l}=t;return void 0===t.data&&a.data&&void 0!==i&&a.data(i),void 0===t.fullTeamName&&a.fullTeamName&&void 0!==l&&a.fullTeamName(l),`<div id="plotly"><div id="plotDiv"${w("this",n,0)}></div></div>`}));function re(e,t,a,o){let n,r=Array.from({length:38},((e,t)=>t+1)),i=[];for(let t=1;t<=38;t++){let o=e.form[a][t].position;i.push(o)}if(o){let e=a.replace(" FC","");e=e[0].toLowerCase()+e.slice(1),e=e.replace(/ ([A-Z])/g,"-$1").toLowerCase(),n={color:getComputedStyle(document.documentElement).getPropertyValue(`--${e}`),width:4}}else n={color:"#d3d3d3"};return{x:t,y:i,name:a,mode:"lines",line:n,text:r,hovertemplate:`<b>${a}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,showlegend:!1}}function ie(e,t){let a=function(e){let t=[];for(let a=1;a<=38;a++){let o=[];e.teamNames.forEach((t=>{o.push(e.fixtures[t][a].date)})),o=o.map((e=>new Date(e))),o=o.sort(),t.push(o[Math.floor(o.length/2)])}return t.sort((function(e,t){return e-t})),t}(e),o=[];for(let n=0;n<e.teamNames.length;n++)if(e.teamNames[n]!=t){let t=re(e,a,e.teamNames[n],!1);o.push(t)}let n=re(e,a,t,!0);o.push(n);let r=Array.from(Array(20),((e,t)=>t+1));return{data:o,layout:{title:!1,autosize:!0,margin:{r:20,l:50,t:0,b:40,pad:5},hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Form Rating"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,autorange:"reversed",fixedrange:!0,ticktext:r,tickvals:r},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0},shapes:[{type:"rect",x0:a[0],y0:4.5,x1:a[a.length-1],y1:.5,line:{width:0},fillcolor:"#77DD77",opacity:.3,layer:"below"},{type:"rect",x0:a[0],y0:6.5,x1:a[a.length-1],y1:4.5,line:{width:0},fillcolor:"#4CDEEE",opacity:.3,layer:"below"},{type:"rect",x0:a[0],y0:20.5,x1:a[a.length-1],y1:17.5,line:{width:0},fillcolor:"#C23B22",opacity:.3,layer:"below"}]},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}const se=x(((e,t,a,o)=>{let n,r;s((()=>{r=ie(i,l),new Plotly.newPlot(n,r.data,r.layout,r.config)}));let{data:i,fullTeamName:l}=t;return void 0===t.data&&a.data&&void 0!==i&&a.data(i),void 0===t.fullTeamName&&a.fullTeamName&&void 0!==l&&a.fullTeamName(l),`<div id="plotly"><div id="plotDiv"${w("this",n,0)}></div></div>`}));function le(e,t){let a=function(e){let t={};for(let a of e.teamNames)for(let o of Object.keys(e.form[a])){let[n,r,i]=e.form[a][o].score.split(" ");n=parseInt(n),i=parseInt(i),o in t?t[o]+=n+i:t[o]=n+i}for(let e of Object.keys(t))t[e]/=20;return t}(e),o=function(e){let t=[];for(let a=1;a<=38;a++){let o=[];for(let t of e.teamNames)o.push(e.fixtures[t][a].date);o=o.map((e=>new Date(e))),o=o.sort(),t.push(o[Math.floor(o.length/2)])}return t.sort((function(e,t){return e-t})),t}(e),n=Object.keys(a),[r,i]=function(e,t){let a={},o={};for(let n of Object.keys(e.form[t])){let[r,i,s]=e.form[t][n].score.split(" ");r=parseInt(r),s=parseInt(s),e.form[t][n].atHome?(a[n]=r,o[n]=s):(a[n]=s,o[n]=r)}return[a,o]}(e,t);return{data:[{name:"Scored",type:"bar",x:o,y:Object.values(r),text:n,marker:{color:"#77DD77"},hovertemplate:"<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>"},{name:"Conceded",type:"bar",x:o,y:Object.values(i),text:n,marker:{color:"C23B22"},hovertemplate:"<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>"},{name:"Avg",type:"line",x:o,y:Object.values(a),text:n,hovertemplate:"<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",line:{color:"#0080FF",width:2}}],layout:{title:!1,autosize:!0,margin:{r:20,l:50,t:0,b:15,pad:5},barmode:"stack",hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Goals Scored"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0,showticklabels:!1},legend:{x:1,xanchor:"right",y:1}},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}const de=x(((e,t,a,o)=>{let n,r;s((()=>{r=le(i,l),new Plotly.newPlot(n,r.data,r.layout,r.config)}));let{data:i,fullTeamName:l}=t;return void 0===t.data&&a.data&&void 0!==i&&a.data(i),void 0===t.fullTeamName&&a.fullTeamName&&void 0!==l&&a.fullTeamName(l),`<div id="plotly"><div id="plotDiv"${w("this",n,0)}></div></div>`}));function ce(e,t){let a=function(e){let t=[];for(let a=1;a<=38;a++){let o=[];for(let t of e.teamNames)o.push(e.fixtures[t][a].date);o=o.map((e=>new Date(e))),o=o.sort(),t.push(o[Math.floor(o.length/2)])}return t.sort((function(e,t){return e-t})),t}(e),o=Object.keys(e.form[t]),[n,r]=function(e,t){let a=[],o=[];for(let n of Object.keys(e.form[t])){let[r,i,s]=e.form[t][n].score.split(" ");r=parseInt(r),s=parseInt(s),e.form[t][n].atHome?s>0?(a.push(1),o.push(0)):(o.push(1),a.push(0)):r>0?(a.push(1),o.push(0)):(o.push(1),a.push(0))}return[o,a]}(e,t);return{data:[{name:"Clean sheets",type:"bar",x:a,y:n,text:o,marker:{color:"#77DD77"},hovertemplate:"<b>Clean sheet<extra></extra>",showlegend:!1},{name:"Conceded",type:"bar",x:a,y:r,text:o,marker:{color:"C23B22"},hovertemplate:"<b>Goals conceded<extra></extra>",showlegend:!1}],layout:{title:!1,autosize:!0,height:60,margin:{r:20,l:50,t:0,b:40,pad:5},hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:""},showticklabels:!1,gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0},shapes:[{type:"line",x0:a[0],y0:.5,x1:a[a.length-1],y1:.5,layer:"below",line:{color:"#d3d3d3",width:2}}]},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}const ue=x(((e,t,a,o)=>{let n,r;s((()=>{r=ce(i,l),new Plotly.newPlot(n,r.data,r.layout,r.config)}));let{data:i,fullTeamName:l}=t;return void 0===t.data&&a.data&&void 0!==i&&a.data(i),void 0===t.fullTeamName&&a.fullTeamName&&void 0!==l&&a.fullTeamName(l),`<div id="plotly"><div id="plotDiv"${w("this",n,0)}></div></div>`})),me=x(((e,t,a,o)=>{let n,r;s((()=>{r=function(){let e=Object.keys(i);return{data:[{x:Object.keys(i),y:Object.values(i),type:"bar",name:"Avg",marker:{color:"#d3d3d3"},line:{width:0},hovertemplate:"%{x} goals: %{y}<extra></extra>",hoverinfo:"x+y"},{x:Object.keys(l),y:Object.values(l),type:"bar",name:"Goals scored",marker:{color:"#77DD77"},line:{width:0},hovertemplate:"%{x} goals: %{y}<extra></extra>",hoverinfo:"x+y",opacity:.6}],layout:{title:!1,autosize:!0,margin:{r:0,l:50,t:0,b:40,pad:5},hovermode:"closest",barmode:"overlay",bargap:0,plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Frequency"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0},xaxis:{title:{text:"Goals Scored"},linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0,ticktext:e,tickvals:e},legend:{x:1,xanchor:"right",y:.95}},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}(),new Plotly.newPlot(n,r.data,r.layout,r.config)}));let{goalFreq:i,teamScoredFreq:l}=t;return void 0===t.goalFreq&&a.goalFreq&&void 0!==i&&a.goalFreq(i),void 0===t.teamScoredFreq&&a.teamScoredFreq&&void 0!==l&&a.teamScoredFreq(l),`<div id="plotly"><div id="plotDiv"${w("this",n,0)}></div></div>`})),ve=x(((e,t,a,o)=>{let n,r;s((()=>{r=function(){let e=Object.keys(i);return{data:[{x:Object.keys(i),y:Object.values(i),type:"bar",name:"Avg",marker:{color:"#d3d3d3"},line:{width:0},hovertemplate:"%{x} goals: %{y}<extra></extra>",hoverinfo:"x+y"},{x:Object.keys(l),y:Object.values(l),type:"bar",name:"Goals conceded",marker:{color:"#C23B22"},line:{width:0},hovertemplate:"%{x} goals: %{y}<extra></extra>",hoverinfo:"x+y",opacity:.6}],layout:{title:!1,autosize:!0,margin:{r:0,l:50,t:0,b:40,pad:5},hovermode:"closest",barmode:"overlay",bargap:0,plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Frequency"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0},xaxis:{title:{text:"Goals Conceded"},linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0,ticktext:e,tickvals:e},legend:{x:1,xanchor:"right",y:.95}},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}(),new Plotly.newPlot(n,r.data,r.layout,r.config)}));let{goalFreq:i,teamConcededFreq:l}=t;return void 0===t.goalFreq&&a.goalFreq&&void 0!==i&&a.goalFreq(i),void 0===t.teamConcededFreq&&a.teamConcededFreq&&void 0!==l&&a.teamConcededFreq(l),`<div id="plotly"><div id="plotDiv"${w("this",n,0)}></div></div>`}));const pe=x(((e,t,a,o)=>{let n,r,i;s((()=>{n=function(e){let t={};for(let a of e.teamNames)for(let o of Object.keys(e.form[a])){let n=e.form[a][o].score;if("None - None"!=n){let[r,i,s]=n.split(" ");e.form[a][o].atHome&&(r in t?t[r]+=1:t[r]=1,s in t?t[s]+=1:t[s]=1)}}for(let e of Object.keys(t))t[e]/=20;return t}(l),r=function(e,t){let a={};for(let o of Object.keys(e.form[t])){let n=e.form[t][o].score;if("None - None"!=n){let[r,i,s]=n.split(" ");e.form[t][o].atHome?r in a?a[r]+=1:a[r]=1:s in a?a[s]+=1:a[s]=1}}return a}(l,d),i=function(e,t){let a={};for(let o of Object.keys(e.form[t])){let n=e.form[t][o].score;if("None - None"!=n){let[r,i,s]=n.split(" ");e.form[t][o].atHome?s in a?a[s]+=1:a[s]=1:r in a?a[r]+=1:a[r]=1}}return a}(l,d)}));let{data:l,fullTeamName:d}=t;return void 0===t.data&&a.data&&void 0!==l&&a.data(l),void 0===t.fullTeamName&&a.fullTeamName&&void 0!==d&&a.fullTeamName(d),`<div class="two-graphs"><div class="graph freq-graph mini-graph">${null!=r?`${b(me,"GoalsScoredFreq").$$render(e,{goalFreq:n,teamScoredFreq:r},{},{})}`:""}</div>\n  <div class="graph freq-graph mini-graphh">${null!=i?`${b(ve,"GoalsConcededFreq").$$render(e,{goalFreq:n,teamConcededFreq:i},{},{})}`:""}</div></div>`}));const fe=x(((e,t,a,o)=>{let n,r,i="";s((()=>{var e;e=l.replace(/\-/g," "),i=e.toLowerCase().split(" ").map((function(e){return e.charAt(0).toUpperCase()+e.slice(1)})).join(" ")+" FC",async function(e){const t=await fetch(e);return await t.json()}("https://pldashboard.herokuapp.com/teams").then((e=>{n=function(e,t){return Object.keys(e.form[t]).reduce(((a,o)=>e.form[t][a]>e.form[t][o]?a:o))}(e,i),r=e,console.log(r)}))}));let{team:l}=t;return void 0===t.team&&a.team&&void 0!==l&&a.team(l),`${e.head+=(e.title=`<title>${p(i)}</title>`,"")+'<meta name="description" content="Premier League Statistics Dashboard">',""}\n\n${b(R,"Router").$$render(e,{},{},{default:()=>`<div class="header" style="${"background-color: var(--"+p(l)+");"}"><div class="main-link title no-decoration" style="${"color: var(--"+p(l+"-secondary")+");"}">${p(i)}</div></div>\n\n  ${null!=r?`<div class="page-content"><div class="row"><div class="row-left position-and-badge" style="${"background-image: url('"+p(r.logoURLs[i])+"')"}"><div class="position">${p(r.standings[i][r.currentSeason].position)}</div></div>\n        <div class="fixtures-graph row-graph"><h1 class="lowered">Fixtures</h1>\n          <div class="graph mini-graph">${b(te,"Fixtures").$$render(e,{data:r,fullTeamName:i},{},{})}</div></div></div>\n\n      <div class="row"><div class="row-left form-details">${b(W,"CurrentForm").$$render(e,{data:r,currentMatchday:n,fullTeamName:i},{},{})}\n          ${b(V,"TableSnippet").$$render(e,{data:r,team:l,fullTeamName:i},{},{})}</div>\n        ${b(Y,"NextGame").$$render(e,{data:r,currentMatchday:n,fullTeamName:i},{},{})}</div>\n\n      <div class="row"><div class="form-graph row-graph"><h1 class="lowered">Form Over Time</h1>\n          <div class="graph full-row-graph" style="height: auto">${b(ne,"FormOverTime").$$render(e,{data:r,fullTeamName:i},{},{})}</div></div></div>\n\n      <div class="row"><div class="position-over-time-graph row-graph"><h1 class="lowered">Position Over Time</h1>\n          <div class="graph full-row-graph">${b(se,"PositionOverTime").$$render(e,{data:r,fullTeamName:i},{},{})}</div></div></div>\n\n      <div class="row no-bottom-margin" style="margin-bottom: 0"><div class="goals-scored-vs-conceded-graph row-graph"><h1 class="lowered">Goals Scored and Conceded</h1>\n          <div class="graph full-row-graph">${b(de,"GoalsScoredAndConceded").$$render(e,{data:r,fullTeamName:i},{},{})}</div></div></div>\n      \n      <div class="row"><div class="row-graph"><div class="clean-sheets graph full-row-graph">${b(ue,"CleanSheets").$$render(e,{data:r,fullTeamName:i},{},{})}\n            </div></div></div>\n\n      <div class="season-stats-row">${b(K,"SeasonStats").$$render(e,{data:r,fullTeamName:i},{},{})}</div>\n\n      <div class="row"><div class="goals-freq-row row-graph"><h1>Goals Per Game</h1>\n          ${b(pe,"GoalFrequencies").$$render(e,{data:r,fullTeamName:i},{},{})}</div></div>\n\n      ${b(Q,"TeamsFooter").$$render(e,{lastUpdated:r.lastUpdated},{},{})}</div>`:'<div class="loading-spinner-container"><div class="loading-spinner"></div></div>'}`})}`}));function he(e,t){return Math.round(e.homeGoals)==t.homeGoals&&Math.round(e.awayGoals)==t.awayGoals}function ye(e,t){return e.homeGoals>e.awayGoals&&t.homeGoals>t.awayGoals||e.homeGoals==e.awayGoals&&t.homeGoals==t.awayGoals||e.homeGoals<e.awayGoals&&t.homeGoals<t.awayGoals}const ge=x(((e,t,a,o)=>{let n;return s((()=>{(async function(e){const t=await fetch(e);return await t.json()})("https://pldashboard.herokuapp.com/predictions").then((e=>{!function(e){e.predictions.sort(((e,t)=>new Date(t._id)-new Date(e._id)));for(let t=0;t<e.predictions.length;t++)e.predictions[t].predictions.sort(((e,t)=>new Date(e._id)-new Date(t._id)))}(e),function(e){for(let t=0;t<e.predictions.length;t++)for(let a=0;a<e.predictions[t].predictions.length;a++){let o=e.predictions[t].predictions[a];null!=o.actual&&(he(o.prediction,o.actual)?o.colour="green":ye(o.prediction,o.actual)?o.colour="yellow":o.colour="red")}}(e),console.log(e),n=e,console.log(n.predictions)}))})),`${e.head+=(e.title="<title>Predictions</title>","")+'<meta name="description" content="Premier League Statistics Dashboard">',""}\n\n${b(R,"Router").$$render(e,{},{},{default:()=>`<div class="predictions-header">${b(_,"Link").$$render(e,{class:"predictions-title main-link",style:"text-decoration: none",to:"/predictions"},{},{default:()=>"Predictions"})}</div>\n\n  ${null!=n?`<div class="page-content"><div class="accuracy-display"><div class="accuracy"><span class="accuracy-item">Predicting with accuracy: <b>${p((100*n.accuracy.scoreAccuracy).toFixed(2))}%</b></span><br>\n          <div class="accuracy-item">General results accuracy: <b>${p((100*n.accuracy.resultAccuracy).toFixed(2))}%</b></div></div></div>\n\n      <div class="predictions-container"><div class="predictions">${null!=n.predictions?`${y(n.predictions,(({_id:e,predictions:t})=>`<div class="date">${p(e)}</div>\n              <div class="medium-predictions-divider"></div>\n              \n              ${y(t,(e=>`<button class="${"prediction-container "+p(e.colour)}"><div class="prediction prediction-item"><div class="prediction-label">Predicted:</div>\n                    <div class="prediction-value"><div class="prediction-initials">${p(e.home)}</div>\n                      <div class="prediction-score">${p(Math.round(e.prediction.homeGoals))} - ${p(Math.round(e.prediction.awayGoals))}</div>\n                      <div class="prediction-initials">${p(e.away)}</div>\n                    </div></div>\n                  ${null!=e.actual?`<div class="actual prediction-item"><div class="prediction-label">Actual:</div>\n                      <div class="prediction-value"><div class="prediction-initials">${p(e.home)}</div>\n                        <div class="prediction-score">${p(e.actual.homeGoals)} - ${p(e.actual.awayGoals)}</div>\n                        <div class="prediction-initials">${p(e.away)}</div></div>\n                    </div>`:`<div class="prediction-time">${p(function(e){let t=new Date(e);return t=t.toTimeString().slice(0,5),t}(e.datetime))}</div>`}\n\n                  \n                  ${null!=e.prediction?`<div class="prediction-details"${w("id",e._id,0)}><div class="detailed-predicted-score"><b>${p(e.prediction.homeGoals)} - ${p(e.prediction.awayGoals)}</b></div>\n                    </div>`:""}\n                </button>`))}\n              <div class="predictions-gap"></div>`))}`:""}</div></div></div>\n\n    <div class="predictions-footer footer-text-colour"><div class="method-description">Predictions are calculated using previous results and then adjusting by\n        recent form and home advantage.\n      </div>\n      </div>`:'<div class="loading-spinner-container"><div class="loading-spinner"></div></div>'}`})}`})),be=x(((e,t,a,o)=>{let{url:n=""}=t;return void 0===t.url&&a.url&&void 0!==n&&a.url(n),`${b(R,"Router").$$render(e,{url:n},{},{default:()=>`${b(q,"Route").$$render(e,{path:"/",component:z},{},{})}\n  ${b(q,"Route").$$render(e,{path:"/predictions",component:ge},{},{})}\n  ${b(q,"Route").$$render(e,{path:"/:team"},{},{default:({params:t})=>`${b(fe,"Team").$$render(e,{team:t.team},{},{})}`})}`})}`}));module.exports=be;
+'use strict';
+
+function noop() { }
+function run(fn) {
+    return fn();
+}
+function blank_object() {
+    return Object.create(null);
+}
+function run_all(fns) {
+    fns.forEach(run);
+}
+function is_function(thing) {
+    return typeof thing === 'function';
+}
+function safe_not_equal(a, b) {
+    return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+}
+function subscribe(store, ...callbacks) {
+    if (store == null) {
+        return noop;
+    }
+    const unsub = store.subscribe(...callbacks);
+    return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
+}
+function compute_rest_props(props, keys) {
+    const rest = {};
+    keys = new Set(keys);
+    for (const k in props)
+        if (!keys.has(k) && k[0] !== '$')
+            rest[k] = props[k];
+    return rest;
+}
+function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
+    const e = document.createEvent('CustomEvent');
+    e.initCustomEvent(type, bubbles, cancelable, detail);
+    return e;
+}
+
+let current_component;
+function set_current_component(component) {
+    current_component = component;
+}
+function get_current_component() {
+    if (!current_component)
+        throw new Error('Function called outside component initialization');
+    return current_component;
+}
+function onMount(fn) {
+    get_current_component().$$.on_mount.push(fn);
+}
+function onDestroy(fn) {
+    get_current_component().$$.on_destroy.push(fn);
+}
+function createEventDispatcher() {
+    const component = get_current_component();
+    return (type, detail, { cancelable = false } = {}) => {
+        const callbacks = component.$$.callbacks[type];
+        if (callbacks) {
+            // TODO are there situations where events could be dispatched
+            // in a server (non-DOM) environment?
+            const event = custom_event(type, detail, { cancelable });
+            callbacks.slice().forEach(fn => {
+                fn.call(component, event);
+            });
+            return !event.defaultPrevented;
+        }
+        return true;
+    };
+}
+function setContext(key, context) {
+    get_current_component().$$.context.set(key, context);
+    return context;
+}
+function getContext(key) {
+    return get_current_component().$$.context.get(key);
+}
+Promise.resolve();
+
+// source: https://html.spec.whatwg.org/multipage/indices.html
+const boolean_attributes = new Set([
+    'allowfullscreen',
+    'allowpaymentrequest',
+    'async',
+    'autofocus',
+    'autoplay',
+    'checked',
+    'controls',
+    'default',
+    'defer',
+    'disabled',
+    'formnovalidate',
+    'hidden',
+    'ismap',
+    'loop',
+    'multiple',
+    'muted',
+    'nomodule',
+    'novalidate',
+    'open',
+    'playsinline',
+    'readonly',
+    'required',
+    'reversed',
+    'selected'
+]);
+
+const invalid_attribute_name_character = /[\s'">/=\u{FDD0}-\u{FDEF}\u{FFFE}\u{FFFF}\u{1FFFE}\u{1FFFF}\u{2FFFE}\u{2FFFF}\u{3FFFE}\u{3FFFF}\u{4FFFE}\u{4FFFF}\u{5FFFE}\u{5FFFF}\u{6FFFE}\u{6FFFF}\u{7FFFE}\u{7FFFF}\u{8FFFE}\u{8FFFF}\u{9FFFE}\u{9FFFF}\u{AFFFE}\u{AFFFF}\u{BFFFE}\u{BFFFF}\u{CFFFE}\u{CFFFF}\u{DFFFE}\u{DFFFF}\u{EFFFE}\u{EFFFF}\u{FFFFE}\u{FFFFF}\u{10FFFE}\u{10FFFF}]/u;
+// https://html.spec.whatwg.org/multipage/syntax.html#attributes-2
+// https://infra.spec.whatwg.org/#noncharacter
+function spread(args, attrs_to_add) {
+    const attributes = Object.assign({}, ...args);
+    if (attrs_to_add) {
+        const classes_to_add = attrs_to_add.classes;
+        const styles_to_add = attrs_to_add.styles;
+        if (classes_to_add) {
+            if (attributes.class == null) {
+                attributes.class = classes_to_add;
+            }
+            else {
+                attributes.class += ' ' + classes_to_add;
+            }
+        }
+        if (styles_to_add) {
+            if (attributes.style == null) {
+                attributes.style = style_object_to_string(styles_to_add);
+            }
+            else {
+                attributes.style = style_object_to_string(merge_ssr_styles(attributes.style, styles_to_add));
+            }
+        }
+    }
+    let str = '';
+    Object.keys(attributes).forEach(name => {
+        if (invalid_attribute_name_character.test(name))
+            return;
+        const value = attributes[name];
+        if (value === true)
+            str += ' ' + name;
+        else if (boolean_attributes.has(name.toLowerCase())) {
+            if (value)
+                str += ' ' + name;
+        }
+        else if (value != null) {
+            str += ` ${name}="${value}"`;
+        }
+    });
+    return str;
+}
+function merge_ssr_styles(style_attribute, style_directive) {
+    const style_object = {};
+    for (const individual_style of style_attribute.split(';')) {
+        const colon_index = individual_style.indexOf(':');
+        const name = individual_style.slice(0, colon_index).trim();
+        const value = individual_style.slice(colon_index + 1).trim();
+        if (!name)
+            continue;
+        style_object[name] = value;
+    }
+    for (const name in style_directive) {
+        const value = style_directive[name];
+        if (value) {
+            style_object[name] = value;
+        }
+        else {
+            delete style_object[name];
+        }
+    }
+    return style_object;
+}
+const escaped = {
+    '"': '&quot;',
+    "'": '&#39;',
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;'
+};
+function escape(html) {
+    return String(html).replace(/["'&<>]/g, match => escaped[match]);
+}
+function escape_attribute_value(value) {
+    return typeof value === 'string' ? escape(value) : value;
+}
+function escape_object(obj) {
+    const result = {};
+    for (const key in obj) {
+        result[key] = escape_attribute_value(obj[key]);
+    }
+    return result;
+}
+function each(items, fn) {
+    let str = '';
+    for (let i = 0; i < items.length; i += 1) {
+        str += fn(items[i], i);
+    }
+    return str;
+}
+const missing_component = {
+    $$render: () => ''
+};
+function validate_component(component, name) {
+    if (!component || !component.$$render) {
+        if (name === 'svelte:component')
+            name += ' this={...}';
+        throw new Error(`<${name}> is not a valid SSR component. You may need to review your build config to ensure that dependencies are compiled, rather than imported as pre-compiled modules`);
+    }
+    return component;
+}
+let on_destroy;
+function create_ssr_component(fn) {
+    function $$render(result, props, bindings, slots, context) {
+        const parent_component = current_component;
+        const $$ = {
+            on_destroy,
+            context: new Map(context || (parent_component ? parent_component.$$.context : [])),
+            // these will be immediately discarded
+            on_mount: [],
+            before_update: [],
+            after_update: [],
+            callbacks: blank_object()
+        };
+        set_current_component({ $$ });
+        const html = fn(result, props, bindings, slots);
+        set_current_component(parent_component);
+        return html;
+    }
+    return {
+        render: (props = {}, { $$slots = {}, context = new Map() } = {}) => {
+            on_destroy = [];
+            const result = { title: '', head: '', css: new Set() };
+            const html = $$render(result, props, {}, $$slots, context);
+            run_all(on_destroy);
+            return {
+                html,
+                css: {
+                    code: Array.from(result.css).map(css => css.code).join('\n'),
+                    map: null // TODO
+                },
+                head: result.title + result.head
+            };
+        },
+        $$render
+    };
+}
+function add_attribute(name, value, boolean) {
+    if (value == null || (boolean && !value))
+        return '';
+    const assignment = (boolean && value === true) ? '' : `="${escape_attribute_value(value.toString())}"`;
+    return ` ${name}${assignment}`;
+}
+function style_object_to_string(style_object) {
+    return Object.keys(style_object)
+        .filter(key => style_object[key])
+        .map(key => `${key}: ${style_object[key]};`)
+        .join(' ');
+}
+
+const subscriber_queue = [];
+/**
+ * Creates a `Readable` store that allows reading by subscription.
+ * @param value initial value
+ * @param {StartStopNotifier}start start and stop notifications for subscriptions
+ */
+function readable(value, start) {
+    return {
+        subscribe: writable(value, start).subscribe
+    };
+}
+/**
+ * Create a `Writable` store that allows both updating and reading by subscription.
+ * @param {*=}value initial value
+ * @param {StartStopNotifier=}start start and stop notifications for subscriptions
+ */
+function writable(value, start = noop) {
+    let stop;
+    const subscribers = new Set();
+    function set(new_value) {
+        if (safe_not_equal(value, new_value)) {
+            value = new_value;
+            if (stop) { // store is ready
+                const run_queue = !subscriber_queue.length;
+                for (const subscriber of subscribers) {
+                    subscriber[1]();
+                    subscriber_queue.push(subscriber, value);
+                }
+                if (run_queue) {
+                    for (let i = 0; i < subscriber_queue.length; i += 2) {
+                        subscriber_queue[i][0](subscriber_queue[i + 1]);
+                    }
+                    subscriber_queue.length = 0;
+                }
+            }
+        }
+    }
+    function update(fn) {
+        set(fn(value));
+    }
+    function subscribe(run, invalidate = noop) {
+        const subscriber = [run, invalidate];
+        subscribers.add(subscriber);
+        if (subscribers.size === 1) {
+            stop = start(set) || noop;
+        }
+        run(value);
+        return () => {
+            subscribers.delete(subscriber);
+            if (subscribers.size === 0) {
+                stop();
+                stop = null;
+            }
+        };
+    }
+    return { set, update, subscribe };
+}
+function derived(stores, fn, initial_value) {
+    const single = !Array.isArray(stores);
+    const stores_array = single
+        ? [stores]
+        : stores;
+    const auto = fn.length < 2;
+    return readable(initial_value, (set) => {
+        let inited = false;
+        const values = [];
+        let pending = 0;
+        let cleanup = noop;
+        const sync = () => {
+            if (pending) {
+                return;
+            }
+            cleanup();
+            const result = fn(single ? values[0] : values, set);
+            if (auto) {
+                set(result);
+            }
+            else {
+                cleanup = is_function(result) ? result : noop;
+            }
+        };
+        const unsubscribers = stores_array.map((store, i) => subscribe(store, (value) => {
+            values[i] = value;
+            pending &= ~(1 << i);
+            if (inited) {
+                sync();
+            }
+        }, () => {
+            pending |= (1 << i);
+        }));
+        inited = true;
+        sync();
+        return function stop() {
+            run_all(unsubscribers);
+            cleanup();
+        };
+    });
+}
+
+const LOCATION = {};
+const ROUTER = {};
+
+/**
+ * Adapted from https://github.com/reach/router/blob/b60e6dd781d5d3a4bdaaf4de665649c0f6a7e78d/src/lib/history.js
+ *
+ * https://github.com/reach/router/blob/master/LICENSE
+ * */
+
+function getLocation(source) {
+  return {
+    ...source.location,
+    state: source.history.state,
+    key: (source.history.state && source.history.state.key) || "initial"
+  };
+}
+
+function createHistory(source, options) {
+  const listeners = [];
+  let location = getLocation(source);
+
+  return {
+    get location() {
+      return location;
+    },
+
+    listen(listener) {
+      listeners.push(listener);
+
+      const popstateListener = () => {
+        location = getLocation(source);
+        listener({ location, action: "POP" });
+      };
+
+      source.addEventListener("popstate", popstateListener);
+
+      return () => {
+        source.removeEventListener("popstate", popstateListener);
+
+        const index = listeners.indexOf(listener);
+        listeners.splice(index, 1);
+      };
+    },
+
+    navigate(to, { state, replace = false } = {}) {
+      state = { ...state, key: Date.now() + "" };
+      // try...catch iOS Safari limits to 100 pushState calls
+      try {
+        if (replace) {
+          source.history.replaceState(state, null, to);
+        } else {
+          source.history.pushState(state, null, to);
+        }
+      } catch (e) {
+        source.location[replace ? "replace" : "assign"](to);
+      }
+
+      location = getLocation(source);
+      listeners.forEach(listener => listener({ location, action: "PUSH" }));
+    }
+  };
+}
+
+// Stores history entries in memory for testing or other platforms like Native
+function createMemorySource(initialPathname = "/") {
+  let index = 0;
+  const stack = [{ pathname: initialPathname, search: "" }];
+  const states = [];
+
+  return {
+    get location() {
+      return stack[index];
+    },
+    addEventListener(name, fn) {},
+    removeEventListener(name, fn) {},
+    history: {
+      get entries() {
+        return stack;
+      },
+      get index() {
+        return index;
+      },
+      get state() {
+        return states[index];
+      },
+      pushState(state, _, uri) {
+        const [pathname, search = ""] = uri.split("?");
+        index++;
+        stack.push({ pathname, search });
+        states.push(state);
+      },
+      replaceState(state, _, uri) {
+        const [pathname, search = ""] = uri.split("?");
+        stack[index] = { pathname, search };
+        states[index] = state;
+      }
+    }
+  };
+}
+
+// Global history uses window.history as the source if available,
+// otherwise a memory history
+const canUseDOM = Boolean(
+  typeof window !== "undefined" &&
+    window.document &&
+    window.document.createElement
+);
+const globalHistory = createHistory(canUseDOM ? window : createMemorySource());
+
+/**
+ * Adapted from https://github.com/reach/router/blob/b60e6dd781d5d3a4bdaaf4de665649c0f6a7e78d/src/lib/utils.js
+ *
+ * https://github.com/reach/router/blob/master/LICENSE
+ * */
+
+const paramRe = /^:(.+)/;
+
+const SEGMENT_POINTS = 4;
+const STATIC_POINTS = 3;
+const DYNAMIC_POINTS = 2;
+const SPLAT_PENALTY = 1;
+const ROOT_POINTS = 1;
+
+/**
+ * Check if `string` starts with `search`
+ * @param {string} string
+ * @param {string} search
+ * @return {boolean}
+ */
+function startsWith(string, search) {
+  return string.substr(0, search.length) === search;
+}
+
+/**
+ * Check if `segment` is a root segment
+ * @param {string} segment
+ * @return {boolean}
+ */
+function isRootSegment(segment) {
+  return segment === "";
+}
+
+/**
+ * Check if `segment` is a dynamic segment
+ * @param {string} segment
+ * @return {boolean}
+ */
+function isDynamic(segment) {
+  return paramRe.test(segment);
+}
+
+/**
+ * Check if `segment` is a splat
+ * @param {string} segment
+ * @return {boolean}
+ */
+function isSplat(segment) {
+  return segment[0] === "*";
+}
+
+/**
+ * Split up the URI into segments delimited by `/`
+ * @param {string} uri
+ * @return {string[]}
+ */
+function segmentize(uri) {
+  return (
+    uri
+      // Strip starting/ending `/`
+      .replace(/(^\/+|\/+$)/g, "")
+      .split("/")
+  );
+}
+
+/**
+ * Strip `str` of potential start and end `/`
+ * @param {string} str
+ * @return {string}
+ */
+function stripSlashes(str) {
+  return str.replace(/(^\/+|\/+$)/g, "");
+}
+
+/**
+ * Score a route depending on how its individual segments look
+ * @param {object} route
+ * @param {number} index
+ * @return {object}
+ */
+function rankRoute(route, index) {
+  const score = route.default
+    ? 0
+    : segmentize(route.path).reduce((score, segment) => {
+        score += SEGMENT_POINTS;
+
+        if (isRootSegment(segment)) {
+          score += ROOT_POINTS;
+        } else if (isDynamic(segment)) {
+          score += DYNAMIC_POINTS;
+        } else if (isSplat(segment)) {
+          score -= SEGMENT_POINTS + SPLAT_PENALTY;
+        } else {
+          score += STATIC_POINTS;
+        }
+
+        return score;
+      }, 0);
+
+  return { route, score, index };
+}
+
+/**
+ * Give a score to all routes and sort them on that
+ * @param {object[]} routes
+ * @return {object[]}
+ */
+function rankRoutes(routes) {
+  return (
+    routes
+      .map(rankRoute)
+      // If two routes have the exact same score, we go by index instead
+      .sort((a, b) =>
+        a.score < b.score ? 1 : a.score > b.score ? -1 : a.index - b.index
+      )
+  );
+}
+
+/**
+ * Ranks and picks the best route to match. Each segment gets the highest
+ * amount of points, then the type of segment gets an additional amount of
+ * points where
+ *
+ *  static > dynamic > splat > root
+ *
+ * This way we don't have to worry about the order of our routes, let the
+ * computers do it.
+ *
+ * A route looks like this
+ *
+ *  { path, default, value }
+ *
+ * And a returned match looks like:
+ *
+ *  { route, params, uri }
+ *
+ * @param {object[]} routes
+ * @param {string} uri
+ * @return {?object}
+ */
+function pick(routes, uri) {
+  let match;
+  let default_;
+
+  const [uriPathname] = uri.split("?");
+  const uriSegments = segmentize(uriPathname);
+  const isRootUri = uriSegments[0] === "";
+  const ranked = rankRoutes(routes);
+
+  for (let i = 0, l = ranked.length; i < l; i++) {
+    const route = ranked[i].route;
+    let missed = false;
+
+    if (route.default) {
+      default_ = {
+        route,
+        params: {},
+        uri
+      };
+      continue;
+    }
+
+    const routeSegments = segmentize(route.path);
+    const params = {};
+    const max = Math.max(uriSegments.length, routeSegments.length);
+    let index = 0;
+
+    for (; index < max; index++) {
+      const routeSegment = routeSegments[index];
+      const uriSegment = uriSegments[index];
+
+      if (routeSegment !== undefined && isSplat(routeSegment)) {
+        // Hit a splat, just grab the rest, and return a match
+        // uri:   /files/documents/work
+        // route: /files/* or /files/*splatname
+        const splatName = routeSegment === "*" ? "*" : routeSegment.slice(1);
+
+        params[splatName] = uriSegments
+          .slice(index)
+          .map(decodeURIComponent)
+          .join("/");
+        break;
+      }
+
+      if (uriSegment === undefined) {
+        // URI is shorter than the route, no match
+        // uri:   /users
+        // route: /users/:userId
+        missed = true;
+        break;
+      }
+
+      let dynamicMatch = paramRe.exec(routeSegment);
+
+      if (dynamicMatch && !isRootUri) {
+        const value = decodeURIComponent(uriSegment);
+        params[dynamicMatch[1]] = value;
+      } else if (routeSegment !== uriSegment) {
+        // Current segments don't match, not dynamic, not splat, so no match
+        // uri:   /users/123/settings
+        // route: /users/:id/profile
+        missed = true;
+        break;
+      }
+    }
+
+    if (!missed) {
+      match = {
+        route,
+        params,
+        uri: "/" + uriSegments.slice(0, index).join("/")
+      };
+      break;
+    }
+  }
+
+  return match || default_ || null;
+}
+
+/**
+ * Check if the `path` matches the `uri`.
+ * @param {string} path
+ * @param {string} uri
+ * @return {?object}
+ */
+function match(route, uri) {
+  return pick([route], uri);
+}
+
+/**
+ * Add the query to the pathname if a query is given
+ * @param {string} pathname
+ * @param {string} [query]
+ * @return {string}
+ */
+function addQuery(pathname, query) {
+  return pathname + (query ? `?${query}` : "");
+}
+
+/**
+ * Resolve URIs as though every path is a directory, no files. Relative URIs
+ * in the browser can feel awkward because not only can you be "in a directory",
+ * you can be "at a file", too. For example:
+ *
+ *  browserSpecResolve('foo', '/bar/') => /bar/foo
+ *  browserSpecResolve('foo', '/bar') => /foo
+ *
+ * But on the command line of a file system, it's not as complicated. You can't
+ * `cd` from a file, only directories. This way, links have to know less about
+ * their current path. To go deeper you can do this:
+ *
+ *  <Link to="deeper"/>
+ *  // instead of
+ *  <Link to=`{${props.uri}/deeper}`/>
+ *
+ * Just like `cd`, if you want to go deeper from the command line, you do this:
+ *
+ *  cd deeper
+ *  # not
+ *  cd $(pwd)/deeper
+ *
+ * By treating every path as a directory, linking to relative paths should
+ * require less contextual information and (fingers crossed) be more intuitive.
+ * @param {string} to
+ * @param {string} base
+ * @return {string}
+ */
+function resolve(to, base) {
+  // /foo/bar, /baz/qux => /foo/bar
+  if (startsWith(to, "/")) {
+    return to;
+  }
+
+  const [toPathname, toQuery] = to.split("?");
+  const [basePathname] = base.split("?");
+  const toSegments = segmentize(toPathname);
+  const baseSegments = segmentize(basePathname);
+
+  // ?a=b, /users?b=c => /users?a=b
+  if (toSegments[0] === "") {
+    return addQuery(basePathname, toQuery);
+  }
+
+  // profile, /users/789 => /users/789/profile
+  if (!startsWith(toSegments[0], ".")) {
+    const pathname = baseSegments.concat(toSegments).join("/");
+
+    return addQuery((basePathname === "/" ? "" : "/") + pathname, toQuery);
+  }
+
+  // ./       , /users/123 => /users/123
+  // ../      , /users/123 => /users
+  // ../..    , /users/123 => /
+  // ../../one, /a/b/c/d   => /a/b/one
+  // .././one , /a/b/c/d   => /a/b/c/one
+  const allSegments = baseSegments.concat(toSegments);
+  const segments = [];
+
+  allSegments.forEach(segment => {
+    if (segment === "..") {
+      segments.pop();
+    } else if (segment !== ".") {
+      segments.push(segment);
+    }
+  });
+
+  return addQuery("/" + segments.join("/"), toQuery);
+}
+
+/**
+ * Combines the `basepath` and the `path` into one path.
+ * @param {string} basepath
+ * @param {string} path
+ */
+function combinePaths(basepath, path) {
+  return `${stripSlashes(
+    path === "/" ? basepath : `${stripSlashes(basepath)}/${stripSlashes(path)}`
+  )}/`;
+}
+
+/* node_modules\svelte-routing\src\Router.svelte generated by Svelte v3.48.0 */
+
+const Router = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let $location, $$unsubscribe_location;
+	let $routes, $$unsubscribe_routes;
+	let $base, $$unsubscribe_base;
+	let { basepath = "/" } = $$props;
+	let { url = null } = $$props;
+	const locationContext = getContext(LOCATION);
+	const routerContext = getContext(ROUTER);
+	const routes = writable([]);
+	$$unsubscribe_routes = subscribe(routes, value => $routes = value);
+	const activeRoute = writable(null);
+	let hasActiveRoute = false; // Used in SSR to synchronously set that a Route is active.
+
+	// If locationContext is not set, this is the topmost Router in the tree.
+	// If the `url` prop is given we force the location to it.
+	const location = locationContext || writable(url ? { pathname: url } : globalHistory.location);
+
+	$$unsubscribe_location = subscribe(location, value => $location = value);
+
+	// If routerContext is set, the routerBase of the parent Router
+	// will be the base for this Router's descendants.
+	// If routerContext is not set, the path and resolved uri will both
+	// have the value of the basepath prop.
+	const base = routerContext
+	? routerContext.routerBase
+	: writable({ path: basepath, uri: basepath });
+
+	$$unsubscribe_base = subscribe(base, value => $base = value);
+
+	const routerBase = derived([base, activeRoute], ([base, activeRoute]) => {
+		// If there is no activeRoute, the routerBase will be identical to the base.
+		if (activeRoute === null) {
+			return base;
+		}
+
+		const { path: basepath } = base;
+		const { route, uri } = activeRoute;
+
+		// Remove the potential /* or /*splatname from
+		// the end of the child Routes relative paths.
+		const path = route.default
+		? basepath
+		: route.path.replace(/\*.*$/, "");
+
+		return { path, uri };
+	});
+
+	function registerRoute(route) {
+		const { path: basepath } = $base;
+		let { path } = route;
+
+		// We store the original path in the _path property so we can reuse
+		// it when the basepath changes. The only thing that matters is that
+		// the route reference is intact, so mutation is fine.
+		route._path = path;
+
+		route.path = combinePaths(basepath, path);
+
+		if (typeof window === "undefined") {
+			// In SSR we should set the activeRoute immediately if it is a match.
+			// If there are more Routes being registered after a match is found,
+			// we just skip them.
+			if (hasActiveRoute) {
+				return;
+			}
+
+			const matchingRoute = match(route, $location.pathname);
+
+			if (matchingRoute) {
+				activeRoute.set(matchingRoute);
+				hasActiveRoute = true;
+			}
+		} else {
+			routes.update(rs => {
+				rs.push(route);
+				return rs;
+			});
+		}
+	}
+
+	function unregisterRoute(route) {
+		routes.update(rs => {
+			const index = rs.indexOf(route);
+			rs.splice(index, 1);
+			return rs;
+		});
+	}
+
+	if (!locationContext) {
+		// The topmost Router in the tree is responsible for updating
+		// the location store and supplying it through context.
+		onMount(() => {
+			const unlisten = globalHistory.listen(history => {
+				location.set(history.location);
+			});
+
+			return unlisten;
+		});
+
+		setContext(LOCATION, location);
+	}
+
+	setContext(ROUTER, {
+		activeRoute,
+		base,
+		routerBase,
+		registerRoute,
+		unregisterRoute
+	});
+
+	if ($$props.basepath === void 0 && $$bindings.basepath && basepath !== void 0) $$bindings.basepath(basepath);
+	if ($$props.url === void 0 && $$bindings.url && url !== void 0) $$bindings.url(url);
+
+	{
+		{
+			const { path: basepath } = $base;
+
+			routes.update(rs => {
+				rs.forEach(r => r.path = combinePaths(basepath, r._path));
+				return rs;
+			});
+		}
+	}
+
+	{
+		{
+			const bestMatch = pick($routes, $location.pathname);
+			activeRoute.set(bestMatch);
+		}
+	}
+
+	$$unsubscribe_location();
+	$$unsubscribe_routes();
+	$$unsubscribe_base();
+	return `${slots.default ? slots.default({}) : ``}`;
+});
+
+/* node_modules\svelte-routing\src\Route.svelte generated by Svelte v3.48.0 */
+
+const Route = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let $activeRoute, $$unsubscribe_activeRoute;
+	let $location, $$unsubscribe_location;
+	let { path = "" } = $$props;
+	let { component = null } = $$props;
+	const { registerRoute, unregisterRoute, activeRoute } = getContext(ROUTER);
+	$$unsubscribe_activeRoute = subscribe(activeRoute, value => $activeRoute = value);
+	const location = getContext(LOCATION);
+	$$unsubscribe_location = subscribe(location, value => $location = value);
+
+	const route = {
+		path,
+		// If no path prop is given, this Route will act as the default Route
+		// that is rendered if no other Route in the Router is a match.
+		default: path === ""
+	};
+
+	let routeParams = {};
+	let routeProps = {};
+	registerRoute(route);
+
+	// There is no need to unregister Routes in SSR since it will all be
+	// thrown away anyway.
+	if (typeof window !== "undefined") {
+		onDestroy(() => {
+			unregisterRoute(route);
+		});
+	}
+
+	if ($$props.path === void 0 && $$bindings.path && path !== void 0) $$bindings.path(path);
+	if ($$props.component === void 0 && $$bindings.component && component !== void 0) $$bindings.component(component);
+
+	{
+		if ($activeRoute && $activeRoute.route === route) {
+			routeParams = $activeRoute.params;
+		}
+	}
+
+	{
+		{
+			const { path, component, ...rest } = $$props;
+			routeProps = rest;
+		}
+	}
+
+	$$unsubscribe_activeRoute();
+	$$unsubscribe_location();
+
+	return `${$activeRoute !== null && $activeRoute.route === route
+	? `${component !== null
+		? `${validate_component(component || missing_component, "svelte:component").$$render($$result, Object.assign({ location: $location }, routeParams, routeProps), {}, {})}`
+		: `${slots.default
+			? slots.default({ params: routeParams, location: $location })
+			: ``}`}`
+	: ``}`;
+});
+
+/* node_modules\svelte-routing\src\Link.svelte generated by Svelte v3.48.0 */
+
+const Link = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let ariaCurrent;
+	let $$restProps = compute_rest_props($$props, ["to","replace","state","getProps"]);
+	let $location, $$unsubscribe_location;
+	let $base, $$unsubscribe_base;
+	let { to = "#" } = $$props;
+	let { replace = false } = $$props;
+	let { state = {} } = $$props;
+	let { getProps = () => ({}) } = $$props;
+	const { base } = getContext(ROUTER);
+	$$unsubscribe_base = subscribe(base, value => $base = value);
+	const location = getContext(LOCATION);
+	$$unsubscribe_location = subscribe(location, value => $location = value);
+	createEventDispatcher();
+	let href, isPartiallyCurrent, isCurrent, props;
+
+	if ($$props.to === void 0 && $$bindings.to && to !== void 0) $$bindings.to(to);
+	if ($$props.replace === void 0 && $$bindings.replace && replace !== void 0) $$bindings.replace(replace);
+	if ($$props.state === void 0 && $$bindings.state && state !== void 0) $$bindings.state(state);
+	if ($$props.getProps === void 0 && $$bindings.getProps && getProps !== void 0) $$bindings.getProps(getProps);
+	href = to === "/" ? $base.uri : resolve(to, $base.uri);
+	isPartiallyCurrent = startsWith($location.pathname, href);
+	isCurrent = href === $location.pathname;
+	ariaCurrent = isCurrent ? "page" : undefined;
+
+	props = getProps({
+		location: $location,
+		href,
+		isPartiallyCurrent,
+		isCurrent
+	});
+
+	$$unsubscribe_location();
+	$$unsubscribe_base();
+
+	return `<a${spread(
+		[
+			{ href: escape_attribute_value(href) },
+			{
+				"aria-current": escape_attribute_value(ariaCurrent)
+			},
+			escape_object(props),
+			escape_object($$restProps)
+		],
+		{}
+	)}>${slots.default ? slots.default({}) : ``}</a>`;
+});
+
+/* src\routes\Home.svelte generated by Svelte v3.48.0 */
+
+function removeBorderRadius() {
+	document.getElementById("team-1").classList.remove("top-left");
+	document.getElementById("team-1").classList.remove("top-right");
+	document.getElementById("team-2").classList.remove("top-right");
+	document.getElementById("team-4").classList.remove("top-right");
+	document.getElementById("team-17").classList.remove("bottom-left");
+	document.getElementById("team-18").classList.remove("bottom-left");
+	document.getElementById("team-19").classList.remove("bottom-left");
+	document.getElementById("team-20").classList.remove("bottom-left");
+	document.getElementById("team-20").classList.remove("bottom-right");
+}
+
+function setBorderRadius() {
+	let width = window.innerWidth;
+	removeBorderRadius();
+
+	if (width < 500) {
+		// 20 rows of 1 column
+		document.getElementById("team-1").classList.add("top-both");
+
+		document.getElementById("team-20").classList.add("bottom-both");
+	} else if (width < 1100) {
+		// 10 rows of 2 columns
+		document.getElementById("team-1").classList.add("top-left");
+
+		document.getElementById("team-2").classList.add("top-right");
+		document.getElementById("team-19").classList.add("bottom-left");
+		document.getElementById("team-20").classList.add("bottom-right");
+	} else {
+		// 5 rows of 4 columns
+		document.getElementById("team-1").classList.add("top-left");
+
+		document.getElementById("team-4").classList.add("top-right");
+		document.getElementById("team-17").classList.add("bottom-left");
+		document.getElementById("team-20").classList.add("bottom-right");
+	}
+}
+
+const Home = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	onMount(() => {
+		window.addEventListener("resize", setBorderRadius, true);
+		setBorderRadius();
+	});
+
+	return `${($$result.head += `${($$result.title = `<title>Premier League</title>`, "")}<meta name="${"description"}" content="${"Premier League Statistics Dashboard"}">`, "")}
+
+${validate_component(Router, "Router").$$render($$result, {}, {}, {
+		default: () => {
+			return `<div class="${"header"}">${validate_component(Link, "Link").$$render($$result, { to: "/" }, {}, {
+				default: () => {
+					return `<div class="${"title main-link no-decoration"}">Premier League</div>`;
+				}
+			})}</div>
+  <div class="${"page-content"}"><div class="${"teams"}">${validate_component(Link, "Link").$$render(
+				$$result,
+				{
+					to: "/manchester-city",
+					class: "team-button",
+					id: "team-1",
+					style: "background-color: var(--manchester-city);"
+				},
+				{},
+				{
+					default: () => {
+						return `<div class="${"main-link"}" style="${"color: var(--manchester-city-secondary);"}">Manchester City
+        </div>`;
+					}
+				}
+			)}
+      ${validate_component(Link, "Link").$$render(
+				$$result,
+				{
+					to: "/manchester-united",
+					class: "team-button",
+					id: "team-2",
+					style: "background-color: var(--manchester-united);"
+				},
+				{},
+				{
+					default: () => {
+						return `<div class="${"main-link"}" style="${"color: var(--manchester-united-secondary);"}">Manchester United
+        </div>`;
+					}
+				}
+			)}
+      ${validate_component(Link, "Link").$$render(
+				$$result,
+				{
+					to: "/liverpool",
+					class: "team-button",
+					id: "team-3",
+					style: "background-color: var(--liverpool);"
+				},
+				{},
+				{
+					default: () => {
+						return `<div class="${"main-link"}" style="${"color: var(--liverpool-secondary);"}">Liverpool
+        </div>`;
+					}
+				}
+			)}
+      ${validate_component(Link, "Link").$$render(
+				$$result,
+				{
+					to: "/chelsea",
+					class: "team-button",
+					id: "team-4",
+					style: "background-color: var(--chelsea);"
+				},
+				{},
+				{
+					default: () => {
+						return `<div class="${"main-link"}" style="${"color: var(--chelsea-secondary);"}">Chelsea
+        </div>`;
+					}
+				}
+			)}
+      ${validate_component(Link, "Link").$$render(
+				$$result,
+				{
+					to: "/leicester-city",
+					class: "team-button",
+					id: "team-5",
+					style: "background-color: var(--leicester-city);"
+				},
+				{},
+				{
+					default: () => {
+						return `<div class="${"main-link"}" style="${"color: var(--leicester-city-secondary);"}">Leicester
+        </div>`;
+					}
+				}
+			)}
+      ${validate_component(Link, "Link").$$render(
+				$$result,
+				{
+					to: "/west-ham-united",
+					class: "team-button",
+					id: "team-6",
+					style: "background-color: var(--west-ham-united);"
+				},
+				{},
+				{
+					default: () => {
+						return `<div class="${"main-link"}" style="${"color: var(--west-ham-united-secondary);"}">West Ham
+        </div>`;
+					}
+				}
+			)}
+      ${validate_component(Link, "Link").$$render(
+				$$result,
+				{
+					to: "/tottenham-hotspur",
+					class: "team-button",
+					id: "team-7",
+					style: "background-color: var(--tottenham-hotspur);"
+				},
+				{},
+				{
+					default: () => {
+						return `<div class="${"main-link"}" style="${"color: var(--tottenham-hotspur-secondary);"}">Spurs
+        </div>`;
+					}
+				}
+			)}
+      ${validate_component(Link, "Link").$$render(
+				$$result,
+				{
+					to: "/arsenal",
+					class: "team-button",
+					id: "team-8",
+					style: "background-color: var(--arsenal);"
+				},
+				{},
+				{
+					default: () => {
+						return `<div class="${"main-link"}" style="${"color: var(--arsenal-secondary);"}">Arsenal
+        </div>`;
+					}
+				}
+			)}
+      <a href="${"/leeds-united"}" class="${"team-button"}" id="${"team-9"}" style="${"background-color: var(--leeds-united);"}"><div class="${"main-link"}" style="${"color: var(--leeds-united-secondary);"}">Leeds United
+        </div></a>
+      <a href="${"/everton"}" class="${"team-button"}" id="${"team-10"}" style="${"background-color: var(--everton);"}"><div class="${"main-link"}" style="${"color: var(--everton-secondary);"}">Everton
+        </div></a>
+      <a href="${"/aston-villa"}" class="${"team-button"}" id="${"team-11"}" style="${"background-color: var(--aston-villa);"}"><div class="${"main-link"}" style="${"color: var(--aston-villa-secondary);"}">Aston Villa
+        </div></a>
+      <a href="${"/newcastle-united"}" class="${"team-button"}" id="${"team-12"}" style="${"background-color: var(--newcastle-united);"}"><div class="${"main-link"}" style="${"color: var(--newcastle-united-secondary);"}">Newcastle
+        </div></a>
+      <a href="${"/wolverhampton-wanderers"}" class="${"team-button"}" id="${"team-13"}" style="${"background-color: var(--wolverhampton-wanderers);"}"><div class="${"main-link"}" style="${"color: var(--wolverhampton-wanderers-secondary);"}">Wolves
+        </div></a>
+      <a href="${"/crystal-palace"}" class="${"team-button"}" id="${"team-14"}" style="${"background-color: var(--crystal-palace);"}"><div class="${"main-link"}" style="${"color: var(--crystal-palace-secondary);"}">Crystal Palace
+        </div></a>
+      <a href="${"/southampton"}" class="${"team-button"}" id="${"team-15"}" style="${"background-color: var(--southampton);"}"><div class="${"main-link"}" style="${"color: var(--southampton-secondary);"}">Southampton
+        </div></a>
+      <a href="${"/brighton-and-hove-albion"}" class="${"team-button"}" id="${"team-16"}" style="${"background-color: var(--brighton-and-hove-albion);"}"><div class="${"main-link"}" style="${"color: var(--brighton-and-hove-albion-secondary);"}">Brighton
+        </div></a>
+      <a href="${"/burnley"}" class="${"team-button"}" id="${"team-17"}" style="${"background-color: var(--burnley);"}"><div class="${"main-link"}" style="${"color: var(--burnley-secondary);"}">Burnley
+        </div></a>
+      <a href="${"/norwich-city"}" class="${"team-button"}" id="${"team-18"}" style="${"background-color: var(--norwich-city);"}"><div class="${"main-link"}" style="${"color: var(--norwich-city-secondary);"}">Norwich City
+        </div></a>
+      <a href="${"/watford"}" class="${"team-button"}" id="${"team-19"}" style="${"background-color: var(--watford);"}"><div class="${"main-link"}" style="${"color: var(--watford-secondary);"}">Watford
+        </div></a>
+      <a href="${"/brentford"}" class="${"team-button"}" id="${"team-20"}" style="${"background-color: var(--brentford);"}"><div class="${"main-link"}" style="${"color: var(--brentford-secondary);"}">Brentford
+        </div></a></div></div>`;
+		}
+	})}
+
+`;
+});
+
+/* src\components\CurrentForm.svelte generated by Svelte v3.48.0 */
+
+function toInitials(fullTeamName) {
+	switch (fullTeamName) {
+		case "Brighton and Hove Albion FC":
+			return "BHA";
+		case "Manchester City FC":
+			return "MCI";
+		case "Manchester United FC":
+			return "MUN";
+		case "Aston Villa FC":
+			return "AVL";
+		case "Sheffield United FC":
+			return "SHU";
+		case "West Bromwich Albion FC":
+			return "WBA";
+		case "West Ham United FC":
+			return "WHU";
+	}
+
+	return fullTeamName.slice(0, 3).toUpperCase();
+}
+
+const CurrentForm = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let { data, currentMatchday, fullTeamName } = $$props;
+	if ($$props.data === void 0 && $$bindings.data && data !== void 0) $$bindings.data(data);
+	if ($$props.currentMatchday === void 0 && $$bindings.currentMatchday && currentMatchday !== void 0) $$bindings.currentMatchday(currentMatchday);
+	if ($$props.fullTeamName === void 0 && $$bindings.fullTeamName && fullTeamName !== void 0) $$bindings.fullTeamName(fullTeamName);
+
+	return `<div class="${"current-form-row"}"><div class="${"icon pos-0 " + escape(data.form[fullTeamName][currentMatchday].form5.charAt(0)) + " " + escape(data.form[fullTeamName][currentMatchday].beatStarTeam
+	? 'star-team'
+	: '')}"></div>
+  <div class="${"icon pos-1 " + escape(data.form[fullTeamName][currentMatchday].form5.charAt(1)) + " " + escape(data.form[fullTeamName][currentMatchday - 1].beatStarTeam
+	? 'star-team'
+	: '')}"></div>
+  <div class="${"icon pos-2 " + escape(data.form[fullTeamName][currentMatchday].form5.charAt(2)) + " " + escape(data.form[fullTeamName][currentMatchday - 2].beatStarTeam
+	? 'star-team'
+	: '')}"></div>
+  <div class="${"icon pos-3 " + escape(data.form[fullTeamName][currentMatchday].form5.charAt(3)) + " " + escape(data.form[fullTeamName][currentMatchday - 3].beatStarTeam
+	? 'star-team'
+	: '')}"></div>
+  <div class="${"icon pos-4 " + escape(data.form[fullTeamName][currentMatchday].form5.charAt(4)) + " " + escape(data.form[fullTeamName][currentMatchday - 4].beatStarTeam
+	? 'star-team'
+	: '')}"></div></div>
+<div class="${"current-form-row"}"><div class="${"icon-name pos-0"}">${escape(toInitials(data.form[fullTeamName][currentMatchday].team))}</div>
+  <div class="${"icon-name pos-1"}">${escape(toInitials(data.form[fullTeamName][currentMatchday - 1].team))}</div>
+  <div class="${"icon-name pos-2"}">${escape(toInitials(data.form[fullTeamName][currentMatchday - 2].team))}</div>
+  <div class="${"icon-name pos-3"}">${escape(toInitials(data.form[fullTeamName][currentMatchday - 3].team))}</div>
+  <div class="${"icon-name pos-4"}">${escape(toInitials(data.form[fullTeamName][currentMatchday - 4].team))}</div></div>
+<div class="${"current-form"}">Current form: ${escape((data.form[fullTeamName][currentMatchday].formRating5 * 100).toFixed(2))}%
+</div>`;
+});
+
+/* src\components\TableSnippet.svelte generated by Svelte v3.48.0 */
+
+function tableSnippetRange(sortedTeams, fullTeamName) {
+	let teamStandingsIdx = sortedTeams.indexOf(fullTeamName);
+	let low = teamStandingsIdx - 3;
+	let high = teamStandingsIdx + 4;
+
+	if (low < 0) {
+		let overflow = low;
+		high -= overflow;
+		low = 0;
+	}
+
+	if (high > sortedTeams.length - 1) {
+		let overflow = high - sortedTeams.length;
+		low -= overflow;
+		high = sortedTeams.length;
+	}
+
+	return [low, high];
+}
+
+function getTableSnippet(data, fullTeamName) {
+	let sortedTeams = Object.keys(data.standings).sort(function (teamA, teamB) {
+		return data.standings[teamB][data.currentSeason].points - data.standings[teamA][data.currentSeason].points;
+	});
+
+	let [low, high] = tableSnippetRange(sortedTeams, fullTeamName);
+	let teamTableIdx;
+	let rows = [];
+
+	for (let i = low; i < high; i++) {
+		if (sortedTeams[i] == fullTeamName) {
+			teamTableIdx = i - low;
+		}
+
+		rows.push({
+			name: sortedTeams[i],
+			position: data.standings[sortedTeams[i]][data.currentSeason].position,
+			points: data.standings[sortedTeams[i]][data.currentSeason].points,
+			gd: data.standings[sortedTeams[i]][data.currentSeason].gD
+		});
+	}
+
+	return { teamTableIdx, rows };
+}
+
+const TableSnippet = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let tableSnippet;
+
+	onMount(() => {
+		tableSnippet = getTableSnippet(data, fullTeamName);
+	});
+
+	let { data, team, fullTeamName } = $$props;
+	if ($$props.data === void 0 && $$bindings.data && data !== void 0) $$bindings.data(data);
+	if ($$props.team === void 0 && $$bindings.team && team !== void 0) $$bindings.team(team);
+	if ($$props.fullTeamName === void 0 && $$bindings.fullTeamName && fullTeamName !== void 0) $$bindings.fullTeamName(fullTeamName);
+
+	return `<div class="${"table-snippet"}">${tableSnippet != undefined
+	? `<div class="${"divider"}"></div>
+    <div class="${"table-row"}"><div class="${"table-element table-position column-title"}"></div>
+      <div class="${"table-element table-team-name column-title"}">Team</div>
+      <div class="${"table-element table-gd column-title"}">GD</div>
+      <div class="${"table-element table-points column-title"}">Points</div></div>
+
+    ${each(Array(tableSnippet.rows.length), (_, i) => {
+			return `
+      ${i == 0
+			? `${i != tableSnippet.teamTableIdx
+				? `<div id="${"divider"}"></div>`
+				: ``}`
+			: `${i - 1 != tableSnippet.teamTableIdx && i != tableSnippet.teamTableIdx
+				? `<div id="${"divider"}"></div>`
+				: ``}`}
+
+      
+      ${i == tableSnippet.teamTableIdx
+			? `
+        <div class="${"table-row this-team"}" style="${"background-color: var(--" + escape(team) + ");"}"><div class="${"table-element table-position this-team"}" style="${"color: var(--" + escape(team) + "-secondary);"}">${escape(tableSnippet.rows[i].position)}</div>
+          <div class="${"table-element table-team-name this-team"}" style="${"color: var(--" + escape(team) + "-secondary);"}">${escape(tableSnippet.rows[i].name)}</div>
+          <div class="${"table-element table-gd this-team"}" style="${"color: var(--" + escape(team) + "-secondary);"}">${escape(tableSnippet.rows[i].gd)}</div>
+          <div class="${"table-element table-points this-team"}" style="${"color: var(--" + escape(team) + "-secondary);"}">${escape(tableSnippet.rows[i].points)}</div>
+        </div>`
+			: `
+        <div class="${"table-row"}"><div class="${"table-element table-position"}">${escape(tableSnippet.rows[i].position)}</div>
+          <div class="${"table-element table-team-name"}">${escape(tableSnippet.rows[i].name)}</div>
+          <div class="${"table-element table-gd"}">${escape(tableSnippet.rows[i].gd)}</div>
+          <div class="${"table-element table-points"}">${escape(tableSnippet.rows[i].points)}</div>
+        </div>`}`;
+		})}
+    ${tableSnippet.teamTableIdx != 6
+		? `<div id="${"divider"}"></div>`
+		: ``}`
+	: ``}</div>`;
+});
+
+/* src\components\NextGame.svelte generated by Svelte v3.48.0 */
+
+const NextGame = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let { data, currentMatchday, fullTeamName } = $$props;
+	if ($$props.data === void 0 && $$bindings.data && data !== void 0) $$bindings.data(data);
+	if ($$props.currentMatchday === void 0 && $$bindings.currentMatchday && currentMatchday !== void 0) $$bindings.currentMatchday(currentMatchday);
+	if ($$props.fullTeamName === void 0 && $$bindings.fullTeamName && fullTeamName !== void 0) $$bindings.fullTeamName(fullTeamName);
+
+	return `<div class="${"next-game-prediction row-graph"}" style="${"border: 6px solid var(--" + escape(data.upcoming[fullTeamName].nextTeam) + ");"}">${data.upcoming[fullTeamName].nextTeam != null
+	? `
+    <div class="${"next-game-title"}" style="${"background-color: var(--" + escape(data.upcoming[fullTeamName].nextTeam.replace(' FC', '').toLowerCase().replace(' ', '-')) + ");"}"><h1 class="${"next-game-title-text"}" style="${"color: var(--" + escape(data.upcoming[fullTeamName].nextTeam.replace(' FC', '').toLowerCase().replace(' ', '-')) + "-secondary);"}">Next Game:
+        ${validate_component(Link, "Link").$$render(
+			$$result,
+			{
+				to: "/" + data.upcoming[fullTeamName].nextTeam.replace(' FC', '').toLowerCase().replace(' ', '-')
+			},
+			{},
+			{
+				default: () => {
+					return `<div class="${"no-decoration"}" style="${"color: inherit"}">${escape(data.upcoming[fullTeamName].nextTeam)}</div>`;
+				}
+			}
+		)}<span class="${"parenthesis"}">(</span>${escape(data.upcoming[fullTeamName].atHome)}<span class="${"parenthesis"}">)</span></h1></div>`
+	: `
+    <div class="${"next-game-season-complete"}"><h1 class="${"next-game-title-text"}">${escape(data.currentSeason)}/${escape(data.currentSeason + 1)} SEASON COMPLETE
+      </h1></div>`}</div>
+
+${data.upcoming[fullTeamName].nextTeam != null
+	? `<div class="${"next-game-values"}"><div class="${"predictions-and-logo"}"><div class="${"next-game-logo opposition-badge"}" style="${"background-image: url('" + escape(data.logoURLs[data.upcoming[fullTeamName].nextTeam]) + "'); background-repeat: no-repeat; background-size: contain; background-position: center;"}"></div>
+      <div class="${"predictions"}"><div class="${"next-game-item"}">Current form:
+          <b>${escape(data.form[data.upcoming[fullTeamName].nextTeam][currentMatchday].formRating5)}%</b></div>
+        <div class="${"next-game-item"}">Score prediction
+          <br>
+          <a class="${"predictions-link"}" href="${"/predictions"}"><b>${escape(data.upcoming.prediction.scoreline)}</b></a>
+          <br>
+          <span class="${"accuracy-item"}">Predicting with accuracy:
+            <b>${escape(data.upcoming.prediction[fullTeamName].accuracy)}%</b></span><br>
+          <div class="${"accuracy-item"}">General results accuracy:
+            <b>${escape(data.upcoming.prediction[fullTeamName].resultsAccuracy)}%</b></div></div></div></div>
+    <div class="${"past-results"}">${data.upcoming[fullTeamName].previousMatches.length == 0
+		? `<div class="${"next-game-item prev-results-title"}">No Previous Results</div>`
+		: `<div class="${"next-game-item prev-results-title"}">Previous Results</div>`}
+
+      
+      ${each(data.upcoming[fullTeamName].previousMatches, prevMatch => {
+			return `<div class="${"next-game-item " + escape(prevMatch.oppTeam)}"><div class="${"past-result"}"><div class="${"home-team"}">${escape(prevMatch.homeTeam)}</div>
+            <div class="${"score"}">${escape(prevMatch.homeGoals)} - ${escape(prevMatch.awayGoals)}</div>
+            <div class="${"away-team"}">${escape(prevMatch.awayTeam)}</div></div>
+          <div style="${"clear: both"}"></div>
+          <div class="${"past-result-date"}">${escape(prevMatch.date)}</div>
+        </div>`;
+		})}</div></div>`
+	: ``}`;
+});
+
+/* src\components\SeasonStats.svelte generated by Svelte v3.48.0 */
+
+function ordinal(n) {
+	var ord = [,"st", "nd", "rd"];
+	var a = n % 100;
+	return n + (ord[a > 20 ? a % 10 : a] || "th");
+}
+
+function getStatsRank(data, attribute, fullTeamName, reverse) {
+	let sorted = Object.keys(data.seasonStats).sort(function (a, b) {
+		return data.seasonStats[b][attribute] - data.seasonStats[a][attribute];
+	});
+
+	let rank = sorted.indexOf(fullTeamName) + 1;
+
+	if (reverse) {
+		rank = 21 - rank;
+	}
+
+	return rank;
+}
+
+function getStatsRankings(data, fullTeamName) {
+	let xGRank = ordinal(getStatsRank(data, "xG", fullTeamName, false));
+
+	// Reverse - lower rank the better
+	let xCRank = ordinal(getStatsRank(data, "xC", fullTeamName, true));
+
+	let cleanSheetRatioRank = ordinal(getStatsRank(data, "cleanSheetRatio", fullTeamName, false));
+
+	return {
+		xG: xGRank,
+		xC: xCRank,
+		cleanSheetRatio: cleanSheetRatioRank
+	};
+}
+
+const SeasonStats = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	function setPositionalOffset() {
+		document.documentElement.style.setProperty("--ssp1-offset", -ssp1.clientWidth / 2 + "px");
+		document.documentElement.style.setProperty("--ssp2-offset", -ssp2.clientWidth / 2 + "px");
+		document.documentElement.style.setProperty("--ssp3-offset", -ssp3.clientWidth / 2 + "px");
+	}
+
+	let ssp1, ssp2, ssp3;
+	let rank = { xG: "", xC: "", cleanSheetRatio: "" };
+
+	onMount(() => {
+		rank = getStatsRankings(data, fullTeamName);
+
+		// Keep ordinal values at the correct offset
+		window.addEventListener("resize", setPositionalOffset);
+
+		// Once rank values have updated, init positional offset for ordinal values
+		setTimeout(
+			function () {
+				setPositionalOffset();
+			},
+			0
+		);
+	});
+
+	let { data, fullTeamName } = $$props;
+	if ($$props.data === void 0 && $$bindings.data && data !== void 0) $$bindings.data(data);
+	if ($$props.fullTeamName === void 0 && $$bindings.fullTeamName && fullTeamName !== void 0) $$bindings.fullTeamName(fullTeamName);
+
+	return `<div class="${"season-stats"}"><div class="${"season-stat goals-per-game"}"><div class="${"season-stat-value"}">${escape(data.seasonStats[fullTeamName].xG)}
+      <div class="${"season-stat-position ssp-" + escape(rank.xG)}" id="${"ssp1"}"${add_attribute("this", ssp1, 0)}>${escape(rank.xG)}</div></div>
+      <div class="${"season-stat-text"}">goals per game</div></div>
+    <div class="${"season-stat conceded-per-game"}"><div class="${"season-stat-value"}">${escape(data.seasonStats[fullTeamName].xC)}
+        <div class="${"season-stat-position ssp-" + escape(rank.xC)}" id="${"ssp2"}"${add_attribute("this", ssp2, 0)}>${escape(rank.xC)}</div></div>
+      <div class="${"season-stat-text"}">conceded per game</div></div>
+    <div class="${"season-stat clean-sheet-ratio"}"><div class="${"season-stat-value"}">${escape(data.seasonStats[fullTeamName].cleanSheetRatio)}
+        <div class="${"season-stat-position ssp-" + escape(rank.cleanSheetRatio)}" id="${"ssp3"}"${add_attribute("this", ssp3, 0)}>${escape(rank.cleanSheetRatio)}</div></div>
+      <div class="${"season-stat-text"}">clean sheets</div></div></div>`;
+});
+
+/* src\components\TeamsFooter.svelte generated by Svelte v3.48.0 */
+
+const TeamsFooter = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let { lastUpdated } = $$props;
+	if ($$props.lastUpdated === void 0 && $$bindings.lastUpdated && lastUpdated !== void 0) $$bindings.lastUpdated(lastUpdated);
+
+	return `<div class="${"teams-footer footer-text-colour"}"><a class="${"ko-fi"}" href="${"https://ko-fi.com/C0C069FOI"}" target="${"_blank"}"><img class="${"ko-fi-img"}" src="${"img/kofi.png"}" alt="${""}">
+    <div class="${"ko-fi-text"}">Support Me</div></a>
+  <div class="${"teams-footer-bottom"}">${lastUpdated != null
+	? `<div class="${"last-updated"}">${escape(lastUpdated)} UTC</div>`
+	: ``}
+    <div class="${"footer-details"}"><div class="${"footer-detail footer-text-colour"}">Data provided by
+        <a class="${"footer-text-colour underline"}" href="${"https://www.football-data.org/"}">football-data.org</a></div>
+      <div class="${"footer-detail footer-text-colour"}">Graphs created using
+        <a class="${"footer-text-colour underline"}" href="${"https://plotly.com/"}">Plotly</a></div>
+      <div class="${"footer-detail footer-text-colour"}">Font made from
+        <a class="${"footer-text-colour"}" href="${"http://www.onlinewebfonts.com"}">oNline Web Fonts</a>
+        is licensed by CC BY 3.0
+      </div></div>
+    <div class="${"footer-bottom"}"><div class="${"created-by footer-text-colour"}">Created by Tom Draper</div>
+      <div class="${"version footer-text-colour"}">v2.0</div></div></div></div>`;
+});
+
+/* src\components\Fixtures.svelte generated by Svelte v3.48.0 */
+
+function getMatchDetail(match) {
+	let matchDetail;
+	let homeAway = match.atHome ? "Home" : "Away";
+
+	if (match.score != null) {
+		matchDetail = `${match.team} (${homeAway}) ${match.score}`;
+	} else {
+		matchDetail = `${match.team} (${homeAway})`;
+	}
+
+	return matchDetail;
+}
+
+function sortByMatchDate(x, y, details) {
+	let list = [];
+
+	for (let i = 0; i < x.length; i++) {
+		list.push({ x: x[i], y: y[i], details: details[i] });
+	}
+
+	list.sort(function (a, b) {
+		return a.x < b.x ? -1 : a.x == b.x ? 0 : 1;
+	});
+
+	for (let i = 0; i < list.length; i++) {
+		x[i] = list[i].x;
+		y[i] = list[i].y;
+		details[i] = list[i].details;
+	}
+}
+
+function increaseNextGameMarker(sizes, x, now, bigMarkerSize) {
+	// Get matchday date with smallest time difference to now
+	let nextGameIdx;
+
+	let minDiff = Number.POSITIVE_INFINITY;
+
+	for (let i = 0; i < x.length; i++) {
+		let diff = x[i] - now;
+
+		if (0 < diff && diff < minDiff) {
+			minDiff = diff;
+			nextGameIdx = i;
+		}
+	}
+
+	// Increase marker size of next game
+	if (nextGameIdx != undefined) {
+		sizes[nextGameIdx] = bigMarkerSize;
+	}
+
+	return sizes;
+}
+
+function getGraphData$4(data, fullTeamName) {
+	// Build data to create a fixtures line graph displaying the date along the
+	// x-axis and opponent strength along the y-axis
+	let x = [];
+
+	let y = [];
+	let details = [];
+
+	for (let matchday = 1; matchday <= 38; matchday++) {
+		let match = data.fixtures[fullTeamName][matchday];
+		x.push(new Date(match.date));
+		let oppTeamRating = data.teamRatings[match.team].totalRating;
+
+		if (match.atHome) {
+			// If team playing at home, decrease opposition rating by the amount of home advantage the team gains
+			oppTeamRating *= 1 - data.homeAdvantages[match.team].totalHomeAdvantage;
+		}
+
+		y.push(oppTeamRating * 100);
+		let matchDetail = getMatchDetail(match);
+		details.push(matchDetail);
+	}
+
+	sortByMatchDate(x, y, details);
+	let now = Date.now();
+	let sizes = Array(x.length).fill(14);
+	sizes = increaseNextGameMarker(sizes, x, now, 26);
+	let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
+	let yLabels = Array.from(Array(11), (_, i) => i * 10);
+	let minX = new Date(x[0]);
+	minX.setDate(minX.getDate() - 10);
+	let maxX = new Date(Math.max(x[x.length - 1], now));
+	maxX.setDate(maxX.getDate() + 10);
+
+	let graphData = {
+		data: [
+			{
+				x,
+				y,
+				type: "scatter",
+				mode: "lines+markers",
+				text: details,
+				line: { color: "#737373" },
+				marker: {
+					size: sizes,
+					colorscale: [
+						[0, "#01c626"],
+						[0.1, "#08a825"],
+						[0.2, "#0b7c20"],
+						[0.3, "#0a661b"],
+						[0.4, "#064411"],
+						[0.5, "#000000"],
+						[0.6, "#5b1d15"],
+						[0.7, "#85160f"],
+						[0.8, "#ad1a10"],
+						[0.9, "#db1a0d"],
+						[1, "#fc1303"]
+					],
+					color: y
+				},
+				customdata: matchdays,
+				hovertemplate: "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>"
+			}
+		],
+		layout: {
+			title: false,
+			autosize: true,
+			margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
+			hovermode: "closest",
+			plot_bgcolor: "#fafafa",
+			paper_bgcolor: "#fafafa",
+			yaxis: {
+				title: { text: "Team Rating" },
+				gridcolor: "gray",
+				showline: false,
+				zeroline: false,
+				fixedrange: true,
+				ticktext: yLabels,
+				tickvals: yLabels
+			},
+			xaxis: {
+				linecolor: "black",
+				showgrid: false,
+				showline: false,
+				range: [minX, maxX],
+				fixedrange: true
+			},
+			shapes: [
+				{
+					type: "line",
+					x0: now,
+					y0: -4,
+					x1: now,
+					y1: 104,
+					line: { color: "black", dash: "dot", width: 1 }
+				}
+			]
+		},
+		config: {
+			responsive: true,
+			showSendToCloud: false,
+			displayModeBar: false
+		}
+	};
+
+	return graphData;
+}
+
+const Fixtures = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let plotDiv;
+	let graphData;
+
+	onMount(() => {
+		graphData = getGraphData$4(data, fullTeamName);
+		new Plotly.newPlot(plotDiv, graphData.data, graphData.layout, graphData.config);
+	});
+
+	let { data, fullTeamName } = $$props;
+	if ($$props.data === void 0 && $$bindings.data && data !== void 0) $$bindings.data(data);
+	if ($$props.fullTeamName === void 0 && $$bindings.fullTeamName && fullTeamName !== void 0) $$bindings.fullTeamName(fullTeamName);
+	return `<div id="${"plotly"}"><div id="${"plotDiv"}"${add_attribute("this", plotDiv, 0)}></div></div>`;
+});
+
+/* src\components\FormOverTime.svelte generated by Svelte v3.48.0 */
+
+function getLine$1(data, x, teamName, isMainTeam) {
+	let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
+	let y = [];
+
+	for (let i = 1; i <= 38; i++) {
+		let form = data.form[teamName][i].formRating5;
+		y.push(form * 100);
+	}
+
+	let lineVal;
+
+	if (isMainTeam) {
+		// Get team primary colour from css variable
+		let teamKey = teamName.replace(' FC', '');
+
+		teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
+		teamKey = teamKey.replace(/ ([A-Z])/g, '-$1').toLowerCase();
+		let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
+		lineVal = { color: lineColor, width: 4 };
+	} else {
+		lineVal = { color: '#d3d3d3' };
+	}
+
+	let line = {
+		x,
+		y,
+		name: teamName,
+		mode: 'lines',
+		line: lineVal,
+		text: matchdays,
+		hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
+		// hoverinfo: 'x+y',
+		showlegend: false
+	};
+
+	return line;
+}
+
+function getMatchdayDates$3(data) {
+	// Find median matchday date across all teams for each matchday
+	let x = [];
+
+	for (let i = 1; i <= 38; i++) {
+		let matchdayDates = [];
+
+		for (let team of data.teamNames) {
+			matchdayDates.push(data.fixtures[team][i].date);
+		}
+
+		matchdayDates = matchdayDates.map(val => {
+			return new Date(val);
+		});
+
+		matchdayDates = matchdayDates.sort();
+		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
+	}
+
+	x.sort(function (a, b) {
+		return a - b;
+	});
+
+	return x;
+}
+
+function getGraphData$3(data, fullTeamName) {
+	let x = getMatchdayDates$3(data); // All lines use the same x
+	let lines = [];
+
+	for (let i = 0; i < data.teamNames.length; i++) {
+		if (data.teamNames[i] != fullTeamName) {
+			let line = getLine$1(data, x, data.teamNames[i], false);
+			lines.push(line);
+		}
+	}
+
+	// Add this team last to ensure it overlaps all other lines
+	let line = getLine$1(data, x, fullTeamName, true);
+
+	lines.push(line);
+	let yLabels = Array.from(Array(11), (_, i) => i * 10);
+
+	let graphData = {
+		data: lines,
+		layout: {
+			title: false,
+			autosize: true,
+			margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
+			hovermode: "closest",
+			plot_bgcolor: "#fafafa",
+			paper_bgcolor: "#fafafa",
+			yaxis: {
+				title: { text: "Form Rating" },
+				gridcolor: "gray",
+				showgrid: false,
+				showline: false,
+				zeroline: false,
+				fixedrange: true,
+				ticktext: yLabels,
+				tickvals: yLabels
+			},
+			xaxis: {
+				linecolor: "black",
+				showgrid: false,
+				showline: false,
+				fixedrange: true
+			}
+		},
+		config: {
+			responsive: true,
+			showSendToCloud: false,
+			displayModeBar: false
+		}
+	};
+
+	return graphData;
+}
+
+const FormOverTime = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let plotDiv;
+	let graphData;
+
+	onMount(() => {
+		graphData = getGraphData$3(data, fullTeamName);
+		new Plotly.newPlot(plotDiv, graphData.data, graphData.layout, graphData.config);
+	});
+
+	let { data, fullTeamName } = $$props;
+	if ($$props.data === void 0 && $$bindings.data && data !== void 0) $$bindings.data(data);
+	if ($$props.fullTeamName === void 0 && $$bindings.fullTeamName && fullTeamName !== void 0) $$bindings.fullTeamName(fullTeamName);
+	return `<div id="${"plotly"}"><div id="${"plotDiv"}"${add_attribute("this", plotDiv, 0)}></div></div>`;
+});
+
+/* src\components\PositionOverTime.svelte generated by Svelte v3.48.0 */
+
+function getLine(data, x, teamName, isMainTeam) {
+	let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
+	let y = [];
+
+	for (let i = 1; i <= 38; i++) {
+		let position = data.form[teamName][i].position;
+		y.push(position);
+	}
+
+	let lineVal;
+
+	if (isMainTeam) {
+		// Get team primary colour from css variable
+		let teamKey = teamName.replace(' FC', '');
+
+		teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
+		teamKey = teamKey.replace(/ ([A-Z])/g, '-$1').toLowerCase();
+		let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
+		lineVal = { color: lineColor, width: 4 };
+	} else {
+		lineVal = { color: '#d3d3d3' };
+	}
+
+	let line = {
+		x,
+		y,
+		name: teamName,
+		mode: 'lines',
+		line: lineVal,
+		text: matchdays,
+		hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
+		// hoverinfo: 'x+y',
+		showlegend: false
+	};
+
+	return line;
+}
+
+function getMatchdayDates$2(data) {
+	// Find median matchday date across all teams for each matchday
+	let x = [];
+
+	for (let i = 1; i <= 38; i++) {
+		let matchdayDates = [];
+
+		data.teamNames.forEach(team => {
+			matchdayDates.push(data.fixtures[team][i].date);
+		});
+
+		matchdayDates = matchdayDates.map(val => {
+			return new Date(val);
+		});
+
+		matchdayDates = matchdayDates.sort();
+		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
+	}
+
+	x.sort(function (a, b) {
+		return a - b;
+	});
+
+	return x;
+}
+
+function getGraphData$2(data, fullTeamName) {
+	let x = getMatchdayDates$2(data); // All lines use the same x
+	let lines = [];
+
+	for (let i = 0; i < data.teamNames.length; i++) {
+		if (data.teamNames[i] != fullTeamName) {
+			let line = getLine(data, x, data.teamNames[i], false);
+			lines.push(line);
+		}
+	}
+
+	// Add this team last to ensure it overlaps all other lines
+	let line = getLine(data, x, fullTeamName, true);
+
+	lines.push(line);
+	let yLabels = Array.from(Array(20), (_, i) => i + 1);
+
+	let graphData = {
+		data: lines,
+		layout: {
+			title: false,
+			autosize: true,
+			margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
+			hovermode: "closest",
+			plot_bgcolor: "#fafafa",
+			paper_bgcolor: "#fafafa",
+			yaxis: {
+				title: { text: "Form Rating" },
+				gridcolor: "gray",
+				showgrid: false,
+				showline: false,
+				zeroline: false,
+				autorange: 'reversed',
+				fixedrange: true,
+				ticktext: yLabels,
+				tickvals: yLabels
+			},
+			xaxis: {
+				linecolor: "black",
+				showgrid: false,
+				showline: false,
+				fixedrange: true
+			},
+			shapes: [
+				{
+					type: "rect",
+					x0: x[0],
+					y0: 4.5,
+					x1: x[x.length - 1],
+					y1: 0.5,
+					line: { width: 0 },
+					fillcolor: '#77DD77',
+					opacity: 0.3,
+					layer: 'below'
+				},
+				{
+					type: "rect",
+					x0: x[0],
+					y0: 6.5,
+					x1: x[x.length - 1],
+					y1: 4.5,
+					line: { width: 0 },
+					fillcolor: '#4CDEEE',
+					opacity: 0.3,
+					layer: 'below'
+				},
+				{
+					type: "rect",
+					x0: x[0],
+					y0: 20.5,
+					x1: x[x.length - 1],
+					y1: 17.5,
+					line: { width: 0 },
+					fillcolor: '#C23B22',
+					opacity: 0.3,
+					layer: 'below'
+				}
+			]
+		},
+		config: {
+			responsive: true,
+			showSendToCloud: false,
+			displayModeBar: false
+		}
+	};
+
+	return graphData;
+}
+
+const PositionOverTime = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let plotDiv;
+	let graphData;
+
+	onMount(() => {
+		graphData = getGraphData$2(data, fullTeamName);
+		new Plotly.newPlot(plotDiv, graphData.data, graphData.layout, graphData.config);
+	});
+
+	let { data, fullTeamName } = $$props;
+	if ($$props.data === void 0 && $$bindings.data && data !== void 0) $$bindings.data(data);
+	if ($$props.fullTeamName === void 0 && $$bindings.fullTeamName && fullTeamName !== void 0) $$bindings.fullTeamName(fullTeamName);
+	return `<div id="${"plotly"}"><div id="${"plotDiv"}"${add_attribute("this", plotDiv, 0)}></div></div>`;
+});
+
+/* src\components\GoalsScoredAndConceded.svelte generated by Svelte v3.48.0 */
+
+function getAvgGoalsPerGame(data) {
+	let avgGoals = {};
+
+	for (let team of data.teamNames) {
+		for (let matchday of Object.keys(data.form[team])) {
+			let [h, _, a] = data.form[team][matchday].score.split(' ');
+			h = parseInt(h);
+			a = parseInt(a);
+
+			if (matchday in avgGoals) {
+				avgGoals[matchday] += h + a;
+			} else {
+				avgGoals[matchday] = h + a;
+			}
+		}
+	}
+
+	// Divide by number of teams to get avg goals per gameweek
+	for (let matchday of Object.keys(avgGoals)) {
+		avgGoals[matchday] /= 20;
+	}
+
+	return avgGoals;
+}
+
+function getTeamGoalsPerGame(data, team) {
+	let scored = {};
+	let conceded = {};
+
+	for (let matchday of Object.keys(data.form[team])) {
+		let [h, _, a] = data.form[team][matchday].score.split(' ');
+		h = parseInt(h);
+		a = parseInt(a);
+
+		if (data.form[team][matchday].atHome) {
+			scored[matchday] = h;
+			conceded[matchday] = a;
+		} else {
+			scored[matchday] = a;
+			conceded[matchday] = h;
+		}
+	}
+
+	return [scored, conceded];
+}
+
+function getMatchdayDates$1(data) {
+	// Find median matchday date across all teams for each matchday
+	let x = [];
+
+	for (let i = 1; i <= 38; i++) {
+		let matchdayDates = [];
+
+		for (let team of data.teamNames) {
+			matchdayDates.push(data.fixtures[team][i].date);
+		}
+
+		matchdayDates = matchdayDates.map(val => {
+			return new Date(val);
+		});
+
+		matchdayDates = matchdayDates.sort();
+		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
+	}
+
+	x.sort(function (a, b) {
+		return a - b;
+	});
+
+	return x;
+}
+
+function getGraphData$1(data, fullTeamName) {
+	let avgGoals = getAvgGoalsPerGame(data);
+	let x = getMatchdayDates$1(data);
+	let matchdays = Object.keys(avgGoals);
+	let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
+
+	let graphData = {
+		data: [
+			{
+				name: 'Scored',
+				type: 'bar',
+				x,
+				y: Object.values(teamScored),
+				text: matchdays,
+				marker: { color: '#77DD77' },
+				hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>'
+			},
+			{
+				name: 'Conceded',
+				type: 'bar',
+				x,
+				y: Object.values(teamConceded),
+				text: matchdays,
+				marker: { color: 'C23B22' },
+				hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>'
+			},
+			{
+				name: 'Avg',
+				type: 'line',
+				x,
+				y: Object.values(avgGoals),
+				text: matchdays,
+				hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals<extra></extra>',
+				line: { color: '#0080FF', width: 2 }
+			}
+		],
+		layout: {
+			title: false,
+			autosize: true,
+			margin: { r: 20, l: 50, t: 0, b: 15, pad: 5 },
+			barmode: 'stack',
+			hovermode: 'closest',
+			plot_bgcolor: "#fafafa",
+			paper_bgcolor: "#fafafa",
+			yaxis: {
+				title: { text: "Goals Scored" },
+				gridcolor: "gray",
+				showgrid: false,
+				showline: false,
+				zeroline: false,
+				fixedrange: true
+			},
+			xaxis: {
+				linecolor: "black",
+				showgrid: false,
+				showline: false,
+				fixedrange: true,
+				showticklabels: false
+			},
+			legend: { x: 1, xanchor: 'right', y: 1 }
+		},
+		config: {
+			responsive: true,
+			showSendToCloud: false,
+			displayModeBar: false
+		}
+	};
+
+	return graphData;
+}
+
+const GoalsScoredAndConceded = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let plotDiv;
+	let graphData;
+
+	onMount(() => {
+		graphData = getGraphData$1(data, fullTeamName);
+		new Plotly.newPlot(plotDiv, graphData.data, graphData.layout, graphData.config);
+	});
+
+	let { data, fullTeamName } = $$props;
+	if ($$props.data === void 0 && $$bindings.data && data !== void 0) $$bindings.data(data);
+	if ($$props.fullTeamName === void 0 && $$bindings.fullTeamName && fullTeamName !== void 0) $$bindings.fullTeamName(fullTeamName);
+	return `<div id="${"plotly"}"><div id="${"plotDiv"}"${add_attribute("this", plotDiv, 0)}></div></div>`;
+});
+
+/* src\components\CleanSheets.svelte generated by Svelte v3.48.0 */
+
+function getTeamCleanSheets(data, team) {
+	let notCleanSheets = [];
+	let cleanSheets = [];
+
+	for (let matchday of Object.keys(data.form[team])) {
+		let [h, _, a] = data.form[team][matchday].score.split(' ');
+		h = parseInt(h);
+		a = parseInt(a);
+
+		if (data.form[team][matchday].atHome) {
+			if (a > 0) {
+				notCleanSheets.push(1);
+				cleanSheets.push(0);
+			} else {
+				cleanSheets.push(1);
+				notCleanSheets.push(0);
+			}
+		} else {
+			if (h > 0) {
+				notCleanSheets.push(1);
+				cleanSheets.push(0);
+			} else {
+				cleanSheets.push(1);
+				notCleanSheets.push(0);
+			}
+		}
+	}
+
+	return [cleanSheets, notCleanSheets];
+}
+
+function getMatchdayDates(data) {
+	// Find median matchday date across all teams for each matchday
+	let x = [];
+
+	for (let i = 1; i <= 38; i++) {
+		let matchdayDates = [];
+
+		for (let team of data.teamNames) {
+			matchdayDates.push(data.fixtures[team][i].date);
+		}
+
+		matchdayDates = matchdayDates.map(val => {
+			return new Date(val);
+		});
+
+		matchdayDates = matchdayDates.sort();
+		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
+	}
+
+	x.sort(function (a, b) {
+		return a - b;
+	});
+
+	return x;
+}
+
+function getGraphData(data, fullTeamName) {
+	let x = getMatchdayDates(data);
+	let matchdays = Object.keys(data.form[fullTeamName]);
+	let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, fullTeamName);
+
+	let graphData = {
+		data: [
+			{
+				name: 'Clean sheets',
+				type: 'bar',
+				x,
+				y: cleanSheets,
+				text: matchdays,
+				marker: { color: '#77DD77' },
+				hovertemplate: '<b>Clean sheet<extra></extra>',
+				showlegend: false
+			},
+			// {
+			//   name: 'Avg',
+			//   type: 'scatter',
+			//   mode: 'lines',
+			//   x: x,
+			//   y: Array(matchdays.length).fill(0.5),
+			//   hoverinfo: 'skip',
+			//   line: {color: '#9b9b9b', width: 2},
+			//   showlegend: false
+			// },
+			{
+				name: 'Conceded',
+				type: 'bar',
+				x,
+				y: notCleanSheets,
+				text: matchdays,
+				marker: { color: 'C23B22' },
+				hovertemplate: '<b>Goals conceded<extra></extra>',
+				showlegend: false
+			}
+		],
+		layout: {
+			title: false,
+			autosize: true,
+			height: 60,
+			margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
+			hovermode: 'closest',
+			plot_bgcolor: "#fafafa",
+			paper_bgcolor: "#fafafa",
+			yaxis: {
+				title: { text: "" },
+				showticklabels: false,
+				gridcolor: "gray",
+				showgrid: false,
+				showline: false,
+				zeroline: false,
+				fixedrange: true
+			},
+			xaxis: {
+				linecolor: "black",
+				showgrid: false,
+				showline: false,
+				fixedrange: true
+			},
+			shapes: [
+				{
+					type: 'line',
+					x0: x[0],
+					y0: 0.5,
+					x1: x[x.length - 1],
+					y1: 0.5,
+					layer: 'below',
+					line: { color: '#d3d3d3', width: 2 }
+				}
+			]
+		},
+		config: {
+			responsive: true,
+			showSendToCloud: false,
+			displayModeBar: false
+		}
+	};
+
+	return graphData;
+}
+
+const CleanSheets = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let plotDiv;
+	let graphData;
+
+	onMount(() => {
+		graphData = getGraphData(data, fullTeamName);
+		new Plotly.newPlot(plotDiv, graphData.data, graphData.layout, graphData.config);
+	});
+
+	let { data, fullTeamName } = $$props;
+	if ($$props.data === void 0 && $$bindings.data && data !== void 0) $$bindings.data(data);
+	if ($$props.fullTeamName === void 0 && $$bindings.fullTeamName && fullTeamName !== void 0) $$bindings.fullTeamName(fullTeamName);
+	return `<div id="${"plotly"}"><div id="${"plotDiv"}"${add_attribute("this", plotDiv, 0)}></div></div>`;
+});
+
+/* src\components\GoalsScoredFreq.svelte generated by Svelte v3.48.0 */
+
+const GoalsScoredFreq = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	function getGraphData() {
+		let xLabels = Object.keys(goalFreq);
+
+		let graphData = {
+			data: [
+				{
+					x: Object.keys(goalFreq),
+					y: Object.values(goalFreq),
+					type: 'bar',
+					name: 'Avg',
+					marker: { color: '#d3d3d3' },
+					line: { width: 0 },
+					hovertemplate: '%{x} goals: %{y}<extra></extra>',
+					hoverinfo: 'x+y'
+				},
+				{
+					x: Object.keys(teamScoredFreq),
+					y: Object.values(teamScoredFreq),
+					type: 'bar',
+					name: 'Goals scored',
+					marker: { color: '#77DD77' },
+					line: { width: 0 },
+					hovertemplate: '%{x} goals: %{y}<extra></extra>',
+					hoverinfo: 'x+y',
+					opacity: 0.6
+				}
+			],
+			layout: {
+				title: false,
+				autosize: true,
+				margin: { r: 0, l: 50, t: 0, b: 40, pad: 5 },
+				hovermode: "closest",
+				barmode: 'overlay',
+				bargap: 0,
+				plot_bgcolor: "#fafafa",
+				paper_bgcolor: "#fafafa",
+				yaxis: {
+					title: { text: "Frequency" },
+					gridcolor: "gray",
+					showgrid: false,
+					showline: false,
+					zeroline: false,
+					fixedrange: true
+				},
+				xaxis: {
+					title: { text: 'Goals Scored' },
+					linecolor: "black",
+					showgrid: false,
+					showline: false,
+					fixedrange: true,
+					ticktext: xLabels,
+					tickvals: xLabels
+				},
+				legend: { x: 1, xanchor: 'right', y: 0.95 }
+			},
+			config: {
+				responsive: true,
+				showSendToCloud: false,
+				displayModeBar: false
+			}
+		};
+
+		return graphData;
+	}
+
+	let plotDiv, graphData;
+
+	onMount(() => {
+		graphData = getGraphData();
+		new Plotly.newPlot(plotDiv, graphData.data, graphData.layout, graphData.config);
+	});
+
+	let { goalFreq, teamScoredFreq } = $$props;
+	if ($$props.goalFreq === void 0 && $$bindings.goalFreq && goalFreq !== void 0) $$bindings.goalFreq(goalFreq);
+	if ($$props.teamScoredFreq === void 0 && $$bindings.teamScoredFreq && teamScoredFreq !== void 0) $$bindings.teamScoredFreq(teamScoredFreq);
+	return `<div id="${"plotly"}"><div id="${"plotDiv"}"${add_attribute("this", plotDiv, 0)}></div></div>`;
+});
+
+/* src\components\GoalsConcededFreq.svelte generated by Svelte v3.48.0 */
+
+const GoalsConcededFreq = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	function getGraphData() {
+		let xLabels = Object.keys(goalFreq);
+
+		let graphData = {
+			data: [
+				{
+					x: Object.keys(goalFreq),
+					y: Object.values(goalFreq),
+					type: 'bar',
+					name: 'Avg',
+					marker: { color: '#d3d3d3' },
+					line: { width: 0 },
+					hovertemplate: '%{x} goals: %{y}<extra></extra>',
+					hoverinfo: 'x+y'
+				},
+				{
+					x: Object.keys(teamConcededFreq),
+					y: Object.values(teamConcededFreq),
+					type: 'bar',
+					name: 'Goals conceded',
+					marker: { color: '#C23B22' },
+					line: { width: 0 },
+					hovertemplate: '%{x} goals: %{y}<extra></extra>',
+					hoverinfo: 'x+y',
+					opacity: 0.6
+				}
+			],
+			layout: {
+				title: false,
+				autosize: true,
+				margin: { r: 0, l: 50, t: 0, b: 40, pad: 5 },
+				hovermode: "closest",
+				barmode: 'overlay',
+				bargap: 0,
+				plot_bgcolor: "#fafafa",
+				paper_bgcolor: "#fafafa",
+				yaxis: {
+					title: { text: "Frequency" },
+					gridcolor: "gray",
+					showgrid: false,
+					showline: false,
+					zeroline: false,
+					fixedrange: true
+				},
+				xaxis: {
+					title: { text: 'Goals Conceded' },
+					linecolor: "black",
+					showgrid: false,
+					showline: false,
+					fixedrange: true,
+					ticktext: xLabels,
+					tickvals: xLabels
+				},
+				legend: { x: 1, xanchor: 'right', y: 0.95 }
+			},
+			config: {
+				responsive: true,
+				showSendToCloud: false,
+				displayModeBar: false
+			}
+		};
+
+		return graphData;
+	}
+
+	let plotDiv, graphData;
+
+	onMount(() => {
+		graphData = getGraphData();
+		new Plotly.newPlot(plotDiv, graphData.data, graphData.layout, graphData.config);
+	});
+
+	let { goalFreq, teamConcededFreq } = $$props;
+	if ($$props.goalFreq === void 0 && $$bindings.goalFreq && goalFreq !== void 0) $$bindings.goalFreq(goalFreq);
+	if ($$props.teamConcededFreq === void 0 && $$bindings.teamConcededFreq && teamConcededFreq !== void 0) $$bindings.teamConcededFreq(teamConcededFreq);
+	return `<div id="${"plotly"}"><div id="${"plotDiv"}"${add_attribute("this", plotDiv, 0)}></div></div>`;
+});
+
+/* src\components\GoalFrequencies.svelte generated by Svelte v3.48.0 */
+
+function avgGoalFrequencies(data) {
+	let goalFreq = {};
+
+	for (let team of data.teamNames) {
+		for (let matchday of Object.keys(data.form[team])) {
+			let score = data.form[team][matchday].score;
+
+			if (score != "None - None") {
+				let [h, _, a] = score.split(" ");
+
+				// Also collect opposition goals scored
+				if (data.form[team][matchday].atHome) {
+					if (h in goalFreq) {
+						goalFreq[h] += 1;
+					} else {
+						goalFreq[h] = 1;
+					}
+
+					if (a in goalFreq) {
+						goalFreq[a] += 1;
+					} else {
+						goalFreq[a] = 1;
+					}
+				}
+			}
+		}
+	}
+
+	// Divide by number of teams to get avg
+	for (let goals of Object.keys(goalFreq)) {
+		goalFreq[goals] /= 20;
+	}
+
+	return goalFreq;
+}
+
+function teamScoredFrequencies(data, team) {
+	let goalFreq = {};
+
+	for (let matchday of Object.keys(data.form[team])) {
+		let score = data.form[team][matchday].score;
+
+		if (score != "None - None") {
+			let [h, _, a] = score.split(" ");
+
+			if (data.form[team][matchday].atHome) {
+				if (h in goalFreq) {
+					goalFreq[h] += 1;
+				} else {
+					goalFreq[h] = 1;
+				}
+			} else {
+				if (a in goalFreq) {
+					goalFreq[a] += 1;
+				} else {
+					goalFreq[a] = 1;
+				}
+			}
+		}
+	}
+
+	return goalFreq;
+}
+
+function teamConcededFrequencies(data, team) {
+	let goalFreq = {};
+
+	for (let matchday of Object.keys(data.form[team])) {
+		let score = data.form[team][matchday].score;
+
+		if (score != "None - None") {
+			let [h, _, a] = score.split(" ");
+
+			if (data.form[team][matchday].atHome) {
+				if (a in goalFreq) {
+					goalFreq[a] += 1;
+				} else {
+					goalFreq[a] = 1;
+				}
+			} else {
+				if (h in goalFreq) {
+					goalFreq[h] += 1;
+				} else {
+					goalFreq[h] = 1;
+				}
+			}
+		}
+	}
+
+	return goalFreq;
+}
+
+const GoalFrequencies = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let goalFreq, teamScoredFreq, teamConcededFreq;
+
+	onMount(() => {
+		goalFreq = avgGoalFrequencies(data);
+		teamScoredFreq = teamScoredFrequencies(data, fullTeamName);
+		teamConcededFreq = teamConcededFrequencies(data, fullTeamName);
+	});
+
+	let { data, fullTeamName } = $$props;
+	if ($$props.data === void 0 && $$bindings.data && data !== void 0) $$bindings.data(data);
+	if ($$props.fullTeamName === void 0 && $$bindings.fullTeamName && fullTeamName !== void 0) $$bindings.fullTeamName(fullTeamName);
+
+	return `<div class="${"two-graphs"}"><div class="${"graph freq-graph mini-graph"}">${teamScoredFreq != undefined
+	? `${validate_component(GoalsScoredFreq, "GoalsScoredFreq").$$render($$result, { goalFreq, teamScoredFreq }, {}, {})}`
+	: ``}</div>
+  <div class="${"graph freq-graph mini-graphh"}">${teamConcededFreq != undefined
+	? `${validate_component(GoalsConcededFreq, "GoalsConcededFreq").$$render($$result, { goalFreq, teamConcededFreq }, {}, {})}`
+	: ``}</div></div>`;
+});
+
+/* src\routes\Team.svelte generated by Svelte v3.48.0 */
+
+function toTitleCase(str) {
+	return str.toLowerCase().split(" ").map(function (word) {
+		return word.charAt(0).toUpperCase() + word.slice(1);
+	}).join(" ");
+}
+
+function getCurrentMatchday(data, fullTeamName) {
+	return Object.keys(data.form[fullTeamName]).reduce((a, b) => data.form[fullTeamName][a] > data.form[fullTeamName][b]
+	? a
+	: b);
+}
+
+async function fetchData$1(address) {
+	const response = await fetch(address);
+	let json = await response.json();
+	return json;
+}
+
+const Team = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let fullTeamName = "";
+	let currentMatchday;
+	let data;
+
+	onMount(() => {
+		fullTeamName = toTitleCase(team.replace(/\-/g, " ")) + " FC";
+
+		fetchData$1("https://pldashboard.herokuapp.com/teams").then(json => {
+			// Build teamData package from json data
+			currentMatchday = getCurrentMatchday(json, fullTeamName);
+
+			data = json;
+			console.log(data);
+		});
+	});
+
+	let { team } = $$props;
+	if ($$props.team === void 0 && $$bindings.team && team !== void 0) $$bindings.team(team);
+
+	return `${($$result.head += `${($$result.title = `<title>${escape(fullTeamName)}</title>`, "")}<meta name="${"description"}" content="${"Premier League Statistics Dashboard"}">`, "")}
+
+${validate_component(Router, "Router").$$render($$result, {}, {}, {
+		default: () => {
+			return `<div class="${"header"}" style="${"background-color: var(--" + escape(team) + ");"}"><div class="${"main-link title no-decoration"}" style="${"color: var(--" + escape(team + '-secondary') + ");"}">${escape(fullTeamName)}</div></div>
+
+  ${data != undefined
+			? `<div class="${"page-content"}"><div class="${"row"}"><div class="${"row-left position-and-badge"}" style="${"background-image: url('" + escape(data.logoURLs[fullTeamName]) + "')"}"><div class="${"position"}">${escape(data.standings[fullTeamName][data.currentSeason].position)}</div></div>
+        <div class="${"fixtures-graph row-graph"}"><h1 class="${"lowered"}">Fixtures</h1>
+          <div class="${"graph mini-graph"}">${validate_component(Fixtures, "Fixtures").$$render($$result, { data, fullTeamName }, {}, {})}</div></div></div>
+
+      <div class="${"row"}"><div class="${"row-left form-details"}">${validate_component(CurrentForm, "CurrentForm").$$render($$result, { data, currentMatchday, fullTeamName }, {}, {})}
+          ${validate_component(TableSnippet, "TableSnippet").$$render($$result, { data, team, fullTeamName }, {}, {})}</div>
+        ${validate_component(NextGame, "NextGame").$$render($$result, { data, currentMatchday, fullTeamName }, {}, {})}</div>
+
+      <div class="${"row"}"><div class="${"form-graph row-graph"}"><h1 class="${"lowered"}">Form Over Time</h1>
+          <div class="${"graph full-row-graph"}" style="${"height: auto"}">${validate_component(FormOverTime, "FormOverTime").$$render($$result, { data, fullTeamName }, {}, {})}</div></div></div>
+
+      <div class="${"row"}"><div class="${"position-over-time-graph row-graph"}"><h1 class="${"lowered"}">Position Over Time</h1>
+          <div class="${"graph full-row-graph"}">${validate_component(PositionOverTime, "PositionOverTime").$$render($$result, { data, fullTeamName }, {}, {})}</div></div></div>
+
+      <div class="${"row no-bottom-margin"}" style="${"margin-bottom: 0"}"><div class="${"goals-scored-vs-conceded-graph row-graph"}"><h1 class="${"lowered"}">Goals Scored and Conceded</h1>
+          <div class="${"graph full-row-graph"}">${validate_component(GoalsScoredAndConceded, "GoalsScoredAndConceded").$$render($$result, { data, fullTeamName }, {}, {})}</div></div></div>
+      
+      <div class="${"row"}"><div class="${"row-graph"}"><div class="${"clean-sheets graph full-row-graph"}">${validate_component(CleanSheets, "CleanSheets").$$render($$result, { data, fullTeamName }, {}, {})}
+            </div></div></div>
+
+      <div class="${"season-stats-row"}">${validate_component(SeasonStats, "SeasonStats").$$render($$result, { data, fullTeamName }, {}, {})}</div>
+
+      <div class="${"row"}"><div class="${"goals-freq-row row-graph"}"><h1>Goals Per Game</h1>
+          ${validate_component(GoalFrequencies, "GoalFrequencies").$$render($$result, { data, fullTeamName }, {}, {})}</div></div>
+
+      ${validate_component(TeamsFooter, "TeamsFooter").$$render($$result, { lastUpdated: data.lastUpdated }, {}, {})}</div>`
+			: `<div class="${"loading-spinner-container"}"><div class="${"loading-spinner"}"></div></div>`}`;
+		}
+	})}`;
+});
+
+/* src\routes\Predictions.svelte generated by Svelte v3.48.0 */
+
+async function fetchData(address) {
+	const response = await fetch(address);
+	let json = await response.json();
+	return json;
+}
+
+function identicalScore(prediction, actual) {
+	return Math.round(prediction.homeGoals) == actual.homeGoals && Math.round(prediction.awayGoals) == actual.awayGoals;
+}
+
+function sameResult(prediction, actual) {
+	return prediction.homeGoals > prediction.awayGoals && actual.homeGoals > actual.awayGoals || prediction.homeGoals == prediction.awayGoals && actual.homeGoals == actual.awayGoals || prediction.homeGoals < prediction.awayGoals && actual.homeGoals < actual.awayGoals;
+}
+
+function insertColours(json) {
+	for (let i = 0; i < json.predictions.length; i++) {
+		for (let j = 0; j < json.predictions[i].predictions.length; j++) {
+			let prediction = json.predictions[i].predictions[j];
+
+			if (prediction.actual != null) {
+				if (identicalScore(prediction.prediction, prediction.actual)) {
+					prediction.colour = 'green';
+				} else if (sameResult(prediction.prediction, prediction.actual)) {
+					prediction.colour = 'yellow';
+				} else {
+					prediction.colour = 'red';
+				}
+			}
+		}
+	}
+}
+
+function datetimeToTime(datetime) {
+	let date = new Date(datetime);
+	date = date.toTimeString().slice(0, 5);
+	return date;
+}
+
+function sortByDate(json) {
+	json.predictions.sort((a, b) => {
+		return new Date(b._id) - new Date(a._id);
+	});
+
+	// Sort each day of predictions by time
+	for (let i = 0; i < json.predictions.length; i++) {
+		json.predictions[i].predictions.sort((a, b) => {
+			return new Date(a._id) - new Date(b._id);
+		});
+	}
+}
+
+const Predictions = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let data;
+
+	onMount(() => {
+		fetchData("https://pldashboard.herokuapp.com/predictions").then(json => {
+			sortByDate(json);
+			insertColours(json);
+			console.log(json);
+			data = json;
+			console.log(data.predictions);
+		});
+	});
+
+	return `${($$result.head += `${($$result.title = `<title>Predictions</title>`, "")}<meta name="${"description"}" content="${"Premier League Statistics Dashboard"}">`, "")}
+
+${validate_component(Router, "Router").$$render($$result, {}, {}, {
+		default: () => {
+			return `<div class="${"predictions-header"}">${validate_component(Link, "Link").$$render(
+				$$result,
+				{
+					class: "predictions-title main-link",
+					style: "text-decoration: none",
+					to: "/predictions"
+				},
+				{},
+				{
+					default: () => {
+						return `Predictions`;
+					}
+				}
+			)}</div>
+
+  ${data != undefined
+			? `<div class="${"page-content"}"><div class="${"accuracy-display"}"><div class="${"accuracy"}"><span class="${"accuracy-item"}">Predicting with accuracy: <b>${escape((data.accuracy.scoreAccuracy * 100).toFixed(2))}%</b></span><br>
+          <div class="${"accuracy-item"}">General results accuracy: <b>${escape((data.accuracy.resultAccuracy * 100).toFixed(2))}%</b></div></div></div>
+
+      <div class="${"predictions-container"}"><div class="${"predictions"}">${data.predictions != null
+				? `${each(data.predictions, ({ _id, predictions }) => {
+						return `<div class="${"date"}">${escape(_id)}</div>
+              <div class="${"medium-predictions-divider"}"></div>
+              
+              ${each(predictions, pred => {
+							return `<button class="${"prediction-container " + escape(pred.colour)}"><div class="${"prediction prediction-item"}"><div class="${"prediction-label"}">Predicted:</div>
+                    <div class="${"prediction-value"}"><div class="${"prediction-initials"}">${escape(pred.home)}</div>
+                      <div class="${"prediction-score"}">${escape(Math.round(pred.prediction.homeGoals))} - ${escape(Math.round(pred.prediction.awayGoals))}</div>
+                      <div class="${"prediction-initials"}">${escape(pred.away)}</div>
+                    </div></div>
+                  ${pred.actual != null
+							? `<div class="${"actual prediction-item"}"><div class="${"prediction-label"}">Actual:</div>
+                      <div class="${"prediction-value"}"><div class="${"prediction-initials"}">${escape(pred.home)}</div>
+                        <div class="${"prediction-score"}">${escape(pred.actual.homeGoals)} - ${escape(pred.actual.awayGoals)}</div>
+                        <div class="${"prediction-initials"}">${escape(pred.away)}</div></div>
+                    </div>`
+							: `<div class="${"prediction-time"}">${escape(datetimeToTime(pred.datetime))}</div>`}
+
+                  
+                  ${pred.prediction != null
+							? `<div class="${"prediction-details"}"${add_attribute("id", pred._id, 0)}><div class="${"detailed-predicted-score"}"><b>${escape(pred.prediction.homeGoals)} - ${escape(pred.prediction.awayGoals)}</b></div>
+                    </div>`
+							: ``}
+                </button>`;
+						})}
+              <div class="${"predictions-gap"}"></div>`;
+					})}`
+				: ``}</div></div></div>
+
+    <div class="${"predictions-footer footer-text-colour"}"><div class="${"method-description"}">Predictions are calculated using previous results and then adjusting by
+        recent form and home advantage.
+      </div>
+      </div>`
+			: `<div class="${"loading-spinner-container"}"><div class="${"loading-spinner"}"></div></div>`}`;
+		}
+	})}`;
+});
+
+/* src\App.svelte generated by Svelte v3.48.0 */
+
+const App = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+	let { url = "" } = $$props;
+	if ($$props.url === void 0 && $$bindings.url && url !== void 0) $$bindings.url(url);
+
+	return `${validate_component(Router, "Router").$$render($$result, { url }, {}, {
+		default: () => {
+			return `${validate_component(Route, "Route").$$render($$result, { path: "/", component: Home }, {}, {})}
+  ${validate_component(Route, "Route").$$render(
+				$$result,
+				{
+					path: "/predictions",
+					component: Predictions
+				},
+				{},
+				{}
+			)}
+  ${validate_component(Route, "Route").$$render($$result, { path: "/:team" }, {}, {
+				default: ({ params }) => {
+					return `${validate_component(Team, "Team").$$render($$result, { team: params.team }, {}, {})}`;
+				}
+			})}`;
+		}
+	})}`;
+});
+
+module.exports = App;
