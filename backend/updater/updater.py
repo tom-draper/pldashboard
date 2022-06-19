@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 from timebudget import timebudget
 
 from data import Data
-from visualiser import Visualiser
+# from visualiser import Visualiser
 
 
 class Updater:
@@ -21,10 +21,9 @@ class Updater:
         self.current_season = current_season
         self.data = Data(current_season)
         self.database = Database()
-        self.visualiser = Visualiser()
 
         # Import environment variables
-        __file__ = 'data.py'
+        __file__ = 'updater.py'
         dotenv_path = join(dirname(__file__), '.env')
         load_dotenv(dotenv_path)
         self.url = os.getenv('URL')
@@ -161,14 +160,14 @@ class Updater:
             update_db=update_db
         )
 
-    def save_tables(self):
-        self.data.standings._save_to_html()
-        self.data.fixtures._save_to_html()
-        self.data.team_ratings._save_to_html()
-        self.data.home_advantages._save_to_html()
-        self.data.form._save_to_html()
-        self.data.upcoming._save_to_html()
-        self.data.season_stats._save_to_html()
+    # def save_tables(self):
+    #     self.data.standings._save_to_html()
+    #     self.data.fixtures._save_to_html()
+    #     self.data.team_ratings._save_to_html()
+    #     self.data.home_advantages._save_to_html()
+    #     self.data.form._save_to_html()
+    #     self.data.upcoming._save_to_html()
+    #     self.data.season_stats._save_to_html()
     
     
     def save_team_data_to_database(self):
