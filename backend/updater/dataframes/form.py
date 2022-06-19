@@ -1,9 +1,11 @@
-from dataframes.df import DF
-from pandas import DataFrame
-from utils.utilities import Utilities
-from timebudget import timebudget
 from collections import defaultdict
+
 import pandas as pd
+from pandas import DataFrame
+from timebudget import timebudget
+from utils.utilities import Utilities
+
+from dataframes.df import DF
 from dataframes.fixtures import Fixtures
 from dataframes.standings import Standings
 from dataframes.team_ratings import TeamRatings

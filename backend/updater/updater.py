@@ -13,7 +13,6 @@ from dotenv import load_dotenv
 from timebudget import timebudget
 
 from data import Data
-# from visualiser import Visualiser
 
 
 class Updater:
@@ -220,7 +219,7 @@ class Updater:
             if update_db:
                 pass
                 # TODO: Save predictions to database...
-                #self.predictions.save_to_database()
+                #self.database.update_predictions(predictions)
 
 
 if __name__ == "__main__":
