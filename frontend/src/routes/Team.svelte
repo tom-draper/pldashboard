@@ -9,9 +9,9 @@
   import Fixtures from "../components/Fixtures.svelte";
   import FormOverTime from "../components/FormOverTime.svelte";
   import PositionOverTime from "../components/PositionOverTime.svelte";
-  import GoalsScoredAndConceded from "../components/GoalsScoredAndConceded.svelte";
-  import CleanSheets from "../components/CleanSheets.svelte";
-  import GoalFrequencies from "../components/GoalFrequencies.svelte";
+  import GoalsScoredAndConceded from "../components/goals_scored_and_conceded/GoalsScoredAndConceded.svelte";
+  import CleanSheets from "../components/goals_scored_and_conceded/CleanSheets.svelte";
+  import GoalFrequencies from "../components/goals_per_game/GoalsPerGame.svelte";
 
   function toTitleCase(str) {
     return str

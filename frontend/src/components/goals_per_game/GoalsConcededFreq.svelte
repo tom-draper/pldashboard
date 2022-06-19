@@ -13,17 +13,17 @@
           name: 'Avg',
           marker: {color: '#d3d3d3'},
           line: {width: 0},
-          hovertemplate: '%{x} goals: %{y}<extra></extra>',
+          hovertemplate: '%{x} goals in %{y} games<extra></extra>',
           hoverinfo: 'x+y'
         },
         {
-          x: Object.keys(teamScoredFreq),
-          y: Object.values(teamScoredFreq),
+          x: Object.keys(teamConcededFreq),
+          y: Object.values(teamConcededFreq),
           type: 'bar',
-          name: 'Goals scored',
-          marker: {color: '#77DD77'},
+          name: 'Goals conceded',
+          marker: {color: '#C23B22'},
           line: {width: 0},
-          hovertemplate: '%{x} goals: %{y}<extra></extra>',
+          hovertemplate: '%{x} goals in %{y} games<extra></extra>',
           hoverinfo: 'x+y',
           opacity: 0.6,
 
@@ -47,7 +47,7 @@
           fixedrange: true,
         },
         xaxis: {
-          title: {text: 'Goals Scored'},
+          title: {text: 'Goals Conceded'},
           linecolor: "black",
           showgrid: false,
           showline: false,
@@ -58,7 +58,7 @@
         legend: {
           x: 1,
           xanchor: 'right',
-          y: 0.95
+          y: 0.95 
         }
       },
       config: {
@@ -81,7 +81,7 @@
     );
   });
 
-  export let goalFreq, teamScoredFreq;
+  export let goalFreq, teamConcededFreq;
 </script>
 
 <div id="plotly">

@@ -1,6 +1,5 @@
 <script>
   import { onMount } from "svelte";
-import { object_without_properties } from "svelte/internal";
 
   function getAvgGoalsPerGame(data) {
     let avgGoals = {};
@@ -27,34 +26,23 @@ import { object_without_properties } from "svelte/internal";
     return avgGoals;
   }
   
-  function getTeamCleanSheets(data, team) {
-    let notCleanSheets = [];
-    let cleanSheets = [];
+  function getTeamGoalsPerGame(data, team) {
+    let scored = {};
+    let conceded = {};
     for (let matchday of Object.keys(data.form[team])) {
       let [h, _, a] = data.form[team][matchday].score.split(' ');
       h = parseInt(h);
-      a = parseInt(a);
+      a = parseInt(a)
       if (data.form[team][matchday].atHome) {
-        if (a > 0) {
-          notCleanSheets.push(1)
-          cleanSheets.push(0)
-        } else {
-          cleanSheets.push(1)
-          notCleanSheets.push(0)
-        }
+        scored[matchday] = h;
+        conceded[matchday] = a;
       } else {
-        if (h > 0) {
-          notCleanSheets.push(1)
-          cleanSheets.push(0)
-        } else {
-          cleanSheets.push(1)
-          notCleanSheets.push(0)
-        }
-
+        scored[matchday] = a;
+        conceded[matchday] = h;
       }
     }
     
-    return [cleanSheets, notCleanSheets];
+    return [scored, conceded];
   }
 
    function getMatchdayDates(data) {
@@ -76,56 +64,53 @@ import { object_without_properties } from "svelte/internal";
   }
 
   function getGraphData(data, fullTeamName) {
+    let avgGoals = getAvgGoalsPerGame(data);
     let x = getMatchdayDates(data);
 
-    let matchdays = Object.keys(data.form[fullTeamName]);
+    let matchdays = Object.keys(avgGoals);
 
-    let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, fullTeamName);
-    
+    let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName); 
+
     let graphData = {
       data: [
         {
-          name: 'Clean sheets',
+          name: 'Scored',
           type: 'bar',
           x: x,
-          y: cleanSheets,
+          y: Object.values(teamScored),
           text: matchdays,
           marker: {color: '#77DD77'},
-          hovertemplate: '<b>Clean sheet<extra></extra>',
-          showlegend: false
+          hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>',
         },
-        // {
-        //   name: 'Avg',
-        //   type: 'scatter',
-        //   mode: 'lines',
-        //   x: x,
-        //   y: Array(matchdays.length).fill(0.5),
-        //   hoverinfo: 'skip',
-        //   line: {color: '#9b9b9b', width: 2},
-        //   showlegend: false
-        // },
         {
           name: 'Conceded',
           type: 'bar',
           x: x,
-          y: notCleanSheets,
+          y: Object.values(teamConceded),
           text: matchdays,
           marker: {color: 'C23B22'},
-          hovertemplate: '<b>Goals conceded<extra></extra>',
-          showlegend: false
+          hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>',
+        },
+        {
+          name: 'Avg',
+          type: 'line',
+          x: x,
+          y: Object.values(avgGoals),
+          text: matchdays,
+          hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals<extra></extra>',
+          line: {color: '#0080FF', width: 2},
         },
       ],
       layout: {
         title: false,
         autosize: true,
-        height: 60,
-        margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
+        margin: { r: 20, l: 50, t: 0, b: 15, pad: 5 },
+        barmode: 'stack',
         hovermode: 'closest',
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
         yaxis: {
-          title: { text: "" },
-          showticklabels: false,
+          title: { text: "Goals Scored" },
           gridcolor: "gray",
           showgrid: false,
           showline: false,
@@ -137,21 +122,13 @@ import { object_without_properties } from "svelte/internal";
           showgrid: false,
           showline: false,
           fixedrange: true,
+          showticklabels: false,
         },
-        shapes: [
-          {
-           type: 'line',
-           x0: x[0],
-           y0: 0.5, 
-           x1: x[x.length-1], 
-           y1: 0.5,
-           layer: 'below',
-            line: {
-              color: '#d3d3d3',
-              width: 2
-            }
-          }
-        ]
+        legend: {
+          x: 1,
+          xanchor: 'right',
+          y: 1
+        }
       },
       config: {
         responsive: true,
