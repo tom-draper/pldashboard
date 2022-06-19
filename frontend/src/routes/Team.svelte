@@ -12,6 +12,13 @@
   import GoalsScoredAndConceded from "../components/goals_scored_and_conceded/GoalsScoredAndConceded.svelte";
   import CleanSheets from "../components/goals_scored_and_conceded/CleanSheets.svelte";
   import GoalFrequencies from "../components/goals_per_game/GoalsPerGame.svelte";
+  import Spider from "../components/Spider.svelte";
+
+  function handleResize() {
+    if (data != undefined) {
+      console.log(window.innerWidth);
+    }
+  }
 
   function toTitleCase(str) {
     return str
@@ -40,11 +47,14 @@
   let data;
   onMount(() => {
     fullTeamName = toTitleCase(team.replace(/\-/g, " ")) + " FC";
-    fetchData("https://pldashboard.herokuapp.com/teams").then((json) => {
+    fetchData("https://pldashboard.herokuapp.com/teams")
+    .then((json) => {
       // Build teamData package from json data
       currentMatchday = getCurrentMatchday(json, fullTeamName);
       data = json;
       console.log(data);
+    }).then(() => {
+      window.dispatchEvent(new Event('resize'));
     });
   });
 
@@ -96,7 +106,7 @@
       <div class="row">
         <div class="form-graph row-graph">
           <h1 class="lowered">Form Over Time</h1>
-          <div class="graph full-row-graph" style="height: auto">
+          <div class="graph full-row-graph">
             <FormOverTime {data} {fullTeamName} />
           </div>
         </div>
@@ -111,7 +121,7 @@
         </div>
       </div>
 
-      <div class="row no-bottom-margin" style="margin-bottom: 0">
+      <div class="row no-bottom-margin">
         <div class="goals-scored-vs-conceded-graph row-graph">
           <h1 class="lowered">Goals Scored and Conceded</h1>
           <div class="graph full-row-graph">
@@ -124,7 +134,6 @@
         <div class="row-graph">
           <div class="clean-sheets graph full-row-graph">
             <CleanSheets {data} {fullTeamName} />
-            <!-- {% include 'graphs/%s/clean-sheets-%s.html' % (params.team.names.hyphenated, params.team.names.hyphenated) %} -->
           </div>
         </div>
       </div>
@@ -137,6 +146,14 @@
         <div class="goals-freq-row row-graph">
           <h1>Goals Per Game</h1>
           <GoalFrequencies {data} {fullTeamName} />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-graph">
+          <div class="spider-chart full-row-graph">
+            <Spider {data} {fullTeamName} />
+          </div>
         </div>
       </div>
 

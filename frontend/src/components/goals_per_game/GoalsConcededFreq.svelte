@@ -79,6 +79,10 @@
       graphData.layout,
       graphData.config
     );
+    // Once plot generated, add resizable attribute to it to shorten height for mobile view
+    Plot.then(plot => {
+      plot.children[0].children[0].classList.add('resizable-graph');
+    }) 
   });
 
   export let goalFreq, teamConcededFreq;
