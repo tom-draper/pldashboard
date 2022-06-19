@@ -293,6 +293,9 @@ img {
   width: 100% !important;
   height: 450px !important;
 }
+.resizable-spider-chart {
+  height: 550px !important;
+}
 .full-row-graph {
   margin-left: 10px;
 }
@@ -542,7 +545,7 @@ img {
 .teams-footer {
   padding: 50px 0 4px;
   height: auto;
-  margin-top: 50px;
+  /* margin-top: 50px; */
   width: 100%;
   font-size: 0.65em;
   align-items: center;
@@ -662,9 +665,80 @@ h1 {
   border: 4px solid rgb(46 46 46);
 }
 
+
+.spider-chart {
+  /* width: 600px; */
+  /* height: 550px; */
+  margin: 1em auto auto;
+  position: relative;  
+}
+
+
+.opp-team-selector {
+  position: absolute;
+  top: 50px;
+  right: calc((100vw - 1200px) / 2);
+}
+
+/* Style The Dropdown Button */
+.dropbtn {
+  background-color: #ffffff;
+  color: black;
+  padding: 16px;
+  font-size: 16px;
+  border-radius: var(--border-radius);
+  border: 2px solid black;
+  cursor: pointer;
+}
+
+.dropbtn,
+.dropdown-content {
+  width: 250px;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  font-size: 0.7em;
+  /* min-width: 160px; */
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-item {
+  color: black;
+  padding: 3px 0;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  background-color: #dbdbdb;
+}
+
+
 .parenthesis {
   font-family: 'Courier New', Courier, monospace !important;
 }
+
 
 /* Mobile view */
 
@@ -681,9 +755,9 @@ h1 {
   .season-stat-text {
     font-size: 0.9em;
   }
-  .teams-footer {
+  /* .teams-footer {
     margin-top: 0;
-  }
+  } */
   .season-stat-position {
     top: -40px;
   }
@@ -775,6 +849,9 @@ h1 {
   .resizable-graph {
     height: 400px !important;
   }
+  .resizable-spider-chart {
+    height: 300px !important;
+  }
 
   .two-graphs {
     display: flex;
@@ -844,6 +921,9 @@ h1 {
   }
   .resizable-graph {
     height: 300px !important;
+  }
+  .resizable-spider-chart {
+    height: 260px !important;
   }
 }
 
@@ -948,9 +1028,9 @@ h1 {
   .season-stat {
     margin: 0.25em 0 0.45em 0;
   }
-  .teams-footer {
+  /* .teams-footer {
     margin-top: 2em;
-  }
+  } */
   .next-game-prediction {
     margin-top: 30px;
   }
@@ -972,6 +1052,9 @@ h1 {
   }
   .resizable-graph {
     height: 250px !important;
+  }
+  .resizable-spider-chart {
+    height: 220px !important;
   }
   .plotly-graph-div {
     width: 105% !important;

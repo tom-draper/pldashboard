@@ -142,6 +142,7 @@
         <SeasonStats {data} {fullTeamName} />
       </div>
 
+      
       <div class="row">
         <div class="goals-freq-row row-graph">
           <h1>Goals Per Game</h1>
@@ -153,6 +154,16 @@
         <div class="row-graph">
           <div class="spider-chart full-row-graph">
             <Spider {data} {fullTeamName} />
+          </div>
+          <div class="opp-team-selector">
+            <div class="dropdown">
+              <button class="dropbtn">Select comparison</button>
+              <div class="dropdown-content">
+                {#each data.teamNames as team}
+                  <div class="dropdown-item">{team}</div>
+                {/each}
+              </div>
+            </div>
           </div>
         </div>
       </div>

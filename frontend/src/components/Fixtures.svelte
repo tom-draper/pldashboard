@@ -118,7 +118,7 @@
           "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
       }],
       layout: {
-        title: false,
+         title: false,
         autosize: true,
         margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
         hovermode: "closest",
