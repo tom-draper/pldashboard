@@ -14,6 +14,17 @@
   import GoalFrequencies from "../components/goals_per_game/GoalsPerGame.svelte";
   import Spider from "../components/Spider.svelte";
 
+  function spiderBtnClick(btn) {
+    if (btn.style.background == '') {
+      let team = btn.innerHTML.toLowerCase().replace(' ', '-');
+      btn.style.background = `var(--${team})`;
+      btn.style.color = `var(--${team}-secondary)`;
+
+    } else {
+      btn.style.background = '';
+      btn.style.color = 'black';
+    }
+  }
 
   function toTitleCase(str) {
     return str
@@ -158,9 +169,9 @@
               <div class="spider-opp-team-btns">
                 {#each data.teamNames as teamName}
                   {#if teamName != fullTeamName}
-                    <button class="spider-opp-team-btn">
-                    {teamName.replace(' FC', '')}
-                  </button>
+                    <button class="spider-opp-team-btn" on:click={(e) => {spiderBtnClick(e.target)}}>
+                      {teamName.replace(' FC', '')}
+                    </button>
                   <!-- style="background: var(--{teamName.replace(" FC", "").toLowerCase().replace(/ /g, "-")}); color: var(--{teamName.replace(" FC", "").toLowerCase().replace(/ /g, "-")}-secondary)" -->
                   {/if}
                 {/each}
