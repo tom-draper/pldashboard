@@ -4,7 +4,7 @@
   function spiderBtnClick(btn) {
     if (btn.style.background == '') {
       let team = btn.innerHTML.toLowerCase().replace(/ /g, '-');
-      btn.style.background = `var(--${team})`;
+       btn.style.background = `var(--${team})`;
       btn.style.color = `var(--${team}-secondary)`;
 
     } else {
@@ -379,10 +379,7 @@
           class="spider-opp-team-btn"
           on:click={(e) => {
             spiderBtnClick(e.target);
-          }}
-        >
-          {teamName.replace(" FC", "")}
-        </button>
+          }}>{teamName.replace(" FC", "")}</button>
       {/if}
     {/each}
   </div>
