@@ -14,11 +14,6 @@
   import GoalFrequencies from "../components/goals_per_game/GoalsPerGame.svelte";
   import Spider from "../components/Spider.svelte";
 
-  function handleResize() {
-    if (data != undefined) {
-      console.log(window.innerWidth);
-    }
-  }
 
   function toTitleCase(str) {
     return str
@@ -48,14 +43,15 @@
   onMount(() => {
     fullTeamName = toTitleCase(team.replace(/\-/g, " ")) + " FC";
     fetchData("https://pldashboard.herokuapp.com/teams")
-    .then((json) => {
-      // Build teamData package from json data
-      currentMatchday = getCurrentMatchday(json, fullTeamName);
-      data = json;
-      console.log(data);
-    }).then(() => {
-      window.dispatchEvent(new Event('resize'));
-    });
+      .then((json) => {
+        // Build teamData package from json data
+        currentMatchday = getCurrentMatchday(json, fullTeamName);
+        data = json;
+        console.log(data);
+      })
+      .then(() => {
+        window.dispatchEvent(new Event("resize"));
+      });
   });
 
   export let team;
@@ -129,7 +125,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="row">
         <div class="row-graph">
           <div class="clean-sheets graph full-row-graph">
@@ -142,7 +138,6 @@
         <SeasonStats {data} {fullTeamName} />
       </div>
 
-      
       <div class="row">
         <div class="goals-freq-row row-graph">
           <h1>Goals Per Game</h1>
@@ -151,16 +146,23 @@
       </div>
 
       <div class="row">
-        <div class="row-graph">
-          <div class="spider-chart full-row-graph">
-            <Spider {data} {fullTeamName} />
-          </div>
-          <div class="opp-team-selector">
-            <div class="dropdown">
-              <button class="dropbtn">Select comparison</button>
-              <div class="dropdown-content">
-                {#each data.teamNames as team}
-                  <div class="dropdown-item">{team}</div>
+        <div class="spider-chart-row row-graph">
+          <div class="spider-chart-container">
+            <div class="spider-chart full-row-graph">
+              <Spider {data} {fullTeamName} />
+            </div>
+            <div class="spider-opp-team-selector">
+              <div class="spider-opp-team-title">
+                Select team comparison
+              </div>
+              <div class="spider-opp-team-btns">
+                {#each data.teamNames as teamName}
+                  {#if teamName != fullTeamName}
+                    <button class="spider-opp-team-btn">
+                    {teamName.replace(' FC', '')}
+                  </button>
+                  <!-- style="background: var(--{teamName.replace(" FC", "").toLowerCase().replace(/ /g, "-")}); color: var(--{teamName.replace(" FC", "").toLowerCase().replace(/ /g, "-")}-secondary)" -->
+                  {/if}
                 {/each}
               </div>
             </div>

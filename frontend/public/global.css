@@ -426,6 +426,9 @@ img {
 .next-game-logo {
   height: 225px;
   margin: 10px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
 }
 .predictions-and-logo {
   font-size: 22px;
@@ -666,73 +669,49 @@ h1 {
 }
 
 
+
+.spider-chart-row {
+  display: grid;
+  place-items: center;
+}
 .spider-chart {
   /* width: 600px; */
   /* height: 550px; */
-  margin: 1em auto auto;
-  position: relative;  
-}
-
-
-.opp-team-selector {
-  position: absolute;
-  top: 50px;
-  right: calc((100vw - 1200px) / 2);
-}
-
-/* Style The Dropdown Button */
-.dropbtn {
-  background-color: #ffffff;
-  color: black;
-  padding: 16px;
-  font-size: 16px;
-  border-radius: var(--border-radius);
-  border: 2px solid black;
-  cursor: pointer;
-}
-
-.dropbtn,
-.dropdown-content {
-  width: 250px;
-}
-
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
   position: relative;
-  display: inline-block;
+  /* display: grid; */
+  /* place-items: center; */
 }
 
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  font-size: 0.7em;
-  /* min-width: 160px; */
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+.spider-chart-container {
+  margin: 1em auto auto;
+  display: flex;
 }
 
-/* Links inside the dropdown */
-.dropdown-item {
-  color: black;
-  padding: 3px 0;
-  text-decoration: none;
-  display: block;
+.spider-opp-team-selector {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
 }
 
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #f1f1f1}
+.spider-opp-team-title {
+  margin-bottom: 5px;
+}
+.spider-opp-team-btns {
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  border: 3px solid black;
+}
+.spider-opp-team-btn {
+  padding: 4px;
+  cursor: pointer;
+  border: none;
+}
+.spider-opp-team-btn:hover {
+  filter: brightness(0.8)
 
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
-  display: block;
 }
 
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {
-  background-color: #dbdbdb;
-}
 
 
 .parenthesis {

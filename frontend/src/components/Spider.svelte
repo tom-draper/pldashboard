@@ -6,25 +6,26 @@
     let teamKey = team.replace(' FC', '');
     teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
     teamKey = teamKey.replace(/ ([A-Z])/g, '-$1').toLowerCase();
-    let teamColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`)
+    let teamColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
+
+    let labels = ['Attack', 'Defence', 'Clean Sheets', 'Consistency', 'Win Streak', 'Vs Big 6']
 
     let graphData = {
       data: [
         {
           type: "scatterpolar",
-          r: [20, 20, 10, 10, 20],
-          theta: ["Attack", "Scored", "Goal Difference", "Defence", "Clean Sheets"],
+          r: [20, 20, 10, 20, 60, 60],
+          theta: labels,
           fill: "toself",
           marker: {color: '#d3d3d3' },
-          lineclose:true,
-          opacity: 1,
         },
         {
           type: "scatterpolar",
-          r: [39, 28, 8, 7, 28],
-          theta: ["Attack", "Scored", "Goal Difference", "Defence", "Clean Sheets"],
+          r: [39, 28, 8, 60, 100, 60, 50],
+          theta: labels,
           fill: "toself",
           marker: {color: teamColor},
+          lineclose:true,
           // opacity: 0.4,
         },
       ],
@@ -37,7 +38,7 @@
           },
         },
         hover: 'closest',
-        margin: {t: 20, b: 20, l: 100, r: 100},
+        margin: {t: 25, b: 25, l: 100, r: 100},
         showlegend: false,
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
