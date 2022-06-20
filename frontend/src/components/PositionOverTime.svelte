@@ -30,7 +30,6 @@
       line: lineVal,
       text: matchdays,
       hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
-      // hoverinfo: 'x+y',
       showlegend: false
     };
     return line;

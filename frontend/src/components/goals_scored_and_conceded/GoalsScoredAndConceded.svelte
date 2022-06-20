@@ -6,9 +6,9 @@
 
     for (let team of data.teamNames) {
       for (let matchday of Object.keys(data.form[team])) {
-        let [h, _, a] = data.form[team][matchday].score.split(' ');
+        let [h, _, a] = data.form[team][matchday].score.split(" ");
         h = parseInt(h);
-        a = parseInt(a)
+        a = parseInt(a);
         if (matchday in avgGoals) {
           avgGoals[matchday] += h + a;
         } else {
@@ -16,23 +16,22 @@
         }
       }
     }
-    
+
     // Divide by number of teams to get avg goals per gameweek
     for (let matchday of Object.keys(avgGoals)) {
       avgGoals[matchday] /= 20;
     }
-    
-    
+
     return avgGoals;
   }
-  
+
   function getTeamGoalsPerGame(data, team) {
     let scored = {};
     let conceded = {};
     for (let matchday of Object.keys(data.form[team])) {
-      let [h, _, a] = data.form[team][matchday].score.split(' ');
+      let [h, _, a] = data.form[team][matchday].score.split(" ");
       h = parseInt(h);
-      a = parseInt(a)
+      a = parseInt(a);
       if (data.form[team][matchday].atHome) {
         scored[matchday] = h;
         conceded[matchday] = a;
@@ -41,25 +40,27 @@
         conceded[matchday] = h;
       }
     }
-    
+
     return [scored, conceded];
   }
 
-   function getMatchdayDates(data) {
+  function getMatchdayDates(data) {
     // Find median matchday date across all teams for each matchday
     let x = [];
     for (let i = 1; i <= 38; i++) {
       let matchdayDates = [];
       for (let team of data.teamNames) {
-        matchdayDates.push(data.fixtures[team][i].date)
-      } 
-      matchdayDates = matchdayDates.map(val => {return new Date(val)})
+        matchdayDates.push(data.fixtures[team][i].date);
+      }
+      matchdayDates = matchdayDates.map((val) => {
+        return new Date(val);
+      });
       matchdayDates = matchdayDates.sort();
-      x.push(matchdayDates[Math.floor(matchdayDates.length/2)]);
+      x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
     }
     x.sort(function (a, b) {
       return a - b;
-    })
+    });
     return x;
   }
 
@@ -69,44 +70,46 @@
 
     let matchdays = Object.keys(avgGoals);
 
-    let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName); 
+    let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
 
     let graphData = {
       data: [
         {
-          name: 'Scored',
-          type: 'bar',
+          name: "Scored",
+          type: "bar",
           x: x,
           y: Object.values(teamScored),
           text: matchdays,
-          marker: {color: '#77DD77'},
-          hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>',
+          marker: { color: "#77DD77" },
+          hovertemplate:
+            "<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>",
         },
         {
-          name: 'Conceded',
-          type: 'bar',
+          name: "Conceded",
+          type: "bar",
           x: x,
           y: Object.values(teamConceded),
           text: matchdays,
-          marker: {color: 'C23B22'},
-          hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>',
+          marker: { color: "C23B22" },
+          hovertemplate:
+            "<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>",
         },
         {
-          name: 'Avg',
-          type: 'line',
+          name: "Avg",
+          type: "line",
           x: x,
           y: Object.values(avgGoals),
           text: matchdays,
-          hovertemplate: '<b>Matchday %{text}</b><br>%{y} goals<extra></extra>',
-          line: {color: '#0080FF', width: 2},
+          hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",
+          line: { color: "#0080FF", width: 2 },
         },
       ],
       layout: {
         title: false,
         autosize: true,
         margin: { r: 20, l: 50, t: 0, b: 15, pad: 5 },
-        barmode: 'stack',
-        hovermode: 'closest',
+        barmode: "stack",
+        hovermode: "closest",
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
         yaxis: {
@@ -126,9 +129,9 @@
         },
         legend: {
           x: 1,
-          xanchor: 'right',
-          y: 1
-        }
+          xanchor: "right",
+          y: 1,
+        },
       },
       config: {
         responsive: true,
@@ -150,9 +153,9 @@
       graphData.config
     );
     // Once plot generated, add resizable attribute to it to shorten height for mobile view
-    Plot.then(plot => {
-      plot.children[0].children[0].classList.add('resizable-graph');
-    }) 
+    Plot.then((plot) => {
+      plot.children[0].children[0].classList.add("resizable-graph");
+    });
   });
 
   export let data, fullTeamName;

@@ -13,25 +13,27 @@
     let lineVal;
     if (isMainTeam) {
       // Get team primary colour from css variable
-      let teamKey = teamName.replace(' FC', '');
+      let teamKey = teamName.replace(" FC", "");
       teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
-      teamKey = teamKey.replace(/ ([A-Z])/g, '-$1').toLowerCase();
-      let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`)
-      lineVal = {color: lineColor, width: 4}
+      teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
+      let lineColor = getComputedStyle(
+        document.documentElement
+      ).getPropertyValue(`--${teamKey}`);
+      lineVal = { color: lineColor, width: 4 };
     } else {
-      lineVal = {color: '#d3d3d3'};
+      lineVal = { color: "#d3d3d3" };
     }
 
     let line = {
       x: x,
       y: y,
       name: teamName,
-      mode: 'lines',
+      mode: "lines",
       line: lineVal,
       text: matchdays,
       hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
       // hoverinfo: 'x+y',
-      showlegend: false
+      showlegend: false,
     };
     return line;
   }
@@ -42,25 +44,27 @@
     for (let i = 1; i <= 38; i++) {
       let matchdayDates = [];
       for (let team of data.teamNames) {
-        matchdayDates.push(data.fixtures[team][i].date)
-      } 
-      matchdayDates = matchdayDates.map(val => {return new Date(val)})
+        matchdayDates.push(data.fixtures[team][i].date);
+      }
+      matchdayDates = matchdayDates.map((val) => {
+        return new Date(val);
+      });
       matchdayDates = matchdayDates.sort();
-      x.push(matchdayDates[Math.floor(matchdayDates.length/2)]);
+      x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
     }
     x.sort(function (a, b) {
       return a - b;
-    })
+    });
     return x;
   }
 
   function getGraphData(data, fullTeamName) {
-    let x = getMatchdayDates(data);  // All lines use the same x
+    let x = getMatchdayDates(data); // All lines use the same x
     let lines = [];
     for (let i = 0; i < data.teamNames.length; i++) {
       if (data.teamNames[i] != fullTeamName) {
-        let line = getLine(data, x, data.teamNames[i], false)
-        lines.push(line)
+        let line = getLine(data, x, data.teamNames[i], false);
+        lines.push(line);
       }
     }
 
@@ -68,7 +72,7 @@
     let line = getLine(data, x, fullTeamName, true);
     lines.push(line);
 
-    let yLabels = Array.from(Array(11), (_, i) => i*10)
+    let yLabels = Array.from(Array(11), (_, i) => i * 10);
 
     let graphData = {
       data: lines,
@@ -87,14 +91,14 @@
           zeroline: false,
           fixedrange: true,
           ticktext: yLabels,
-          tickvals: yLabels
+          tickvals: yLabels,
         },
         xaxis: {
           linecolor: "black",
           showgrid: false,
           showline: false,
           fixedrange: true,
-        },        
+        },
       },
       config: {
         responsive: true,
@@ -116,9 +120,9 @@
       graphData.config
     );
     // Once plot generated, add resizable attribute to it to shorten height for mobile view
-    Plot.then(plot => {
-      plot.children[0].children[0].classList.add('resizable-graph');
-    }) 
+    Plot.then((plot) => {
+      plot.children[0].children[0].classList.add("resizable-graph");
+    });
   });
 
   export let data, fullTeamName;

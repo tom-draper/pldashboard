@@ -14,7 +14,6 @@
   import GoalFrequencies from "../components/goals_per_game/GoalsPerGame.svelte";
   import Spider from "../components/Spider.svelte";
 
-
   function toTitleCase(str) {
     return str
       .toLowerCase()

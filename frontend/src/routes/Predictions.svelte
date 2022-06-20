@@ -16,12 +16,21 @@
   }
 
   function identicalScore(prediction, actual) {
-    return Math.round(prediction.homeGoals) == actual.homeGoals && Math.round(prediction.awayGoals) == actual.awayGoals;
+    return (
+      Math.round(prediction.homeGoals) == actual.homeGoals &&
+      Math.round(prediction.awayGoals) == actual.awayGoals
+    );
   }
 
   function sameResult(prediction, actual) {
-    return (prediction.homeGoals > prediction.awayGoals && actual.homeGoals > actual.awayGoals) || (prediction.homeGoals == prediction.awayGoals && actual.homeGoals == actual.awayGoals) || (prediction.homeGoals < prediction.awayGoals && actual.homeGoals < actual.awayGoals)
-
+    return (
+      (prediction.homeGoals > prediction.awayGoals &&
+        actual.homeGoals > actual.awayGoals) ||
+      (prediction.homeGoals == prediction.awayGoals &&
+        actual.homeGoals == actual.awayGoals) ||
+      (prediction.homeGoals < prediction.awayGoals &&
+        actual.homeGoals < actual.awayGoals)
+    );
   }
 
   function insertColours(json) {
@@ -30,11 +39,11 @@
         let prediction = json.predictions[i].predictions[j];
         if (prediction.actual != null) {
           if (identicalScore(prediction.prediction, prediction.actual)) {
-            prediction.colour = 'green';
+            prediction.colour = "green";
           } else if (sameResult(prediction.prediction, prediction.actual)) {
-            prediction.colour = 'yellow';
+            prediction.colour = "yellow";
           } else {
-            prediction.colour = 'red';
+            prediction.colour = "red";
           }
         }
       }
@@ -44,7 +53,7 @@
   function datetimeToTime(datetime) {
     let date = new Date(datetime);
     date = date.toTimeString().slice(0, 5);
-    return date
+    return date;
   }
 
   function sortByDate(json) {
@@ -61,9 +70,8 @@
 
   let data;
   onMount(() => {
-    fetchData("https://pldashboard.herokuapp.com/predictions")
-    .then((json) => {
-      sortByDate(json)
+    fetchData("https://pldashboard.herokuapp.com/predictions").then((json) => {
+      sortByDate(json);
       insertColours(json);
       console.log(json);
       data = json;
@@ -82,7 +90,8 @@
     <Link
       class="predictions-title main-link"
       style="text-decoration: none"
-      to="/predictions">Predictions</Link>
+      to="/predictions">Predictions</Link
+    >
   </div>
 
   {#if data != undefined}
@@ -90,10 +99,14 @@
       <div class="accuracy-display">
         <div class="accuracy">
           <span class="accuracy-item">
-            Predicting with accuracy: <b>{ (data.accuracy.scoreAccuracy * 100).toFixed(2) }%</b></span
+            Predicting with accuracy: <b
+              >{(data.accuracy.scoreAccuracy * 100).toFixed(2)}%</b
+            ></span
           ><br />
           <div class="accuracy-item">
-            General results accuracy: <b>{ (data.accuracy.resultAccuracy * 100).toFixed(2) }%</b>
+            General results accuracy: <b
+              >{(data.accuracy.resultAccuracy * 100).toFixed(2)}%</b
+            >
           </div>
         </div>
       </div>
@@ -101,7 +114,7 @@
       <div class="predictions-container">
         <div class="predictions">
           {#if data.predictions != null}
-            {#each data.predictions as {_id, predictions}}
+            {#each data.predictions as { _id, predictions }}
               <div class="date">
                 {_id}
               </div>
@@ -109,39 +122,46 @@
               <!-- Each prediction on this day -->
               {#each predictions as pred}
                 <button
-                  class="prediction-container { pred.colour }"
-                  on:click="{() => toggleDetailsDisplay(pred._id)}"
+                  class="prediction-container {pred.colour}"
+                  on:click={() => toggleDetailsDisplay(pred._id)}
                 >
                   <div class="prediction prediction-item">
                     <div class="prediction-label">Predicted:</div>
                     <div class="prediction-value">
-                      <div class="prediction-initials">{ pred.home }</div>
+                      <div class="prediction-initials">{pred.home}</div>
                       <div class="prediction-score">
-                        { Math.round(pred.prediction.homeGoals) } - { Math.round(pred.prediction.awayGoals) }
+                        {Math.round(pred.prediction.homeGoals)} - {Math.round(
+                          pred.prediction.awayGoals
+                        )}
                       </div>
-                      <div class="prediction-initials">{ pred.away }</div>
+                      <div class="prediction-initials">{pred.away}</div>
                     </div>
                   </div>
                   {#if pred.actual != null}
                     <div class="actual prediction-item">
                       <div class="prediction-label">Actual:</div>
                       <div class="prediction-value">
-                        <div class="prediction-initials">{ pred.home }</div>
+                        <div class="prediction-initials">{pred.home}</div>
                         <div class="prediction-score">
-                          { pred.actual.homeGoals } - { pred.actual.awayGoals }
+                          {pred.actual.homeGoals} - {pred.actual.awayGoals}
                         </div>
-                        <div class="prediction-initials">{ pred.away }</div>
+                        <div class="prediction-initials">{pred.away}</div>
                       </div>
                     </div>
                   {:else}
-                    <div class="prediction-time">{ datetimeToTime(pred.datetime) }</div>
+                    <div class="prediction-time">
+                      {datetimeToTime(pred.datetime)}
+                    </div>
                   {/if}
 
                   <!-- Toggle to see detialed score -->
                   {#if pred.prediction != null}
-                    <div class="prediction-details" id={ pred._id }>
+                    <div class="prediction-details" id={pred._id}>
                       <div class="detailed-predicted-score">
-                        <b>{ pred.prediction.homeGoals } - { pred.prediction.awayGoals }</b>
+                        <b
+                          >{pred.prediction.homeGoals} - {pred.prediction
+                            .awayGoals}</b
+                        >
                       </div>
                     </div>
                   {/if}
@@ -163,7 +183,7 @@
     </div>
   {:else}
     <div class="loading-spinner-container">
-      <div class="loading-spinner"></div>
+      <div class="loading-spinner" />
     </div>
   {/if}
 </Router>

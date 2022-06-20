@@ -383,7 +383,6 @@
         >
           {teamName.replace(" FC", "")}
         </button>
-        <!-- style="background: var(--{teamName.replace(" FC", "").toLowerCase().replace(/ /g, "-")}); color: var(--{teamName.replace(" FC", "").toLowerCase().replace(/ /g, "-")}-secondary)" -->
       {/if}
     {/each}
   </div>
