@@ -1,6 +1,18 @@
 <script>
   import { onMount } from "svelte";
 
+  function spiderBtnClick(btn) {
+    if (btn.style.background == '') {
+      let team = btn.innerHTML.toLowerCase().replace(/ /g, '-');
+      btn.style.background = `var(--${team})`;
+      btn.style.color = `var(--${team}-secondary)`;
+
+    } else {
+      btn.style.background = '';
+      btn.style.color = 'black';
+    }
+  }
+
   function goalsPerSeason(data) {
     let attack = {};
     let maxGoals = Number.NEGATIVE_INFINITY;
@@ -127,12 +139,12 @@
       totalCleanSheets += cleanSheets[team];
     }
     cleanSheets.avg = totalCleanSheets / Object.keys(cleanSheets).length;
-    
+
     return cleanSheets;
   }
 
   function getConsistency(data) {
-    let consistency = {}
+    let consistency = {};
     let maxConsistency = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
       let backToBack = 0;
@@ -140,14 +152,14 @@
       for (let matchday of Object.keys(data.form[team])) {
         let match = data.form[team][matchday];
         if (match.score != "None - None") {
-          let [h, _, a] = match.score.split(' ');
+          let [h, _, a] = match.score.split(" ");
           let result;
           if ((match.atHome && h > a) || (!match.atHome && h < a)) {
-            result = 'win';
+            result = "win";
           } else if ((match.atHome && h < a) || (!match.atHome && h > a)) {
-            result = 'lost';
+            result = "lost";
           } else {
-            result = 'draw';
+            result = "draw";
           }
           if (prevResult != null && prevResult == result) {
             backToBack += 1;
@@ -157,7 +169,7 @@
       }
       if (backToBack > maxConsistency) {
         maxConsistency = backToBack;
-      } 
+      }
       consistency[team] = backToBack;
     }
 
@@ -180,7 +192,7 @@
       for (let matchday of Object.keys(data.form[team])) {
         let match = data.form[team][matchday];
         if (match.score != "None - None") {
-          let [h, _, a] = match.score.split(' ');
+          let [h, _, a] = match.score.split(" ");
           if ((match.atHome && h > a) || (!match.atHome && h < a)) {
             tempWinStreak += 1;
             if (tempWinStreak > winStreak) {
@@ -219,14 +231,21 @@
     let vsBig6 = {};
     let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
-      let big6 = ['Manchester United FC', 'Liverpool FC', 'Manchester City FC', 'Arsenal FC', 'Chelsea FC', 'Tottenham Hotspurs FC']
+      let big6 = [
+        "Manchester United FC",
+        "Liverpool FC",
+        "Manchester City FC",
+        "Arsenal FC",
+        "Chelsea FC",
+        "Tottenham Hotspurs FC",
+      ];
       big6 = removeItem(big6, team);
 
       let winsVsBig6 = 0;
       for (let matchday of Object.keys(data.form[team])) {
         let match = data.form[team][matchday];
         if (match.score != "None - None" && big6.includes(match.team)) {
-          let [h, _, a] = match.score.split(' ');
+          let [h, _, a] = match.score.split(" ");
           if ((match.atHome && h > a) || (!match.atHome && h < a)) {
             winsVsBig6 += 1;
           }
@@ -237,7 +256,6 @@
       }
       vsBig6[team] = winsVsBig6;
     }
-
 
     let totalVsBig6 = 0;
     for (let team of Object.keys(vsBig6)) {
@@ -277,14 +295,28 @@
       data: [
         {
           type: "scatterpolar",
-          r: [attack.avg, defence.avg, cleanSheets.avg, consistency.avg, winStreaks.avg, vsBig6.avg],
+          r: [
+            attack.avg,
+            defence.avg,
+            cleanSheets.avg,
+            consistency.avg,
+            winStreaks.avg,
+            vsBig6.avg,
+          ],
           theta: labels,
           fill: "toself",
           marker: { color: "#d3d3d3" },
         },
         {
           type: "scatterpolar",
-          r: [attack[team], defence[team], cleanSheets[team], consistency[team], winStreaks[team], vsBig6[team]],
+          r: [
+            attack[team],
+            defence[team],
+            cleanSheets[team],
+            consistency[team],
+            winStreaks[team],
+            vsBig6[team],
+          ],
           theta: labels,
           fill: "toself",
           marker: { color: teamColor },
@@ -331,8 +363,28 @@
   export let data, fullTeamName;
 </script>
 
-<div id="plotly">
-  <div id="plotDiv" bind:this={plotDiv}>
-    <!-- Plotly chart will be drawn inside this DIV -->
+<div class="spider-chart full-row-graph">
+  <div id="plotly">
+    <div id="plotDiv" bind:this={plotDiv}>
+      <!-- Plotly chart will be drawn inside this DIV -->
+    </div>
+  </div>
+</div>
+<div class="spider-opp-team-selector">
+  <div class="spider-opp-team-title">Select team comparison</div>
+  <div class="spider-opp-team-btns">
+    {#each data.teamNames as teamName}
+      {#if teamName != fullTeamName}
+        <button
+          class="spider-opp-team-btn"
+          on:click={(e) => {
+            spiderBtnClick(e.target);
+          }}
+        >
+          {teamName.replace(" FC", "")}
+        </button>
+        <!-- style="background: var(--{teamName.replace(" FC", "").toLowerCase().replace(/ /g, "-")}); color: var(--{teamName.replace(" FC", "").toLowerCase().replace(/ /g, "-")}-secondary)" -->
+      {/if}
+    {/each}
   </div>
 </div>
