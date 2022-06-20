@@ -16,7 +16,7 @@
 
   function spiderBtnClick(btn) {
     if (btn.style.background == '') {
-      let team = btn.innerHTML.toLowerCase().replace(' ', '-');
+      let team = btn.innerHTML.toLowerCase().replace(/ /g, '-');
       btn.style.background = `var(--${team})`;
       btn.style.color = `var(--${team}-secondary)`;
 
