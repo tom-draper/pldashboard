@@ -3,7 +3,8 @@
 
   function goalsPerSeason(data) {
     let attack = {};
-    let maxGoals = null;
+    let maxGoals = Number.NEGATIVE_INFINITY;
+    let minGoals = Number.POSITIVE_INFINITY;
     for (let team of data.teamNames) {
       let totalGoals = 0;
       let seasonsPlayed = 0;
@@ -13,6 +14,8 @@
           totalGoals += goals;
           if (goals > maxGoals) {
             maxGoals = goals;
+          } else if (goals < minGoals) {
+            minGoals = goals
           }
           seasonsPlayed += 1;
         }
@@ -20,12 +23,13 @@
       let goalsPerSeason = totalGoals / seasonsPlayed;
       attack[team] = goalsPerSeason;
     }
-    return [attack, maxGoals];
+    return [attack, [minGoals, maxGoals]];
   }
 
-  function scaleAttack(attack, upperLimit) {
+  function scaleAttack(attack, range) {
+    let [lower, upper] = range;
     for (let team in attack) {
-      attack[team] = (attack[team] / upperLimit) * 100
+      attack[team] = ((attack[team]-lower) / (upper-lower)) * 100
     }
     return attack;
   }
@@ -48,7 +52,8 @@
 
   function concededPerSeason(data) {
     let defence = {};
-    let maxConceded = null;
+    let maxConceded = Number.NEGATIVE_INFINITY;
+    let minConceded = Number.POSITIVE_INFINITY;
     for (let team of data.teamNames) {
       let totalGoals = 0;
       let seasonsPlayed = 0;
@@ -58,6 +63,8 @@
           totalGoals += goals;
           if (goals > maxConceded) {
             maxConceded = goals;
+          } else if (goals < minConceded) {
+            minConceded = goals;
           }
           seasonsPlayed += 1
         }
@@ -65,12 +72,13 @@
       let goalsPerSeason = totalGoals / seasonsPlayed;
       defence[team] = goalsPerSeason;
     }
-    return [defence, maxConceded];
+    return [defence, [minConceded, maxConceded]];
   }
 
-  function scaleDefence(defence, upperLimit) {
+  function scaleDefence(defence, range) {
+    let [lower, upper] = range;
     for (let team in defence) {
-      defence[team] = 100 - ((defence[team] / upperLimit) * 100)
+      defence[team] = 100 - (((defence[team]-lower) / (upper-lower)) * 100)
     }
     return defence;
   }
@@ -84,8 +92,8 @@
   }
 
   function getDefence(data) {
-    let [defence, maxConceded] = concededPerSeason(data);
-    defence = scaleDefence(defence, maxConceded);
+    let [defence, range] = concededPerSeason(data);
+    defence = scaleDefence(defence, range);
     insertAvgDefence(defence);
 
     return defence;
@@ -129,8 +137,6 @@
           theta: labels,
           fill: "toself",
           marker: { color: teamColor },
-          lineclose: true,
-          // opacity: 0.4,
         },
       ],
       layout: {
