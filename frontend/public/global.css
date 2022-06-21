@@ -694,7 +694,8 @@ h1 {
 }
 
 .spider-opp-team-title {
-  margin-bottom: 5px;
+  margin: 0 10px 5px 10px;
+  font-size: 0.9em;
 }
 .spider-opp-team-btns {
   border-radius: 6px;
@@ -703,9 +704,9 @@ h1 {
   border: 3px solid black;
 }
 .spider-opp-team-btn {
-  padding: 4px;
   cursor: pointer;
   border: none;
+  padding: 4px 10px;
 }
 .spider-opp-team-btn:hover {
   filter: brightness(0.95)
@@ -829,7 +830,7 @@ h1 {
     height: 400px !important;
   }
   .resizable-spider-chart {
-    height: 300px !important;
+    height: 500px !important;
   }
 
   .two-graphs {
@@ -902,7 +903,7 @@ h1 {
     height: 300px !important;
   }
   .resizable-spider-chart {
-    height: 260px !important;
+    height: 350px !important;
   }
 }
 

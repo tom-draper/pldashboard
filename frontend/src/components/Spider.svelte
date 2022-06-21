@@ -1,15 +1,95 @@
 <script>
   import { onMount } from "svelte";
 
+  function getTeamColor(team) {
+    let teamKey = team.replace(" FC", "");
+    teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
+    teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
+    let teamColor = getComputedStyle(document.documentElement).getPropertyValue(
+      `--${teamKey}`
+    );
+    return teamColor;
+  }
+  
+  function addTeamComparison(team) {
+    let teamColor = getTeamColor(team);
+
+    let teamData = {
+        name: team,
+        type: "scatterpolar",
+        r: [
+          attack[team],
+          defence[team],
+          cleanSheets[team],
+          consistency[team],
+          winStreaks[team],
+          vsBig6[team],
+        ],
+        theta: labels,
+        fill: "toself",
+        marker: { color: teamColor }
+    }
+    spiderPlots.push(teamData);
+    Plotly.redraw(plotDiv);  // Redraw with team added
+  }
+
+  function addAvg() {
+    let avg = {
+        name: 'Avg',
+        type: "scatterpolar",
+        r: [
+          attack.avg,
+          defence.avg,
+          cleanSheets.avg,
+          consistency.avg,
+          winStreaks.avg,
+          vsBig6.avg,
+        ],
+        theta: labels,
+        fill: "toself",
+        marker: { color: "#d3d3d3" },
+    };
+    spiderPlots.unshift(avg);  // Add avg below the team spider plot
+  }
+
+  function removeTeamComparison(team) {
+    // Remove spider plot for this team
+    for (let i = 0; i < spiderPlots.length; i++) {
+      if (spiderPlots[i].name == team) {
+        spiderPlots.splice(i, 1);
+        break;
+      }
+    }
+
+    // If removing only comparison team, re-insert the initial avg spider plot
+    if (comparisonTeams.length == 1) {
+      addAvg();
+    }
+
+    Plotly.redraw(plotDiv);  // Redraw with team removed
+  }
+
   function spiderBtnClick(btn) {
     if (btn.style.background == '') {
       let team = btn.innerHTML.toLowerCase().replace(/ /g, '-');
-       btn.style.background = `var(--${team})`;
+      btn.style.background = `var(--${team})`;
       btn.style.color = `var(--${team}-secondary)`;
-
     } else {
       btn.style.background = '';
       btn.style.color = 'black';
+    }
+
+    let fullTeamName = btn.innerHTML + ' FC';
+    if (comparisonTeams.length == 0) {
+      spiderPlots.splice(0, 1);  // Remove avg
+    }
+
+    if (comparisonTeams.includes(fullTeamName)) {
+      removeTeamComparison(fullTeamName);  // Remove from spider chart
+      removeItem(comparisonTeams, fullTeamName);  // Remove from comparison teams
+    } else {
+      addTeamComparison(fullTeamName);  // Add team to spider chart
+      comparisonTeams.push(fullTeamName);  // Add to comparison teams
     }
   }
 
@@ -267,61 +347,59 @@
     return vsBig6;
   }
 
+  function initSpiderPlots(team) {
+    let teamColor = getTeamColor(team);
+
+    let avgData = {
+        name: 'Avg',
+        type: "scatterpolar",
+        r: [
+          attack.avg,
+          defence.avg,
+          cleanSheets.avg,
+          consistency.avg,
+          winStreaks.avg,
+          vsBig6.avg,
+        ],
+        theta: labels,
+        fill: "toself",
+        marker: { color: "#d3d3d3" },
+    };
+    let teamData = {
+        name: team,
+        type: "scatterpolar",
+        r: [
+          attack[team],
+          defence[team],
+          cleanSheets[team],
+          consistency[team],
+          winStreaks[team],
+          vsBig6[team],
+        ],
+        theta: labels,
+        fill: "toself",
+        marker: { color: teamColor }
+    }
+  
+    return [avgData, teamData];
+  }
+
+  function computePlotData(data) {
+    attack = getAttack(data);
+    defence = getDefence(data);
+    cleanSheets = getCleanSheets(data);
+    consistency = getConsistency(data);
+    winStreaks = getWinStreak(data);
+    vsBig6 = getVsBig6(data);
+  }
+
   function getGraphData(data, team) {
-    let teamKey = team.replace(" FC", "");
-    teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
-    teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
-    let teamColor = getComputedStyle(document.documentElement).getPropertyValue(
-      `--${teamKey}`
-    );
+    computePlotData(data);
 
-    let labels = [
-      "Attack",
-      "Defence",
-      "Clean Sheets",
-      "Consistency",
-      "Win Streak",
-      "vs Big 6",
-    ];
-
-    let attack = getAttack(data);
-    let defence = getDefence(data);
-    let cleanSheets = getCleanSheets(data);
-    let consistency = getConsistency(data);
-    let winStreaks = getWinStreak(data);
-    let vsBig6 = getVsBig6(data);
-
+    spiderPlots = initSpiderPlots(team);
+    
     let graphData = {
-      data: [
-        {
-          type: "scatterpolar",
-          r: [
-            attack.avg,
-            defence.avg,
-            cleanSheets.avg,
-            consistency.avg,
-            winStreaks.avg,
-            vsBig6.avg,
-          ],
-          theta: labels,
-          fill: "toself",
-          marker: { color: "#d3d3d3" },
-        },
-        {
-          type: "scatterpolar",
-          r: [
-            attack[team],
-            defence[team],
-            cleanSheets[team],
-            consistency[team],
-            winStreaks[team],
-            vsBig6[team],
-          ],
-          theta: labels,
-          fill: "toself",
-          marker: { color: teamColor },
-        },
-      ],
+      data: spiderPlots,
       layout: {
         height: 550,
         polar: {
@@ -344,8 +422,25 @@
     };
     return graphData;
   }
+  
+  let labels = [
+    "Attack",
+    "Defence",
+    "Clean Sheets",
+    "Consistency",
+    "Win Streak",
+    "vs Big 6",
+  ];
+  let attack;
+  let defence;
+  let cleanSheets;
+  let consistency;
+  let winStreaks;
+  let vsBig6;
 
   let plotDiv;
+  let spiderPlots;
+  let comparisonTeams = [];
   let graphData;
   onMount(() => {
     graphData = getGraphData(data, fullTeamName);
@@ -371,7 +466,7 @@
   </div>
 </div>
 <div class="spider-opp-team-selector">
-  <div class="spider-opp-team-title">Select team comparison</div>
+  <!-- <div class="spider-opp-team-title">Select team comparison</div> -->
   <div class="spider-opp-team-btns">
     {#each data.teamNames as teamName}
       {#if teamName != fullTeamName}
