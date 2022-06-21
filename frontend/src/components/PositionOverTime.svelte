@@ -30,7 +30,6 @@
       line: lineVal,
       text: matchdays,
       hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
-      // hoverinfo: 'x+y',
       showlegend: false
     };
     return line;
@@ -157,6 +156,10 @@
       graphData.layout,
       graphData.config
     );
+    // Once plot generated, add resizable attribute to it to shorten height for mobile view
+    Plot.then(plot => {
+      plot.children[0].children[0].classList.add('resizable-graph');
+    }) 
   });
 
   export let data, fullTeamName;

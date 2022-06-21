@@ -42,14 +42,14 @@
   <div class="current-form-row">
     <div
       class="icon pos-0 {data.form[fullTeamName][currentMatchday].form5.charAt(
-        0
+        4
       )} {data.form[fullTeamName][matchdays[0]].beatStarTeam
         ? 'star-team'
         : ''}"
     />
     <div
       class="icon pos-1 {data.form[fullTeamName][currentMatchday].form5.charAt(
-        1
+        3
       )} {data.form[fullTeamName][matchdays[1]].beatStarTeam
         ? 'star-team'
         : ''}"
@@ -63,14 +63,14 @@
     />
     <div
       class="icon pos-3 {data.form[fullTeamName][currentMatchday].form5.charAt(
-        3
+        1
       )} {data.form[fullTeamName][matchdays[3]].beatStarTeam
         ? 'star-team'
         : ''}"
     />
     <div
       class="icon pos-4 {data.form[fullTeamName][currentMatchday].form5.charAt(
-        4
+        0
       )} {data.form[fullTeamName][matchdays[4]].beatStarTeam
         ? 'star-team'
         : ''}"

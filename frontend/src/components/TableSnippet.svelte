@@ -81,7 +81,10 @@
       <!-- Row of table -->
       {#if i == tableSnippet.teamTableIdx}
         <!-- Highlighted row for the team of the current page -->
-        <div class="table-row this-team" style="background-color: var(--{team});">
+        <div
+          class="table-row this-team"
+          style="background-color: var(--{team});"
+        >
           <div
             class="table-element table-position this-team"
             style="color: var(--{team}-secondary);"

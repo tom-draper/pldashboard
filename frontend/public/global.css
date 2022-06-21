@@ -99,17 +99,16 @@ h1 {
   text-decoration: none;
 }
 
-/* Ko-fi button */
+/* ------------------------------ Ko-fi button -------------------------------- */
 
 a {
   text-decoration: none;
 }
 
 .ko-fi {
-  width: 120px;
-  /* height: 100px; */
+  width: fit-content;
   background: #ff5f5f;
-  padding: 10px 20px;
+  padding: 0.8em 1.8em;
   color: white;
   text-decoration: none;
   border-radius: 6px;
@@ -118,27 +117,14 @@ a {
 }
 
 .ko-fi-text {
-  margin: 4px 0 auto;
+  margin: auto 0;
   font-size: 1.05em;
 }
 
 .ko-fi-img {
-  width: 25px;
-  height: 25px;
-  margin-right: 15px;
-}
-
-a.kofi-button {
-  font-size: 16px;
-  border-radius: var(--border-radius);
-}
-.kofitext img.kofiimg {
-  height: 18px;
-  width: 28px;
-  padding-right: 2px;
-}
-.kofitext {
-  font-family: 'Quicksand', Helvetica, Century Gothic, sans-serif;
+  width: 2.2em;
+  height: 2.2em;
+  margin-right: 1em;
 }
 
 /* -------------------------------- Layout ------------------------------------- */
@@ -307,6 +293,10 @@ img {
   width: 100% !important;
   height: 450px !important;
 }
+.resizable-spider-chart {
+  width: 700px !important;
+  height: 550px !important;
+}
 .full-row-graph {
   margin-left: 10px;
 }
@@ -437,6 +427,9 @@ img {
 .next-game-logo {
   height: 225px;
   margin: 10px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
 }
 .predictions-and-logo {
   font-size: 22px;
@@ -556,7 +549,7 @@ img {
 .teams-footer {
   padding: 50px 0 4px;
   height: auto;
-  margin-top: 50px;
+  /* margin-top: 50px; */
   width: 100%;
   font-size: 0.65em;
   align-items: center;
@@ -676,9 +669,63 @@ h1 {
   border: 4px solid rgb(46 46 46);
 }
 
+
+
+.spider-chart-row {
+  display: grid;
+  place-items: center;
+}
+.spider-chart {
+  /* width: 600px; */
+  /* height: 550px; */
+  position: relative;
+  /* display: grid; */
+  /* place-items: center; */
+}
+
+.spider-chart-container {
+  margin: 1em auto auto;
+  display: flex;
+}
+
+.spider-opp-team-selector {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+
+.spider-opp-team-title {
+  margin: 0 10px 5px 10px;
+  font-size: 0.9em;
+}
+.spider-opp-team-btns {
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  border: 3px solid black;
+}
+.spider-opp-team-btn {
+  cursor: pointer;
+  border: none;
+  padding: 4px 10px;
+}
+.top-spider-opp-team-btn {
+  border-radius: 3px 3px 0 0;
+}
+.bottom-spider-opp-team-btn {
+  border-radius: 0 0 3px 3px;
+}
+.spider-opp-team-btn:hover {
+  filter: brightness(0.95)
+
+}
+
+
+
 .parenthesis {
   font-family: 'Courier New', Courier, monospace !important;
 }
+
 
 /* Mobile view */
 
@@ -695,9 +742,9 @@ h1 {
   .season-stat-text {
     font-size: 0.9em;
   }
-  .teams-footer {
+  /* .teams-footer {
     margin-top: 0;
-  }
+  } */
   .season-stat-position {
     top: -40px;
   }
@@ -789,10 +836,27 @@ h1 {
   .resizable-graph {
     height: 400px !important;
   }
+  .resizable-spider-chart {
+    height: 500px !important;
+    width: 650px !important;
+  }
 
   .two-graphs {
     display: flex;
     margin: 0;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .spider-chart-container {
+    flex-direction: column-reverse;
+    width: 100%;
+  }
+  .spider-chart {
+    margin-top: 1em;
+  }
+  .resizable-sper-chart {
+    width: 100% !important;
   }
 }
 
@@ -855,6 +919,12 @@ h1 {
 @media only screen and (max-width: 700px) {
   .current-form-row {
     width: 90%;
+  }
+  .resizable-graph {
+    height: 300px !important;
+  }
+  .resizable-spider-chart {
+    height: 350px !important;
   }
 }
 
@@ -959,9 +1029,9 @@ h1 {
   .season-stat {
     margin: 0.25em 0 0.45em 0;
   }
-  .teams-footer {
+  /* .teams-footer {
     margin-top: 2em;
-  }
+  } */
   .next-game-prediction {
     margin-top: 30px;
   }
@@ -983,6 +1053,9 @@ h1 {
   }
   .resizable-graph {
     height: 250px !important;
+  }
+  .resizable-spider-chart {
+    height: 220px !important;
   }
   .plotly-graph-div {
     width: 105% !important;
