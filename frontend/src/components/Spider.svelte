@@ -472,6 +472,12 @@
 <div class="spider-opp-team-selector">
   <!-- <div class="spider-opp-team-title">Select team comparison</div> -->
   <div class="spider-opp-team-btns">
+    <button
+      class="spider-opp-team-btn top-spider-opp-team-btn"
+      on:click={(e) => {
+        spiderBtnClick(e.target);
+      }}>{data.teamNames[0].replace(" FC", "")}</button
+    >
     {#each data.teamNames as teamName}
       {#if teamName != fullTeamName}
         <button
@@ -482,5 +488,11 @@
         >
       {/if}
     {/each}
+    <button
+      class="spider-opp-team-btn bottom-spider-opp-team-btn"
+      on:click={(e) => {
+        spiderBtnClick(e.target);
+      }}>{data.teamNames[data.teamNames.length-1].replace(" FC", "")}</button
+    >
   </div>
 </div>

@@ -709,6 +709,12 @@ h1 {
   border: none;
   padding: 4px 10px;
 }
+.top-spider-opp-team-btn {
+  border-radius: 3px 3px 0 0;
+}
+.bottom-spider-opp-team-btn {
+  border-radius: 0 0 3px 3px;
+}
 .spider-opp-team-btn:hover {
   filter: brightness(0.95)
 
