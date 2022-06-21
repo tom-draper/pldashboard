@@ -457,6 +457,10 @@
     Plot.then((plot) => {
       plot.children[0].children[0].classList.add("resizable-spider-chart");
     });
+    
+    // Add inner border radius to top and bottom teams
+    document.getElementById('spider-opp-teams').children[0].classList.add('top-spider-opp-team-btn');
+    document.getElementById('spider-opp-teams').children[18].classList.add('bottom-spider-opp-team-btn');
   });
 
   export let data, fullTeamName;
@@ -471,13 +475,7 @@
 </div>
 <div class="spider-opp-team-selector">
   <!-- <div class="spider-opp-team-title">Select team comparison</div> -->
-  <div class="spider-opp-team-btns">
-    <button
-      class="spider-opp-team-btn top-spider-opp-team-btn"
-      on:click={(e) => {
-        spiderBtnClick(e.target);
-      }}>{data.teamNames[0].replace(" FC", "")}</button
-    >
+  <div class="spider-opp-team-btns" id="spider-opp-teams">
     {#each data.teamNames as teamName}
       {#if teamName != fullTeamName}
         <button
@@ -488,11 +486,5 @@
         >
       {/if}
     {/each}
-    <button
-      class="spider-opp-team-btn bottom-spider-opp-team-btn"
-      on:click={(e) => {
-        spiderBtnClick(e.target);
-      }}>{data.teamNames[data.teamNames.length-1].replace(" FC", "")}</button
-    >
   </div>
 </div>
