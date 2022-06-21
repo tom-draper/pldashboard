@@ -4,52 +4,49 @@
   function getTeamColor(team) {
     let teamKey = team.replace(" FC", "");
     teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
-    teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
+    teamKey = teamKey.replace(/ /g, "-").toLowerCase();
     let teamColor = getComputedStyle(document.documentElement).getPropertyValue(
       `--${teamKey}`
     );
     return teamColor;
   }
-  
+
   function addTeamComparison(team) {
     let teamColor = getTeamColor(team);
 
     let teamData = {
-        name: team,
-        type: "scatterpolar",
-        r: [
-          attack[team],
-          defence[team],
-          cleanSheets[team],
-          consistency[team],
-          winStreaks[team],
-          vsBig6[team],
-        ],
-        theta: labels,
-        fill: "toself",
-        marker: { color: teamColor }
-    }
+      name: team,
+      type: "scatterpolar",
+      r: [
+        attack[team],
+        defence[team],
+        cleanSheets[team],
+        consistency[team],
+        winStreaks[team],
+        vsBig6[team],
+      ],
+      theta: labels,
+      fill: "toself",
+      marker: { color: teamColor },
+    };
     spiderPlots.push(teamData);
-    Plotly.redraw(plotDiv);  // Redraw with team added
+    Plotly.redraw(plotDiv); // Redraw with team added
   }
 
   function addAvg() {
-    let avg = {
-        name: 'Avg',
-        type: "scatterpolar",
-        r: [
-          attack.avg,
-          defence.avg,
-          cleanSheets.avg,
-          consistency.avg,
-          winStreaks.avg,
-          vsBig6.avg,
-        ],
-        theta: labels,
-        fill: "toself",
-        marker: { color: "#d3d3d3" },
-    };
-    spiderPlots.unshift(avg);  // Add avg below the team spider plot
+    let avg = scatterPlot(
+      "Avg",
+      [
+        attack.avg,
+        defence.avg,
+        cleanSheets.avg,
+        consistency.avg,
+        winStreaks.avg,
+        vsBig6.avg,
+      ],
+      "D3D3D3"
+    );
+    spiderPlots.unshift(avg); // Add avg below the team spider plot
   }
 
   function removeTeamComparison(team) {
@@ -66,30 +63,30 @@
       addAvg();
     }
 
-    Plotly.redraw(plotDiv);  // Redraw with team removed
+    Plotly.redraw(plotDiv); // Redraw with team removed
   }
 
   function spiderBtnClick(btn) {
-    if (btn.style.background == '') {
-      let team = btn.innerHTML.toLowerCase().replace(/ /g, '-');
+    if (btn.style.background == "") {
+      let team = btn.innerHTML.toLowerCase().replace(/ /g, "-");
       btn.style.background = `var(--${team})`;
       btn.style.color = `var(--${team}-secondary)`;
     } else {
-      btn.style.background = '';
-      btn.style.color = 'black';
+      btn.style.background = "";
+      btn.style.color = "black";
     }
 
-    let fullTeamName = btn.innerHTML + ' FC';
+    let fullTeamName = btn.innerHTML + " FC";
     if (comparisonTeams.length == 0) {
-      spiderPlots.splice(0, 1);  // Remove avg
+      spiderPlots.splice(0, 1); // Remove avg
     }
 
     if (comparisonTeams.includes(fullTeamName)) {
-      removeTeamComparison(fullTeamName);  // Remove from spider chart
-      removeItem(comparisonTeams, fullTeamName);  // Remove from comparison teams
+      removeTeamComparison(fullTeamName); // Remove from spider chart
+      removeItem(comparisonTeams, fullTeamName); // Remove from comparison teams
     } else {
-      addTeamComparison(fullTeamName);  // Add team to spider chart
-      comparisonTeams.push(fullTeamName);  // Add to comparison teams
+      addTeamComparison(fullTeamName); // Add team to spider chart
+      comparisonTeams.push(fullTeamName); // Add to comparison teams
     }
   }
 
@@ -347,40 +344,47 @@
     return vsBig6;
   }
 
+  function scatterPlot(name, r, color) {
+    return {
+      name: name,
+      type: "scatterpolar",
+      r: r,
+      theta: labels,
+      fill: "toself",
+      marker: { color: color },
+      hovertemplate: `<b>${name}</b><br>%{theta}: %{r}<extra></extra>`,
+      hoveron: "points",
+    };
+  }
+
   function initSpiderPlots(team) {
     let teamColor = getTeamColor(team);
 
-    let avgData = {
-        name: 'Avg',
-        type: "scatterpolar",
-        r: [
-          attack.avg,
-          defence.avg,
-          cleanSheets.avg,
-          consistency.avg,
-          winStreaks.avg,
-          vsBig6.avg,
-        ],
-        theta: labels,
-        fill: "toself",
-        marker: { color: "#d3d3d3" },
-    };
-    let teamData = {
-        name: team,
-        type: "scatterpolar",
-        r: [
-          attack[team],
-          defence[team],
-          cleanSheets[team],
-          consistency[team],
-          winStreaks[team],
-          vsBig6[team],
-        ],
-        theta: labels,
-        fill: "toself",
-        marker: { color: teamColor }
-    }
-  
+    let avgData = scatterPlot(
+      "Avg",
+      [
+        attack.avg,
+        defence.avg,
+        cleanSheets.avg,
+        consistency.avg,
+        winStreaks.avg,
+        vsBig6.avg,
+      ],
+      "#D3D3D3"
+    );
+    let teamData = scatterPlot(
+      team,
+      [
+        attack[team],
+        defence[team],
+        cleanSheets[team],
+        consistency[team],
+        winStreaks[team],
+        vsBig6[team],
+      ],
+      teamColor
+    );
+
     return [avgData, teamData];
   }
 
@@ -397,7 +401,7 @@
     computePlotData(data);
 
     spiderPlots = initSpiderPlots(team);
-    
+
     let graphData = {
       data: spiderPlots,
       layout: {
@@ -409,7 +413,7 @@
           },
         },
         hover: "closest",
-        margin: { t: 25, b: 25, l: 100, r: 100 },
+        margin: { t: 25, b: 25, l: 75, r: 75 },
         showlegend: false,
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
@@ -422,7 +426,7 @@
     };
     return graphData;
   }
-  
+
   let labels = [
     "Attack",
     "Defence",
@@ -458,7 +462,7 @@
   export let data, fullTeamName;
 </script>
 
-<div class="spider-chart full-row-graph">
+<div class="spider-chart">
   <div id="plotly">
     <div id="plotDiv" bind:this={plotDiv}>
       <!-- Plotly chart will be drawn inside this DIV -->
@@ -474,7 +478,8 @@
           class="spider-opp-team-btn"
           on:click={(e) => {
             spiderBtnClick(e.target);
-          }}>{teamName.replace(" FC", "")}</button>
+          }}>{teamName.replace(" FC", "")}</button
+        >
       {/if}
     {/each}
   </div>

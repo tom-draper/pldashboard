@@ -294,6 +294,7 @@ img {
   height: 450px !important;
 }
 .resizable-spider-chart {
+  width: 700px !important;
   height: 550px !important;
 }
 .full-row-graph {
@@ -831,11 +832,25 @@ h1 {
   }
   .resizable-spider-chart {
     height: 500px !important;
+    width: 650px !important;
   }
 
   .two-graphs {
     display: flex;
     margin: 0;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .spider-chart-container {
+    flex-direction: column-reverse;
+    width: 100%;
+  }
+  .spider-chart {
+    margin-top: 1em;
+  }
+  .resizable-sper-chart {
+    width: 100% !important;
   }
 }
 
