@@ -34,18 +34,7 @@
   }
 
   function addAvg() {
-    let avg = scatterPlot(
-      "Avg",
-      [
-        attack.avg,
-        defence.avg,
-        cleanSheets.avg,
-        consistency.avg,
-        winStreaks.avg,
-        vsBig6.avg,
-      ],
-      "D3D3D3"
-    );
+    let avg = avgScatterPlot();
     spiderPlots.unshift(avg); // Add avg below the team spider plot
   }
 
@@ -357,10 +346,8 @@
     };
   }
 
-  function initSpiderPlots(team) {
-    let teamColor = getTeamColor(team);
-
-    let avgData = scatterPlot(
+  function avgScatterPlot() {
+    return scatterPlot(
       "Avg",
       [
         attack.avg,
@@ -370,8 +357,15 @@
         winStreaks.avg,
         vsBig6.avg,
       ],
-      "#D3D3D3"
+      "#ADADAD"
     );
+
+  }
+
+  function initSpiderPlots(team) {
+    let teamColor = getTeamColor(team);
+
+    let avgData = avgScatterPlot();
     let teamData = scatterPlot(
       team,
       [
