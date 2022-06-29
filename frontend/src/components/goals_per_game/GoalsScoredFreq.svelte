@@ -11,7 +11,7 @@
           y: Object.values(goalFreq),
           type: "bar",
           name: "Avg",
-          marker: { color: "#d3d3d3" },
+          marker: { color: "#C6C6C6" },
           line: { width: 0 },
           hovertemplate: "%{x} goals in %{y} games<extra></extra>",
           hoverinfo: "x+y",

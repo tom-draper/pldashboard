@@ -1,15 +1,15 @@
 {
   "dependencies": {
-    "express": "^4.17.1",
-    "nodemon": "^2.0.6",
+    "express": "^4.18.1",
+    "nodemon": "^2.0.18",
     "npm-run-all": "^4.1.5",
-    "rollup": "^2.35.1",
+    "rollup": "^2.75.7",
     "rollup-plugin-import-css": "^3.0.3",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "~7.0.0",
     "rollup-plugin-terser": "^7.0.2",
-    "sirv-cli": "^1.0.10",
-    "svelte": "^3.31.1",
+    "sirv-cli": "^1.0.14",
+    "svelte": "^3.48.0",
     "svelte-routing": "^1.6.0"
   },
   "scripts": {
@@ -19,7 +19,7 @@
     "server": "nodemon server.js --watch server.js --watch public/App.js"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.0.0",
-    "@rollup/plugin-node-resolve": "^11.0.0"
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-node-resolve": "^13.3.0"
   }
 }
