@@ -271,15 +271,8 @@ a {
   flex-direction: column;
   width: 800px;
   padding-right: auto;
-  margin-right: 40px;
-  padding-left: 40px;
+  margin: 0 40px;
   text-justify: center;
-}
-.position-and-badge {
-  height: 500px;
-  background-repeat: no-repeat;
-  background-size: auto 450px; 
-  background-position: right center;
 }
 img {
   height: 450px;
@@ -308,10 +301,17 @@ img {
   flex-direction: column;
 }
 
+.position-and-badge {
+  height: 500px;
+  background-repeat: no-repeat;
+  background-size: auto 450px; 
+  background-position: right center;
+}
 .position-no-badge {
   padding-left: 0;
   margin: 0;
   height: 500px;
+  width: 860px;
 }
 .position-central,
 .position {
@@ -810,6 +810,7 @@ h1 {
   }
   .position-no-badge {
     height: 400px;
+    width: 500px;
   }
   .circles-background {
     transform: scale(0.8);
@@ -1022,14 +1023,7 @@ h1 {
   .lowered {
     margin: 0 30px;
   }
-  .position {
-    font-size: 10.5em;
-    text-align: center;
-    line-height: 1.6;
-    padding-right: 20px;
-    margin: 0;
-    text-shadow: 7px 7px #000;
-  }
+  .position,
   .position-central {
     font-size: 10.5em;
     text-align: center;
@@ -1041,13 +1035,10 @@ h1 {
   .position-and-badge {
     background-size: auto 210px !important;
     background-position: center !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100%;
   }
-  .position-no-badge {
-    /* background-size: auto 210px !important; */
-    /* background-position: center !important; */
+
+  .position-no-badge,
+  .position-and-badge {
     padding: 0 !important;
     margin: 0 !important;
     width: 100%;
@@ -1083,9 +1074,7 @@ h1 {
   .next-game-values {
     margin-top: 5px;
   }
-  .past-results {
-    margin-top: 20px;
-  }
+  .past-results,
   .season-stats-row {
     margin-top: 20px;
   }
@@ -1182,10 +1171,7 @@ h1 {
   display: flex;
   text-align: right;
 }
-.prediction-initials {
-  flex: 1;
-  text-align: center;
-}
+.prediction-initials,
 .prediction-score {
   flex: 1;
   text-align: center;
