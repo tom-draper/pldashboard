@@ -37,7 +37,7 @@
         teamTableIdx = i - low;
       }
       rows.push({
-        name: sortedTeams[i],
+        name: sortedTeams[i].replace(' FC', ''),
         position: data.standings[sortedTeams[i]][data.currentSeason].position,
         points: data.standings[sortedTeams[i]][data.currentSeason].points,
         gd: data.standings[sortedTeams[i]][data.currentSeason].gD,

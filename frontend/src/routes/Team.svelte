@@ -21,10 +21,12 @@
       .map(function (word) {
         return word.charAt(0).toUpperCase() + word.slice(1);
       })
-      .join(" ");
+      .join(" ")
+      .replace('And', 'and');
   }
 
   function getCurrentMatchday(data, fullTeamName) {
+    console.log(data, fullTeamName)
     return Object.keys(data.form[fullTeamName]).reduce((a, b) =>
       data.form[fullTeamName][a] > data.form[fullTeamName][b] ? a : b
     );
@@ -58,7 +60,7 @@
 </script>
 
 <svelte:head>
-  <title>{fullTeamName}</title>
+  <title>{fullTeamName.replace(' FC', '')}</title>
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
@@ -67,7 +69,7 @@
     <div class="main-link title no-decoration"
       style="color: var(--{team + '-secondary'});"
     >
-      {fullTeamName}
+      {fullTeamName.replace(' FC', '')}
     </div>
   </div>
 
@@ -87,9 +89,6 @@
           <div class="row-left position-no-badge">
             <div class="circles-background-container">
               <svg class="circles-background">
-                <!-- <circle cx="170" cy="330" r="150" stroke-width="0" fill="var(--{team})" /> -->
-                <!-- <circle cx="340" cy="140" r="120" stroke-width="0" fill="var(--{team})" /> -->
-                <!-- <circle cx="375" cy="80" r="40" stroke-width="0" fill="var(--{team})" /> -->
                 <circle cx="300" cy="150" r="100" stroke-width="0" fill="var(--{team}-secondary)" />
                 <circle cx="170" cy="170" r="140" stroke-width="0" fill="var(--{team})" />
                 <circle cx="300" cy="320" r="170" stroke-width="0" fill="var(--{team})" />
