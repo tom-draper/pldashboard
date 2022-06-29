@@ -307,16 +307,42 @@ img {
   display: flex;
   flex-direction: column;
 }
+
+.position-no-badge {
+  padding-left: 0;
+  margin: 0;
+  height: 500px;
+}
+.position-central,
 .position {
   text-shadow: 9px 9px #000;
-  margin-top: 10px;
   font-weight: 800;
   font-size: 450px;
-  text-align: left;
-  margin-left: 30px;
   user-select: none;
   max-width: 500px;
 }
+.position {
+  text-align: left;
+  margin-top: 0.02em;
+  margin-left: 30px;
+}
+.position-central {
+  text-align: center;
+  margin-top: 0.04em;
+  max-height: 500px;
+  margin-left: 0.05em;
+}
+.circles-background-container {
+  position: absolute;
+  align-self: center;
+  width: 500px;
+  z-index: -10;
+}
+.circles-background {
+  height: 500px;
+  width: 500px;
+}
+
 .current-form-row {
   font-size: 0.9em;
   display: flex;
@@ -778,8 +804,16 @@ h1 {
     background-size: auto 330px !important;
     height: 400px;
   }
+  .position-central,
   .position {
     font-size: 350px;
+  }
+  .position-no-badge {
+    height: 400px;
+  }
+  .circles-background {
+    transform: scale(0.8);
+    margin-top: -50px;
   }
   .icon {
     width: 20vw;
@@ -845,6 +879,11 @@ h1 {
     display: flex;
     margin: 0;
   }
+
+  .position-central,
+  .circles-background-container {
+    align-self: center;
+  }
 }
 
 @media only screen and (max-width: 1000px) {
@@ -855,7 +894,7 @@ h1 {
   .spider-chart {
     margin-top: 1em;
   }
-  .resizable-sper-chart {
+  .resizable-spider-chart {
     width: 100% !important;
   }
 }
@@ -991,14 +1030,38 @@ h1 {
     margin: 0;
     text-shadow: 7px 7px #000;
   }
+  .position-central {
+    font-size: 10.5em;
+    text-align: center;
+    line-height: 1.6;
+    padding-right: 20px;
+    margin: 0;
+    text-shadow: 7px 7px #000;
+  }
   .position-and-badge {
     background-size: auto 210px !important;
     background-position: center !important;
     padding: 0 !important;
     margin: 0 !important;
     width: 100%;
+  }
+  .position-no-badge {
+    /* background-size: auto 210px !important; */
+    /* background-position: center !important; */
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100%;
+  }
+  .position-and-badge,
+  .position-no-badge,
+  .circles-background-container {
     height: 250px;
   }
+  .circles-background {
+    transform: scale(0.5);
+    margin-top: -125px;
+  }
+
   h1 {
     font-size: 1.5em;
   }
