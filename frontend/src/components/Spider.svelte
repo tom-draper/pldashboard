@@ -183,7 +183,7 @@
       let nCleanSheets = 0;
       for (let matchday of Object.keys(data.form[teamName])) {
         let match = data.form[teamName][matchday];
-        if (match.score != "None - None") {
+        if (match.score != null) {
           let [h, _, a] = match.score.split(" ");
           if (match.atHome && a == 0) {
             nCleanSheets += 1;
@@ -216,7 +216,7 @@
       let prevResult = null;
       for (let matchday of Object.keys(data.form[teamName])) {
         let match = data.form[teamName][matchday];
-        if (match.score != "None - None") {
+        if (match.score != null) {
           let [h, _, a] = match.score.split(" ");
           let result;
           if ((match.atHome && h > a) || (!match.atHome && h < a)) {
@@ -256,7 +256,7 @@
       let tempWinStreak = 0;
       for (let matchday of Object.keys(data.form[teamName])) {
         let match = data.form[teamName][matchday];
-        if (match.score != "None - None") {
+        if (match.score != null) {
           let [h, _, a] = match.score.split(" ");
           if ((match.atHome && h > a) || (!match.atHome && h < a)) {
             tempWinStreak += 1;
@@ -309,7 +309,7 @@
       let winsVsBig6 = 0;
       for (let matchday of Object.keys(data.form[teamName])) {
         let match = data.form[teamName][matchday];
-        if (match.score != "None - None" && big6.includes(match.teamName)) {
+        if (match.score != null && big6.includes(match.teamName)) {
           let [h, _, a] = match.score.split(" ");
           if ((match.atHome && h > a) || (!match.atHome && h < a)) {
             winsVsBig6 += 1;

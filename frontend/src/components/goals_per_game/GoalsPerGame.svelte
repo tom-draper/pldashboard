@@ -8,7 +8,7 @@
     for (let team of data.teamNames) {
       for (let matchday of Object.keys(data.form[team])) {
         let score = data.form[team][matchday].score;
-        if (score != "None - None") {
+        if (score != null) {
           let [h, _, a] = score.split(" ");
           // Also collect opposition goals scored
           if (data.form[team][matchday].atHome) {
@@ -39,7 +39,7 @@
     let goalFreq = {};
     for (let matchday of Object.keys(data.form[team])) {
       let score = data.form[team][matchday].score;
-      if (score != "None - None") {
+      if (score != null) {
         let [h, _, a] = score.split(" ");
         if (data.form[team][matchday].atHome) {
           if (h in goalFreq) {
@@ -64,7 +64,7 @@
     let goalFreq = {};
     for (let matchday of Object.keys(data.form[team])) {
       let score = data.form[team][matchday].score;
-      if (score != "None - None") {
+      if (score != null) {
         let [h, _, a] = score.split(" ");
         if (data.form[team][matchday].atHome) {
           if (a in goalFreq) {

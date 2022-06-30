@@ -7342,7 +7342,7 @@
     		for (let matchday of Object.keys(data.form[team])) {
     			let score = data.form[team][matchday].score;
 
-    			if (score != "None - None") {
+    			if (score != null) {
     				let [h, _, a] = score.split(" ");
 
     				// Also collect opposition goals scored
@@ -7377,7 +7377,7 @@
     	for (let matchday of Object.keys(data.form[team])) {
     		let score = data.form[team][matchday].score;
 
-    		if (score != "None - None") {
+    		if (score != null) {
     			let [h, _, a] = score.split(" ");
 
     			if (data.form[team][matchday].atHome) {
@@ -7405,7 +7405,7 @@
     	for (let matchday of Object.keys(data.form[team])) {
     		let score = data.form[team][matchday].score;
 
-    		if (score != "None - None") {
+    		if (score != null) {
     			let [h, _, a] = score.split(" ");
 
     			if (data.form[team][matchday].atHome) {
@@ -7789,7 +7789,7 @@
     		for (let matchday of Object.keys(data.form[teamName])) {
     			let match = data.form[teamName][matchday];
 
-    			if (match.score != "None - None") {
+    			if (match.score != null) {
     				let [h, _, a] = match.score.split(" ");
 
     				if (match.atHome && a == 0) {
@@ -7829,7 +7829,7 @@
     		for (let matchday of Object.keys(data.form[teamName])) {
     			let match = data.form[teamName][matchday];
 
-    			if (match.score != "None - None") {
+    			if (match.score != null) {
     				let [h, _, a] = match.score.split(" ");
     				let result;
 
@@ -7878,7 +7878,7 @@
     		for (let matchday of Object.keys(data.form[teamName])) {
     			let match = data.form[teamName][matchday];
 
-    			if (match.score != "None - None") {
+    			if (match.score != null) {
     				let [h, _, a] = match.score.split(" ");
 
     				if (match.atHome && h > a || !match.atHome && h < a) {
@@ -7941,7 +7941,7 @@
     		for (let matchday of Object.keys(data.form[teamName])) {
     			let match = data.form[teamName][matchday];
 
-    			if (match.score != "None - None" && big6.includes(match.teamName)) {
+    			if (match.score != null && big6.includes(match.teamName)) {
     				let [h, _, a] = match.score.split(" ");
 
     				if (match.atHome && h > a || !match.atHome && h < a) {
