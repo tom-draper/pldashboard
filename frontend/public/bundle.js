@@ -1,5 +1,5 @@
 
-(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35730/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 (function () {
     'use strict';
 
@@ -8015,27 +8015,27 @@
     	}
 
     	function spiderBtnClick(btn) {
+    		let teamName = btn.innerHTML;
+
     		if (btn.style.background == "") {
-    			let teamName = btn.innerHTML.toLowerCase().replace(/ /g, "-");
-    			btn.style.background = `var(--${teamName})`;
-    			btn.style.color = `var(--${teamName}-secondary)`;
+    			let teamKey = teamName.toLowerCase().replace(/ /g, "-");
+    			btn.style.background = `var(--${teamKey})`;
+    			btn.style.color = `var(--${teamKey}-secondary)`;
     		} else {
     			btn.style.background = "";
     			btn.style.color = "black";
     		}
 
-    		let fullTeamName = btn.innerHTML + " FC";
-
     		if (comparisonTeams.length == 0) {
     			spiderPlots.splice(0, 1); // Remove avg
     		}
 
-    		if (comparisonTeams.includes(fullTeamName)) {
-    			removeTeamComparison(fullTeamName); // Remove from spider chart
-    			removeItem(comparisonTeams, fullTeamName); // Remove from comparison teams
+    		if (comparisonTeams.includes(teamName)) {
+    			removeTeamComparison(teamName); // Remove from spider chart
+    			removeItem(comparisonTeams, teamName); // Remove from comparison teams
     		} else {
-    			addTeamComparison(fullTeamName); // Add teamName to spider chart
-    			comparisonTeams.push(fullTeamName); // Add to comparison teams
+    			addTeamComparison(teamName); // Add teamName to spider chart
+    			comparisonTeams.push(teamName); // Add to comparison teams
     		}
     	}
 
