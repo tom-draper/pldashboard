@@ -45,9 +45,9 @@ class SeasonStats(DF):
         self,
         team_name: str
     ) -> tuple[tuple[float, str], tuple[float, str], tuple[float, str]]:
-        clean_sheets = self._get_stat(team_name, 'CleanSheetRatio', False)
-        goals_per_game = self._get_stat(team_name, 'XG', False)
-        conceded_per_game = self._get_stat(team_name, 'XC', True)
+        clean_sheets = self._get_stat(team_name, 'cleanSheetRatio', False)
+        goals_per_game = self._get_stat(team_name, 'xG', False)
+        conceded_per_game = self._get_stat(team_name, 'xC', True)
         return clean_sheets, goals_per_game, conceded_per_game
 
     @staticmethod
@@ -62,8 +62,8 @@ class SeasonStats(DF):
         goals_conceded = 0
 
         for matchday in matchdays:
-            at_home = row[matchday]['AtHome']
-            score = row[matchday]['Score']
+            at_home = row[matchday]['atHome']
+            score = row[matchday]['score']
             if score is not None:
                 home, away = utils.extract_int_score(score)
 
@@ -93,15 +93,15 @@ class SeasonStats(DF):
             Rows: the 20 teams participating in the current season.
             Columns (multi-index):
             --------------------------------------------------
-            | XG | XC | CleanSheetRatio | NoGoalRatio |
+            | xG | xC | cleanSheetRatio | noGoalRatio |
 
-            XG: the total number of goals scored this season divided by 
+            xG: the total number of goals scored this season divided by 
                 the number of games played.
-            XC: the total number of goals conceded this season divided 
+            xC: the total number of goals conceded this season divided 
                 by the number of games played.
-            CleanSheetRatio: the number of games without a goal conceded this 
+            cleanSheetRatio: the number of games without a goal conceded this 
                 season divided by the number of games played.
-            NoGoalRatio: the number of games without a goal scored this 
+            noGoalRatio: the number of games without a goal scored this 
                 season divided by the number of games played.
 
         Args:
@@ -119,10 +119,10 @@ class SeasonStats(DF):
 
         matchdays = list(form.df.columns.unique(level=0))
 
-        season_stats = {'XG': {},
-                        'XC': {},
-                        'CleanSheetRatio': {},
-                        'NoGoalRatio': {}}  # type: dict[str, dict[str, float]]
+        season_stats = {'xG': {},
+                        'xC': {},
+                        'cleanSheetRatio': {},
+                        'noGoalRatio': {}}  # type: dict[str, dict[str, float]]
         for team_name, row in form.df.iterrows():
             n_games, clean_sheets, failed_to_score, goals_scored, goals_conceded = self._row_season_goals(
                 row, matchdays)
@@ -132,17 +132,17 @@ class SeasonStats(DF):
                 d[team_name] = 0.0
 
             if n_games > 0:
-                season_stats['XG'][team_name] = round(
+                season_stats['xG'][team_name] = round(
                     goals_scored / n_games, 2)
-                season_stats['XC'][team_name] = round(
+                season_stats['xC'][team_name] = round(
                     goals_conceded / n_games, 2)
-                season_stats['CleanSheetRatio'][team_name] = round(
+                season_stats['cleanSheetRatio'][team_name] = round(
                     clean_sheets / n_games, 2)
-                season_stats['NoGoalRatio'][team_name] = round(
+                season_stats['noGoalRatio'][team_name] = round(
                     failed_to_score / n_games, 2)
 
         season_stats = pd.DataFrame.from_dict(season_stats)
-        season_stats.index.name = 'Team'
+        season_stats.index.name = 'team'
 
         if display:
             print(season_stats)

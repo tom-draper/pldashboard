@@ -391,6 +391,6 @@ class Predictions:
         upcoming_predictions = pd.DataFrame.from_dict(
             predictions, 
             orient='index'
-        )[['prediction']].rename(columns={'prediction': 'Prediction'})
+        )[['prediction']]
 
         return upcoming_predictions

@@ -22,13 +22,13 @@ class Upcoming(DF):
         self.finished_season = False
 
     def _get_opposition(self, team_name: str) -> str:
-        return self.df.at[team_name, 'NextTeam']
+        return self.df.at[team_name, 'nextTeam']
 
     def _get_prev_matches(self, team_name: str) -> list:
-        return self.df.at[team_name, 'PreviousMatches']
+        return self.df.at[team_name, 'prevMatches']
 
     def _get_at_home(self, team_name: str) -> str:
-        return self.df.at[team_name, 'AtHome']
+        return self.df.at[team_name, 'atHome']
 
     def get_details(self, team_name: str) -> tuple[str, str, list]:
         opp_team_name = ''
@@ -52,10 +52,10 @@ class Upcoming(DF):
         at_home = None  # type: Optional[str]
         # Scan through list of fixtures to find the first that is 'scheduled'
         for matchday_no in fixtures.df.columns.unique(level=0):
-            if fixtures.df.at[team_name, (matchday_no, 'Status')] == 'SCHEDULED':
-                date = fixtures.df.at[team_name, (matchday_no, 'Date')]
-                next_team = fixtures.df.at[team_name, (matchday_no, 'Team')]
-                at_home = fixtures.df.at[team_name, (matchday_no, 'AtHome')]
+            if fixtures.df.at[team_name, (matchday_no, 'status')] == 'SCHEDULED':
+                date = fixtures.df.at[team_name, (matchday_no, 'date')]
+                next_team = fixtures.df.at[team_name, (matchday_no, 'team')]
+                at_home = fixtures.df.at[team_name, (matchday_no, 'atHome')]
                 break
 
         return date, next_team, at_home
@@ -64,18 +64,16 @@ class Upcoming(DF):
         self,
         team_name: str
     ) -> tuple[str, int, str, int]:
-        at_home = self.df.at[team_name, 'AtHome']
+        at_home = self.df.at[team_name, 'atHome']
 
         if at_home:
             home_initials = utils.convert_team_name_or_initials(team_name)
-            away_initials = utils.convert_team_name_or_initials(
-                self.df.at[team_name, 'NextTeam'])
+            away_initials = utils.convert_team_name_or_initials(self.df.at[team_name, 'nextTeam'])
         else:
-            home_initials = utils.convert_team_name_or_initials(
-                self.df.at[team_name, 'NextTeam'])
+            home_initials = utils.convert_team_name_or_initials(self.df.at[team_name, 'nextTeam'])
             away_initials = utils.convert_team_name_or_initials(team_name)
 
-        prediction = self.df.at[team_name, 'Prediction']
+        prediction = self.df.at[team_name, 'prediction']
         xg_home = prediction['homeGoals']
         xg_away = prediction['awayGoals']
 
@@ -91,11 +89,11 @@ class Upcoming(DF):
         home_score = match['score']['fullTime']['homeTeam']
         away_score = match['score']['fullTime']['awayTeam']
         if home_score == away_score:
-            result = ('Drew', 'Drew')
+            result = ('drew', 'drew')
         elif home_score > away_score:
-            result = ('Won', 'Lost')
+            result = ('Won', 'lost')
         else:
-            result = ('Lost', 'Won')
+            result = ('lost', 'won')
 
         return result
 
@@ -109,13 +107,13 @@ class Upcoming(DF):
         result: str
     ) -> dict:
         readable_date = self._readable_date(date)
-        prev_match = {'Date': date,
-                      'ReadableDate': readable_date,
-                      'HomeTeam': home_team,
-                      'AwayTeam': away_team,
-                      'HomeGoals': home_goals,
-                      'AwayGoals': away_goals,
-                      'Result': result}
+        prev_match = {'date': date,
+                      'readableDate': readable_date,
+                      'homeTeam': home_team,
+                      'awayTeam': away_team,
+                      'homeGoals': home_goals,
+                      'awayGoals': away_goals,
+                      'result': result}
         return prev_match
 
     def _append_prev_match(
@@ -130,15 +128,15 @@ class Upcoming(DF):
     ):
         # From the perspective from the home team
         # If this match's home team has their next game against this match's away team
-        if next_games[home_team]['NextTeam'] == away_team:
+        if next_games[home_team]['nextTeam'] == away_team:
             prev_match = self._prev_match(
                 date, home_team, away_team, home_goals, away_goals, result[0])
-            next_games[home_team]['PreviousMatches'].append(prev_match)
+            next_games[home_team]['prevMatches'].append(prev_match)
 
-        if next_games[away_team]['NextTeam'] == home_team:
+        if next_games[away_team]['nextTeam'] == home_team:
             prev_match = self._prev_match(
                 date, home_team, away_team, home_goals, away_goals, result[1])
-            next_games[away_team]['PreviousMatches'].append(prev_match)
+            next_games[away_team]['prevMatches'].append(prev_match)
 
     @staticmethod
     def _ord(n: int) -> str:
@@ -152,8 +150,8 @@ class Upcoming(DF):
     @staticmethod
     def _sort_prev_matches_by_date(next_games: dict):
         for _, row in next_games.items():
-            row['PreviousMatches'] = sorted(
-                row['PreviousMatches'], key=lambda x: x['Date'], reverse=True)
+            row['prevMatches'] = sorted(
+                row['prevMatches'], key=lambda x: x['Date'], reverse=True)
 
     def _append_season_prev_matches(
         self,
@@ -169,8 +167,8 @@ class Upcoming(DF):
 
         for match in data:
             if match['status'] == 'FINISHED':
-                home_team = match['homeTeam']['name'].replace('&', 'and')  # type: str
-                away_team = match['awayTeam']['name'].replace('&', 'and')  # type: str
+                home_team = match['homeTeam']['name'].replace(' FC', '').replace('&', 'and')  # type: str
+                away_team = match['awayTeam']['name'].replace(' FC', '').replace('&', 'and')  # type: str
 
                 if home_team in team_names and away_team in team_names:
                     home_goals = match['score']['fullTime']['homeTeam']
@@ -205,19 +203,19 @@ class Upcoming(DF):
 
             Rows: the 20 teams participating in the current season
             Columns:
-            --------------------------------------------------------------------------------
-            | Date | NextGame | AtHome | PreviousMatches | Prediction | DetailedPrediction |
+            ----------------------------------------------------------------------------
+            | date | nextGame | atHome | prevMatches | prediction | detailedPrediction |
 
-            Date: the datetime of the upcoming match.
-            NextGame: name of the opposition team in a team's next game
-            AtHome: whether the team is playing the next match at home or away, 
+            date: the datetime of the upcoming match.
+            nextGame: name of the opposition team in a team's next game
+            atHome: whether the team is playing the next match at home or away, 
                 either True or False
-            PreviousMatches: list of previous match dictionaries containing the 
+            prevMatches: list of previous match dictionaries containing the 
                 date, home team, away team, home goals, away goals, match result 
-                for each match between the two teams
-            Prediction: a {'homeGoals': X, 'awayGoals': Y} dictionary holding the
+                for each recorded previous match between the two teams.
+            prediction: a {'homeGoals': X, 'awayGoals': Y} dictionary holding the
                 predicted integer goals for each team
-            DetailedPrediction: a {'homeGoals': X, 'awayGoals': Y} dictionary holding the
+            detailedPrediction: a {'homeGoals': X, 'awayGoals': Y} dictionary holding the
                 predicted float goals for each team
 
         Args:
@@ -244,10 +242,10 @@ class Upcoming(DF):
         for team_name in team_names:
             date, next_team, at_home = self._get_next_game(team_name, fixtures)
             d[team_name] = {
-                'Date': date,
-                'NextTeam': next_team,
-                'AtHome': at_home,
-                'PreviousMatches': []
+                'date': date,
+                'nextTeam': next_team,
+                'atHome': at_home,
+                'prevMatches': []
             }
 
         for i in range(n_seasons):
@@ -265,7 +263,7 @@ class Upcoming(DF):
             predictions = self.predictions.build(fixtures, form, upcoming, home_advantages, update_db)
             upcoming = pd.concat([upcoming, predictions], axis=1)
 
-        upcoming.index.name = 'Team'
+        upcoming.index.name = 'team'
 
         if display:
             print(upcoming)

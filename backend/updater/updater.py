@@ -45,7 +45,7 @@ class Updater:
                                     headers=self.headers)
             
             code = response.status_code
-            if code== 429 or code == 403:
+            if code == 429 or code == 403:
                 print('❌  Status:', code)
                 raise ValueError('❌ ERROR: Data request failed')
             else:
@@ -158,27 +158,17 @@ class Updater:
             display=display_tables,
             update_db=update_db
         )
-
-    # def save_tables(self):
-    #     self.data.standings._save_to_html()
-    #     self.data.fixtures._save_to_html()
-    #     self.data.team_ratings._save_to_html()
-    #     self.data.home_advantages._save_to_html()
-    #     self.data.form._save_to_html()
-    #     self.data.upcoming._save_to_html()
-    #     self.data.season_stats._save_to_html()
-    
     
     def save_team_data_to_database(self):
-        team_data = self.data.to_one_dict()            
+        team_data = self.data.to_one_dict()
         self.database.update_team_data(team_data)
         
-    def get_logo_urls(self) -> dict[str, str]:       
+    def get_logo_urls(self) -> dict[str, str]:
         data = self.json_data['standings'][self.current_season]
 
         logo_urls = {}
         for standings_row in data:
-            team_name = standings_row['team']['name'].replace('&', 'and')
+            team_name = standings_row['team']['name'].replace(' FC', '').replace('&', 'and')
             crest_url = standings_row['team']['crestUrl']
             logo_urls[team_name] = crest_url
 
@@ -209,14 +199,14 @@ class Updater:
             
         self.build_dataframes(n_seasons, display_tables, update_db)
         
-        print('💾 Saving new data to database...')
-        self.save_team_data_to_database()
 
         if request_new:
             print('💾 Saving new data as JSON files...')
             self.save_data_to_json()
             print('💾 Saving tables as HTML files...')
             if update_db:
+                print('💾 Saving new data to database...')
+                self.save_team_data_to_database()
                 pass
                 # TODO: Save predictions to database...
                 #self.database.update_predictions(predictions)

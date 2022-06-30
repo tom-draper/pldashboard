@@ -20,7 +20,6 @@ class Database:
         USERNAME = getenv('MONGODB_USERNAME')
         PASSWORD = getenv('MONGODB_PASSWORD')
         MONGODB_DATABASE = getenv('MONGODB_DATABASE')
-        print(USERNAME)
         self.connection_string = f"mongodb+srv://{USERNAME}:{PASSWORD}@main.pvnry.mongodb.net/{MONGODB_DATABASE}?retryWrites=true&w=majority&authSource=admin"
 
     def get_predictions(self) -> list[dict]:

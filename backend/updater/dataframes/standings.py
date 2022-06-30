@@ -145,19 +145,18 @@ class Standings(DF):
         season: int
     ) -> DataFrame:
         data = json_data['standings'][season]
-        df = pd.DataFrame(data)
-
+        df = pd.DataFrame.from_dict(data)
+        
         # Rename teams to their team name
-        team_names = [name.replace('&', 'and') for name in [
-            df['team'][x]['name'] for x in range(len(df))]]
+        team_names = [name.replace(' FC', '').replace('&', 'and') 
+                      for name in [df['team'][x]['name'] for x in range(len(df))]]
         df = df.drop(columns=['form', 'team'])
         df.index = team_names
 
         # Move points column to the end
         points_col = df.pop('points')
         df.insert(8, 'points', points_col)
-        col_headings = ['Position', 'Played', 'Won',
-                        'Drawn', 'Lost', 'GF', 'GA', 'GD', 'Points']
+        col_headings = ['position', 'played', 'won', 'drawn', 'lost', 'gF', 'gA', 'gD', 'points']
         df.columns = pd.MultiIndex.from_product([[season], col_headings])
 
         df = df.drop(index=df.index.difference(current_teams))
@@ -181,20 +180,20 @@ class Standings(DF):
             -----------------------------------------------------------------
             |                         [SEASON YEAR]                         |
             |---------------------------------------------------------------|
-            | Position | Played | Won | Draw | Lost | GF | GA | GD | Points | 
+            | position | played | won | draw | lost | gF | gA | gD | points | 
 
             [SEASON YEAR]: 4-digit year values that a season began, from current 
                 season to season no_seasons ago
-            Position: unique integer from 1 to 20 depending on the table position 
+            position: unique integer from 1 to 20 depending on the table position 
                 the team holds in the season
-            Played: the number of games the team has played in the season.
-            Won: the number of games the team has won in the season.
-            Drawn: the number of games the team has drawn in the season.
-            Lost: the number of games the team has lost in the season.
-            GF: goals for - the number of goals the team has scored in this season.
-            GA: goals against - the number of games the team has lost in the season.
-            GD: the number of games the team has lost in the season.
-            Points: the points aquired by the team.
+            played: the number of games the team has played in the season.
+            won: the number of games the team has won in the season.
+            drawn: the number of games the team has drawn in the season.
+            lost: the number of games the team has lost in the season.
+            gF: goals for - the number of goals the team has scored in this season.
+            gA: goals against - the number of games the team has lost in the season.
+            gD: the number of games the team has lost in the season.
+            points: the points aquired by the team.
 
         Args:
             json_data dict: the json data storage used to build the dataframe
@@ -220,7 +219,7 @@ class Standings(DF):
             standings = pd.concat((standings, season_standings), axis=1)
 
         standings = standings.fillna(0).astype(int)
-        standings.index.name = 'Team'
+        standings.index.name = 'team'
         standings.columns.names = ('Season', None)
 
         if display:

@@ -15,52 +15,52 @@ class HomeAdvantages(DF):
     def _home_advantages_for_season(d: defaultdict, data: dict, season: int):
         for match in data:
             if match['score']['winner'] is not None:
-                home_team = match['homeTeam']['name'].replace('&', 'and')
-                away_team = match['awayTeam']['name'].replace('&', 'and')
+                home_team = match['homeTeam']['name'].replace(' FC', '').replace('&', 'and')
+                away_team = match['awayTeam']['name'].replace(' FC', '').replace('&', 'and')
                 home_goals = match['score']['fullTime']['homeTeam']
                 away_goals = match['score']['fullTime']['awayTeam']
                 if home_goals > away_goals:
-                    # Home team wins
-                    d[home_team][(season, 'Home', 'Wins')] += 1
-                    d[away_team][(season, 'Away', 'Loses')] += 1
+                    # home team wins
+                    d[home_team][(season, 'home', 'wins')] += 1
+                    d[away_team][(season, 'away', 'loses')] += 1
                 elif home_goals < away_goals:
-                    # Away team wins
-                    d[home_team][(season, 'Home', 'Loses')] += 1
-                    d[away_team][(season, 'Away', 'Wins')] += 1
+                    # away team wins
+                    d[home_team][(season, 'home', 'loses')] += 1
+                    d[away_team][(season, 'away', 'wins')] += 1
                 else:
                     # Draw
-                    d[home_team][(season, 'Home', 'Draws')] += 1
-                    d[away_team][(season, 'Away', 'Draws')] += 1
+                    d[home_team][(season, 'home', 'draws')] += 1
+                    d[away_team][(season, 'away', 'draws')] += 1
 
     @staticmethod
     def _create_season_home_advantage_col(
         home_advantages: DataFrame,
         season: int
     ):
-        played_at_home = home_advantages[season]['Home']['Wins'] \
-            + home_advantages[season]['Home']['Draws'] \
-            + home_advantages[season]['Home']['Loses']
-        home_advantages[season, 'Home', 'Played'] = played_at_home
+        played_at_home = home_advantages[season]['home']['wins'] \
+            + home_advantages[season]['home']['draws'] \
+            + home_advantages[season]['home']['loses']
+        home_advantages[season, 'home', 'played'] = played_at_home
 
         # Percentage wins at home = total wins at home / total games played at home
-        win_ratio_at_home = home_advantages[season]['Home']['Wins'] / \
+        win_ratio_at_home = home_advantages[season]['home']['wins'] / \
             played_at_home
-        home_advantages[season, 'Home', 'WinRatio'] = win_ratio_at_home
+        home_advantages[season, 'home', 'winRatio'] = win_ratio_at_home
 
         played = played_at_home \
-            + home_advantages[season]['Away']['Wins'] \
-            + home_advantages[season]['Away']['Draws'] \
-            + home_advantages[season]['Away']['Loses']
-        home_advantages[season, 'Overall', 'Played'] = played
+            + home_advantages[season]['away']['wins'] \
+            + home_advantages[season]['away']['draws'] \
+            + home_advantages[season]['away']['loses']
+        home_advantages[season, 'overall', 'played'] = played
 
         # Percentage wins = total wins / total games played
-        win_ratio = (home_advantages[season]['Home']['Wins']
-                     + home_advantages[season]['Away']['Wins']) / played
-        home_advantages[season, 'Overall', 'WinRatio'] = win_ratio
+        win_ratio = (home_advantages[season]['home']['wins']
+                     + home_advantages[season]['away']['wins']) / played
+        home_advantages[season, 'overall', 'winRatio'] = win_ratio
 
-        # Home advantage = percentage wins at home - percentage wins
+        # home advantage = percentage wins at home - percentage wins
         home_advantage = win_ratio_at_home - win_ratio
-        home_advantages[season, 'HomeAdvantage', ''] = home_advantage
+        home_advantages[season, 'homeAdvantage', ''] = home_advantage
 
     @staticmethod
     def _create_total_home_advantage_col(
@@ -69,24 +69,24 @@ class HomeAdvantages(DF):
         threshold: float
     ):
         home_advantages_cols = home_advantages.iloc[:, home_advantages.columns.get_level_values(
-            1) == 'HomeAdvantage']
+            1) == 'homeAdvantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
-        if (home_advantages[season]['Home']['Played'] <= threshold).all():
+        if (home_advantages[season]['home']['played'] <= threshold).all():
             print(f"Current season excluded from home advantages calculation -> all teams must have played {threshold} home games.")
             # Drop this current seasons column (start from previous season)
             home_advantages_cols = home_advantages_cols.drop(
                 season, level=0, axis=1)
 
         # Drop pandemic year (anomaly, no fans, data shows neutral home advantage)
-        if (2020, 'HomeAdvantage', '') in list(home_advantages_cols.columns):
+        if (2020, 'homeAdvantage', '') in list(home_advantages_cols.columns):
             home_advantages_cols = home_advantages_cols.drop(
-                (2020, 'HomeAdvantage', ''), axis=1)
+                (2020, 'homeAdvantage', ''), axis=1)
 
         home_advantages = home_advantages.sort_index(axis=1)
-        home_advantages['TotalHomeAdvantage'] = home_advantages_cols.mean(
+        home_advantages['totalhomeAdvantage'] = home_advantages_cols.mean(
             axis=1).fillna(0)
         home_advantages = home_advantages.sort_values(
-            by='TotalHomeAdvantage', ascending=False)
+            by='totalhomeAdvantage', ascending=False)
 
         return home_advantages
 
@@ -97,29 +97,29 @@ class HomeAdvantages(DF):
     ) -> dict[tuple[int, str, str], int]:
         template = {}
         for i in range(no_seasons):
-            template.update({(season-i, 'Home', 'Wins'):  0,
-                             (season-i, 'Home', 'Draws'): 0,
-                             (season-i, 'Home', 'Loses'): 0,
-                             (season-i, 'Away', 'Wins'):  0,
-                             (season-i, 'Away', 'Draws'): 0,
-                             (season-i, 'Away', 'Loses'): 0})
+            template.update({(season-i, 'home', 'wins'):  0,
+                             (season-i, 'home', 'draws'): 0,
+                             (season-i, 'home', 'loses'): 0,
+                             (season-i, 'away', 'wins'):  0,
+                             (season-i, 'away', 'draws'): 0,
+                             (season-i, 'away', 'loses'): 0})
         return template
 
     @staticmethod
     def _clean_dataframe(home_advantages: DataFrame, current_season_teams: list[str]) -> DataFrame:
         home_advantages = home_advantages.drop(
-            columns=['Wins', 'Loses', 'Draws'], level=2)
+            columns=['wins', 'loses', 'draws'], level=2)
         home_advantages = home_advantages.loc[current_season_teams]
-        home_advantages.columns.names = ('Season', None, None)
-        home_advantages.index.name = 'Team'
+        home_advantages.columns.names = ('season', None, None)
+        home_advantages.index.name = 'team'
         return home_advantages
 
     @staticmethod
     def get_season_teams(season_fixtures_data):
         current_season_teams = set()
         for match in season_fixtures_data:
-            home_team = match['homeTeam']['name'].replace('&', 'and')
-            away_team = match['awayTeam']['name'].replace('&', 'and')
+            home_team = match['homeTeam']['name'].replace(' FC', '').replace('&', 'and')
+            away_team = match['awayTeam']['name'].replace(' FC', '').replace('&', 'and')
             current_season_teams.add(home_team)
             current_season_teams.add(away_team)
         return current_season_teams
@@ -140,19 +140,19 @@ class HomeAdvantages(DF):
                 by the team's total home advantage
             Columns (multi-index):
             ------------------------------------------------------------------------------
-            |                     [SEASON YEAR]                     | TotalHomeAdvantage |
+            |                     [SEASON YEAR]                     | totalhomeAdvantage |
             |-------------------------------------------------------|--------------------|
-            |       Home        |      Overall      | HomeAdvantage |                    |
+            |       home        |      overall      | homeAdvantage |                    |
             |-------------------|-------------------|---------------|                    |
-            | Played | WinRatio | Played | WinRatio |               |                    |
+            | played | winRatio | played | winRatio |               |                    |
 
             [SEASON YEAR]: 4-digit year values that a season began, from current 
                 season to season no_seasons ago.
-            Played: the number of games played in the season.
-            WinsRatio: the win ratio of all games played in the season.
-            HomeAdvantage: the difference between the ratio of games won at home 
+            played: the number of games played in the season.
+            winRatio: the win ratio of all games played in the season.
+            homeAdvantage: the difference between the ratio of games won at home 
                 and the ratio of games won in total for a given season year.
-            TotalHomeAdvantage: combined home advantages value from all seasons 
+            totalhomeAdvantage: combined home advantages value from all seasons 
                in the table: the average home wins ratio / wins ratio.
 
         Args:
@@ -160,7 +160,7 @@ class HomeAdvantages(DF):
             season int: the year of the current season
             threshold float: the minimum number of home games played to incorporate
                 a season's home advantage calculation for all teams into the 
-                Total Home Advantage value
+                Total home Advantage value
             no_seasons (int, optional): number of seasons to include. 
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.

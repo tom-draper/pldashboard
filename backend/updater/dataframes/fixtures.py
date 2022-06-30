@@ -15,7 +15,7 @@ class Fixtures(DF):
         super().__init__(d, 'fixtures')
 
     def get_n_games_played(self, team_name: str) -> int:
-        return (self.df.loc[team_name, (slice(None), 'Status')] == 'FINISHED').values.sum()
+        return (self.df.loc[team_name, (slice(None), 'status')] == 'FINISHED').values.sum()
 
     @staticmethod
     def _inc_avg_scored_conceded(
@@ -39,9 +39,9 @@ class Fixtures(DF):
         avg_conceded = 0
         total = 0
         for matchday_no in self.df.columns.unique(level=0):
-            if self.df.at[team_name, (matchday_no, 'Status')] == 'FINISHED':
-                at_home = self.df.at[team_name, (matchday_no, 'AtHome')]
-                score = self.df.at[team_name, (matchday_no, 'Score')]
+            if self.df.at[team_name, (matchday_no, 'status')] == 'FINISHED':
+                at_home = self.df.at[team_name, (matchday_no, 'atHome')]
+                score = self.df.at[team_name, (matchday_no, 'score')]
                 h, a = utils.extract_int_score(score)
                 avg_scored, avg_conceded = self._inc_avg_scored_conceded(
                     avg_scored, avg_conceded, h, a, at_home)
@@ -58,14 +58,14 @@ class Fixtures(DF):
         if match['score']['fullTime']['homeTeam'] is not None:
             score = f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}"
 
-        matchday[(match["matchday"], 'Date')].append(
+        matchday[(match["matchday"], 'date')].append(
             datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ"))
-        matchday[(match["matchday"], 'AtHome')].append(True)
-        matchday[(match["matchday"], 'Team')].append(
+        matchday[(match["matchday"], 'atHome')].append(True)
+        matchday[(match["matchday"], 'team')].append(
             match['awayTeam']['name'].replace('&', 'and'))
-        matchday[(match["matchday"], 'Status')].append(match['status'])
-        matchday[(match["matchday"], 'Score')].append(score)
-        team_names.append(match['homeTeam']['name'].replace('&', 'and'))
+        matchday[(match["matchday"], 'status')].append(match['status'])
+        matchday[(match["matchday"], 'score')].append(score)
+        team_names.append(match['homeTeam']['name'].replace(' FC', '').replace('&', 'and'))
 
     @staticmethod
     def _insert_away_team_row(matchday: dict, match: dict, team_names: list[str]):
@@ -73,14 +73,14 @@ class Fixtures(DF):
         if match['score']['fullTime']['homeTeam'] is not None:
             score = f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}"
 
-        matchday[(match["matchday"], 'Date')].append(
+        matchday[(match["matchday"], 'date')].append(
             datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ"))
-        matchday[(match["matchday"], 'AtHome')].append(False)
-        matchday[(match["matchday"], 'Team')].append(
+        matchday[(match["matchday"], 'atHome')].append(False)
+        matchday[(match["matchday"], 'team')].append(
             match['homeTeam']['name'].replace('&', 'and'))
-        matchday[(match["matchday"], 'Status')].append(match['status'])
-        matchday[(match["matchday"], 'Score')].append(score)
-        team_names.append(match['awayTeam']['name'].replace('&', 'and'))
+        matchday[(match["matchday"], 'status')].append(match['status'])
+        matchday[(match["matchday"], 'score')].append(score)
+        team_names.append(match['awayTeam']['name'].replace(' FC', '').replace('&', 'and'))
 
     @staticmethod
     def _insert_team_row(
@@ -92,21 +92,21 @@ class Fixtures(DF):
         date = datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ")
 
         if home_team:
-            team_name = match['homeTeam']['name'].replace('&', 'and')
-            opp_team_name = match['awayTeam']['name'].replace('&', 'and')
+            team_name = match['homeTeam']['name'].replace(' FC', '').replace('&', 'and')
+            opp_team_name = match['awayTeam']['name'].replace(' FC', '').replace('&', 'and')
         else:
-            team_name = match['awayTeam']['name'].replace('&', 'and')
-            opp_team_name = match['homeTeam']['name'].replace('&', 'and')
+            team_name = match['awayTeam']['name'].replace(' FC', '').replace('&', 'and')
+            opp_team_name = match['homeTeam']['name'].replace(' FC', '').replace('&', 'and')
 
         score = None
         if match['score']['fullTime']['homeTeam'] is not None:
             score = f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}"
 
-        matchday[(match['matchday'], 'Date')].append(date)
-        matchday[(match['matchday'], 'AtHome')].append(home_team)
-        matchday[(match['matchday'], 'Team')].append(opp_team_name)
-        matchday[(match['matchday'], 'Status')].append(match['status'])
-        matchday[(match['matchday'], 'Score')].append(score)
+        matchday[(match['matchday'], 'date')].append(date)
+        matchday[(match['matchday'], 'atHome')].append(home_team)
+        matchday[(match['matchday'], 'team')].append(opp_team_name)
+        matchday[(match['matchday'], 'status')].append(match['status'])
+        matchday[(match['matchday'], 'score')].append(score)
         team_names.append(team_name)
 
     @timebudget
@@ -117,20 +117,20 @@ class Fixtures(DF):
 
             Rows: the 20 teams participating in the current season
             Columns (multi-index):
-            ---------------------------------------------
-            |             Matchday Number]              |
-            ---------------------------------------------
-            | Date | AtHome | Team  | Status  | Score |
+            ------------------------------------------
+            |           [MATCHDAY NUMBER]            |
+            ------------------------------------------
+            | date | atHome | team  | status | score |
 
-            Matchday [X]: where X is integers from 1 to 38
-            Date: datetime value for the day a match is scheduled for or taken 
+            MATCHDAY NUMBER: all matchday numbers from 1 to 38.
+            date: datetime value for the day a match is scheduled for or taken 
                 place on
-            AtHome: whether the team is playing that match at home or away, 
+            atHome: whether the team is playing that match at home or away, 
                 either True or False
-            Team: the name of the opposition team
-            Status: the current status of that match, either 'FINISHED', 'IN PLAY' 
+            team: the name of the opposition team
+            status: the current status of that match, either 'FINISHED', 'IN PLAY' 
                 or 'SCHEDULED'
-            Score: the score of that game, either 'X - Y' if status is 'FINISHED'
+            score: the score of that game, either 'X - Y' if status is 'FINISHED'
                 or None if status is 'SCHEDULED' or 'IN-PLAY'
 
         Args:
@@ -175,8 +175,8 @@ class Fixtures(DF):
         fixtures = pd.concat(matchdays, axis=1)
 
         fixtures.index = team_names_index
-        fixtures.columns.names = ("Matchday", None)
-        fixtures.index.name = 'Team'
+        fixtures.columns.names = ('matchday', None)
+        fixtures.index.name = 'team'
 
         if display:
             print(fixtures)

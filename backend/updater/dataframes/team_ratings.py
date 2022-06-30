@@ -29,7 +29,7 @@ class TeamRatings(DF):
         include_current_season: bool,
     ):
         # Calculate total rating column
-        team_ratings['TotalRating'] = 0
+        team_ratings['totalRating'] = 0
         if include_current_season:
             start_n = 0  # Include current season when calculating total rating
             w = self._get_season_weightings(no_seasons)  # Column weights
@@ -38,8 +38,8 @@ class TeamRatings(DF):
             w = self._get_season_weightings(no_seasons - 1)  # Column weights
 
         for n in range(start_n, no_seasons):
-            team_ratings['TotalRating'] += w[n - start_n] * \
-                team_ratings[f'NormRating{n}YAgo']
+            team_ratings['totalRating'] += w[n - start_n] * \
+                team_ratings[f'normRating{n}YAgo']
 
     @timebudget
     def build(
@@ -57,17 +57,17 @@ class TeamRatings(DF):
                 descending by the team's rating
             Columns (multi-index):
             ---------------------------------------------------------------------------------------------------
-            | RatingCurrent | Rating[N]YAgo | NormRatingCurrent | NormRating[N]YAgo | TotalRating |
+            | ratingCurrent | rating[N]YAgo | rormRatingCurrent | rormRating[N]YAgo | totalRating |
 
-            RatingCurrent: a calculated positive or negative value that represents
+            ratingCurrent: a calculated positive or negative value that represents
                 the team's rating based on the state of the current season's 
                 standings table.
-            Rating[N]YAgo: a calculated positive or negative value that represents 
+            rating[N]YAgo: a calculated positive or negative value that represents 
                 the team's rating based on the state of the standings table [N]
                 seasons ago.
-            NormRatingCurrent: the Rating Current column value normalised
-            NormRating[N]YAgo: the Rating [N]Y Ago column values normalised
-            TotalRating: a final normalised rating value incorporating the values 
+            normRatingCurrent: the Rating Current column value normalised
+            normRating[N]YAgo: the Rating [N]Y Ago column values normalised
+            totalRating: a final normalised rating value incorporating the values 
                 from all normalised columns.
 
         Args:
@@ -90,14 +90,13 @@ class TeamRatings(DF):
 
         # Create column for each included season
         for n in range(0, n_seasons):
-            team_ratings[f'Rating{n}YAgo'] = np.nan
+            team_ratings[f'rating{n}YAgo'] = np.nan
 
         # Insert rating values for each row
         for team_name, row in standings.df.iterrows():
             for n in range(n_seasons):
-                rating = self._calc_rating(
-                    row[season-n]['Points'], row[season-n]['GD'])
-                team_ratings.loc[team_name, f'Rating{n}YAgo'] = rating
+                rating = self._calc_rating(row[season-n]['points'], row[season-n]['gD'])
+                team_ratings.loc[team_name, f'rating{n}YAgo'] = rating
 
         # Replace any NaN with the lowest rating in the same column
         for col in team_ratings.columns:
@@ -106,15 +105,15 @@ class TeamRatings(DF):
 
         # Create normalised versions of the three ratings columns
         for n in range(0, n_seasons):
-            team_ratings[f'NormRating{n}YAgo'] = (team_ratings[f'Rating{n}YAgo']
-                                                        - team_ratings[f'Rating{n}YAgo'].min()) \
-                / (team_ratings[f'Rating{n}YAgo'].max()
-                   - team_ratings[f'Rating{n}YAgo'].min())
+            team_ratings[f'normRating{n}YAgo'] = (team_ratings[f'rating{n}YAgo']
+                                                        - team_ratings[f'rating{n}YAgo'].min()) \
+                / (team_ratings[f'rating{n}YAgo'].max()
+                   - team_ratings[f'rating{n}YAgo'].min())
 
         # Check whether current season data should be included in each team's total rating
         include_current_season = True
         # If current season hasn't played enough games
-        if (standings.df[season]['Played'] <= games_threshold).all():
+        if (standings.df[season]['played'] <= games_threshold).all():
             print(
                 f'Current season excluded from team ratings calculation -> all teams must have played {games_threshold} games.')
             include_current_season = False
@@ -123,9 +122,9 @@ class TeamRatings(DF):
             team_ratings, n_seasons, include_current_season)
 
         team_ratings = team_ratings.sort_values(
-            by="TotalRating", ascending=False)
-        team_ratings = team_ratings.rename(columns={'Rating0YAgo': 'RatingCurrent',
-                                                    'NormRating0YAgo': 'NormRatingCurrent'})
+            by="totalRating", ascending=False)
+        team_ratings = team_ratings.rename(columns={'rating0YAgo': 'ratingCurrent',
+                                                    'normRating0YAgo': 'normRatingCurrent'})
 
         if display:
             print(team_ratings)
