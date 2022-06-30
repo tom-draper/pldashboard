@@ -60,8 +60,8 @@ class Data:
             
             if type(k) is list:
                 # Separate multi-index into a nested dict
-                k1 = str(k[0]) if type(k[0]) is int else utils.camel_case(k[0])
-                k2 = str(k[1]) if type(k[1]) is int else utils.camel_case(k[1])
+                k1 = str(k[0]) if type(k[0]) is int else k[0]
+                k2 = str(k[1]) if type(k[1]) is int else k[1]
                 if k1 in new_d:
                     new_d[k1][k2] = self.collapse_tuple_keys(v)
                 else:
@@ -69,7 +69,7 @@ class Data:
             elif type(k) is int:
                 new_d[str(k)] = self.collapse_tuple_keys(v)
             else:
-                new_d[utils.camel_case(k)] = self.collapse_tuple_keys(v)
+                new_d[k] = self.collapse_tuple_keys(v)
         
         return new_d
     

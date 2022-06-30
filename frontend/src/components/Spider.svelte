@@ -1,9 +1,8 @@
 <script>
   import { onMount } from "svelte";
 
-  function getTeamColor(team) {
-    let teamKey = team.replace(" FC", "");
-    teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
+  function getTeamColor(teamName) {
+    let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
     teamKey = teamKey.replace(/ /g, "-").toLowerCase();
     let teamColor = getComputedStyle(document.documentElement).getPropertyValue(
       `--${teamKey}`
@@ -11,55 +10,55 @@
     return teamColor;
   }
 
-  function addTeamComparison(team) {
-    let teamColor = getTeamColor(team);
+  function addTeamComparison(teamName) {
+    let teamColor = getTeamColor(teamName);
 
     let teamData = {
-      name: team,
+      name: teamName,
       type: "scatterpolar",
       r: [
-        attack[team],
-        defence[team],
-        cleanSheets[team],
-        consistency[team],
-        winStreaks[team],
-        vsBig6[team],
+        attack[teamName],
+        defence[teamName],
+        cleanSheets[teamName],
+        consistency[teamName],
+        winStreaks[teamName],
+        vsBig6[teamName],
       ],
       theta: labels,
       fill: "toself",
       marker: { color: teamColor },
     };
     spiderPlots.push(teamData);
-    Plotly.redraw(plotDiv); // Redraw with team added
+    Plotly.redraw(plotDiv); // Redraw with teamName added
   }
 
   function addAvg() {
     let avg = avgScatterPlot();
-    spiderPlots.unshift(avg); // Add avg below the team spider plot
+    spiderPlots.unshift(avg); // Add avg below the teamName spider plot
   }
 
-  function removeTeamComparison(team) {
-    // Remove spider plot for this team
+  function removeTeamComparison(teamName) {
+    // Remove spider plot for this teamName
     for (let i = 0; i < spiderPlots.length; i++) {
-      if (spiderPlots[i].name == team) {
+      if (spiderPlots[i].name == teamName) {
         spiderPlots.splice(i, 1);
         break;
       }
     }
 
-    // If removing only comparison team, re-insert the initial avg spider plot
+    // If removing only comparison teamName, re-insert the initial avg spider plot
     if (comparisonTeams.length == 1) {
       addAvg();
     }
 
-    Plotly.redraw(plotDiv); // Redraw with team removed
+    Plotly.redraw(plotDiv); // Redraw with teamName removed
   }
 
   function spiderBtnClick(btn) {
     if (btn.style.background == "") {
-      let team = btn.innerHTML.toLowerCase().replace(/ /g, "-");
-      btn.style.background = `var(--${team})`;
-      btn.style.color = `var(--${team}-secondary)`;
+      let teamName = btn.innerHTML.toLowerCase().replace(/ /g, "-");
+      btn.style.background = `var(--${teamName})`;
+      btn.style.color = `var(--${teamName}-secondary)`;
     } else {
       btn.style.background = "";
       btn.style.color = "black";
@@ -74,7 +73,7 @@
       removeTeamComparison(fullTeamName); // Remove from spider chart
       removeItem(comparisonTeams, fullTeamName); // Remove from comparison teams
     } else {
-      addTeamComparison(fullTeamName); // Add team to spider chart
+      addTeamComparison(fullTeamName); // Add teamName to spider chart
       comparisonTeams.push(fullTeamName); // Add to comparison teams
     }
   }
@@ -83,11 +82,11 @@
     let attack = {};
     let maxGoals = Number.NEGATIVE_INFINITY;
     let minGoals = Number.POSITIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let teamName of data.teamNames) {
       let totalGoals = 0;
       let seasonsPlayed = 0;
-      for (let year in data.standings[team]) {
-        let goals = data.standings[team][year].gF;
+      for (let year in data.standings[teamName]) {
+        let goals = data.standings[teamName][year].gF;
         if (goals > 0) {
           totalGoals += goals;
           if (goals > maxGoals) {
@@ -99,23 +98,23 @@
         }
       }
       let goalsPerSeason = totalGoals / seasonsPlayed;
-      attack[team] = goalsPerSeason;
+      attack[teamName] = goalsPerSeason;
     }
     return [attack, [minGoals, maxGoals]];
   }
 
   function scaleAttack(attack, range) {
     let [lower, upper] = range;
-    for (let team in attack) {
-      attack[team] = ((attack[team] - lower) / (upper - lower)) * 100;
+    for (let teamName in attack) {
+      attack[teamName] = ((attack[teamName] - lower) / (upper - lower)) * 100;
     }
     return attack;
   }
 
   function insertAvgAttack(attack) {
     let totalAttack = 0;
-    for (let team in attack) {
-      totalAttack += attack[team];
+    for (let teamName in attack) {
+      totalAttack += attack[teamName];
     }
     attack.avg = totalAttack / Object.keys(attack).length;
   }
@@ -132,11 +131,11 @@
     let defence = {};
     let maxConceded = Number.NEGATIVE_INFINITY;
     let minConceded = Number.POSITIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let teamName of data.teamNames) {
       let totalGoals = 0;
       let seasonsPlayed = 0;
-      for (let year in data.standings[team]) {
-        let goals = data.standings[team][year].gA;
+      for (let year in data.standings[teamName]) {
+        let goals = data.standings[teamName][year].gA;
         if (goals > 0) {
           totalGoals += goals;
           if (goals > maxConceded) {
@@ -148,23 +147,23 @@
         }
       }
       let goalsPerSeason = totalGoals / seasonsPlayed;
-      defence[team] = goalsPerSeason;
+      defence[teamName] = goalsPerSeason;
     }
     return [defence, [minConceded, maxConceded]];
   }
 
   function scaleDefence(defence, range) {
     let [lower, upper] = range;
-    for (let team in defence) {
-      defence[team] = 100 - ((defence[team] - lower) / (upper - lower)) * 100;
+    for (let teamName in defence) {
+      defence[teamName] = 100 - ((defence[teamName] - lower) / (upper - lower)) * 100;
     }
     return defence;
   }
 
   function insertAvgDefence(defence) {
     let totalAttack = 0;
-    for (let team in defence) {
-      totalAttack += defence[team];
+    for (let teamName in defence) {
+      totalAttack += defence[teamName];
     }
     defence.avg = totalAttack / Object.keys(defence).length;
   }
@@ -180,10 +179,10 @@
   function getCleanSheets(data) {
     let cleanSheets = {};
     let maxCleanSheets = Number.NEGATIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let teamName of data.teamNames) {
       let nCleanSheets = 0;
-      for (let matchday of Object.keys(data.form[team])) {
-        let match = data.form[team][matchday];
+      for (let matchday of Object.keys(data.form[teamName])) {
+        let match = data.form[teamName][matchday];
         if (match.score != "None - None") {
           let [h, _, a] = match.score.split(" ");
           if (match.atHome && a == 0) {
@@ -196,13 +195,13 @@
       if (nCleanSheets > maxCleanSheets) {
         maxCleanSheets = nCleanSheets;
       }
-      cleanSheets[team] = nCleanSheets;
+      cleanSheets[teamName] = nCleanSheets;
     }
 
     let totalCleanSheets = 0;
-    for (let team of Object.keys(cleanSheets)) {
-      cleanSheets[team] = (cleanSheets[team] / maxCleanSheets) * 100;
-      totalCleanSheets += cleanSheets[team];
+    for (let teamName of Object.keys(cleanSheets)) {
+      cleanSheets[teamName] = (cleanSheets[teamName] / maxCleanSheets) * 100;
+      totalCleanSheets += cleanSheets[teamName];
     }
     cleanSheets.avg = totalCleanSheets / Object.keys(cleanSheets).length;
 
@@ -212,11 +211,11 @@
   function getConsistency(data) {
     let consistency = {};
     let maxConsistency = Number.NEGATIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let teamName of data.teamNames) {
       let backToBack = 0;
       let prevResult = null;
-      for (let matchday of Object.keys(data.form[team])) {
-        let match = data.form[team][matchday];
+      for (let matchday of Object.keys(data.form[teamName])) {
+        let match = data.form[teamName][matchday];
         if (match.score != "None - None") {
           let [h, _, a] = match.score.split(" ");
           let result;
@@ -236,13 +235,13 @@
       if (backToBack > maxConsistency) {
         maxConsistency = backToBack;
       }
-      consistency[team] = backToBack;
+      consistency[teamName] = backToBack;
     }
 
     let totalConsistency = 0;
-    for (let team of Object.keys(consistency)) {
-      consistency[team] = (consistency[team] / maxConsistency) * 100;
-      totalConsistency += consistency[team];
+    for (let teamName of Object.keys(consistency)) {
+      consistency[teamName] = (consistency[teamName] / maxConsistency) * 100;
+      totalConsistency += consistency[teamName];
     }
     consistency.avg = totalConsistency / Object.keys(consistency).length;
 
@@ -252,11 +251,11 @@
   function getWinStreak(data) {
     let winStreaks = {};
     let maxWinStreaks = Number.NEGATIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let teamName of data.teamNames) {
       let winStreak = 0;
       let tempWinStreak = 0;
-      for (let matchday of Object.keys(data.form[team])) {
-        let match = data.form[team][matchday];
+      for (let matchday of Object.keys(data.form[teamName])) {
+        let match = data.form[teamName][matchday];
         if (match.score != "None - None") {
           let [h, _, a] = match.score.split(" ");
           if ((match.atHome && h > a) || (!match.atHome && h < a)) {
@@ -272,13 +271,13 @@
       if (winStreak > maxWinStreaks) {
         maxWinStreaks = winStreak;
       }
-      winStreaks[team] = winStreak;
+      winStreaks[teamName] = winStreak;
     }
 
     let totalWinStreaks = 0;
-    for (let team of Object.keys(winStreaks)) {
-      winStreaks[team] = (winStreaks[team] / maxWinStreaks) * 100;
-      totalWinStreaks += winStreaks[team];
+    for (let teamName of Object.keys(winStreaks)) {
+      winStreaks[teamName] = (winStreaks[teamName] / maxWinStreaks) * 100;
+      totalWinStreaks += winStreaks[teamName];
     }
     winStreaks.avg = totalWinStreaks / Object.keys(winStreaks).length;
 
@@ -296,7 +295,7 @@
   function getVsBig6(data) {
     let vsBig6 = {};
     let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let teamName of data.teamNames) {
       let big6 = [
         "Manchester United FC",
         "Liverpool FC",
@@ -305,12 +304,12 @@
         "Chelsea FC",
         "Tottenham Hotspurs FC",
       ];
-      big6 = removeItem(big6, team);
+      big6 = removeItem(big6, teamName);
 
       let winsVsBig6 = 0;
-      for (let matchday of Object.keys(data.form[team])) {
-        let match = data.form[team][matchday];
-        if (match.score != "None - None" && big6.includes(match.team)) {
+      for (let matchday of Object.keys(data.form[teamName])) {
+        let match = data.form[teamName][matchday];
+        if (match.score != "None - None" && big6.includes(match.teamName)) {
           let [h, _, a] = match.score.split(" ");
           if ((match.atHome && h > a) || (!match.atHome && h < a)) {
             winsVsBig6 += 1;
@@ -320,13 +319,13 @@
       if (winsVsBig6 > maxWinsVsBig6) {
         maxWinsVsBig6 = winsVsBig6;
       }
-      vsBig6[team] = winsVsBig6;
+      vsBig6[teamName] = winsVsBig6;
     }
 
     let totalVsBig6 = 0;
-    for (let team of Object.keys(vsBig6)) {
-      vsBig6[team] = (vsBig6[team] / maxWinsVsBig6) * 100;
-      totalVsBig6 += vsBig6[team];
+    for (let teamName of Object.keys(vsBig6)) {
+      vsBig6[teamName] = (vsBig6[teamName] / maxWinsVsBig6) * 100;
+      totalVsBig6 += vsBig6[teamName];
     }
     vsBig6.avg = totalVsBig6 / Object.keys(vsBig6).length;
 
@@ -362,19 +361,19 @@
 
   }
 
-  function initSpiderPlots(team) {
-    let teamColor = getTeamColor(team);
+  function initSpiderPlots(teamName) {
+    let teamColor = getTeamColor(teamName);
 
     let avgData = avgScatterPlot();
     let teamData = scatterPlot(
-      team,
+      teamName,
       [
-        attack[team],
-        defence[team],
-        cleanSheets[team],
-        consistency[team],
-        winStreaks[team],
-        vsBig6[team],
+        attack[teamName],
+        defence[teamName],
+        cleanSheets[teamName],
+        consistency[teamName],
+        winStreaks[teamName],
+        vsBig6[teamName],
       ],
       teamColor
     );
@@ -391,10 +390,10 @@
     vsBig6 = getVsBig6(data);
   }
 
-  function getGraphData(data, team) {
+  function getGraphData(data, teamName) {
     computePlotData(data);
 
-    spiderPlots = initSpiderPlots(team);
+    spiderPlots = initSpiderPlots(teamName);
 
     let graphData = {
       data: spiderPlots,
@@ -468,7 +467,7 @@
   </div>
 </div>
 <div class="spider-opp-team-selector">
-  <!-- <div class="spider-opp-team-title">Select team comparison</div> -->
+  <!-- <div class="spider-opp-teamName-title">Select teamName comparison</div> -->
   <div class="spider-opp-team-btns" id="spider-opp-teams">
     {#each data.teamNames as teamName}
       {#if teamName != fullTeamName}
@@ -476,7 +475,7 @@
           class="spider-opp-team-btn"
           on:click={(e) => {
             spiderBtnClick(e.target);
-          }}>{teamName.replace(" FC", "")}</button
+          }}>{teamName}</button
         >
       {/if}
     {/each}

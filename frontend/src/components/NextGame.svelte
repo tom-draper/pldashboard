@@ -7,7 +7,6 @@
   onMount(() => {
     if (data.upcoming[fullTeamName].nextTeam != null) {
       oppTeam = data.upcoming[fullTeamName].nextTeam
-        .replace(" FC", "")
         .toLowerCase()
         .replace(/ /g, "-");
     }

@@ -70,6 +70,7 @@
       details.push(matchDetail);
     }
 
+
     sortByMatchDate(x, y, details);
 
     let now = Date.now();

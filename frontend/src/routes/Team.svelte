@@ -26,7 +26,7 @@
   }
 
   function getCurrentMatchday(data, fullTeamName) {
-    console.log(data, fullTeamName)
+    console.log(data);
     return Object.keys(data.form[fullTeamName]).reduce((a, b) =>
       data.form[fullTeamName][a] > data.form[fullTeamName][b] ? a : b
     );
@@ -43,7 +43,7 @@
   let currentMatchday;
   let data;
   onMount(() => {
-    fullTeamName = toTitleCase(team.replace(/\-/g, " ")) + " FC";
+    fullTeamName = toTitleCase(team.replace(/\-/g, " "));
     fetchData("https://pldashboard.herokuapp.com/teams")
       .then((json) => {
         // Build teamData package from json data
@@ -60,7 +60,7 @@
 </script>
 
 <svelte:head>
-  <title>{fullTeamName.replace(' FC', '')}</title>
+  <title>{fullTeamName}</title>
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
@@ -69,7 +69,7 @@
     <div class="main-link title no-decoration"
       style="color: var(--{team + '-secondary'});"
     >
-      {fullTeamName.replace(' FC', '')}
+      {fullTeamName}
     </div>
   </div>
 

@@ -137,31 +137,3 @@ class Utilities:
         else:
             scoreline = f'{opp_team_name_initials} {conceded} - {scored} {team_name_initials}'
         return scoreline
-
-    @staticmethod
-    def snake_case(s: str) -> str:
-        if len(s) == 0 or s.islower():
-            return s
-        
-        if s.isupper():
-            return s.lower()
-
-        if s[0].isupper():
-            s = s[0].lower() + s[1:]
-        
-        s = s.replace(' ', '_')
-        
-        # Convert capitals to underscore prefix + lowercase  
-        s = list(s)
-        for i in range(len(s)-1, 0, -1):
-            if (s[i].isupper() and s[i] != '_' and i != 0 and s[i-1].islower() and not s[i-1].isdigit()) or (i != 0 and s[i-1] != '_' and not s[i-1].isdigit() and s[i].isdigit()):
-                s[i] = '_' + s[i].lower()
-        s = ''.join(s).lower()
-            
-        return s
-
-    @staticmethod
-    def camel_case(s: str) -> str:
-        if ' FC' in s:
-            return s
-        return s[0].lower() + s[1:]

@@ -3475,19 +3475,19 @@
 
     function toInitials(team) {
     	switch (team) {
-    		case "Brighton and Hove Albion FC":
+    		case "Brighton and Hove Albion":
     			return "BHA";
-    		case "Manchester City FC":
+    		case "Manchester City":
     			return "MCI";
-    		case "Manchester United FC":
+    		case "Manchester United":
     			return "MUN";
-    		case "Aston Villa FC":
+    		case "Aston Villa":
     			return "AVL";
-    		case "Sheffield United FC":
+    		case "Sheffield United":
     			return "SHU";
-    		case "West Bromwich Albion FC":
+    		case "West Bromwich Albion":
     			return "WBA";
-    		case "West Ham United FC":
+    		case "West Ham United":
     			return "WHU";
     	}
 
@@ -4199,7 +4199,7 @@
     		}
 
     		rows.push({
-    			name: sortedTeams[i].replace(' FC', ''),
+    			name: sortedTeams[i],
     			position: data.standings[sortedTeams[i]][data.currentSeason].position,
     			points: data.standings[sortedTeams[i]][data.currentSeason].points,
     			gd: data.standings[sortedTeams[i]][data.currentSeason].gD
@@ -4242,7 +4242,7 @@
     	return child_ctx;
     }
 
-    // (19:0) {#if data != undefined}
+    // (18:0) {#if data != undefined}
     function create_if_block$5(ctx) {
     	let current_block_type_index;
     	let if_block;
@@ -4316,7 +4316,7 @@
     	};
     }
 
-    // (28:2) {:else}
+    // (27:2) {:else}
     function create_else_block$2(ctx) {
     	let div0;
     	let t0;
@@ -4657,7 +4657,7 @@
     	};
     }
 
-    // (20:2) {#if data.upcoming[fullTeamName].nextTeam == null}
+    // (19:2) {#if data.upcoming[fullTeamName].nextTeam == null}
     function create_if_block_1$2(ctx) {
     	let div1;
     	let div0;
@@ -4722,7 +4722,7 @@
     	};
     }
 
-    // (33:6) {#if oppTeam != undefined}
+    // (32:6) {#if oppTeam != undefined}
     function create_if_block_3$1(ctx) {
     	let div;
     	let h1;
@@ -4832,7 +4832,7 @@
     	};
     }
 
-    // (43:12) <Link to="/{oppTeam}">
+    // (42:12) <Link to="/{oppTeam}">
     function create_default_slot$3(ctx) {
     	let div;
     	let t0_value = /*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[2]].nextTeam + "";
@@ -4873,7 +4873,7 @@
     	};
     }
 
-    // (94:8) {:else}
+    // (93:8) {:else}
     function create_else_block_1$2(ctx) {
     	let div;
     	let t;
@@ -4904,7 +4904,7 @@
     	};
     }
 
-    // (90:8) {#if data.upcoming[fullTeamName].previousMatches.length == 0}
+    // (89:8) {#if data.upcoming[fullTeamName].previousMatches.length == 0}
     function create_if_block_2$1(ctx) {
     	let div;
     	let t;
@@ -4935,7 +4935,7 @@
     	};
     }
 
-    // (99:8) {#each data.upcoming[fullTeamName].previousMatches as prevMatch}
+    // (98:8) {#each data.upcoming[fullTeamName].previousMatches as prevMatch}
     function create_each_block$2(ctx) {
     	let div6;
     	let div3;
@@ -5128,7 +5128,7 @@
 
     	onMount(() => {
     		if (data.upcoming[fullTeamName].nextTeam != null) {
-    			$$invalidate(3, oppTeam = data.upcoming[fullTeamName].nextTeam.replace(" FC", "").toLowerCase().replace(/ /g, "-"));
+    			$$invalidate(3, oppTeam = data.upcoming[fullTeamName].nextTeam.toLowerCase().replace(/ /g, "-"));
     		}
     	});
 
@@ -6053,9 +6053,8 @@
 
     	if (isMainTeam) {
     		// Get team primary colour from css variable
-    		let teamKey = teamName.replace(" FC", "");
+    		let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
 
-    		teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
     		teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
     		let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
     		lineVal = { color: lineColor, width: 4 };
@@ -6248,9 +6247,8 @@
 
     	if (isMainTeam) {
     		// Get team primary colour from css variable
-    		let teamKey = teamName.replace(' FC', '');
+    		let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
 
-    		teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
     		teamKey = teamKey.replace(/ ([A-Z])/g, '-$1').toLowerCase();
     		let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
     		lineVal = { color: lineColor, width: 4 };
@@ -7463,10 +7461,10 @@
     	return child_ctx;
     }
 
-    // (474:6) {#if teamName != fullTeamName}
+    // (473:6) {#if teamName != fullTeamName}
     function create_if_block$2(ctx) {
     	let button;
-    	let t_value = /*teamName*/ ctx[24].replace(" FC", "") + "";
+    	let t_value = /*teamName*/ ctx[24] + "";
     	let t;
     	let mounted;
     	let dispose;
@@ -7497,7 +7495,7 @@
     			}
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*data*/ 1 && t_value !== (t_value = /*teamName*/ ctx[24].replace(" FC", "") + "")) set_data(t, t_value);
+    			if (dirty & /*data*/ 1 && t_value !== (t_value = /*teamName*/ ctx[24] + "")) set_data(t, t_value);
     		},
     		d(detaching) {
     			if (detaching) detach(button);
@@ -7507,7 +7505,7 @@
     	};
     }
 
-    // (473:4) {#each data.teamNames as teamName}
+    // (472:4) {#each data.teamNames as teamName}
     function create_each_block$1(ctx) {
     	let if_block_anchor;
     	let if_block = /*teamName*/ ctx[24] != /*fullTeamName*/ ctx[1] && create_if_block$2(ctx);
@@ -7656,9 +7654,8 @@
     	};
     }
 
-    function getTeamColor(team) {
-    	let teamKey = team.replace(" FC", "");
-    	teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
+    function getTeamColor(teamName) {
+    	let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
     	teamKey = teamKey.replace(/ /g, "-").toLowerCase();
     	let teamColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
     	return teamColor;
@@ -7669,12 +7666,12 @@
     	let maxGoals = Number.NEGATIVE_INFINITY;
     	let minGoals = Number.POSITIVE_INFINITY;
 
-    	for (let team of data.teamNames) {
+    	for (let teamName of data.teamNames) {
     		let totalGoals = 0;
     		let seasonsPlayed = 0;
 
-    		for (let year in data.standings[team]) {
-    			let goals = data.standings[team][year].gF;
+    		for (let year in data.standings[teamName]) {
+    			let goals = data.standings[teamName][year].gF;
 
     			if (goals > 0) {
     				totalGoals += goals;
@@ -7690,7 +7687,7 @@
     		}
 
     		let goalsPerSeason = totalGoals / seasonsPlayed;
-    		attack[team] = goalsPerSeason;
+    		attack[teamName] = goalsPerSeason;
     	}
 
     	return [attack, [minGoals, maxGoals]];
@@ -7699,8 +7696,8 @@
     function scaleAttack(attack, range) {
     	let [lower, upper] = range;
 
-    	for (let team in attack) {
-    		attack[team] = (attack[team] - lower) / (upper - lower) * 100;
+    	for (let teamName in attack) {
+    		attack[teamName] = (attack[teamName] - lower) / (upper - lower) * 100;
     	}
 
     	return attack;
@@ -7709,8 +7706,8 @@
     function insertAvgAttack(attack) {
     	let totalAttack = 0;
 
-    	for (let team in attack) {
-    		totalAttack += attack[team];
+    	for (let teamName in attack) {
+    		totalAttack += attack[teamName];
     	}
 
     	attack.avg = totalAttack / Object.keys(attack).length;
@@ -7728,12 +7725,12 @@
     	let maxConceded = Number.NEGATIVE_INFINITY;
     	let minConceded = Number.POSITIVE_INFINITY;
 
-    	for (let team of data.teamNames) {
+    	for (let teamName of data.teamNames) {
     		let totalGoals = 0;
     		let seasonsPlayed = 0;
 
-    		for (let year in data.standings[team]) {
-    			let goals = data.standings[team][year].gA;
+    		for (let year in data.standings[teamName]) {
+    			let goals = data.standings[teamName][year].gA;
 
     			if (goals > 0) {
     				totalGoals += goals;
@@ -7749,7 +7746,7 @@
     		}
 
     		let goalsPerSeason = totalGoals / seasonsPlayed;
-    		defence[team] = goalsPerSeason;
+    		defence[teamName] = goalsPerSeason;
     	}
 
     	return [defence, [minConceded, maxConceded]];
@@ -7758,8 +7755,8 @@
     function scaleDefence(defence, range) {
     	let [lower, upper] = range;
 
-    	for (let team in defence) {
-    		defence[team] = 100 - (defence[team] - lower) / (upper - lower) * 100;
+    	for (let teamName in defence) {
+    		defence[teamName] = 100 - (defence[teamName] - lower) / (upper - lower) * 100;
     	}
 
     	return defence;
@@ -7768,8 +7765,8 @@
     function insertAvgDefence(defence) {
     	let totalAttack = 0;
 
-    	for (let team in defence) {
-    		totalAttack += defence[team];
+    	for (let teamName in defence) {
+    		totalAttack += defence[teamName];
     	}
 
     	defence.avg = totalAttack / Object.keys(defence).length;
@@ -7786,11 +7783,11 @@
     	let cleanSheets = {};
     	let maxCleanSheets = Number.NEGATIVE_INFINITY;
 
-    	for (let team of data.teamNames) {
+    	for (let teamName of data.teamNames) {
     		let nCleanSheets = 0;
 
-    		for (let matchday of Object.keys(data.form[team])) {
-    			let match = data.form[team][matchday];
+    		for (let matchday of Object.keys(data.form[teamName])) {
+    			let match = data.form[teamName][matchday];
 
     			if (match.score != "None - None") {
     				let [h, _, a] = match.score.split(" ");
@@ -7807,14 +7804,14 @@
     			maxCleanSheets = nCleanSheets;
     		}
 
-    		cleanSheets[team] = nCleanSheets;
+    		cleanSheets[teamName] = nCleanSheets;
     	}
 
     	let totalCleanSheets = 0;
 
-    	for (let team of Object.keys(cleanSheets)) {
-    		cleanSheets[team] = cleanSheets[team] / maxCleanSheets * 100;
-    		totalCleanSheets += cleanSheets[team];
+    	for (let teamName of Object.keys(cleanSheets)) {
+    		cleanSheets[teamName] = cleanSheets[teamName] / maxCleanSheets * 100;
+    		totalCleanSheets += cleanSheets[teamName];
     	}
 
     	cleanSheets.avg = totalCleanSheets / Object.keys(cleanSheets).length;
@@ -7825,12 +7822,12 @@
     	let consistency = {};
     	let maxConsistency = Number.NEGATIVE_INFINITY;
 
-    	for (let team of data.teamNames) {
+    	for (let teamName of data.teamNames) {
     		let backToBack = 0;
     		let prevResult = null;
 
-    		for (let matchday of Object.keys(data.form[team])) {
-    			let match = data.form[team][matchday];
+    		for (let matchday of Object.keys(data.form[teamName])) {
+    			let match = data.form[teamName][matchday];
 
     			if (match.score != "None - None") {
     				let [h, _, a] = match.score.split(" ");
@@ -7856,14 +7853,14 @@
     			maxConsistency = backToBack;
     		}
 
-    		consistency[team] = backToBack;
+    		consistency[teamName] = backToBack;
     	}
 
     	let totalConsistency = 0;
 
-    	for (let team of Object.keys(consistency)) {
-    		consistency[team] = consistency[team] / maxConsistency * 100;
-    		totalConsistency += consistency[team];
+    	for (let teamName of Object.keys(consistency)) {
+    		consistency[teamName] = consistency[teamName] / maxConsistency * 100;
+    		totalConsistency += consistency[teamName];
     	}
 
     	consistency.avg = totalConsistency / Object.keys(consistency).length;
@@ -7874,12 +7871,12 @@
     	let winStreaks = {};
     	let maxWinStreaks = Number.NEGATIVE_INFINITY;
 
-    	for (let team of data.teamNames) {
+    	for (let teamName of data.teamNames) {
     		let winStreak = 0;
     		let tempWinStreak = 0;
 
-    		for (let matchday of Object.keys(data.form[team])) {
-    			let match = data.form[team][matchday];
+    		for (let matchday of Object.keys(data.form[teamName])) {
+    			let match = data.form[teamName][matchday];
 
     			if (match.score != "None - None") {
     				let [h, _, a] = match.score.split(" ");
@@ -7900,14 +7897,14 @@
     			maxWinStreaks = winStreak;
     		}
 
-    		winStreaks[team] = winStreak;
+    		winStreaks[teamName] = winStreak;
     	}
 
     	let totalWinStreaks = 0;
 
-    	for (let team of Object.keys(winStreaks)) {
-    		winStreaks[team] = winStreaks[team] / maxWinStreaks * 100;
-    		totalWinStreaks += winStreaks[team];
+    	for (let teamName of Object.keys(winStreaks)) {
+    		winStreaks[teamName] = winStreaks[teamName] / maxWinStreaks * 100;
+    		totalWinStreaks += winStreaks[teamName];
     	}
 
     	winStreaks.avg = totalWinStreaks / Object.keys(winStreaks).length;
@@ -7928,7 +7925,7 @@
     	let vsBig6 = {};
     	let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
 
-    	for (let team of data.teamNames) {
+    	for (let teamName of data.teamNames) {
     		let big6 = [
     			"Manchester United FC",
     			"Liverpool FC",
@@ -7938,13 +7935,13 @@
     			"Tottenham Hotspurs FC"
     		];
 
-    		big6 = removeItem(big6, team);
+    		big6 = removeItem(big6, teamName);
     		let winsVsBig6 = 0;
 
-    		for (let matchday of Object.keys(data.form[team])) {
-    			let match = data.form[team][matchday];
+    		for (let matchday of Object.keys(data.form[teamName])) {
+    			let match = data.form[teamName][matchday];
 
-    			if (match.score != "None - None" && big6.includes(match.team)) {
+    			if (match.score != "None - None" && big6.includes(match.teamName)) {
     				let [h, _, a] = match.score.split(" ");
 
     				if (match.atHome && h > a || !match.atHome && h < a) {
@@ -7957,14 +7954,14 @@
     			maxWinsVsBig6 = winsVsBig6;
     		}
 
-    		vsBig6[team] = winsVsBig6;
+    		vsBig6[teamName] = winsVsBig6;
     	}
 
     	let totalVsBig6 = 0;
 
-    	for (let team of Object.keys(vsBig6)) {
-    		vsBig6[team] = vsBig6[team] / maxWinsVsBig6 * 100;
-    		totalVsBig6 += vsBig6[team];
+    	for (let teamName of Object.keys(vsBig6)) {
+    		vsBig6[teamName] = vsBig6[teamName] / maxWinsVsBig6 * 100;
+    		totalVsBig6 += vsBig6[teamName];
     	}
 
     	vsBig6.avg = totalVsBig6 / Object.keys(vsBig6).length;
@@ -7972,19 +7969,19 @@
     }
 
     function instance$3($$self, $$props, $$invalidate) {
-    	function addTeamComparison(team) {
-    		let teamColor = getTeamColor(team);
+    	function addTeamComparison(teamName) {
+    		let teamColor = getTeamColor(teamName);
 
     		let teamData = {
-    			name: team,
+    			name: teamName,
     			type: "scatterpolar",
     			r: [
-    				attack[team],
-    				defence[team],
-    				cleanSheets[team],
-    				consistency[team],
-    				winStreaks[team],
-    				vsBig6[team]
+    				attack[teamName],
+    				defence[teamName],
+    				cleanSheets[teamName],
+    				consistency[teamName],
+    				winStreaks[teamName],
+    				vsBig6[teamName]
     			],
     			theta: labels,
     			fill: "toself",
@@ -7992,36 +7989,36 @@
     		};
 
     		spiderPlots.push(teamData);
-    		Plotly.redraw(plotDiv); // Redraw with team added
+    		Plotly.redraw(plotDiv); // Redraw with teamName added
     	}
 
     	function addAvg() {
     		let avg = avgScatterPlot();
-    		spiderPlots.unshift(avg); // Add avg below the team spider plot
+    		spiderPlots.unshift(avg); // Add avg below the teamName spider plot
     	}
 
-    	function removeTeamComparison(team) {
-    		// Remove spider plot for this team
+    	function removeTeamComparison(teamName) {
+    		// Remove spider plot for this teamName
     		for (let i = 0; i < spiderPlots.length; i++) {
-    			if (spiderPlots[i].name == team) {
+    			if (spiderPlots[i].name == teamName) {
     				spiderPlots.splice(i, 1);
     				break;
     			}
     		}
 
-    		// If removing only comparison team, re-insert the initial avg spider plot
+    		// If removing only comparison teamName, re-insert the initial avg spider plot
     		if (comparisonTeams.length == 1) {
     			addAvg();
     		}
 
-    		Plotly.redraw(plotDiv); // Redraw with team removed
+    		Plotly.redraw(plotDiv); // Redraw with teamName removed
     	}
 
     	function spiderBtnClick(btn) {
     		if (btn.style.background == "") {
-    			let team = btn.innerHTML.toLowerCase().replace(/ /g, "-");
-    			btn.style.background = `var(--${team})`;
-    			btn.style.color = `var(--${team}-secondary)`;
+    			let teamName = btn.innerHTML.toLowerCase().replace(/ /g, "-");
+    			btn.style.background = `var(--${teamName})`;
+    			btn.style.color = `var(--${teamName}-secondary)`;
     		} else {
     			btn.style.background = "";
     			btn.style.color = "black";
@@ -8037,7 +8034,7 @@
     			removeTeamComparison(fullTeamName); // Remove from spider chart
     			removeItem(comparisonTeams, fullTeamName); // Remove from comparison teams
     		} else {
-    			addTeamComparison(fullTeamName); // Add team to spider chart
+    			addTeamComparison(fullTeamName); // Add teamName to spider chart
     			comparisonTeams.push(fullTeamName); // Add to comparison teams
     		}
     	}
@@ -8070,19 +8067,19 @@
     		);
     	}
 
-    	function initSpiderPlots(team) {
-    		let teamColor = getTeamColor(team);
+    	function initSpiderPlots(teamName) {
+    		let teamColor = getTeamColor(teamName);
     		let avgData = avgScatterPlot();
 
     		let teamData = scatterPlot(
-    			team,
+    			teamName,
     			[
-    				attack[team],
-    				defence[team],
-    				cleanSheets[team],
-    				consistency[team],
-    				winStreaks[team],
-    				vsBig6[team]
+    				attack[teamName],
+    				defence[teamName],
+    				cleanSheets[teamName],
+    				consistency[teamName],
+    				winStreaks[teamName],
+    				vsBig6[teamName]
     			],
     			teamColor
     		);
@@ -8099,9 +8096,9 @@
     		vsBig6 = getVsBig6(data);
     	}
 
-    	function getGraphData(data, team) {
+    	function getGraphData(data, teamName) {
     		computePlotData(data);
-    		spiderPlots = initSpiderPlots(team);
+    		spiderPlots = initSpiderPlots(teamName);
 
     		let graphData = {
     			data: spiderPlots,
@@ -8901,7 +8898,6 @@
     function create_default_slot$2(ctx) {
     	let div1;
     	let div0;
-    	let t0_value = /*fullTeamName*/ ctx[1].replace(' FC', '') + "";
     	let t0;
     	let t1;
     	let current_block_type_index;
@@ -8923,7 +8919,7 @@
     		c() {
     			div1 = element("div");
     			div0 = element("div");
-    			t0 = text(t0_value);
+    			t0 = text(/*fullTeamName*/ ctx[1]);
     			t1 = space();
     			if_block.c();
     			if_block_anchor = empty();
@@ -8934,7 +8930,7 @@
     			var div1_nodes = children(div1);
     			div0 = claim_element(div1_nodes, "DIV", { class: true, style: true });
     			var div0_nodes = children(div0);
-    			t0 = claim_text(div0_nodes, t0_value);
+    			t0 = claim_text(div0_nodes, /*fullTeamName*/ ctx[1]);
     			div0_nodes.forEach(detach);
     			div1_nodes.forEach(detach);
     			t1 = claim_space(nodes);
@@ -8958,7 +8954,7 @@
     			current = true;
     		},
     		p(ctx, dirty) {
-    			if ((!current || dirty & /*fullTeamName*/ 2) && t0_value !== (t0_value = /*fullTeamName*/ ctx[1].replace(' FC', '') + "")) set_data(t0, t0_value);
+    			if (!current || dirty & /*fullTeamName*/ 2) set_data(t0, /*fullTeamName*/ ctx[1]);
 
     			if (!current || dirty & /*team*/ 1) {
     				set_style(div0, "color", "var(--" + (/*team*/ ctx[0] + '-secondary') + ")");
@@ -9018,7 +9014,7 @@
     	let t;
     	let router;
     	let current;
-    	document.title = title_value = /*fullTeamName*/ ctx[1].replace(' FC', '');
+    	document.title = title_value = /*fullTeamName*/ ctx[1];
 
     	router = new Router({
     			props: {
@@ -9035,7 +9031,7 @@
     			this.h();
     		},
     		l(nodes) {
-    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1vzgwse\"]', document.head);
+    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1qp08hs\"]', document.head);
     			meta = claim_element(head_nodes, "META", { name: true, content: true });
     			head_nodes.forEach(detach);
     			t = claim_space(nodes);
@@ -9053,7 +9049,7 @@
     			current = true;
     		},
     		p(ctx, [dirty]) {
-    			if ((!current || dirty & /*fullTeamName*/ 2) && title_value !== (title_value = /*fullTeamName*/ ctx[1].replace(' FC', ''))) {
+    			if ((!current || dirty & /*fullTeamName*/ 2) && title_value !== (title_value = /*fullTeamName*/ ctx[1])) {
     				document.title = title_value;
     			}
 
@@ -9089,7 +9085,7 @@
     }
 
     function getCurrentMatchday(data, fullTeamName) {
-    	console.log(data, fullTeamName);
+    	console.log(data);
 
     	return Object.keys(data.form[fullTeamName]).reduce((a, b) => data.form[fullTeamName][a] > data.form[fullTeamName][b]
     	? a
@@ -9108,7 +9104,7 @@
     	let data;
 
     	onMount(() => {
-    		$$invalidate(1, fullTeamName = toTitleCase(team.replace(/\-/g, " ")) + " FC");
+    		$$invalidate(1, fullTeamName = toTitleCase(team.replace(/\-/g, " ")));
 
     		fetchData$1("https://pldashboard.herokuapp.com/teams").then(json => {
     			// Build teamData package from json data

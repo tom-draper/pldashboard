@@ -3,19 +3,19 @@
 
   function toInitials(team) {
     switch (team) {
-      case "Brighton and Hove Albion FC":
+      case "Brighton and Hove Albion":
         return "BHA";
-      case "Manchester City FC":
+      case "Manchester City":
         return "MCI";
-      case "Manchester United FC":
+      case "Manchester United":
         return "MUN";
-      case "Aston Villa FC":
+      case "Aston Villa":
         return "AVL";
-      case "Sheffield United FC":
+      case "Sheffield United":
         return "SHU";
-      case "West Bromwich Albion FC":
+      case "West Bromwich Albion":
         return "WBA";
-      case "West Ham United FC":
+      case "West Ham United":
         return "WHU";
     }
     return team.slice(0, 3).toUpperCase();

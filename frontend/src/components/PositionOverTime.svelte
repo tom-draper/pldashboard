@@ -13,8 +13,7 @@
     let lineVal;
     if (isMainTeam) {
       // Get team primary colour from css variable
-      let teamKey = teamName.replace(' FC', '');
-      teamKey = teamKey[0].toLowerCase() + teamKey.slice(1);
+      let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
       teamKey = teamKey.replace(/ ([A-Z])/g, '-$1').toLowerCase();
       let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`)
       lineVal = {color: lineColor, width: 4}

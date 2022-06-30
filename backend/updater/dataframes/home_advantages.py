@@ -83,10 +83,10 @@ class HomeAdvantages(DF):
                 (2020, 'homeAdvantage', ''), axis=1)
 
         home_advantages = home_advantages.sort_index(axis=1)
-        home_advantages['totalhomeAdvantage'] = home_advantages_cols.mean(
+        home_advantages['totalHomeAdvantage'] = home_advantages_cols.mean(
             axis=1).fillna(0)
         home_advantages = home_advantages.sort_values(
-            by='totalhomeAdvantage', ascending=False)
+            by='totalHomeAdvantage', ascending=False)
 
         return home_advantages
 
@@ -140,7 +140,7 @@ class HomeAdvantages(DF):
                 by the team's total home advantage
             Columns (multi-index):
             ------------------------------------------------------------------------------
-            |                     [SEASON YEAR]                     | totalhomeAdvantage |
+            |                     [SEASON YEAR]                     | totalHomeAdvantage |
             |-------------------------------------------------------|--------------------|
             |       home        |      overall      | homeAdvantage |                    |
             |-------------------|-------------------|---------------|                    |
@@ -152,7 +152,7 @@ class HomeAdvantages(DF):
             winRatio: the win ratio of all games played in the season.
             homeAdvantage: the difference between the ratio of games won at home 
                 and the ratio of games won in total for a given season year.
-            totalhomeAdvantage: combined home advantages value from all seasons 
+            totalHomeAdvantage: combined home advantages value from all seasons 
                in the table: the average home wins ratio / wins ratio.
 
         Args:
