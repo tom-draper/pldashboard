@@ -889,11 +889,11 @@ h1 {
 
 @media only screen and (max-width: 1000px) {
   .spider-chart-container {
-    flex-direction: column-reverse;
+    flex-direction: column;
     width: 100%;
   }
   .spider-chart {
-    margin-top: 1em;
+    margin-bottom: 1em;
   }
   .resizable-spider-chart {
     width: 100% !important;
