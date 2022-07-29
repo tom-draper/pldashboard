@@ -13,7 +13,7 @@ updater_old = Updater(current_season)
 updater_old.build_all(request_new=False, display_tables=False)
 
 updater_new = Updater(current_season)
-updater_new.build_all(request_new=True, display_tables=False)
+updater_new.build_all(request_new=False, display_tables=False)
 
 updater_objects = [updater_old, updater_new]
 updater_ids = ["old", "new"]
@@ -133,7 +133,7 @@ def test_form_df_early_matchdays_(matchday_no):
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
 def test_upcoming_df(updater):
     # 20 teams with 6 columns
-    assert updater.data.upcoming.df.shape == (20, 6)
+    assert updater.data.upcoming.df.shape == (20, 4)
 
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)

@@ -41,17 +41,17 @@ class Updater:
 
     def fixtures_data(self, season: int, request_new: bool = True) -> dict:
         if request_new and self.url is not None:
-            response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(season),
+            res = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(season),
                                     headers=self.headers)
             
-            code = response.status_code
+            code = res.status_code
             if code == 429 or code == 403:
                 print('❌  Status:', code)
                 raise ValueError('❌ ERROR: Data request failed')
             else:
                 print('✔️  Status:', code)
 
-            return response.json()['matches']
+            return res.json()['matches']
         else:
             # Read saved fixtures data
             with open(f'data/fixtures_{season}.json', 'r') as json_file:
@@ -59,17 +59,17 @@ class Updater:
 
     def standings_data(self, season: int, request_new: bool = True) -> dict:
         if request_new and self.url is not None:
-            response = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(season),
+            res = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(season),
                                     headers=self.headers)
 
-            code = response.status_code
+            code = res.status_code
             if code == 429 or code == 403:
                 print('❌  Status:', code)
                 raise ValueError('❌ ERROR: Data request failed')
             else:
                 print('✔️  Status:', code)
 
-            return response.json()['standings'][0]['table']
+            return res.json()['standings'][0]['table']
         else:
             # Read standings data
             with open(f'data/standings_{season}.json', 'r') as json_file:
@@ -160,7 +160,7 @@ class Updater:
         )
     
     def save_team_data_to_database(self):
-        team_data = self.data.to_one_dict()
+        team_data = self.data.to_dict()
         self.database.update_team_data(team_data)
         
     def get_logo_urls(self) -> dict[str, str]:
@@ -198,7 +198,6 @@ class Updater:
             self.fetch_json_data(n_seasons, request_new)
             
         self.build_dataframes(n_seasons, display_tables, update_db)
-        
 
         if request_new:
             print('💾 Saving new data as JSON files...')
@@ -207,7 +206,6 @@ class Updater:
             if update_db:
                 print('💾 Saving new data to database...')
                 self.save_team_data_to_database()
-                pass
                 # TODO: Save predictions to database...
                 #self.database.update_predictions(predictions)
 
@@ -216,6 +214,7 @@ if __name__ == "__main__":
     # Build all dataframes and save to database
     updater = Updater(2021)
     updater.build_all(
-        request_new=False, 
-        display_tables=True, 
+        request_new=True, 
+        display_tables=False, 
+        update_db=True,
     )

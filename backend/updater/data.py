@@ -41,7 +41,7 @@ class Data:
                 and self.form.df is not None and self.upcoming is not None 
                 and self.season_stats is not None)
     
-    def to_one_dataframe(self) -> DataFrame:
+    def to_dataframe(self) -> DataFrame:
         return pd.concat((self.fixtures.df, self.standings.df, self.team_ratings.df, self.home_advantages.df, self.form.df, self.upcoming.df, self.season_stats.df), 1)
 
     def collapse_tuple_keys(self, d):
@@ -73,24 +73,24 @@ class Data:
         
         return new_d
     
-    def to_one_dict(self) -> dict:
-        # Build one dict containing all dataframes
-        if self.built_all_dataframes():
-            d = {
-                'lastUpdated': self.last_updated,
-                'currentSeason': self.current_season,
-                'teamNames': self.team_names,
-                'logoURLs': self.logo_urls,
-                'fixtures': self.fixtures.df.to_dict(orient='index'),
-                'standings': self.standings.df.to_dict(orient='index'),
-                'teamRatings': self.team_ratings.df.to_dict(orient='index'),
-                'homeAdvantages': self.home_advantages.df.to_dict(orient='index'),
-                'form': self.form.df.to_dict(orient='index'),
-                'upcoming': self.upcoming.df.to_dict(orient='index'),
-                'seasonStats': self.season_stats.df.to_dict(orient='index'),
-            }
-            # Collapse tuple keys, convert int key to str and remove NaN values
-            d = self.collapse_tuple_keys(d)
-            return d
-        else:
+    def to_dict(self) -> dict:
+        if not self.built_all_dataframes():
             raise ValueError('❌ [ERROR] Cannot build one team data dict: A dataframe is empty')
+            
+        # Build one dict containing all dataframes
+        d = {
+            'lastUpdated': self.last_updated,
+            'currentSeason': self.current_season,
+            'teamNames': self.team_names,
+            'logoURLs': self.logo_urls,
+            'fixtures': self.fixtures.df.to_dict(orient='index'),
+            'standings': self.standings.df.to_dict(orient='index'),
+            'teamRatings': self.team_ratings.df.to_dict(orient='index'),
+            'homeAdvantages': self.home_advantages.df.to_dict(orient='index'),
+            'form': self.form.df.to_dict(orient='index'),
+            'upcoming': self.upcoming.df.to_dict(orient='index'),
+            'seasonStats': self.season_stats.df.to_dict(orient='index'),
+        }
+        # Collapse tuple keys, convert int key to str and remove NaN values
+        d = self.collapse_tuple_keys(d)
+        return d

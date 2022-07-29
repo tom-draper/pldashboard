@@ -122,7 +122,7 @@ class HomeAdvantages(DF):
             away_team = match['awayTeam']['name'].replace(' FC', '').replace('&', 'and')
             current_season_teams.add(home_team)
             current_season_teams.add(away_team)
-        return current_season_teams
+        return list(current_season_teams)
 
     @timebudget
     def build(
@@ -184,10 +184,8 @@ class HomeAdvantages(DF):
             home_advantages, season, threshold)
 
         # Remove working columns
-        current_season_teams = self.get_season_teams(
-            json_data['fixtures'][season])
-        home_advantages = self._clean_dataframe(
-            home_advantages, current_season_teams)
+        current_season_teams = self.get_season_teams(json_data['fixtures'][season])
+        home_advantages = self._clean_dataframe(home_advantages, current_season_teams)
 
         if display:
             print(home_advantages)
