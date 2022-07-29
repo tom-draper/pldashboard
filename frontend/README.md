@@ -1,6 +1,8 @@
 # PL Dashboard Svelte Frontend
 
-### Dev server
+Uses SSR (server-side rendering) with svelte-routing.
+
+### Development Server
 
 ```bash
 npm run start
@@ -10,4 +12,10 @@ npm run start
 
 ```bash
 npm run build
+```
+
+Run production server with:
+
+```bash
+node server.js
 ```
