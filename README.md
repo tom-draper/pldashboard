@@ -1,4 +1,4 @@
-# Premier-League
+# Premier League Statistics Dashboard
 
 A football dashboard to show the recent performance of each Premier League team, including interactive visualisations, key metrics and predictions.
 
