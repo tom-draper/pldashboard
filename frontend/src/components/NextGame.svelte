@@ -62,31 +62,36 @@
         <div class="predictions">
           <div class="next-game-item">
             Current form:
-            <b
-              >{data.form[data.upcoming[fullTeamName].nextTeam][currentMatchday]
-                .formRating5}%</b
-            >
+            {#if currentMatchday != null}
+              <b
+                >{data.form[data.upcoming[fullTeamName].nextTeam][
+                  currentMatchday
+                ].formRating5}%</b
+              >
+            {:else}
+              None
+            {/if}
           </div>
           <div class="next-game-item">
             Score prediction
             <br />
             <a class="predictions-link" href="/predictions">
-              <b>{data.upcoming.prediction.scoreline}</b>
+              <b>{data.upcoming[fullTeamName].prediction.homeGoals} - {data.upcoming[fullTeamName].prediction.awayGoals}</b>
             </a>
             <br />
             <span class="accuracy-item">
               Predicting with accuracy:
-              <b>{data.upcoming.prediction[fullTeamName].accuracy}%</b></span
+              <b>{data.upcoming[fullTeamName].prediction.accuracy}%</b></span
             ><br />
             <div class="accuracy-item">
               General results accuracy:
-              <b>{data.upcoming.prediction[fullTeamName].resultsAccuracy}%</b>
+              <b>{data.upcoming[fullTeamName].prediction.resultsAccuracy}%</b>
             </div>
           </div>
         </div>
       </div>
       <div class="past-results">
-        {#if data.upcoming[fullTeamName].previousMatches.length == 0}
+        {#if data.upcoming[fullTeamName].prevMatches.length == 0}
           <div class="next-game-item prev-results-title">
             No Previous Results
           </div>
@@ -95,7 +100,7 @@
         {/if}
 
         <!-- Display table of previous results against the next team this team is playing -->
-        {#each data.upcoming[fullTeamName].previousMatches as prevMatch}
+        {#each data.upcoming[fullTeamName].prevMatches as prevMatch}
           <div class="next-game-item {prevMatch.oppTeam}">
             <div class="past-result">
               <div class="home-team">{prevMatch.homeTeam}</div>

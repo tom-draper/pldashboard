@@ -26,7 +26,9 @@
   }
 
   function getCurrentMatchday(data, fullTeamName) {
-    console.log(data);
+    if (Object.keys(data.form[fullTeamName]).length == 0) {
+      return null  // Season has not started yet
+    }
     return Object.keys(data.form[fullTeamName]).reduce((a, b) =>
       data.form[fullTeamName][a] > data.form[fullTeamName][b] ? a : b
     );

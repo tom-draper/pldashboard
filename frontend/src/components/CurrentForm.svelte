@@ -95,7 +95,10 @@
   </div>
 {/if}
 <div class="current-form">
-  Current form: {(
-    data.form[fullTeamName][currentMatchday].formRating5 * 100
-  ).toFixed(2)}%
+  Current form:
+  {#if currentMatchday != null}
+    {(data.form[fullTeamName][currentMatchday].formRating5 * 100).toFixed(2)}%
+  {:else}
+    None
+  {/if}
 </div>
