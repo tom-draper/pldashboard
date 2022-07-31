@@ -70,7 +70,6 @@
       details.push(matchDetail);
     }
 
-
     sortByMatchDate(x, y, details);
 
     let now = Date.now();
@@ -83,9 +82,27 @@
     let yLabels = Array.from(Array(11), (_, i) => i * 10);
 
     let minX = new Date(x[0]);
-    minX.setDate(minX.getDate() - 10);
-    let maxX = new Date(Math.max(x[x.length - 1], now));
-    maxX.setDate(maxX.getDate() + 10);
+    minX.setDate(minX.getDate() - 12);
+    // let maxX = new Date(Math.max(x[x.length - 1], now));
+    let maxX = new Date(x[x.length - 1]);
+    maxX.setDate(maxX.getDate() + 12);
+
+    let nowLine = undefined;
+    if (now <= maxX) {
+      // Vertical line shapw marking current day
+      nowLine = {
+        type: "line",
+        x0: now,
+        y0: -4,
+        x1: now,
+        y1: 104,
+        line: {
+          color: "black",
+          dash: "dot",
+          width: 1,
+        },
+      };
+    }
 
     let graphData = {
       data: [
@@ -143,20 +160,7 @@
           range: [minX, maxX],
           fixedrange: true,
         },
-        shapes: [
-          {
-            type: "line",
-            x0: now,
-            y0: -4,
-            x1: now,
-            y1: 104,
-            line: {
-              color: "black",
-              dash: "dot",
-              width: 1,
-            },
-          },
-        ],
+        shapes: [nowLine],
       },
       config: {
         responsive: true,

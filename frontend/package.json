@@ -7,7 +7,7 @@
     "svelte-routing": "^1.6.0"
   },
   "scripts": {
-    "start": "run-p watch server",
+    "dev": "run-p watch server",
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "server": "nodemon server.js --watch server.js --watch public/App.js"

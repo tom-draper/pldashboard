@@ -5,7 +5,7 @@ Uses SSR (server-side rendering) with svelte-routing.
 ## Development Server
 
 ```bash
-npm run start
+npm run dev
 ```
 
 ## Build
