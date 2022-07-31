@@ -302,7 +302,7 @@
         "Manchester City",
         "Arsenal",
         "Chelsea",
-        "Tottenham Hotspurs",
+        "Tottenham Hotspur",
       ];
       big6 = removeItem(big6, teamName);
 
