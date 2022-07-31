@@ -199,7 +199,7 @@ class Updater:
             
         self.build_dataframes(n_seasons, display_tables, update_db)
 
-        if request_new:
+        if False and request_new:
             print('💾 Saving new data as JSON files...')
             self.save_data_to_json()
             print('💾 Saving tables as HTML files...')

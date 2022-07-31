@@ -10,10 +10,10 @@ from updater.updater import Updater
 current_season = 2021
 
 updater_old = Updater(current_season)
-updater_old.build_all(request_new=False, display_tables=False)
+updater_old.build_all(request_new=False, display_tables=False, update_db=False)
 
 updater_new = Updater(current_season)
-updater_new.build_all(request_new=False, display_tables=False)
+updater_new.build_all(request_new=True, display_tables=True, update_db=False)
 
 updater_objects = [updater_old, updater_new]
 updater_ids = ["old", "new"]

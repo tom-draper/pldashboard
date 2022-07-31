@@ -2,13 +2,13 @@
 
 Uses SSR (server-side rendering) with svelte-routing.
 
-### Development Server
+## Development Server
 
 ```bash
 npm run start
 ```
 
-### Build
+## Build
 
 ```bash
 npm run build
