@@ -449,6 +449,7 @@ img {
 .next-game-title-text {
   margin: 0;
   color: rgb(181, 181, 181);
+  display: flex;
 }
 .next-game-logo {
   height: 225px;
@@ -488,14 +489,13 @@ img {
   display: flex;
   margin: 0 5% 2px;
 }
-.Drew {
+.drew {
   background-color: #ffb2477e;
-  
 }
-.Won {
+.won {
   background-color: #77dd7798;
 }
-.Lost {
+.lost {
   background-color: #f3363688;
 }
 .past-result-date {

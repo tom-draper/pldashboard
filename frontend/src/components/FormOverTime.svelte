@@ -1,12 +1,12 @@
 <script>
   import { onMount } from "svelte";
 
-  function getLine(data, x, teamName, isMainTeam) {
-    let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
-
+  function getFormLine(data, x, teamName, isMainTeam) {
+    let matchdays = Object.keys(data.form[teamName]);  // Played matchdays
+    
     let y = [];
-    for (let i = 1; i <= 38; i++) {
-      let form = data.form[teamName][i].formRating5;
+    for (let matchday of matchdays) {
+      let form = data.form[teamName][matchday].formRating5;
       y.push(form * 100);
     }
 
@@ -31,19 +31,25 @@
       line: lineVal,
       text: matchdays,
       hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
-      // hoverinfo: 'x+y',
       showlegend: false,
     };
     return line;
   }
+  
+  function getMatchdayDates(data, teamName) {
+    let matchdays = Object.keys(data.form[teamName]);  // Played matchdasy
 
-  function getMatchdayDates(data) {
-    // Find median matchday date across all teams for each matchday
+    // If played one or no games, take x-axis from whole season dates
+    if (matchdays.length <= 1) {
+      matchdays = Object.keys(data.fixtures[teamName])
+    }
+
     let x = [];
-    for (let i = 1; i <= 38; i++) {
+    // Find median matchday date across all teams for each matchday
+    for (let matchday of matchdays) {
       let matchdayDates = [];
       for (let team of data.teamNames) {
-        matchdayDates.push(data.fixtures[team][i].date);
+        matchdayDates.push(data.fixtures[team][matchday].date);
       }
       matchdayDates = matchdayDates.map((val) => {
         return new Date(val);
@@ -58,17 +64,17 @@
   }
 
   function getGraphData(data, fullTeamName) {
-    let x = getMatchdayDates(data); // All lines use the same x
+    let x = getMatchdayDates(data, fullTeamName); // All lines use the same x
     let lines = [];
     for (let i = 0; i < data.teamNames.length; i++) {
       if (data.teamNames[i] != fullTeamName) {
-        let line = getLine(data, x, data.teamNames[i], false);
+        let line = getFormLine(data, x, data.teamNames[i], false);
         lines.push(line);
       }
     }
 
     // Add this team last to ensure it overlaps all other lines
-    let line = getLine(data, x, fullTeamName, true);
+    let line = getFormLine(data, x, fullTeamName, true);
     lines.push(line);
 
     let yLabels = Array.from(Array(11), (_, i) => i * 10);
@@ -78,7 +84,7 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
+        margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
         hovermode: "closest",
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",

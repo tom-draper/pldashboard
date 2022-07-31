@@ -2,11 +2,12 @@
   import { onMount } from "svelte";
 
   function getLine(data, x, teamName, isMainTeam) {
-    let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
-
+    let matchdays = Object.keys(data.form[teamName]) 
+    
     let y = [];
-    for (let i = 1; i <= 38; i++) {
-      let position = data.form[teamName][i].position;
+    for (let matchday of matchdays) {
+      console.log(matchday)
+      let position = data.form[teamName][matchday].position;
       y.push(position);
     }
 
@@ -33,14 +34,21 @@
     };
     return line;
   }
+  
+  function getMatchdayDates(data, teamName) {
+    let matchdays = Object.keys(data.form[teamName]) 
 
-  function getMatchdayDates(data) {
+    // If played one or no games, take x-axis from whole season dates
+    if (matchdays.length <= 1) {
+      matchdays = Object.keys(data.fixtures[teamName])
+    }
+    
     // Find median matchday date across all teams for each matchday
     let x = [];
-    for (let i = 1; i <= 38; i++) {
+    for (let matchday of matchdays) {
       let matchdayDates = [];
       data.teamNames.forEach(team => {
-        matchdayDates.push(data.fixtures[team][i].date)
+        matchdayDates.push(data.fixtures[team][matchday].date)
       })
       matchdayDates = matchdayDates.map(val => {return new Date(val)})
       matchdayDates = matchdayDates.sort();
@@ -49,11 +57,12 @@
     x.sort(function (a, b) {
       return a - b;
     })
+    console.log(x);
     return x;
   }
 
   function getGraphData(data, fullTeamName) {
-    let x = getMatchdayDates(data);  // All lines use the same x
+    let x = getMatchdayDates(data, fullTeamName);  // All lines use the same x
     let lines = [];
     for (let i = 0; i < data.teamNames.length; i++) {
       if (data.teamNames[i] != fullTeamName) {
@@ -73,7 +82,7 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
+        margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
         hovermode: "closest",
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",

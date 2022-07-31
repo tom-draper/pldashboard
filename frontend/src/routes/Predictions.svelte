@@ -70,7 +70,8 @@
 
   let data;
   onMount(() => {
-    fetchData("https://pldashboard.herokuapp.com/predictions").then((json) => {
+    fetchData("http://127.0.0.1:5000/predictions").then((json) => {
+    // fetchData("https://pldashboard.herokuapp.com/predictions").then((json) => {
       sortByDate(json);
       insertColours(json);
       console.log(json);

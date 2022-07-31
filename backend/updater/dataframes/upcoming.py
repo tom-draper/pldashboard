@@ -91,7 +91,7 @@ class Upcoming(DF):
         if home_score == away_score:
             result = ('drew', 'drew')
         elif home_score > away_score:
-            result = ('Won', 'lost')
+            result = ('won', 'lost')
         else:
             result = ('lost', 'won')
 
