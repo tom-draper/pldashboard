@@ -107,7 +107,7 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 20, l: 50, t: 0, b: 15, pad: 5 },
+        margin: { r: 20, l: 50, t: 15, b: 15, pad: 5 },
         barmode: "stack",
         hovermode: "closest",
         plot_bgcolor: "#fafafa",
@@ -119,7 +119,8 @@
           showline: false,
           zeroline: false,
           fixedrange: true,
-        },
+          rangemode: 'nonnegative'
+         },
         xaxis: {
           linecolor: "black",
           showgrid: false,

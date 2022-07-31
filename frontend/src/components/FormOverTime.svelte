@@ -97,6 +97,7 @@
           fixedrange: true,
           ticktext: yLabels,
           tickvals: yLabels,
+          range: [0, 100]
         },
         xaxis: {
           linecolor: "black",

@@ -44,6 +44,7 @@
           showline: false,
           zeroline: false,
           fixedrange: true,
+          rangemode: 'nonnegative'
         },
         xaxis: {
           title: { text: "Goals Conceded" },
