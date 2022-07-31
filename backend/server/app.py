@@ -6,7 +6,7 @@ from flask_cors import CORS, cross_origin
 from utils.utilities import Utilities
 from database.database import Database
 
-season = 2021
+season = 2022
 
 app = Flask(__name__)
 cors = CORS(app)

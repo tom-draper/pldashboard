@@ -25,27 +25,30 @@ class Database:
     def get_predictions(self) -> list[dict]:
         predictions = None
         with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Predictions
+            collection = client.PremierLeague.Predictions2022
             predictions = list(collection.aggregate(
                 [{
                     "$group": {"_id": {"$dateToString": {"format": "%Y-%m-%d", "date": "$datetime"}},
                                "predictions": {"$push": "$$ROOT"}}
                 }]
             ))
+            
         return predictions
 
     def get_prediction_accuracy(self) -> dict:
         accuracy = None
         with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Accuracy
+            collection = client.PremierLeague.Accuracy2022
             accuracy = collection.find_one()
+            
         return accuracy
 
     def get_teams_data(self) -> dict:
         team_data = None
         with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.TeamData
+            collection = client.PremierLeague.TeamData2022
             team_data = dict(collection.find().next())
+            
         return team_data
 
     @staticmethod
@@ -85,10 +88,11 @@ class Database:
             results_accuracy = result_correct / n_played
             home_goals_avg_diff = home_goals_diff / n_played
             away_goals_avg_diff = away_goals_diff / n_played
+            
         return score_accuracy, results_accuracy, home_goals_avg_diff, away_goals_avg_diff
 
-    def _calc_accuracy(self, database) -> dict[str, float]:
-        collection = database.Predictions
+    def _calc_accuracy(self, client: pymongo.MongoClient) -> dict[str, float]:
+        collection = client.PremierLeague.Predictions2022
         played = collection.find({'actual': {'$ne': None}}, {
                                  '_id': 0, 'prediction': 1, 'actual': 1})
 
@@ -102,21 +106,18 @@ class Database:
                     'resultAccuracy': results_accuracy,
                     'homeGoalsAvgDiff': home_goals_avg_diff,
                     'awayGoalsAvgDiff': away_goals_avg_diff}
+        
         return accuracy
 
-    def _save_accuracy(self, database, accuracy: float):
-        collection = database.Accuracy
+    def _save_accuracy(self, client: pymongo.MongoClient, accuracy: float):
+        collection = client.PremierLeague.Accuracy2022
         collection.replace_one({'_id': 'accuracy'}, accuracy)
 
     def update_accuracy(self):
-        client = pymongo.MongoClient(self.connection_string)
-        database = client.PremierLeague
-
-        accuracy = self._calc_accuracy(database)
-        self._save_accuracy(database, accuracy)
-
-        client.close()
-
+        with pymongo.MongoClient(self.connection_string) as client:
+            accuracy = self._calc_accuracy(client)
+            self._save_accuracy(client, accuracy)
+        
         return accuracy
 
     @staticmethod
@@ -125,9 +126,10 @@ class Database:
         away_initials: str,
         actual_scores: dict[tuple[str, str], dict[str, int]]
     ) -> Optional[str]:
+        actual_score = None
         if (home_initials, away_initials) in actual_scores:
-            return actual_scores[(home_initials, away_initials)]
-        return None
+            actual_score = actual_scores[(home_initials, away_initials)]
+        return actual_score
 
     def _build_predictions(self, preds: dict, actual_scores: dict[tuple[str, str], dict[str, int]]):
         predictions = []
@@ -143,16 +145,19 @@ class Database:
                 'actual': actual_score,
             }
             predictions.append(prediction)
+            
         return predictions
 
     @staticmethod
-    def _save_predictions(database, predictions: list):
+    def _save_predictions(self, predictions: list):
         print('💾 Saving predictions to database...')
-        collection = database.Predictions
-        for prediction in predictions:
-            collection.replace_one(
-                {'_id': prediction['_id']}, prediction, upsert=True)
-
+        with pymongo.MongoClient(self.connection_string) as client:
+            collection = client.PremierLeague.Predictions2022
+            
+            for prediction in predictions:
+                collection.replace_one(
+                    {'_id': prediction['_id']}, prediction, upsert=True)
+            
     def update_predictions(self, preds: dict, actual_scores: dict[tuple[str, str], dict[str, int]]):
         """
         Update the MongoDB database with predictions in the preds dict, including
@@ -170,16 +175,10 @@ class Database:
         """
 
         predictions = self._build_predictions(preds, actual_scores)
+        self._save_predictions(predictions)
 
-        client = pymongo.MongoClient(self.connection_string)
-        database = client.PremierLeague
-
-        self._save_predictions(database, predictions)
-
-        client.close()
-
-    def update_with_json_data(self):
-        with open('data/predictions_2021.json', 'r') as f:
+    def _read_json_predictions(self, season=2021):
+        with open(f'data/predictions_{season}.json', 'r') as f:
             data = json.loads(f.read())
 
         predictions = []
@@ -200,44 +199,38 @@ class Database:
                     'detailedPrediction': detailed_prediction
                 }
                 predictions.append(prediction)
+                
+        return predictions
+        
 
-        client = pymongo.MongoClient(self.connection_string)
-        database = client.PremierLeague
-
-        self._save_predictions(database, predictions)
-
-        client.close()
+    def update_with_json_data(self):
+        predictions = self._read_json_predictions()
+        self._save_predictions(predictions)
 
     def update_actual_scores(self, actual_scores: dict[tuple[str, str], dict[str, int]]):
-        client = pymongo.MongoClient(self.connection_string)
-        collection = client.PremierLeague.Predictions
+        with pymongo.MongoClient(self.connection_string) as client:
+            collection = client.PremierLeague.Predictions2022
 
-        no_actual_scores = collection.find(
-            {'actual': None}, {'_id': 1, 'home': 1, 'away': 1})
+            no_actual_scores = collection.find(
+                {'actual': None}, {'_id': 1, 'home': 1, 'away': 1})
 
-        for d in no_actual_scores:
-            actual = self._get_actual_score(
-                d['home'], d['away'], actual_scores)
-            if actual is not None:
-                collection.update_one({'_id': d['_id']}, {
-                                      '$set': {'actual': actual}})
-
-        client.close()
+            for d in no_actual_scores:
+                actual = self._get_actual_score(
+                    d['home'], d['away'], actual_scores)
+                if actual is not None:
+                    collection.update_one({'_id': d['_id']}, {
+                                        '$set': {'actual': actual}})
 
     def update_all_actual_scores(self, actual_scores: dict[tuple[str, str], dict[str, int]]):
-        client = pymongo.MongoClient(self.connection_string)
-        collection = client.PremierLeague.Predictions
+        with pymongo.MongoClient(self.connection_string) as client:
+            collection = client.PremierLeague.Predictions2022
 
-        for initials, actual in actual_scores.items():
-            prediction_id = f'{initials[0]} vs {initials[1]}'
-            collection.update_one({'_id': prediction_id}, {
-                                  '$set': {'actual': actual}})
-
-        client.close()
+            for initials, actual in actual_scores.items():
+                prediction_id = f'{initials[0]} vs {initials[1]}'
+                collection.update_one({'_id': prediction_id}, {
+                                    '$set': {'actual': actual}})
 
     def update_team_data(self, team_data: dict):
-        client = pymongo.MongoClient(self.connection_string)
-        collection = client.PremierLeague.TeamData
-        collection.replace_one({'_id': 'team_data'}, team_data)
-
-        client.close()
+        with pymongo.MongoClient(self.connection_string) as client:
+            collection = client.PremierLeague.TeamData2022
+            collection.replace_one({'_id': 'team_data'}, team_data)

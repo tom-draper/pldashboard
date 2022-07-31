@@ -212,7 +212,7 @@ class Updater:
 
 if __name__ == "__main__":
     # Build all dataframes and save to database
-    updater = Updater(2021)
+    updater = Updater(2022)
     updater.build_all(
         request_new=True, 
         display_tables=False, 
