@@ -57,7 +57,6 @@
     x.sort(function (a, b) {
       return a - b;
     })
-    console.log(x);
     return x;
   }
 
