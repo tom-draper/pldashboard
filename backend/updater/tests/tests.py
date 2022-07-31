@@ -7,7 +7,7 @@ import pytest
 
 from updater.updater import Updater
 
-current_season = 2021
+current_season = 2022
 
 updater_old = Updater(current_season)
 updater_old.build_all(request_new=False, display_tables=False, update_db=False)

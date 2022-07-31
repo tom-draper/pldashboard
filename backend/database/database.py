@@ -47,7 +47,7 @@ class Database:
         team_data = None
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData2022
-            team_data = dict(collection.find().next())
+            team_data = dict(collection.find_one({'_id': 'team_data'}))
             
         return team_data
 
@@ -148,7 +148,6 @@ class Database:
             
         return predictions
 
-    @staticmethod
     def _save_predictions(self, predictions: list):
         print('💾 Saving predictions to database...')
         with pymongo.MongoClient(self.connection_string) as client:

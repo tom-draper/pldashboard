@@ -94,7 +94,7 @@ class Updater:
         self.load_previous_fixtures(n_seasons)
 
         if request_new:
-            self.last_updated = datetime.now().strftime('Last updated: %Y-%m-%d %H:%M:%S')
+            self.last_updated = datetime.now()
 
     def save_data_to_json(self):
         """ Save current season fixtures and standings data in self.json_data to 
@@ -205,7 +205,6 @@ class Updater:
         if request_new:
             print('💾 Saving new data as JSON files...')
             self.save_data_to_json()
-            print('💾 Saving tables as HTML files...')
             if update_db:
                 print('💾 Saving new data to database...')
                 self.save_team_data_to_database()
@@ -219,5 +218,5 @@ if __name__ == "__main__":
     updater.build_all(
         request_new=True, 
         display_tables=True, 
-        update_db=False,
+        update_db=True,
     )
