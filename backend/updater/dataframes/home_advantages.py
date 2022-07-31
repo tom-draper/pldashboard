@@ -1,30 +1,47 @@
 from collections import defaultdict
 
 import pandas as pd
-from timebudget import timebudget
 from pandas import DataFrame
+from timebudget import timebudget
+from utils.utilities import Utilities
 
 from dataframes.df import DF
 
+utils = Utilities()
 
 class HomeAdvantages(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'home_advantages')
-
+    
     @staticmethod
-    def _home_advantages_for_season(d: defaultdict, data: dict, season: int):
+    def _check_init_team_row(d: defaultdict, team: str, season: int):
+        if team not in d:
+            d[team] = {}
+        if (season, 'home', 'wins') not in d[team]:
+            d[team][(season, 'home', 'wins')] = 0 
+            d[team][(season, 'home', 'loses')] = 0 
+            d[team][(season, 'home', 'draws')] = 0 
+            d[team][(season, 'away', 'wins')] = 0 
+            d[team][(season, 'away', 'loses')] = 0 
+            d[team][(season, 'away', 'draws')] = 0 
+
+    def _home_advantages_for_season(self, d: defaultdict, data: dict, season: int):
         for match in data:
+            home_team = utils.clean_full_team_name(match['homeTeam']['name'])
+            away_team = utils.clean_full_team_name(match['awayTeam']['name'])
+            
+            self._check_init_team_row(d, home_team, season)
+            self._check_init_team_row(d, away_team, season)
+                
             if match['score']['winner'] is not None:
-                home_team = match['homeTeam']['name'].replace(' FC', '').replace('&', 'and')
-                away_team = match['awayTeam']['name'].replace(' FC', '').replace('&', 'and')
                 home_goals = match['score']['fullTime']['homeTeam']
                 away_goals = match['score']['fullTime']['awayTeam']
                 if home_goals > away_goals:
-                    # home team wins
+                    # Home team wins
                     d[home_team][(season, 'home', 'wins')] += 1
                     d[away_team][(season, 'away', 'loses')] += 1
                 elif home_goals < away_goals:
-                    # away team wins
+                    # Away team wins
                     d[home_team][(season, 'home', 'loses')] += 1
                     d[away_team][(season, 'away', 'wins')] += 1
                 else:
@@ -118,8 +135,8 @@ class HomeAdvantages(DF):
     def get_season_teams(season_fixtures_data):
         current_season_teams = set()
         for match in season_fixtures_data:
-            home_team = match['homeTeam']['name'].replace(' FC', '').replace('&', 'and')
-            away_team = match['awayTeam']['name'].replace(' FC', '').replace('&', 'and')
+            home_team = utils.clean_full_team_name(match['homeTeam']['name'])
+            away_team = utils.clean_full_team_name(match['awayTeam']['name'])
             current_season_teams.add(home_team)
             current_season_teams.add(away_team)
         return list(current_season_teams)
@@ -174,7 +191,7 @@ class HomeAdvantages(DF):
 
         home_advantages = pd.DataFrame.from_dict(d, orient='index')
         home_advantages = home_advantages.fillna(0).astype(int)
-
+        
         # Calculate home advantages for each season
         for i in range(no_seasons):
             self._create_season_home_advantage_col(home_advantages, season-i)

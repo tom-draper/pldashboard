@@ -297,12 +297,12 @@
     let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
     for (let teamName of data.teamNames) {
       let big6 = [
-        "Manchester United FC",
-        "Liverpool FC",
-        "Manchester City FC",
-        "Arsenal FC",
-        "Chelsea FC",
-        "Tottenham Hotspurs FC",
+        "Manchester United",
+        "Liverpool",
+        "Manchester City",
+        "Arsenal",
+        "Chelsea",
+        "Tottenham Hotspurs",
       ];
       big6 = removeItem(big6, teamName);
 

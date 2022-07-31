@@ -111,11 +111,11 @@ class SeasonStats(DF):
                 creation. Defaults to False.
         """
         print('🛠️  Building season stats dataframe... ')
-        self._check_dependencies(form)
+        # self._check_dependencies(form)
 
-        if form.df.empty:
-            raise ValueError(
-                '❌ [ERROR] Cannot build season stats dataframe: Form dataframe empty')
+        # if form.df.empty:
+        #     raise ValueError(
+        #         '❌ [ERROR] Cannot build season stats dataframe: Form dataframe empty')
 
         matchdays = list(form.df.columns.unique(level=0))
 

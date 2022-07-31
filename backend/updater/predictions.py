@@ -48,14 +48,14 @@ class Predictor:
         goals_scored = 0
         goals_conceded = 0
         for prev_match in prev_matches:
-            if team_name == prev_match['HomeTeam']:
+            if team_name == prev_match['homeTeam']:
                 # Played at home
-                goals_scored += prev_match['HomeGoals']
-                goals_conceded += prev_match['AwayGoals']
-            elif team_name == prev_match['AwayTeam']:
+                goals_scored += prev_match['homeGoals']
+                goals_conceded += prev_match['awayGoals']
+            elif team_name == prev_match['awayTeam']:
                 # Played away
-                goals_scored += prev_match['AwayGoals']
-                goals_conceded += prev_match['HomeGoals']
+                goals_scored += prev_match['awayGoals']
+                goals_conceded += prev_match['homeGoals']
 
         # Average scored and conceded
         avg_scored = goals_scored / len(prev_matches)
@@ -242,7 +242,7 @@ class Predictor:
         ) -> tuple[str, str, dict[str, int], dict[str, float]]:
         team_name_initials = util.convert_team_name_or_initials(team_name)
         opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
-
+        
         # Construct prediction string for display
         if at_home:
             home = team_name_initials
@@ -271,10 +271,10 @@ class Predictor:
             if upcoming is not None:
                 form_rating = form.get_current_form_rating(team_name)
                 long_term_form_rating = form.get_long_term_form_rating(team_name)
-                
-                opp_team_name = upcoming.at[team_name, 'NextTeam']
-                at_home = upcoming.at[team_name, 'AtHome']
-                prev_matches = upcoming.at[team_name, 'PreviousMatches']
+                                
+                opp_team_name = upcoming.at[team_name, 'nextTeam']
+                at_home = upcoming.at[team_name, 'atHome']
+                prev_matches = upcoming.at[team_name, 'prevMatches']
                 
                 opp_form_rating = form.get_current_form_rating(opp_team_name)
                 opp_long_term_form_rating = form.get_long_term_form_rating(opp_team_name)
@@ -282,8 +282,8 @@ class Predictor:
                 avg_result = fixtures.get_avg_result(team_name)
                 opp_avg_result = fixtures.get_avg_result(opp_team_name)
                 
-                home_advantage = home_advantages.df.loc[team_name, 'TotalHomeAdvantage'][0]
-                opp_home_advantage = home_advantages.df.loc[opp_team_name, 'TotalHomeAdvantage'][0]
+                home_advantage = home_advantages.df.loc[team_name, 'totalHomeAdvantage'][0]
+                opp_home_advantage = home_advantages.df.loc[opp_team_name, 'totalHomeAdvantage'][0]
 
                 pred_scored, pred_conceded = self._calc_score_prediction(
                     team_name, avg_result, opp_avg_result, home_advantage,
@@ -293,13 +293,13 @@ class Predictor:
                 home_initials, away_initials, pred = self._prediction_details(
                     team_name, opp_team_name, pred_scored, pred_conceded, at_home)
 
-                date = upcoming.at[team_name, 'Date'].to_pydatetime()
+                date = upcoming.at[team_name, 'date'].to_pydatetime()
                 
                 prediction = {'date': date,
                               'homeInitials': home_initials,
                               'awayInitials': away_initials,
                               'prediction': pred}
-
+            
             predictions[team_name] = prediction
 
         return predictions
@@ -350,17 +350,17 @@ class Predictions:
 
         for matchday_no in range(1, 39):
             matchday = fixtures.df[matchday_no]
-            matchday_status = matchday['Status'] 
+            matchday_status = matchday['status'] 
 
             # If whole column is SCHEDULED, skip
             if not all(matchday_status == 'SCHEDULED'):
                 for team_name, row in matchday.iterrows():
-                    if row['Status'] == 'FINISHED':
-                        home_goals, away_goals = util.extract_int_score(row['Score'])
+                    if row['status'] == 'FINISHED':
+                        home_goals, away_goals = util.extract_int_score(row['score'])
 
                         home_initials = util.convert_team_name_or_initials(team_name)
-                        away_initials = util.convert_team_name_or_initials(row['Team'])
-                        if not row['AtHome']:
+                        away_initials = util.convert_team_name_or_initials(row['team'])
+                        if not row['atHome']:
                             home_initials, away_initials = away_initials, home_initials
 
                         actual_scores[(home_initials, away_initials)] = {
@@ -392,5 +392,7 @@ class Predictions:
             predictions, 
             orient='index'
         )[['prediction']]
+        
+        print(upcoming_predictions)
 
         return upcoming_predictions

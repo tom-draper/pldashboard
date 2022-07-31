@@ -2,8 +2,8 @@ from datetime import datetime
 from typing import Optional
 
 import pandas as pd
-from timebudget import timebudget
 from pandas import DataFrame
+from timebudget import timebudget
 from utils.utilities import Utilities
 
 from dataframes.df import DF
@@ -151,7 +151,7 @@ class Upcoming(DF):
     def _sort_prev_matches_by_date(next_games: dict):
         for _, row in next_games.items():
             row['prevMatches'] = sorted(
-                row['prevMatches'], key=lambda x: x['Date'], reverse=True)
+                row['prevMatches'], key=lambda x: x['date'], reverse=True)
 
     def _append_season_prev_matches(
         self,
@@ -167,8 +167,8 @@ class Upcoming(DF):
 
         for match in data:
             if match['status'] == 'FINISHED':
-                home_team = match['homeTeam']['name'].replace(' FC', '').replace('&', 'and')  # type: str
-                away_team = match['awayTeam']['name'].replace(' FC', '').replace('&', 'and')  # type: str
+                home_team = utils.clean_full_team_name(match['homeTeam']['name'])  # type: str
+                away_team = utils.clean_full_team_name(match['awayTeam']['name'])  # type: str
 
                 if home_team in team_names and away_team in team_names:
                     home_goals = match['score']['fullTime']['homeTeam']
@@ -234,9 +234,9 @@ class Upcoming(DF):
                 creation. Defaults to False.
         """
         print('🛠️  Building upcoming dataframe... ')
-        self._check_dependencies(fixtures, form)
-        if not team_names:
-            raise ValueError('❌ [ERROR] Cannot build upcoming dataframe: Teams names list empty')
+        # self._check_dependencies(fixtures, form)
+        # if not team_names:
+        #     raise ValueError('❌ [ERROR] Cannot build upcoming dataframe: Teams names list empty')
 
         d = {}  # type: dict[str, dict[str, Optional[str] | list]]
         for team_name in team_names:

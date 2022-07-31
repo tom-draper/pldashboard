@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
-from timebudget import timebudget
 from pandas import DataFrame
+from timebudget import timebudget
 
 from dataframes.df import DF
 from dataframes.standings import Standings

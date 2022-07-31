@@ -1,8 +1,11 @@
 import pandas as pd
 from pandas import DataFrame
 from timebudget import timebudget
+from utils.utilities import Utilities
 
 from dataframes.df import DF
+
+utils = Utilities()
 
 
 class Standings(DF):
@@ -148,7 +151,7 @@ class Standings(DF):
         df = pd.DataFrame.from_dict(data)
         
         # Rename teams to their team name
-        team_names = [name.replace(' FC', '').replace('&', 'and') 
+        team_names = [utils.clean_full_team_name(name) 
                       for name in [df['team'][x]['name'] for x in range(len(df))]]
         df = df.drop(columns=['form', 'team'])
         df.index = team_names

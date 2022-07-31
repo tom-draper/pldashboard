@@ -1,6 +1,6 @@
 from collections import defaultdict
-import numpy as np
 
+import numpy as np
 import pandas as pd
 from pandas import DataFrame
 from timebudget import timebudget
@@ -54,7 +54,10 @@ class Form(DF):
             matchday = self.get_prev_matchday()
         return matchday
 
-    def _get_last_played_matchday(self, current_matchday: int, team_name: str) -> int:
+    def _get_last_played_matchday(self, current_matchday: int, team_name: str) -> int | None:
+        if current_matchday is None:
+            return None
+        
         matchday = current_matchday
         while self.df.at[team_name, (matchday, 'score')] is None and matchday > 0:
             matchday -= 1
@@ -93,7 +96,7 @@ class Form(DF):
         return latest_teams_played
 
     def _get_form_rating(self, team_name: str, matchday: int, n_games: int) -> float:
-        rating = 0
+        rating = 50.0
         if matchday is not None:
             rating = (
                 self.df.at[team_name, (matchday, f'formRating{n_games}')] * 100).round(1)
@@ -329,8 +332,8 @@ class Form(DF):
 
         d = defaultdict(lambda: [])
         for team, row in form.iterrows():
-            teams_matchdays = row[(slice(None), 'date')
-                                  ][row[(slice(None), 'score')] != None]
+            print(row)
+            teams_matchdays = row[(slice(None), 'date')][row[(slice(None), 'score')] != None]
             # Matchdays sorted by date played
             teams_matchdays = teams_matchdays.sort_values(
                 inplace=False).index.values
@@ -425,12 +428,14 @@ class Form(DF):
         self._check_dependencies(fixtures, standings, team_ratings)
 
         matchday_nos = self._get_played_matchdays(fixtures)
+        
         form = fixtures.df[matchday_nos].drop(columns=['status'], level=1)
+        
+        if len(matchday_nos) > 0:
+            form_rows = self._form_columns(form, team_ratings, star_team_threshold)
+            form = pd.concat([form, form_rows], axis=1)
 
-        form_rows = self._form_columns(form, team_ratings, star_team_threshold)
-        form = pd.concat([form, form_rows], axis=1)
-
-        form = self._clean_dataframe(form, matchday_nos)
+            form = self._clean_dataframe(form, matchday_nos)
 
         if display:
             print(form)

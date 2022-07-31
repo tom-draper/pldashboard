@@ -14,6 +14,9 @@ from timebudget import timebudget
 
 from data import Data
 
+from utils.utilities import Utilities
+
+utils = Utilities()
 
 class Updater:
     def __init__(self, current_season: int):
@@ -168,7 +171,7 @@ class Updater:
 
         logo_urls = {}
         for standings_row in data:
-            team_name = standings_row['team']['name'].replace(' FC', '').replace('&', 'and')
+            team_name = utils.clean_full_team_name(standings_row['team']['name'])
             crest_url = standings_row['team']['crestUrl']
             logo_urls[team_name] = crest_url
 
@@ -199,7 +202,7 @@ class Updater:
             
         self.build_dataframes(n_seasons, display_tables, update_db)
 
-        if False and request_new:
+        if request_new:
             print('💾 Saving new data as JSON files...')
             self.save_data_to_json()
             print('💾 Saving tables as HTML files...')
@@ -215,6 +218,6 @@ if __name__ == "__main__":
     updater = Updater(2022)
     updater.build_all(
         request_new=True, 
-        display_tables=False, 
-        update_db=True,
+        display_tables=True, 
+        update_db=False,
     )

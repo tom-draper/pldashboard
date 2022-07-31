@@ -2,8 +2,8 @@ from collections import defaultdict
 from datetime import datetime
 
 import pandas as pd
-from timebudget import timebudget
 from pandas import DataFrame
+from timebudget import timebudget
 from utils.utilities import Utilities
 
 from dataframes.df import DF
@@ -47,8 +47,9 @@ class Fixtures(DF):
                     avg_scored, avg_conceded, h, a, at_home)
                 total += 1
 
-        avg_scored = avg_scored / total
-        avg_conceded = avg_conceded / total
+        if total > 0:
+            avg_scored = avg_scored / total
+            avg_conceded = avg_conceded / total
 
         return avg_scored, avg_conceded
 
@@ -65,7 +66,7 @@ class Fixtures(DF):
             match['awayTeam']['name'].replace('&', 'and'))
         matchday[(match["matchday"], 'status')].append(match['status'])
         matchday[(match["matchday"], 'score')].append(score)
-        team_names.append(match['homeTeam']['name'].replace(' FC', '').replace('&', 'and'))
+        team_names.append(utils.clean_full_team_name(match['homeTeam']['name']))
 
     @staticmethod
     def _insert_away_team_row(matchday: dict, match: dict, team_names: list[str]):
@@ -80,7 +81,7 @@ class Fixtures(DF):
             match['homeTeam']['name'].replace('&', 'and'))
         matchday[(match["matchday"], 'status')].append(match['status'])
         matchday[(match["matchday"], 'score')].append(score)
-        team_names.append(match['awayTeam']['name'].replace(' FC', '').replace('&', 'and'))
+        team_names.append(utils.clean_full_team_name(match['awayTeam']['name']))
 
     @staticmethod
     def _insert_team_row(
@@ -92,11 +93,11 @@ class Fixtures(DF):
         date = datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ")
 
         if home_team:
-            team_name = match['homeTeam']['name'].replace(' FC', '').replace('&', 'and')
-            opp_team_name = match['awayTeam']['name'].replace(' FC', '').replace('&', 'and')
+            team_name = utils.clean_full_team_name(match['homeTeam']['name'])
+            opp_team_name = utils.clean_full_team_name(match['awayTeam']['name'])
         else:
-            team_name = match['awayTeam']['name'].replace(' FC', '').replace('&', 'and')
-            opp_team_name = match['homeTeam']['name'].replace(' FC', '').replace('&', 'and')
+            team_name = utils.clean_full_team_name(match['awayTeam']['name'])
+            opp_team_name = utils.clean_full_team_name(match['homeTeam']['name'])
 
         score = None
         if match['score']['fullTime']['homeTeam'] is not None:

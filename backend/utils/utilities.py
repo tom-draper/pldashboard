@@ -25,59 +25,43 @@ class TwoWayDict(dict):
 
 class Utilities:
     names_and_initials = TwoWayDict({
-        'ARS': 'Arsenal FC',
-        'AVL': 'Aston Villa FC',
-        'BHA': 'Brighton and Hove Albion FC',
-        'BUR': 'Burnley FC',
-        'BRE': 'Brentford FC',
-        'CHE': 'Chelsea FC',
-        'CRY': 'Crystal Palace FC',
-        'EVE': 'Everton FC',
-        'FUL': 'Fulham FC',
-        'LEE': 'Leeds United FC',
-        'LEI': 'Leicester City FC',
-        'LIV': 'Liverpool FC',
-        'MCI': 'Manchester City FC',
-        'MUN': 'Manchester United FC',
-        'NOR': 'Norwich City FC',
-        'NEW': 'Newcastle United FC',
-        'SHU': 'Sheffield United FC',
-        'SOU': 'Southampton FC',
-        'TOT': 'Tottenham Hotspur FC',
-        'WAT': 'Watford FC',
-        'WBA': 'West Bromwich Albion FC',
-        'WHU': 'West Ham United FC',
-        'WOL': 'Wolverhampton Wanderers FC',
+        'ARS': 'Arsenal',
+        'AVL': 'Aston Villa',
+        'BHA': 'Brighton and Hove Albion',
+        'BUR': 'Burnley',
+        'BRE': 'Brentford',
+        'CHE': 'Chelsea',
+        'CRY': 'Crystal Palace',
+        'EVE': 'Everton',
+        'FUL': 'Fulham',
+        'LEE': 'Leeds United',
+        'LEI': 'Leicester City',
+        'LIV': 'Liverpool',
+        'MCI': 'Manchester City',
+        'MUN': 'Manchester United',
+        'NOR': 'Norwich City',
+        'NEW': 'Newcastle United',
+        'SHU': 'Sheffield United',
+        'SOU': 'Southampton',
+        'TOT': 'Tottenham Hotspur',
+        'WAT': 'Watford',
+        'WBA': 'West Bromwich Albion',
+        'WHU': 'West Ham United',
+        'WOL': 'Wolverhampton Wanderers',
+        'NOT': 'Nottingham Forest',
+        
     })
 
-    # def __init__(self):
-    #     self.team_colours = self._read_team_colours()
-    
-    # def _read_team_colours(self):
-    #     team_colours = {}
-    #     with open('./static/style.css', 'r') as f:
-    #         match = re.search(r':root\s*{[^\}]*}', f.read()).group(0)
-    #         css_vars = re.findall(r'\-\-[^;]*;', match)
-    #         for css_var in css_vars:
-    #             # Get team name from css variable
-    #             team = re.search(r'\-\-([^:]*):', css_var).group(1)
-    #             team = team.replace('-', ' ').title() + ' FC'
-    #             # Get team colour from css variable
-    #             colour = re.search(r':\s*([^;]*);', css_var).group(1)
-    #             # Insert commas if missing
-    #             if ',' not in colour:
-    #                 colour = colour.replace(' ', ', ')
-    #             team_colours[team] = colour
-    #     return team_colours
-
     def convert_team_name_or_initials(self, team_name: str) -> str:
-        if team_name in self.names_and_initials.keys():
+        if (team_name in self.names_and_initials or 
+            team_name in self.names_and_initials.values()):
             return self.names_and_initials[team_name]
         elif len(team_name) == 3:
-            # If no match found and input is initials
-            raise KeyError("Team name does not exist")
+            # Cannot convert initials to a full team name if not in dict
+            raise KeyError("Team name corresponding to input initials does not exist")
         else:
-            # If no match found and input is team name, shorten team name
+            # If no match found for a given full team name, shorten name to
+            # create initials
             return team_name[:3].upper()
 
     @staticmethod
@@ -137,3 +121,6 @@ class Utilities:
         else:
             scoreline = f'{opp_team_name_initials} {conceded} - {scored} {team_name_initials}'
         return scoreline
+    
+    def clean_full_team_name(self, full_team_name: str) -> str:
+        return full_team_name.replace(' FC', '').replace('AFC ', '').replace('&', '')
