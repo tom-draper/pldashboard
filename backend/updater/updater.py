@@ -176,7 +176,7 @@ class Updater:
             logo_urls[team_name] = crest_url
 
         return logo_urls
-    
+        
     def build_dataframes(self, n_seasons, display_tables, update_db):
         self.data.last_updated = self.last_updated
         self.data.logo_urls = self.get_logo_urls()

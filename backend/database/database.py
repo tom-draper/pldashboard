@@ -48,8 +48,20 @@ class Database:
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData2022
             team_data = dict(collection.find_one({'_id': 'team_data'}))
+        
+        # Insert form from previous season
+        prev_form = self.get_prev_season_form()
+        team_data['prevForm'] = prev_form['form']
             
         return team_data
+    
+    def get_prev_season_form(self) -> dict:
+        prev_form = None
+        with pymongo.MongoClient(self.connection_string) as client:
+            collection = client.PremierLeague.TeamData
+            prev_form = dict(collection.find_one({'_id': 'team_data'}, {'form': 1}))
+        
+        return prev_form
 
     @staticmethod
     def _accuracy_counts(played: list[dict]) -> tuple[int, int, float, float]:
@@ -200,7 +212,6 @@ class Database:
                 predictions.append(prediction)
                 
         return predictions
-        
 
     def update_with_json_data(self):
         predictions = self._read_json_predictions()

@@ -292,27 +292,8 @@
     align-content: center;
     height: 125px;
   }
-  .main-link {
-    margin: 10px;
-  }
-  .top-left {
-    border-radius: 6px 0 0;
-  }
-  .top-right {
-    border-radius: 0 6px 0 0;
-  }
-  .top-both {
-    border-radius: 6px 6px 0 0;
-  }
-  .bottom-right {
-    border-radius: 0 0 6px;
-  }
-  .bottom-left {
-    border-radius: 0 0 0 6px;
-  }
-  .bottom-both {
-    border-radius: 0 0 6px 6px;
-  }
+
+
 
   @media only screen and (max-width: 1250px) {
     .teams {

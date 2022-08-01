@@ -8,7 +8,6 @@
       oppTeam = data.upcoming[fullTeamName].nextTeam
         .toLowerCase()
         .replace(/ /g, "-");
-      console.log(oppTeam);
     }
   });
   

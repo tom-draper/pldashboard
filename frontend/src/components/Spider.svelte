@@ -97,7 +97,12 @@
           seasonsPlayed += 1;
         }
       }
-      let goalsPerSeason = totalGoals / seasonsPlayed;
+
+      let goalsPerSeason = 0
+      if (seasonsPlayed > 0) {
+        goalsPerSeason = totalGoals / seasonsPlayed;
+      }
+
       attack[teamName] = goalsPerSeason;
     }
     return [attack, [minGoals, maxGoals]];
@@ -132,12 +137,12 @@
     let maxConceded = Number.NEGATIVE_INFINITY;
     let minConceded = Number.POSITIVE_INFINITY;
     for (let teamName of data.teamNames) {
-      let totalGoals = 0;
+      let totalConceded = 0;
       let seasonsPlayed = 0;
       for (let year in data.standings[teamName]) {
         let goals = data.standings[teamName][year].gA;
         if (goals > 0) {
-          totalGoals += goals;
+          totalConceded += goals;
           if (goals > maxConceded) {
             maxConceded = goals;
           } else if (goals < minConceded) {
@@ -146,9 +151,15 @@
           seasonsPlayed += 1;
         }
       }
-      let goalsPerSeason = totalGoals / seasonsPlayed;
+      
+      let goalsPerSeason = 0;
+      if (seasonsPlayed > 0) {
+        goalsPerSeason = totalConceded / seasonsPlayed;
+      }
+
       defence[teamName] = goalsPerSeason;
     }
+
     return [defence, [minConceded, maxConceded]];
   }
 
@@ -161,11 +172,13 @@
   }
 
   function insertAvgDefence(defence) {
-    let totalAttack = 0;
+    let totalDefence = 0;
+    console.log(defence);
     for (let teamName in defence) {
-      totalAttack += defence[teamName];
+      console.log(defence[teamName])
+      totalDefence += defence[teamName];
     }
-    defence.avg = totalAttack / Object.keys(defence).length;
+    defence.avg = totalDefence / Object.keys(defence).length;
   }
 
   function getDefence(data) {
@@ -192,6 +205,21 @@
           }
         }
       }
+      
+      if (teamName in data.prevForm) {
+        for (let matchday of Object.keys(data.prevForm[teamName])) {
+          let match = data.prevForm[teamName][matchday];
+          if (match.score != null) {
+            let [h, _, a] = match.score.split(" ");
+            if (match.atHome && a == 0) {
+              nCleanSheets += 1;
+            } else if (!match.atHome && h == 0) {
+              nCleanSheets += 1;
+            }
+          }
+        }
+      }
+
       if (nCleanSheets > maxCleanSheets) {
         maxCleanSheets = nCleanSheets;
       }
@@ -232,9 +260,32 @@
           prevResult = result;
         }
       }
+
+      if (teamName in data.prevForm) {
+        for (let matchday of Object.keys(data.prevForm[teamName])) {
+          let match = data.prevForm[teamName][matchday];
+          if (match.score != null) {
+            let [h, _, a] = match.score.split(" ");
+            let result;
+            if ((match.atHome && h > a) || (!match.atHome && h < a)) {
+              result = "win";
+            } else if ((match.atHome && h < a) || (!match.atHome && h > a)) {
+              result = "lost";
+            } else {
+              result = "draw";
+            }
+            if (prevResult != null && prevResult == result) {
+              backToBack += 1;
+            }
+            prevResult = result;
+          }
+        }
+      }
+
       if (backToBack > maxConsistency) {
         maxConsistency = backToBack;
       }
+
       consistency[teamName] = backToBack;
     }
 
@@ -268,6 +319,24 @@
           }
         }
       }
+
+      if (teamName in data.prevForm) {
+        for (let matchday of Object.keys(data.prevForm[teamName])) {
+          let match = data.prevForm[teamName][matchday];
+          if (match.score != null) {
+            let [h, _, a] = match.score.split(" ");
+            if ((match.atHome && h > a) || (!match.atHome && h < a)) {
+              tempWinStreak += 1;
+              if (tempWinStreak > winStreak) {
+                winStreak = tempWinStreak;
+              }
+            } else {
+              tempWinStreak = 0;
+            }
+          }
+        }
+      }
+
       if (winStreak > maxWinStreaks) {
         maxWinStreaks = winStreak;
       }
@@ -309,16 +378,30 @@
       let winsVsBig6 = 0;
       for (let matchday of Object.keys(data.form[teamName])) {
         let match = data.form[teamName][matchday];
-        if (match.score != null && big6.includes(match.teamName)) {
+        if (match.score != null && big6.includes(match.team)) {
           let [h, _, a] = match.score.split(" ");
           if ((match.atHome && h > a) || (!match.atHome && h < a)) {
             winsVsBig6 += 1;
           }
         }
       }
+
+      if (teamName in data.prevForm) {
+        for (let matchday of Object.keys(data.prevForm[teamName])) {
+          let match = data.prevForm[teamName][matchday];
+          if (match.score != null && big6.includes(match.team)) {
+            let [h, _, a] = match.score.split(" ");
+            if ((match.atHome && h > a) || (!match.atHome && h < a)) {
+              winsVsBig6 += 1;
+            }
+          }
+        }
+      }
+
       if (winsVsBig6 > maxWinsVsBig6) {
         maxWinsVsBig6 = winsVsBig6;
       }
+
       vsBig6[teamName] = winsVsBig6;
     }
 

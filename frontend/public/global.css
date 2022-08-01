@@ -1,6 +1,6 @@
 /* -------------------------------- Global ------------------------------------- */
 
-:root{
+:root {
   --sheffield-united: rgb(238 39 55);
   --sheffield-united-secondary: rgb(13 23 26);
   --leeds-united: rgb(255 205 0);
@@ -86,6 +86,7 @@ h1 {
   margin: 25px 0 0;
   font-size: 1.7em;
 }
+
 .main-link {
   font-size: 1.4em;
   font-weight: 600;
@@ -95,6 +96,7 @@ h1 {
   text-decoration: none;
   letter-spacing: -1px;
 }
+
 .no-decoration {
   text-decoration: none;
 }
@@ -115,6 +117,35 @@ a {
   font-size: 2.6em;
   font-weight: 600;
 }
+
+.main-link {
+  margin: 10px;
+}
+
+.top-left {
+  border-radius: 6px 0 0;
+}
+
+.top-right {
+  border-radius: 0 6px 0 0;
+}
+
+.top-both {
+  border-radius: 6px 6px 0 0;
+}
+
+.bottom-right {
+  border-radius: 0 0 6px;
+}
+
+.bottom-left {
+  border-radius: 0 0 0 6px;
+}
+
+.bottom-both {
+  border-radius: 0 0 6px 6px;
+}
+
 /* ------------------------------- Teams Page ---------------------------------- */
 
 .W {
@@ -128,6 +159,7 @@ a {
 .D {
   background-image: url("img/form_img/draw.png");
 }
+
 .L {
   background-image: url("img/form_img/lose.png");
 }
@@ -141,6 +173,7 @@ a {
   flex-direction: column;
   text-align: center;
 }
+
 .row {
   position: relative;
   display: flex;
@@ -151,15 +184,18 @@ a {
 .no-bottom-margin {
   margin-bottom: 0;
 }
+
 .clean-sheets-row {
   position: relative;
   display: flex;
   margin-bottom: 25px;
   height: 30%;
 }
+
 .clean-sheets {
   height: 60px;
 }
+
 .row-left {
   display: flex;
   flex-direction: column;
@@ -168,28 +204,35 @@ a {
   margin: 0 40px;
   text-justify: center;
 }
+
 img {
   height: 450px;
   position: relative;
 }
+
 .row-graph {
   width: 100%;
   margin: 0 20px;
 }
+
 .resizable-graph {
   width: 100% !important;
   height: 450px !important;
 }
+
 .resizable-spider-chart {
   width: 700px !important;
   height: 550px !important;
 }
+
 .full-row-graph {
   margin-left: 10px;
 }
+
 .clean-sheets.body {
   margin: 0;
 }
+
 .fixtures-graph {
   display: flex;
   flex-direction: column;
@@ -198,15 +241,17 @@ img {
 .position-and-badge {
   height: 500px;
   background-repeat: no-repeat;
-  background-size: auto 450px; 
+  background-size: auto 450px;
   background-position: right center;
 }
+
 .position-no-badge {
   padding-left: 0;
   margin: 0;
   height: 500px;
   width: 860px;
 }
+
 .position-central,
 .position {
   text-shadow: 9px 9px #000;
@@ -215,23 +260,27 @@ img {
   user-select: none;
   max-width: 500px;
 }
+
 .position {
   text-align: left;
   margin-top: 0.02em;
   margin-left: 30px;
 }
+
 .position-central {
   text-align: center;
   margin-top: 0.04em;
   max-height: 500px;
   margin-left: 0.05em;
 }
+
 .circles-background-container {
   position: absolute;
   align-self: center;
   width: 500px;
   z-index: -10;
 }
+
 .circles-background {
   height: 500px;
   width: 500px;
@@ -243,6 +292,7 @@ img {
   width: min(80%, 600px);
   width: 100%;
 }
+
 .icon {
   position: relative;
   width: 20%;
@@ -252,30 +302,40 @@ img {
   background-repeat: no-repeat;
   background-size: contain;
 }
+
 .icon-name {
   position: relative;
   width: 20%;
   margin: 0 5px;
 }
-.pos-4 {  /* Most recent game */
+
+.pos-4 {
+  /* Most recent game */
   opacity: 100%;
 }
+
 .pos-3 {
   opacity: 90%;
 }
+
 .pos-2 {
   opacity: 80%;
 }
+
 .pos-1 {
   opacity: 70%;
 }
-.pos-0 {  /* Least recent game */
+
+.pos-0 {
+  /* Least recent game */
   opacity: 50%;
 }
+
 .current-form {
   font-size: 1.6em;
   margin: 20px 10px;
 }
+
 .table-snippet {
   position: relative;
   margin-top: 20px;
@@ -284,54 +344,67 @@ img {
   width: 100%;
   height: auto;
 }
+
 .table-row {
   display: flex;
   padding: 5px 5%;
   border-radius: var(--border-radius);
 }
+
 .table-row.this-team {
   padding: 13px 5%;
   font-size: 20px;
 }
+
 .this-team {
   font-size: 19px !important;
 }
+
 #divider {
   align-self: center;
   border-bottom: 1px solid grey;
   width: 90%;
   margin: auto;
 }
+
 #big-divider {
   border-bottom: 2px solid rgb(29 29 29);
   width: 100%;
   width: 0%;
 }
+
 .column-title {
   font-weight: 700;
 }
+
 .table-element {
   font-size: 17px;
 }
+
 .table-position {
   width: 7%;
 }
+
 .table-team-name {
   width: 63%;
   text-align: left;
   margin-left: 3px;
 }
+
 .table-gd {
   width: 15%;
 }
+
 .table-points {
   width: 15%;
 }
+
 .next-game-title {
   width: max-content;
   padding: 6px 20px;
   border-radius: 0 0 var(--border-radius) 0;
 }
+
 .next-game-season-complete {
   display: grid;
   place-items: center;
@@ -340,11 +413,13 @@ img {
   border-radius: var(--border-radius);
   height: 98%;
 }
+
 .next-game-title-text {
   margin: 0;
   color: rgb(181, 181, 181);
   display: flex;
 }
+
 .next-game-logo {
   height: 225px;
   margin: 10px;
@@ -352,17 +427,21 @@ img {
   background-size: contain;
   background-position: center;
 }
+
 .predictions-and-logo {
   font-size: 22px;
   width: 45%;
 }
+
 .predictions-link {
   text-decoration: none;
   color: #333;
 }
+
 .predictions-link:hover {
   color: rgb(120 120 120);
 }
+
 .past-results {
   font-size: 22px;
   width: 55%;
@@ -370,55 +449,68 @@ img {
   flex-direction: column;
   margin: auto 0;
 }
+
 .next-game-prediction {
   margin: 0 20px 0 0;
   border-radius: var(--border-radius);
 }
+
 .next-game-values {
   display: flex;
   margin: 0.5% 5% 0.5% 0;
 }
+
 .past-result {
   font-size: 17px;
   display: flex;
   margin: 0 5% 2px;
 }
+
 .drew {
   background-color: #ffb2477e;
 }
+
 .won {
   background-color: #77dd7798;
 }
+
 .lost {
   background-color: #f3363688;
 }
+
 .past-result-date {
   font-size: 13px;
   color: rgb(104, 104, 104);
 }
+
 .prev-results-title {
   font-weight: 700;
   padding-top: 0 !important;
   margin: 0 !important;
 }
+
 .next-game-item {
   padding: 7px 0 4px;
   border-radius: var(--border-radius);
   margin-top: 4px;
 }
+
 .accuracy {
   margin-bottom: 30px;
 }
+
 .accuracy-item {
   font-size: 14px;
   color: rgb(120 120 120);
   margin-bottom: 5px;
 }
+
 .home-team {
   float: left;
   width: calc(50% - 18px);
   text-align: left;
 }
+
 .score {
   float: left;
   min-width: 44px;
@@ -426,11 +518,13 @@ img {
   text-align: center;
   font-weight: 800;
 }
+
 .away-team {
   float: left;
   width: calc(50% - 18px);
   text-align: right;
 }
+
 .home-team,
 .away-team {
   font-size: 16px;
@@ -440,6 +534,7 @@ img {
   display: flex;
   margin: 0 8%;
 }
+
 .freq-graph {
   width: 50%;
 }
@@ -450,6 +545,7 @@ img {
   margin: 20px auto 15px;
   width: 80%;
 }
+
 .footer-gap {
   height: 40px;
 }
@@ -457,26 +553,32 @@ img {
 .underline {
   text-decoration: underline;
 }
+
 .footer-item-gap {
   margin: 8px 10px;
 }
+
 .footer-bottom {
   margin: 15px 0 5px auto;
   display: flex;
 }
+
 .footer-text-colour {
   color: rgb(0 0 0 / 37%);
 }
+
 .season-stats-row {
   margin: 100px 100px 80px;
   height: auto;
 }
+
 .season-stats {
   display: flex;
   font-size: 50px;
   width: 100%;
   letter-spacing: -0.06em;
 }
+
 .season-stat-value {
   font-size: 3.2em;
   line-height: 0.6em;
@@ -486,9 +588,11 @@ img {
   position: relative;
   user-select: none;
 }
+
 h1 {
   user-select: none;
 }
+
 .season-stat-position {
   font-size: 0.3em;
   color: rgb(162 162 162);
@@ -500,9 +604,11 @@ h1 {
 .season-stat {
   flex: 1;
 }
+
 .lowered {
   margin-bottom: -9px;
 }
+
 .debug {
   border: 4px solid rgb(46 46 46);
 }
@@ -518,27 +624,34 @@ h1 {
   .season-stat-value {
     font-size: 2.5em;
   }
+
   .season-stat {
     margin: 0.4em 0 1em 0;
   }
+
   .season-stats-row {
     margin: 70px 0 10px;
   }
+
   .season-stat-text {
     font-size: 0.9em;
   }
+
   /* .teams-footer {
     margin-top: 0;
   } */
   .season-stat-position {
     top: -40px;
   }
+
   #ssp1 {
     right: calc(var(--ssp1-offset) - 40px);
   }
+
   #ssp2 {
     right: calc(var(--ssp2-offset) - 40px);
   }
+
   #ssp3 {
     right: calc(var(--ssp3-offset) - 40px);
   }
@@ -549,12 +662,15 @@ h1 {
     flex-direction: column;
     margin-bottom: 40px;
   }
+
   .row-graph {
     width: auto;
   }
+
   .row-left {
     align-self: center;
   }
+
   .position-and-badge {
     width: 50%;
     max-width: 400px;
@@ -563,66 +679,85 @@ h1 {
     background-size: auto 330px !important;
     height: 400px;
   }
+
   .position-central,
   .position {
     font-size: 350px;
   }
+
   .position-no-badge {
     height: 400px;
     width: 500px;
   }
+
   .circles-background {
     transform: scale(0.8);
     margin-top: -50px;
   }
+
   .icon {
     width: 20vw;
   }
+
   .form-details {
     width: 80%;
     align-items: center;
   }
+
   .current-form-row {
     width: min(80%, 600px);
   }
+
   .table-snippet {
     margin-top: 0;
   }
+
   .mini-graph {
     /* Reset margin to match other graphs as no longer on row with other items */
     margin-left: 10px;
   }
+
   .next-game-prediction {
     margin: 50px 20px 0;
   }
+
   .next-game-title {
     width: auto;
     border-radius: 0;
   }
+
   .season-stats {
     flex-direction: column;
   }
+
   .season-stat-value {
     font-size: 3em;
   }
+
   .season-stat {
     margin: 0.4em 0 1em 0;
   }
+
   .season-stats-row {
     margin-top: 40px;
   }
+
   .season-stat-position {
     top: -49px;
   }
+
   #ssp1 {
     right: calc(var(--ssp1-offset) - 45px);
   }
+
   #ssp2 {
     right: calc(var(--ssp2-offset) - 45px);
   }
+
   #ssp3 {
     right: calc(var(--ssp3-offset) - 45px);
   }
+
   .season-stat-text {
     font-size: 0.9em;
   }
@@ -630,6 +765,7 @@ h1 {
   .resizable-graph {
     height: 400px !important;
   }
+
   .resizable-spider-chart {
     height: 500px !important;
     width: 650px !important;
@@ -651,9 +787,11 @@ h1 {
     flex-direction: column;
     width: 100%;
   }
+
   .spider-chart {
     margin-bottom: 1em;
   }
+
   .resizable-spider-chart {
     width: 100% !important;
   }
@@ -663,6 +801,7 @@ h1 {
   .row-graph {
     margin: 0;
   }
+
   .next-game-prediction {
     margin: 50px 75px 0;
   }
@@ -672,35 +811,45 @@ h1 {
     flex-direction: column;
     margin: 20px;
   }
+
   .predictions-and-logo {
     margin: 0 auto;
     width: 100%;
   }
+
   .past-results {
     margin: 30px auto 0;
     width: 100%;
   }
+
   .next-game-prediction {
     padding-bottom: 0;
   }
+
   .season-stat {
     margin: 0.4em 0 0.8em 0;
   }
+
   .season-stat-value {
     font-size: 2.5em;
   }
+
   .season-stat-position {
     top: -42px;
   }
+
   #ssp1 {
     right: calc(var(--ssp1-offset) - 40px);
   }
+
   #ssp2 {
     right: calc(var(--ssp2-offset) - 40px);
   }
+
   #ssp3 {
     right: calc(var(--ssp3-offset) - 40px);
   }
+
   .season-stat-text {
     font-size: 0.9em;
   }
@@ -710,6 +859,7 @@ h1 {
   #back-button {
     display: none;
   }
+
   .position-and-badge {
     width: 70%;
   }
@@ -719,9 +869,11 @@ h1 {
   .current-form-row {
     width: 90%;
   }
+
   .resizable-graph {
     height: 300px !important;
   }
+
   .resizable-spider-chart {
     height: 350px !important;
   }
@@ -731,57 +883,74 @@ h1 {
   .row {
     margin-bottom: 30px;
   }
+
   .full-row-graph,
   .mini-graph {
     margin-left: 10px;
   }
+
   .season-stat {
     margin: 0.4em 0 0.8em 0;
   }
+
   .season-stat-value {
     font-size: 1.4em;
     letter-spacing: 0.01em;
   }
+
   .season-stat-position {
     top: -22px;
   }
+
   #ssp1 {
     right: calc(var(--ssp1-offset) - 18px);
   }
+
   #ssp2 {
     right: calc(var(--ssp2-offset) - 18px);
   }
+
   #ssp3 {
     right: calc(var(--ssp3-offset) - 18px);
   }
+
   .season-stat-text {
     font-size: 0.55em;
     letter-spacing: -0.04em;
   }
+
   .form-details {
     width: 90%;
   }
+
   .teams-footer {
     padding: 0;
   }
+
   .footer-detail {
     margin: 2px 0 !important;
   }
+
   .team-button {
     height: 90px;
   }
+
   .title {
     font-size: 2.2em !important;
   }
+
   .main-link {
     font-size: 1.2em;
   }
+
   .next-game-prediction {
     margin: 50px 10px 0;
   }
+
   .lowered {
     margin: 0 30px;
   }
+
   .position,
   .position-central {
     font-size: 10.5em;
@@ -791,6 +960,7 @@ h1 {
     margin: 0;
     text-shadow: 7px 7px #000;
   }
+
   .position-and-badge {
     background-size: auto 210px !important;
     background-position: center !important;
@@ -802,11 +972,13 @@ h1 {
     margin: 0 !important;
     width: 100%;
   }
+
   .position-and-badge,
   .position-no-badge,
   .circles-background-container {
     height: 250px;
   }
+
   .circles-background {
     transform: scale(0.5);
     margin-top: -125px;
@@ -815,45 +987,57 @@ h1 {
   h1 {
     font-size: 1.5em;
   }
+
   .current-form {
     font-size: 1.3em;
   }
+
   .table-element {
     font-size: 14px;
   }
+
   .this-team {
     font-size: 16px;
   }
+
   .table-row.this-team {
     padding: 10px 5% 8px 5%;
   }
+
   .next-game-logo {
     height: 190px;
   }
+
   .next-game-values {
     margin-top: 5px;
   }
+
   .past-results,
   .season-stats-row {
     margin-top: 20px;
   }
+
   .season-stat {
     margin: 0.25em 0 0.45em 0;
   }
+
   /* .teams-footer {
     margin-top: 2em;
   } */
   .next-game-prediction {
     margin-top: 30px;
   }
+
   .prev-results-title {
     font-size: 18px;
   }
+
   .score,
   .home-team,
   .away-team {
     font-size: 0.85em;
   }
+
   .past-result-date {
     font-size: 11px;
   }
@@ -862,12 +1046,15 @@ h1 {
   .page-content {
     overflow-x: hidden;
   }
+
   .resizable-graph {
     height: 250px !important;
   }
+
   .resizable-spider-chart {
     height: 220px !important;
   }
+
   .plotly-graph-div {
     width: 105% !important;
   }
@@ -884,22 +1071,28 @@ h1 {
   padding: 40px 40px 0;
   text-align: center;
 }
+
 .predictions {
   display: flex;
   flex-direction: column;
 }
+
 .predictions-gap {
   margin: 15px 0;
 }
+
 .page-content {
   font-size: 1.3em;
 }
+
 .green {
   background-color: #77DD77;
 }
+
 .yellow {
   background-color: #FFB347;
 }
+
 .red {
   background-color: #C23B22;
 }
@@ -908,33 +1101,40 @@ h1 {
   font-size: 3em;
   font-weight: 800;
 }
+
 .predictions-container {
   width: 50%;
   margin: 0 auto;
 }
+
 .date {
   width: min(90%, 300px);
   align-self: center;
   margin-bottom: 2px;
 }
+
 .prediction-item {
   text-align: left;
   margin: 0 8%;
   display: flex;
 }
+
 .prediction-label {
   flex: 5;
 }
+
 .prediction-value {
   flex: 4.5;
   display: flex;
   text-align: right;
 }
+
 .prediction-initials,
 .prediction-score {
   flex: 1;
   text-align: center;
 }
+
 .prediction-container {
   padding: 6px 0 3px;
   margin: 2px 0;
@@ -948,12 +1148,14 @@ h1 {
   outline: inherit;
   position: relative;
 }
+
 .medium-predictions-divider {
   align-self: center;
   border-bottom: 3px solid black;
   width: min(100%, 375px);
   margin-bottom: 2px;
 }
+
 .prediction-details {
   font-size: 0.75em;
   color: black;
@@ -962,6 +1164,7 @@ h1 {
   height: 0;
   display: none;
 }
+
 .prediction-time {
   color: grey;
   font-size: 0.7em;
@@ -969,18 +1172,22 @@ h1 {
   right: -34px;
   top: calc(50% - 7px);
 }
+
 .prediction-detail {
   margin: 3px 0 3px 30px;
 }
+
 .prediction-details.expanded {
   height: auto;
   display: block;
 }
+
 .detailed-predicted-score {
   font-size: 1.2em;
   margin: 10px 0 0;
   text-align: center;
 }
+
 .tabbed {
   padding-left: 2em;
 }
@@ -991,16 +1198,20 @@ h1 {
   .predictions-container {
     width: 80%;
   }
+
   .prediction-container {
     width: min(80%, 300px);
   }
+
   .page-content {
     font-size: 1.1em;
   }
+
   .prediction-time {
     right: -28px;
     top: calc(50% - 6px);
   }
+
   .prediction-value {
     flex: 4;
   }
@@ -1040,6 +1251,10 @@ h1 {
 
 @keyframes rotate {
   0% {
-    transform: rotate(0); }
+    transform: rotate(0);
+  }
+
   100% {
-    transform: rotate(360deg); } }
+    transform: rotate(360deg);
+  }
+}
