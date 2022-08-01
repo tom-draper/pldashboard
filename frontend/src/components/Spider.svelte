@@ -120,18 +120,31 @@
     return attack;
   }
 
-  function insertAvgAttack(attack) {
-    let totalAttack = 0;
-    for (let teamName in attack) {
-      totalAttack += attack[teamName];
+  function formMetricAvgScaled(formMetric, max) {
+    let total = 0;
+    for (let teamName of Object.keys(formMetric)) {
+      formMetric[teamName] = (formMetric[teamName] / max) * 100;
+      total += formMetric[teamName];
     }
-    attack.avg = totalAttack / Object.keys(attack).length;
+    let avg = total / Object.keys(formMetric).length;
+
+    return avg
   }
 
+  function formMetricAvg(formMetric) {
+    let total = 0;
+    for (let teamName in formMetric) {
+      total += formMetric[teamName];
+    }
+    let avg = total / Object.keys(formMetric).length;
+
+    return avg
+  }
+  
   function getAttack(data) {
     let [attack, maxGoals] = goalsPerSeason(data);
     attack = scaleAttack(attack, maxGoals);
-    insertAvgAttack(attack);
+    attack.avg = formMetricAvg(attack);
 
     return attack;
   }
@@ -155,7 +168,7 @@
           seasonsPlayed += 1;
         }
       }
-      
+
       let goalsPerSeason = null;
       if (seasonsPlayed > 0) {
         goalsPerSeason = totalConceded / seasonsPlayed;
@@ -173,57 +186,44 @@
       if (defence[teamName] == null) {
         defence[teamName] = 0;
       } else {
-        defence[teamName] = 100 - ((defence[teamName] - lower) / (upper - lower)) * 100;
+        defence[teamName] =
+          100 - ((defence[teamName] - lower) / (upper - lower)) * 100;
       }
     }
     return defence;
   }
 
-  function insertAvgDefence(defence) {
-    let totalDefence = 0;
-    for (let teamName in defence) {
-      totalDefence += defence[teamName];
-    }
-    defence.avg = totalDefence / Object.keys(defence).length;
-  }
-
   function getDefence(data) {
     let [defence, range] = concededPerSeason(data);
     defence = scaleDefence(defence, range);
-    insertAvgDefence(defence);
+    defence.avg = formMetricAvg(defence);
 
     return defence;
+  }
+
+  function formCleanSheets(form, teamName) {
+    let nCleanSheets = 0;
+    for (let matchday of Object.keys(form[teamName])) {
+      let match = form[teamName][matchday];
+      if (match.score != null) {
+        let [h, _, a] = match.score.split(" ");
+        if (match.atHome && a == 0) {
+          nCleanSheets += 1;
+        } else if (!match.atHome && h == 0) {
+          nCleanSheets += 1;
+        }
+      }
+    }
+    return nCleanSheets;
   }
 
   function getCleanSheets(data) {
     let cleanSheets = {};
     let maxCleanSheets = Number.NEGATIVE_INFINITY;
     for (let teamName of data.teamNames) {
-      let nCleanSheets = 0;
-      for (let matchday of Object.keys(data.form[teamName])) {
-        let match = data.form[teamName][matchday];
-        if (match.score != null) {
-          let [h, _, a] = match.score.split(" ");
-          if (match.atHome && a == 0) {
-            nCleanSheets += 1;
-          } else if (!match.atHome && h == 0) {
-            nCleanSheets += 1;
-          }
-        }
-      }
-      
+      let nCleanSheets = formCleanSheets(data.form, teamName);
       if (teamName in data.prevForm) {
-        for (let matchday of Object.keys(data.prevForm[teamName])) {
-          let match = data.prevForm[teamName][matchday];
-          if (match.score != null) {
-            let [h, _, a] = match.score.split(" ");
-            if (match.atHome && a == 0) {
-              nCleanSheets += 1;
-            } else if (!match.atHome && h == 0) {
-              nCleanSheets += 1;
-            }
-          }
-        }
+        nCleanSheets += formCleanSheets(data.prevForm, teamName);
       }
 
       if (nCleanSheets > maxCleanSheets) {
@@ -232,60 +232,44 @@
       cleanSheets[teamName] = nCleanSheets;
     }
 
-    let totalCleanSheets = 0;
-    for (let teamName of Object.keys(cleanSheets)) {
-      cleanSheets[teamName] = (cleanSheets[teamName] / maxCleanSheets) * 100;
-      totalCleanSheets += cleanSheets[teamName];
-    }
-    cleanSheets.avg = totalCleanSheets / Object.keys(cleanSheets).length;
+    cleanSheets.avg = formMetricAvgScaled(cleanSheets, maxCleanSheets);
 
     return cleanSheets;
   }
+
+  function formConsistency(form, teamName) {
+    let backToBack = 0; // Counts pairs of back to back identical match results
+    let prevResult = null;
+    for (let matchday of Object.keys(form[teamName])) {
+      let match = form[teamName][matchday];
+      if (match.score != null) {
+        let [h, _, a] = match.score.split(" ");
+        let result;
+        if ((match.atHome && h > a) || (!match.atHome && h < a)) {
+          result = "win";
+        } else if ((match.atHome && h < a) || (!match.atHome && h > a)) {
+          result = "lost";
+        } else {
+          result = "draw";
+        }
+        if (prevResult != null && prevResult == result) {
+          backToBack += 1;
+        }
+        prevResult = result;
+      }
+    }
+    return backToBack;
+  }
+
+
 
   function getConsistency(data) {
     let consistency = {};
     let maxConsistency = Number.NEGATIVE_INFINITY;
     for (let teamName of data.teamNames) {
-      let backToBack = 0;
-      let prevResult = null;
-      for (let matchday of Object.keys(data.form[teamName])) {
-        let match = data.form[teamName][matchday];
-        if (match.score != null) {
-          let [h, _, a] = match.score.split(" ");
-          let result;
-          if ((match.atHome && h > a) || (!match.atHome && h < a)) {
-            result = "win";
-          } else if ((match.atHome && h < a) || (!match.atHome && h > a)) {
-            result = "lost";
-          } else {
-            result = "draw";
-          }
-          if (prevResult != null && prevResult == result) {
-            backToBack += 1;
-          }
-          prevResult = result;
-        }
-      }
-
+      let backToBack = formConsistency(data.form, teamName);
       if (teamName in data.prevForm) {
-        for (let matchday of Object.keys(data.prevForm[teamName])) {
-          let match = data.prevForm[teamName][matchday];
-          if (match.score != null) {
-            let [h, _, a] = match.score.split(" ");
-            let result;
-            if ((match.atHome && h > a) || (!match.atHome && h < a)) {
-              result = "win";
-            } else if ((match.atHome && h < a) || (!match.atHome && h > a)) {
-              result = "lost";
-            } else {
-              result = "draw";
-            }
-            if (prevResult != null && prevResult == result) {
-              backToBack += 1;
-            }
-            prevResult = result;
-          }
-        }
+        backToBack += formConsistency(data.prevForm, teamName);
       }
 
       if (backToBack > maxConsistency) {
@@ -295,52 +279,38 @@
       consistency[teamName] = backToBack;
     }
 
-    let totalConsistency = 0;
-    for (let teamName of Object.keys(consistency)) {
-      consistency[teamName] = (consistency[teamName] / maxConsistency) * 100;
-      totalConsistency += consistency[teamName];
-    }
-    consistency.avg = totalConsistency / Object.keys(consistency).length;
+    consistency.avg = formMetricAvgScaled(consistency, maxConsistency);
 
     return consistency;
+  }
+
+  function formWinStreak(form, teamName) {
+    let winStreak = 0;
+    let tempWinStreak = 0;
+    for (let matchday of Object.keys(form[teamName])) {
+      let match = form[teamName][matchday];
+      if (match.score != null) {
+        let [h, _, a] = match.score.split(" ");
+        if ((match.atHome && h > a) || (!match.atHome && h < a)) {
+          tempWinStreak += 1;
+          if (tempWinStreak > winStreak) {
+            winStreak = tempWinStreak;
+          }
+        } else {
+          tempWinStreak = 0;
+        }
+      }
+    }
+    return winStreak;
   }
 
   function getWinStreak(data) {
     let winStreaks = {};
     let maxWinStreaks = Number.NEGATIVE_INFINITY;
     for (let teamName of data.teamNames) {
-      let winStreak = 0;
-      let tempWinStreak = 0;
-      for (let matchday of Object.keys(data.form[teamName])) {
-        let match = data.form[teamName][matchday];
-        if (match.score != null) {
-          let [h, _, a] = match.score.split(" ");
-          if ((match.atHome && h > a) || (!match.atHome && h < a)) {
-            tempWinStreak += 1;
-            if (tempWinStreak > winStreak) {
-              winStreak = tempWinStreak;
-            }
-          } else {
-            tempWinStreak = 0;
-          }
-        }
-      }
-
+      let winStreak = formWinStreak(data.form, teamName);
       if (teamName in data.prevForm) {
-        for (let matchday of Object.keys(data.prevForm[teamName])) {
-          let match = data.prevForm[teamName][matchday];
-          if (match.score != null) {
-            let [h, _, a] = match.score.split(" ");
-            if ((match.atHome && h > a) || (!match.atHome && h < a)) {
-              tempWinStreak += 1;
-              if (tempWinStreak > winStreak) {
-                winStreak = tempWinStreak;
-              }
-            } else {
-              tempWinStreak = 0;
-            }
-          }
-        }
+        winStreak += formWinStreak(data.prevForm, teamName);
       }
 
       if (winStreak > maxWinStreaks) {
@@ -349,12 +319,7 @@
       winStreaks[teamName] = winStreak;
     }
 
-    let totalWinStreaks = 0;
-    for (let teamName of Object.keys(winStreaks)) {
-      winStreaks[teamName] = (winStreaks[teamName] / maxWinStreaks) * 100;
-      totalWinStreaks += winStreaks[teamName];
-    }
-    winStreaks.avg = totalWinStreaks / Object.keys(winStreaks).length;
+    winStreaks.avg = formMetricAvgScaled(winStreaks, maxWinStreaks);
 
     return winStreaks;
   }
@@ -365,6 +330,21 @@
       arr.splice(index, 1);
     }
     return arr;
+  }
+
+  function formWinsVsBig6(form, teamName, big6) {
+    let winsVsBig6 = 0;
+    for (let matchday of Object.keys(form[teamName])) {
+      let match = form[teamName][matchday];
+      if (match.score != null && big6.includes(match.team)) {
+        let [h, _, a] = match.score.split(" ");
+        if ((match.atHome && h > a) || (!match.atHome && h < a)) {
+          winsVsBig6 += 1;
+        }
+      }
+    }
+
+    return winsVsBig6;
   }
 
   function getVsBig6(data) {
@@ -381,27 +361,9 @@
       ];
       big6 = removeItem(big6, teamName);
 
-      let winsVsBig6 = 0;
-      for (let matchday of Object.keys(data.form[teamName])) {
-        let match = data.form[teamName][matchday];
-        if (match.score != null && big6.includes(match.team)) {
-          let [h, _, a] = match.score.split(" ");
-          if ((match.atHome && h > a) || (!match.atHome && h < a)) {
-            winsVsBig6 += 1;
-          }
-        }
-      }
-
+      let winsVsBig6 = formWinsVsBig6(data.form, teamName, big6);
       if (teamName in data.prevForm) {
-        for (let matchday of Object.keys(data.prevForm[teamName])) {
-          let match = data.prevForm[teamName][matchday];
-          if (match.score != null && big6.includes(match.team)) {
-            let [h, _, a] = match.score.split(" ");
-            if ((match.atHome && h > a) || (!match.atHome && h < a)) {
-              winsVsBig6 += 1;
-            }
-          }
-        }
+        winsVsBig6 += formWinsVsBig6(data.prevForm, teamName, big6);
       }
 
       if (winsVsBig6 > maxWinsVsBig6) {
@@ -409,14 +371,10 @@
       }
 
       vsBig6[teamName] = winsVsBig6;
-    }
 
-    let totalVsBig6 = 0;
-    for (let teamName of Object.keys(vsBig6)) {
-      vsBig6[teamName] = (vsBig6[teamName] / maxWinsVsBig6) * 100;
-      totalVsBig6 += vsBig6[teamName];
     }
-    vsBig6.avg = totalVsBig6 / Object.keys(vsBig6).length;
+    
+    vsBig6.avg = formMetricAvgScaled(vsBig6, maxWinsVsBig6)
 
     return vsBig6;
   }
@@ -447,7 +405,6 @@
       ],
       "#ADADAD"
     );
-
   }
 
   function initSpiderPlots(teamName) {
@@ -539,10 +496,14 @@
     Plot.then((plot) => {
       plot.children[0].children[0].classList.add("resizable-spider-chart");
     });
-    
+
     // Add inner border radius to top and bottom teams
-    document.getElementById('spider-opp-teams').children[0].classList.add('top-spider-opp-team-btn');
-    document.getElementById('spider-opp-teams').children[18].classList.add('bottom-spider-opp-team-btn');
+    document
+      .getElementById("spider-opp-teams")
+      .children[0].classList.add("top-spider-opp-team-btn");
+    document
+      .getElementById("spider-opp-teams")
+      .children[18].classList.add("bottom-spider-opp-team-btn");
   });
 
   export let data, fullTeamName;
@@ -571,27 +532,27 @@
 </div>
 
 <style scoped>
-.spider-chart {
-  position: relative;
-}
-.spider-opp-team-selector {
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-}
-.spider-opp-team-btns {
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  border: 3px solid black;
-  font-size: 13px;
-}
-.spider-opp-team-btn {
-  cursor: pointer;
-  border: none;
-  padding: 4px 10px;
-}
-.spider-opp-team-btn:hover {
-  filter: brightness(0.95)
-}
+  .spider-chart {
+    position: relative;
+  }
+  .spider-opp-team-selector {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+  }
+  .spider-opp-team-btns {
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    border: 3px solid black;
+    font-size: 13px;
+  }
+  .spider-opp-team-btn {
+    cursor: pointer;
+    border: none;
+    padding: 4px 10px;
+  }
+  .spider-opp-team-btn:hover {
+    filter: brightness(0.95);
+  }
 </style>
