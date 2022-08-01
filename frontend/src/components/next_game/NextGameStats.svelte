@@ -25,15 +25,17 @@
 >
   <div class="next-game-title" style="background-color: var(--{oppTeam});">
     <h1 class="next-game-title-text" style="color: var(--{oppTeam}-secondary);">
-      Next Game:&nbsp<a
+      Next Game:&nbsp
+      <a
         href="/{data.upcoming[fullTeamName].nextTeam
           .toLowerCase()
           .replace(/ /g, '-')}"
         style="color: inherit"
-        >{data.upcoming[fullTeamName].nextTeam}</a
-      ><span class="parenthesis">(</span>{data.upcoming[fullTeamName].atHome
+        >{data.upcoming[fullTeamName].nextTeam}&nbsp</a
+      >
+      ({data.upcoming[fullTeamName].atHome
         ? "Home"
-        : "Away"}<span class="parenthesis">)</span>
+        : "Away"})
     </h1>
   </div>
 
@@ -276,9 +278,6 @@
     .past-results {
       margin: 30px auto;
     }
-    .predictions {
-      padding: 80px 0;
-    }
   }
 
   @media only screen and (max-width: 800px) {
@@ -304,6 +303,10 @@
 
     .next-game-prediction {
       padding-bottom: 0;
+    }
+    .next-game-title-text {
+      flex-direction: column;
+      text-align: left;
     }
   }
 </style>

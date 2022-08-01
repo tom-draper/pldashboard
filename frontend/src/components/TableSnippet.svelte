@@ -91,12 +91,13 @@
           >
             {tableSnippet.rows[i].position}
           </div>
-          <div
+          <a
+            href="/{team}"
             class="table-element table-team-name this-team"
             style="color: var(--{team}-secondary);"
           >
             {tableSnippet.rows[i].name}
-          </div>
+          </a>
           <div
             class="table-element table-gd this-team"
             style="color: var(--{team}-secondary);"
@@ -116,9 +117,9 @@
           <div class="table-element table-position">
             {tableSnippet.rows[i].position}
           </div>
-          <div class="table-element table-team-name">
+          <a href="/{team}" class="table-element table-team-name">
             {tableSnippet.rows[i].name}
-          </div>
+          </a>
           <div class="table-element table-gd">
             {tableSnippet.rows[i].gd}
           </div>
@@ -182,6 +183,7 @@
   width: 63%;
   text-align: left;
   margin-left: 3px;
+  color: #333333;
 }
 
 .table-gd {

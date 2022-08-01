@@ -544,8 +544,9 @@
     border-radius: 6px;
     display: flex;
     flex-direction: column;
-    border: 3px solid black;
+    border: 3px solid #333333;
     font-size: 13px;
+    color: #333333;
   }
   .spider-opp-team-btn {
     cursor: pointer;
@@ -555,4 +556,5 @@
   .spider-opp-team-btn:hover {
     filter: brightness(0.95);
   }
+
 </style>

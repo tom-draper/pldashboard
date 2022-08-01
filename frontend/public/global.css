@@ -339,7 +339,12 @@ a {
 }
 
 
-
+  .top-spider-opp-team-btn {
+    border-radius: 3px 3px 0 0;
+  }
+  .bottom-spider-opp-team-btn {
+    border-radius: 0 0 3px 3px;
+  }
 
 
 .two-graphs {
@@ -523,12 +528,19 @@ h1 {
 }
 
 @media only screen and (max-width: 700px) {
-  #back-button {
-    display: none;
-  }
-
   .position-and-badge {
     width: 70%;
+  }
+  .circles-background {
+    transform: scale(0.55);
+    margin-top: -85px;
+  }
+  .position-no-badge {
+    height: 330px;
+  }
+  .position-central {
+    font-size: 250px;
+    margin: 35px 0 0 0;
   }
 }
 
@@ -555,8 +567,6 @@ h1 {
   .mini-graph {
     margin-left: 10px;
   }
-
- 
 
   .form-details {
     width: 90%;
@@ -619,7 +629,7 @@ h1 {
   }
 
   .circles-background {
-    transform: scale(0.5);
+    transform: scale(0.4);
     margin-top: -125px;
   }
 
@@ -628,15 +638,11 @@ h1 {
   }
 
   .current-form {
-    font-size: 1.3em;
+    font-size: 1.5rem !important;
   }
 
-  .table-element {
+  .table-snippet {
     font-size: 14px;
-  }
-
-  .this-team {
-    font-size: 16px;
   }
 
   .table-row.this-team {
@@ -659,12 +665,22 @@ h1 {
   .season-stat {
     margin: 0.25em 0 0.45em 0;
   }
+  .season-stat-position {
+    font-size: 0.5em !important;
+    top: -0.4em !important;
+  }
+  .season-stat-text {
+    font-size: 0.7em !important;
+  }
 
   /* .teams-footer {
     margin-top: 2em;
   } */
   .next-game-prediction {
-    margin-top: 30px;
+    margin: 40px 20px 20px !important;
+  }
+  .predictions {
+    font-size: 0.9em;
   }
 
   .prev-results-title {
@@ -714,9 +730,9 @@ h1 {
     width: min(80%, 300px);
   }
 
-  .page-content {
+  /* .page-content {
     font-size: 1.1em;
-  }
+  } */
 
   .prediction-time {
     right: -28px;
