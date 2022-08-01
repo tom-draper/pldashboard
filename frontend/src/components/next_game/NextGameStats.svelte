@@ -1,11 +1,12 @@
 <script>
   import { onMount } from "svelte";
-  import { Link } from "svelte-routing";
+
   function ordinal(n) {
     let ord = [, "st", "nd", "rd"];
     let a = n % 100;
     return n + (ord[a > 20 ? a % 10 : a] || "th");
   }
+  
   let oppTeam;
   onMount(() => {
     if (data.upcoming[fullTeamName].nextTeam != null) {
@@ -24,14 +25,12 @@
 >
   <div class="next-game-title" style="background-color: var(--{oppTeam});">
     <h1 class="next-game-title-text" style="color: var(--{oppTeam}-secondary);">
-      Next Game:&nbsp<Link
-        to="/{data.upcoming[fullTeamName].nextTeam
+      Next Game:&nbsp<a
+        href="/{data.upcoming[fullTeamName].nextTeam
           .toLowerCase()
           .replace(/ /g, '-')}"
         style="color: inherit"
-        ><div class="no-decoration">
-          {data.upcoming[fullTeamName].nextTeam}
-        </div></Link
+        >{data.upcoming[fullTeamName].nextTeam}</a
       ><span class="parenthesis">(</span>{data.upcoming[fullTeamName].atHome
         ? "Home"
         : "Away"}<span class="parenthesis">)</span>
@@ -41,20 +40,20 @@
   <div class="next-game-values">
     <div class="predictions-and-logo">
       {#if showBadge}
-      <div
-        class="next-game-logo opposition-badge"
-        style="background-image: url('{data.logoURLs[
-          data.upcoming[fullTeamName].nextTeam
-        ]}')"
-      />
-      {:else}
         <div
-          class="next-game-position"
+          class="next-game-logo opposition-badge"
+          style="background-image: url('{data.logoURLs[
+            data.upcoming[fullTeamName].nextTeam
+          ]}')"
         />
+      {:else}
+        <div class="next-game-position" />
       {/if}
       <div class="predictions">
         <div class="next-game-item">
-          <div class="next-game-position">{ordinal(data.standings[fullTeamName][data.currentSeason].position)}</div>
+          <div class="next-game-position">
+            {ordinal(data.standings[data.upcoming[fullTeamName].nextTeam][data.currentSeason].position)}
+          </div>
         </div>
         <div class="next-game-item">
           Current form:
@@ -91,7 +90,7 @@
     </div>
     <div class="past-results">
       {#if data.upcoming[fullTeamName].prevMatches.length == 0}
-        <div class="next-game-item prev-results-title">No Previous Results</div>
+        <div class="next-game-item prev-results-title no-prev-results">No Previous Results</div>
       {:else}
         <div class="next-game-item prev-results-title">Previous Results</div>
       {/if}
@@ -151,13 +150,10 @@
     background-position: center;
   }
 
-  .predictions {
-    padding: 60px 0;
-  }
-
   .predictions-and-logo {
     font-size: 22px;
     width: 45%;
+    margin: auto;
   }
 
   .predictions-link {
@@ -184,7 +180,8 @@
 
   .next-game-values {
     display: flex;
-    margin: 0.5% 5% 0.5% 0;
+    margin: 0 5%;
+    min-height: 390px;
   }
 
   .next-game-position {
@@ -220,7 +217,17 @@
     padding-top: 0 !important;
     margin: 0 !important;
   }
-
+  .no-prev-results {
+    background: grey;
+    padding: 60px 0 !important;
+    display: grid;
+    place-items: center;
+    background: #f3f3f3;
+    border: rgb(181, 181, 181) solid 5px;
+    color: rgb(181, 181, 181);
+    border-radius: var(--border-radius);
+    margin: 0 25px !important;
+  }
   .next-game-item {
     padding: 7px 0 4px;
     border-radius: var(--border-radius);

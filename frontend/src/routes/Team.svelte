@@ -69,12 +69,14 @@
 
 <Router>
   <div class="header" style="background-color: var(--{team});">
-    <div
-      class="main-link title no-decoration"
-      style="color: var(--{team + '-secondary'});"
-    >
-      {fullTeamName}
-    </div>
+    <a href="/{team}">
+      <div
+        class="main-link title no-decoration"
+        style="color: var(--{team + '-secondary'});"
+      >
+        {fullTeamName}
+      </div>
+    </a>
   </div>
 
   {#if data != undefined}
