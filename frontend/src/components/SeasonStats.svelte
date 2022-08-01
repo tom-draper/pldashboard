@@ -105,15 +105,15 @@
   </div>
 </div>
 
-<style>
+<style scoped>
   #ssp1 {
-    right: calc(var(--ssp1-offset) - 48px);
+    right: calc(var(--ssp1-offset) - 40px);
   }
   #ssp2 {
-    right: calc(var(--ssp2-offset) - 48px);
+    right: calc(var(--ssp2-offset) - 40px);
   }
   #ssp3 {
-    right: calc(var(--ssp3-offset) - 48px);
+    right: calc(var(--ssp3-offset) - 40px);
   }
   .ssp-1st {
     color: #6cff68;
@@ -175,4 +175,164 @@
   .ssp-20th {
     color: #ff6868;
   }
+.season-stats {
+  display: flex;
+  font-size: 2.2em;
+  width: 100%;
+  letter-spacing: -0.06em;
+}
+
+.season-stat-value {
+  font-size: 3.2em;
+  line-height: 0.6em;
+  font-weight: 700;
+  width: fit-content;
+  margin: 0 auto;
+  position: relative;
+  user-select: none;
+}
+
+.season-stat-position {
+  font-size: 0.3em;
+  position: absolute;
+  top: -50px;
+  letter-spacing: -0.07em;
+}
+
+.season-stat {
+  flex: 1;
+}
+
+@media only screen and (max-width: 1400px) {
+  .season-stat-value {
+    font-size: 2.5em;
+  }
+
+  .season-stat {
+    margin: 0.4em 0 1em 0;
+  }
+
+  .season-stats-row {
+    margin: 70px 0 10px;
+  }
+
+  .season-stat-text {
+    font-size: 0.9em;
+  }
+
+  /* .teams-footer {
+    margin-top: 0;
+  } */
+  .season-stat-position {
+    top: -40px;
+  }
+
+  #ssp1 {
+    right: calc(var(--ssp1-offset) - 40px);
+  }
+
+  #ssp2 {
+    right: calc(var(--ssp2-offset) - 40px);
+  }
+
+  #ssp3 {
+    right: calc(var(--ssp3-offset) - 40px);
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+    .season-stat {
+      margin: 0.4em 0 1em 0;
+    }
+  
+    .season-stat-position {
+      top: -49px;
+    }
+  
+    #ssp1 {
+      right: calc(var(--ssp1-offset) - 45px);
+    }
+  
+    #ssp2 {
+      right: calc(var(--ssp2-offset) - 45px);
+    }
+  
+    #ssp3 {
+      right: calc(var(--ssp3-offset) - 45px);
+    }
+}
+
+
+@media only screen and (max-width: 800px) {
+  .season-stats {
+    flex-direction: column;
+  }
+
+  .season-stat-value {
+    font-size: 3em;
+  }
+
+  .season-stat-text {
+    font-size: 0.9em;
+  }
+  .season-stat {
+    margin: 0.4em 0 0.8em 0;
+  }
+
+  .season-stat-value {
+    font-size: 2.5em;
+  }
+
+  .season-stat-position {
+    top: -42px;
+  }
+
+  #ssp1 {
+    right: calc(var(--ssp1-offset) - 40px);
+  }
+
+  #ssp2 {
+    right: calc(var(--ssp2-offset) - 40px);
+  }
+  
+  #ssp3 {
+    right: calc(var(--ssp3-offset) - 40px);
+  }
+  
+  .season-stat-text {
+    font-size: 0.9em;
+  }
+}
+
+@media only screen and (max-width: 550px) {
+ .season-stat {
+    margin: 0.4em 0 0.8em 0;
+  }
+
+  .season-stat-value {
+    font-size: 1.4em;
+    letter-spacing: 0.01em;
+  }
+
+  .season-stat-position {
+    top: -22px;
+  }
+
+  #ssp1 {
+    right: calc(var(--ssp1-offset) - 18px);
+  }
+
+  #ssp2 {
+    right: calc(var(--ssp2-offset) - 18px);
+  }
+
+  #ssp3 {
+    right: calc(var(--ssp3-offset) - 18px);
+  }
+
+  .season-stat-text {
+    font-size: 0.55em;
+    letter-spacing: -0.04em;
+  }
+}
 </style>

@@ -1,7 +1,11 @@
 <script>
   import { onMount } from "svelte";
   import { Link } from "svelte-routing";
-
+  function ordinal(n) {
+    let ord = [, "st", "nd", "rd"];
+    let a = n % 100;
+    return n + (ord[a > 20 ? a % 10 : a] || "th");
+  }
   let oppTeam;
   onMount(() => {
     if (data.upcoming[fullTeamName].nextTeam != null) {
@@ -50,8 +54,7 @@
       {/if}
       <div class="predictions">
         <div class="next-game-item">
-          Position:
-            <b>{data.standings[fullTeamName][data.currentSeason].position}</b>
+          <div class="next-game-position">{ordinal(data.standings[fullTeamName][data.currentSeason].position)}</div>
         </div>
         <div class="next-game-item">
           Current form:
@@ -149,7 +152,7 @@
   }
 
   .predictions {
-    padding: 33% 0;
+    padding: 60px 0;
   }
 
   .predictions-and-logo {
@@ -182,6 +185,11 @@
   .next-game-values {
     display: flex;
     margin: 0.5% 5% 0.5% 0;
+  }
+
+  .next-game-position {
+    font-size: 3em;
+    font-weight: 700;
   }
 
   .past-result {
@@ -252,5 +260,43 @@
   .home-team,
   .away-team {
     font-size: 16px;
+  }
+
+  @media only screen and (max-width: 1200px) {
+    .next-game-prediction {
+      margin: 50px 20px 0;
+    }
+    .past-results {
+      margin: 30px auto;
+    }
+    .predictions {
+      padding: 80px 0;
+    }
+  }
+
+  @media only screen and (max-width: 800px) {
+    .next-game-prediction {
+      margin: 50px 75px 0;
+    }
+
+    /* Change next game to column orientation */
+    .next-game-values {
+      flex-direction: column;
+      margin: 20px;
+    }
+
+    .predictions-and-logo {
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .past-results {
+      margin: 30px auto 0;
+      width: 100%;
+    }
+
+    .next-game-prediction {
+      padding-bottom: 0;
+    }
   }
 </style>

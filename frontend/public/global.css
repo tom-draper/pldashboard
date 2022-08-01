@@ -57,8 +57,8 @@
   --bournemouth-secondary: rgb(0 0 0);
   --brentford: rgb(227 6 19);
   --brentford-secondary: rgb(255 255 255);
-  --nottingham-forst: rgb(229 50 51);
-  --nottingham-forst-secondary: rgb(255 255 255);
+  --nottingham-forest: rgb(229 50 51);
+  --nottingham-forest-secondary: rgb(255 255 255);
 
   --border-radius: 6px;
   --ssp1-offset: 0;
@@ -120,6 +120,15 @@ a {
 .main-link {
   margin: 10px;
 }
+.team-button {
+  text-align: center;
+  font-size: 20px;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  height: 125px;
+}
 
 .top-left {
   border-radius: 6px 0 0;
@@ -144,44 +153,6 @@ a {
 .bottom-both {
   border-radius: 0 0 6px 6px;
 }
-
-.teams {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  width: 80%;
-  margin: 8px auto;
-  box-shadow: 0 0 0.5em 0.1em rgba(0, 0, 0, 0.2);
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.team-button {
-  text-align: center;
-  font-size: 20px;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  height: 125px;
-}
-
-@media only screen and (max-width: 1250px) {
-  .teams {
-    width: 90%;
-  }
-}
-
-@media only screen and (max-width: 1100px) {
-  .teams {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media only screen and (max-width: 500px) {
-  .teams {
-    grid-template-columns: repeat(1, 1fr);
-  }
-}
-
 /* ------------------------------- Teams Page ---------------------------------- */
 
 .W {
@@ -413,37 +384,8 @@ a {
   height: auto;
 }
 
-.season-stats {
-  display: flex;
-  font-size: 50px;
-  width: 100%;
-  letter-spacing: -0.06em;
-}
-
-.season-stat-value {
-  font-size: 3.2em;
-  line-height: 0.6em;
-  font-weight: 700;
-  width: fit-content;
-  margin: 0 auto;
-  position: relative;
-  user-select: none;
-}
-
 h1 {
   user-select: none;
-}
-
-.season-stat-position {
-  font-size: 0.3em;
-  color: rgb(162 162 162);
-  position: absolute;
-  top: -53px;
-  letter-spacing: -0.07em;
-}
-
-.season-stat {
-  flex: 1;
 }
 
 .lowered {
@@ -459,43 +401,6 @@ h1 {
 }
 
 /* Mobile view */
-
-@media only screen and (max-width: 1400px) {
-  .season-stat-value {
-    font-size: 2.5em;
-  }
-
-  .season-stat {
-    margin: 0.4em 0 1em 0;
-  }
-
-  .season-stats-row {
-    margin: 70px 0 10px;
-  }
-
-  .season-stat-text {
-    font-size: 0.9em;
-  }
-
-  /* .teams-footer {
-    margin-top: 0;
-  } */
-  .season-stat-position {
-    top: -40px;
-  }
-
-  #ssp1 {
-    right: calc(var(--ssp1-offset) - 40px);
-  }
-
-  #ssp2 {
-    right: calc(var(--ssp2-offset) - 40px);
-  }
-
-  #ssp3 {
-    right: calc(var(--ssp3-offset) - 40px);
-  }
-}
 
 @media only screen and (max-width: 1200px) {
   .row {
@@ -566,40 +471,8 @@ h1 {
     border-radius: 0;
   }
 
-  .season-stats {
-    flex-direction: column;
-  }
-
-  .season-stat-value {
-    font-size: 3em;
-  }
-
-  .season-stat {
-    margin: 0.4em 0 1em 0;
-  }
-
   .season-stats-row {
-    margin-top: 40px;
-  }
-
-  .season-stat-position {
-    top: -49px;
-  }
-
-  #ssp1 {
-    right: calc(var(--ssp1-offset) - 45px);
-  }
-
-  #ssp2 {
-    right: calc(var(--ssp2-offset) - 45px);
-  }
-
-  #ssp3 {
-    right: calc(var(--ssp3-offset) - 45px);
-  }
-
-  .season-stat-text {
-    font-size: 0.9em;
+    margin: 40px 50px;
   }
 
   .resizable-graph {
@@ -637,61 +510,15 @@ h1 {
   }
 }
 
+@media only screen and (max-width: 900px) {
+  .season-stats-row {
+    margin: 40px 10px;
+  }
+}
+
 @media only screen and (max-width: 800px) {
   .row-graph {
     margin: 0;
-  }
-
-  .next-game-prediction {
-    margin: 50px 75px 0;
-  }
-
-  /* Change next game to column orientation */
-  .next-game-values {
-    flex-direction: column;
-    margin: 20px;
-  }
-
-  .predictions-and-logo {
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  .past-results {
-    margin: 30px auto 0;
-    width: 100%;
-  }
-
-  .next-game-prediction {
-    padding-bottom: 0;
-  }
-
-  .season-stat {
-    margin: 0.4em 0 0.8em 0;
-  }
-
-  .season-stat-value {
-    font-size: 2.5em;
-  }
-
-  .season-stat-position {
-    top: -42px;
-  }
-
-  #ssp1 {
-    right: calc(var(--ssp1-offset) - 40px);
-  }
-
-  #ssp2 {
-    right: calc(var(--ssp2-offset) - 40px);
-  }
-
-  #ssp3 {
-    right: calc(var(--ssp3-offset) - 40px);
-  }
-
-  .season-stat-text {
-    font-size: 0.9em;
   }
 }
 
@@ -729,35 +556,7 @@ h1 {
     margin-left: 10px;
   }
 
-  .season-stat {
-    margin: 0.4em 0 0.8em 0;
-  }
-
-  .season-stat-value {
-    font-size: 1.4em;
-    letter-spacing: 0.01em;
-  }
-
-  .season-stat-position {
-    top: -22px;
-  }
-
-  #ssp1 {
-    right: calc(var(--ssp1-offset) - 18px);
-  }
-
-  #ssp2 {
-    right: calc(var(--ssp2-offset) - 18px);
-  }
-
-  #ssp3 {
-    right: calc(var(--ssp3-offset) - 18px);
-  }
-
-  .season-stat-text {
-    font-size: 0.55em;
-    letter-spacing: -0.04em;
-  }
+ 
 
   .form-details {
     width: 90%;

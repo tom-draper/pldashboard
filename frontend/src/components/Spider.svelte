@@ -562,7 +562,7 @@
   </div>
 </div>
 
-<style>
+<style scoped>
 .spider-chart {
   position: relative;
 }
