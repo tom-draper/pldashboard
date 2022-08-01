@@ -107,13 +107,13 @@
 
 <style scoped>
   #ssp1 {
-    right: calc(var(--ssp1-offset) - 40px);
+    right: calc(var(--ssp1-offset) - 1.2em);
   }
   #ssp2 {
-    right: calc(var(--ssp2-offset) - 40px);
+    right: calc(var(--ssp2-offset) - 1.2em);
   }
   #ssp3 {
-    right: calc(var(--ssp3-offset) - 40px);
+    right: calc(var(--ssp3-offset) - 1.2em);
   }
   .ssp-1st {
     color: #6cff68;
@@ -195,7 +195,7 @@
 .season-stat-position {
   font-size: 0.3em;
   position: absolute;
-  top: -50px;
+  top: -1em;
   letter-spacing: -0.07em;
 }
 
@@ -219,57 +219,19 @@
   .season-stat-text {
     font-size: 0.9em;
   }
-
-  /* .teams-footer {
-    margin-top: 0;
-  } */
-  .season-stat-position {
-    top: -40px;
-  }
-
-  #ssp1 {
-    right: calc(var(--ssp1-offset) - 40px);
-  }
-
-  #ssp2 {
-    right: calc(var(--ssp2-offset) - 40px);
-  }
-
-  #ssp3 {
-    right: calc(var(--ssp3-offset) - 40px);
-  }
 }
 
 @media only screen and (max-width: 1200px) {
     .season-stat {
       margin: 0.4em 0 1em 0;
     }
-  
-    .season-stat-position {
-      top: -49px;
-    }
-  
-    #ssp1 {
-      right: calc(var(--ssp1-offset) - 45px);
-    }
-  
-    #ssp2 {
-      right: calc(var(--ssp2-offset) - 45px);
-    }
-  
-    #ssp3 {
-      right: calc(var(--ssp3-offset) - 45px);
-    }
+
 }
 
 
 @media only screen and (max-width: 800px) {
   .season-stats {
     flex-direction: column;
-  }
-
-  .season-stat-value {
-    font-size: 3em;
   }
 
   .season-stat-text {
@@ -283,22 +245,6 @@
     font-size: 2.5em;
   }
 
-  .season-stat-position {
-    top: -42px;
-  }
-
-  #ssp1 {
-    right: calc(var(--ssp1-offset) - 40px);
-  }
-
-  #ssp2 {
-    right: calc(var(--ssp2-offset) - 40px);
-  }
-  
-  #ssp3 {
-    right: calc(var(--ssp3-offset) - 40px);
-  }
-  
   .season-stat-text {
     font-size: 0.9em;
   }
@@ -314,24 +260,8 @@
     letter-spacing: 0.01em;
   }
 
-  .season-stat-position {
-    top: -22px;
-  }
-
-  #ssp1 {
-    right: calc(var(--ssp1-offset) - 18px);
-  }
-
-  #ssp2 {
-    right: calc(var(--ssp2-offset) - 18px);
-  }
-
-  #ssp3 {
-    right: calc(var(--ssp3-offset) - 18px);
-  }
-
   .season-stat-text {
-    font-size: 0.55em;
+    /* font-size: 0.6em; */
     letter-spacing: -0.04em;
   }
 }
