@@ -43,7 +43,7 @@
     if (matchdays.length <= 1) {
       matchdays = Object.keys(data.fixtures[teamName])
     }
-
+    
     let x = [];
     // Find median matchday date across all teams for each matchday
     for (let matchday of matchdays) {
@@ -104,6 +104,7 @@
           showgrid: false,
           showline: false,
           fixedrange: true,
+          range: [x[0], x[x.length-1]],
         },
       },
       config: {

@@ -9,7 +9,7 @@
   </a>
   <div class="teams-footer-bottom">
     {#if lastUpdated != null}
-      <div class="last-updated">{lastUpdated} UTC</div>
+      <div class="last-updated">Last updated: {lastUpdated} UTC</div>
     {/if}
     <div class="footer-details">
       <div class="footer-detail footer-text-colour">

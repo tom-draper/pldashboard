@@ -31,7 +31,7 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 0, l: 50, t: 0, b: 40, pad: 5 },
+        margin: { r: 0, l: 50, t: 15, b: 40, pad: 5 },
         hovermode: "closest",
         barmode: "overlay",
         bargap: 0,
