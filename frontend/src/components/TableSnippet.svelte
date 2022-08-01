@@ -23,8 +23,8 @@
   function getTableSnippet(data, fullTeamName) {
     let sortedTeams = Object.keys(data.standings).sort(function (teamA, teamB) {
       return (
-        data.standings[teamB][data.currentSeason].points -
-        data.standings[teamA][data.currentSeason].points
+        data.standings[teamA][data.currentSeason].position -
+        data.standings[teamB][data.currentSeason].position
       );
     });
 
@@ -68,7 +68,7 @@
       <div class="table-element table-points column-title">Points</div>
     </div>
 
-    {#each Array(tableSnippet.rows.length) as _, i}
+    {#each tableSnippet.rows as row, i}
       <!-- Divider -->
       {#if i == 0}
         {#if i != tableSnippet.teamTableIdx}
@@ -77,7 +77,6 @@
       {:else if i - 1 != tableSnippet.teamTableIdx && i != tableSnippet.teamTableIdx}
         <div id="divider" />
       {/if}
-
       <!-- Row of table -->
       {#if i == tableSnippet.teamTableIdx}
         <!-- Highlighted row for the team of the current page -->
@@ -89,42 +88,42 @@
             class="table-element table-position this-team"
             style="color: var(--{team}-secondary);"
           >
-            {tableSnippet.rows[i].position}
+            {row.position}
           </div>
           <a
             href="/{team}"
             class="table-element table-team-name this-team"
             style="color: var(--{team}-secondary);"
           >
-            {tableSnippet.rows[i].name}
+            {row.name}
           </a>
           <div
             class="table-element table-gd this-team"
             style="color: var(--{team}-secondary);"
           >
-            {tableSnippet.rows[i].gd}
+            {row.gd}
           </div>
           <div
             class="table-element table-points this-team"
             style="color: var(--{team}-secondary);"
           >
-            {tableSnippet.rows[i].points}
+            {row.points}
           </div>
         </div>
       {:else}
         <!-- Plain row -->
         <div class="table-row">
           <div class="table-element table-position">
-            {tableSnippet.rows[i].position}
+            {row.position}
           </div>
           <a href="/{team}" class="table-element table-team-name">
-            {tableSnippet.rows[i].name}
+            {row.name}
           </a>
           <div class="table-element table-gd">
-            {tableSnippet.rows[i].gd}
+            {row.gd}
           </div>
           <div class="table-element table-points">
-            {tableSnippet.rows[i].points}
+            {row.points}
           </div>
         </div>
       {/if}

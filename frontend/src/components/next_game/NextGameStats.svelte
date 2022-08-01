@@ -182,7 +182,7 @@
 
   .next-game-values {
     display: flex;
-    margin: 0 5%;
+    margin-right: 5%;
     min-height: 390px;
   }
 

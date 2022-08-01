@@ -3,7 +3,6 @@
   import { onMount } from "svelte";
 
   function removeBorderRadius() {
-    console.log(document.getElementById("team-1"))
     document.getElementById("team-1").classList.remove("top-left");
     document.getElementById("team-1").classList.remove("top-right");
     document.getElementById("team-2").classList.remove("top-right");
@@ -63,6 +62,11 @@
   onMount(() => {
     window.addEventListener("resize", setBorderRadius, true);
     setBorderRadius();
+
+    return () => {
+      // Called when component is destroyed
+      window.removeEventListener("resize", setBorderRadius, true);
+    }
   });
 </script>
 
