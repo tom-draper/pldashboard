@@ -98,7 +98,7 @@
         }
       }
 
-      let goalsPerSeason = 0
+      let goalsPerSeason = null;
       if (seasonsPlayed > 0) {
         goalsPerSeason = totalGoals / seasonsPlayed;
       }
@@ -111,7 +111,11 @@
   function scaleAttack(attack, range) {
     let [lower, upper] = range;
     for (let teamName in attack) {
-      attack[teamName] = ((attack[teamName] - lower) / (upper - lower)) * 100;
+      if (attack[teamName] == null) {
+        attack[teamName] = 0;
+      } else {
+        attack[teamName] = ((attack[teamName] - lower) / (upper - lower)) * 100;
+      }
     }
     return attack;
   }
@@ -152,7 +156,7 @@
         }
       }
       
-      let goalsPerSeason = 0;
+      let goalsPerSeason = null;
       if (seasonsPlayed > 0) {
         goalsPerSeason = totalConceded / seasonsPlayed;
       }
@@ -166,7 +170,11 @@
   function scaleDefence(defence, range) {
     let [lower, upper] = range;
     for (let teamName in defence) {
-      defence[teamName] = 100 - ((defence[teamName] - lower) / (upper - lower)) * 100;
+      if (defence[teamName] == null) {
+        defence[teamName] = 0;
+      } else {
+        defence[teamName] = 100 - ((defence[teamName] - lower) / (upper - lower)) * 100;
+      }
     }
     return defence;
   }
