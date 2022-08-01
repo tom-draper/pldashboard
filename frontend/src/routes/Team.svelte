@@ -200,7 +200,7 @@
   {/if}
 </Router>
 
-<style>
+<style scoped>
   .spider-chart-row {
     display: grid;
     place-items: center;
