@@ -122,7 +122,7 @@
 
   function formMetricAvgScaled(formMetric, max) {
     let total = 0;
-    for (let teamName of Object.keys(formMetric)) {
+    for (let teamName in formMetric) {
       formMetric[teamName] = (formMetric[teamName] / max) * 100;
       total += formMetric[teamName];
     }
@@ -140,7 +140,7 @@
 
     return avg
   }
-  
+
   function getAttack(data) {
     let [attack, maxGoals] = goalsPerSeason(data);
     attack = scaleAttack(attack, maxGoals);
@@ -240,7 +240,7 @@
   function formConsistency(form, teamName) {
     let backToBack = 0; // Counts pairs of back to back identical match results
     let prevResult = null;
-    for (let matchday of Object.keys(form[teamName])) {
+    for (let matchday in form[teamName]) {
       let match = form[teamName][matchday];
       if (match.score != null) {
         let [h, _, a] = match.score.split(" ");
@@ -287,7 +287,7 @@
   function formWinStreak(form, teamName) {
     let winStreak = 0;
     let tempWinStreak = 0;
-    for (let matchday of Object.keys(form[teamName])) {
+    for (let matchday in form[teamName]) {
       let match = form[teamName][matchday];
       if (match.score != null) {
         let [h, _, a] = match.score.split(" ");
@@ -334,7 +334,7 @@
 
   function formWinsVsBig6(form, teamName, big6) {
     let winsVsBig6 = 0;
-    for (let matchday of Object.keys(form[teamName])) {
+    for (let matchday in form[teamName]) {
       let match = form[teamName][matchday];
       if (match.score != null && big6.includes(match.team)) {
         let [h, _, a] = match.score.split(" ");
