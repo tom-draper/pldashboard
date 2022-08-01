@@ -467,7 +467,6 @@
   </div>
 </div>
 <div class="spider-opp-team-selector">
-  <!-- <div class="spider-opp-teamName-title">Select teamName comparison</div> -->
   <div class="spider-opp-team-btns" id="spider-opp-teams">
     {#each data.teamNames as teamName}
       {#if teamName != fullTeamName}

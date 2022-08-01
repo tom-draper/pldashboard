@@ -112,13 +112,11 @@
     </div>
   </div>
 {/if}
-{#if currentMatchday != undefined}
-  <div class="current-form">
-    Current form:
-    {#if currentMatchday != null}
-      {(data.form[fullTeamName][currentMatchday].formRating5 * 100).toFixed(2)}%
-    {:else}
-      None
-    {/if}
-  </div>
-{/if}
+<div class="current-form">
+  Current form:
+  {#if currentMatchday != null}
+    {(data.form[fullTeamName][currentMatchday].formRating5 * 100).toFixed(2)}%
+  {:else}
+    None
+  {/if}
+</div>
