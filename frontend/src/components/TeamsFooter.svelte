@@ -45,7 +45,7 @@
   padding: 50px 0 4px;
   height: auto;
   width: 100%;
-  font-size: 0.65em;
+  font-size: 13px;
   align-items: center;
 }
 .teams-footer-bottom {

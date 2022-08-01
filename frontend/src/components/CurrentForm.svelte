@@ -120,3 +120,10 @@
     None
   {/if}
 </div>
+
+<style>
+.current-form {
+  font-size: 1.8rem;
+  margin: 20px 10px;
+}
+</style>

@@ -71,10 +71,9 @@
   let data;
   onMount(() => {
     fetchData("http://127.0.0.1:5000/predictions").then((json) => {
-    // fetchData("https://pldashboard.herokuapp.com/predictions").then((json) => {
+      // fetchData("https://pldashboard.herokuapp.com/predictions").then((json) => {
       sortByDate(json);
       insertColours(json);
-      console.log(json);
       data = json;
       console.log(data.predictions);
     });
@@ -190,10 +189,139 @@
 </Router>
 
 <style>
-.predictions-footer {
-  align-items: center;
-  font-size: 0.8em;
-  margin-top: 30px;
-  text-align: center;
-}
+  .predictions-header {
+    padding: 40px 40px 0;
+    text-align: center;
+  }
+
+  .predictions {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .predictions-gap {
+    margin: 15px 0;
+  }
+
+  .page-content {
+    font-size: 1.3em;
+  }
+
+  .green {
+    background-color: #77dd77;
+  }
+
+  .yellow {
+    background-color: #ffb347;
+  }
+
+  .red {
+    background-color: #c23b22;
+  }
+
+  .predictions-container {
+    width: 50%;
+    margin: 0 auto;
+  }
+
+  .date {
+    width: min(90%, 300px);
+    align-self: center;
+    margin-bottom: 2px;
+  }
+
+  .prediction-item {
+    text-align: left;
+    margin: 0 8%;
+    display: flex;
+  }
+
+  .prediction-label {
+    flex: 5;
+  }
+
+  .prediction-value {
+    flex: 4.5;
+    display: flex;
+    text-align: right;
+  }
+
+  .prediction-initials,
+  .prediction-score {
+    flex: 1;
+    text-align: center;
+  }
+
+  .prediction-container {
+    padding: 6px 0 3px;
+    margin: 2px 0;
+    width: min(90%, 300px);
+    align-self: center;
+    border-radius: var(--border-radius);
+    color: inherit;
+    border: none;
+    font-size: 0.8em;
+    cursor: pointer;
+    outline: inherit;
+    position: relative;
+  }
+
+  .medium-predictions-divider {
+    align-self: center;
+    border-bottom: 3px solid black;
+    width: min(100%, 375px);
+    margin-bottom: 2px;
+  }
+
+  .prediction-details {
+    font-size: 0.75em;
+    color: black;
+    margin: 5px 0;
+    text-align: left;
+    height: 0;
+    display: none;
+  }
+
+  .prediction-time {
+    color: grey;
+    font-size: 0.7em;
+    position: absolute;
+    right: -34px;
+    top: calc(50% - 7px);
+  }
+
+  .prediction-detail {
+    margin: 3px 0 3px 30px;
+  }
+
+  .prediction-details.expanded {
+    height: auto;
+    display: block;
+  }
+
+  .detailed-predicted-score {
+    font-size: 1.2em;
+    margin: 10px 0 0;
+    text-align: center;
+  }
+
+  .tabbed {
+    padding-left: 2em;
+  }
+  .predictions-footer {
+    align-items: center;
+    font-size: 0.8em;
+    margin-top: 30px;
+    text-align: center;
+  }
+
+  .accuracy {
+    margin-bottom: 30px;
+  }
+
+  .accuracy-item {
+    font-size: 14px;
+    color: rgb(120 120 120);
+    margin-bottom: 5px;
+  }
 </style>

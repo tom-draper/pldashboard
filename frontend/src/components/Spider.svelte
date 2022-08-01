@@ -173,9 +173,7 @@
 
   function insertAvgDefence(defence) {
     let totalDefence = 0;
-    console.log(defence);
     for (let teamName in defence) {
-      console.log(defence[teamName])
       totalDefence += defence[teamName];
     }
     defence.avg = totalDefence / Object.keys(defence).length;
@@ -578,6 +576,7 @@
   display: flex;
   flex-direction: column;
   border: 3px solid black;
+  font-size: 13px;
 }
 .spider-opp-team-btn {
   cursor: pointer;

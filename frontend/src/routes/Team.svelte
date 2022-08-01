@@ -134,7 +134,7 @@
           <CurrentForm {data} {currentMatchday} {fullTeamName} />
           <TableSnippet {data} {team} {fullTeamName} />
         </div>
-        <NextGame {data} {currentMatchday} {fullTeamName} />
+        <NextGame {data} {currentMatchday} {fullTeamName} {showBadge}/>
       </div>
 
       <div class="row">

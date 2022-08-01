@@ -6,7 +6,6 @@
     
     let y = [];
     for (let matchday of matchdays) {
-      console.log(matchday)
       let position = data.form[teamName][matchday].position;
       y.push(position);
     }
