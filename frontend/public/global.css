@@ -99,32 +99,8 @@ h1 {
   text-decoration: none;
 }
 
-/* ------------------------------ Ko-fi button -------------------------------- */
-
 a {
   text-decoration: none;
-}
-
-.ko-fi {
-  width: fit-content;
-  background: #ff5f5f;
-  padding: 0.8em 1.8em;
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-  display: flex;
-  margin: auto;
-}
-
-.ko-fi-text {
-  margin: auto 0;
-  font-size: 1.05em;
-}
-
-.ko-fi-img {
-  width: 2.2em;
-  height: 2.2em;
-  margin-right: 1em;
 }
 
 /* -------------------------------- Layout ------------------------------------- */
@@ -134,76 +110,11 @@ a {
   text-align: center;
   height: 72px;
 }
-#back-button {
-  position: absolute;
-  top: 20px;
-  left: 40px;
-  width: 80px;
-  height: 48px;
-  background: url("img/Back3.png");
-  background-size: contain;
-}
+
 .title {
   font-size: 2.6em;
   font-weight: 600;
 }
-
-/* ------------------------------- Home Page ----------------------------------- */
-
-.teams {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  width: 80%;
-  margin: 8px auto;
-  box-shadow: 0 0 0.5em 0.1em rgba(0, 0, 0, 0.2);
-  background-color: rgba(0, 0, 0, 0.1);
-}
-.team-button {
-  text-align: center;
-  font-size: 20px;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  height: 125px;
-}
-.main-link {
-  margin: 10px;
-}
-.home-page-footer {
-  padding: 20px 0 30px;
-  height: auto;
-  margin-top: 1%;
-  display: flex;
-  align-self: center;
-  background: red;
-}
-
-.pl-background {
-  background: #3d195b;
-}
-.pl-text {
-  color: #e90052;
-}
-
-@media only screen and (max-width: 1250px) {
-  .teams {
-    width: 90%;
-  }
-}
-
-@media only screen and (max-width: 1100px) {
-  .teams {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media only screen and (max-width: 500px) {
-  .teams {
-    grid-template-columns: repeat(1, 1fr);
-  }
-}
-
 /* ------------------------------- Teams Page ---------------------------------- */
 
 .W {
@@ -236,24 +147,7 @@ a {
   margin-bottom: 25px;
   height: auto;
 }
-.top-left {
-  border-radius: 6px 0 0;
-}
-.top-right {
-  border-radius: 0 6px 0 0;
-}
-.top-both {
-  border-radius: 6px 6px 0 0;
-}
-.bottom-right {
-  border-radius: 0 0 6px;
-}
-.bottom-left {
-  border-radius: 0 0 0 6px;
-}
-.bottom-both {
-  border-radius: 0 0 6px 6px;
-}
+
 .no-bottom-margin {
   margin-bottom: 0;
 }
@@ -550,59 +444,8 @@ img {
   width: 50%;
 }
 
-/* Footer general */
-
-.donation {
-  width: 30px;
-  height: 30px;
-  margin-right: 8px;
-  align-self: center;
-}
-.donation-text {
-  align-self: center;
-}
-.footer-link {
-  display: flex;
-  text-decoration: none;
-  font-weight: 500;
-}
-.donation-fontsize {
-  font-size: 16px;
-}
-
 /* Teams page footer */
 
-.teams-footer {
-  padding: 50px 0 4px;
-  height: auto;
-  /* margin-top: 50px; */
-  width: 100%;
-  font-size: 0.65em;
-  align-items: center;
-}
-.teams-footer-bottom {
-  margin-top: 30px;
-}
-.footer-details {
-  display: flex;
-  flex-direction: column;
-}
-.footer-detail {
-  margin: 4px 0 !important;
-}
-.created-by {
-  margin-left: auto !important;
-  margin: 0 10px;
-}
-.version {
-  margin: 0 10px;
-}
-.predictions-footer {
-  align-items: center;
-  font-size: 0.8em;
-  margin-top: 30px;
-  text-align: center;
-}
 .method-description {
   margin: 20px auto 15px;
   width: 80%;
@@ -610,10 +453,7 @@ img {
 .footer-gap {
   height: 40px;
 }
-.last-updated {
-  text-align: center;
-  margin-bottom: 1em;
-}
+
 .underline {
   text-decoration: underline;
 }
@@ -656,35 +496,7 @@ h1 {
   top: -53px;
   letter-spacing: -0.07em;
 }
-#ssp1 {
-  right: calc(var(--ssp1-offset) - 48px);
-}
-#ssp2 {
-  right: calc(var(--ssp2-offset) - 48px);
-}
-#ssp3 {
-  right: calc(var(--ssp3-offset) - 48px);
-}
-.ssp-1st { color: #6CFF68; }
-.ssp-2nd { color: #78F570; }
-.ssp-3rd { color: #81EB78; }
-.ssp-4th { color: #89E07F; }
-.ssp-5th { color: #8FD686; }
-.ssp-6th { color: #95CC8C; }
-.ssp-7th { color: #99C192; }
-.ssp-8th { color: #9DB797; }
-.ssp-9th { color: #A0AD9D; }
-.ssp-10th { color: #A2A2A2; }
-.ssp-11th { color: #A2A2A2; }
-.ssp-12th { color: #AF9D9B; }
-.ssp-13th { color: #BC9895; }
-.ssp-14th { color: #C7928E; }
-.ssp-15th { color: #D18D88; }
-.ssp-16th { color: #DB8681; }
-.ssp-17th { color: #E5807B; }
-.ssp-18th { color: #EE7975; }
-.ssp-19th { color: #F7716E; }
-.ssp-20th { color: #FF6868; }
+
 .season-stat {
   flex: 1;
 }
@@ -694,59 +506,6 @@ h1 {
 .debug {
   border: 4px solid rgb(46 46 46);
 }
-
-
-
-.spider-chart-row {
-  display: grid;
-  place-items: center;
-}
-.spider-chart {
-  /* width: 600px; */
-  /* height: 550px; */
-  position: relative;
-  /* display: grid; */
-  /* place-items: center; */
-}
-
-.spider-chart-container {
-  margin: 1em auto auto;
-  display: flex;
-}
-
-.spider-opp-team-selector {
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-}
-
-.spider-opp-team-title {
-  margin: 0 10px 5px 10px;
-  font-size: 0.9em;
-}
-.spider-opp-team-btns {
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  border: 3px solid black;
-}
-.spider-opp-team-btn {
-  cursor: pointer;
-  border: none;
-  padding: 4px 10px;
-}
-.top-spider-opp-team-btn {
-  border-radius: 3px 3px 0 0;
-}
-.bottom-spider-opp-team-btn {
-  border-radius: 0 0 3px 3px;
-}
-.spider-opp-team-btn:hover {
-  filter: brightness(0.95)
-
-}
-
-
 
 .parenthesis {
   font-family: 'Courier New', Courier, monospace !important;
@@ -1257,31 +1016,6 @@ h1 {
   .prediction-value {
     flex: 6;
   }
-}
-
-/* -------------------------------- Data Page ---------------------------------- */
-
-.table-title {
-  margin-top: 30px;
-  font-size: 1.3em;
-  font-weight: 700;
-}
-.data-table-container {
-  font-size: 0.52em;
-  margin: 20px auto;
-  overflow-x: auto;
-  overflow-y: auto;
-  width: max-content;
-  max-width: 95%;
-  height: auto;
-}
-table {
-  margin: 0 auto;
-  border-collapse: collapse;
-}
-th,
-td {
-  padding: 2px 4px;
 }
 
 /* Spinner */

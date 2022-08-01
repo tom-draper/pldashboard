@@ -39,3 +39,55 @@
     </div>
   </div>
 </div>
+
+<style>
+.teams-footer {
+  padding: 50px 0 4px;
+  height: auto;
+  width: 100%;
+  font-size: 0.65em;
+  align-items: center;
+}
+.teams-footer-bottom {
+  margin-top: 30px;
+}
+.footer-details {
+  display: flex;
+  flex-direction: column;
+}
+.footer-detail {
+  margin: 4px 0 !important;
+}
+.created-by {
+  margin-left: auto !important;
+  margin: 0 10px;
+} 
+.version {
+  margin: 0 10px;
+}
+.last-updated {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+/* Kofi button */
+.ko-fi {
+  width: fit-content;
+  background: #ff5f5f;
+  padding: 0.8em 1.8em;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  display: flex;
+  margin: auto;
+}
+.ko-fi-text {
+  margin: auto 0;
+  font-size: 1.05em;
+}
+.ko-fi-img {
+  width: 2.2em;
+  height: 2.2em;
+  margin-right: 1em;
+}
+</style>

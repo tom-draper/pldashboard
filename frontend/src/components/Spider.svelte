@@ -481,3 +481,28 @@
     {/each}
   </div>
 </div>
+
+<style>
+.spider-chart {
+  position: relative;
+}
+.spider-opp-team-selector {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+.spider-opp-team-btns {
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  border: 3px solid black;
+}
+.spider-opp-team-btn {
+  cursor: pointer;
+  border: none;
+  padding: 4px 10px;
+}
+.spider-opp-team-btn:hover {
+  filter: brightness(0.95)
+}
+</style>

@@ -22,12 +22,12 @@
         return word.charAt(0).toUpperCase() + word.slice(1);
       })
       .join(" ")
-      .replace('And', 'and');
+      .replace("And", "and");
   }
 
   function getCurrentMatchday(data, fullTeamName) {
     if (Object.keys(data.form[fullTeamName]).length == 0) {
-      return null  // Season has not started yet
+      return null; // Season has not started yet
     }
     return Object.keys(data.form[fullTeamName]).reduce((a, b) =>
       data.form[fullTeamName][a] > data.form[fullTeamName][b] ? a : b
@@ -47,7 +47,7 @@
   onMount(() => {
     fullTeamName = toTitleCase(team.replace(/\-/g, " "));
     fetchData("http://127.0.0.1:5000/teams")
-    // fetchData("https://pldashboard.herokuapp.com/teams")
+      // fetchData("https://pldashboard.herokuapp.com/teams")
       .then((json) => {
         // Build teamData package from json data
         currentMatchday = getCurrentMatchday(json, fullTeamName);
@@ -69,7 +69,8 @@
 
 <Router>
   <div class="header" style="background-color: var(--{team});">
-    <div class="main-link title no-decoration"
+    <div
+      class="main-link title no-decoration"
       style="color: var(--{team + '-secondary'});"
     >
       {fullTeamName}
@@ -92,9 +93,27 @@
           <div class="row-left position-no-badge">
             <div class="circles-background-container">
               <svg class="circles-background">
-                <circle cx="300" cy="150" r="100" stroke-width="0" fill="var(--{team}-secondary)" />
-                <circle cx="170" cy="170" r="140" stroke-width="0" fill="var(--{team})" />
-                <circle cx="300" cy="320" r="170" stroke-width="0" fill="var(--{team})" />
+                <circle
+                  cx="300"
+                  cy="150"
+                  r="100"
+                  stroke-width="0"
+                  fill="var(--{team}-secondary)"
+                />
+                <circle
+                  cx="170"
+                  cy="170"
+                  r="140"
+                  stroke-width="0"
+                  fill="var(--{team})"
+                />
+                <circle
+                  cx="300"
+                  cy="320"
+                  r="170"
+                  stroke-width="0"
+                  fill="var(--{team})"
+                />
               </svg>
             </div>
             <div class="position-central">
@@ -180,3 +199,14 @@
     </div>
   {/if}
 </Router>
+
+<style>
+  .spider-chart-row {
+    display: grid;
+    place-items: center;
+  }
+  .spider-chart-container {
+    margin: 1em auto auto;
+    display: flex;
+  }
+</style>

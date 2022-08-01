@@ -188,3 +188,12 @@
     </div>
   {/if}
 </Router>
+
+<style>
+.predictions-footer {
+  align-items: center;
+  font-size: 0.8em;
+  margin-top: 30px;
+  text-align: center;
+}
+</style>

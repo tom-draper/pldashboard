@@ -2,8 +2,8 @@
   import { onMount } from "svelte";
 
   function ordinal(n) {
-    var ord = [, "st", "nd", "rd"];
-    var a = n % 100;
+    let ord = [, "st", "nd", "rd"];
+    let a = n % 100;
     return n + (ord[a > 20 ? a % 10 : a] || "th");
   }
 
@@ -47,7 +47,7 @@
   let rank = {
     xG: "",
     xC: "",
-    cleanSheetRatio: ""
+    cleanSheetRatio: "",
   };
   onMount(() => {
     rank = getStatsRankings(data, fullTeamName);
@@ -57,7 +57,7 @@
     // Once rank values have updated, init positional offset for ordinal values
     setTimeout(function () {
       setPositionalOffset();
-    }, 0)
+    }, 0);
   });
 
   export let data, fullTeamName;
@@ -68,39 +68,111 @@
     <div class="season-stat-value">
       {data.seasonStats[fullTeamName].xG}
       <div
-      class="season-stat-position ssp-{rank.xG}"
-      id="ssp1"
-      bind:this={ssp1}
+        class="season-stat-position ssp-{rank.xG}"
+        id="ssp1"
+        bind:this={ssp1}
       >
-          {rank.xG}
-        </div>
+        {rank.xG}
       </div>
-      <div class="season-stat-text">goals per game</div>
     </div>
-    <div class="season-stat conceded-per-game">
-      <div class="season-stat-value">
-        {data.seasonStats[fullTeamName].xC}
-        <div
-          class="season-stat-position ssp-{rank.xC}"
-          id="ssp2"
-          bind:this={ssp2}
-        >
-          {rank.xC}
-        </div>
+    <div class="season-stat-text">goals per game</div>
+  </div>
+  <div class="season-stat conceded-per-game">
+    <div class="season-stat-value">
+      {data.seasonStats[fullTeamName].xC}
+      <div
+        class="season-stat-position ssp-{rank.xC}"
+        id="ssp2"
+        bind:this={ssp2}
+      >
+        {rank.xC}
       </div>
-      <div class="season-stat-text">conceded per game</div>
     </div>
-    <div class="season-stat clean-sheet-ratio">
-      <div class="season-stat-value">
-        {data.seasonStats[fullTeamName].cleanSheetRatio}
-        <div
-          class="season-stat-position ssp-{rank.cleanSheetRatio}"
-          id="ssp3"
-          bind:this={ssp3}
-        >
-          {rank.cleanSheetRatio}
-        </div>
+    <div class="season-stat-text">conceded per game</div>
+  </div>
+  <div class="season-stat clean-sheet-ratio">
+    <div class="season-stat-value">
+      {data.seasonStats[fullTeamName].cleanSheetRatio}
+      <div
+        class="season-stat-position ssp-{rank.cleanSheetRatio}"
+        id="ssp3"
+        bind:this={ssp3}
+      >
+        {rank.cleanSheetRatio}
       </div>
-      <div class="season-stat-text">clean sheets</div>
     </div>
+    <div class="season-stat-text">clean sheets</div>
+  </div>
 </div>
+
+<style>
+  #ssp1 {
+    right: calc(var(--ssp1-offset) - 48px);
+  }
+  #ssp2 {
+    right: calc(var(--ssp2-offset) - 48px);
+  }
+  #ssp3 {
+    right: calc(var(--ssp3-offset) - 48px);
+  }
+  .ssp-1st {
+    color: #6cff68;
+  }
+  .ssp-2nd {
+    color: #78f570;
+  }
+  .ssp-3rd {
+    color: #81eb78;
+  }
+  .ssp-4th {
+    color: #89e07f;
+  }
+  .ssp-5th {
+    color: #8fd686;
+  }
+  .ssp-6th {
+    color: #95cc8c;
+  }
+  .ssp-7th {
+    color: #99c192;
+  }
+  .ssp-8th {
+    color: #9db797;
+  }
+  .ssp-9th {
+    color: #a0ad9d;
+  }
+  .ssp-10th {
+    color: #a2a2a2;
+  }
+  .ssp-11th {
+    color: #a2a2a2;
+  }
+  .ssp-12th {
+    color: #af9d9b;
+  }
+  .ssp-13th {
+    color: #bc9895;
+  }
+  .ssp-14th {
+    color: #c7928e;
+  }
+  .ssp-15th {
+    color: #d18d88;
+  }
+  .ssp-16th {
+    color: #db8681;
+  }
+  .ssp-17th {
+    color: #e5807b;
+  }
+  .ssp-18th {
+    color: #ee7975;
+  }
+  .ssp-19th {
+    color: #f7716e;
+  }
+  .ssp-20th {
+    color: #ff6868;
+  }
+</style>
