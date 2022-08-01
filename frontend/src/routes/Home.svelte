@@ -275,41 +275,5 @@
 </Router>
 
 <style>
-  .teams {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    width: 80%;
-    margin: 8px auto;
-    box-shadow: 0 0 0.5em 0.1em rgba(0, 0, 0, 0.2);
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-  .team-button {
-    text-align: center;
-    font-size: 20px;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    height: 125px;
-  }
 
-
-
-  @media only screen and (max-width: 1250px) {
-    .teams {
-      width: 90%;
-    }
-  }
-
-  @media only screen and (max-width: 1100px) {
-    .teams {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media only screen and (max-width: 500px) {
-    .teams {
-      grid-template-columns: repeat(1, 1fr);
-    }
-  }
 </style>
