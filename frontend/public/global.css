@@ -540,18 +540,6 @@ h1 {
   .season-stats-row {
     margin-top: 20px;
   }
-
-  .season-stat {
-    margin: 0.25em 0 0.45em 0;
-  }
-  .season-stat-position {
-    font-size: 0.5em !important;
-    top: -0.4em !important;
-  }
-  .season-stat-text {
-    font-size: 0.7em !important;
-  }
-
   .predictions {
     font-size: 0.9em;
   }

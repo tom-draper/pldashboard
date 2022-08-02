@@ -244,18 +244,23 @@
 }
 
 @media only screen and (max-width: 550px) {
- .season-stat {
-    margin: 0.4em 0 0.8em 0;
-  }
-
   .season-stat-value {
     font-size: 1.4em;
     letter-spacing: 0.01em;
   }
-
-  .season-stat-text {
-    /* font-size: 0.6em; */
-    letter-spacing: -0.04em;
+  
+  .season-stat {
+    margin: 0.25em 0 0.45em 0;
   }
+  .season-stat-position {
+    font-size: 0.5em;
+    top: -0.5em;
+  }
+  .season-stat-text {
+    letter-spacing: -0.04em;
+    font-size: 0.7em;
+  }
+
+
 }
 </style>

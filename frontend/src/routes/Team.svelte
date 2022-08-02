@@ -348,6 +348,21 @@
     display: flex;
   }
 
+  @media only screen and (min-width: 2400px) {
+    .position-central {
+      font-size: 16vw;
+    }
+  }
+  @media only screen and (min-width: 2200px) {
+    .position-central {
+      font-size: 18vw;
+    }
+  }
+  @media only screen and (min-width: 2000px) {
+    .position-central {
+      font-size: 20vw;
+    }
+  }
   @media only screen and (max-width: 1800px) {
     .circles-background {
       transform: scale(0.9);
