@@ -232,53 +232,7 @@ a {
   flex-direction: column;
 }
 
-.position-and-badge {
-  height: 500px;
-  background-repeat: no-repeat;
-  background-size: auto 450px;
-  background-position: right center;
-}
 
-.position-no-badge {
-  padding-left: 0;
-  margin: 0;
-  height: 500px;
-  /* width: 860px; */
-}
-
-.position-central,
-.position {
-  text-shadow: 9px 9px #000;
-  font-weight: 800;
-  font-size: 430px;
-  user-select: none;
-  max-width: 500px;
-}
-
-.position {
-  text-align: left;
-  margin-top: 0.02em;
-  margin-left: 30px;
-}
-
-.position-central {
-  text-align: center;
-  margin-top: 0.04em;
-  max-height: 500px;
-  margin-left: 0.05em;
-}
-
-.circles-background-container {
-  position: absolute;
-  align-self: center;
-  width: 500px;
-  z-index: -10;
-}
-
-.circles-background {
-  height: 500px;
-  width: 500px;
-}
 
 .current-form-row {
   font-size: 0.9em;
