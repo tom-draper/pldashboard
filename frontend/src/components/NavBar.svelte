@@ -1,12 +1,11 @@
 <script>
-
   let alias = {
-    'Wolverhampton Wanderers': 'Wolves',
-    'Tottenham Hotspur': 'Spurs',
-    'Leeds United': 'Leeds',
-    'West Ham United': 'West Ham',
-    'Brighton and Hove Albion': 'Brighton'
-  }
+    "Wolverhampton Wanderers": "Wolves",
+    "Tottenham Hotspur": "Spurs",
+    "Leeds United": "Leeds",
+    "West Ham United": "West Ham",
+    "Brighton and Hove Albion": "Brighton",
+  };
 
   let teams = [
     "Manchester City",
@@ -33,22 +32,22 @@
 
   function getAlias(team) {
     if (team in alias) {
-      return alias[team]
+      return alias[team];
     }
-    return team
+    return team;
   }
 
   function closeNavBar() {
-    console.log("hi");
-    document.getElementById('navBar').style.display = 'none';
-    document.getElementById('dashboard').style.marginLeft = 0;
+    document.getElementById("navBar").style.display = "none";
+    document.getElementById("dashboard").style.marginLeft = 0;
+    window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
   }
 
   export let thisTeam;
 </script>
 
 <nav>
-  <div class="title">pldashboard</div>
+  <div class="title no-selection">pldashboard</div>
   <div class="team-links">
     <!-- <a href="/all-teams">
     <div class="all-teams">
@@ -59,7 +58,7 @@
       {#if team.toLowerCase().replace(/ /g, "-") == thisTeam}
         <a href="/{team.toLowerCase().replace(/ /g, '-')}" class="team-link">
           <div
-            class="team-name"
+            class="this-team-name"
             style="color: var(--{team
               .toLowerCase()
               .replace(/ /g, '-')}-secondary);
@@ -78,8 +77,8 @@
     {/each}
   </div>
   <div class="close">
-    <button class="close-btn" on:click="{closeNavBar}">
-      <img src="img/arrow-bar-left.svg" alt="">
+    <button class="close-btn" on:click={closeNavBar}>
+      <img src="img/arrow-bar-left.svg" alt="" />
     </button>
   </div>
 </nav>
@@ -94,14 +93,23 @@
     place-items: center;
     /* text-align: center; */
   }
+  .no-selection {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+  }
   .team-links {
     font-size: 1em;
     color: white;
   }
   /* .all-teams, */
+  .this-team-name,
   .team-name {
     padding: 0.4em 1em;
     color: #c600d8;
+  }
+  :hover.team-name {
+    background: #2c002f;
   }
   /* .all-teams {
     padding: 2em 0.8em;

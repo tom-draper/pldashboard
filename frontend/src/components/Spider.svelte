@@ -545,13 +545,13 @@
     display: flex;
     flex-direction: column;
     border: 3px solid #333333;
-    font-size: 13px;
     color: #333333;
   }
   .spider-opp-team-btn {
     cursor: pointer;
     border: none;
     padding: 4px 10px;
+    font-size: 13px;
   }
   .spider-opp-team-btn:hover {
     filter: brightness(0.95);
