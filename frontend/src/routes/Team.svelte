@@ -391,6 +391,9 @@
       transform: scale(0.5);
       margin-top: -90px;
     }
+    .row-left {
+      margin-right: 0;
+    }
   }
   @media only screen and (max-width: 1200px) {
     .circles-background {
@@ -432,6 +435,9 @@
       padding-right: 20px;
       margin: 0;
       text-shadow: 7px 7px #000;
+    }
+    .multi-element-row {
+      margin: 0;
     }
 
     .position-and-badge {

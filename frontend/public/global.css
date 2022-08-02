@@ -393,10 +393,6 @@ h1 {
     margin-left: 10px;
   }
 
-  .next-game-prediction {
-    margin: 50px 20px 0;
-  }
-
   .next-game-title {
     width: auto;
     border-radius: 0;
@@ -490,7 +486,7 @@ h1 {
   }
 
   .form-details {
-    width: 90%;
+    width: 95%;
   }
 
   .teams-footer {
@@ -511,10 +507,6 @@ h1 {
 
   .main-link {
     font-size: 1.2em;
-  }
-
-  .next-game-prediction {
-    margin: 50px 10px 0;
   }
 
   .lowered {
@@ -560,12 +552,6 @@ h1 {
     font-size: 0.7em !important;
   }
 
-  /* .teams-footer {
-    margin-top: 2em;
-  } */
-  .next-game-prediction {
-    margin: 40px 20px 20px !important;
-  }
   .predictions {
     font-size: 0.9em;
   }

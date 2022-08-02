@@ -309,4 +309,12 @@
       text-align: left;
     }
   }
+  @media only screen and (max-width: 550px) {
+    .next-game-values {
+      margin: 20px 10px;
+    }
+    .next-game-prediction {
+      margin: 40px 10px;
+    }
+  }
 </style>
