@@ -26,11 +26,11 @@
   }
 
   function getCurrentMatchday(data, fullTeamName) {
-    if (Object.keys(data.form[fullTeamName]).length == 0) {
+    if (Object.keys(data.form[data.currentSeason][fullTeamName]).length == 0) {
       return null; // Season has not started yet
     }
-    return Object.keys(data.form[fullTeamName]).reduce((a, b) =>
-      data.form[fullTeamName][a] > data.form[fullTeamName][b] ? a : b
+    return Object.keys(data.form[data.currentSeason][fullTeamName]).reduce((a, b) =>
+      data.form[data.currentSeason][fullTeamName][a] > data.form[data.currentSeason][fullTeamName][b] ? a : b
     );
   }
 
@@ -211,4 +211,9 @@
     margin: 1em auto auto;
     display: flex;
   }
+@media only screen and (max-width: 800px) {
+  .season-stats-row {
+    margin: 10px;
+  }
+}
 </style>

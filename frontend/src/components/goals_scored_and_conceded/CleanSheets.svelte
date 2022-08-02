@@ -4,11 +4,11 @@
   function getTeamCleanSheets(data, team) {
     let notCleanSheets = [];
     let cleanSheets = [];
-    for (let matchday of Object.keys(data.form[team])) {
-      let [h, _, a] = data.form[team][matchday].score.split(" ");
+    for (let matchday of Object.keys(data.form[data.currentSeason][team])) {
+      let [h, _, a] = data.form[data.currentSeason][team][matchday].score.split(" ");
       h = parseInt(h);
       a = parseInt(a);
-      if (data.form[team][matchday].atHome) {
+      if (data.form[data.currentSeason][team][matchday].atHome) {
         if (a > 0) {
           notCleanSheets.push(1);
           cleanSheets.push(0);
@@ -53,7 +53,7 @@
   function getGraphData(data, fullTeamName) {
     let x = getMatchdayDates(data);
 
-    let matchdays = Object.keys(data.form[fullTeamName]);
+    let matchdays = Object.keys(data.form[data.currentSeason][fullTeamName]);
 
     let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, fullTeamName);
 

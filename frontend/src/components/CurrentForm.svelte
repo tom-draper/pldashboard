@@ -22,9 +22,9 @@
   }
 
   function getSortedMatchdays(data, team) {
-    let matchdays = Object.keys(data.form[team]).sort(function (a, b) {
+    let matchdays = Object.keys(data.form[data.currentSeason][team]).sort(function (a, b) {
       return (
-        new Date(data.form[team][a].date) - new Date(data.form[team][b].date)
+        new Date(data.form[data.currentSeason][team][a].date) - new Date(data.form[data.currentSeason][team][b].date)
       );
     });
     return matchdays;
@@ -34,7 +34,7 @@
     let formStarTeams = [];
     for (let matchday of matchdays) {
       formStarTeams.push(
-        data.form[team][matchday].beatStarTeam ? "star-team" : ""
+        data.form[data.currentSeason][team][matchday].beatStarTeam ? "star-team" : ""
       );
     }
 
@@ -48,8 +48,8 @@
 
   function getFormIcons(data, team) {
     let formIcons = [];
-    if (data.form[team].length > 0) {
-      formIcons = data.form[team][currentMatchday].form5.split("");
+    if (data.form[data.currentSeason][team].length > 0) {
+      formIcons = data.form[data.currentSeason][team][currentMatchday].form5.split("");
     }
 
     // Fill in blanks with None icons
@@ -64,7 +64,7 @@
     let formInitials = [];
 
     for (let matchday of matchdays) {
-      formInitials.push(toInitials(data.form[team][matchday].team));
+      formInitials.push(toInitials(data.form[data.currentSeason][team][matchday].team));
     }
 
     // Fill in blanks with None icons
@@ -115,7 +115,7 @@
 <div class="current-form">
   Current form:
   {#if currentMatchday != null}
-    {(data.form[fullTeamName][currentMatchday].formRating5 * 100).toFixed(2)}%
+    {(data.form[data.currentSeason][fullTeamName][currentMatchday].formRating5 * 100).toFixed(2)}%
   {:else}
     None
   {/if}

@@ -5,8 +5,8 @@
     let avgGoals = {};
 
     for (let team of data.teamNames) {
-      for (let matchday of Object.keys(data.form[team])) {
-        let [h, _, a] = data.form[team][matchday].score.split(" ");
+      for (let matchday of Object.keys(data.form[data.currentSeason][team])) {
+        let [h, _, a] = data.form[data.currentSeason][team][matchday].score.split(" ");
         h = parseInt(h);
         a = parseInt(a);
         if (matchday in avgGoals) {
@@ -28,11 +28,11 @@
   function getTeamGoalsPerGame(data, team) {
     let scored = {};
     let conceded = {};
-    for (let matchday of Object.keys(data.form[team])) {
-      let [h, _, a] = data.form[team][matchday].score.split(" ");
+    for (let matchday of Object.keys(data.form[data.currentSeason][team])) {
+      let [h, _, a] = data.form[data.currentSeason][team][matchday].score.split(" ");
       h = parseInt(h);
       a = parseInt(a);
-      if (data.form[team][matchday].atHome) {
+      if (data.form[data.currentSeason][team][matchday].atHome) {
         scored[matchday] = h;
         conceded[matchday] = a;
       } else {

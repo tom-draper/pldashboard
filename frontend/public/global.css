@@ -385,7 +385,7 @@ a {
 }
 
 .season-stats-row {
-  margin: 100px 100px 80px;
+  margin: 40px 100px 60px;
   height: auto;
 }
 
@@ -477,7 +477,7 @@ h1 {
   }
 
   .season-stats-row {
-    margin: 40px 50px;
+    margin: 40px 50px 60px;
   }
 
   .resizable-graph {
@@ -515,11 +515,6 @@ h1 {
   }
 }
 
-@media only screen and (max-width: 900px) {
-  .season-stats-row {
-    margin: 40px 10px;
-  }
-}
 
 @media only screen and (max-width: 800px) {
   .row-graph {

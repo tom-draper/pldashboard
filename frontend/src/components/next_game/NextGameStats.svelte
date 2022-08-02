@@ -61,7 +61,7 @@
           Current form:
           {#if currentMatchday != null}
             <b
-              >{data.form[data.upcoming[fullTeamName].nextTeam][currentMatchday]
+              >{data.form[data.currentSeason][data.upcoming[fullTeamName].nextTeam][currentMatchday]
                 .formRating5}%</b
             >
           {:else}

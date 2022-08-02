@@ -208,9 +208,9 @@
     font-size: 2.5em;
   }
 
-  .season-stat {
+  /* .season-stat {
     margin: 0.4em 0 1em 0;
-  }
+  } */
 
   .season-stats-row {
     margin: 70px 0 10px;
@@ -219,13 +219,6 @@
   .season-stat-text {
     font-size: 0.9em;
   }
-}
-
-@media only screen and (max-width: 1200px) {
-    .season-stat {
-      margin: 0.4em 0 1em 0;
-    }
-
 }
 
 
@@ -238,7 +231,7 @@
     font-size: 0.9em;
   }
   .season-stat {
-    margin: 0.4em 0 0.8em 0;
+    margin: 0.5em 0 0.9em 0;
   }
 
   .season-stat-value {
