@@ -39,6 +39,11 @@
     );
   }
 
+  function openNavBar() {
+    document.getElementById('navBar').style.display = 'block';
+    document.getElementById('dashboard').style.marginLeft = '200px';
+  }
+
   async function fetchData(address) {
     const response = await fetch(address);
     let json = await response.json();
@@ -74,10 +79,10 @@
 
 <Router>
   <div id="team">
-    <div id="nav-bar">
+    <div id="navBar">
       <NavBar thisTeam={team} />
     </div>
-    <div class="dashboard">
+    <div id="dashboard">
       <div class="header" style="background-color: var(--{team});">
         <a href="/{team}">
           <div
@@ -217,6 +222,13 @@
 </Router>
 
 <style scoped>
+  .main-link {
+    margin: 10px auto;
+    width: fit-content;
+  }
+  .page-content {
+    position: relative;
+  }
   #team {
     display: flex;
   }
@@ -273,9 +285,20 @@
     margin: auto;
   }
 
-  .dashboard {
+  #dashboard {
     margin-left: 220px;
     width: 100%;
+  }
+
+  .open-nav-bar-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 0.9em;
+    left: 0.6em;
+    background: transparent;
+    border: none;
+    outline: none;
+    z-index: 50;
   }
 
   .row-graph {
@@ -332,10 +355,10 @@
     .circles-background {
       transform: scale(0.75);
     }
-    #nav-bar {
+    #navBar {
       display: none;
     }
-    .dashboard {
+    #dashboard {
       margin-left: 0;
     }
   }

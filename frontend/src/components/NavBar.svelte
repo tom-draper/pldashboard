@@ -38,6 +38,12 @@
     return team
   }
 
+  function closeNavBar() {
+    console.log("hi");
+    document.getElementById('navBar').style.display = 'none';
+    document.getElementById('dashboard').style.marginLeft = 0;
+  }
+
   export let thisTeam;
 </script>
 
@@ -71,6 +77,13 @@
       {/if}
     {/each}
   </div>
+  <div class="close">
+    <button class="close-btn" on:click="{closeNavBar}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#c600d8" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
+    </svg>
+    </button>
+  </div>
 </nav>
 
 <style scoped>
@@ -101,4 +114,21 @@
     height: 100vh;
     background: #37003c;
   }
+  .close-btn {
+    position: absolute;
+    right: 0.9em;
+    bottom: 0.6em;
+    /* background: #c600d8 !important; */
+    background: #37003c;
+    /* color: #c600d8 !important; */
+    border: none;
+    outline: none;
+    padding-top: 0.3em;
+    cursor: pointer;
+  }
+  /* .close-icon {
+    width: 25px;
+    height: 25px;
+    color: red;
+  } */
 </style>
