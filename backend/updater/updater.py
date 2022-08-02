@@ -139,8 +139,8 @@ class Updater:
         # Calculated form values for each team for each matchday played so far
         self.data.form.build(
             self.data.fixtures, 
-            self.data.standings, 
             self.data.team_ratings,
+            self.current_season,
             self.star_team_threshold, 
             display=display_tables
         )

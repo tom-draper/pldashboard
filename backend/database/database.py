@@ -49,10 +49,6 @@ class Database:
             collection = client.PremierLeague.TeamData2022
             team_data = dict(collection.find_one({'_id': 'team_data'}))
         
-        # Insert form from previous season
-        prev_form = self.get_prev_season_form()
-        team_data['prevForm'] = prev_form['form']
-            
         return team_data
     
     def get_prev_season_form(self) -> dict:
@@ -239,8 +235,21 @@ class Database:
                 prediction_id = f'{initials[0]} vs {initials[1]}'
                 collection.update_one({'_id': prediction_id}, {
                                     '$set': {'actual': actual}})
+    
+    def _insert_prev_season_form(self, team_data: dict):
+        # TEMPORARY SOLUTION - fetch form prev season form data from database and
+        # insert into new data
+        # TODO: Build form dataframe from json_data instead of fixtures
+        # Then include last two seasons within form dataframe instead of only current season
+        team_data['form'] = {'2022': team_data['form']}
+        
+        # Insert form from previous season
+        prev_form = self.get_prev_season_form()
+        team_data['form']['2021'] = prev_form['form']
 
     def update_team_data(self, team_data: dict):
+        self._insert_prev_season_form(team_data)
+        
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData2022
             collection.replace_one({'_id': 'team_data'}, team_data)

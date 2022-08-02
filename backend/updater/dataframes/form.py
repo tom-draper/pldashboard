@@ -8,7 +8,6 @@ from utils.utilities import Utilities
 
 from dataframes.df import DF
 from dataframes.fixtures import Fixtures
-from dataframes.standings import Standings
 from dataframes.team_ratings import TeamRatings
 
 utils = Utilities()
@@ -332,7 +331,6 @@ class Form(DF):
 
         d = defaultdict(lambda: [])
         for team, row in form.iterrows():
-            print(row)
             teams_matchdays = row[(slice(None), 'date')][row[(slice(None), 'score')] != None]
             # Matchdays sorted by date played
             teams_matchdays = teams_matchdays.sort_values(
@@ -367,13 +365,17 @@ class Form(DF):
         form = form.sort_values(
             by=[(max(matchday_nos), 'formRating5')], ascending=False)
         return form
+    
+    def _build(self, json_data: dict, season: int):
+        for match in json_data['fixtures'][season]:
+            print(match['status'], match['utcDate'], match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'])
 
     @timebudget
     def build(
         self,
         fixtures: Fixtures,
-        standings: Standings,
         team_ratings: TeamRatings,
+        current_season: int,
         star_team_threshold: float,
         display: bool = False
     ):
@@ -385,7 +387,7 @@ class Form(DF):
             -----------------------------------------------------------------------------------------------------------------------------
             |                                                         [MATCHDAY NUMBER]                                                 |
             |---------------------------------------------------------------------------------------------------------------------------|
-            | date | team | score | gD | foints | fosition | form5 | form10 | formRating5 | formRating10 | cumGD | cumPoints | starTeam |
+            | date | team | score | gD | points | fosition | form5 | form10 | formRating5 | formRating10 | cumGD | cumPoints | starTeam |
 
             [MATCHDAY NUMBER]: the matchdays numbers that have been played.
             date: the datetime of the team's game played on that matchday.
@@ -415,8 +417,6 @@ class Form(DF):
         Args:
             fixtures Fixtures: a completed dataframe containing past and future
                 fixtures for each team within the current season
-            standings Standings: a completed dataframe filled with standings data 
-                for recent seasons
             team_ratings TeamRatings: a completed dataframe filled with long-term
                 ratings for each team
             star_team_threshold float: the minimum team ratings required for a team
@@ -425,7 +425,7 @@ class Form(DF):
                 creation. Defaults to False.
         """
         print('🛠️  Building form dataframe... ')
-        self._check_dependencies(fixtures, standings, team_ratings)
+        self._check_dependencies(fixtures, team_ratings)
 
         matchday_nos = self._get_played_matchdays(fixtures)
         
