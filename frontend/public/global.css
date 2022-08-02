@@ -725,10 +725,6 @@ h1 {
     width: min(80%, 300px);
   }
 
-  /* .page-content {
-    font-size: 1.1em;
-  } */
-
   .prediction-time {
     right: -28px;
     top: calc(50% - 6px);

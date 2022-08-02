@@ -10,7 +10,9 @@
 
 
 <Router url="{url}">
-  <Route path="/" component="{Home}" />
+  <Route path="/">
+    <Team team='manchester-city' />
+  </Route>
   <Route path="/predictions" component="{Predictions}" />
   <Route path="/:team" let:params>
     <Team team={params.team} />
