@@ -220,13 +220,14 @@
 
 <style scoped>
   .main-link {
-    margin: 10px auto;
+    margin: auto;
     width: fit-content;
+    display: grid;
+    place-items: center;
   }
   .title {
     font-size: 2.5rem;
     width: fit-content;
-    margin: 10px auto;
   }
   .page-content {
     position: relative;
