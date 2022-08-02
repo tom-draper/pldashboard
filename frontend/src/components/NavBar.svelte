@@ -100,7 +100,7 @@
   }
   /* .all-teams, */
   .team-name {
-    padding: 0.5em 1em;
+    padding: 0.4em 1em;
     color: #c600d8;
   }
   /* .all-teams {
