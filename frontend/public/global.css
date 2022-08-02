@@ -175,22 +175,7 @@ a {
   background-image: url("img/form_img/none.png");
 }
 
-.page-content {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
 
-.row {
-  position: relative;
-  display: flex;
-  margin-bottom: 25px;
-  height: auto;
-}
-
-.no-bottom-margin {
-  margin-bottom: 0;
-}
 
 .clean-sheets-row {
   position: relative;

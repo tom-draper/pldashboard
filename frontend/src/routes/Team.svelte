@@ -40,8 +40,8 @@
   }
 
   function openNavBar() {
-    document.getElementById('navBar').style.display = 'block';
-    document.getElementById('dashboard').style.marginLeft = '200px';
+    document.getElementById("navBar").style.display = "block";
+    document.getElementById("dashboard").style.marginLeft = "200px";
   }
 
   async function fetchData(address) {
@@ -84,11 +84,8 @@
     </div>
     <div id="dashboard">
       <div class="header" style="background-color: var(--{team});">
-        <a href="/{team}">
-          <div
-            class="main-link title no-decoration"
-            style="color: var(--{team + '-secondary'});"
-          >
+        <a class="main-link no-decoration" href="/{team}">
+          <div class="title" style="color: var(--{team + '-secondary'});">
             {fullTeamName}
           </div>
         </a>
@@ -96,7 +93,7 @@
 
       {#if data != undefined}
         <div class="page-content">
-          <div class="row multi-element-row">
+          <div class="row multi-element-row small-bottom-margin">
             {#if showBadge}
               <div
                 class="row-left position-and-badge"
@@ -226,6 +223,11 @@
     margin: 10px auto;
     width: fit-content;
   }
+  .title {
+    font-size: 2.5rem;
+    width: fit-content;
+    margin: 10px auto;
+  }
   .page-content {
     position: relative;
   }
@@ -301,15 +303,31 @@
     z-index: 50;
   }
 
+  .no-bottom-margin {
+    margin-bottom: 0 !important;
+  }
+  .small-bottom-margin {
+    margin-bottom: 1.5rem !important;
+  }
+  .page-content {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .row {
+    position: relative;
+    display: flex;
+    margin-bottom: 3rem;
+    height: auto;
+  }
   .row-graph {
     width: 100%;
   }
   .row-left {
     display: flex;
     flex-direction: column;
-    /* width: 800px; */
     padding-right: auto;
-    /* margin: 0 40px; */
     margin-right: 20px;
     text-justify: center;
     flex: 4;
@@ -318,7 +336,7 @@
     flex: 10;
   }
   .multi-element-row {
-    margin: 0 20px;
+    margin: 0 20px 3rem 20px;
   }
 
   .spider-chart-row {
