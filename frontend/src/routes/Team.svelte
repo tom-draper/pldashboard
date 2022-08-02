@@ -378,6 +378,9 @@
     .circles-background {
       margin-top: -100px;
     }
+    .position-no-badge {
+      margin-bottom: -50px;
+    }
   }
   @media only screen and (max-width: 1000px) {
     .circles-background {

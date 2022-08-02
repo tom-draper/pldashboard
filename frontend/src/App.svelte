@@ -1,6 +1,6 @@
 <script>
   import { Router, Route } from "svelte-routing";
-  import Home from "./routes/Home.svelte";
+  import Teams from "./routes/Teams.svelte";
   import Team from "./routes/Team.svelte";
   import Predictions from "./routes/Predictions.svelte";
 
@@ -17,4 +17,6 @@
   <Route path="/:team" let:params>
     <Team team={params.team} />
   </Route>
+  <Route path="/teams" component="{Teams}" />
+
 </Router>
