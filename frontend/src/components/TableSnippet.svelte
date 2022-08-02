@@ -116,7 +116,7 @@
           <div class="table-element table-position">
             {row.position}
           </div>
-          <a href="/{team}" class="table-element table-team-name">
+          <a href="/{row.name.toLowerCase().replace(/ /g, '-')}" class="table-element table-team-name">
             {row.name}
           </a>
           <div class="table-element table-gd">

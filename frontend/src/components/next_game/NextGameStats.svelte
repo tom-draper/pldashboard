@@ -198,20 +198,20 @@
   }
 
   .drew {
-    background-color: #ffb2477e;
+    background-color: rgb(255, 201, 125)
   }
 
   .won {
-    background-color: #77dd7798;
+    background-color: rgb(156, 242, 156);
   }
 
   .lost {
-    background-color: #f3363688;
+    background-color: #f77979;
   }
 
   .past-result-date {
     font-size: 13px;
-    color: rgb(104, 104, 104);
+    color: #333;
   }
 
   .prev-results-title {
