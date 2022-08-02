@@ -203,24 +203,11 @@ a {
   height: 60px;
 }
 
-.row-left {
-  display: flex;
-  flex-direction: column;
-  width: 800px;
-  padding-right: auto;
-  margin: 0 40px;
-  text-justify: center;
-}
-
 .predictions-title {
   font-size: 2.6em;
   font-weight: 800;
 }
 
-.row-graph {
-  width: 100%;
-  margin: 0 20px;
-}
 
 .resizable-graph {
   width: 100% !important;
@@ -256,7 +243,7 @@ a {
   padding-left: 0;
   margin: 0;
   height: 500px;
-  width: 860px;
+  /* width: 860px; */
 }
 
 .position-central,
@@ -594,40 +581,6 @@ h1 {
   .lowered {
     margin: 0 30px;
   }
-
-  .position,
-  .position-central {
-    font-size: 10.5em;
-    text-align: center;
-    line-height: 1.6;
-    padding-right: 20px;
-    margin: 0;
-    text-shadow: 7px 7px #000;
-  }
-
-  .position-and-badge {
-    background-size: auto 210px !important;
-    background-position: center !important;
-  }
-
-  .position-no-badge,
-  .position-and-badge {
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100%;
-  }
-
-  .position-and-badge,
-  .position-no-badge,
-  .circles-background-container {
-    height: 250px;
-  }
-
-  .circles-background {
-    transform: scale(0.4);
-    margin-top: -125px;
-  }
-
   h1 {
     font-size: 1.5em;
   }

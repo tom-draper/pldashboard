@@ -20,7 +20,7 @@
 </script>
 
 <div
-  class="next-game-prediction row-graph"
+  class="next-game-prediction"
   style="border: 6px solid var(--{oppTeam});"
 >
   <div class="next-game-title" style="background-color: var(--{oppTeam});">
@@ -176,7 +176,7 @@
   }
 
   .next-game-prediction {
-    margin: 0 20px 0 0;
+    /* margin: 0 20px 0 0; */
     border-radius: var(--border-radius);
   }
 

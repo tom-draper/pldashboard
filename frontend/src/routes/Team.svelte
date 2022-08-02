@@ -70,8 +70,9 @@ import NavBar from "../components/NavBar.svelte";
 
 <Router>
   <div id="team">
-    <NavBar thisTeam={team}/>
-
+    <div id="nav-bar">
+      <NavBar thisTeam={team}/>
+    </div>
   <div class="dashboard">
     <div class="header" style="background-color: var(--{team});">
       <a href="/{team}">
@@ -86,7 +87,7 @@ import NavBar from "../components/NavBar.svelte";
   
     {#if data != undefined}
       <div class="page-content">
-        <div class="row">
+        <div class="row multi-element-row">
           {#if showBadge}
             <div
               class="row-left position-and-badge"
@@ -128,7 +129,7 @@ import NavBar from "../components/NavBar.svelte";
               </div>
             </div>
           {/if}
-          <div class="fixtures-graph row-graph">
+          <div class="row-right fixtures-graph row-graph">
             <h1 class="lowered">Fixtures</h1>
             <div class="graph mini-graph">
               <Fixtures {data} {fullTeamName} />
@@ -136,12 +137,14 @@ import NavBar from "../components/NavBar.svelte";
           </div>
         </div>
   
-        <div class="row">
+        <div class="row multi-element-row">
           <div class="row-left form-details">
             <CurrentForm {data} {currentMatchday} {fullTeamName} />
             <TableSnippet {data} {team} {fullTeamName} />
           </div>
-          <NextGame {data} {currentMatchday} {fullTeamName} {showBadge}/>
+          <div class="row-right">
+            <NextGame {data} {currentMatchday} {fullTeamName} {showBadge}/>
+          </div>
         </div>
   
         <div class="row">
@@ -214,9 +217,34 @@ import NavBar from "../components/NavBar.svelte";
     display: flex;
   }
 
+  .position-central {
+    font-size: 23vw;
+    margin: auto;
+  }
+
   .dashboard {
     margin-left: 220px;
     width: 100%;
+  }
+
+  .row-graph {
+    width: 100%;
+  }
+  .row-left {
+    display: flex;
+    flex-direction: column;
+    /* width: 800px; */
+    padding-right: auto;
+    /* margin: 0 40px; */
+    margin-right: 20px;
+    text-justify: center;
+    flex: 4;
+  }
+  .row-right {
+    flex: 10;
+  }
+  .multi-element-row {
+    margin: 0 20px;
   }
 
   .spider-chart-row {
@@ -227,9 +255,107 @@ import NavBar from "../components/NavBar.svelte";
     margin: 1em auto auto;
     display: flex;
   }
+  
+@media only screen and (max-width: 1800px) { 
+  .circles-background {
+    transform: scale(0.9);
+  }
+  .position-central {
+    font-size: 25vw;
+  }
+}
+@media only screen and (max-width: 1600px) { 
+  .row-left {
+    flex: 5;
+  }
+  .circles-background {
+    transform: scale(0.85);
+  }
+}
+@media only screen and (max-width: 1500px) { 
+  .circles-background {
+    transform: scale(0.8);
+  }
+}
+@media only screen and (max-width: 1400px) { 
+  .circles-background {
+    transform: scale(0.75);
+  }
+  #nav-bar {
+    display: none;
+  }
+  .dashboard {
+    margin-left: 0;
+  }
+}
+@media only screen and (max-width: 1300px) { 
+  .circles-background {
+    transform: scale(0.7);
+  }
+}
+
+@media only screen and (max-width: 1200px) { 
+  .circles-background {
+    transform: scale(0.5);
+    margin-top: -80px;
+  }
+}
+@media only screen and (max-width: 1000px) { 
+  .circles-background {
+    transform: scale(0.5);
+    margin-top: -110px;
+  }
+}
+
 @media only screen and (max-width: 800px) {
+  .circles-background {
+    transform: scale(0.45);
+    margin-top: -120px;
+  }
+  .position-central {
+    font-size: 13em;
+  }
+  /* .position-no-badge {
+    margin-bottom: -20px;
+  } */
   .season-stats-row {
     margin: 10px;
   }
 }
+
+@media only screen and (max-width: 550px) {
+  .position,
+  .position-central {
+    font-size: 10em;
+    text-align: center;
+    line-height: 1.6;
+    padding-right: 20px;
+    margin: 0;
+    text-shadow: 7px 7px #000;
+  }
+
+  .position-and-badge {
+    background-size: auto 210px !important;
+    background-position: center !important;
+  }
+
+  .position-no-badge,
+  .position-and-badge {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100%;
+  }
+
+  /* .position-and-badge,
+  .position-no-badge,
+  .circles-background-container {
+    height: 200px;
+  } */
+
+  .circles-background {
+    transform: scale(0.35);
+    margin-top: -125px;
+  }
+}
+
 </style>
