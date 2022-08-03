@@ -5,8 +5,8 @@ import numpy as np
 
 from predictions import Predictor
 from updater import Updater
-from utils.utilities import Utilities
-from database.database import Database
+from lib.utils.utilities import Utilities
+from lib.database.database import Database
 
 util = Utilities()
 

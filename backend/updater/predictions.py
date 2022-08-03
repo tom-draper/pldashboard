@@ -9,8 +9,8 @@ import pandas as pd
 from pandas.core.frame import DataFrame
 
 from data import Fixtures, Form, HomeAdvantages, Upcoming
-from database.database import Database
-from utils.utilities import Utilities
+from lib.database.database import Database
+from lib.utils.utilities import Utilities
 
 util = Utilities()
 

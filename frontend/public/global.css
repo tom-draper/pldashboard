@@ -333,44 +333,7 @@ h1 {
 
 /* Mobile view */
 
-@media only screen and (max-width: 1200px) {
-  .row {
-    flex-direction: column;
-    margin-bottom: 40px;
-  }
-
-  .row-graph {
-    width: auto;
-  }
-
-  .row-left {
-    align-self: center;
-  }
-
-  .position-and-badge {
-    width: 50%;
-    max-width: 400px;
-    min-width: 150px;
-    padding-right: 3% !important;
-    background-size: auto 330px !important;
-    height: 400px;
-  }
-
-  .position-central,
-  .position {
-    font-size: 350px;
-  }
-
-  .position-no-badge {
-    height: 400px;
-    width: 500px;
-  }
-
-  .circles-background {
-    transform: scale(0.8);
-    margin-top: -50px;
-  }
-
+@media only screen and (max-width: 1100px) {
   .icon {
     width: 20vw;
   }

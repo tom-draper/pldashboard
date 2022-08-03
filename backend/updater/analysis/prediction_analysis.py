@@ -5,8 +5,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import matplotlib.pyplot as plt
 import numpy as np
-from database.database import Database
-from utils.utilities import Utilities
+from lib.database.database import Database
+from lib.utils.utilities import Utilities
 
 util = Utilities()
 

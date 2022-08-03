@@ -1,35 +1,4 @@
 <script>
-  let alias = {
-    "Wolverhampton Wanderers": "Wolves",
-    "Tottenham Hotspur": "Spurs",
-    "Leeds United": "Leeds",
-    "West Ham United": "West Ham",
-    "Brighton and Hove Albion": "Brighton",
-  };
-
-  let teams = [
-    "Manchester City",
-    "Liverpool",
-    "Chelsea",
-    "Tottenham Hotspur",
-    "Arsenal",
-    "Manchester United",
-    "West Ham United",
-    "Leicester City",
-    "Brighton and Hove Albion",
-    "Wolverhampton Wanderers",
-    "Newcastle United",
-    "Crystal Palace",
-    "Brentford",
-    "Aston Villa",
-    "Southampton",
-    "Everton",
-    "Leeds United",
-    "Fulham",
-    "Bournemouth",
-    "Nottingham Forest",
-  ];
-
   function getAlias(team) {
     if (team in alias) {
       return alias[team];
@@ -43,7 +12,7 @@
     window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
   }
 
-  export let thisTeam;
+  export let team, teams, alias;
 </script>
 
 <nav>
@@ -54,23 +23,23 @@
       All Teams
     </div>
     </a> -->
-    {#each teams as team, i (team)}
-      {#if team.toLowerCase().replace(/ /g, "-") == thisTeam}
-        <a href="/{team.toLowerCase().replace(/ /g, '-')}" class="team-link">
+    {#each teams as _team, _ (_team)}
+      {#if _team.toLowerCase().replace(/ /g, "-") == team}
+        <a href="/{_team.toLowerCase().replace(/ /g, '-')}" class="team-link">
           <div
             class="this-team-name"
-            style="color: var(--{team
+            style="color: var(--{_team
               .toLowerCase()
               .replace(/ /g, '-')}-secondary);
-              background-color: var(--{team.toLowerCase().replace(/ /g, '-')})"
+              background-color: var(--{_team.toLowerCase().replace(/ /g, '-')})"
           >
-            {getAlias(team)}
+            {getAlias(_team)}
           </div>
         </a>
       {:else}
-        <a href="/{team.toLowerCase().replace(/ /g, '-')}" class="team-link">
+        <a href="/{_team.toLowerCase().replace(/ /g, '-')}" class="team-link">
           <div class="team-name">
-            {getAlias(team)}
+            {getAlias(_team)}
           </div>
         </a>
       {/if}

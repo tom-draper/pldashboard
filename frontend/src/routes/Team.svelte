@@ -14,7 +14,37 @@
   import GoalFrequencies from "../components/goals_per_game/GoalsPerGame.svelte";
   import Spider from "../components/Spider.svelte";
   import NavBar from "../components/NavBar.svelte";
+  import MobileViewNav from "../components/MobileViewNav.svelte";
+  let alias = {
+    "Wolverhampton Wanderers": "Wolves",
+    "Tottenham Hotspur": "Spurs",
+    "Leeds United": "Leeds",
+    "West Ham United": "West Ham",
+    "Brighton and Hove Albion": "Brighton",
+  };
 
+  let teams = [
+    "Manchester City",
+    "Liverpool",
+    "Chelsea",
+    "Tottenham Hotspur",
+    "Arsenal",
+    "Manchester United",
+    "West Ham United",
+    "Leicester City",
+    "Brighton and Hove Albion",
+    "Wolverhampton Wanderers",
+    "Newcastle United",
+    "Crystal Palace",
+    "Brentford",
+    "Aston Villa",
+    "Southampton",
+    "Everton",
+    "Leeds United",
+    "Fulham",
+    "Bournemouth",
+    "Nottingham Forest",
+  ];
   function toTitleCase(str) {
     return str
       .toLowerCase()
@@ -80,7 +110,7 @@
 <Router>
   <div id="team">
     <div id="navBar">
-      <NavBar thisTeam={team} />
+      <NavBar {team} {teams} {alias} />
     </div>
     <div id="dashboard">
       <div class="header" style="background-color: var(--{team});">
@@ -207,6 +237,8 @@
             </div>
           </div>
 
+          <MobileViewNav {team} {teams} {alias} />
+
           <TeamsFooter lastUpdated={data.lastUpdated} />
         </div>
       {:else}
@@ -219,8 +251,11 @@
 </Router>
 
 <style scoped>
+  .header {
+    display: grid;
+    place-items: center;
+  }
   .main-link {
-    margin: auto;
     width: fit-content;
     display: grid;
     place-items: center;
@@ -293,7 +328,7 @@
     width: 100%;
   }
 
-  .open-nav-bar-btn {
+  /* .open-nav-bar-btn {
     cursor: pointer;
     position: absolute;
     top: 0.9em;
@@ -302,7 +337,7 @@
     border: none;
     outline: none;
     z-index: 50;
-  }
+  } */
 
   .no-bottom-margin {
     margin-bottom: 0 !important;
@@ -369,7 +404,7 @@
       transform: scale(0.9);
     }
     .position-central {
-      font-size: 25vw;
+      font-size: 24vw;
     }
   }
   @media only screen and (max-width: 1600px) {
@@ -389,6 +424,11 @@
     .circles-background {
       transform: scale(0.75);
     }
+  }
+  @media only screen and (max-width: 1300px) {
+    .circles-background {
+      transform: scale(0.7);
+    }
     #navBar {
       display: none;
     }
@@ -396,39 +436,55 @@
       margin-left: 0;
     }
   }
-  @media only screen and (max-width: 1300px) {
+
+  @media only screen and (max-width: 1100px) {
+    .row {
+      flex-direction: column;
+      margin-bottom: 40px;
+    }
+    .row-graph {
+      width: auto;
+    }
+    
+    .row-left {
+      margin-right: 0;
+      align-self: center;
+    }
+
+    .position-and-badge {
+      width: 50%;
+      max-width: 400px;
+      min-width: 150px;
+      padding-right: 3% !important;
+      background-size: auto 330px !important;
+      height: 400px;
+      margin-bottom: -50px;
+    }
+
+    .position-no-badge {
+      height: 400px;
+      width: 500px;
+    }
+
     .circles-background {
-      transform: scale(0.7);
+      transform: scale(0.5);
+      margin-top: -100px;
     }
   }
 
-  @media only screen and (max-width: 1200px) {
+  @media only screen and (max-width: 900px) {
     .circles-background {
-      transform: scale(0.5);
-      margin-top: -90px;
+      transform: scale(0.45);
+      margin-top: -120px;
     }
-    .row-left {
-      margin-right: 0;
-    }
-  }
-  @media only screen and (max-width: 1200px) {
-    .circles-background {
-      margin-top: -100px;
-    }
-    .position-no-badge {
-      margin-bottom: -50px;
-    }
-  }
-  @media only screen and (max-width: 1000px) {
-    .circles-background {
-      transform: scale(0.5);
-      margin-top: -110px;
+    .position-central {
+      font-size: 25vw;
     }
   }
 
   @media only screen and (max-width: 800px) {
     .circles-background {
-      transform: scale(0.45);
+      transform: scale(0.4);
       margin-top: -120px;
     }
     .position-central {

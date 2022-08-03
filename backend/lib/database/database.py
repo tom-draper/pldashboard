@@ -7,7 +7,7 @@ from typing import Optional
 import pymongo
 from dotenv import load_dotenv
 
-from utils.utilities import Utilities
+from lib.utils.utilities import Utilities
 
 util = Utilities()
 

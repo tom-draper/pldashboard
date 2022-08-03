@@ -8,13 +8,13 @@ from datetime import datetime
 from os.path import dirname, join
 
 import requests
-from database.database import Database
+from lib.database.database import Database
 from dotenv import load_dotenv
 from timebudget import timebudget
 
 from data import Data
 
-from utils.utilities import Utilities
+from lib.utils.utilities import Utilities
 
 utils = Utilities()
 

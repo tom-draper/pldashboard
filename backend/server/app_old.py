@@ -6,8 +6,8 @@ from flask import Flask, jsonify, render_template, request
 # from flask_compress import Compress
 from pandas.core.frame import DataFrame
 
-from backend.updater.updater import Updater
-from backend.utils.utilities import Utilities
+from lib.updater.updater import Updater
+from lib.utils.utilities import Utilities
 
 season = 2021
 

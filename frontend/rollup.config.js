@@ -25,11 +25,6 @@ export default [
           //   css.write("public/bundle.css");
           // },
         },
-        // preprocess: autoPreprocess({
-        //   postcss: true,
-        //   scss: { includePaths: ["src", "node_modules"] },
-        // }),
-        // emitCss: false,
       }),
       css({ output: 'bundle.css'}),
       resolve(),

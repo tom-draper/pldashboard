@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame
 from timebudget import timebudget
-from utils.utilities import Utilities
+from lib.utils.utilities import Utilities
 
 from dataframes.df import DF
 from dataframes.fixtures import Fixtures

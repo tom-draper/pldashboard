@@ -198,11 +198,11 @@
   }
 
   .drew {
-    background-color: rgb(255, 201, 125)
+    background-color: rgb(255, 207, 139)
   }
 
   .won {
-    background-color: rgb(156, 242, 156);
+    background-color: rgb(169, 247, 169);
   }
 
   .lost {
@@ -271,15 +271,12 @@
     font-size: 16px;
   }
 
-  @media only screen and (max-width: 1200px) {
+  @media only screen and (max-width: 1100px) {
     .next-game-prediction {
       margin: 50px 20px 0;
     }
-    .past-results {
-      margin: 30px auto;
-    }
   }
-
+  
   @media only screen and (max-width: 800px) {
     .next-game-prediction {
       margin: 50px 75px 0;

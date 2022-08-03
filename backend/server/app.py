@@ -3,8 +3,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from flask import Flask, jsonify
 from flask_cors import CORS, cross_origin
-from utils.utilities import Utilities
-from database.database import Database
+from lib.utils.utilities import Utilities
+from lib.database.database import Database
 
 season = 2022
 
