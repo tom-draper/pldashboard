@@ -308,7 +308,7 @@ class Predictor:
 class Predictions:
     def __init__(self, current_season: int):
         self.predictor = Predictor()
-        self.database = Database()
+        self.database = Database(current_season)
         self.accuracy = None  # type: dict[str, float]
         self.prediction_file = f'data/predictions_{current_season}.json'
 

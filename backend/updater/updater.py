@@ -22,7 +22,7 @@ class Updater:
     def __init__(self, current_season: int):
         self.current_season = current_season
         self.data = Data(current_season)
-        self.database = Database()
+        self.database = Database(current_season)
 
         # Import environment variables
         __file__ = 'updater.py'

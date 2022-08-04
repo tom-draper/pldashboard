@@ -11,7 +11,7 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADER'] = 'Content-Type'
 
-database = Database()
+database = Database(season)
 
 @app.route('/api/teams')
 @cross_origin()

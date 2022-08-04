@@ -80,7 +80,6 @@ class Data:
         # Build one dict containing all dataframes
         d = {
             'lastUpdated': self.last_updated,
-            'currentSeason': self.current_season,
             'teamNames': self.team_names,
             'logoURLs': self.logo_urls,
             'fixtures': self.fixtures.df.to_dict(orient='index'),

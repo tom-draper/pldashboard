@@ -13,7 +13,9 @@ util = Utilities()
 
 
 class Database:
-    def __init__(self):
+    def __init__(self, current_season):
+        self.current_season = current_season
+        
         __file__ = 'database.py'
         dotenv_path = join(dirname(__file__), '.env')
         load_dotenv(dotenv_path)
@@ -38,16 +40,16 @@ class Database:
     def get_prediction_accuracy(self) -> dict:
         accuracy = None
         with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Accuracy2022
-            accuracy = collection.find_one()
+            collection = client.PremierLeague.Accuracy
+            accuracy = collection.find_one({'_id': self.current_season})
             
         return accuracy
 
     def get_teams_data(self) -> dict:
         team_data = None
         with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.TeamData2022
-            team_data = dict(collection.find_one({'_id': 'team_data'}))
+            collection = client.PremierLeague.TeamData
+            team_data = dict(collection.find_one({'_id': self.current_season}))
         
         return team_data
     
@@ -55,7 +57,7 @@ class Database:
         prev_form = None
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData
-            prev_form = dict(collection.find_one({'_id': 'team_data'}, {'form': 1}))
+            prev_form = dict(collection.find_one({'_id': self.current_season-1}, {'form': 1}))
         
         return prev_form
 
@@ -118,8 +120,8 @@ class Database:
         return accuracy
 
     def _save_accuracy(self, client: pymongo.MongoClient, accuracy: float):
-        collection = client.PremierLeague.Accuracy2022
-        collection.replace_one({'_id': 'accuracy'}, accuracy)
+        collection = client.PremierLeague.Accuracy
+        collection.replace_one({'_id': self.current_season}, accuracy)
 
     def update_accuracy(self):
         with pymongo.MongoClient(self.connection_string) as client:
@@ -184,7 +186,7 @@ class Database:
         predictions = self._build_predictions(preds, actual_scores)
         self._save_predictions(predictions)
 
-    def _read_json_predictions(self, season=2021):
+    def _read_json_predictions(self, season=2022):
         with open(f'data/predictions_{season}.json', 'r') as f:
             data = json.loads(f.read())
 
@@ -241,15 +243,13 @@ class Database:
         # insert into new data
         # TODO: Build form dataframe from json_data instead of fixtures
         # Then include last two seasons within form dataframe instead of only current season
-        team_data['form'] = {'2022': team_data['form']}
-        
-        # Insert form from previous season
         prev_form = self.get_prev_season_form()
         team_data['form']['2021'] = prev_form['form']
 
     def update_team_data(self, team_data: dict):
+        team_data['form'] = {'2022': team_data['form']}
         self._insert_prev_season_form(team_data)
         
         with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.TeamData2022
-            collection.replace_one({'_id': 'team_data'}, team_data)
+            collection = client.PremierLeague.TeamData
+            collection.replace_one({'_id': 2022}, team_data)
