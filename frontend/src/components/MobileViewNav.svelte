@@ -1,11 +1,10 @@
 <script>
-  function getAlias(team) {
-    if (team in alias) {
-      return alias[team];
-    }
-    return team;
+  function switchTeamToTop(team) {
+    switchTeam(team);
+    window.scrollTo(0, 0);
   }
-  export let team, teams, alias;
+
+  export let team, teams, getAlias, switchTeam;
 </script>
 
 <nav>
@@ -13,13 +12,15 @@
   <div class="team-links">
     {#each teams as _team}
       {#if _team.toLowerCase().replace(/ /g, "-") != team}
-        <a
-          href="/{_team.toLowerCase().replace(/ /g, '-')}"
+        <button
+          on:click={() => {
+            switchTeamToTop(_team.toLowerCase().replace(/ /g, "-"));
+          }}
           style="color: var(--{_team
             .toLowerCase()
             .replace(/ /g, '-')}-secondary);
               background-color: var(--{_team.toLowerCase().replace(/ /g, '-')})"
-          class="team-link">{getAlias(_team)}</a
+          class="team-link">{getAlias(_team)}</button
         >
       {/if}
     {/each}
@@ -42,6 +43,9 @@
   .team-link {
     color: inherit;
     background: inherit;
+    cursor: pointer;
+    border: none;
+    font-size: 1em;
     padding: 0.4em;
   }
 

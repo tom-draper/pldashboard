@@ -43,22 +43,30 @@
     );
   }
 
-  let ssp1, ssp2, ssp3;
-  let rank = {
-    xG: "",
-    xC: "",
-    cleanSheetRatio: "",
-  };
-  onMount(() => {
+  function setStatsValues() {
     rank = getStatsRankings(data, fullTeamName);
-
+  
     // Keep ordinal values at the correct offset
     window.addEventListener("resize", setPositionalOffset);
     // Once rank values have updated, init positional offset for ordinal values
     setTimeout(function () {
       setPositionalOffset();
     }, 0);
-  });
+  }
+
+  let ssp1, ssp2, ssp3;
+  let rank = {
+    xG: "",
+    xC: "",
+    cleanSheetRatio: "",
+  };
+  let setup = false;
+  onMount(() => {
+    setStatsValues();
+    setup = true;
+  })
+
+  $: fullTeamName && setup && setStatsValues();
 
   export let data, fullTeamName;
 </script>

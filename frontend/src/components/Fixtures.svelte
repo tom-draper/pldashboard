@@ -49,7 +49,7 @@
     return sizes;
   }
 
-  function getGraphData(data, fullTeamName) {
+  function buildPlotData(data, fullTeamName) {
     // Build data to create a fixtures line graph displaying the date along the
     // x-axis and opponent strength along the y-axis
     let x = [];
@@ -145,7 +145,7 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
+        margin: { r: 20, l: 50, t: 5, b: 40, pad: 5 },
         hovermode: "closest",
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
@@ -171,26 +171,38 @@
         responsive: true,
         showSendToCloud: false,
         displayModeBar: false,
-      },
+      }
     };
     return graphData;
   }
 
-  let plotDiv;
-  let graphData;
-  onMount(() => {
-    graphData = getGraphData(data, fullTeamName);
-    let Plot = new Plotly.newPlot(
+  function genPlot() {
+    plotData = buildPlotData(data, fullTeamName);
+    new Plotly.newPlot(
       plotDiv,
-      graphData.data,
-      graphData.layout,
-      graphData.config
-    );
-    // Once plot generated, add resizable attribute to it to shorten height for mobile view
-    Plot.then((plot) => {
+      plotData.data,
+      plotData.layout,
+      plotData.config
+    ).then(plot => {
+      // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-graph");
     });
+  }
+  
+  function refreshPlot() {
+    let newPlotData = buildPlotData(data, fullTeamName);
+    plotData.data[0] = newPlotData.data[0];  // Overwrite plot data
+    Plotly.redraw(plotDiv)
+  }
+  
+  let plotDiv, plotData;
+  let setup = false;
+  onMount(() => {
+    genPlot();
+    setup = true;
   });
+
+  $: fullTeamName && setup && refreshPlot()
 
   export let data, fullTeamName;
 </script>

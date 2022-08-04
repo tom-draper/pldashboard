@@ -1,22 +1,22 @@
 <script>
-  import { onMount } from "svelte";
-
   function ordinal(n) {
     let ord = [, "st", "nd", "rd"];
     let a = n % 100;
     return n + (ord[a > 20 ? a % 10 : a] || "th");
   }
-  
-  let oppTeam;
-  onMount(() => {
+
+  function setOppTeam() {
     if (data.upcoming[fullTeamName].nextTeam != null) {
       oppTeam = data.upcoming[fullTeamName].nextTeam
         .toLowerCase()
         .replace(/ /g, "-");
     }
-  });
+  }
+  
+  let oppTeam;
+  $: fullTeamName && setOppTeam();
 
-  export let data, fullTeamName, currentMatchday, showBadge;
+  export let data, fullTeamName, currentMatchday, showBadge, getAlias;
 </script>
 
 <div
@@ -101,11 +101,11 @@
       {#each data.upcoming[fullTeamName].prevMatches as prevMatch}
         <div class="next-game-item {prevMatch.result}">
           <div class="past-result">
-            <div class="home-team">{prevMatch.homeTeam}</div>
+            <div class="home-team">{getAlias(prevMatch.homeTeam)}</div>
             <div class="score">
               {prevMatch.homeGoals} - {prevMatch.awayGoals}
             </div>
-            <div class="away-team">{prevMatch.awayTeam}</div>
+            <div class="away-team">{getAlias(prevMatch.awayTeam)}</div>
           </div>
           <div style="clear: both" />
           <div class="past-result-date">
@@ -178,12 +178,13 @@
   .next-game-prediction {
     /* margin: 0 20px 0 0; */
     border-radius: var(--border-radius);
+    min-height: 97.5%;
   }
 
   .next-game-values {
     display: flex;
-    margin-right: 5%;
-    min-height: 390px;
+    margin: 8% 5% 0 0;
+    /* min-height: 390px; */
   }
 
   .next-game-position {
@@ -275,6 +276,9 @@
     .next-game-prediction {
       margin: 50px 20px 0;
     }
+    .next-game-values {
+      margin: 5% 8% 5% 0;
+    }
   }
   
   @media only screen and (max-width: 800px) {
@@ -306,12 +310,17 @@
       text-align: left;
     }
   }
+  @media only screen and (max-width: 700px) {
+    .next-game-prediction {
+      margin: 40px 20px;
+    }
+  }
   @media only screen and (max-width: 550px) {
     .next-game-values {
       margin: 20px 10px;
     }
     .next-game-prediction {
-      margin: 40px 10px;
+      margin: 40px 15px;
     }
   }
 </style>

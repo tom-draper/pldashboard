@@ -84,13 +84,16 @@
   }
 
   let formIcons, formStarTeams, formInitials;
-  onMount(() => {
+  function setFormValues() {
     let sortedMatchdays = getSortedMatchdays(data, fullTeamName);
     let matchdays = sortedMatchdays.slice(-5);
     formIcons = getFormIcons(data, fullTeamName);
     formStarTeams = getFormStarTeams(data, fullTeamName, matchdays);
     formInitials = getFormInitials(data, fullTeamName, matchdays);
-  });
+  }
+
+  $: fullTeamName && setFormValues();
+
   export let data, currentMatchday, fullTeamName;
 </script>
 

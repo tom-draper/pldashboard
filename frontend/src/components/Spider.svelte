@@ -221,15 +221,9 @@
     let cleanSheets = {};
     let maxCleanSheets = Number.NEGATIVE_INFINITY;
     for (let teamName of data.teamNames) {
-      let nCleanSheets = formCleanSheets(
-        data.form[data._id],
-        teamName
-      );
+      let nCleanSheets = formCleanSheets(data.form[data._id], teamName);
       if (teamName in data.form[data._id - 1]) {
-        nCleanSheets += formCleanSheets(
-          data.form[data._id - 1],
-          teamName
-        );
+        nCleanSheets += formCleanSheets(data.form[data._id - 1], teamName);
       }
 
       if (nCleanSheets > maxCleanSheets) {
@@ -273,10 +267,7 @@
     for (let teamName of data.teamNames) {
       let backToBack = formConsistency(data.form[data._id], teamName);
       if (teamName in data.form[data._id - 1]) {
-        backToBack += formConsistency(
-          data.form[data._id - 1],
-          teamName
-        );
+        backToBack += formConsistency(data.form[data._id - 1], teamName);
       }
 
       if (backToBack > maxConsistency) {
@@ -368,17 +359,9 @@
       ];
       big6 = removeItem(big6, teamName);
 
-      let winsVsBig6 = formWinsVsBig6(
-        data.form[data._id],
-        teamName,
-        big6
-      );
+      let winsVsBig6 = formWinsVsBig6(data.form[data._id], teamName, big6);
       if (teamName in data.form[data._id - 1]) {
-        winsVsBig6 += formWinsVsBig6(
-          data.form[data._id - 1],
-          teamName,
-          big6
-        );
+        winsVsBig6 += formWinsVsBig6(data.form[data._id - 1], teamName, big6);
       }
 
       if (winsVsBig6 > maxWinsVsBig6) {
@@ -450,7 +433,7 @@
     vsBig6 = getVsBig6(data);
   }
 
-  function getGraphData(data, teamName) {
+  function buildPlotData(data, teamName) {
     computePlotData(data);
 
     spiderPlots = initSpiderPlots(teamName);
@@ -480,6 +463,7 @@
     return graphData;
   }
 
+  let attack, defence, cleanSheets, consistency, winStreaks, vsBig6;
   let labels = [
     "Attack",
     "Defence",
@@ -488,26 +472,25 @@
     "Win Streak",
     "vs Big 6",
   ];
-  let attack;
-  let defence;
-  let cleanSheets;
-  let consistency;
-  let winStreaks;
-  let vsBig6;
 
-  let plotDiv;
+  let plotDiv, plotData;
   let spiderPlots;
   let comparisonTeams = [];
-  let graphData;
+  let setup = false;
   onMount(() => {
-    graphData = getGraphData(data, fullTeamName);
-    let Plot = new Plotly.newPlot(
+    genPlot();
+    setup = true;
+  });
+
+  function genPlot() {
+    plotData = buildPlotData(data, fullTeamName);
+    new Plotly.newPlot(
       plotDiv,
-      graphData.data,
-      graphData.layout,
-      graphData.config
-    );
-    Plot.then((plot) => {
+      plotData.data,
+      plotData.layout,
+      plotData.config
+    ).then(plot => {
+      // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-spider-chart");
     });
 
@@ -518,9 +501,17 @@
     document
       .getElementById("spider-opp-teams")
       .children[18].classList.add("bottom-spider-opp-team-btn");
-  });
+  }
 
-  export let data, fullTeamName;
+  function refreshPlot() {
+    let newPlotData = buildPlotData(data, fullTeamName);
+    plotData.data[1] = newPlotData.data[1]; // Overwrite team data
+    Plotly.redraw(plotDiv);
+  }
+
+  $: fullTeamName && setup && refreshPlot();
+
+  export let data, fullTeamName, getAlias;
 </script>
 
 <div class="spider-chart">
@@ -538,7 +529,7 @@
           class="spider-opp-team-btn"
           on:click={(e) => {
             spiderBtnClick(e.target);
-          }}>{teamName}</button
+          }}>{getAlias(teamName)}</button
         >
       {/if}
     {/each}
@@ -560,6 +551,7 @@
     flex-direction: column;
     border: 3px solid #333333;
     color: #333333;
+    width: 180px;
   }
   .spider-opp-team-btn {
     cursor: pointer;
