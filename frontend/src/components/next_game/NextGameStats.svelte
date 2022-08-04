@@ -184,7 +184,7 @@
   .next-game-values {
     display: flex;
     margin: 8% 5% 0 0;
-    /* min-height: 390px; */
+    min-height: 370px;
   }
 
   .next-game-position {
