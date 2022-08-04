@@ -15,6 +15,7 @@
   import Spider from "../components/Spider.svelte";
   import NavBar from "../components/NavBar.svelte";
   import MobileViewNav from "../components/MobileViewNav.svelte";
+
   let alias = {
     "Wolverhampton Wanderers": "Wolves",
     "Tottenham Hotspur": "Spurs",
@@ -445,7 +446,7 @@
     .row-graph {
       width: auto;
     }
-    
+
     .row-left {
       margin-right: 0;
       align-self: center;
@@ -490,9 +491,6 @@
     .position-central {
       font-size: 13em;
     }
-    /* .position-no-badge {
-    margin-bottom: -20px;
-  } */
     .season-stats-row {
       margin: 10px;
     }
@@ -523,12 +521,6 @@
       margin: 0 !important;
       width: 100%;
     }
-
-    /* .position-and-badge,
-  .position-no-badge,
-  .circles-background-container {
-    height: 200px;
-  } */
 
     .circles-background {
       transform: scale(0.35);

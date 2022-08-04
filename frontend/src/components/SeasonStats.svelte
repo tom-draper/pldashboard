@@ -175,92 +175,89 @@
   .ssp-20th {
     color: #ff6868;
   }
-.season-stats {
-  display: flex;
-  font-size: 2.2em;
-  width: 100%;
-  letter-spacing: -0.06em;
-}
-
-.season-stat-value {
-  font-size: 3.2em;
-  line-height: 0.6em;
-  font-weight: 700;
-  width: fit-content;
-  margin: 0 auto;
-  position: relative;
-  user-select: none;
-}
-
-.season-stat-position {
-  font-size: 0.3em;
-  position: absolute;
-  top: -1em;
-  letter-spacing: -0.07em;
-}
-
-.season-stat {
-  flex: 1;
-}
-
-@media only screen and (max-width: 1400px) {
-  .season-stat-value {
-    font-size: 2.5em;
+  .season-stats {
+    display: flex;
+    font-size: 2.2em;
+    width: 100%;
+    letter-spacing: -0.06em;
   }
 
-  /* .season-stat {
+  .season-stat-value {
+    font-size: 3.2em;
+    line-height: 0.6em;
+    font-weight: 700;
+    width: fit-content;
+    margin: 0 auto;
+    position: relative;
+    user-select: none;
+  }
+
+  .season-stat-position {
+    font-size: 0.3em;
+    position: absolute;
+    top: -1em;
+    letter-spacing: -0.07em;
+  }
+
+  .season-stat {
+    flex: 1;
+  }
+
+  @media only screen and (max-width: 1400px) {
+    .season-stat-value {
+      font-size: 2.5em;
+    }
+
+    /* .season-stat {
     margin: 0.4em 0 1em 0;
   } */
 
-  .season-stats-row {
-    margin: 70px 0 10px;
+    .season-stats-row {
+      margin: 70px 0 10px;
+    }
+
+    .season-stat-text {
+      font-size: 0.9em;
+    }
   }
 
-  .season-stat-text {
-    font-size: 0.9em;
-  }
-}
+  @media only screen and (max-width: 800px) {
+    .season-stats {
+      flex-direction: column;
+    }
 
+    .season-stat-text {
+      font-size: 0.9em;
+    }
+    .season-stat {
+      margin: 0.5em 0 0.9em 0;
+    }
 
-@media only screen and (max-width: 800px) {
-  .season-stats {
-    flex-direction: column;
-  }
+    .season-stat-value {
+      font-size: 2.5em;
+    }
 
-  .season-stat-text {
-    font-size: 0.9em;
-  }
-  .season-stat {
-    margin: 0.5em 0 0.9em 0;
-  }
-
-  .season-stat-value {
-    font-size: 2.5em;
-  }
-
-  .season-stat-text {
-    font-size: 0.9em;
-  }
-}
-
-@media only screen and (max-width: 550px) {
-  .season-stat-value {
-    font-size: 1.4em;
-    letter-spacing: 0.01em;
-  }
-  
-  .season-stat {
-    margin: 0.25em 0 0.45em 0;
-  }
-  .season-stat-position {
-    font-size: 0.5em;
-    top: -0.5em;
-  }
-  .season-stat-text {
-    letter-spacing: -0.04em;
-    font-size: 0.7em;
+    .season-stat-text {
+      font-size: 0.9em;
+    }
   }
 
+  @media only screen and (max-width: 550px) {
+    .season-stat-value {
+      font-size: 1.4em;
+      letter-spacing: 0.01em;
+    }
 
-}
+    .season-stat {
+      margin: 0.25em 0 0.45em 0;
+    }
+    .season-stat-position {
+      font-size: 0.5em;
+      top: -0.5em;
+    }
+    .season-stat-text {
+      letter-spacing: -0.04em;
+      font-size: 0.7em;
+    }
+  }
 </style>

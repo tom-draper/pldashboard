@@ -71,12 +71,14 @@
   let data;
   onMount(() => {
     // fetchData("http://127.0.0.1:5000/api/predictions").then((json) => {
-    fetchData("https://pldashboard.herokuapp.com/api/predictions").then((json) => {
-      sortByDate(json);
-      insertColours(json);
-      data = json;
-      console.log(data.predictions);
-    });
+    fetchData("https://pldashboard.herokuapp.com/api/predictions").then(
+      (json) => {
+        sortByDate(json);
+        insertColours(json);
+        data = json;
+        console.log(data.predictions);
+      }
+    );
   });
 </script>
 
@@ -323,5 +325,9 @@
     font-size: 14px;
     color: rgb(120 120 120);
     margin-bottom: 5px;
+  }
+  .method-description {
+    margin: 20px auto 15px;
+    width: 80%;
   }
 </style>

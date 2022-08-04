@@ -120,6 +120,7 @@ a {
 .main-link {
   margin: 10px;
 }
+
 .team-button {
   text-align: center;
   font-size: 20px;
@@ -153,6 +154,7 @@ a {
 .bottom-both {
   border-radius: 0 0 6px 6px;
 }
+
 /* ------------------------------- Teams Page ---------------------------------- */
 
 .W {
@@ -218,59 +220,13 @@ a {
 }
 
 
-
-.current-form-row {
-  font-size: 0.9em;
-  display: flex;
-  width: min(80%, 600px);
-  width: 100%;
+.top-spider-opp-team-btn {
+  border-radius: 3px 3px 0 0;
 }
 
-.icon {
-  position: relative;
-  width: 20%;
-  height: 0;
-  padding-bottom: 20%;
-  margin: 0 5px;
-  background-repeat: no-repeat;
-  background-size: contain;
+.bottom-spider-opp-team-btn {
+  border-radius: 0 0 3px 3px;
 }
-
-.icon-name {
-  position: relative;
-  width: 20%;
-  margin: 0 5px;
-}
-
-.pos-4 {
-  /* Most recent game */
-  opacity: 100%;
-}
-
-.pos-3 {
-  opacity: 90%;
-}
-
-.pos-2 {
-  opacity: 80%;
-}
-
-.pos-1 {
-  opacity: 70%;
-}
-
-.pos-0 {
-  /* Least recent game */
-  opacity: 50%;
-}
-
-
-  .top-spider-opp-team-btn {
-    border-radius: 3px 3px 0 0;
-  }
-  .bottom-spider-opp-team-btn {
-    border-radius: 0 0 3px 3px;
-  }
 
 
 .two-graphs {
@@ -284,10 +240,6 @@ a {
 
 /* Teams page footer */
 
-.method-description {
-  margin: 20px auto 15px;
-  width: 80%;
-}
 
 .footer-gap {
   height: 40px;
@@ -411,13 +363,16 @@ h1 {
   .position-and-badge {
     width: 70%;
   }
+
   .circles-background {
     transform: scale(0.55);
     margin-top: -85px;
   }
+
   .position-no-badge {
     height: 330px;
   }
+
   .position-central {
     font-size: 250px;
     margin: 35px 0 0 0;
@@ -475,6 +430,7 @@ h1 {
   .lowered {
     margin: 0 30px;
   }
+
   h1 {
     font-size: 1.5em;
   }
@@ -503,6 +459,7 @@ h1 {
   .season-stats-row {
     margin-top: 20px;
   }
+
   .predictions {
     font-size: 0.9em;
   }

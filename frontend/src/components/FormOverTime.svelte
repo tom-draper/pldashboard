@@ -2,8 +2,8 @@
   import { onMount } from "svelte";
 
   function getFormLine(data, x, teamName, isMainTeam) {
-    let matchdays = Object.keys(data.form[data.currentSeason][teamName]);  // Played matchdays
-    
+    let matchdays = Object.keys(data.form[data.currentSeason][teamName]); // Played matchdays
+
     let y = [];
     for (let matchday of matchdays) {
       let form = data.form[data.currentSeason][teamName][matchday].formRating5;
@@ -35,15 +35,15 @@
     };
     return line;
   }
-  
+
   function getMatchdayDates(data, teamName) {
-    let matchdays = Object.keys(data.form[data.currentSeason][teamName]);  // Played matchdasy
+    let matchdays = Object.keys(data.form[data.currentSeason][teamName]); // Played matchdasy
 
     // If played one or no games, take x-axis from whole season dates
     if (matchdays.length <= 1) {
-      matchdays = Object.keys(data.fixtures[teamName])
+      matchdays = Object.keys(data.fixtures[teamName]);
     }
-    
+
     let x = [];
     // Find median matchday date across all teams for each matchday
     for (let matchday of matchdays) {
@@ -97,14 +97,14 @@
           fixedrange: true,
           ticktext: yLabels,
           tickvals: yLabels,
-          range: [0, 100]
+          range: [0, 100],
         },
         xaxis: {
           linecolor: "black",
           showgrid: false,
           showline: false,
           fixedrange: true,
-          range: [x[0], x[x.length-1]],
+          range: [x[0], x[x.length - 1]],
         },
       },
       config: {

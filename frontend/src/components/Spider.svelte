@@ -128,7 +128,7 @@
     }
     let avg = total / Object.keys(formMetric).length;
 
-    return avg
+    return avg;
   }
 
   function formMetricAvg(formMetric) {
@@ -138,7 +138,7 @@
     }
     let avg = total / Object.keys(formMetric).length;
 
-    return avg
+    return avg;
   }
 
   function getAttack(data) {
@@ -221,9 +221,15 @@
     let cleanSheets = {};
     let maxCleanSheets = Number.NEGATIVE_INFINITY;
     for (let teamName of data.teamNames) {
-      let nCleanSheets = formCleanSheets(data.form[data.currentSeason], teamName);
-      if (teamName in data.form[data.currentSeason-1]) {
-        nCleanSheets += formCleanSheets(data.form[data.currentSeason-1], teamName);
+      let nCleanSheets = formCleanSheets(
+        data.form[data.currentSeason],
+        teamName
+      );
+      if (teamName in data.form[data.currentSeason - 1]) {
+        nCleanSheets += formCleanSheets(
+          data.form[data.currentSeason - 1],
+          teamName
+        );
       }
 
       if (nCleanSheets > maxCleanSheets) {
@@ -261,15 +267,16 @@
     return backToBack;
   }
 
-
-
   function getConsistency(data) {
     let consistency = {};
     let maxConsistency = Number.NEGATIVE_INFINITY;
     for (let teamName of data.teamNames) {
       let backToBack = formConsistency(data.form[data.currentSeason], teamName);
-      if (teamName in data.form[data.currentSeason-1]) {
-        backToBack += formConsistency(data.form[data.currentSeason-1], teamName);
+      if (teamName in data.form[data.currentSeason - 1]) {
+        backToBack += formConsistency(
+          data.form[data.currentSeason - 1],
+          teamName
+        );
       }
 
       if (backToBack > maxConsistency) {
@@ -309,8 +316,8 @@
     let maxWinStreaks = Number.NEGATIVE_INFINITY;
     for (let teamName of data.teamNames) {
       let winStreak = formWinStreak(data.form[data.currentSeason], teamName);
-      if (teamName in data.form[data.currentSeason-1]) {
-        winStreak += formWinStreak(data.form[data.currentSeason-1], teamName);
+      if (teamName in data.form[data.currentSeason - 1]) {
+        winStreak += formWinStreak(data.form[data.currentSeason - 1], teamName);
       }
 
       if (winStreak > maxWinStreaks) {
@@ -361,9 +368,17 @@
       ];
       big6 = removeItem(big6, teamName);
 
-      let winsVsBig6 = formWinsVsBig6(data.form[data.currentSeason], teamName, big6);
-      if (teamName in data.form[data.currentSeason-1]) {
-        winsVsBig6 += formWinsVsBig6(data.form[data.currentSeason-1], teamName, big6);
+      let winsVsBig6 = formWinsVsBig6(
+        data.form[data.currentSeason],
+        teamName,
+        big6
+      );
+      if (teamName in data.form[data.currentSeason - 1]) {
+        winsVsBig6 += formWinsVsBig6(
+          data.form[data.currentSeason - 1],
+          teamName,
+          big6
+        );
       }
 
       if (winsVsBig6 > maxWinsVsBig6) {
@@ -371,10 +386,9 @@
       }
 
       vsBig6[teamName] = winsVsBig6;
-
     }
-    
-    vsBig6.avg = formMetricAvgScaled(vsBig6, maxWinsVsBig6)
+
+    vsBig6.avg = formMetricAvgScaled(vsBig6, maxWinsVsBig6);
 
     return vsBig6;
   }
@@ -556,5 +570,4 @@
   .spider-opp-team-btn:hover {
     filter: brightness(0.95);
   }
-
 </style>

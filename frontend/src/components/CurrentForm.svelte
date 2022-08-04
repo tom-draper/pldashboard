@@ -22,11 +22,14 @@
   }
 
   function getSortedMatchdays(data, team) {
-    let matchdays = Object.keys(data.form[data.currentSeason][team]).sort(function (a, b) {
-      return (
-        new Date(data.form[data.currentSeason][team][a].date) - new Date(data.form[data.currentSeason][team][b].date)
-      );
-    });
+    let matchdays = Object.keys(data.form[data.currentSeason][team]).sort(
+      function (a, b) {
+        return (
+          new Date(data.form[data.currentSeason][team][a].date) -
+          new Date(data.form[data.currentSeason][team][b].date)
+        );
+      }
+    );
     return matchdays;
   }
 
@@ -34,7 +37,9 @@
     let formStarTeams = [];
     for (let matchday of matchdays) {
       formStarTeams.push(
-        data.form[data.currentSeason][team][matchday].beatStarTeam ? "star-team" : ""
+        data.form[data.currentSeason][team][matchday].beatStarTeam
+          ? "star-team"
+          : ""
       );
     }
 
@@ -49,7 +54,8 @@
   function getFormIcons(data, team) {
     let formIcons = [];
     if (data.form[data.currentSeason][team].length > 0) {
-      formIcons = data.form[data.currentSeason][team][currentMatchday].form5.split("");
+      formIcons =
+        data.form[data.currentSeason][team][currentMatchday].form5.split("");
     }
 
     // Fill in blanks with None icons
@@ -64,7 +70,9 @@
     let formInitials = [];
 
     for (let matchday of matchdays) {
-      formInitials.push(toInitials(data.form[data.currentSeason][team][matchday].team));
+      formInitials.push(
+        toInitials(data.form[data.currentSeason][team][matchday].team)
+      );
     }
 
     // Fill in blanks with None icons
@@ -115,15 +123,62 @@
 <div class="current-form">
   Current form:
   {#if currentMatchday != null}
-    {(data.form[data.currentSeason][fullTeamName][currentMatchday].formRating5 * 100).toFixed(2)}%
+    {(
+      data.form[data.currentSeason][fullTeamName][currentMatchday].formRating5 *
+      100
+    ).toFixed(2)}%
   {:else}
     None
   {/if}
 </div>
 
 <style>
-.current-form {
-  font-size: 1.8rem;
-  margin: 20px 10px;
-}
+  .current-form {
+    font-size: 1.8rem;
+    margin: 20px 10px;
+  }
+  .current-form-row {
+    font-size: 0.9em;
+    display: flex;
+    width: min(80%, 600px);
+    width: 100%;
+  }
+
+  .icon {
+    position: relative;
+    width: 20%;
+    height: 0;
+    padding-bottom: 20%;
+    margin: 0 5px;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .icon-name {
+    position: relative;
+    width: 20%;
+    margin: 0 5px;
+  }
+
+  .pos-4 {
+    /* Most recent game */
+    opacity: 100%;
+  }
+
+  .pos-3 {
+    opacity: 90%;
+  }
+
+  .pos-2 {
+    opacity: 80%;
+  }
+
+  .pos-1 {
+    opacity: 70%;
+  }
+
+  .pos-0 {
+    /* Least recent game */
+    opacity: 50%;
+  }
 </style>

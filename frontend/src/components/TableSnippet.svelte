@@ -116,7 +116,10 @@
           <div class="table-element table-position">
             {row.position}
           </div>
-          <a href="/{row.name.toLowerCase().replace(/ /g, '-')}" class="table-element table-team-name">
+          <a
+            href="/{row.name.toLowerCase().replace(/ /g, '-')}"
+            class="table-element table-team-name"
+          >
             {row.name}
           </a>
           <div class="table-element table-gd">
@@ -135,61 +138,57 @@
 </div>
 
 <style scoped>
-.table-snippet {
-  position: relative;
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: auto;
-}
+  .table-snippet {
+    position: relative;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+  }
 
-.table-row {
-  display: flex;
-  padding: 5px 5%;
-  border-radius: var(--border-radius);
-}
+  .table-row {
+    display: flex;
+    padding: 5px 5%;
+    border-radius: var(--border-radius);
+  }
 
-.table-row.this-team {
-  padding: 13px 5%;
-  font-size: 20px;
-}
+  .table-row.this-team {
+    padding: 13px 5%;
+    font-size: 20px;
+  }
 
-.this-team {
-  font-size: 1.1em !important;
-}
+  .this-team {
+    font-size: 1.1em !important;
+  }
 
-#divider {
-  align-self: center;
-  border-bottom: 1px solid grey;
-  width: 90%;
-  margin: auto;
-}
+  #divider {
+    align-self: center;
+    border-bottom: 1px solid grey;
+    width: 90%;
+    margin: auto;
+  }
 
-.column-title {
-  font-weight: 700;
-}
+  .column-title {
+    font-weight: 700;
+  }
 
-/* .table-element {
-  font-size: 1.1rem;
-} */
+  .table-position {
+    width: 7%;
+  }
 
-.table-position {
-  width: 7%;
-}
+  .table-team-name {
+    width: 63%;
+    text-align: left;
+    margin-left: 3px;
+    color: #333333;
+  }
 
-.table-team-name {
-  width: 63%;
-  text-align: left;
-  margin-left: 3px;
-  color: #333333;
-}
+  .table-gd {
+    width: 15%;
+  }
 
-.table-gd {
-  width: 15%;
-}
-
-.table-points {
-  width: 15%;
-}
+  .table-points {
+    width: 15%;
+  }
 </style>

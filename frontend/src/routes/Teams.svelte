@@ -37,27 +37,27 @@
   }
 
   let teams = [
-    'Manchester City',
-    'Liverpool',
-    'Chelsea',
-    'Tottenham Hotspur',
-    'Arsenal',
-    'Manchester United',
-    'West Ham United',
-    'Leicester City',
-    'Brighton and Hove Albion',
-    'Wolverhampton Wanderers',
-    'Newcastle United',
-    'Crystal Palace',
-    'Brentford',
-    'Aston Villa',
-    'Southampton',
-    'Everton',
-    'Leeds United',
-    'Fulham',
-    'Bournemouth',
-    'Nottingham Forest'
-  ]
+    "Manchester City",
+    "Liverpool",
+    "Chelsea",
+    "Tottenham Hotspur",
+    "Arsenal",
+    "Manchester United",
+    "West Ham United",
+    "Leicester City",
+    "Brighton and Hove Albion",
+    "Wolverhampton Wanderers",
+    "Newcastle United",
+    "Crystal Palace",
+    "Brentford",
+    "Aston Villa",
+    "Southampton",
+    "Everton",
+    "Leeds United",
+    "Fulham",
+    "Bournemouth",
+    "Nottingham Forest",
+  ];
 
   onMount(() => {
     window.addEventListener("resize", setBorderRadius, true);
@@ -66,7 +66,7 @@
     return () => {
       // Called when component is destroyed
       window.removeEventListener("resize", setBorderRadius, true);
-    }
+    };
   });
 </script>
 
@@ -87,46 +87,50 @@
         <Link
           to="/{team.toLowerCase().replace(/ /g, '-')}"
           class="team-button"
-          id="team-{i+1}"
-          style="background-color: var(--{team.toLowerCase().replace(/ /g, '-')});"
+          id="team-{i + 1}"
+          style="background-color: var(--{team
+            .toLowerCase()
+            .replace(/ /g, '-')});"
         >
-          <div class="main-link" style="color: var(--{team.toLowerCase().replace(/ /g, '-')}-secondary);">
+          <div
+            class="main-link"
+            style="color: var(--{team
+              .toLowerCase()
+              .replace(/ /g, '-')}-secondary);"
+          >
             {team}
           </div>
         </Link>
       {/each}
-  </div>
-</Router>
+    </div>
+  </div></Router
+>
 
 <style scoped>
-
-
-.teams {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  width: 80%;
-  margin: 8px auto;
-  box-shadow: 0 0 0.5em 0.1em rgba(0, 0, 0, 0.2);
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-@media only screen and (max-width: 1250px) {
   .teams {
-    width: 90%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 80%;
+    margin: 8px auto;
+    box-shadow: 0 0 0.5em 0.1em rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.1);
   }
-}
 
-@media only screen and (max-width: 1100px) {
-  .teams {
-    grid-template-columns: repeat(2, 1fr);
+  @media only screen and (max-width: 1250px) {
+    .teams {
+      width: 90%;
+    }
   }
-}
 
-@media only screen and (max-width: 500px) {
-  .teams {
-    grid-template-columns: repeat(1, 1fr);
+  @media only screen and (max-width: 1100px) {
+    .teams {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
-}
 
-
+  @media only screen and (max-width: 500px) {
+    .teams {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
 </style>
