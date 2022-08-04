@@ -30,13 +30,16 @@
           </div>
         </a>
       {:else}
-        <!-- <a href="/{_team.toLowerCase().replace(/ /g, '-')}" class="team-link"> -->
-          <button class="team-link" on:click="{() => {switchTeam(_team.toLowerCase().replace(/ /g, '-'))}}">
-            <div class="team-name">
-              {getAlias(_team)}
-            </div>
-          </button>
-        <!-- </a> -->
+        <button
+          class="team-link"
+          on:click={() => {
+            switchTeam(_team.toLowerCase().replace(/ /g, "-"));
+          }}
+        >
+          <div class="team-name">
+            {getAlias(_team)}
+          </div>
+        </button>
       {/if}
     {/each}
   </div>
