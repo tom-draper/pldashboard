@@ -9,19 +9,18 @@
 </script>
 
 <nav>
-  <div class="nav-title">Other teams</div>
+  <div class="nav-title">Other Teams</div>
   <div class="team-links">
     {#each teams as _team}
       {#if _team.toLowerCase().replace(/ /g, "-") != team}
-        <div
-          class="team-link-container"
+        <a
+          href="/{_team.toLowerCase().replace(/ /g, '-')}"
           style="color: var(--{_team
             .toLowerCase()
             .replace(/ /g, '-')}-secondary);
               background-color: var(--{_team.toLowerCase().replace(/ /g, '-')})"
+          class="team-link">{getAlias(_team)}</a
         >
-          <a href="/{_team}" class="team-link">{getAlias(_team)}</a>
-        </div>
       {/if}
     {/each}
   </div>
@@ -31,15 +30,11 @@
   .nav-title {
     font-size: 1.4em;
     margin-bottom: 0.8em;
+    font-weight: bold;
   }
   nav {
     display: none;
     margin: 40px 8%;
-  }
-  .team-link-container {
-    padding: 0.2em 0;
-    margin: 0 auto;
-    width: 100%;
   }
   .team-links {
     display: grid;
@@ -47,6 +42,7 @@
   .team-link {
     color: inherit;
     background: inherit;
+    padding: 0.4em;
   }
 
   @media only screen and (max-width: 1300px) {
