@@ -16,7 +16,7 @@
   let oppTeam;
   $: fullTeamName && setOppTeam();
 
-  export let data, fullTeamName, currentMatchday, showBadge;
+  export let data, fullTeamName, currentMatchday, showBadge, getAlias;
 </script>
 
 <div
@@ -101,11 +101,11 @@
       {#each data.upcoming[fullTeamName].prevMatches as prevMatch}
         <div class="next-game-item {prevMatch.result}">
           <div class="past-result">
-            <div class="home-team">{prevMatch.homeTeam}</div>
+            <div class="home-team">{getAlias(prevMatch.homeTeam)}</div>
             <div class="score">
               {prevMatch.homeGoals} - {prevMatch.awayGoals}
             </div>
-            <div class="away-team">{prevMatch.awayTeam}</div>
+            <div class="away-team">{getAlias(prevMatch.awayTeam)}</div>
           </div>
           <div style="clear: both" />
           <div class="past-result-date">

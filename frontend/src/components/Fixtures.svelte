@@ -145,7 +145,7 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
+        margin: { r: 20, l: 50, t: 5, b: 40, pad: 5 },
         hovermode: "closest",
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",

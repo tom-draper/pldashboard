@@ -194,10 +194,10 @@
           <div class="row multi-element-row">
             <div class="row-left form-details">
               <CurrentForm {data} {currentMatchday} {fullTeamName} />
-              <TableSnippet {data} {team} {fullTeamName} />
+              <TableSnippet {data} {team} {fullTeamName} {getAlias} />
             </div>
             <div class="row-right">
-              <NextGame {data} {currentMatchday} {fullTeamName} {showBadge} />
+              <NextGame {data} {currentMatchday} {fullTeamName} {showBadge} {getAlias} />
             </div>
           </div>
 
@@ -255,7 +255,7 @@
             </div>
           </div>
 
-          <MobileViewNav {team} {teams} {alias} />
+          <MobileViewNav {team} {teams} {getAlias} {switchTeam} />
 
           <TeamsFooter lastUpdated={data.lastUpdated} />
         </div>
@@ -422,7 +422,7 @@
       transform: scale(0.9);
     }
     .position-central {
-      font-size: 24vw;
+      font-size: 20vw;
     }
   }
   @media only screen and (max-width: 1600px) {
@@ -436,6 +436,9 @@
   @media only screen and (max-width: 1500px) {
     .circles-background {
       transform: scale(0.8);
+    }
+    .position-central {
+      font-size: 22vw;
     }
   }
   @media only screen and (max-width: 1400px) {
@@ -452,6 +455,9 @@
     }
     #dashboard {
       margin-left: 0;
+    }
+    .position-central {
+      font-size: 24vw;
     }
   }
 

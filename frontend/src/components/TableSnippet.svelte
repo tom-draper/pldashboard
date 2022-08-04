@@ -51,7 +51,7 @@
   let tableSnippet;
   $: fullTeamName && buildTableSnippet()
 
-  export let data, team, fullTeamName;
+  export let data, team, fullTeamName, getAlias;
 </script>
 
 <div class="table-snippet">
@@ -91,7 +91,7 @@
             class="table-element table-team-name this-team"
             style="color: var(--{team}-secondary);"
           >
-            {row.name}
+            {getAlias(row.name)}
           </a>
           <div
             class="table-element table-gd this-team"
@@ -116,7 +116,7 @@
             href="/{row.name.toLowerCase().replace(/ /g, '-')}"
             class="table-element table-team-name"
           >
-            {row.name}
+            {getAlias(row.name)}
           </a>
           <div class="table-element table-gd">
             {row.gd}
@@ -176,7 +176,7 @@
   .table-team-name {
     width: 63%;
     text-align: left;
-    margin-left: 3px;
+    margin-left: 8px;
     color: #333333;
   }
 
