@@ -178,12 +178,13 @@
   .next-game-prediction {
     /* margin: 0 20px 0 0; */
     border-radius: var(--border-radius);
+    min-height: 97.5%;
   }
 
   .next-game-values {
     display: flex;
-    margin-right: 5%;
-    min-height: 390px;
+    margin: 8% 5% 0 0;
+    /* min-height: 390px; */
   }
 
   .next-game-position {
@@ -275,6 +276,9 @@
     .next-game-prediction {
       margin: 50px 20px 0;
     }
+    .next-game-values {
+      margin: 5% 8% 5% 0;
+    }
   }
   
   @media only screen and (max-width: 800px) {
@@ -306,12 +310,17 @@
       text-align: left;
     }
   }
+  @media only screen and (max-width: 700px) {
+    .next-game-prediction {
+      margin: 40px 20px;
+    }
+  }
   @media only screen and (max-width: 550px) {
     .next-game-values {
       margin: 20px 10px;
     }
     .next-game-prediction {
-      margin: 40px 10px;
+      margin: 40px 15px;
     }
   }
 </style>
