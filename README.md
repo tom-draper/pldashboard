@@ -1,8 +1,10 @@
-# Premier League Statistics Dashboard
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/41476809/182866599-641fc504-e87a-4647-a716-d2ab8ed9fc03.png" width="830" />
+</p>
 
-A football dashboard to show the recent performance of each Premier League team, including interactive visualisations, key metrics and predictions.
+A Premier League statistics dashboard highlighting recent performance of each team. Includes interactive visualisations, carefully chosen metrics and score predictions for upcoming games.
 
-Created with Svelte, Flask, Plotly, Pandas and the football-data.org API for the football data. 
+Built with Svelte, Flask, Plotly, Pandas MongoDB and the football-data.org API for the football data. 
 
 Hosted at: https://pldashboard.com
 
