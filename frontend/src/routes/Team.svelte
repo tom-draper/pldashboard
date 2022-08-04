@@ -382,7 +382,7 @@
     display: flex;
     flex-direction: column;
     padding-right: auto;
-    margin-right: 20px;
+    margin-right: 2vw;
     text-justify: center;
     flex: 4;
   }
