@@ -23,8 +23,8 @@
   function getTableSnippet(data, fullTeamName) {
     let sortedTeams = Object.keys(data.standings).sort(function (teamA, teamB) {
       return (
-        data.standings[teamA][data.currentSeason].position -
-        data.standings[teamB][data.currentSeason].position
+        data.standings[teamA][data._id].position -
+        data.standings[teamB][data._id].position
       );
     });
 
@@ -38,9 +38,9 @@
       }
       rows.push({
         name: sortedTeams[i],
-        position: data.standings[sortedTeams[i]][data.currentSeason].position,
-        points: data.standings[sortedTeams[i]][data.currentSeason].points,
-        gd: data.standings[sortedTeams[i]][data.currentSeason].gD,
+        position: data.standings[sortedTeams[i]][data._id].position,
+        points: data.standings[sortedTeams[i]][data._id].points,
+        gd: data.standings[sortedTeams[i]][data._id].gD,
       });
     }
 

@@ -222,12 +222,12 @@
     let maxCleanSheets = Number.NEGATIVE_INFINITY;
     for (let teamName of data.teamNames) {
       let nCleanSheets = formCleanSheets(
-        data.form[data.currentSeason],
+        data.form[data._id],
         teamName
       );
-      if (teamName in data.form[data.currentSeason - 1]) {
+      if (teamName in data.form[data._id - 1]) {
         nCleanSheets += formCleanSheets(
-          data.form[data.currentSeason - 1],
+          data.form[data._id - 1],
           teamName
         );
       }
@@ -271,10 +271,10 @@
     let consistency = {};
     let maxConsistency = Number.NEGATIVE_INFINITY;
     for (let teamName of data.teamNames) {
-      let backToBack = formConsistency(data.form[data.currentSeason], teamName);
-      if (teamName in data.form[data.currentSeason - 1]) {
+      let backToBack = formConsistency(data.form[data._id], teamName);
+      if (teamName in data.form[data._id - 1]) {
         backToBack += formConsistency(
-          data.form[data.currentSeason - 1],
+          data.form[data._id - 1],
           teamName
         );
       }
@@ -315,9 +315,9 @@
     let winStreaks = {};
     let maxWinStreaks = Number.NEGATIVE_INFINITY;
     for (let teamName of data.teamNames) {
-      let winStreak = formWinStreak(data.form[data.currentSeason], teamName);
-      if (teamName in data.form[data.currentSeason - 1]) {
-        winStreak += formWinStreak(data.form[data.currentSeason - 1], teamName);
+      let winStreak = formWinStreak(data.form[data._id], teamName);
+      if (teamName in data.form[data._id - 1]) {
+        winStreak += formWinStreak(data.form[data._id - 1], teamName);
       }
 
       if (winStreak > maxWinStreaks) {
@@ -369,13 +369,13 @@
       big6 = removeItem(big6, teamName);
 
       let winsVsBig6 = formWinsVsBig6(
-        data.form[data.currentSeason],
+        data.form[data._id],
         teamName,
         big6
       );
-      if (teamName in data.form[data.currentSeason - 1]) {
+      if (teamName in data.form[data._id - 1]) {
         winsVsBig6 += formWinsVsBig6(
-          data.form[data.currentSeason - 1],
+          data.form[data._id - 1],
           teamName,
           big6
         );

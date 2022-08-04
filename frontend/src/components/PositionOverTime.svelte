@@ -2,11 +2,11 @@
   import { onMount } from "svelte";
 
   function getLine(data, x, teamName, isMainTeam) {
-    let matchdays = Object.keys(data.form[data.currentSeason][teamName]);
+    let matchdays = Object.keys(data.form[data._id][teamName]);
 
     let y = [];
     for (let matchday of matchdays) {
-      let position = data.form[data.currentSeason][teamName][matchday].position;
+      let position = data.form[data._id][teamName][matchday].position;
       y.push(position);
     }
 
@@ -37,7 +37,7 @@
   }
 
   function getMatchdayDates(data, teamName) {
-    let matchdays = Object.keys(data.form[data.currentSeason][teamName]);
+    let matchdays = Object.keys(data.form[data._id][teamName]);
 
     // If played one or no games, take x-axis from whole season dates
     if (matchdays.length <= 1) {

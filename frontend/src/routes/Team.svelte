@@ -58,13 +58,13 @@
   }
 
   function getCurrentMatchday(data, fullTeamName) {
-    if (Object.keys(data.form[data.currentSeason][fullTeamName]).length == 0) {
+    if (Object.keys(data.form[data._id][fullTeamName]).length == 0) {
       return null; // Season has not started yet
     }
-    return Object.keys(data.form[data.currentSeason][fullTeamName]).reduce(
+    return Object.keys(data.form[data._id][fullTeamName]).reduce(
       (a, b) =>
-        data.form[data.currentSeason][fullTeamName][a] >
-        data.form[data.currentSeason][fullTeamName][b]
+        data.form[data._id][fullTeamName][a] >
+        data.form[data._id][fullTeamName][b]
           ? a
           : b
     );
@@ -131,7 +131,7 @@
                 style="background-image: url('{data.logoURLs[fullTeamName]}')"
               >
                 <div class="position">
-                  {data.standings[fullTeamName][data.currentSeason].position}
+                  {data.standings[fullTeamName][data._id].position}
                 </div>
               </div>
             {:else}
@@ -162,7 +162,7 @@
                   </svg>
                 </div>
                 <div class="position-central">
-                  {data.standings[fullTeamName][data.currentSeason].position}
+                  {data.standings[fullTeamName][data._id].position}
                 </div>
               </div>
             {/if}

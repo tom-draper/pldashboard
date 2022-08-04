@@ -6,12 +6,12 @@
   function avgGoalFrequencies(data) {
     let goalFreq = {};
     for (let team of data.teamNames) {
-      for (let matchday of Object.keys(data.form[data.currentSeason][team])) {
-        let score = data.form[data.currentSeason][team][matchday].score;
+      for (let matchday of Object.keys(data.form[data._id][team])) {
+        let score = data.form[data._id][team][matchday].score;
         if (score != null) {
           let [h, _, a] = score.split(" ");
           // Also collect opposition goals scored
-          if (data.form[data.currentSeason][team][matchday].atHome) {
+          if (data.form[data._id][team][matchday].atHome) {
             if (h in goalFreq) {
               goalFreq[h] += 1;
             } else {
@@ -37,11 +37,11 @@
 
   function teamScoredFrequencies(data, team) {
     let goalFreq = {};
-    for (let matchday of Object.keys(data.form[data.currentSeason][team])) {
-      let score = data.form[data.currentSeason][team][matchday].score;
+    for (let matchday of Object.keys(data.form[data._id][team])) {
+      let score = data.form[data._id][team][matchday].score;
       if (score != null) {
         let [h, _, a] = score.split(" ");
-        if (data.form[data.currentSeason][team][matchday].atHome) {
+        if (data.form[data._id][team][matchday].atHome) {
           if (h in goalFreq) {
             goalFreq[h] += 1;
           } else {
@@ -62,11 +62,11 @@
 
   function teamConcededFrequencies(data, team) {
     let goalFreq = {};
-    for (let matchday of Object.keys(data.form[data.currentSeason][team])) {
-      let score = data.form[data.currentSeason][team][matchday].score;
+    for (let matchday of Object.keys(data.form[data._id][team])) {
+      let score = data.form[data._id][team][matchday].score;
       if (score != null) {
         let [h, _, a] = score.split(" ");
-        if (data.form[data.currentSeason][team][matchday].atHome) {
+        if (data.form[data._id][team][matchday].atHome) {
           if (a in goalFreq) {
             goalFreq[a] += 1;
           } else {

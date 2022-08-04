@@ -54,14 +54,14 @@
       <div class="predictions">
         <div class="next-game-item">
           <div class="next-game-position">
-            {ordinal(data.standings[data.upcoming[fullTeamName].nextTeam][data.currentSeason].position)}
+            {ordinal(data.standings[data.upcoming[fullTeamName].nextTeam][data._id].position)}
           </div>
         </div>
         <div class="next-game-item">
           Current form:
           {#if currentMatchday != null}
             <b
-              >{data.form[data.currentSeason][data.upcoming[fullTeamName].nextTeam][currentMatchday]
+              >{data.form[data._id][data.upcoming[fullTeamName].nextTeam][currentMatchday]
                 .formRating5}%</b
             >
           {:else}
