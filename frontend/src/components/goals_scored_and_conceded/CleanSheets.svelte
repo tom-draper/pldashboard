@@ -50,14 +50,14 @@
     return x;
   }
 
-  function getGraphData(data, fullTeamName) {
+  function buildPlotData(data, fullTeamName) {
     let x = getMatchdayDates(data);
 
     let matchdays = Object.keys(data.form[data._id][fullTeamName]);
 
     let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, fullTeamName);
 
-    let graphData = {
+    let plotData = {
       data: [
         {
           name: "Clean sheets",
@@ -125,20 +125,34 @@
         displayModeBar: false,
       },
     };
-    return graphData;
+    return plotData;
   }
 
-  let plotDiv;
-  let graphData;
+  let plotDiv, plotData;
+  let setup = false;
   onMount(() => {
-    graphData = getGraphData(data, fullTeamName);
-    let Plot = new Plotly.newPlot(
-      plotDiv,
-      graphData.data,
-      graphData.layout,
-      graphData.config
-    );
+    genPlot();
+    setup = true;
   });
+
+  function genPlot() {
+    plotData = buildPlotData(data, fullTeamName);
+    new Plotly.newPlot(
+      plotDiv,
+      plotData.data,
+      plotData.layout,
+      plotData.config
+    );
+  }
+
+  function refreshPlot() {
+    let newPlotData = buildPlotData(data, fullTeamName);
+    plotData.data[0] = newPlotData.data[0];
+    plotData.data[1] = newPlotData.data[1];
+    Plotly.redraw(plotDiv);
+  }
+
+  $: fullTeamName && setup && refreshPlot();
 
   export let data, fullTeamName;
 </script>

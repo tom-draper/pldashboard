@@ -1,18 +1,11 @@
 <script>
-  function getAlias(team) {
-    if (team in alias) {
-      return alias[team];
-    }
-    return team;
-  }
-
   function closeNavBar() {
     document.getElementById("navBar").style.display = "none";
     document.getElementById("dashboard").style.marginLeft = 0;
     window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
   }
 
-  export let team, teams, alias;
+  export let team, teams, getAlias, switchTeam;
 </script>
 
 <nav>
@@ -37,11 +30,13 @@
           </div>
         </a>
       {:else}
-        <a href="/{_team.toLowerCase().replace(/ /g, '-')}" class="team-link">
-          <div class="team-name">
-            {getAlias(_team)}
-          </div>
-        </a>
+        <!-- <a href="/{_team.toLowerCase().replace(/ /g, '-')}" class="team-link"> -->
+          <button class="team-link" on:click="{() => {switchTeam(_team.toLowerCase().replace(/ /g, '-'))}}">
+            <div class="team-name">
+              {getAlias(_team)}
+            </div>
+          </button>
+        <!-- </a> -->
       {/if}
     {/each}
   </div>
@@ -70,6 +65,17 @@
   .team-links {
     font-size: 1em;
     color: white;
+    display: grid;
+  }
+  button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    text-align: left;
   }
   /* .all-teams, */
   .this-team-name,

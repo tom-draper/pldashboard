@@ -1,6 +1,4 @@
 <script>
-  import { onMount } from "svelte";
-
   function tableSnippetRange(sortedTeams, fullTeamName) {
     let teamStandingsIdx = sortedTeams.indexOf(fullTeamName);
 
@@ -20,7 +18,7 @@
     return [low, high];
   }
 
-  function getTableSnippet(data, fullTeamName) {
+  function buildTableSnippet() {
     let sortedTeams = Object.keys(data.standings).sort(function (teamA, teamB) {
       return (
         data.standings[teamA][data._id].position -
@@ -44,16 +42,14 @@
       });
     }
 
-    return {
+    tableSnippet = {
       teamTableIdx: teamTableIdx,
       rows: rows,
     };
   }
 
   let tableSnippet;
-  onMount(() => {
-    tableSnippet = getTableSnippet(data, fullTeamName);
-  });
+  $: fullTeamName && buildTableSnippet()
 
   export let data, team, fullTeamName;
 </script>

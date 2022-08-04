@@ -1,20 +1,20 @@
 <script>
-  import { onMount } from "svelte";
-
   function ordinal(n) {
     let ord = [, "st", "nd", "rd"];
     let a = n % 100;
     return n + (ord[a > 20 ? a % 10 : a] || "th");
   }
-  
-  let oppTeam;
-  onMount(() => {
+
+  function setOppTeam() {
     if (data.upcoming[fullTeamName].nextTeam != null) {
       oppTeam = data.upcoming[fullTeamName].nextTeam
         .toLowerCase()
         .replace(/ /g, "-");
     }
-  });
+  }
+  
+  let oppTeam;
+  $: fullTeamName && setOppTeam();
 
   export let data, fullTeamName, currentMatchday, showBadge;
 </script>

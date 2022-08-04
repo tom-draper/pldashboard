@@ -98,12 +98,12 @@
 <div class="two-graphs">
   <div class="graph freq-graph mini-graph">
     {#if teamScoredFreq != undefined}
-      <GoalsScoredFreq {goalFreq} {teamScoredFreq} />
+      <GoalsScoredFreq {goalFreq} {teamScoredFreq} {fullTeamName} />
     {/if}
   </div>
   <div class="graph freq-graph mini-graphh">
     {#if teamConcededFreq != undefined}
-      <GoalsConcededFreq {goalFreq} {teamConcededFreq} />
+      <GoalsConcededFreq {goalFreq} {teamConcededFreq} {fullTeamName} />
     {/if}
   </div>
 </div>

@@ -24,6 +24,13 @@
     "Brighton and Hove Albion": "Brighton",
   };
 
+  function getAlias(team) {
+    if (team in alias) {
+      return alias[team];
+    }
+    return team;
+  }
+
   let teams = [
     "Manchester City",
     "Liverpool",
@@ -61,12 +68,11 @@
     if (Object.keys(data.form[data._id][fullTeamName]).length == 0) {
       return null; // Season has not started yet
     }
-    return Object.keys(data.form[data._id][fullTeamName]).reduce(
-      (a, b) =>
-        data.form[data._id][fullTeamName][a] >
-        data.form[data._id][fullTeamName][b]
-          ? a
-          : b
+    return Object.keys(data.form[data._id][fullTeamName]).reduce((a, b) =>
+      data.form[data._id][fullTeamName][a] >
+      data.form[data._id][fullTeamName][b]
+        ? a
+        : b
     );
   }
 
@@ -81,11 +87,7 @@
     return json;
   }
 
-  const showBadge = false;
-  let fullTeamName = "";
-  let currentMatchday;
-  let data;
-  onMount(() => {
+  function initDashboard() {
     fullTeamName = toTitleCase(team.replace(/\-/g, " "));
     // fetchData("http://127.0.0.1:5000/api/teams")
     fetchData("https://pldashboard.herokuapp.com/api/teams")
@@ -98,6 +100,21 @@
       .then(() => {
         window.dispatchEvent(new Event("resize"));
       });
+  }
+
+  function switchTeam(newTeam) {
+    team = newTeam;
+    fullTeamName = toTitleCase(team.replace(/\-/g, " "));
+    currentMatchday = getCurrentMatchday(data, fullTeamName);
+    window.history.pushState(null,null,team); // Change current url without reloading
+  }
+
+  const showBadge = false;
+  let fullTeamName = "";
+  let currentMatchday;
+  let data;
+  onMount(() => {
+    initDashboard();
   });
 
   export let team;
@@ -111,7 +128,7 @@
 <Router>
   <div id="team">
     <div id="navBar">
-      <NavBar {team} {teams} {alias} />
+      <NavBar {team} {teams} {getAlias} {switchTeam} />
     </div>
     <div id="dashboard">
       <div class="header" style="background-color: var(--{team});">
@@ -233,7 +250,7 @@
           <div class="row">
             <div class="spider-chart-row row-graph">
               <div class="spider-chart-container">
-                <Spider {data} {fullTeamName} />
+                <Spider {data} {fullTeamName} {getAlias} />
               </div>
             </div>
           </div>

@@ -1,10 +1,10 @@
 <script>
   import { onMount } from "svelte";
 
-  function getGraphData() {
+  function buildPlotData() {
     let xLabels = Object.keys(goalFreq);
 
-    let graphData = {
+    let plotData = {
       data: [
         {
           x: Object.keys(goalFreq),
@@ -67,25 +67,38 @@
         displayModeBar: false,
       },
     };
-    return graphData;
+    return plotData;
   }
 
-  let plotDiv, graphData;
+  let plotDiv, plotData;
+  let setup = false;
   onMount(() => {
-    graphData = getGraphData();
-    let Plot = new Plotly.newPlot(
+    genPlot();
+    setup = true;
+  });
+  
+  function genPlot() {
+    plotData = buildPlotData();
+    new Plotly.newPlot(
       plotDiv,
-      graphData.data,
-      graphData.layout,
-      graphData.config
-    );
-    // Once plot generated, add resizable attribute to it to shorten height for mobile view
-    Plot.then((plot) => {
+      plotData.data,
+      plotData.layout,
+      plotData.config
+    ).then(plot => {
+      // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-graph");
     });
-  });
+  }
 
-  export let goalFreq, teamScoredFreq;
+  function refreshPlot() {
+    let newPlotData = buildPlotData();
+    plotData.data[1] = newPlotData.data[1];
+    Plotly.redraw(plotDiv);
+  }
+
+  $: fullTeamName && setup && refreshPlot();
+
+  export let goalFreq, teamScoredFreq, fullTeamName;
 </script>
 
 <div id="plotly">
