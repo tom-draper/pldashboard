@@ -2,6 +2,7 @@
   import { Router, Route } from "svelte-routing";
   import Teams from "./routes/Teams.svelte";
   import Team from "./routes/Team.svelte";
+  import Home from "./routes/Home.svelte";
   import Predictions from "./routes/Predictions.svelte";
 
   // Used for SSR. A falsy value is ignored by the Router.
@@ -17,4 +18,5 @@
     <Team team={params.team} />
   </Route>
   <Route path="/teams" component={Teams} />
+  <Route path="/home" component={Home} />
 </Router>
