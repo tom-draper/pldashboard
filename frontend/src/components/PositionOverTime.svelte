@@ -89,7 +89,7 @@
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
         yaxis: {
-          title: { text: "Form Rating" },
+          title: { text: "Position" },
           gridcolor: "gray",
           showgrid: false,
           showline: false,
