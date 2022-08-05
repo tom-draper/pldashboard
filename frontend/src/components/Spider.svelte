@@ -87,7 +87,6 @@
 
   function spiderBtnClick(btn) {
     let teamName = getName(btn.innerHTML);
-    console.log(teamName);
     if (btn.style.background == "") {
       let teamKey = teamName.toLowerCase().replace(/ /g, "-");
       btn.style.background = `var(--${teamKey})`;
