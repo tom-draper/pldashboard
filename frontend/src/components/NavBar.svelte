@@ -9,7 +9,11 @@
 </script>
 
 <nav>
-  <div class="title no-selection">pldashboard</div>
+  <div class="title no-selection">
+    <p>
+      <span style="color: #00fe87">pl</span>dashboard
+    </p>
+  </div>
   <div class="team-links">
     <!-- <a href="/all-teams">
     <div class="all-teams">
@@ -54,11 +58,9 @@
   .title {
     color: white;
     font-size: 1.6em;
-    /* padding: 1.5em 0.1em; */
     height: 102px;
     display: grid;
     place-items: center;
-    /* text-align: center; */
   }
   .no-selection {
     user-select: none;
@@ -85,6 +87,8 @@
   .team-name {
     padding: 0.4em 1em;
     color: #c600d8;
+    /* color: #fcdbff; */
+    /* color: #00fe87; */
   }
   :hover.team-name {
     background: #2c002f;
@@ -97,22 +101,16 @@
     width: 220px;
     height: 100vh;
     background: #37003c;
+    background: #38003d;
   }
   .close-btn {
     position: absolute;
     right: 0.9em;
     bottom: 0.6em;
-    /* background: #c600d8 !important; */
-    background: #37003c;
-    /* color: #c600d8 !important; */
+    background: transparent;
     border: none;
     outline: none;
     padding-top: 0.3em;
     cursor: pointer;
   }
-  /* .close-icon {
-    width: 25px;
-    height: 25px;
-    color: red;
-  } */
 </style>
