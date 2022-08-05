@@ -91,12 +91,14 @@
   }
   
   function refreshPlot() {
-    let newPlotData = buildPlotData();
-    plotData.data[1] = newPlotData.data[1];
-    Plotly.redraw(plotDiv);
+    if (setup) {
+      let newPlotData = buildPlotData();
+      plotData.data[1] = newPlotData.data[1];
+      Plotly.redraw(plotDiv);
+    }
   }
 
-  $: fullTeamName && setup && refreshPlot();
+  $: fullTeamName && refreshPlot();
 
   export let goalFreq, teamConcededFreq, fullTeamName;
 </script>

@@ -137,14 +137,16 @@
   }
 
   function refreshPlot() {
-    let newPlotData = buildPlotData(data, fullTeamName);
-    for (let i = 0; i < 20; i++) {
-      plotData.data[i] = newPlotData.data[i];
+    if (setup) {
+      let newPlotData = buildPlotData(data, fullTeamName);
+      for (let i = 0; i < 20; i++) {
+        plotData.data[i] = newPlotData.data[i];
+      }
+      Plotly.redraw(plotDiv);
     }
-    Plotly.redraw(plotDiv);
   }
 
-  $: fullTeamName && setup && refreshPlot();
+  $: fullTeamName && refreshPlot();
 
   export let data, fullTeamName;
 </script>

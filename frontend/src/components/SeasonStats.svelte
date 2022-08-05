@@ -44,14 +44,16 @@
   }
 
   function setStatsValues() {
-    rank = getStatsRankings(data, fullTeamName);
-  
-    // Keep ordinal values at the correct offset
-    window.addEventListener("resize", setPositionalOffset);
-    // Once rank values have updated, init positional offset for ordinal values
-    setTimeout(function () {
-      setPositionalOffset();
-    }, 0);
+    if (setup) {
+      rank = getStatsRankings(data, fullTeamName);
+    
+      // Keep ordinal values at the correct offset
+      window.addEventListener("resize", setPositionalOffset);
+      // Once rank values have updated, init positional offset for ordinal values
+      setTimeout(function () {
+        setPositionalOffset();
+      }, 0);
+    }
   }
 
   let ssp1, ssp2, ssp3;
@@ -66,7 +68,7 @@
     setup = true;
   })
 
-  $: fullTeamName && setup && setStatsValues();
+  $: fullTeamName && setStatsValues();
 
   export let data, fullTeamName;
 </script>
