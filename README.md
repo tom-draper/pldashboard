@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/41476809/182866599-641fc504-e87a-4647-a716-d2ab8ed9fc03.png" width="830" />
+  <img src="https://user-images.githubusercontent.com/41476809/183070998-3ff2c5ea-fba7-4d31-8db6-6e1aa1fed611.png" width="830" />
 </p>
 
 A Premier League statistics dashboard highlighting recent performance of each team. Includes interactive visualisations, carefully chosen metrics and score predictions for upcoming games.
