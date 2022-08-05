@@ -1492,7 +1492,11 @@ const NextGameStats = create_ssr_component(($$result, $$props, $$bindings, slots
 	if ($$props.fullTeamName === void 0 && $$bindings.fullTeamName && fullTeamName !== void 0) $$bindings.fullTeamName(fullTeamName);
 	if ($$props.currentMatchday === void 0 && $$bindings.currentMatchday && currentMatchday !== void 0) $$bindings.currentMatchday(currentMatchday);
 
+<<<<<<< HEAD
 	return `<div class="${"next-game-prediction row-graph"}" style="${"border: 6px solid var(--" + escape(data.upcoming[fullTeamName].nextTeam.toLowerCase().replace(/ /g, '-'), true) + ");"}"><div class="${"next-game-title"}" style="${"background-color: var(--" + escape(data.upcoming[fullTeamName].nextTeam.toLowerCase().replace(/ /g, '-'), true) + ");"}"><h1 class="${"next-game-title-text"}" style="${"color: var(--" + escape(data.upcoming[fullTeamName].nextTeam.toLowerCase().replace(/ /g, '-'), true) + "-secondary);"}">Next Game: ${validate_component(Link, "Link").$$render(
+=======
+	return `<div class="${"next-game-prediction row-graph"}" style="${"border: 6px solid var(--" + escape(data.upcoming[fullTeamName].nextTeam.toLowerCase().replace(/ /g, '-'), true) + ");"}"><div class="${"next-game-title"}" style="${"background-color: var(--" + escape(data.upcoming[fullTeamName].nextTeam.toLowerCase().replace(/ /g, '-'), true) + ");"}"><h1 class="${"next-game-title-text"}" style="${"color: var(--" + escape(data.upcoming[fullTeamName].nextTeam.toLowerCase().replace(/ /g, '-'), true) + "-secondary);"}">Next Game: ${validate_component(Link, "Link").$$render(
+>>>>>>> main
 		$$result,
 		{
 			to: "/" + data.upcoming[fullTeamName].nextTeam.toLowerCase().replace(/ /g, '-'),
@@ -3458,4 +3462,8 @@ const App = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 	})}`;
 });
 
+<<<<<<< HEAD
 module.exports = App;
+=======
+module.exports = App;
+>>>>>>> main
