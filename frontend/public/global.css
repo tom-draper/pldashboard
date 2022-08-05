@@ -420,7 +420,7 @@ h1 {
   }
 
   .title {
-    font-size: 2.2em !important;
+    font-size: 1.8em !important;
   }
 
   .main-link {
@@ -468,11 +468,7 @@ h1 {
     font-size: 18px;
   }
 
-  .score,
-  .home-team,
-  .away-team {
-    font-size: 0.85em;
-  }
+
 
   .past-result-date {
     font-size: 11px;

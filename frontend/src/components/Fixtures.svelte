@@ -74,7 +74,7 @@
 
     let now = Date.now();
 
-    let sizes = Array(x.length).fill(14);
+    let sizes = Array(x.length).fill(13);
     sizes = increaseNextGameMarker(sizes, x, now, 26);
 
     let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);

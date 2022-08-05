@@ -317,6 +317,9 @@
     text-align: center;
   }
 
+  .accuracy-display {
+    text-align: center;
+  }
   .accuracy {
     margin-bottom: 30px;
   }

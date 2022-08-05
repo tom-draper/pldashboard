@@ -12,17 +12,14 @@
         .replace(/ /g, "-");
     }
   }
-  
+
   let oppTeam;
   $: fullTeamName && setOppTeam();
 
   export let data, fullTeamName, currentMatchday, showBadge, getAlias;
 </script>
 
-<div
-  class="next-game-prediction"
-  style="border: 6px solid var(--{oppTeam});"
->
+<div class="next-game-prediction" style="border: 6px solid var(--{oppTeam});">
   <div class="next-game-title" style="background-color: var(--{oppTeam});">
     <h1 class="next-game-title-text" style="color: var(--{oppTeam}-secondary);">
       Next Game:&nbsp
@@ -30,12 +27,9 @@
         href="/{data.upcoming[fullTeamName].nextTeam
           .toLowerCase()
           .replace(/ /g, '-')}"
-        style="color: inherit"
-        >{data.upcoming[fullTeamName].nextTeam}&nbsp</a
+        style="color: inherit">{data.upcoming[fullTeamName].nextTeam}&nbsp</a
       >
-      ({data.upcoming[fullTeamName].atHome
-        ? "Home"
-        : "Away"})
+      ({data.upcoming[fullTeamName].atHome ? "Home" : "Away"})
     </h1>
   </div>
 
@@ -54,15 +48,19 @@
       <div class="predictions">
         <div class="next-game-item">
           <div class="next-game-position">
-            {ordinal(data.standings[data.upcoming[fullTeamName].nextTeam][data._id].position)}
+            {ordinal(
+              data.standings[data.upcoming[fullTeamName].nextTeam][data._id]
+                .position
+            )}
           </div>
         </div>
         <div class="next-game-item">
           Current form:
           {#if currentMatchday != null}
             <b
-              >{data.form[data._id][data.upcoming[fullTeamName].nextTeam][currentMatchday]
-                .formRating5}%</b
+              >{data.form[data._id][data.upcoming[fullTeamName].nextTeam][
+                currentMatchday
+              ].formRating5}%</b
             >
           {:else}
             None
@@ -92,7 +90,9 @@
     </div>
     <div class="past-results">
       {#if data.upcoming[fullTeamName].prevMatches.length == 0}
-        <div class="next-game-item prev-results-title no-prev-results">No Previous Results</div>
+        <div class="next-game-item prev-results-title no-prev-results">
+          No Previous Results
+        </div>
       {:else}
         <div class="next-game-item prev-results-title">Previous Results</div>
       {/if}
@@ -199,7 +199,7 @@
   }
 
   .drew {
-    background-color: rgb(255, 207, 139)
+    background-color: rgb(255, 207, 139);
   }
 
   .won {
@@ -280,7 +280,7 @@
       margin: 5% 8% 5% 0;
     }
   }
-  
+
   @media only screen and (max-width: 800px) {
     .next-game-prediction {
       margin: 50px 75px 0;
@@ -318,9 +318,14 @@
   @media only screen and (max-width: 550px) {
     .next-game-values {
       margin: 20px 10px;
+      font-size: 0.85em;
     }
     .next-game-prediction {
       margin: 40px 15px;
     }
+    /* .score,
+    .home-team,
+    .away-team {
+    } */
   }
 </style>
