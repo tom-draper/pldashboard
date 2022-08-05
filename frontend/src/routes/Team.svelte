@@ -31,6 +31,13 @@
     return team;
   }
 
+  function getName(teamAlias) {
+    if (!Object.values(alias).includes(teamAlias)) {
+      return teamAlias;
+    }
+    return Object.keys(alias).find(key => alias[key] === teamAlias);
+  }
+
   let teams = [
     "Manchester City",
     "Liverpool",
@@ -134,7 +141,7 @@
       <div class="header" style="background-color: var(--{team});">
         <a class="main-link no-decoration" href="/{team}">
           <div class="title" style="color: var(--{team + '-secondary'});">
-            {fullTeamName}
+            {getAlias(fullTeamName)}
           </div>
         </a>
       </div>
@@ -250,7 +257,7 @@
           <div class="row">
             <div class="spider-chart-row row-graph">
               <div class="spider-chart-container">
-                <Spider {data} {fullTeamName} {getAlias} />
+                <Spider {data} {fullTeamName} {getAlias} {getName} />
               </div>
             </div>
           </div>
@@ -337,7 +344,7 @@
     transform: scale(0.95);
   }
   .position-central {
-    font-size: 23vw;
+    font-size: 20vw;
     margin: auto;
   }
 
