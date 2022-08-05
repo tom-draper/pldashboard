@@ -190,9 +190,11 @@
   }
   
   function refreshPlot() {
-    let newPlotData = buildPlotData(data, fullTeamName);
-    plotData.data[0] = newPlotData.data[0];  // Overwrite plot data
-    Plotly.redraw(plotDiv)
+    if (setup) {
+      let newPlotData = buildPlotData(data, fullTeamName);
+      plotData.data[0] = newPlotData.data[0];  // Overwrite plot data
+      Plotly.redraw(plotDiv)
+    }
   }
   
   let plotDiv, plotData;
@@ -202,7 +204,7 @@
     setup = true;
   });
 
-  $: fullTeamName && setup && refreshPlot()
+  $: fullTeamName && refreshPlot()
 
   export let data, fullTeamName;
 </script>

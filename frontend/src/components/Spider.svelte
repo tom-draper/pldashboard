@@ -50,10 +50,10 @@
     if (comparisonTeams.length == 1) {
       addAvg(plotData.data);
     }
-    
+
     Plotly.redraw(plotDiv); // Redraw with teamName removed
   }
-  
+
   function removeAllTeamComparisons() {
     for (let i = 0; i < comparisonTeams.length; i++) {
       // Remove spider plot for this teamName
@@ -63,20 +63,20 @@
           break;
         }
       }
-    
+
       // If removing only comparison teamName, re-insert the initial avg spider plot
       if (comparisonTeams.length == 1) {
         addAvg(plotData.data);
       }
       removeItem(comparisonTeams, comparisonTeams[i]); // Remove from comparison teams
     }
-    
+
     Plotly.redraw(plotDiv); // Redraw with teamName removed
   }
 
   function resetTeamComparisonBtns() {
-    let btns = document.getElementById('spider-opp-teams');
-    for (let i = 0; i < btns.children.length; i ++) {
+    let btns = document.getElementById("spider-opp-teams");
+    for (let i = 0; i < btns.children.length; i++) {
       let btn = btns.children[i];
       if (btn.style.background != "") {
         btn.style.background = "";
@@ -435,10 +435,8 @@
     );
   }
 
-  function initSpiderPlots(teamName) {
+  function getTeamData(teamName) {
     let teamColor = getTeamColor(teamName);
-
-    let avgData = avgScatterPlot();
     let teamData = scatterPlot(
       teamName,
       [
@@ -451,6 +449,12 @@
       ],
       teamColor
     );
+    return teamData;
+  }
+
+  function initSpiderPlots(teamName) {
+    let avgData = avgScatterPlot();
+    let teamData = getTeamData(teamName);
 
     return [avgData, teamData];
   }
@@ -511,7 +515,7 @@
     genPlot();
     setup = true;
   });
-
+  
   function genPlot() {
     plotData = buildPlotData(data, fullTeamName);
     new Plotly.newPlot(
@@ -519,7 +523,7 @@
       plotData.data,
       plotData.layout,
       plotData.config
-    ).then((plot) => {
+    ).then(plot => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-spider-chart");
     });
@@ -533,26 +537,28 @@
       .children[18].classList.add("bottom-spider-opp-team-btn");
   }
 
-  function refreshPlot() {
-    // let spiderPlots = initSpiderPlots(fullTeamName);
-
-    // // console.log(spiderPlots);
-    // // console.log('here', plotData);
-    // while (plotData.data.length > 0) {
-    //   plotData.data.pop();
-    // }
-    // plotData.data.push(spiderPlots[0]); // Overwrite avg
-    // plotData.data.push(spiderPlots[1]); // Overwrite team data
-    
-    // removeAllTeamComparisons(fullTeamName);
-
-    // Plotly.redraw(plotDiv);
-      removeAllTeamComparisons();
-      resetTeamComparisonBtns();
-      genPlot();
+  function emptyArray(arr) {
+    let length = arr.length;
+    for (let i = 0; i < length; i++) {
+      arr.pop();
+    }
   }
 
-  $: fullTeamName && setup && refreshPlot();
+  function refreshPlot() {
+    if (setup) {
+      let spiderPlots = initSpiderPlots(fullTeamName);
+      // Remove all but two plots
+      emptyArray(plotData.data);
+      // Replace final two plots with defaults
+      plotData.data.push(spiderPlots[0])  // Reset to avg
+      plotData.data.push(spiderPlots[1])  // Reset to team data
+  
+      removeAllTeamComparisons();
+      resetTeamComparisonBtns();
+    }
+  }
+
+  $: fullTeamName && refreshPlot();
 
   export let data, fullTeamName, getAlias, getName;
 </script>

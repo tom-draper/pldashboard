@@ -4968,7 +4968,7 @@
     			append_hydration(div1, t1);
     			append_hydration(div1, div0);
     			append_hydration(div0, t2);
-    			/*div0_binding*/ ctx[7](div0);
+    			/*div0_binding*/ ctx[6](div0);
     			append_hydration(div3, t3);
     			append_hydration(div3, div2);
     			append_hydration(div2, t4);
@@ -4979,7 +4979,7 @@
     			append_hydration(div5, t7);
     			append_hydration(div5, div4);
     			append_hydration(div4, t8);
-    			/*div4_binding*/ ctx[8](div4);
+    			/*div4_binding*/ ctx[7](div4);
     			append_hydration(div7, t9);
     			append_hydration(div7, div6);
     			append_hydration(div6, t10);
@@ -4990,7 +4990,7 @@
     			append_hydration(div9, t13);
     			append_hydration(div9, div8);
     			append_hydration(div8, t14);
-    			/*div8_binding*/ ctx[9](div8);
+    			/*div8_binding*/ ctx[8](div8);
     			append_hydration(div11, t15);
     			append_hydration(div11, div10);
     			append_hydration(div10, t16);
@@ -5021,9 +5021,9 @@
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div12);
-    			/*div0_binding*/ ctx[7](null);
-    			/*div4_binding*/ ctx[8](null);
-    			/*div8_binding*/ ctx[9](null);
+    			/*div0_binding*/ ctx[6](null);
+    			/*div4_binding*/ ctx[7](null);
+    			/*div8_binding*/ ctx[8](null);
     		}
     	};
     }
@@ -5071,18 +5071,20 @@
     	}
 
     	function setStatsValues() {
-    		$$invalidate(5, rank = getStatsRankings(data, fullTeamName));
+    		if (setup) {
+    			$$invalidate(5, rank = getStatsRankings(data, fullTeamName));
 
-    		// Keep ordinal values at the correct offset
-    		window.addEventListener("resize", setPositionalOffset);
+    			// Keep ordinal values at the correct offset
+    			window.addEventListener("resize", setPositionalOffset);
 
-    		// Once rank values have updated, init positional offset for ordinal values
-    		setTimeout(
-    			function () {
-    				setPositionalOffset();
-    			},
-    			0
-    		);
+    			// Once rank values have updated, init positional offset for ordinal values
+    			setTimeout(
+    				function () {
+    					setPositionalOffset();
+    				},
+    				0
+    			);
+    		}
     	}
 
     	let ssp1, ssp2, ssp3;
@@ -5091,7 +5093,7 @@
 
     	onMount(() => {
     		setStatsValues();
-    		$$invalidate(6, setup = true);
+    		setup = true;
     	});
 
     	let { data, fullTeamName } = $$props;
@@ -5123,8 +5125,8 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName, setup*/ 66) {
-    			fullTeamName && setup && setStatsValues();
+    		if ($$self.$$.dirty & /*fullTeamName*/ 2) {
+    			fullTeamName && setStatsValues();
     		}
     	};
 
@@ -5135,7 +5137,6 @@
     		ssp2,
     		ssp3,
     		rank,
-    		setup,
     		div0_binding,
     		div4_binding,
     		div8_binding
@@ -5456,14 +5457,14 @@
     		m(target, anchor) {
     			insert_hydration(target, div1, anchor);
     			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[4](div0);
+    			/*div0_binding*/ ctx[3](div0);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div1);
-    			/*div0_binding*/ ctx[4](null);
+    			/*div0_binding*/ ctx[3](null);
     		}
     	};
     }
@@ -5649,9 +5650,11 @@
     	}
 
     	function refreshPlot() {
-    		let newPlotData = buildPlotData$4(data, fullTeamName);
-    		plotData.data[0] = newPlotData.data[0]; // Overwrite plot data
-    		Plotly.redraw(plotDiv);
+    		if (setup) {
+    			let newPlotData = buildPlotData$4(data, fullTeamName);
+    			plotData.data[0] = newPlotData.data[0]; // Overwrite plot data
+    			Plotly.redraw(plotDiv);
+    		}
     	}
 
     	let plotDiv, plotData;
@@ -5659,7 +5662,7 @@
 
     	onMount(() => {
     		genPlot();
-    		$$invalidate(3, setup = true);
+    		setup = true;
     	});
 
     	let { data, fullTeamName } = $$props;
@@ -5677,12 +5680,12 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName, setup*/ 12) {
-    			fullTeamName && setup && refreshPlot();
+    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
+    			fullTeamName && refreshPlot();
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, setup, div0_binding];
+    	return [plotDiv, data, fullTeamName, div0_binding];
     }
 
     class Fixtures extends SvelteComponent {
@@ -5720,14 +5723,14 @@
     		m(target, anchor) {
     			insert_hydration(target, div1, anchor);
     			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[4](div0);
+    			/*div0_binding*/ ctx[3](div0);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div1);
-    			/*div0_binding*/ ctx[4](null);
+    			/*div0_binding*/ ctx[3](null);
     		}
     	};
     }
@@ -5862,7 +5865,7 @@
 
     	onMount(() => {
     		genPlot();
-    		$$invalidate(3, setup = true);
+    		setup = true;
     	});
 
     	function genPlot() {
@@ -5875,13 +5878,15 @@
     	}
 
     	function refreshPlot() {
-    		let newPlotData = buildPlotData$3(data, fullTeamName);
+    		if (setup) {
+    			let newPlotData = buildPlotData$3(data, fullTeamName);
 
-    		for (let i = 0; i < 20; i++) {
-    			plotData.data[i] = newPlotData.data[i];
+    			for (let i = 0; i < 20; i++) {
+    				plotData.data[i] = newPlotData.data[i];
+    			}
+
+    			Plotly.redraw(plotDiv);
     		}
-
-    		Plotly.redraw(plotDiv);
     	}
 
     	let { data, fullTeamName } = $$props;
@@ -5899,12 +5904,12 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName, setup*/ 12) {
-    			fullTeamName && setup && refreshPlot();
+    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
+    			fullTeamName && refreshPlot();
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, setup, div0_binding];
+    	return [plotDiv, data, fullTeamName, div0_binding];
     }
 
     class FormOverTime extends SvelteComponent {
@@ -5942,14 +5947,14 @@
     		m(target, anchor) {
     			insert_hydration(target, div1, anchor);
     			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[4](div0);
+    			/*div0_binding*/ ctx[3](div0);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div1);
-    			/*div0_binding*/ ctx[4](null);
+    			/*div0_binding*/ ctx[3](null);
     		}
     	};
     }
@@ -6119,7 +6124,7 @@
 
     	onMount(() => {
     		genPlot();
-    		$$invalidate(3, setup = true);
+    		setup = true;
     	});
 
     	function genPlot() {
@@ -6132,13 +6137,15 @@
     	}
 
     	function refreshPlot() {
-    		let newPlotData = buildPlotData$2(data, fullTeamName);
+    		if (setup) {
+    			let newPlotData = buildPlotData$2(data, fullTeamName);
 
-    		for (let i = 0; i < 20; i++) {
-    			plotData.data[i] = newPlotData.data[i];
+    			for (let i = 0; i < 20; i++) {
+    				plotData.data[i] = newPlotData.data[i];
+    			}
+
+    			Plotly.redraw(plotDiv);
     		}
-
-    		Plotly.redraw(plotDiv);
     	}
 
     	let { data, fullTeamName } = $$props;
@@ -6156,12 +6163,12 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName, setup*/ 12) {
-    			fullTeamName && setup && refreshPlot();
+    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
+    			fullTeamName && refreshPlot();
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, setup, div0_binding];
+    	return [plotDiv, data, fullTeamName, div0_binding];
     }
 
     class PositionOverTime extends SvelteComponent {
@@ -6199,14 +6206,14 @@
     		m(target, anchor) {
     			insert_hydration(target, div1, anchor);
     			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[4](div0);
+    			/*div0_binding*/ ctx[3](div0);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div1);
-    			/*div0_binding*/ ctx[4](null);
+    			/*div0_binding*/ ctx[3](null);
     		}
     	};
     }
@@ -6361,7 +6368,7 @@
 
     	onMount(() => {
     		genPlot();
-    		$$invalidate(3, setup = true);
+    		setup = true;
     	});
 
     	function genPlot() {
@@ -6374,10 +6381,12 @@
     	}
 
     	function refreshPlot() {
-    		let newPlotData = buildPlotData$1(data, fullTeamName);
-    		plotData.data[0] = newPlotData.data[0];
-    		plotData.data[1] = newPlotData.data[1];
-    		Plotly.redraw(plotDiv);
+    		if (setup) {
+    			let newPlotData = buildPlotData$1(data, fullTeamName);
+    			plotData.data[0] = newPlotData.data[0];
+    			plotData.data[1] = newPlotData.data[1];
+    			Plotly.redraw(plotDiv);
+    		}
     	}
 
     	let { data, fullTeamName } = $$props;
@@ -6395,12 +6404,12 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName, setup*/ 12) {
-    			fullTeamName && setup && refreshPlot();
+    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
+    			fullTeamName && refreshPlot();
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, setup, div0_binding];
+    	return [plotDiv, data, fullTeamName, div0_binding];
     }
 
     class GoalsScoredAndConceded extends SvelteComponent {
@@ -6438,14 +6447,14 @@
     		m(target, anchor) {
     			insert_hydration(target, div1, anchor);
     			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[4](div0);
+    			/*div0_binding*/ ctx[3](div0);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div1);
-    			/*div0_binding*/ ctx[4](null);
+    			/*div0_binding*/ ctx[3](null);
     		}
     	};
     }
@@ -6587,7 +6596,7 @@
 
     	onMount(() => {
     		genPlot();
-    		$$invalidate(3, setup = true);
+    		setup = true;
     	});
 
     	function genPlot() {
@@ -6596,10 +6605,12 @@
     	}
 
     	function refreshPlot() {
-    		let newPlotData = buildPlotData(data, fullTeamName);
-    		plotData.data[0] = newPlotData.data[0];
-    		plotData.data[1] = newPlotData.data[1];
-    		Plotly.redraw(plotDiv);
+    		if (setup) {
+    			let newPlotData = buildPlotData(data, fullTeamName);
+    			plotData.data[0] = newPlotData.data[0];
+    			plotData.data[1] = newPlotData.data[1];
+    			Plotly.redraw(plotDiv);
+    		}
     	}
 
     	let { data, fullTeamName } = $$props;
@@ -6617,12 +6628,12 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName, setup*/ 12) {
-    			fullTeamName && setup && refreshPlot();
+    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
+    			fullTeamName && refreshPlot();
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, setup, div0_binding];
+    	return [plotDiv, data, fullTeamName, div0_binding];
     }
 
     class CleanSheets extends SvelteComponent {
@@ -6660,14 +6671,14 @@
     		m(target, anchor) {
     			insert_hydration(target, div1, anchor);
     			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[5](div0);
+    			/*div0_binding*/ ctx[4](div0);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div1);
-    			/*div0_binding*/ ctx[5](null);
+    			/*div0_binding*/ ctx[4](null);
     		}
     	};
     }
@@ -6744,7 +6755,7 @@
 
     	onMount(() => {
     		genPlot();
-    		$$invalidate(4, setup = true);
+    		setup = true;
     	});
 
     	function genPlot() {
@@ -6757,9 +6768,11 @@
     	}
 
     	function refreshPlot() {
-    		let newPlotData = buildPlotData();
-    		plotData.data[1] = newPlotData.data[1];
-    		Plotly.redraw(plotDiv);
+    		if (setup) {
+    			let newPlotData = buildPlotData();
+    			plotData.data[1] = newPlotData.data[1];
+    			Plotly.redraw(plotDiv);
+    		}
     	}
 
     	let { goalFreq, teamScoredFreq, fullTeamName } = $$props;
@@ -6778,12 +6791,12 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName, setup*/ 24) {
-    			fullTeamName && setup && refreshPlot();
+    		if ($$self.$$.dirty & /*fullTeamName*/ 8) {
+    			fullTeamName && refreshPlot();
     		}
     	};
 
-    	return [plotDiv, goalFreq, teamScoredFreq, fullTeamName, setup, div0_binding];
+    	return [plotDiv, goalFreq, teamScoredFreq, fullTeamName, div0_binding];
     }
 
     class GoalsScoredFreq extends SvelteComponent {
@@ -6826,14 +6839,14 @@
     		m(target, anchor) {
     			insert_hydration(target, div1, anchor);
     			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[5](div0);
+    			/*div0_binding*/ ctx[4](div0);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div1);
-    			/*div0_binding*/ ctx[5](null);
+    			/*div0_binding*/ ctx[4](null);
     		}
     	};
     }
@@ -6910,7 +6923,7 @@
 
     	onMount(() => {
     		genPlot();
-    		$$invalidate(4, setup = true);
+    		setup = true;
     	});
 
     	function genPlot() {
@@ -6923,9 +6936,11 @@
     	}
 
     	function refreshPlot() {
-    		let newPlotData = buildPlotData();
-    		plotData.data[1] = newPlotData.data[1];
-    		Plotly.redraw(plotDiv);
+    		if (setup) {
+    			let newPlotData = buildPlotData();
+    			plotData.data[1] = newPlotData.data[1];
+    			Plotly.redraw(plotDiv);
+    		}
     	}
 
     	let { goalFreq, teamConcededFreq, fullTeamName } = $$props;
@@ -6944,12 +6959,12 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName, setup*/ 24) {
-    			fullTeamName && setup && refreshPlot();
+    		if ($$self.$$.dirty & /*fullTeamName*/ 8) {
+    			fullTeamName && refreshPlot();
     		}
     	};
 
-    	return [plotDiv, goalFreq, teamConcededFreq, fullTeamName, setup, div0_binding];
+    	return [plotDiv, goalFreq, teamConcededFreq, fullTeamName, div0_binding];
     }
 
     class GoalsConcededFreq extends SvelteComponent {
@@ -7293,14 +7308,14 @@
 
     function get_each_context$3(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[29] = list[i];
+    	child_ctx[30] = list[i];
     	return child_ctx;
     }
 
-    // (570:6) {#if teamName != fullTeamName}
+    // (576:6) {#if teamName != fullTeamName}
     function create_if_block$4(ctx) {
     	let button;
-    	let t_value = /*getAlias*/ ctx[2](/*teamName*/ ctx[29]) + "";
+    	let t_value = /*getAlias*/ ctx[2](/*teamName*/ ctx[30]) + "";
     	let t;
     	let mounted;
     	let dispose;
@@ -7326,12 +7341,12 @@
     			append_hydration(button, t);
 
     			if (!mounted) {
-    				dispose = listen(button, "click", /*click_handler*/ ctx[8]);
+    				dispose = listen(button, "click", /*click_handler*/ ctx[7]);
     				mounted = true;
     			}
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*getAlias, data*/ 5 && t_value !== (t_value = /*getAlias*/ ctx[2](/*teamName*/ ctx[29]) + "")) set_data(t, t_value);
+    			if (dirty[0] & /*getAlias, data*/ 5 && t_value !== (t_value = /*getAlias*/ ctx[2](/*teamName*/ ctx[30]) + "")) set_data(t, t_value);
     		},
     		d(detaching) {
     			if (detaching) detach(button);
@@ -7341,10 +7356,10 @@
     	};
     }
 
-    // (569:4) {#each data.teamNames as teamName}
+    // (575:4) {#each data.teamNames as teamName}
     function create_each_block$3(ctx) {
     	let if_block_anchor;
-    	let if_block = /*teamName*/ ctx[29] != /*fullTeamName*/ ctx[1] && create_if_block$4(ctx);
+    	let if_block = /*teamName*/ ctx[30] != /*fullTeamName*/ ctx[1] && create_if_block$4(ctx);
 
     	return {
     		c() {
@@ -7360,7 +7375,7 @@
     			insert_hydration(target, if_block_anchor, anchor);
     		},
     		p(ctx, dirty) {
-    			if (/*teamName*/ ctx[29] != /*fullTeamName*/ ctx[1]) {
+    			if (/*teamName*/ ctx[30] != /*fullTeamName*/ ctx[1]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
@@ -7445,7 +7460,7 @@
     			insert_hydration(target, div2, anchor);
     			append_hydration(div2, div1);
     			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[7](div0);
+    			/*div0_binding*/ ctx[6](div0);
     			insert_hydration(target, t, anchor);
     			insert_hydration(target, div4, anchor);
     			append_hydration(div4, div3);
@@ -7482,7 +7497,7 @@
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div2);
-    			/*div0_binding*/ ctx[7](null);
+    			/*div0_binding*/ ctx[6](null);
     			if (detaching) detach(t);
     			if (detaching) detach(div4);
     			destroy_each(each_blocks, detaching);
@@ -7498,7 +7513,7 @@
     }
 
     function resetTeamComparisonBtns() {
-    	let btns = document.getElementById('spider-opp-teams');
+    	let btns = document.getElementById("spider-opp-teams");
 
     	for (let i = 0; i < btns.children.length; i++) {
     		let btn = btns.children[i];
@@ -7850,6 +7865,14 @@
     	return vsBig6;
     }
 
+    function emptyArray(arr) {
+    	let length = arr.length;
+
+    	for (let i = 0; i < length; i++) {
+    		arr.pop();
+    	}
+    }
+
     function instance$5($$self, $$props, $$invalidate) {
     	function addTeamComparison(teamName) {
     		let teamColor = getTeamColor(teamName);
@@ -7970,9 +7993,8 @@
     		);
     	}
 
-    	function initSpiderPlots(teamName) {
+    	function getTeamData(teamName) {
     		let teamColor = getTeamColor(teamName);
-    		let avgData = avgScatterPlot();
 
     		let teamData = scatterPlot(
     			teamName,
@@ -7987,6 +8009,12 @@
     			teamColor
     		);
 
+    		return teamData;
+    	}
+
+    	function initSpiderPlots(teamName) {
+    		let avgData = avgScatterPlot();
+    		let teamData = getTeamData(teamName);
     		return [avgData, teamData];
     	}
 
@@ -8034,7 +8062,7 @@
 
     	onMount(() => {
     		genPlot();
-    		$$invalidate(6, setup = true);
+    		setup = true;
     	});
 
     	function genPlot() {
@@ -8052,20 +8080,19 @@
     	}
 
     	function refreshPlot() {
-    		// let spiderPlots = initSpiderPlots(fullTeamName);
-    		// // console.log(spiderPlots);
-    		// // console.log('here', plotData);
-    		// while (plotData.data.length > 0) {
-    		//   plotData.data.pop();
-    		// }
-    		// plotData.data.push(spiderPlots[0]); // Overwrite avg
-    		// plotData.data.push(spiderPlots[1]); // Overwrite team data
-    		// removeAllTeamComparisons(fullTeamName);
-    		// Plotly.redraw(plotDiv);
-    		removeAllTeamComparisons();
+    		if (setup) {
+    			let spiderPlots = initSpiderPlots(fullTeamName);
 
-    		resetTeamComparisonBtns();
-    		genPlot();
+    			// Remove all but two plots
+    			emptyArray(plotData.data);
+
+    			// Replace final two plots with defaults
+    			plotData.data.push(spiderPlots[0]); // Reset to avg
+
+    			plotData.data.push(spiderPlots[1]); // Reset to team data
+    			removeAllTeamComparisons();
+    			resetTeamComparisonBtns();
+    		}
     	}
 
     	let { data, fullTeamName, getAlias, getName } = $$props;
@@ -8089,8 +8116,8 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[0] & /*fullTeamName, setup*/ 66) {
-    			fullTeamName && setup && refreshPlot();
+    		if ($$self.$$.dirty[0] & /*fullTeamName*/ 2) {
+    			fullTeamName && refreshPlot();
     		}
     	};
 
@@ -8101,7 +8128,6 @@
     		plotDiv,
     		spiderBtnClick,
     		getName,
-    		setup,
     		div0_binding,
     		click_handler
     	];
