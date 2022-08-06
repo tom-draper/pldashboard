@@ -505,7 +505,7 @@
     "Clean Sheets",
     "Consistency",
     "Win Streak",
-    "vs Big 6",
+    "Vs Big 6",
   ];
 
   let plotDiv, plotData;

@@ -2767,7 +2767,7 @@
     	};
     }
 
-    // (150:2) {:else}
+    // (140:2) {:else}
     function create_else_block$7(ctx) {
     	let t;
 
@@ -2788,7 +2788,7 @@
     	};
     }
 
-    // (146:2) {#if currentMatchday != null}
+    // (136:2) {#if currentMatchday != null}
     function create_if_block$a(ctx) {
     	let t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*fullTeamName*/ ctx[2]][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "";
     	let t0;
@@ -8165,7 +8165,7 @@
     	}
 
     	let attack, defence, cleanSheets, consistency, winStreaks, vsBig6;
-    	let labels = ["Attack", "Defence", "Clean Sheets", "Consistency", "Win Streak", "vs Big 6"];
+    	let labels = ["Attack", "Defence", "Clean Sheets", "Consistency", "Win Streak", "Vs Big 6"];
     	let plotDiv, plotData;
     	let comparisonTeams = [];
     	let setup = false;

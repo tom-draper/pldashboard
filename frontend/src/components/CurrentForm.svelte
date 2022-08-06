@@ -124,21 +124,11 @@
     <div class="icon pos-4 {formIcons[4]} {formStarTeams[4]}" />
   </div>
   <div class="current-form-row">
-    <div class="icon-name pos-0">
-      {formInitials[0]}
-    </div>
-    <div class="icon-name pos-1">
-      {formInitials[1]}
-    </div>
-    <div class="icon-name pos-2">
-      {formInitials[2]}
-    </div>
-    <div class="icon-name pos-3">
-      {formInitials[3]}
-    </div>
-    <div class="icon-name pos-4">
-      {formInitials[4]}
-    </div>
+    <div class="icon-name pos-0">{formInitials[0]}</div>
+    <div class="icon-name pos-1">{formInitials[1]}</div>
+    <div class="icon-name pos-2">{formInitials[2]}</div>
+    <div class="icon-name pos-3">{formInitials[3]}</div>
+    <div class="icon-name pos-4">{formInitials[4]}</div>
   </div>
 {/if}
 <div class="current-form">
