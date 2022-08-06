@@ -65,7 +65,7 @@
   {/if}
 </nav>
 
-<style scoped>
+<!--<style scoped>
   .nav-title {
     font-size: 1.4em;
     margin-bottom: 0.8em;
@@ -131,4 +131,4 @@
       border-radius: 0 0 6px 6px;
     }
   }
-</style>
+</style>-->

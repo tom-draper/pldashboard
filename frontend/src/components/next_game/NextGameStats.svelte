@@ -121,7 +121,7 @@
   </div>
 </div>
 
-<style scoped>
+<!--<style scoped>
   .next-game-title {
     width: max-content;
     padding: 6px 20px;
@@ -337,4 +337,4 @@
     .away-team {
     } */
   }
-</style>
+</style>-->

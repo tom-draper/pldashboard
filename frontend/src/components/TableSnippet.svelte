@@ -133,7 +133,7 @@
   {/if}
 </div>
 
-<style scoped>
+<!--<style scoped>
   .table-snippet {
     position: relative;
     margin-top: 20px;
@@ -197,4 +197,4 @@
   .table-points {
     width: 15%;
   }
-</style>
+</style>-->

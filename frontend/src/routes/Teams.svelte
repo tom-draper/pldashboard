@@ -106,7 +106,7 @@
   </div></Router
 >
 
-<style scoped>
+<!--<style scoped>
   .teams {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -133,4 +133,4 @@
       grid-template-columns: repeat(1, 1fr);
     }
   }
-</style>
+</style>-->

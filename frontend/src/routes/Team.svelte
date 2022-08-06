@@ -275,7 +275,7 @@
   </div>
 </Router>
 
-<style scoped>
+<!--<style scoped>
   .header {
     display: grid;
     place-items: center;
@@ -557,4 +557,4 @@
       margin-top: -125px;
     }
   }
-</style>
+</style>-->

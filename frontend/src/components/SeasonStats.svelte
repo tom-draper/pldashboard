@@ -119,7 +119,7 @@
   </div>
 </div>
 
-<style scoped>
+<!--<style scoped>
   #ssp1 {
     right: calc(var(--ssp1-offset) - 1.2em);
   }
@@ -274,4 +274,4 @@
       font-size: 0.7em;
     }
   }
-</style>
+</style>-->
