@@ -1,5 +1,5 @@
 
-(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35730/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 (function () {
     'use strict';
 
@@ -2767,7 +2767,7 @@
     	};
     }
 
-    // (130:2) {:else}
+    // (150:2) {:else}
     function create_else_block$7(ctx) {
     	let t;
 
@@ -2788,7 +2788,7 @@
     	};
     }
 
-    // (125:2) {#if currentMatchday != null}
+    // (146:2) {#if currentMatchday != null}
     function create_if_block$a(ctx) {
     	let t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*fullTeamName*/ ctx[2]][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "";
     	let t0;
@@ -2919,8 +2919,8 @@
     }
 
     function getSortedMatchdays(data, team) {
-    	let matchdays = Object.keys(data.form[data._id][team]).sort(function (a, b) {
-    		return new Date(data.form[data._id][team][a].date) - new Date(data.form[data._id][team][b].date);
+    	let matchdays = Object.keys(data.form[data._id][team]).sort(function (matchday1, matchday2) {
+    		return new Date(data.form[data._id][team][matchday1].date) - new Date(data.form[data._id][team][matchday2].date);
     	});
 
     	return matchdays;
@@ -2958,6 +2958,22 @@
     	return formInitials;
     }
 
+    function latestNPlayedMatchdays(data, team, matchdays, N) {
+    	let latestN = [];
+
+    	for (let i = matchdays.length - 1; i >= 0; i--) {
+    		if (data.form[data._id][team][matchdays[i]].score != null) {
+    			latestN.unshift(matchdays[i]);
+    		}
+
+    		if (latestN.length >= N) {
+    			break;
+    		}
+    	}
+
+    	return latestN;
+    }
+
     function instance$k($$self, $$props, $$invalidate) {
     	function getFormIcons(data, team) {
     		let formIcons = [];
@@ -2978,7 +2994,7 @@
 
     	function setFormValues() {
     		let sortedMatchdays = getSortedMatchdays(data, fullTeamName);
-    		let matchdays = sortedMatchdays.slice(-5);
+    		let matchdays = latestNPlayedMatchdays(data, fullTeamName, sortedMatchdays, 5);
     		$$invalidate(3, formIcons = getFormIcons(data, fullTeamName));
     		$$invalidate(4, formStarTeams = getFormStarTeams(data, fullTeamName, matchdays));
     		$$invalidate(5, formInitials = getFormInitials(data, fullTeamName, matchdays));

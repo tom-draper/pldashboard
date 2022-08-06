@@ -20,14 +20,15 @@
   }
 
   function getSortedMatchdays(data, team) {
-    let matchdays = Object.keys(data.form[data._id][team]).sort(
-      function (a, b) {
-        return (
-          new Date(data.form[data._id][team][a].date) -
-          new Date(data.form[data._id][team][b].date)
-        );
-      }
-    );
+    let matchdays = Object.keys(data.form[data._id][team]).sort(function (
+      matchday1,
+      matchday2
+    ) {
+      return (
+        new Date(data.form[data._id][team][matchday1].date) -
+        new Date(data.form[data._id][team][matchday2].date)
+      );
+    });
     return matchdays;
   }
 
@@ -35,9 +36,7 @@
     let formStarTeams = [];
     for (let matchday of matchdays) {
       formStarTeams.unshift(
-        data.form[data._id][team][matchday].beatStarTeam
-          ? "star-team"
-          : ""
+        data.form[data._id][team][matchday].beatStarTeam ? "star-team" : ""
       );
     }
 
@@ -80,10 +79,32 @@
     return formInitials;
   }
 
+  function latestNPlayedMatchdays(data, team, matchdays, N) {
+    let latestN = [];
+
+    for (let i = matchdays.length - 1; i >= 0; i--) {
+      if (data.form[data._id][team][matchdays[i]].score != null) {
+        latestN.unshift(matchdays[i]);
+      }
+      if (latestN.length >= N) {
+        break;
+      }
+    }
+
+    return latestN;
+  }
+
   let formIcons, formStarTeams, formInitials;
   function setFormValues() {
     let sortedMatchdays = getSortedMatchdays(data, fullTeamName);
-    let matchdays = sortedMatchdays.slice(-5);
+
+    let matchdays = latestNPlayedMatchdays(
+      data,
+      fullTeamName,
+      sortedMatchdays,
+      5
+    );
+
     formIcons = getFormIcons(data, fullTeamName);
     formStarTeams = getFormStarTeams(data, fullTeamName, matchdays);
     formInitials = getFormInitials(data, fullTeamName, matchdays);
@@ -124,8 +145,7 @@
   Current form:
   {#if currentMatchday != null}
     {(
-      data.form[data._id][fullTeamName][currentMatchday].formRating5 *
-      100
+      data.form[data._id][fullTeamName][currentMatchday].formRating5 * 100
     ).toFixed(1)}%
   {:else}
     None
