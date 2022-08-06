@@ -201,10 +201,10 @@
           <div class="row multi-element-row">
             <div class="row-left form-details">
               <CurrentForm {data} {currentMatchday} {fullTeamName} />
-              <TableSnippet {data} {team} {fullTeamName} {getAlias} />
+              <TableSnippet {data} {team} {fullTeamName} {getAlias} {switchTeam} />
             </div>
             <div class="row-right">
-              <NextGame {data} {currentMatchday} {fullTeamName} {showBadge} {getAlias} />
+              <NextGame {data} {currentMatchday} {fullTeamName} {showBadge} {getAlias} {switchTeam} />
             </div>
           </div>
 

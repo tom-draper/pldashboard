@@ -88,11 +88,12 @@
 </svelte:head>
 
 <Router>
+  <div id="predictions">
+
   <div class="predictions-header">
-    <Link
-      class="predictions-title main-link"
-      style="text-decoration: none"
-      to="/predictions">Predictions</Link
+    <a
+      class="predictions-title"
+      href="/predictions">Predictions</a
     >
   </div>
 
@@ -188,13 +189,26 @@
       <div class="loading-spinner" />
     </div>
   {/if}
+  </div>
 </Router>
 
-<style>
+<style scoped>
   .predictions-header {
     padding: 40px 40px 0;
     text-align: center;
   }
+
+  .predictions-title {
+    font-size: 2.6em;
+    font-weight: 800;
+    letter-spacing: -1px;
+    align-self: center;
+    flex: auto;
+    color: #333;
+    margin: 10px;
+    text-decoration: none;
+  }
+
 
   .predictions {
     display: flex;
@@ -229,6 +243,7 @@
   .date {
     width: min(90%, 300px);
     align-self: center;
+    text-align: center;
     margin-bottom: 2px;
   }
 
@@ -319,13 +334,13 @@
 
   .accuracy-display {
     text-align: center;
+    font-size: 0.85rem;
   }
   .accuracy {
-    margin-bottom: 30px;
+    margin: 1em 0 2.5em;
   }
 
   .accuracy-item {
-    font-size: 14px;
     color: rgb(120 120 120);
     margin-bottom: 5px;
   }
@@ -333,4 +348,62 @@
     margin: 20px auto 15px;
     width: 80%;
   }
+@media only screen and (max-width: 800px) {
+  .predictions-container {
+    width: 80%;
+  }
+
+  .prediction-container {
+    width: min(80%, 300px);
+  }
+
+  .prediction-time {
+    right: -28px;
+    top: calc(50% - 6px);
+  }
+
+  .prediction-value {
+    flex: 4;
+  }
+}
+
+@media only screen and (max-width: 550px) {
+  #predictions {
+    font-size: 0.9em;
+  }
+  .predictions-title {
+      font-size: 2em !important;
+    }
+    .predictions-container {
+      width: 90%;
+    }
+    .prediction-container {
+      width: 80%;
+    }
+    .accuracy-display {
+      font-size: 0.8rem;
+    }
+
+    /* .predictions {
+    font-size: 0.9em;
+  } */
+
+  /* .prev-results-title {
+    font-size: 18px;
+  } */
+  .prediction-item {
+    margin: 0 6%;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .prediction-value {
+    flex: 4.5;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .prediction-value {
+    flex: 6;
+  }
+}
 </style>

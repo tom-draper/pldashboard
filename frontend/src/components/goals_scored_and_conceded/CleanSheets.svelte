@@ -5,24 +5,27 @@
     let notCleanSheets = [];
     let cleanSheets = [];
     for (let matchday of Object.keys(data.form[data._id][team])) {
-      let [h, _, a] = data.form[data._id][team][matchday].score.split(" ");
-      h = parseInt(h);
-      a = parseInt(a);
-      if (data.form[data._id][team][matchday].atHome) {
-        if (a > 0) {
-          notCleanSheets.push(1);
-          cleanSheets.push(0);
+      let score = data.form[data._id][team][matchday].score;
+      if (score != null) {
+        let [h, _, a] = score.split(" ");
+        h = parseInt(h);
+        a = parseInt(a);
+        if (data.form[data._id][team][matchday].atHome) {
+          if (a > 0) {
+            notCleanSheets.push(1);
+            cleanSheets.push(0);
+          } else {
+            cleanSheets.push(1);
+            notCleanSheets.push(0);
+          }
         } else {
-          cleanSheets.push(1);
-          notCleanSheets.push(0);
-        }
-      } else {
-        if (h > 0) {
-          notCleanSheets.push(1);
-          cleanSheets.push(0);
-        } else {
-          cleanSheets.push(1);
-          notCleanSheets.push(0);
+          if (h > 0) {
+            notCleanSheets.push(1);
+            cleanSheets.push(0);
+          } else {
+            cleanSheets.push(1);
+            notCleanSheets.push(0);
+          }
         }
       }
     }

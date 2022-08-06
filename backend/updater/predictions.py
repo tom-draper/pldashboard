@@ -332,9 +332,9 @@ class Predictions:
         return accuracy, result_accuracy
 
     def _print_accuracy(self):
-        print(f' ℹ️ Predicting with accuracy: {round(self.accuracy["scoreAccuracy"]*100, 2)}%')
-        print(f' ℹ️ Predicting correct results with accuracy: {round(self.accuracy["resultAccuracy"]*100, 2)}%')
-        print(f' ℹ️ Net predictions: [{self._signed_float_str(self.accuracy["homeGoalsAvgDiff"])}] - [{self._signed_float_str(self.accuracy["awayGoalsAvgDiff"])}]')
+        print(f'ℹ️ Predicting with accuracy: {round(self.accuracy["scoreAccuracy"]*100, 2)}%')
+        print(f'ℹ️ Predicting correct results with accuracy: {round(self.accuracy["resultAccuracy"]*100, 2)}%')
+        print(f'ℹ️ Net predictions: [{self._signed_float_str(self.accuracy["homeGoalsAvgDiff"])}] - [{self._signed_float_str(self.accuracy["awayGoalsAvgDiff"])}]')
 
     @staticmethod
     def _signed_float_str(value: float) -> str:

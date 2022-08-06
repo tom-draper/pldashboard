@@ -1,6 +1,4 @@
 <script>
-  import { onMount } from "svelte";
-
   function toInitials(team) {
     switch (team) {
       case "Brighton and Hove Albion":
@@ -36,7 +34,7 @@
   function getFormStarTeams(data, team, matchdays) {
     let formStarTeams = [];
     for (let matchday of matchdays) {
-      formStarTeams.push(
+      formStarTeams.unshift(
         data.form[data._id][team][matchday].beatStarTeam
           ? "star-team"
           : ""
@@ -45,7 +43,7 @@
 
     // Fill in blanks
     for (let i = formStarTeams.length; i < 5; i++) {
-      formStarTeams.push("");
+      formStarTeams.unshift("");
     }
 
     return formStarTeams;
@@ -53,14 +51,13 @@
 
   function getFormIcons(data, team) {
     let formIcons = [];
-    if (data.form[data._id][team].length > 0) {
-      formIcons =
-        data.form[data._id][team][currentMatchday].form5.split("");
+    if (Object.keys(data.form[data._id][team][currentMatchday]).length > 0) {
+      formIcons = data.form[data._id][team][currentMatchday].form5.split("");
     }
 
     // Fill in blanks with None icons
     for (let i = formIcons.length; i < 5; i++) {
-      formIcons.push("N");
+      formIcons.unshift("N");
     }
 
     return formIcons;
@@ -70,14 +67,14 @@
     let formInitials = [];
 
     for (let matchday of matchdays) {
-      formInitials.push(
+      formInitials.unshift(
         toInitials(data.form[data._id][team][matchday].team)
       );
     }
 
     // Fill in blanks with None icons
     for (let i = formInitials.length; i < 5; i++) {
-      formInitials.push("");
+      formInitials.unshift("");
     }
 
     return formInitials;
@@ -129,7 +126,7 @@
     {(
       data.form[data._id][fullTeamName][currentMatchday].formRating5 *
       100
-    ).toFixed(2)}%
+    ).toFixed(1)}%
   {:else}
     None
   {/if}

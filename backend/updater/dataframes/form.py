@@ -54,11 +54,8 @@ class Form(DF):
         return matchday
 
     def _get_last_played_matchday(self, current_matchday: int, team_name: str) -> int | None:
-        if current_matchday is None:
-            return None
-        
         matchday = current_matchday
-        while self.df.at[team_name, (matchday, 'score')] is None and matchday > 0:
+        while matchday > 0 and self.df.at[team_name, (matchday, 'score')] is None:
             matchday -= 1
         return matchday
 
@@ -95,6 +92,9 @@ class Form(DF):
         return latest_teams_played
 
     def _get_form_rating(self, team_name: str, matchday: int, n_games: int) -> float:
+        if matchday < 1 or matchday > 38:
+            return 0
+        
         rating = 50.0
         if matchday is not None:
             rating = (
@@ -123,7 +123,7 @@ class Form(DF):
         return values
 
     def _get_matchday(self, n_back=0):
-        current_matchday = None
+        current_matchday = 0
         matchdays = self.df.columns.unique(level=0)
         if len(matchdays) != 0:
             current_matchday = matchdays[-(n_back+1)]

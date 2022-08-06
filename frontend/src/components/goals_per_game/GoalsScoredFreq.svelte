@@ -2,32 +2,10 @@
   import { onMount } from "svelte";
 
   function buildPlotData() {
-    let xLabels = Object.keys(goalFreq);
+    let xLabels = getXLabels();
 
     let plotData = {
-      data: [
-        {
-          x: Object.keys(goalFreq),
-          y: Object.values(goalFreq),
-          type: "bar",
-          name: "Avg",
-          marker: { color: "#C6C6C6" },
-          line: { width: 0 },
-          hovertemplate: "%{x} goals in %{y} games<extra></extra>",
-          hoverinfo: "x+y",
-        },
-        {
-          x: Object.keys(teamScoredFreq),
-          y: Object.values(teamScoredFreq),
-          type: "bar",
-          name: "Goals scored",
-          marker: { color: "#77DD77" },
-          line: { width: 0 },
-          hovertemplate: "%{x} goals in %{y} games<extra></extra>",
-          hoverinfo: "x+y",
-          opacity: 0.6,
-        },
-      ],
+      data: getScoredBars(),
       layout: {
         title: false,
         autosize: true,
@@ -44,7 +22,7 @@
           showline: false,
           zeroline: false,
           fixedrange: true,
-          rangemode: 'nonnegative'
+          rangemode: "nonnegative",
         },
         xaxis: {
           title: { text: "Goals Scored" },
@@ -76,7 +54,7 @@
     genPlot();
     setup = true;
   });
-  
+
   function genPlot() {
     plotData = buildPlotData();
     new Plotly.newPlot(
@@ -84,7 +62,7 @@
       plotData.data,
       plotData.layout,
       plotData.config
-    ).then(plot => {
+    ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-graph");
     });
@@ -92,15 +70,14 @@
 
   function refreshPlot() {
     if (setup) {
-      let newPlotData = buildPlotData();
-      plotData.data[1] = newPlotData.data[1];
+      plotData.data[1] = getScoredTeamBars(); // Update team bars
       Plotly.redraw(plotDiv);
     }
   }
 
   $: fullTeamName && refreshPlot();
 
-  export let goalFreq, teamScoredFreq, fullTeamName;
+  export let fullTeamName, getScoredBars, getScoredTeamBars, getXLabels;
 </script>
 
 <div id="plotly">

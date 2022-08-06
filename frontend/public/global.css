@@ -190,12 +190,6 @@ a {
   height: 60px;
 }
 
-.predictions-title {
-  font-size: 2.6em;
-  font-weight: 800;
-}
-
-
 .resizable-graph {
   width: 100% !important;
   height: 450px !important;
@@ -460,13 +454,6 @@ h1 {
     margin-top: 20px;
   }
 
-  .predictions {
-    font-size: 0.9em;
-  }
-
-  .prev-results-title {
-    font-size: 18px;
-  }
 
 
 
@@ -498,36 +485,7 @@ h1 {
 
 /* Mobile view */
 
-@media only screen and (max-width: 800px) {
-  .predictions-container {
-    width: 80%;
-  }
 
-  .prediction-container {
-    width: min(80%, 300px);
-  }
-
-  .prediction-time {
-    right: -28px;
-    top: calc(50% - 6px);
-  }
-
-  .prediction-value {
-    flex: 4;
-  }
-}
-
-@media only screen and (max-width: 500px) {
-  .prediction-value {
-    flex: 4.5;
-  }
-}
-
-@media only screen and (max-width: 400px) {
-  .prediction-value {
-    flex: 6;
-  }
-}
 
 /* Spinner */
 

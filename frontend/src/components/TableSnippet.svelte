@@ -51,7 +51,7 @@
   let tableSnippet;
   $: fullTeamName && buildTableSnippet()
 
-  export let data, team, fullTeamName, getAlias;
+  export let data, team, fullTeamName, getAlias, switchTeam;
 </script>
 
 <div class="table-snippet">
@@ -112,12 +112,12 @@
           <div class="table-element table-position">
             {row.position}
           </div>
-          <a
-            href="/{row.name.toLowerCase().replace(/ /g, '-')}"
+          <button
+            on:click="{() => {switchTeam(row.name.toLowerCase().replace(/ /g, '-'))}}"
             class="table-element table-team-name"
           >
             {getAlias(row.name)}
-          </a>
+          </button>
           <div class="table-element table-gd">
             {row.gd}
           </div>
@@ -171,6 +171,16 @@
 
   .table-position {
     width: 7%;
+  }
+
+  button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
   }
 
   .table-team-name {

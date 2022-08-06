@@ -2,32 +2,10 @@
   import { onMount } from "svelte";
 
   function buildPlotData() {
-    let xLabels = Object.keys(goalFreq);
+    let xLabels = getXLabels();
 
     let graphData = {
-      data: [
-        {
-          x: Object.keys(goalFreq),
-          y: Object.values(goalFreq),
-          type: "bar",
-          name: "Avg",
-          marker: { color: "#C6C6C6" },
-          line: { width: 0 },
-          hovertemplate: "%{x} goals in %{y} games<extra></extra>",
-          hoverinfo: "x+y",
-        },
-        {
-          x: Object.keys(teamConcededFreq),
-          y: Object.values(teamConcededFreq),
-          type: "bar",
-          name: "Goals conceded",
-          marker: { color: "#C23B22" },
-          line: { width: 0 },
-          hovertemplate: "%{x} goals in %{y} games<extra></extra>",
-          hoverinfo: "x+y",
-          opacity: 0.6,
-        },
-      ],
+      data: getConcededBars(),
       layout: {
         title: false,
         autosize: true,
@@ -92,15 +70,14 @@
   
   function refreshPlot() {
     if (setup) {
-      let newPlotData = buildPlotData();
-      plotData.data[1] = newPlotData.data[1];
+      plotData.data[1] = getConcededTeamBars();
       Plotly.redraw(plotDiv);
     }
   }
 
   $: fullTeamName && refreshPlot();
 
-  export let goalFreq, teamConcededFreq, fullTeamName;
+  export let fullTeamName, getConcededBars, getConcededTeamBars, getXLabels;
 </script>
 
 <div id="plotly">

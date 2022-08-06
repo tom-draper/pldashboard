@@ -16,18 +16,18 @@
   let oppTeam;
   $: fullTeamName && setOppTeam();
 
-  export let data, fullTeamName, currentMatchday, showBadge, getAlias;
+  export let data, fullTeamName, currentMatchday, showBadge, getAlias, switchTeam;
 </script>
 
 <div class="next-game-prediction" style="border: 6px solid var(--{oppTeam});">
   <div class="next-game-title" style="background-color: var(--{oppTeam});">
     <h1 class="next-game-title-text" style="color: var(--{oppTeam}-secondary);">
       Next Game:&nbsp
-      <a
-        href="/{data.upcoming[fullTeamName].nextTeam
+      <button
+        on:click="{() => {switchTeam(data.upcoming[fullTeamName].nextTeam
           .toLowerCase()
-          .replace(/ /g, '-')}"
-        style="color: inherit">{data.upcoming[fullTeamName].nextTeam}&nbsp</a
+          .replace(/ /g, '-'))}}"
+        style="color: inherit">{getAlias(data.upcoming[fullTeamName].nextTeam)}&nbsp</button
       >
       ({data.upcoming[fullTeamName].atHome ? "Home" : "Away"})
     </h1>
@@ -58,9 +58,8 @@
           Current form:
           {#if currentMatchday != null}
             <b
-              >{data.form[data._id][data.upcoming[fullTeamName].nextTeam][
-                currentMatchday
-              ].formRating5}%</b
+              >{(data.form[data._id][data.upcoming[fullTeamName].nextTeam][
+                currentMatchday].formRating5 * 100).toFixed(1)}%</b
             >
           {:else}
             None
@@ -122,7 +121,7 @@
   </div>
 </div>
 
-<style>
+<style scoped>
   .next-game-title {
     width: max-content;
     padding: 6px 20px;
@@ -156,6 +155,16 @@
     font-size: 22px;
     width: 45%;
     margin: auto;
+  }
+
+  button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
   }
 
   .predictions-link {

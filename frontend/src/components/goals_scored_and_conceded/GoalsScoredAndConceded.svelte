@@ -6,13 +6,16 @@
 
     for (let team of data.teamNames) {
       for (let matchday of Object.keys(data.form[data._id][team])) {
-        let [h, _, a] = data.form[data._id][team][matchday].score.split(" ");
-        h = parseInt(h);
-        a = parseInt(a);
-        if (matchday in avgGoals) {
-          avgGoals[matchday] += h + a;
-        } else {
-          avgGoals[matchday] = h + a;
+        let score = data.form[data._id][team][matchday].score;
+        if (score != null) {
+          let [h, _, a] = score.split(" ");
+          h = parseInt(h);
+          a = parseInt(a);
+          if (matchday in avgGoals) {
+            avgGoals[matchday] += h + a;
+          } else {
+            avgGoals[matchday] = h + a;
+          }
         }
       }
     }
@@ -29,15 +32,18 @@
     let scored = {};
     let conceded = {};
     for (let matchday of Object.keys(data.form[data._id][team])) {
-      let [h, _, a] = data.form[data._id][team][matchday].score.split(" ");
-      h = parseInt(h);
-      a = parseInt(a);
-      if (data.form[data._id][team][matchday].atHome) {
-        scored[matchday] = h;
-        conceded[matchday] = a;
-      } else {
-        scored[matchday] = a;
-        conceded[matchday] = h;
+      let score = data.form[data._id][team][matchday].score;
+      if (score != null) {
+        let [h, _, a] = score.split(" ");
+        h = parseInt(h);
+        a = parseInt(a);
+        if (data.form[data._id][team][matchday].atHome) {
+          scored[matchday] = h;
+          conceded[matchday] = a;
+        } else {
+          scored[matchday] = a;
+          conceded[matchday] = h;
+        }
       }
     }
 
