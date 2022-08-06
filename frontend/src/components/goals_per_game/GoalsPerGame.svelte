@@ -11,21 +11,25 @@
       name: "Avg",
       marker: { color: "#C6C6C6" },
       line: { width: 0 },
-      hovertemplate: "%{x} goals in %{y} games<extra></extra>",
+      hovertemplate: `Average %{x} with probability %{y:.2f}<extra></extra>`,
       hoverinfo: "x+y",
     };
   }
-
-  function teamBars(data, name, color) {
+  
+  function teamBars(data, type, color) {
+    let opener = 'Score'
+    if (type == 'conceded') {
+      opener = 'Concede'
+    }
     return {
       x: Object.keys(data),
       y: Object.values(data),
       type: "bar",
-      name: name,
+      name: `Goals ${type}`,
       marker: { color: color },
+      hovertemplate: `${opener} %{x} with probability %{y:.2f}<extra></extra>`,
       // marker: { color: color },
       line: { width: 0 },
-      hovertemplate: "%{x} goals in %{y} games<extra></extra>",
       hoverinfo: "x+y",
       opacity: 0.6,
     };
@@ -36,19 +40,21 @@
   }
 
   // Basic colour scale shared between the two bar chars
-  let colourScale = [
-"#5df455",
-"#b2d000",
-"#dfa700",
-"#f77a1c",
-"#f74d4d",
-  ];
+  let colourScale = ["#5df455", "#b2d000", "#dfa700", "#f77a1c", "#f74d4d"];
 
   // Concatenate unique extreme colours, for extreme values that only a few teams achieve
   // Concatenate bright greens
-  let scoredColourScale = reversed(colourScale).concat(['#4EF745', '#3BFA31', '#1bfd0f'])
+  let scoredColourScale = reversed(colourScale).concat([
+    "#4EF745",
+    "#3BFA31",
+    "#1bfd0f",
+  ]);
   // Concatenate bright reds
-  let concededColourScale = colourScale.concat(['#FA3E3C', '#FC2B29', '#FD0F0F'])
+  let concededColourScale = colourScale.concat([
+    "#FA3E3C",
+    "#FC2B29",
+    "#FD0F0F",
+  ]);
 
   function reversed(arr) {
     return arr.slice().reverse();
@@ -56,19 +62,19 @@
 
   function getScoredBars() {
     // return bars(teamScoredFreq, "Goals scored", "#77DD77");
-    return bars(teamScoredFreq, "Goals scored", scoredColourScale);
+    return bars(teamScoredFreq, "scored", scoredColourScale);
   }
 
   function getConcededBars() {
-    return bars(teamConcededFreq, "Goals conceded", concededColourScale);
+    return bars(teamConcededFreq, "conceded", concededColourScale);
   }
 
   function getScoredTeamBars() {
-    return teamBars(teamScoredFreq, "Goals scored", scoredColourScale);
+    return teamBars(teamScoredFreq, "scored", scoredColourScale);
   }
 
   function getConcededTeamBars() {
-    return teamBars(teamConcededFreq, "Goals conceded", concededColourScale);
+    return teamBars(teamConcededFreq, "conceded", concededColourScale);
   }
 
   function getXLabels() {

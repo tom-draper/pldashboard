@@ -1,5 +1,5 @@
 
-(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35730/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 (function () {
     'use strict';
 
@@ -7336,16 +7336,22 @@
     	};
     }
 
-    function teamBars(data, name, color) {
+    function teamBars(data, type, color) {
+    	let opener = 'Score';
+
+    	if (type == 'conceded') {
+    		opener = 'Concede';
+    	}
+
     	return {
     		x: Object.keys(data),
     		y: Object.values(data),
     		type: "bar",
-    		name,
+    		name: `Goals ${type}`,
     		marker: { color },
+    		hovertemplate: `${opener} %{x} with probability %{y:.2f}<extra></extra>`,
     		// marker: { color: color },
     		line: { width: 0 },
-    		hovertemplate: "%{x} goals in %{y} games<extra></extra>",
     		hoverinfo: "x+y",
     		opacity: 0.6
     	};
@@ -7507,7 +7513,7 @@
     			name: "Avg",
     			marker: { color: "#C6C6C6" },
     			line: { width: 0 },
-    			hovertemplate: "%{x} goals in %{y} games<extra></extra>",
+    			hovertemplate: `Average %{x} with probability %{y:.2f}<extra></extra>`,
     			hoverinfo: "x+y"
     		};
     	}
@@ -7521,26 +7527,26 @@
 
     	// Concatenate unique extreme colours, for extreme values that only a few teams achieve
     	// Concatenate bright greens
-    	let scoredColourScale = reversed(colourScale).concat(['#4EF745', '#3BFA31', '#1bfd0f']);
+    	let scoredColourScale = reversed(colourScale).concat(["#4EF745", "#3BFA31", "#1bfd0f"]);
 
     	// Concatenate bright reds
-    	let concededColourScale = colourScale.concat(['#FA3E3C', '#FC2B29', '#FD0F0F']);
+    	let concededColourScale = colourScale.concat(["#FA3E3C", "#FC2B29", "#FD0F0F"]);
 
     	function getScoredBars() {
     		// return bars(teamScoredFreq, "Goals scored", "#77DD77");
-    		return bars(teamScoredFreq, "Goals scored", scoredColourScale);
+    		return bars(teamScoredFreq, "scored", scoredColourScale);
     	}
 
     	function getConcededBars() {
-    		return bars(teamConcededFreq, "Goals conceded", concededColourScale);
+    		return bars(teamConcededFreq, "conceded", concededColourScale);
     	}
 
     	function getScoredTeamBars() {
-    		return teamBars(teamScoredFreq, "Goals scored", scoredColourScale);
+    		return teamBars(teamScoredFreq, "scored", scoredColourScale);
     	}
 
     	function getConcededTeamBars() {
-    		return teamBars(teamConcededFreq, "Goals conceded", concededColourScale);
+    		return teamBars(teamConcededFreq, "conceded", concededColourScale);
     	}
 
     	function getXLabels() {
