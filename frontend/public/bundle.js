@@ -5558,43 +5558,8 @@
     	return sizes;
     }
 
-    function buildPlotData$4(data, fullTeamName) {
-    	// Build data to create a fixtures line graph displaying the date along the
-    	// x-axis and opponent strength along the y-axis
-    	let x = [];
-
-    	let y = [];
-    	let details = [];
-
-    	for (let matchday = 1; matchday <= 38; matchday++) {
-    		let match = data.fixtures[fullTeamName][matchday];
-    		x.push(new Date(match.date));
-    		let oppTeamRating = data.teamRatings[match.team].totalRating;
-
-    		if (match.atHome) {
-    			// If team playing at home, decrease opposition rating by the amount of home advantage the team gains
-    			oppTeamRating *= 1 - data.homeAdvantages[match.team].totalHomeAdvantage;
-    		}
-
-    		y.push(oppTeamRating * 100);
-    		let matchDetail = getMatchDetail(match);
-    		details.push(matchDetail);
-    	}
-
-    	sortByMatchDate(x, y, details);
-    	let now = Date.now();
-    	let sizes = Array(x.length).fill(13);
-    	sizes = increaseNextGameMarker(sizes, x, now, 26);
-    	let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
-    	let yLabels = Array.from(Array(11), (_, i) => i * 10);
-    	let minX = new Date(x[0]);
-    	minX.setDate(minX.getDate() - 12);
-
-    	// let maxX = new Date(Math.max(x[x.length - 1], now));
-    	let maxX = new Date(x[x.length - 1]);
-
-    	maxX.setDate(maxX.getDate() + 12);
-    	let nowLine = undefined;
+    function nowLine(now, maxX) {
+    	let nowLine = [];
 
     	if (now <= maxX) {
     		// Vertical line shapw marking current day
@@ -5608,75 +5573,129 @@
     		};
     	}
 
-    	let graphData = {
-    		data: [
-    			{
-    				x,
-    				y,
-    				type: "scatter",
-    				mode: "lines+markers",
-    				text: details,
-    				line: { color: "#737373" },
-    				marker: {
-    					size: sizes,
-    					// colorscale: [
-    					//   [0, "#01c626"],
-    					//   [0.1, "#08a825"],
-    					//   [0.2, "#0b7c20"],
-    					//   [0.3, "#0a661b"],
-    					//   [0.4, "#064411"],
-    					//   [0.5, "#000000"],
-    					//   [0.6, "#5b1d15"],
-    					//   [0.7, "#85160f"],
-    					//   [0.8, "#ad1a10"],
-    					//   [0.9, "#db1a0d"],
-    					//   [1, "#fc1303"],
-    					// ],
-    					colorscale: [[0, "#01c626"], [0.5, "#f3f3f3"], [1, "#fc1303"]],
-    					color: y
-    				},
-    				customdata: matchdays,
-    				hovertemplate: "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>"
-    			}
-    		],
-    		layout: {
-    			title: false,
-    			autosize: true,
-    			margin: { r: 20, l: 50, t: 5, b: 40, pad: 5 },
-    			hovermode: "closest",
-    			plot_bgcolor: "#fafafa",
-    			paper_bgcolor: "#fafafa",
-    			yaxis: {
-    				title: { text: "Team Rating" },
-    				gridcolor: "gray",
-    				showline: false,
-    				zeroline: false,
-    				fixedrange: true,
-    				ticktext: yLabels,
-    				tickvals: yLabels
-    			},
-    			xaxis: {
-    				linecolor: "black",
-    				showgrid: false,
-    				showline: false,
-    				range: [minX, maxX],
-    				fixedrange: true
-    			},
-    			shapes: [nowLine]
-    		},
-    		config: {
-    			responsive: true,
-    			showSendToCloud: false,
-    			displayModeBar: false
-    		}
-    	};
+    	return nowLine;
+    }
 
-    	return graphData;
+    function xRange(x) {
+    	let minX = new Date(x[0]);
+    	minX.setDate(minX.getDate() - 12);
+
+    	// let maxX = new Date(Math.max(x[x.length - 1], now));
+    	let maxX = new Date(x[x.length - 1]);
+
+    	maxX.setDate(maxX.getDate() + 12);
+    	return [minX, maxX];
     }
 
     function instance$d($$self, $$props, $$invalidate) {
+    	function linePoints() {
+    		let x = [];
+    		let y = [];
+    		let details = [];
+
+    		for (let matchday = 1; matchday <= 38; matchday++) {
+    			let match = data.fixtures[fullTeamName][matchday];
+    			x.push(new Date(match.date));
+    			let oppTeamRating = data.teamRatings[match.team].totalRating;
+
+    			if (match.atHome) {
+    				// If team playing at home, decrease opposition rating by the amount of home advantage the team gains
+    				oppTeamRating *= 1 - data.homeAdvantages[match.team].totalHomeAdvantage;
+    			}
+
+    			y.push(oppTeamRating * 100);
+    			let matchDetail = getMatchDetail(match);
+    			details.push(matchDetail);
+    		}
+
+    		return [x, y, details];
+    	}
+
+    	function line(now) {
+    		let [x, y, details] = linePoints();
+    		sortByMatchDate(x, y, details);
+    		let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
+    		let sizes = Array(x.length).fill(13);
+    		sizes = increaseNextGameMarker(sizes, x, now, 26);
+
+    		return {
+    			x,
+    			y,
+    			type: "scatter",
+    			mode: "lines+markers",
+    			text: details,
+    			line: { color: "#737373" },
+    			marker: {
+    				size: sizes,
+    				// colorscale: [
+    				//   [0, "#01c626"],
+    				//   [0.1, "#08a825"],
+    				//   [0.2, "#0b7c20"],
+    				//   [0.3, "#0a661b"],
+    				//   [0.4, "#064411"],
+    				//   [0.5, "#000000"],
+    				//   [0.6, "#5b1d15"],
+    				//   [0.7, "#85160f"],
+    				//   [0.8, "#ad1a10"],
+    				//   [0.9, "#db1a0d"],
+    				//   [1, "#fc1303"],
+    				// ],
+    				colorscale: [[0, "#01c626"], [0.5, "#f3f3f3"], [1, "#fc1303"]],
+    				color: y
+    			},
+    			customdata: matchdays,
+    			hovertemplate: "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>"
+    		};
+    	}
+
+    	function buildPlotData(data, fullTeamName) {
+    		// Build data to create a fixtures line graph displaying the date along the
+    		// x-axis and opponent strength along the y-axis
+    		let now = Date.now();
+
+    		let l = line(now);
+    		let yLabels = Array.from(Array(11), (_, i) => i * 10);
+    		let [minX, maxX] = xRange(l.x);
+
+    		let plotData = {
+    			data: [l],
+    			layout: {
+    				title: false,
+    				autosize: true,
+    				margin: { r: 20, l: 50, t: 5, b: 40, pad: 5 },
+    				hovermode: "closest",
+    				plot_bgcolor: "#fafafa",
+    				paper_bgcolor: "#fafafa",
+    				yaxis: {
+    					title: { text: "Team Rating" },
+    					gridcolor: "gray",
+    					showline: false,
+    					zeroline: false,
+    					fixedrange: true,
+    					ticktext: yLabels,
+    					tickvals: yLabels
+    				},
+    				xaxis: {
+    					linecolor: "black",
+    					showgrid: false,
+    					showline: false,
+    					range: [minX, maxX],
+    					fixedrange: true
+    				},
+    				shapes: [nowLine(now, maxX)]
+    			},
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
     	function genPlot() {
-    		plotData = buildPlotData$4(data, fullTeamName);
+    		plotData = buildPlotData(data);
 
     		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
     			// Once plot generated, add resizable attribute to it to shorten height for mobile view
@@ -5686,7 +5705,7 @@
 
     	function refreshPlot() {
     		if (setup) {
-    			let newPlotData = buildPlotData$4(data, fullTeamName);
+    			let newPlotData = buildPlotData();
     			plotData.data[0] = newPlotData.data[0]; // Overwrite plot data
     			Plotly.redraw(plotDiv);
     		}
