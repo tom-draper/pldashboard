@@ -53,36 +53,41 @@
     return x;
   }
 
-  function buildPlotData(data, fullTeamName) {
-    let x = getMatchdayDates(data);
-
+  function bars(data, fullTeamName, x) {
     let matchdays = Object.keys(data.form[data._id][fullTeamName]);
 
     let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, fullTeamName);
+    return [
+      {
+        name: "Clean sheets",
+        type: "bar",
+        x: x,
+        y: cleanSheets,
+        text: matchdays,
+        marker: { color: "#77DD77" },
+        hovertemplate: "<b>Clean sheet<extra></extra>",
+        showlegend: false,
+      },
+      {
+        name: "Conceded",
+        type: "bar",
+        x: x,
+        y: notCleanSheets,
+        text: matchdays,
+        marker: { color: "C23B22" },
+        hovertemplate: "<b>Goals conceded<extra></extra>",
+        showlegend: false,
+      }
+    ];
+  }
+
+  function buildPlotData(data, fullTeamName) {
+    let x = getMatchdayDates(data);
+
+    let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, x);
 
     let plotData = {
-      data: [
-        {
-          name: "Clean sheets",
-          type: "bar",
-          x: x,
-          y: cleanSheets,
-          text: matchdays,
-          marker: { color: "#77DD77" },
-          hovertemplate: "<b>Clean sheet<extra></extra>",
-          showlegend: false,
-        },
-        {
-          name: "Conceded",
-          type: "bar",
-          x: x,
-          y: notCleanSheets,
-          text: matchdays,
-          marker: { color: "C23B22" },
-          hovertemplate: "<b>Goals conceded<extra></extra>",
-          showlegend: false,
-        },
-      ],
+      data: [cleanSheetsBar, concededBar],
       layout: {
         title: false,
         autosize: true,
@@ -150,9 +155,10 @@
 
   function refreshPlot() {
     if (setup) {
-      let newPlotData = buildPlotData(data, fullTeamName);
-      plotData.data[0] = newPlotData.data[0];
-      plotData.data[1] = newPlotData.data[1];
+      let x = getMatchdayDates(data);
+      let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, x);
+      plotData.data[0] = cleanSheetsBar;
+      plotData.data[1] = concededBar;
       Plotly.redraw(plotDiv);
     }
   }

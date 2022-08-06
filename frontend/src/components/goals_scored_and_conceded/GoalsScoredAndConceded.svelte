@@ -70,46 +70,56 @@
     return x;
   }
 
-  function buildPlotData(data, fullTeamName) {
-    let avgGoals = getAvgGoalsPerGame(data);
-    let x = getMatchdayDates(data);
+  function avgLine(x, avgGoals, matchdays) {
+    return {
+      name: "Avg",
+      type: "line",
+      x: x,
+      y: Object.values(avgGoals),
+      text: matchdays,
+      hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",
+      line: { color: "#0080FF", width: 2 },
+    };
+  }
 
+  function teamScoredBar(x, teamScored, matchdays) {
+    return {
+      name: "Scored",
+      type: "bar",
+      x: x,
+      y: Object.values(teamScored),
+      text: matchdays,
+      marker: { color: "#77DD77" },
+      hovertemplate:
+        "<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>",
+    };
+  }
+
+  function teamConcededBar(x, teamConceded, matchdays) {
+    return {
+      name: "Conceded",
+      type: "bar",
+      x: x,
+      y: Object.values(teamConceded),
+      text: matchdays,
+      marker: { color: "C23B22" },
+      hovertemplate:
+        "<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>",
+    };
+  }
+
+  function buildPlotData(data, fullTeamName) {
+    let x = getMatchdayDates(data);
+    let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
+    let avgGoals = getAvgGoalsPerGame(data);
     let matchdays = Object.keys(avgGoals);
 
-    let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
+    let scoredBar = teamScoredBar(x, teamScored, matchdays);
+    let concededBar = teamConcededBar(x, teamConceded, matchdays);
+    let line = avgLine(x, avgGoals, matchdays);
 
     let plotData = {
-      data: [
-        {
-          name: "Scored",
-          type: "bar",
-          x: x,
-          y: Object.values(teamScored),
-          text: matchdays,
-          marker: { color: "#77DD77" },
-          hovertemplate:
-            "<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>",
-        },
-        {
-          name: "Conceded",
-          type: "bar",
-          x: x,
-          y: Object.values(teamConceded),
-          text: matchdays,
-          marker: { color: "C23B22" },
-          hovertemplate:
-            "<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>",
-        },
-        {
-          name: "Avg",
-          type: "line",
-          x: x,
-          y: Object.values(avgGoals),
-          text: matchdays,
-          hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",
-          line: { color: "#0080FF", width: 2 },
-        },
-      ],
+      data: [scoredBar, concededBar, line],
       layout: {
         title: false,
         autosize: true,
@@ -125,8 +135,8 @@
           showline: false,
           zeroline: false,
           fixedrange: true,
-          rangemode: 'nonnegative'
-         },
+          rangemode: "nonnegative",
+        },
         xaxis: {
           linecolor: "black",
           showgrid: false,
@@ -155,7 +165,7 @@
     genPlot();
     setup = true;
   });
-  
+
   function genPlot() {
     plotData = buildPlotData(data, fullTeamName);
     new Plotly.newPlot(
@@ -163,17 +173,24 @@
       plotData.data,
       plotData.layout,
       plotData.config
-    ).then(plot => {
+    ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-graph");
     });
   }
-  
+
   function refreshPlot() {
     if (setup) {
-      let newPlotData = buildPlotData(data, fullTeamName);
-      plotData.data[0] = newPlotData.data[0];
-      plotData.data[1] = newPlotData.data[1];
+      let x = getMatchdayDates(data);
+      let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
+      let avgGoals = getAvgGoalsPerGame(data);
+      let matchdays = Object.keys(avgGoals);
+
+      let scoredBar = teamScoredBar(x, teamScored, matchdays);
+      let concededBar = teamConcededBar(x, teamConceded, matchdays);
+      
+      plotData.data[0] = scoredBar;
+      plotData.data[1] = concededBar;
       Plotly.redraw(plotDiv);
     }
   }
