@@ -104,12 +104,13 @@ class Updater:
                 json.dump(self.json_data[type][self.current_season], f)
 
 
-    def _build_dataframes(self, n_seasons: int, display_tables: bool = False, 
+    def build_dataframes(self, n_seasons: int, display_tables: bool = False, 
                           update_db: bool = True):
+        self.data.last_updated = self.last_updated
+        
         # Standings for the last [n_seasons] seasons
         self.data.standings.build(
             self.json_data, 
-            self.data.team_names,
             self.current_season, 
             n_seasons, 
             display=display_tables
@@ -145,17 +146,16 @@ class Updater:
             display=display_tables
         )
         # Season metrics
-        self.data.season_stats.build(
-            self.data.form, 
-            display=display_tables
-        )
+        # self.data.season_stats.build(
+        #     self.data.form, 
+        #     display=display_tables
+        # )
         # Data about the opponent in each team's next game
         self.data.upcoming.build(
             self.json_data, 
             self.data.fixtures, 
             self.data.form, 
             self.data.home_advantages, 
-            self.data.team_names, 
             self.current_season, 
             n_seasons, 
             display=display_tables,
@@ -176,13 +176,6 @@ class Updater:
             logo_urls[team_name] = crest_url
 
         return logo_urls
-        
-    def build_dataframes(self, n_seasons, display_tables, update_db):
-        self.data.last_updated = self.last_updated
-        self.data.logo_urls = self.get_logo_urls()
-        self.data.team_names = list(self.data.logo_urls.keys())
-        # Build using stored data in self.json_data
-        self._build_dataframes(n_seasons, display_tables, update_db)
     
     @timebudget
     def build_all(

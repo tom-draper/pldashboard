@@ -100,6 +100,7 @@
     fetchData("https://pldashboard.herokuapp.com/api/teams")
       .then((json) => {
         // Build teamData package from json data
+        json.teamNames = Object.keys(json.fixtures)
         currentMatchday = getCurrentMatchday(json, fullTeamName);
         data = json;
         console.log(data);

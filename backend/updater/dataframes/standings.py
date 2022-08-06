@@ -141,6 +141,15 @@ class Standings(DF):
         df = df.drop(df[~df.index.isin(team_names)].index)
         return df
 
+    def get_team_names(self, json_data: dict, season: int):
+        data = json_data['standings'][season]
+        team_names = []
+        for row in data:
+            team_names.append(utils.clean_full_team_name(row['team']['name']))
+            
+        print(team_names)
+        return team_names
+
     @staticmethod
     def _season_standings(
         json_data: dict,
@@ -163,13 +172,13 @@ class Standings(DF):
         df.columns = pd.MultiIndex.from_product([[season], col_headings])
 
         df = df.drop(index=df.index.difference(current_teams))
+        
         return df
 
     @timebudget
     def build(
         self,
         json_data: dict,
-        team_names: list[str],
         season: int,
         no_seasons: int = 3,
         display: bool = False
@@ -208,12 +217,9 @@ class Standings(DF):
         """
         print('🛠️  Building standings dataframe...')
 
-        # Check for dependencies
-        if not team_names:
-            raise ValueError(
-                '❌ [ERROR] Cannot build standings dataframe: Team names list not available')
-
         standings = pd.DataFrame()
+        
+        team_names = self.get_team_names(json_data, season)
 
         # Loop from current season to the season 2 years ago
         for n in range(no_seasons):

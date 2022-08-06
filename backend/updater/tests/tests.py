@@ -31,8 +31,8 @@ def test_dfs_filled(updater):
                   updater.data.team_ratings.df,
                   updater.data.home_advantages.df,
                   updater.data.form.df,
-                  updater.data.upcoming.df,
-                  updater.data.season_stats.df]
+                  updater.data.upcoming.df]
+                #   updater.data.season_stats.df]
 
     # Check all dataframes are filled
     assert all([not df.empty for df in dataframes])
@@ -46,8 +46,8 @@ def test_index_identical(updater):
                   updater.data.team_ratings.df,
                   updater.data.home_advantages.df,
                   updater.data.form.df,
-                  updater.data.upcoming.df,
-                  updater.data.season_stats.df]
+                  updater.data.upcoming.df]
+                #   updater.data.season_stats.df]
 
     pairs = [(dataframes[i], dataframes[i+1])
              for i in range(len(dataframes)-1)]
@@ -136,10 +136,10 @@ def test_upcoming_df(updater):
     assert updater.data.upcoming.df.shape == (20, 4)
 
 
-@pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
-def test_season_stats_df(updater):
-    # 20 teams with 4 columns
-    assert updater.data.season_stats.df.shape == (20, 4)
+# @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
+# def test_season_stats_df(updater):
+#     # 20 teams with 4 columns
+#     assert updater.data.season_stats.df.shape == (20, 4)
 
 
 def test_last_updated():

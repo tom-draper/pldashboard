@@ -192,7 +192,6 @@ class Upcoming(DF):
         fixtures: Fixtures,
         form: Form,
         home_advantages: HomeAdvantages,
-        team_names: list[str],
         season: int,
         n_seasons: int = 3,
         display: bool = False,
@@ -234,11 +233,9 @@ class Upcoming(DF):
                 creation. Defaults to False.
         """
         print('🛠️  Building upcoming dataframe... ')
-        # self._check_dependencies(fixtures, form)
-        # if not team_names:
-        #     raise ValueError('❌ [ERROR] Cannot build upcoming dataframe: Teams names list empty')
 
         d = {}  # type: dict[str, dict[str, Optional[str] | list]]
+        team_names = fixtures.df.index.to_list()
         for team_name in team_names:
             date, next_team, at_home = self._get_next_game(team_name, fixtures)
             d[team_name] = {

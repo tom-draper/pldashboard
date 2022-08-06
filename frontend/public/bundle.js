@@ -9362,7 +9362,7 @@
     	};
     }
 
-    // (149:6) {#if data != undefined}
+    // (150:6) {#if data != undefined}
     function create_if_block$1(ctx) {
     	let div24;
     	let div2;
@@ -9950,7 +9950,7 @@
     	};
     }
 
-    // (161:12) {:else}
+    // (162:12) {:else}
     function create_else_block$1(ctx) {
     	let div2;
     	let div0;
@@ -10079,7 +10079,7 @@
     	};
     }
 
-    // (135:0) <Router>
+    // (136:0) <Router>
     function create_default_slot$3(ctx) {
     	let div4;
     	let div0;
@@ -10397,8 +10397,9 @@
     		// fetchData("http://127.0.0.1:5000/api/teams")
     		fetchData$1("https://pldashboard.herokuapp.com/api/teams").then(json => {
     			// Build teamData package from json data
-    			$$invalidate(2, currentMatchday = getCurrentMatchday(json, fullTeamName));
+    			json.teamNames = Object.keys(json.fixtures);
 
+    			$$invalidate(2, currentMatchday = getCurrentMatchday(json, fullTeamName));
     			$$invalidate(3, data = json);
     			console.log(data);
     		}).then(() => {
