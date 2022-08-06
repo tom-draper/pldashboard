@@ -35,16 +35,20 @@
     return [avgBars(), teamBars(data, name, color)];
   }
 
+  // Basic colour scale shared between the two bar chars
   let colourScale = [
-    "#f74d4d",
-    "#fa6634",
-    "#f58011",
-    "#e89b00",
-    "#d5b300",
-    "#bacb00",
-    "#96e01d",
-    "#5df455",
+"#5df455",
+"#b2d000",
+"#dfa700",
+"#f77a1c",
+"#f74d4d",
   ];
+
+  // Concatenate unique extreme colours, for extreme values that only a few teams achieve
+  // Concatenate bright greens
+  let scoredColourScale = reversed(colourScale).concat(['#4EF745', '#3BFA31', '#1bfd0f'])
+  // Concatenate bright reds
+  let concededColourScale = colourScale.concat(['#FA3E3C', '#FC2B29', '#FD0F0F'])
 
   function reversed(arr) {
     return arr.slice().reverse();
@@ -52,19 +56,19 @@
 
   function getScoredBars() {
     // return bars(teamScoredFreq, "Goals scored", "#77DD77");
-    return bars(teamScoredFreq, "Goals scored", colourScale);
+    return bars(teamScoredFreq, "Goals scored", scoredColourScale);
   }
 
   function getConcededBars() {
-    return bars(teamConcededFreq, "Goals conceded", reversed(colourScale));
+    return bars(teamConcededFreq, "Goals conceded", concededColourScale);
   }
 
   function getScoredTeamBars() {
-    return teamBars(teamScoredFreq, "Goals scored", colourScale);
+    return teamBars(teamScoredFreq, "Goals scored", scoredColourScale);
   }
 
   function getConcededTeamBars() {
-    return teamBars(teamConcededFreq, "Goals conceded", reversed(colourScale));
+    return teamBars(teamConcededFreq, "Goals conceded", concededColourScale);
   }
 
   function getXLabels() {
