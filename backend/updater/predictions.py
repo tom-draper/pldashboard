@@ -393,6 +393,4 @@ class Predictions:
             orient='index'
         )[['prediction']]
         
-        print(upcoming_predictions)
-
         return upcoming_predictions
