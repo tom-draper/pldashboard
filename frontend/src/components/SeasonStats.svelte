@@ -7,9 +7,9 @@
     return n + (ord[a > 20 ? a % 10 : a] || "th");
   }
 
-  function getStatsRank(data, attribute, fullTeamName, reverse) {
-    let sorted = Object.keys(data.seasonStats).sort(function (a, b) {
-      return data.seasonStats[b][attribute] - data.seasonStats[a][attribute];
+  function getStatsRank(seasonStats, attribute, fullTeamName, reverse) {
+    let sorted = Object.keys(seasonStats).sort(function (team1, team2) {
+      return seasonStats[team2][attribute] - seasonStats[team1][attribute];
     });
     let rank = sorted.indexOf(fullTeamName) + 1;
     if (reverse) {
@@ -18,12 +18,12 @@
     return rank;
   }
 
-  function getStatsRankings(data, fullTeamName) {
-    let xGRank = ordinal(getStatsRank(data, "xG", fullTeamName, false));
+  function getStatsRankings(seasonStats, fullTeamName) {
+    let xGRank = ordinal(getStatsRank(seasonStats, "xG", fullTeamName, false));
     // Reverse - lower rank the better
-    let xCRank = ordinal(getStatsRank(data, "xC", fullTeamName, true));
+    let xCRank = ordinal(getStatsRank(seasonStats, "xC", fullTeamName, true));
     let cleanSheetRatioRank = ordinal(
-      getStatsRank(data, "cleanSheetRatio", fullTeamName, false)
+      getStatsRank(seasonStats, "cleanSheetRatio", fullTeamName, false)
     );
     return { xG: xGRank, xC: xCRank, cleanSheetRatio: cleanSheetRatioRank };
   }
@@ -43,23 +43,93 @@
     );
   }
 
-  function setStatsValues() {
-    rank = getStatsRankings(data, fullTeamName);
+  function setStatsValues(seasonStats, fullTeamName) {
+    rank = getStatsRankings(seasonStats, fullTeamName);
 
     // Keep ordinal values at the correct offset
-    window.addEventListener("resize", setPositionalOffset);
     // Once rank values have updated, init positional offset for ordinal values
+    window.addEventListener("resize", setPositionalOffset);
     // setTimeout(function () {
     //   setPositionalOffset();
     // }, 0);
   }
 
-  function refreshStatsValues() {
-    if (setup) {
-      setStatsValues();
+  function isCleanSheet(h, a, atHome) {
+    return (a == 0 && atHome) || (h == 0 && !atHome)
+  }
+
+  function goalsScored(h, a, atHome) {
+    if (atHome) {
+      return h
+    } else {
+      return a
     }
   }
 
+  function goalsConceded(h, a, atHome) {
+    if (atHome) {
+      return a
+    } else {
+      return h
+    }
+  }
+
+  function notScored(h, a, atHome) {
+    return (h == 0 && atHome) || (a == 0 && !atHome)
+  }
+
+  function countOccurances(data, seasonStats, team, season) {
+    if (!(team in data.form[season])) {
+      return
+    }
+
+    for (let matchday of Object.keys(data.form[season][team])) {
+      let score = data.form[season][team][matchday].score;
+      if (score != null) {
+        let [h, _, a] = score.split(' ');
+        h = parseInt(h);
+        a = parseInt(a);
+        let atHome = data.form[season][team][matchday].atHome;
+        if (isCleanSheet(h, a, atHome)) {
+          seasonStats[team].cleanSheetRatio += 1
+        }
+        if (notScored(h, a, atHome)) {
+          seasonStats[team].noGoalRatio += 1
+        }
+        seasonStats[team].xG += goalsScored(h, a, atHome)
+        seasonStats[team].xC += goalsConceded(h, a, atHome)
+        seasonStats[team].played += 1
+      }
+    }
+  }
+  
+  function buildSeasonStats(data) {
+    let seasonStats = {}
+    for (let team of data.teamNames) {
+      seasonStats[team] = {cleanSheetRatio: 0, noGoalRatio: 0, xC: 0, xG: 0, played: 0}
+
+      countOccurances(data, seasonStats, team, data._id)
+      countOccurances(data, seasonStats, team, data._id-1)
+
+      if (seasonStats[team].played > 0) {
+        seasonStats[team].xG /= seasonStats[team].played
+        seasonStats[team].xC /= seasonStats[team].played
+        seasonStats[team].cleanSheetRatio /= seasonStats[team].played
+        seasonStats[team].noGoalRatio /= seasonStats[team].played
+      }
+    }
+
+    return seasonStats;
+  }
+
+  function refreshStatsValues() {
+    if (setup) {
+      // seasonStats = buildSeasonStats(data)
+      setStatsValues(seasonStats, fullTeamName);
+    }
+  }
+
+  let seasonStats;
   let ssp1, ssp2, ssp3;
   let rank = {
     xG: "",
@@ -68,7 +138,8 @@
   };
   let setup = false;
   onMount(() => {
-    setStatsValues();
+    seasonStats = buildSeasonStats(data);
+    setStatsValues(seasonStats, fullTeamName);
     setup = true;
   });
 
@@ -77,47 +148,49 @@
   export let data, fullTeamName;
 </script>
 
-<div class="season-stats">
-  <div class="season-stat goals-per-game">
-    <div class="season-stat-value">
-      {data.seasonStats[fullTeamName].xG}
-      <div
-        class="season-stat-position ssp-{rank.xG}"
-        id="ssp1"
-        bind:this={ssp1}
-      >
-        {rank.xG}
+{#if seasonStats != undefined}
+  <div class="season-stats">
+    <div class="season-stat goals-per-game">
+      <div class="season-stat-value">
+        {seasonStats[fullTeamName].xG.toFixed(2)}
+        <div
+          class="season-stat-position ssp-{rank.xG}"
+          id="ssp1"
+          bind:this={ssp1}
+        >
+          {rank.xG}
+        </div>
       </div>
+      <div class="season-stat-text">goals per game</div>
     </div>
-    <div class="season-stat-text">goals per game</div>
-  </div>
-  <div class="season-stat conceded-per-game">
-    <div class="season-stat-value">
-      {data.seasonStats[fullTeamName].xC}
-      <div
-        class="season-stat-position ssp-{rank.xC}"
-        id="ssp2"
-        bind:this={ssp2}
-      >
-        {rank.xC}
+    <div class="season-stat conceded-per-game">
+      <div class="season-stat-value">
+        {seasonStats[fullTeamName].xC.toFixed(2)}
+        <div
+          class="season-stat-position ssp-{rank.xC}"
+          id="ssp2"
+          bind:this={ssp2}
+        >
+          {rank.xC}
+        </div>
       </div>
+      <div class="season-stat-text">conceded per game</div>
     </div>
-    <div class="season-stat-text">conceded per game</div>
-  </div>
-  <div class="season-stat clean-sheet-ratio">
-    <div class="season-stat-value">
-      {data.seasonStats[fullTeamName].cleanSheetRatio}
-      <div
-        class="season-stat-position ssp-{rank.cleanSheetRatio}"
-        id="ssp3"
-        bind:this={ssp3}
-      >
-        {rank.cleanSheetRatio}
+    <div class="season-stat clean-sheet-ratio">
+      <div class="season-stat-value">
+        {seasonStats[fullTeamName].cleanSheetRatio.toFixed(2)}
+        <div
+          class="season-stat-position ssp-{rank.cleanSheetRatio}"
+          id="ssp3"
+          bind:this={ssp3}
+        >
+          {rank.cleanSheetRatio}
+        </div>
       </div>
+      <div class="season-stat-text">clean sheets</div>
     </div>
-    <div class="season-stat-text">clean sheets</div>
   </div>
-</div>
+{/if}
 
 <style scoped>
   #ssp1 {

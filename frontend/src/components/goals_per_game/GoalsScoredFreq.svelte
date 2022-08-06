@@ -15,15 +15,7 @@
         bargap: 0,
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
-        yaxis: {
-          title: { text: "Frequency" },
-          gridcolor: "gray",
-          showgrid: false,
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          rangemode: "nonnegative",
-        },
+        yaxis: getYAxisLayout(),
         xaxis: {
           title: { text: "Goals Scored" },
           linecolor: "black",
@@ -71,13 +63,20 @@
   function refreshPlot() {
     if (setup) {
       plotData.data[1] = getScoredTeamBars(); // Update team bars
+      Plotly.relayout(plotDiv, {
+        yaxis: getYAxisLayout(),
+      });
       Plotly.redraw(plotDiv);
     }
   }
 
   $: fullTeamName && refreshPlot();
 
-  export let fullTeamName, getScoredBars, getScoredTeamBars, getXLabels;
+  export let fullTeamName,
+    getScoredBars,
+    getScoredTeamBars,
+    getXLabels,
+    getYAxisLayout;
 </script>
 
 <div id="plotly">

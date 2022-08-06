@@ -15,15 +15,7 @@
         bargap: 0,
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
-        yaxis: {
-          title: { text: "Frequency" },
-          gridcolor: "gray",
-          showgrid: false,
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          rangemode: 'nonnegative'
-        },
+        yaxis: getYAxisLayout(),
         xaxis: {
           title: { text: "Goals Conceded" },
           linecolor: "black",
@@ -54,7 +46,7 @@
     genPlot();
     setup = true;
   });
-  
+
   function genPlot() {
     plotData = buildPlotData();
     new Plotly.newPlot(
@@ -62,22 +54,29 @@
       plotData.data,
       plotData.layout,
       plotData.config
-    ).then(plot => {
+    ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-graph");
     });
   }
-  
+
   function refreshPlot() {
     if (setup) {
       plotData.data[1] = getConcededTeamBars();
+      Plotly.relayout(plotDiv, {
+        yaxis: getYAxisLayout()
+      });
       Plotly.redraw(plotDiv);
     }
   }
 
   $: fullTeamName && refreshPlot();
 
-  export let fullTeamName, getConcededBars, getConcededTeamBars, getXLabels;
+  export let fullTeamName,
+    getConcededBars,
+    getConcededTeamBars,
+    getXLabels,
+    getYAxisLayout;
 </script>
 
 <div id="plotly">
