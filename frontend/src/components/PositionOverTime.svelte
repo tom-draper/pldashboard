@@ -63,8 +63,7 @@
     return x;
   }
 
-  function buildPlotData(data, fullTeamName) {
-    let x = getMatchdayDates(data, fullTeamName); // All lines use the same x
+  function lines(x) {
     let lines = [];
     for (let i = 0; i < data.teamNames.length; i++) {
       if (data.teamNames[i] != fullTeamName) {
@@ -72,15 +71,20 @@
         lines.push(line);
       }
     }
-
+  
     // Add this team last to ensure it overlaps all other lines
     let line = getLine(data, x, fullTeamName, true);
     lines.push(line);
+    return lines;
+  }
+
+  function buildPlotData(data, fullTeamName) {
+    let x = getMatchdayDates(data, fullTeamName); // All lines use the same x
 
     let yLabels = Array.from(Array(20), (_, i) => i + 1);
 
     let graphData = {
-      data: lines,
+      data: lines(x),
       layout: {
         title: false,
         autosize: true,

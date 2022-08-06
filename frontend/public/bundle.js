@@ -5705,8 +5705,9 @@
 
     	function refreshPlot() {
     		if (setup) {
-    			let newPlotData = buildPlotData();
-    			plotData.data[0] = newPlotData.data[0]; // Overwrite plot data
+    			let now = Date.now();
+    			let l = line(now);
+    			plotData.data[0] = l; // Overwrite plot data
     			Plotly.redraw(plotDiv);
     		}
     	}
@@ -5858,62 +5859,66 @@
     	return x;
     }
 
-    function buildPlotData$3(data, fullTeamName) {
-    	let x = getMatchdayDates$3(data, fullTeamName); // All lines use the same x
-    	let lines = [];
+    function instance$c($$self, $$props, $$invalidate) {
+    	function lines(x) {
+    		let lines = [];
 
-    	for (let i = 0; i < data.teamNames.length; i++) {
-    		if (data.teamNames[i] != fullTeamName) {
-    			let line = getFormLine(data, x, data.teamNames[i], false);
-    			lines.push(line);
+    		for (let i = 0; i < data.teamNames.length; i++) {
+    			if (data.teamNames[i] != fullTeamName) {
+    				let line = getFormLine(data, x, data.teamNames[i], false);
+    				lines.push(line);
+    			}
     		}
+
+    		// Add this team last to ensure it overlaps all other lines
+    		let line = getFormLine(data, x, fullTeamName, true);
+
+    		lines.push(line);
+    		return lines;
     	}
 
-    	// Add this team last to ensure it overlaps all other lines
-    	let line = getFormLine(data, x, fullTeamName, true);
+    	function buildPlotData(data, fullTeamName) {
+    		let x = getMatchdayDates$3(data, fullTeamName); // All lines use the same x
+    		let yLabels = Array.from(Array(11), (_, i) => i * 10);
 
-    	lines.push(line);
-    	let yLabels = Array.from(Array(11), (_, i) => i * 10);
-
-    	let graphData = {
-    		data: lines,
-    		layout: {
-    			title: false,
-    			autosize: true,
-    			margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
-    			hovermode: "closest",
-    			plot_bgcolor: "#fafafa",
-    			paper_bgcolor: "#fafafa",
-    			yaxis: {
-    				title: { text: "Form Rating" },
-    				gridcolor: "gray",
-    				showgrid: false,
-    				showline: false,
-    				zeroline: false,
-    				fixedrange: true,
-    				ticktext: yLabels,
-    				tickvals: yLabels,
-    				range: [0, 100]
+    		let graphData = {
+    			data: lines(x),
+    			layout: {
+    				title: false,
+    				autosize: true,
+    				margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
+    				hovermode: "closest",
+    				plot_bgcolor: "#fafafa",
+    				paper_bgcolor: "#fafafa",
+    				yaxis: {
+    					title: { text: "Form Rating" },
+    					gridcolor: "gray",
+    					showgrid: false,
+    					showline: false,
+    					zeroline: false,
+    					fixedrange: true,
+    					ticktext: yLabels,
+    					tickvals: yLabels,
+    					range: [0, 100]
+    				},
+    				xaxis: {
+    					linecolor: "black",
+    					showgrid: false,
+    					showline: false,
+    					fixedrange: true,
+    					range: [x[0], x[x.length - 1]]
+    				}
     			},
-    			xaxis: {
-    				linecolor: "black",
-    				showgrid: false,
-    				showline: false,
-    				fixedrange: true,
-    				range: [x[0], x[x.length - 1]]
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
     			}
-    		},
-    		config: {
-    			responsive: true,
-    			showSendToCloud: false,
-    			displayModeBar: false
-    		}
-    	};
+    		};
 
-    	return graphData;
-    }
+    		return graphData;
+    	}
 
-    function instance$c($$self, $$props, $$invalidate) {
     	let plotDiv, plotData;
     	let setup = false;
 
@@ -5923,7 +5928,7 @@
     	});
 
     	function genPlot() {
-    		plotData = buildPlotData$3(data, fullTeamName);
+    		plotData = buildPlotData(data, fullTeamName);
 
     		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
     			// Once plot generated, add resizable attribute to it to shorten height for mobile view
@@ -5933,7 +5938,7 @@
 
     	function refreshPlot() {
     		if (setup) {
-    			let newPlotData = buildPlotData$3(data, fullTeamName);
+    			let newPlotData = buildPlotData(data, fullTeamName);
 
     			for (let i = 0; i < 20; i++) {
     				plotData.data[i] = newPlotData.data[i];
@@ -6082,96 +6087,100 @@
     	return x;
     }
 
-    function buildPlotData$2(data, fullTeamName) {
-    	let x = getMatchdayDates$2(data, fullTeamName); // All lines use the same x
-    	let lines = [];
+    function instance$b($$self, $$props, $$invalidate) {
+    	function lines(x) {
+    		let lines = [];
 
-    	for (let i = 0; i < data.teamNames.length; i++) {
-    		if (data.teamNames[i] != fullTeamName) {
-    			let line = getLine(data, x, data.teamNames[i], false);
-    			lines.push(line);
+    		for (let i = 0; i < data.teamNames.length; i++) {
+    			if (data.teamNames[i] != fullTeamName) {
+    				let line = getLine(data, x, data.teamNames[i], false);
+    				lines.push(line);
+    			}
     		}
+
+    		// Add this team last to ensure it overlaps all other lines
+    		let line = getLine(data, x, fullTeamName, true);
+
+    		lines.push(line);
+    		return lines;
     	}
 
-    	// Add this team last to ensure it overlaps all other lines
-    	let line = getLine(data, x, fullTeamName, true);
+    	function buildPlotData(data, fullTeamName) {
+    		let x = getMatchdayDates$2(data, fullTeamName); // All lines use the same x
+    		let yLabels = Array.from(Array(20), (_, i) => i + 1);
 
-    	lines.push(line);
-    	let yLabels = Array.from(Array(20), (_, i) => i + 1);
-
-    	let graphData = {
-    		data: lines,
-    		layout: {
-    			title: false,
-    			autosize: true,
-    			margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
-    			hovermode: "closest",
-    			plot_bgcolor: "#fafafa",
-    			paper_bgcolor: "#fafafa",
-    			yaxis: {
-    				title: { text: "Position" },
-    				gridcolor: "gray",
-    				showgrid: false,
-    				showline: false,
-    				zeroline: false,
-    				autorange: "reversed",
-    				fixedrange: true,
-    				ticktext: yLabels,
-    				tickvals: yLabels
-    			},
-    			xaxis: {
-    				linecolor: "black",
-    				showgrid: false,
-    				showline: false,
-    				fixedrange: true
-    			},
-    			shapes: [
-    				{
-    					type: "rect",
-    					x0: x[0],
-    					y0: 4.5,
-    					x1: x[x.length - 1],
-    					y1: 0.5,
-    					line: { width: 0 },
-    					fillcolor: "#77DD77",
-    					opacity: 0.3,
-    					layer: "below"
+    		let graphData = {
+    			data: lines(x),
+    			layout: {
+    				title: false,
+    				autosize: true,
+    				margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
+    				hovermode: "closest",
+    				plot_bgcolor: "#fafafa",
+    				paper_bgcolor: "#fafafa",
+    				yaxis: {
+    					title: { text: "Position" },
+    					gridcolor: "gray",
+    					showgrid: false,
+    					showline: false,
+    					zeroline: false,
+    					autorange: "reversed",
+    					fixedrange: true,
+    					ticktext: yLabels,
+    					tickvals: yLabels
     				},
-    				{
-    					type: "rect",
-    					x0: x[0],
-    					y0: 6.5,
-    					x1: x[x.length - 1],
-    					y1: 4.5,
-    					line: { width: 0 },
-    					fillcolor: "#4CDEEE",
-    					opacity: 0.3,
-    					layer: "below"
+    				xaxis: {
+    					linecolor: "black",
+    					showgrid: false,
+    					showline: false,
+    					fixedrange: true
     				},
-    				{
-    					type: "rect",
-    					x0: x[0],
-    					y0: 20.5,
-    					x1: x[x.length - 1],
-    					y1: 17.5,
-    					line: { width: 0 },
-    					fillcolor: "#C23B22",
-    					opacity: 0.3,
-    					layer: "below"
-    				}
-    			]
-    		},
-    		config: {
-    			responsive: true,
-    			showSendToCloud: false,
-    			displayModeBar: false
-    		}
-    	};
+    				shapes: [
+    					{
+    						type: "rect",
+    						x0: x[0],
+    						y0: 4.5,
+    						x1: x[x.length - 1],
+    						y1: 0.5,
+    						line: { width: 0 },
+    						fillcolor: "#77DD77",
+    						opacity: 0.3,
+    						layer: "below"
+    					},
+    					{
+    						type: "rect",
+    						x0: x[0],
+    						y0: 6.5,
+    						x1: x[x.length - 1],
+    						y1: 4.5,
+    						line: { width: 0 },
+    						fillcolor: "#4CDEEE",
+    						opacity: 0.3,
+    						layer: "below"
+    					},
+    					{
+    						type: "rect",
+    						x0: x[0],
+    						y0: 20.5,
+    						x1: x[x.length - 1],
+    						y1: 17.5,
+    						line: { width: 0 },
+    						fillcolor: "#C23B22",
+    						opacity: 0.3,
+    						layer: "below"
+    					}
+    				]
+    			},
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
 
-    	return graphData;
-    }
+    		return graphData;
+    	}
 
-    function instance$b($$self, $$props, $$invalidate) {
     	let plotDiv;
     	let plotData;
     	let setup = false;
@@ -6182,7 +6191,7 @@
     	});
 
     	function genPlot() {
-    		plotData = buildPlotData$2(data, fullTeamName);
+    		plotData = buildPlotData(data, fullTeamName);
 
     		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
     			// Once plot generated, add resizable attribute to it to shorten height for mobile view
@@ -6192,7 +6201,7 @@
 
     	function refreshPlot() {
     		if (setup) {
-    			let newPlotData = buildPlotData$2(data, fullTeamName);
+    			let newPlotData = buildPlotData(data, fullTeamName);
 
     			for (let i = 0; i < 20; i++) {
     				plotData.data[i] = newPlotData.data[i];

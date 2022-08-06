@@ -207,8 +207,9 @@
   
   function refreshPlot() {
     if (setup) {
-      let newPlotData = buildPlotData(data, fullTeamName);
-      plotData.data[0] = newPlotData.data[0];  // Overwrite plot data
+      let now = Date.now();
+      let l = line(now);
+      plotData.data[0] = l;  // Overwrite plot data
       Plotly.redraw(plotDiv)
     }
   }
