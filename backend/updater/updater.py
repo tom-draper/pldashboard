@@ -210,6 +210,6 @@ if __name__ == "__main__":
     updater = Updater(2022)
     updater.build_all(
         request_new=True, 
-        display_tables=True, 
+        display_tables=False, 
         update_db=True,
     )
