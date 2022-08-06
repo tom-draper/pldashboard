@@ -40,7 +40,7 @@
   </div>
 </div>
 
-<!--<style scoped>
+<style scoped>
   .teams-footer {
     padding: 50px 0 4px;
     height: auto;
@@ -90,4 +90,4 @@
     height: 2.2em;
     margin-right: 1em;
   }
-</style>-->
+</style>

@@ -585,7 +585,7 @@
   </div>
 </div>
 
-<!--<style scoped>
+<style scoped>
   .spider-chart {
     position: relative;
   }
@@ -611,4 +611,4 @@
   .spider-opp-team-btn:hover {
     filter: brightness(0.95);
   }
-</style>-->
+</style>

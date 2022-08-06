@@ -132,7 +132,7 @@
   {/if}
 </div>
 
-<!--<style scoped>
+<style scoped>
   .current-form {
     font-size: 1.8rem;
     margin: 20px 10px;
@@ -181,4 +181,4 @@
     /* Least recent game */
     opacity: 50%;
   }
-</style>-->
+</style>

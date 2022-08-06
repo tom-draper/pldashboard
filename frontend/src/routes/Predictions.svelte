@@ -192,7 +192,7 @@
   </div>
 </Router>
 
-<!--<style scoped>
+<style scoped>
   .predictions-header {
     padding: 40px 40px 0;
     text-align: center;
@@ -406,4 +406,4 @@
     flex: 6;
   }
 }
-</style>-->
+</style>

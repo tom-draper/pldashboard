@@ -1,2 +1,11648 @@
-!function(){"use strict";function t(){}function e(t,e){for(const a in e)t[a]=e[a];return t}function a(t){return t()}function n(){return Object.create(null)}function r(t){t.forEach(a)}function o(t){return"function"==typeof t}function l(t,e){return t!=t?e==e:t!==e||t&&"object"==typeof t||"function"==typeof t}let s;function c(t,e){return s||(s=document.createElement("a")),s.href=e,t===s.href}function i(e,...a){if(null==e)return t;const n=e.subscribe(...a);return n.unsubscribe?()=>n.unsubscribe():n}function d(t,e,a){t.$$.on_destroy.push(i(e,a))}function u(t,e,a,n){if(t){const r=f(t,e,a,n);return t[0](r)}}function f(t,a,n,r){return t[1]&&r?e(n.ctx.slice(),t[1](r(a))):n.ctx}function h(t,e,a,n){if(t[2]&&n){const r=t[2](n(a));if(void 0===e.dirty)return r;if("object"==typeof r){const t=[],a=Math.max(e.dirty.length,r.length);for(let n=0;n<a;n+=1)t[n]=e.dirty[n]|r[n];return t}return e.dirty|r}return e.dirty}function m(t,e,a,n,r,o){if(r){const l=f(e,a,n,o);t.p(l,r)}}function p(t){if(t.ctx.length>32){const e=[],a=t.ctx.length/32;for(let t=0;t<a;t++)e[t]=-1;return e}return-1}function g(t){const e={};for(const a in t)"$"!==a[0]&&(e[a]=t[a]);return e}function v(t,e){const a={};e=new Set(e);for(const n in t)e.has(n)||"$"===n[0]||(a[n]=t[n]);return a}let $,y=!1;function b(t,e,a,n){for(;t<e;){const r=t+(e-t>>1);a(r)<=n?t=r+1:e=r}return t}function w(t,e){if(y){for(!function(t){if(t.hydrate_init)return;t.hydrate_init=!0;let e=t.childNodes;if("HEAD"===t.nodeName){const t=[];for(let a=0;a<e.length;a++){const n=e[a];void 0!==n.claim_order&&t.push(n)}e=t}const a=new Int32Array(e.length+1),n=new Int32Array(e.length);a[0]=-1;let r=0;for(let t=0;t<e.length;t++){const o=e[t].claim_order,l=(r>0&&e[a[r]].claim_order<=o?r+1:b(1,r,(t=>e[a[t]].claim_order),o))-1;n[t]=a[l]+1;const s=l+1;a[s]=t,r=Math.max(s,r)}const o=[],l=[];let s=e.length-1;for(let t=a[r]+1;0!=t;t=n[t-1]){for(o.push(e[t-1]);s>=t;s--)l.push(e[s]);s--}for(;s>=0;s--)l.push(e[s]);o.reverse(),l.sort(((t,e)=>t.claim_order-e.claim_order));for(let e=0,a=0;e<l.length;e++){for(;a<o.length&&l[e].claim_order>=o[a].claim_order;)a++;const n=a<o.length?o[a]:null;t.insertBefore(l[e],n)}}(t),(void 0===t.actual_end_child||null!==t.actual_end_child&&t.actual_end_child.parentElement!==t)&&(t.actual_end_child=t.firstChild);null!==t.actual_end_child&&void 0===t.actual_end_child.claim_order;)t.actual_end_child=t.actual_end_child.nextSibling;e!==t.actual_end_child?void 0===e.claim_order&&e.parentNode===t||t.insertBefore(e,t.actual_end_child):t.actual_end_child=e.nextSibling}else e.parentNode===t&&null===e.nextSibling||t.appendChild(e)}function E(t,e,a){y&&!a?w(t,e):e.parentNode===t&&e.nextSibling==a||t.insertBefore(e,a||null)}function x(t){t.parentNode.removeChild(t)}function I(t,e){for(let a=0;a<t.length;a+=1)t[a]&&t[a].d(e)}function D(t){return document.createElement(t)}function T(t){return document.createElementNS("http://www.w3.org/2000/svg",t)}function N(t){return document.createTextNode(t)}function V(){return N(" ")}function _(){return N("")}function k(t,e,a,n){return t.addEventListener(e,a,n),()=>t.removeEventListener(e,a,n)}function A(t,e,a){null==a?t.removeAttribute(e):t.getAttribute(e)!==a&&t.setAttribute(e,a)}function B(t,e){const a=Object.getOwnPropertyDescriptors(t.__proto__);for(const n in e)null==e[n]?t.removeAttribute(n):"style"===n?t.style.cssText=e[n]:"__value"===n?t.value=t[n]=e[n]:a[n]&&a[n].set?t[n]=e[n]:A(t,n,e[n])}function C(t){return Array.from(t.childNodes)}function L(t,e,a,n,r=!1){!function(t){void 0===t.claim_info&&(t.claim_info={last_index:0,total_claimed:0})}(t);const o=(()=>{for(let n=t.claim_info.last_index;n<t.length;n++){const o=t[n];if(e(o)){const e=a(o);return void 0===e?t.splice(n,1):t[n]=e,r||(t.claim_info.last_index=n),o}}for(let n=t.claim_info.last_index-1;n>=0;n--){const o=t[n];if(e(o)){const e=a(o);return void 0===e?t.splice(n,1):t[n]=e,r?void 0===e&&t.claim_info.last_index--:t.claim_info.last_index=n,o}}return n()})();return o.claim_order=t.claim_info.total_claimed,t.claim_info.total_claimed+=1,o}function P(t,e,a,n){return L(t,(t=>t.nodeName===e),(t=>{const e=[];for(let n=0;n<t.attributes.length;n++){const r=t.attributes[n];a[r.name]||e.push(r.name)}e.forEach((e=>t.removeAttribute(e)))}),(()=>n(e)))}function S(t,e,a){return P(t,e,a,D)}function M(t,e,a){return P(t,e,a,T)}function G(t,e){return L(t,(t=>3===t.nodeType),(t=>{const a=""+e;if(t.data.startsWith(a)){if(t.data.length!==a.length)return t.splitText(a.length)}else t.data=a}),(()=>N(e)),!0)}function O(t){return G(t," ")}function j(t,e){e=""+e,t.wholeText!==e&&(t.data=e)}function H(t,e,a,n){null===a?t.style.removeProperty(e):t.style.setProperty(e,a,n?"important":"")}function U(t,e=document.body){return Array.from(e.querySelectorAll(t))}function F(t){$=t}function R(){if(!$)throw new Error("Function called outside component initialization");return $}function z(t){R().$$.on_mount.push(t)}function W(){const t=R();return(e,a,{cancelable:n=!1}={})=>{const r=t.$$.callbacks[e];if(r){const o=function(t,e,{bubbles:a=!1,cancelable:n=!1}={}){const r=document.createEvent("CustomEvent");return r.initCustomEvent(t,a,n,e),r}(e,a,{cancelable:n});return r.slice().forEach((e=>{e.call(t,o)})),!o.defaultPrevented}return!0}}function Y(t,e){return R().$$.context.set(t,e),e}function q(t){return R().$$.context.get(t)}const X=[],K=[],Z=[],J=[],Q=Promise.resolve();let tt=!1;function et(t){Z.push(t)}const at=new Set;let nt=0;function rt(){const t=$;do{for(;nt<X.length;){const t=X[nt];nt++,F(t),ot(t.$$)}for(F(null),X.length=0,nt=0;K.length;)K.pop()();for(let t=0;t<Z.length;t+=1){const e=Z[t];at.has(e)||(at.add(e),e())}Z.length=0}while(X.length);for(;J.length;)J.pop()();tt=!1,at.clear(),F(t)}function ot(t){if(null!==t.fragment){t.update(),r(t.before_update);const e=t.dirty;t.dirty=[-1],t.fragment&&t.fragment.p(t.ctx,e),t.after_update.forEach(et)}}const lt=new Set;let st;function ct(){st={r:0,c:[],p:st}}function it(){st.r||r(st.c),st=st.p}function dt(t,e){t&&t.i&&(lt.delete(t),t.i(e))}function ut(t,e,a,n){if(t&&t.o){if(lt.has(t))return;lt.add(t),st.c.push((()=>{lt.delete(t),n&&(a&&t.d(1),n())})),t.o(e)}else n&&n()}const ft="undefined"!=typeof window?window:"undefined"!=typeof globalThis?globalThis:global;function ht(t,e){t.d(1),e.delete(t.key)}function mt(t,e){ut(t,1,1,(()=>{e.delete(t.key)}))}function pt(t,e,a,n,r,o,l,s,c,i,d,u){let f=t.length,h=o.length,m=f;const p={};for(;m--;)p[t[m].key]=m;const g=[],v=new Map,$=new Map;for(m=h;m--;){const t=u(r,o,m),s=a(t);let c=l.get(s);c?n&&c.p(t,e):(c=i(s,t),c.c()),v.set(s,g[m]=c),s in p&&$.set(s,Math.abs(m-p[s]))}const y=new Set,b=new Set;function w(t){dt(t,1),t.m(s,d),l.set(t.key,t),d=t.first,h--}for(;f&&h;){const e=g[h-1],a=t[f-1],n=e.key,r=a.key;e===a?(d=e.first,f--,h--):v.has(r)?!l.has(n)||y.has(n)?w(e):b.has(r)?f--:$.get(n)>$.get(r)?(b.add(n),w(e)):(y.add(r),f--):(c(a,l),f--)}for(;f--;){const e=t[f];v.has(e.key)||c(e,l)}for(;h;)w(g[h-1]);return g}function gt(t,e){const a={},n={},r={$$scope:1};let o=t.length;for(;o--;){const l=t[o],s=e[o];if(s){for(const t in l)t in s||(n[t]=1);for(const t in s)r[t]||(a[t]=s[t],r[t]=1);t[o]=s}else for(const t in l)r[t]=1}for(const t in n)t in a||(a[t]=void 0);return a}function vt(t){return"object"==typeof t&&null!==t?t:{}}function $t(t){t&&t.c()}function yt(t,e){t&&t.l(e)}function bt(t,e,n,l){const{fragment:s,on_mount:c,on_destroy:i,after_update:d}=t.$$;s&&s.m(e,n),l||et((()=>{const e=c.map(a).filter(o);i?i.push(...e):r(e),t.$$.on_mount=[]})),d.forEach(et)}function wt(t,e){const a=t.$$;null!==a.fragment&&(r(a.on_destroy),a.fragment&&a.fragment.d(e),a.on_destroy=a.fragment=null,a.ctx=[])}function Et(t,e){-1===t.$$.dirty[0]&&(X.push(t),tt||(tt=!0,Q.then(rt)),t.$$.dirty.fill(0)),t.$$.dirty[e/31|0]|=1<<e%31}function xt(e,a,o,l,s,c,i,d=[-1]){const u=$;F(e);const f=e.$$={fragment:null,ctx:null,props:c,update:t,not_equal:s,bound:n(),on_mount:[],on_destroy:[],on_disconnect:[],before_update:[],after_update:[],context:new Map(a.context||(u?u.$$.context:[])),callbacks:n(),dirty:d,skip_bound:!1,root:a.target||u.$$.root};i&&i(f.root);let h=!1;if(f.ctx=o?o(e,a.props||{},((t,a,...n)=>{const r=n.length?n[0]:a;return f.ctx&&s(f.ctx[t],f.ctx[t]=r)&&(!f.skip_bound&&f.bound[t]&&f.bound[t](r),h&&Et(e,t)),a})):[],f.update(),h=!0,r(f.before_update),f.fragment=!!l&&l(f.ctx),a.target){if(a.hydrate){y=!0;const t=C(a.target);f.fragment&&f.fragment.l(t),t.forEach(x)}else f.fragment&&f.fragment.c();a.intro&&dt(e.$$.fragment),bt(e,a.target,a.anchor,a.customElement),y=!1,rt()}F(u)}class It{$destroy(){wt(this,1),this.$destroy=t}$on(t,e){const a=this.$$.callbacks[t]||(this.$$.callbacks[t]=[]);return a.push(e),()=>{const t=a.indexOf(e);-1!==t&&a.splice(t,1)}}$set(t){var e;this.$$set&&(e=t,0!==Object.keys(e).length)&&(this.$$.skip_bound=!0,this.$$set(t),this.$$.skip_bound=!1)}}const Dt=[];function Tt(e,a=t){let n;const r=new Set;function o(t){if(l(e,t)&&(e=t,n)){const t=!Dt.length;for(const t of r)t[1](),Dt.push(t,e);if(t){for(let t=0;t<Dt.length;t+=2)Dt[t][0](Dt[t+1]);Dt.length=0}}}return{set:o,update:function(t){o(t(e))},subscribe:function(l,s=t){const c=[l,s];return r.add(c),1===r.size&&(n=a(o)||t),l(e),()=>{r.delete(c),0===r.size&&(n(),n=null)}}}}function Nt(e,a,n){const l=!Array.isArray(e),s=l?[e]:e,c=a.length<2;return d=e=>{let n=!1;const d=[];let u=0,f=t;const h=()=>{if(u)return;f();const n=a(l?d[0]:d,e);c?e(n):f=o(n)?n:t},m=s.map(((t,e)=>i(t,(t=>{d[e]=t,u&=~(1<<e),n&&h()}),(()=>{u|=1<<e}))));return n=!0,h(),function(){r(m),f()}},{subscribe:Tt(n,d).subscribe};var d}const Vt={},_t={};function kt(t){return{...t.location,state:t.history.state,key:t.history.state&&t.history.state.key||"initial"}}const At=function(t,e){const a=[];let n=kt(t);return{get location(){return n},listen(e){a.push(e);const r=()=>{n=kt(t),e({location:n,action:"POP"})};return t.addEventListener("popstate",r),()=>{t.removeEventListener("popstate",r);const n=a.indexOf(e);a.splice(n,1)}},navigate(e,{state:r,replace:o=!1}={}){r={...r,key:Date.now()+""};try{o?t.history.replaceState(r,null,e):t.history.pushState(r,null,e)}catch(a){t.location[o?"replace":"assign"](e)}n=kt(t),a.forEach((t=>t({location:n,action:"PUSH"})))}}}(Boolean("undefined"!=typeof window&&window.document&&window.document.createElement)?window:function(t="/"){let e=0;const a=[{pathname:t,search:""}],n=[];return{get location(){return a[e]},addEventListener(t,e){},removeEventListener(t,e){},history:{get entries(){return a},get index(){return e},get state(){return n[e]},pushState(t,r,o){const[l,s=""]=o.split("?");e++,a.push({pathname:l,search:s}),n.push(t)},replaceState(t,r,o){const[l,s=""]=o.split("?");a[e]={pathname:l,search:s},n[e]=t}}}}()),{navigate:Bt}=At,Ct=/^:(.+)/;function Lt(t,e){return t.substr(0,e.length)===e}function Pt(t){return"*"===t[0]}function St(t){return t.replace(/(^\/+|\/+$)/g,"").split("/")}function Mt(t){return t.replace(/(^\/+|\/+$)/g,"")}function Gt(t,e){return{route:t,score:t.default?0:St(t.path).reduce(((t,e)=>(t+=4,!function(t){return""===t}(e)?!function(t){return Ct.test(t)}(e)?Pt(e)?t-=5:t+=3:t+=2:t+=1,t)),0),index:e}}function Ot(t,e){let a,n;const[r]=e.split("?"),o=St(r),l=""===o[0],s=function(t){return t.map(Gt).sort(((t,e)=>t.score<e.score?1:t.score>e.score?-1:t.index-e.index))}(t);for(let t=0,r=s.length;t<r;t++){const r=s[t].route;let c=!1;if(r.default){n={route:r,params:{},uri:e};continue}const i=St(r.path),d={},u=Math.max(o.length,i.length);let f=0;for(;f<u;f++){const t=i[f],e=o[f];if(void 0!==t&&Pt(t)){d["*"===t?"*":t.slice(1)]=o.slice(f).map(decodeURIComponent).join("/");break}if(void 0===e){c=!0;break}let a=Ct.exec(t);if(a&&!l){const t=decodeURIComponent(e);d[a[1]]=t}else if(t!==e){c=!0;break}}if(!c){a={route:r,params:d,uri:"/"+o.slice(0,f).join("/")};break}}return a||n||null}function jt(t,e){return t+(e?`?${e}`:"")}function Ht(t,e){return`${Mt("/"===e?t:`${Mt(t)}/${Mt(e)}`)}/`}function Ut(t){let e;const a=t[9].default,n=u(a,t,t[8],null);return{c(){n&&n.c()},l(t){n&&n.l(t)},m(t,a){n&&n.m(t,a),e=!0},p(t,[r]){n&&n.p&&(!e||256&r)&&m(n,a,t,t[8],e?h(a,t[8],r,null):p(t[8]),null)},i(t){e||(dt(n,t),e=!0)},o(t){ut(n,t),e=!1},d(t){n&&n.d(t)}}}function Ft(t,e,a){let n,r,o,{$$slots:l={},$$scope:s}=e,{basepath:c="/"}=e,{url:i=null}=e;const u=q(Vt),f=q(_t),h=Tt([]);d(t,h,(t=>a(6,r=t)));const m=Tt(null);let p=!1;const g=u||Tt(i?{pathname:i}:At.location);d(t,g,(t=>a(5,n=t)));const v=f?f.routerBase:Tt({path:c,uri:c});d(t,v,(t=>a(7,o=t)));const $=Nt([v,m],(([t,e])=>{if(null===e)return t;const{path:a}=t,{route:n,uri:r}=e;return{path:n.default?a:n.path.replace(/\*.*$/,""),uri:r}}));return u||(z((()=>At.listen((t=>{g.set(t.location)})))),Y(Vt,g)),Y(_t,{activeRoute:m,base:v,routerBase:$,registerRoute:function(t){const{path:e}=o;let{path:a}=t;if(t._path=a,t.path=Ht(e,a),"undefined"==typeof window){if(p)return;const e=function(t,e){return Ot([t],e)}(t,n.pathname);e&&(m.set(e),p=!0)}else h.update((e=>(e.push(t),e)))},unregisterRoute:function(t){h.update((e=>{const a=e.indexOf(t);return e.splice(a,1),e}))}}),t.$$set=t=>{"basepath"in t&&a(3,c=t.basepath),"url"in t&&a(4,i=t.url),"$$scope"in t&&a(8,s=t.$$scope)},t.$$.update=()=>{if(128&t.$$.dirty){const{path:t}=o;h.update((e=>(e.forEach((e=>e.path=Ht(t,e._path))),e)))}if(96&t.$$.dirty){const t=Ot(r,n.pathname);m.set(t)}},[h,g,v,c,i,n,r,o,s,l]}class Rt extends It{constructor(t){super(),xt(this,t,Ft,Ut,l,{basepath:3,url:4})}}const zt=t=>({params:4&t,location:16&t}),Wt=t=>({params:t[2],location:t[4]});function Yt(t){let e,a,n,r;const o=[Xt,qt],l=[];function s(t,e){return null!==t[0]?0:1}return e=s(t),a=l[e]=o[e](t),{c(){a.c(),n=_()},l(t){a.l(t),n=_()},m(t,a){l[e].m(t,a),E(t,n,a),r=!0},p(t,r){let c=e;e=s(t),e===c?l[e].p(t,r):(ct(),ut(l[c],1,1,(()=>{l[c]=null})),it(),a=l[e],a?a.p(t,r):(a=l[e]=o[e](t),a.c()),dt(a,1),a.m(n.parentNode,n))},i(t){r||(dt(a),r=!0)},o(t){ut(a),r=!1},d(t){l[e].d(t),t&&x(n)}}}function qt(t){let e;const a=t[10].default,n=u(a,t,t[9],Wt);return{c(){n&&n.c()},l(t){n&&n.l(t)},m(t,a){n&&n.m(t,a),e=!0},p(t,r){n&&n.p&&(!e||532&r)&&m(n,a,t,t[9],e?h(a,t[9],r,zt):p(t[9]),Wt)},i(t){e||(dt(n,t),e=!0)},o(t){ut(n,t),e=!1},d(t){n&&n.d(t)}}}function Xt(t){let a,n,r;const o=[{location:t[4]},t[2],t[3]];var l=t[0];function s(t){let a={};for(let t=0;t<o.length;t+=1)a=e(a,o[t]);return{props:a}}return l&&(a=new l(s())),{c(){a&&$t(a.$$.fragment),n=_()},l(t){a&&yt(a.$$.fragment,t),n=_()},m(t,e){a&&bt(a,t,e),E(t,n,e),r=!0},p(t,e){const r=28&e?gt(o,[16&e&&{location:t[4]},4&e&&vt(t[2]),8&e&&vt(t[3])]):{};if(l!==(l=t[0])){if(a){ct();const t=a;ut(t.$$.fragment,1,0,(()=>{wt(t,1)})),it()}l?(a=new l(s()),$t(a.$$.fragment),dt(a.$$.fragment,1),bt(a,n.parentNode,n)):a=null}else l&&a.$set(r)},i(t){r||(a&&dt(a.$$.fragment,t),r=!0)},o(t){a&&ut(a.$$.fragment,t),r=!1},d(t){t&&x(n),a&&wt(a,t)}}}function Kt(t){let e,a,n=null!==t[1]&&t[1].route===t[7]&&Yt(t);return{c(){n&&n.c(),e=_()},l(t){n&&n.l(t),e=_()},m(t,r){n&&n.m(t,r),E(t,e,r),a=!0},p(t,[a]){null!==t[1]&&t[1].route===t[7]?n?(n.p(t,a),2&a&&dt(n,1)):(n=Yt(t),n.c(),dt(n,1),n.m(e.parentNode,e)):n&&(ct(),ut(n,1,1,(()=>{n=null})),it())},i(t){a||(dt(n),a=!0)},o(t){ut(n),a=!1},d(t){n&&n.d(t),t&&x(e)}}}function Zt(t,a,n){let r,o,{$$slots:l={},$$scope:s}=a,{path:c=""}=a,{component:i=null}=a;const{registerRoute:u,unregisterRoute:f,activeRoute:h}=q(_t);d(t,h,(t=>n(1,r=t)));const m=q(Vt);d(t,m,(t=>n(4,o=t)));const p={path:c,default:""===c};let v={},$={};var y;return u(p),"undefined"!=typeof window&&(y=()=>{f(p)},R().$$.on_destroy.push(y)),t.$$set=t=>{n(13,a=e(e({},a),g(t))),"path"in t&&n(8,c=t.path),"component"in t&&n(0,i=t.component),"$$scope"in t&&n(9,s=t.$$scope)},t.$$.update=()=>{2&t.$$.dirty&&r&&r.route===p&&n(2,v=r.params);{const{path:t,component:e,...r}=a;n(3,$=r)}},a=g(a),[i,r,v,$,o,h,m,p,c,s,l]}class Jt extends It{constructor(t){super(),xt(this,t,Zt,Kt,l,{path:8,component:0})}}function Qt(t){let a,n,r,o;const l=t[16].default,s=u(l,t,t[15],null);let c=[{href:t[0]},{"aria-current":t[2]},t[1],t[6]],i={};for(let t=0;t<c.length;t+=1)i=e(i,c[t]);return{c(){a=D("a"),s&&s.c(),this.h()},l(t){a=S(t,"A",{href:!0,"aria-current":!0});var e=C(a);s&&s.l(e),e.forEach(x),this.h()},h(){B(a,i)},m(e,l){E(e,a,l),s&&s.m(a,null),n=!0,r||(o=k(a,"click",t[5]),r=!0)},p(t,[e]){s&&s.p&&(!n||32768&e)&&m(s,l,t,t[15],n?h(l,t[15],e,null):p(t[15]),null),B(a,i=gt(c,[(!n||1&e)&&{href:t[0]},(!n||4&e)&&{"aria-current":t[2]},2&e&&t[1],64&e&&t[6]]))},i(t){n||(dt(s,t),n=!0)},o(t){ut(s,t),n=!1},d(t){t&&x(a),s&&s.d(t),r=!1,o()}}}function te(t,a,n){let r;const o=["to","replace","state","getProps"];let l,s,c=v(a,o),{$$slots:i={},$$scope:u}=a,{to:f="#"}=a,{replace:h=!1}=a,{state:m={}}=a,{getProps:p=(()=>({}))}=a;const{base:$}=q(_t);d(t,$,(t=>n(14,s=t)));const y=q(Vt);d(t,y,(t=>n(13,l=t)));const b=W();let w,E,x,I;return t.$$set=t=>{a=e(e({},a),g(t)),n(6,c=v(a,o)),"to"in t&&n(7,f=t.to),"replace"in t&&n(8,h=t.replace),"state"in t&&n(9,m=t.state),"getProps"in t&&n(10,p=t.getProps),"$$scope"in t&&n(15,u=t.$$scope)},t.$$.update=()=>{16512&t.$$.dirty&&n(0,w="/"===f?s.uri:function(t,e){if(Lt(t,"/"))return t;const[a,n]=t.split("?"),[r]=e.split("?"),o=St(a),l=St(r);if(""===o[0])return jt(r,n);if(!Lt(o[0],"."))return jt(("/"===r?"":"/")+l.concat(o).join("/"),n);const s=l.concat(o),c=[];return s.forEach((t=>{".."===t?c.pop():"."!==t&&c.push(t)})),jt("/"+c.join("/"),n)}(f,s.uri)),8193&t.$$.dirty&&n(11,E=Lt(l.pathname,w)),8193&t.$$.dirty&&n(12,x=w===l.pathname),4096&t.$$.dirty&&n(2,r=x?"page":void 0),15361&t.$$.dirty&&n(1,I=p({location:l,href:w,isPartiallyCurrent:E,isCurrent:x}))},[w,I,r,$,y,function(t){if(b("click",t),function(t){return!t.defaultPrevented&&0===t.button&&!(t.metaKey||t.altKey||t.ctrlKey||t.shiftKey)}(t)){t.preventDefault();const e=l.pathname===w||h;Bt(w,{state:m,replace:e})}},c,f,h,m,p,E,x,l,s,u,i]}class ee extends It{constructor(t){super(),xt(this,t,te,Qt,l,{to:7,replace:8,state:9,getProps:10})}}const{document:ae}=ft;function ne(t,e,a){const n=t.slice();return n[1]=e[a],n[3]=a,n}function re(e){let a,n;return{c(){a=D("div"),n=N("Premier League"),this.h()},l(t){a=S(t,"DIV",{class:!0});var e=C(a);n=G(e,"Premier League"),e.forEach(x),this.h()},h(){A(a,"class","title main-link no-decoration")},m(t,e){E(t,a,e),w(a,n)},p:t,d(t){t&&x(a)}}}function oe(e){let a,n,r,o=e[1]+"";return{c(){a=D("div"),n=N(o),r=V(),this.h()},l(t){a=S(t,"DIV",{class:!0,style:!0});var e=C(a);n=G(e,o),e.forEach(x),r=O(t),this.h()},h(){A(a,"class","main-link"),H(a,"color","var(--"+e[1].toLowerCase().replace(/ /g,"-")+"-secondary)")},m(t,e){E(t,a,e),w(a,n),E(t,r,e)},p:t,d(t){t&&x(a),t&&x(r)}}}function le(t,e){let a,n,r;return n=new ee({props:{to:"/"+e[1].toLowerCase().replace(/ /g,"-"),class:"team-button",id:"team-"+(e[3]+1),style:"background-color: var(--"+e[1].toLowerCase().replace(/ /g,"-")+");",$$slots:{default:[oe]},$$scope:{ctx:e}}}),{key:t,first:null,c(){a=_(),$t(n.$$.fragment),this.h()},l(t){a=_(),yt(n.$$.fragment,t),this.h()},h(){this.first=a},m(t,e){E(t,a,e),bt(n,t,e),r=!0},p(t,a){e=t;const r={};16&a&&(r.$$scope={dirty:a,ctx:e}),n.$set(r)},i(t){r||(dt(n.$$.fragment,t),r=!0)},o(t){ut(n.$$.fragment,t),r=!1},d(t){t&&x(a),wt(n,t)}}}function se(t){let e,a,n,r,o,l,s=[],c=new Map;a=new ee({props:{to:"/",$$slots:{default:[re]},$$scope:{ctx:t}}});let i=t[0];const d=t=>t[1];for(let e=0;e<i.length;e+=1){let a=ne(t,i,e),n=d(a);c.set(n,s[e]=le(n,a))}return{c(){e=D("div"),$t(a.$$.fragment),n=V(),r=D("div"),o=D("div");for(let t=0;t<s.length;t+=1)s[t].c();this.h()},l(t){e=S(t,"DIV",{class:!0});var l=C(e);yt(a.$$.fragment,l),l.forEach(x),n=O(t),r=S(t,"DIV",{class:!0});var c=C(r);o=S(c,"DIV",{class:!0});var i=C(o);for(let t=0;t<s.length;t+=1)s[t].l(i);i.forEach(x),c.forEach(x),this.h()},h(){A(e,"class","header"),A(o,"class","teams"),A(r,"class","page-content")},m(t,c){E(t,e,c),bt(a,e,null),E(t,n,c),E(t,r,c),w(r,o);for(let t=0;t<s.length;t+=1)s[t].m(o,null);l=!0},p(t,e){const n={};16&e&&(n.$$scope={dirty:e,ctx:t}),a.$set(n),1&e&&(i=t[0],ct(),s=pt(s,e,d,1,t,i,c,o,mt,le,null,ne),it())},i(t){if(!l){dt(a.$$.fragment,t);for(let t=0;t<i.length;t+=1)dt(s[t]);l=!0}},o(t){ut(a.$$.fragment,t);for(let t=0;t<s.length;t+=1)ut(s[t]);l=!1},d(t){t&&x(e),wt(a),t&&x(n),t&&x(r);for(let t=0;t<s.length;t+=1)s[t].d()}}}function ce(t){let e,a,n,r;return n=new Rt({props:{$$slots:{default:[se]},$$scope:{ctx:t}}}),{c(){e=D("meta"),a=V(),$t(n.$$.fragment),this.h()},l(t){const r=U('[data-svelte="svelte-1rqatx0"]',ae.head);e=S(r,"META",{name:!0,content:!0}),r.forEach(x),a=O(t),yt(n.$$.fragment,t),this.h()},h(){ae.title="Premier League",A(e,"name","description"),A(e,"content","Premier League Statistics Dashboard")},m(t,o){w(ae.head,e),E(t,a,o),bt(n,t,o),r=!0},p(t,[e]){const a={};16&e&&(a.$$scope={dirty:e,ctx:t}),n.$set(a)},i(t){r||(dt(n.$$.fragment,t),r=!0)},o(t){ut(n.$$.fragment,t),r=!1},d(t){x(e),t&&x(a),wt(n,t)}}}function ie(){let t=window.innerWidth;document.getElementById("team-1").classList.remove("top-left"),document.getElementById("team-1").classList.remove("top-right"),document.getElementById("team-2").classList.remove("top-right"),document.getElementById("team-4").classList.remove("top-right"),document.getElementById("team-17").classList.remove("bottom-left"),document.getElementById("team-18").classList.remove("bottom-left"),document.getElementById("team-19").classList.remove("bottom-left"),document.getElementById("team-20").classList.remove("bottom-left"),document.getElementById("team-20").classList.remove("bottom-right"),t<500?(document.getElementById("team-1").classList.add("top-both"),document.getElementById("team-20").classList.add("bottom-both")):t<1100?(document.getElementById("team-1").classList.add("top-left"),document.getElementById("team-2").classList.add("top-right"),document.getElementById("team-19").classList.add("bottom-left"),document.getElementById("team-20").classList.add("bottom-right")):(document.getElementById("team-1").classList.add("top-left"),document.getElementById("team-4").classList.add("top-right"),document.getElementById("team-17").classList.add("bottom-left"),document.getElementById("team-20").classList.add("bottom-right"))}function de(t){return z((()=>(window.addEventListener("resize",ie,!0),ie(),()=>{window.removeEventListener("resize",ie,!0)}))),[["Manchester City","Liverpool","Chelsea","Tottenham Hotspur","Arsenal","Manchester United","West Ham United","Leicester City","Brighton and Hove Albion","Wolverhampton Wanderers","Newcastle United","Crystal Palace","Brentford","Aston Villa","Southampton","Everton","Leeds United","Fulham","Bournemouth","Nottingham Forest"]]}class ue extends It{constructor(t){super(),xt(this,t,de,ce,l,{})}}function fe(t){let e,a,n,r,o,l,s,c,i,d,u,f,h,m,p,g,v,$,y,b,I,T,_,k,B,L,P,M,H,U,F,R=t[5][0]+"",z=t[5][1]+"",W=t[5][2]+"",Y=t[5][3]+"",q=t[5][4]+"";return{c(){e=D("div"),a=D("div"),r=V(),o=D("div"),s=V(),c=D("div"),d=V(),u=D("div"),h=V(),m=D("div"),g=V(),v=D("div"),$=D("div"),y=N(R),b=V(),I=D("div"),T=N(z),_=V(),k=D("div"),B=N(W),L=V(),P=D("div"),M=N(Y),H=V(),U=D("div"),F=N(q),this.h()},l(t){e=S(t,"DIV",{class:!0});var n=C(e);a=S(n,"DIV",{class:!0}),C(a).forEach(x),r=O(n),o=S(n,"DIV",{class:!0}),C(o).forEach(x),s=O(n),c=S(n,"DIV",{class:!0}),C(c).forEach(x),d=O(n),u=S(n,"DIV",{class:!0}),C(u).forEach(x),h=O(n),m=S(n,"DIV",{class:!0}),C(m).forEach(x),n.forEach(x),g=O(t),v=S(t,"DIV",{class:!0});var l=C(v);$=S(l,"DIV",{class:!0});var i=C($);y=G(i,R),i.forEach(x),b=O(l),I=S(l,"DIV",{class:!0});var f=C(I);T=G(f,z),f.forEach(x),_=O(l),k=S(l,"DIV",{class:!0});var p=C(k);B=G(p,W),p.forEach(x),L=O(l),P=S(l,"DIV",{class:!0});var w=C(P);M=G(w,Y),w.forEach(x),H=O(l),U=S(l,"DIV",{class:!0});var E=C(U);F=G(E,q),E.forEach(x),l.forEach(x),this.h()},h(){A(a,"class",n="icon pos-0 "+t[3][0]+" "+t[4][0]),A(o,"class",l="icon pos-1 "+t[3][1]+" "+t[4][1]),A(c,"class",i="icon pos-2 "+t[3][2]+" "+t[4][2]),A(u,"class",f="icon pos-3 "+t[3][3]+" "+t[4][3]),A(m,"class",p="icon pos-4 "+t[3][4]+" "+t[4][4]),A(e,"class","current-form-row"),A($,"class","icon-name pos-0"),A(I,"class","icon-name pos-1"),A(k,"class","icon-name pos-2"),A(P,"class","icon-name pos-3"),A(U,"class","icon-name pos-4"),A(v,"class","current-form-row")},m(t,n){E(t,e,n),w(e,a),w(e,r),w(e,o),w(e,s),w(e,c),w(e,d),w(e,u),w(e,h),w(e,m),E(t,g,n),E(t,v,n),w(v,$),w($,y),w(v,b),w(v,I),w(I,T),w(v,_),w(v,k),w(k,B),w(v,L),w(v,P),w(P,M),w(v,H),w(v,U),w(U,F)},p(t,e){24&e&&n!==(n="icon pos-0 "+t[3][0]+" "+t[4][0])&&A(a,"class",n),24&e&&l!==(l="icon pos-1 "+t[3][1]+" "+t[4][1])&&A(o,"class",l),24&e&&i!==(i="icon pos-2 "+t[3][2]+" "+t[4][2])&&A(c,"class",i),24&e&&f!==(f="icon pos-3 "+t[3][3]+" "+t[4][3])&&A(u,"class",f),24&e&&p!==(p="icon pos-4 "+t[3][4]+" "+t[4][4])&&A(m,"class",p),32&e&&R!==(R=t[5][0]+"")&&j(y,R),32&e&&z!==(z=t[5][1]+"")&&j(T,z),32&e&&W!==(W=t[5][2]+"")&&j(B,W),32&e&&Y!==(Y=t[5][3]+"")&&j(M,Y),32&e&&q!==(q=t[5][4]+"")&&j(F,q)},d(t){t&&x(e),t&&x(g),t&&x(v)}}}function he(e){let a;return{c(){a=N("None")},l(t){a=G(t,"None")},m(t,e){E(t,a,e)},p:t,d(t){t&&x(a)}}}function me(t){let e,a,n=(100*t[0].form[t[0]._id][t[2]][t[1]].formRating5).toFixed(1)+"";return{c(){e=N(n),a=N("%")},l(t){e=G(t,n),a=G(t,"%")},m(t,n){E(t,e,n),E(t,a,n)},p(t,a){7&a&&n!==(n=(100*t[0].form[t[0]._id][t[2]][t[1]].formRating5).toFixed(1)+"")&&j(e,n)},d(t){t&&x(e),t&&x(a)}}}function pe(e){let a,n,r,o=null!=e[5]&&fe(e);function l(t,e){return null!=t[1]?me:he}let s=l(e),c=s(e);return{c(){o&&o.c(),a=V(),n=D("div"),r=N("Current form:\r\n  "),c.c(),this.h()},l(t){o&&o.l(t),a=O(t),n=S(t,"DIV",{class:!0});var e=C(n);r=G(e,"Current form:\r\n  "),c.l(e),e.forEach(x),this.h()},h(){A(n,"class","current-form")},m(t,e){o&&o.m(t,e),E(t,a,e),E(t,n,e),w(n,r),c.m(n,null)},p(t,[e]){null!=t[5]?o?o.p(t,e):(o=fe(t),o.c(),o.m(a.parentNode,a)):o&&(o.d(1),o=null),s===(s=l(t))&&c?c.p(t,e):(c.d(1),c=s(t),c&&(c.c(),c.m(n,null)))},i:t,o:t,d(t){o&&o.d(t),t&&x(a),t&&x(n),c.d()}}}function ge(t){switch(t){case"Brighton and Hove Albion":return"BHA";case"Manchester City":return"MCI";case"Manchester United":return"MUN";case"Aston Villa":return"AVL";case"Sheffield United":return"SHU";case"West Bromwich Albion":return"WBA";case"West Ham United":return"WHU"}return t.slice(0,3).toUpperCase()}function ve(t,e,a){let n,r,o;function l(){let t=function(t,e){return Object.keys(t.form[t._id][e]).sort((function(a,n){return new Date(t.form[t._id][e][a].date)-new Date(t.form[t._id][e][n].date)}))}(s,i),e=t.slice(-5);a(3,n=function(t,e){let a=[];Object.keys(t.form[t._id][e][c]).length>0&&(a=t.form[t._id][e][c].form5.split(""));for(let t=a.length;t<5;t++)a.unshift("N");return a}(s,i)),a(4,r=function(t,e,a){let n=[];for(let r of a)n.unshift(t.form[t._id][e][r].beatStarTeam?"star-team":"");for(let t=n.length;t<5;t++)n.unshift("");return n}(s,i,e)),a(5,o=function(t,e,a){let n=[];for(let r of a)n.unshift(ge(t.form[t._id][e][r].team));for(let t=n.length;t<5;t++)n.unshift("");return n}(s,i,e))}let{data:s,currentMatchday:c,fullTeamName:i}=e;return t.$$set=t=>{"data"in t&&a(0,s=t.data),"currentMatchday"in t&&a(1,c=t.currentMatchday),"fullTeamName"in t&&a(2,i=t.fullTeamName)},t.$$.update=()=>{4&t.$$.dirty&&i&&l()},[s,c,i,n,r,o]}class $e extends It{constructor(t){super(),xt(this,t,ve,pe,l,{data:0,currentMatchday:1,fullTeamName:2})}}function ye(t,e,a){const n=t.slice();return n[8]=e[a],n[10]=a,n}function be(t){let e,a,n,r,o,l,s,c,i,d,u,f,h,m,p,g,v=t[3].rows,$=[];for(let e=0;e<v.length;e+=1)$[e]=Te(ye(t,v,e));let y=6!=t[3].teamTableIdx&&Ne();return{c(){e=D("div"),a=V(),n=D("div"),r=D("div"),o=V(),l=D("div"),s=N("Team"),c=V(),i=D("div"),d=N("GD"),u=V(),f=D("div"),h=N("Points"),m=V();for(let t=0;t<$.length;t+=1)$[t].c();p=V(),y&&y.c(),g=_(),this.h()},l(t){e=S(t,"DIV",{class:!0}),C(e).forEach(x),a=O(t),n=S(t,"DIV",{class:!0});var v=C(n);r=S(v,"DIV",{class:!0}),C(r).forEach(x),o=O(v),l=S(v,"DIV",{class:!0});var b=C(l);s=G(b,"Team"),b.forEach(x),c=O(v),i=S(v,"DIV",{class:!0});var w=C(i);d=G(w,"GD"),w.forEach(x),u=O(v),f=S(v,"DIV",{class:!0});var E=C(f);h=G(E,"Points"),E.forEach(x),v.forEach(x),m=O(t);for(let e=0;e<$.length;e+=1)$[e].l(t);p=O(t),y&&y.l(t),g=_(),this.h()},h(){A(e,"class","divider"),A(r,"class","table-element table-position column-title"),A(l,"class","table-element table-team-name column-title"),A(i,"class","table-element table-gd column-title"),A(f,"class","table-element table-points column-title"),A(n,"class","table-row")},m(t,v){E(t,e,v),E(t,a,v),E(t,n,v),w(n,r),w(n,o),w(n,l),w(l,s),w(n,c),w(n,i),w(i,d),w(n,u),w(n,f),w(f,h),E(t,m,v);for(let e=0;e<$.length;e+=1)$[e].m(t,v);E(t,p,v),y&&y.m(t,v),E(t,g,v)},p(t,e){if(15&e){let a;for(v=t[3].rows,a=0;a<v.length;a+=1){const n=ye(t,v,a);$[a]?$[a].p(n,e):($[a]=Te(n),$[a].c(),$[a].m(p.parentNode,p))}for(;a<$.length;a+=1)$[a].d(1);$.length=v.length}6!=t[3].teamTableIdx?y||(y=Ne(),y.c(),y.m(g.parentNode,g)):y&&(y.d(1),y=null)},d(t){t&&x(e),t&&x(a),t&&x(n),t&&x(m),I($,t),t&&x(p),y&&y.d(t),t&&x(g)}}}function we(e){let a;return{c(){a=D("div"),this.h()},l(t){a=S(t,"DIV",{id:!0}),C(a).forEach(x),this.h()},h(){A(a,"id","divider")},m(t,e){E(t,a,e)},p:t,d(t){t&&x(a)}}}function Ee(t){let e,a=t[10]!=t[3].teamTableIdx&&xe();return{c(){a&&a.c(),e=_()},l(t){a&&a.l(t),e=_()},m(t,n){a&&a.m(t,n),E(t,e,n)},p(t,n){t[10]!=t[3].teamTableIdx?a||(a=xe(),a.c(),a.m(e.parentNode,e)):a&&(a.d(1),a=null)},d(t){a&&a.d(t),t&&x(e)}}}function xe(t){let e;return{c(){e=D("div"),this.h()},l(t){e=S(t,"DIV",{id:!0}),C(e).forEach(x),this.h()},h(){A(e,"id","divider")},m(t,a){E(t,e,a)},d(t){t&&x(e)}}}function Ie(t){let e,a,n,r,o,l,s,c,i,d,u,f,h,m,p=t[8].position+"",g=t[1](t[8].name)+"",v=t[8].gd+"",$=t[8].points+"";function y(){return t[6](t[8])}return{c(){e=D("div"),a=D("div"),n=N(p),r=V(),o=D("button"),l=N(g),s=V(),c=D("div"),i=N(v),d=V(),u=D("div"),f=N($),this.h()},l(t){e=S(t,"DIV",{class:!0});var h=C(e);a=S(h,"DIV",{class:!0});var m=C(a);n=G(m,p),m.forEach(x),r=O(h),o=S(h,"BUTTON",{class:!0});var y=C(o);l=G(y,g),y.forEach(x),s=O(h),c=S(h,"DIV",{class:!0});var b=C(c);i=G(b,v),b.forEach(x),d=O(h),u=S(h,"DIV",{class:!0});var w=C(u);f=G(w,$),w.forEach(x),h.forEach(x),this.h()},h(){A(a,"class","table-element table-position"),A(o,"class","table-element table-team-name"),A(c,"class","table-element table-gd"),A(u,"class","table-element table-points"),A(e,"class","table-row")},m(t,p){E(t,e,p),w(e,a),w(a,n),w(e,r),w(e,o),w(o,l),w(e,s),w(e,c),w(c,i),w(e,d),w(e,u),w(u,f),h||(m=k(o,"click",y),h=!0)},p(e,a){t=e,8&a&&p!==(p=t[8].position+"")&&j(n,p),10&a&&g!==(g=t[1](t[8].name)+"")&&j(l,g),8&a&&v!==(v=t[8].gd+"")&&j(i,v),8&a&&$!==($=t[8].points+"")&&j(f,$)},d(t){t&&x(e),h=!1,m()}}}function De(t){let e,a,n,r,o,l,s,c,i,d,u,f,h,m=t[8].position+"",p=t[1](t[8].name)+"",g=t[8].gd+"",v=t[8].points+"";return{c(){e=D("div"),a=D("div"),n=N(m),r=V(),o=D("a"),l=N(p),c=V(),i=D("div"),d=N(g),u=V(),f=D("div"),h=N(v),this.h()},l(t){e=S(t,"DIV",{class:!0,style:!0});var s=C(e);a=S(s,"DIV",{class:!0,style:!0});var $=C(a);n=G($,m),$.forEach(x),r=O(s),o=S(s,"A",{href:!0,class:!0,style:!0});var y=C(o);l=G(y,p),y.forEach(x),c=O(s),i=S(s,"DIV",{class:!0,style:!0});var b=C(i);d=G(b,g),b.forEach(x),u=O(s),f=S(s,"DIV",{class:!0,style:!0});var w=C(f);h=G(w,v),w.forEach(x),s.forEach(x),this.h()},h(){A(a,"class","table-element table-position this-team"),H(a,"color","var(--"+t[0]+"-secondary)"),A(o,"href",s="/"+t[0]),A(o,"class","table-element table-team-name this-team"),H(o,"color","var(--"+t[0]+"-secondary)"),A(i,"class","table-element table-gd this-team"),H(i,"color","var(--"+t[0]+"-secondary)"),A(f,"class","table-element table-points this-team"),H(f,"color","var(--"+t[0]+"-secondary)"),A(e,"class","table-row this-team"),H(e,"background-color","var(--"+t[0]+")")},m(t,s){E(t,e,s),w(e,a),w(a,n),w(e,r),w(e,o),w(o,l),w(e,c),w(e,i),w(i,d),w(e,u),w(e,f),w(f,h)},p(t,r){8&r&&m!==(m=t[8].position+"")&&j(n,m),1&r&&H(a,"color","var(--"+t[0]+"-secondary)"),10&r&&p!==(p=t[1](t[8].name)+"")&&j(l,p),1&r&&s!==(s="/"+t[0])&&A(o,"href",s),1&r&&H(o,"color","var(--"+t[0]+"-secondary)"),8&r&&g!==(g=t[8].gd+"")&&j(d,g),1&r&&H(i,"color","var(--"+t[0]+"-secondary)"),8&r&&v!==(v=t[8].points+"")&&j(h,v),1&r&&H(f,"color","var(--"+t[0]+"-secondary)"),1&r&&H(e,"background-color","var(--"+t[0]+")")},d(t){t&&x(e)}}}function Te(t){let e,a;function n(t,e){return 0==t[10]?Ee:t[10]-1!=t[3].teamTableIdx&&t[10]!=t[3].teamTableIdx?we:void 0}let r=n(t),o=r&&r(t);function l(t,e){return t[10]==t[3].teamTableIdx?De:Ie}let s=l(t),c=s(t);return{c(){o&&o.c(),e=V(),c.c(),a=_()},l(t){o&&o.l(t),e=O(t),c.l(t),a=_()},m(t,n){o&&o.m(t,n),E(t,e,n),c.m(t,n),E(t,a,n)},p(t,i){r===(r=n(t))&&o?o.p(t,i):(o&&o.d(1),o=r&&r(t),o&&(o.c(),o.m(e.parentNode,e))),s===(s=l(t))&&c?c.p(t,i):(c.d(1),c=s(t),c&&(c.c(),c.m(a.parentNode,a)))},d(t){o&&o.d(t),t&&x(e),c.d(t),t&&x(a)}}}function Ne(t){let e;return{c(){e=D("div"),this.h()},l(t){e=S(t,"DIV",{id:!0}),C(e).forEach(x),this.h()},h(){A(e,"id","divider")},m(t,a){E(t,e,a)},d(t){t&&x(e)}}}function Ve(e){let a,n=null!=e[3]&&be(e);return{c(){a=D("div"),n&&n.c(),this.h()},l(t){a=S(t,"DIV",{class:!0});var e=C(a);n&&n.l(e),e.forEach(x),this.h()},h(){A(a,"class","table-snippet")},m(t,e){E(t,a,e),n&&n.m(a,null)},p(t,[e]){null!=t[3]?n?n.p(t,e):(n=be(t),n.c(),n.m(a,null)):n&&(n.d(1),n=null)},i:t,o:t,d(t){t&&x(a),n&&n.d()}}}function _e(t,e,a){let n,{data:r,team:o,fullTeamName:l,getAlias:s,switchTeam:c}=e;return t.$$set=t=>{"data"in t&&a(4,r=t.data),"team"in t&&a(0,o=t.team),"fullTeamName"in t&&a(5,l=t.fullTeamName),"getAlias"in t&&a(1,s=t.getAlias),"switchTeam"in t&&a(2,c=t.switchTeam)},t.$$.update=()=>{32&t.$$.dirty&&l&&function(){let t,e=Object.keys(r.standings).sort((function(t,e){return r.standings[t][r._id].position-r.standings[e][r._id].position})),[o,s]=function(t,e){let a=t.indexOf(e),n=a-3,r=a+4;return n<0&&(r-=n,n=0),r>t.length-1&&(n-=r-t.length,r=t.length),[n,r]}(e,l),c=[];for(let a=o;a<s;a++)e[a]==l&&(t=a-o),c.push({name:e[a],position:r.standings[e[a]][r._id].position,points:r.standings[e[a]][r._id].points,gd:r.standings[e[a]][r._id].gD});a(3,n={teamTableIdx:t,rows:c})}()},[o,s,c,n,r,l,t=>{c(t.name.toLowerCase().replace(/ /g,"-"))}]}class ke extends It{constructor(t){super(),xt(this,t,_e,Ve,l,{data:4,team:0,fullTeamName:5,getAlias:1,switchTeam:2})}}function Ae(e){let a,n,r,o,l,s,c,i=e[0]._id+"",d=e[0]._id+1+"";return{c(){a=D("div"),n=D("div"),r=D("h1"),o=N(i),l=N("/"),s=N(d),c=N(" SEASON COMPLETE"),this.h()},l(t){a=S(t,"DIV",{class:!0});var e=C(a);n=S(e,"DIV",{class:!0});var u=C(n);r=S(u,"H1",{class:!0});var f=C(r);o=G(f,i),l=G(f,"/"),s=G(f,d),c=G(f," SEASON COMPLETE"),f.forEach(x),u.forEach(x),e.forEach(x),this.h()},h(){A(r,"class","next-game-title-text"),A(n,"class","next-game-season-complete"),A(a,"class","next-game-prediction")},m(t,e){E(t,a,e),w(a,n),w(n,r),w(r,o),w(r,l),w(r,s),w(r,c)},p(t,[e]){1&e&&i!==(i=t[0]._id+"")&&j(o,i),1&e&&d!==(d=t[0]._id+1+"")&&j(s,d)},i:t,o:t,d(t){t&&x(a)}}}function Be(t,e,a){let{data:n}=e;return t.$$set=t=>{"data"in t&&a(0,n=t.data)},[n]}class Ce extends It{constructor(t){super(),xt(this,t,Be,Ae,l,{data:0})}}function Le(t,e,a){const n=t.slice();return n[9]=e[a],n}function Pe(e){let a;return{c(){a=D("div"),this.h()},l(t){a=S(t,"DIV",{class:!0}),C(a).forEach(x),this.h()},h(){A(a,"class","next-game-position")},m(t,e){E(t,a,e)},p:t,d(t){t&&x(a)}}}function Se(t){let e;return{c(){e=D("div"),this.h()},l(t){e=S(t,"DIV",{class:!0,style:!0}),C(e).forEach(x),this.h()},h(){A(e,"class","next-game-logo opposition-badge"),H(e,"background-image","url('"+t[0].logoURLs[t[0].upcoming[t[1]].nextTeam]+"')")},m(t,a){E(t,e,a)},p(t,a){3&a&&H(e,"background-image","url('"+t[0].logoURLs[t[0].upcoming[t[1]].nextTeam]+"')")},d(t){t&&x(e)}}}function Me(e){let a;return{c(){a=N("None")},l(t){a=G(t,"None")},m(t,e){E(t,a,e)},p:t,d(t){t&&x(a)}}}function Ge(t){let e,a,n,r=(100*t[0].form[t[0]._id][t[0].upcoming[t[1]].nextTeam][t[2]].formRating5).toFixed(1)+"";return{c(){e=D("b"),a=N(r),n=N("%")},l(t){e=S(t,"B",{});var o=C(e);a=G(o,r),n=G(o,"%"),o.forEach(x)},m(t,r){E(t,e,r),w(e,a),w(e,n)},p(t,e){7&e&&r!==(r=(100*t[0].form[t[0]._id][t[0].upcoming[t[1]].nextTeam][t[2]].formRating5).toFixed(1)+"")&&j(a,r)},d(t){t&&x(e)}}}function Oe(t){let e,a;return{c(){e=D("div"),a=N("Previous Results"),this.h()},l(t){e=S(t,"DIV",{class:!0});var n=C(e);a=G(n,"Previous Results"),n.forEach(x),this.h()},h(){A(e,"class","next-game-item prev-results-title")},m(t,n){E(t,e,n),w(e,a)},d(t){t&&x(e)}}}function je(t){let e,a;return{c(){e=D("div"),a=N("No Previous Results"),this.h()},l(t){e=S(t,"DIV",{class:!0});var n=C(e);a=G(n,"No Previous Results"),n.forEach(x),this.h()},h(){A(e,"class","next-game-item prev-results-title no-prev-results")},m(t,n){E(t,e,n),w(e,a)},d(t){t&&x(e)}}}function He(t){let e,a,n,r,o,l,s,c,i,d,u,f,h,m,p,g,v,$,y,b=t[4](t[9].homeTeam)+"",I=t[9].homeGoals+"",T=t[9].awayGoals+"",_=t[4](t[9].awayTeam)+"",k=new Date(t[9].date).toLocaleDateString("en-us",{weekday:"long",year:"numeric",month:"short",day:"numeric"})+"";return{c(){e=D("div"),a=D("div"),n=D("div"),r=N(b),o=V(),l=D("div"),s=N(I),c=N(" - "),i=N(T),d=V(),u=D("div"),f=N(_),h=V(),m=D("div"),p=V(),g=D("div"),v=N(k),$=V(),this.h()},l(t){e=S(t,"DIV",{class:!0});var y=C(e);a=S(y,"DIV",{class:!0});var w=C(a);n=S(w,"DIV",{class:!0});var E=C(n);r=G(E,b),E.forEach(x),o=O(w),l=S(w,"DIV",{class:!0});var D=C(l);s=G(D,I),c=G(D," - "),i=G(D,T),D.forEach(x),d=O(w),u=S(w,"DIV",{class:!0});var N=C(u);f=G(N,_),N.forEach(x),w.forEach(x),h=O(y),m=S(y,"DIV",{style:!0}),C(m).forEach(x),p=O(y),g=S(y,"DIV",{class:!0});var V=C(g);v=G(V,k),V.forEach(x),$=O(y),y.forEach(x),this.h()},h(){A(n,"class","home-team"),A(l,"class","score"),A(u,"class","away-team"),A(a,"class","past-result"),H(m,"clear","both"),A(g,"class","past-result-date"),A(e,"class",y="next-game-item "+t[9].result)},m(t,y){E(t,e,y),w(e,a),w(a,n),w(n,r),w(a,o),w(a,l),w(l,s),w(l,c),w(l,i),w(a,d),w(a,u),w(u,f),w(e,h),w(e,m),w(e,p),w(e,g),w(g,v),w(e,$)},p(t,a){19&a&&b!==(b=t[4](t[9].homeTeam)+"")&&j(r,b),3&a&&I!==(I=t[9].homeGoals+"")&&j(s,I),3&a&&T!==(T=t[9].awayGoals+"")&&j(i,T),19&a&&_!==(_=t[4](t[9].awayTeam)+"")&&j(f,_),3&a&&k!==(k=new Date(t[9].date).toLocaleDateString("en-us",{weekday:"long",year:"numeric",month:"short",day:"numeric"})+"")&&j(v,k),3&a&&y!==(y="next-game-item "+t[9].result)&&A(e,"class",y)},d(t){t&&x(e)}}}function Ue(e){let a,n,r,o,l,s,c,i,d,u,f,h,m,p,g,v,$,y,b,T,_,B,L,P,M,U,F,R,z,W,Y,q,X,K,Z,J,Q,tt,et=e[4](e[0].upcoming[e[1]].nextTeam)+"",at=e[0].upcoming[e[1]].atHome?"Home":"Away",nt=Fe(e[0].standings[e[0].upcoming[e[1]].nextTeam][e[0]._id].position)+"",rt=Math.round(e[0].upcoming[e[1]].prediction.homeGoals)+"",ot=Math.round(e[0].upcoming[e[1]].prediction.awayGoals)+"";function lt(t,e){return t[3]?Se:Pe}let st=lt(e),ct=st(e);function it(t,e){return null!=t[2]?Ge:Me}let dt=it(e),ut=dt(e);function ft(t,e){return 0==t[0].upcoming[t[1]].prevMatches.length?je:Oe}let ht=ft(e),mt=ht(e),pt=e[0].upcoming[e[1]].prevMatches,gt=[];for(let t=0;t<pt.length;t+=1)gt[t]=He(Le(e,pt,t));return{c(){a=D("div"),n=D("div"),r=D("h1"),o=N("Next Game: \r\n      "),l=D("button"),s=N(et),c=N(" "),i=N("\r\n      ("),d=N(at),u=N(")"),f=V(),h=D("div"),m=D("div"),ct.c(),p=V(),g=D("div"),v=D("div"),$=D("div"),y=N(nt),b=V(),T=D("div"),_=N("Current form:\r\n          "),ut.c(),B=V(),L=D("div"),P=N("Score prediction\r\n          "),M=D("br"),U=V(),F=D("a"),R=D("b"),z=N(rt),W=N(" - "),Y=N(ot),q=V(),X=D("br"),K=V(),Z=D("div"),mt.c(),J=V();for(let t=0;t<gt.length;t+=1)gt[t].c();this.h()},l(t){a=S(t,"DIV",{class:!0,style:!0});var e=C(a);n=S(e,"DIV",{class:!0,style:!0});var w=C(n);r=S(w,"H1",{class:!0,style:!0});var E=C(r);o=G(E,"Next Game: \r\n      "),l=S(E,"BUTTON",{style:!0});var I=C(l);s=G(I,et),c=G(I," "),I.forEach(x),i=G(E,"\r\n      ("),d=G(E,at),u=G(E,")"),E.forEach(x),w.forEach(x),f=O(e),h=S(e,"DIV",{class:!0});var D=C(h);m=S(D,"DIV",{class:!0});var N=C(m);ct.l(N),p=O(N),g=S(N,"DIV",{class:!0});var V=C(g);v=S(V,"DIV",{class:!0});var k=C(v);$=S(k,"DIV",{class:!0});var A=C($);y=G(A,nt),A.forEach(x),k.forEach(x),b=O(V),T=S(V,"DIV",{class:!0});var j=C(T);_=G(j,"Current form:\r\n          "),ut.l(j),j.forEach(x),B=O(V),L=S(V,"DIV",{class:!0});var H=C(L);P=G(H,"Score prediction\r\n          "),M=S(H,"BR",{}),U=O(H),F=S(H,"A",{class:!0,href:!0});var Q=C(F);R=S(Q,"B",{});var tt=C(R);z=G(tt,rt),W=G(tt," - "),Y=G(tt,ot),tt.forEach(x),Q.forEach(x),q=O(H),X=S(H,"BR",{}),H.forEach(x),V.forEach(x),N.forEach(x),K=O(D),Z=S(D,"DIV",{class:!0});var lt=C(Z);mt.l(lt),J=O(lt);for(let t=0;t<gt.length;t+=1)gt[t].l(lt);lt.forEach(x),D.forEach(x),e.forEach(x),this.h()},h(){H(l,"color","inherit"),A(r,"class","next-game-title-text"),H(r,"color","var(--"+e[6]+"-secondary)"),A(n,"class","next-game-title"),H(n,"background-color","var(--"+e[6]+")"),A($,"class","next-game-position"),A(v,"class","next-game-item"),A(T,"class","next-game-item"),A(F,"class","predictions-link"),A(F,"href","/predictions"),A(L,"class","next-game-item"),A(g,"class","predictions"),A(m,"class","predictions-and-logo"),A(Z,"class","past-results"),A(h,"class","next-game-values"),A(a,"class","next-game-prediction"),H(a,"border","6px solid var(--"+e[6]+")")},m(t,x){E(t,a,x),w(a,n),w(n,r),w(r,o),w(r,l),w(l,s),w(l,c),w(r,i),w(r,d),w(r,u),w(a,f),w(a,h),w(h,m),ct.m(m,null),w(m,p),w(m,g),w(g,v),w(v,$),w($,y),w(g,b),w(g,T),w(T,_),ut.m(T,null),w(g,B),w(g,L),w(L,P),w(L,M),w(L,U),w(L,F),w(F,R),w(R,z),w(R,W),w(R,Y),w(L,q),w(L,X),w(h,K),w(h,Z),mt.m(Z,null),w(Z,J);for(let t=0;t<gt.length;t+=1)gt[t].m(Z,null);Q||(tt=k(l,"click",e[7]),Q=!0)},p(t,[e]){if(19&e&&et!==(et=t[4](t[0].upcoming[t[1]].nextTeam)+"")&&j(s,et),3&e&&at!==(at=t[0].upcoming[t[1]].atHome?"Home":"Away")&&j(d,at),64&e&&H(r,"color","var(--"+t[6]+"-secondary)"),64&e&&H(n,"background-color","var(--"+t[6]+")"),st===(st=lt(t))&&ct?ct.p(t,e):(ct.d(1),ct=st(t),ct&&(ct.c(),ct.m(m,p))),3&e&&nt!==(nt=Fe(t[0].standings[t[0].upcoming[t[1]].nextTeam][t[0]._id].position)+"")&&j(y,nt),dt===(dt=it(t))&&ut?ut.p(t,e):(ut.d(1),ut=dt(t),ut&&(ut.c(),ut.m(T,null))),3&e&&rt!==(rt=Math.round(t[0].upcoming[t[1]].prediction.homeGoals)+"")&&j(z,rt),3&e&&ot!==(ot=Math.round(t[0].upcoming[t[1]].prediction.awayGoals)+"")&&j(Y,ot),ht!==(ht=ft(t))&&(mt.d(1),mt=ht(t),mt&&(mt.c(),mt.m(Z,J))),19&e){let a;for(pt=t[0].upcoming[t[1]].prevMatches,a=0;a<pt.length;a+=1){const n=Le(t,pt,a);gt[a]?gt[a].p(n,e):(gt[a]=He(n),gt[a].c(),gt[a].m(Z,null))}for(;a<gt.length;a+=1)gt[a].d(1);gt.length=pt.length}64&e&&H(a,"border","6px solid var(--"+t[6]+")")},i:t,o:t,d(t){t&&x(a),ct.d(),ut.d(),mt.d(),I(gt,t),Q=!1,tt()}}}function Fe(t){let e=t%100;return t+([,"st","nd","rd"][e>20?e%10:e]||"th")}function Re(t,e,a){let n,{data:r,fullTeamName:o,currentMatchday:l,showBadge:s,getAlias:c,switchTeam:i}=e;return t.$$set=t=>{"data"in t&&a(0,r=t.data),"fullTeamName"in t&&a(1,o=t.fullTeamName),"currentMatchday"in t&&a(2,l=t.currentMatchday),"showBadge"in t&&a(3,s=t.showBadge),"getAlias"in t&&a(4,c=t.getAlias),"switchTeam"in t&&a(5,i=t.switchTeam)},t.$$.update=()=>{2&t.$$.dirty&&o&&null!=r.upcoming[o].nextTeam&&a(6,n=r.upcoming[o].nextTeam.toLowerCase().replace(/ /g,"-"))},[r,o,l,s,c,i,n,()=>{i(r.upcoming[o].nextTeam.toLowerCase().replace(/ /g,"-"))}]}class ze extends It{constructor(t){super(),xt(this,t,Re,Ue,l,{data:0,fullTeamName:1,currentMatchday:2,showBadge:3,getAlias:4,switchTeam:5})}}function We(t){let e,a,n,r;const o=[qe,Ye],l=[];function s(t,e){return null==t[0].upcoming[t[2]].nextTeam?0:1}return e=s(t),a=l[e]=o[e](t),{c(){a.c(),n=_()},l(t){a.l(t),n=_()},m(t,a){l[e].m(t,a),E(t,n,a),r=!0},p(t,r){let c=e;e=s(t),e===c?l[e].p(t,r):(ct(),ut(l[c],1,1,(()=>{l[c]=null})),it(),a=l[e],a?a.p(t,r):(a=l[e]=o[e](t),a.c()),dt(a,1),a.m(n.parentNode,n))},i(t){r||(dt(a),r=!0)},o(t){ut(a),r=!1},d(t){l[e].d(t),t&&x(n)}}}function Ye(t){let e,a;return e=new ze({props:{data:t[0],currentMatchday:t[1],fullTeamName:t[2],showBadge:t[3],getAlias:t[4],switchTeam:t[5]}}),{c(){$t(e.$$.fragment)},l(t){yt(e.$$.fragment,t)},m(t,n){bt(e,t,n),a=!0},p(t,a){const n={};1&a&&(n.data=t[0]),2&a&&(n.currentMatchday=t[1]),4&a&&(n.fullTeamName=t[2]),8&a&&(n.showBadge=t[3]),16&a&&(n.getAlias=t[4]),32&a&&(n.switchTeam=t[5]),e.$set(n)},i(t){a||(dt(e.$$.fragment,t),a=!0)},o(t){ut(e.$$.fragment,t),a=!1},d(t){wt(e,t)}}}function qe(t){let e,a;return e=new Ce({props:{data:t[0]}}),{c(){$t(e.$$.fragment)},l(t){yt(e.$$.fragment,t)},m(t,n){bt(e,t,n),a=!0},p(t,a){const n={};1&a&&(n.data=t[0]),e.$set(n)},i(t){a||(dt(e.$$.fragment,t),a=!0)},o(t){ut(e.$$.fragment,t),a=!1},d(t){wt(e,t)}}}function Xe(t){let e,a,n=null!=t[0]&&We(t);return{c(){n&&n.c(),e=_()},l(t){n&&n.l(t),e=_()},m(t,r){n&&n.m(t,r),E(t,e,r),a=!0},p(t,[a]){null!=t[0]?n?(n.p(t,a),1&a&&dt(n,1)):(n=We(t),n.c(),dt(n,1),n.m(e.parentNode,e)):n&&(ct(),ut(n,1,1,(()=>{n=null})),it())},i(t){a||(dt(n),a=!0)},o(t){ut(n),a=!1},d(t){n&&n.d(t),t&&x(e)}}}function Ke(t,e,a){let{data:n,currentMatchday:r,fullTeamName:o,showBadge:l,getAlias:s,switchTeam:c}=e;return t.$$set=t=>{"data"in t&&a(0,n=t.data),"currentMatchday"in t&&a(1,r=t.currentMatchday),"fullTeamName"in t&&a(2,o=t.fullTeamName),"showBadge"in t&&a(3,l=t.showBadge),"getAlias"in t&&a(4,s=t.getAlias),"switchTeam"in t&&a(5,c=t.switchTeam)},[n,r,o,l,s,c]}class Ze extends It{constructor(t){super(),xt(this,t,Ke,Xe,l,{data:0,currentMatchday:1,fullTeamName:2,showBadge:3,getAlias:4,switchTeam:5})}}function Je(e){let a,n,r,o,l,s,c,i,d,u,f,h,m,p,g,v,$,y,b,I,T,_,k,B,L,P,M,H,U,F,R,z,W,Y=e[0].seasonStats[e[1]].xG+"",q=e[5].xG+"",X=e[0].seasonStats[e[1]].xC+"",K=e[5].xC+"",Z=e[0].seasonStats[e[1]].cleanSheetRatio+"",J=e[5].cleanSheetRatio+"";return{c(){a=D("div"),n=D("div"),r=D("div"),o=N(Y),l=V(),s=D("div"),c=N(q),d=V(),u=D("div"),f=N("goals per game"),h=V(),m=D("div"),p=D("div"),g=N(X),v=V(),$=D("div"),y=N(K),I=V(),T=D("div"),_=N("conceded per game"),k=V(),B=D("div"),L=D("div"),P=N(Z),M=V(),H=D("div"),U=N(J),R=V(),z=D("div"),W=N("clean sheets"),this.h()},l(t){a=S(t,"DIV",{class:!0});var e=C(a);n=S(e,"DIV",{class:!0});var i=C(n);r=S(i,"DIV",{class:!0});var b=C(r);o=G(b,Y),l=O(b),s=S(b,"DIV",{class:!0,id:!0});var w=C(s);c=G(w,q),w.forEach(x),b.forEach(x),d=O(i),u=S(i,"DIV",{class:!0});var E=C(u);f=G(E,"goals per game"),E.forEach(x),i.forEach(x),h=O(e),m=S(e,"DIV",{class:!0});var D=C(m);p=S(D,"DIV",{class:!0});var N=C(p);g=G(N,X),v=O(N),$=S(N,"DIV",{class:!0,id:!0});var V=C($);y=G(V,K),V.forEach(x),N.forEach(x),I=O(D),T=S(D,"DIV",{class:!0});var A=C(T);_=G(A,"conceded per game"),A.forEach(x),D.forEach(x),k=O(e),B=S(e,"DIV",{class:!0});var j=C(B);L=S(j,"DIV",{class:!0});var F=C(L);P=G(F,Z),M=O(F),H=S(F,"DIV",{class:!0,id:!0});var Q=C(H);U=G(Q,J),Q.forEach(x),F.forEach(x),R=O(j),z=S(j,"DIV",{class:!0});var tt=C(z);W=G(tt,"clean sheets"),tt.forEach(x),j.forEach(x),e.forEach(x),this.h()},h(){A(s,"class",i="season-stat-position ssp-"+e[5].xG),A(s,"id","ssp1"),A(r,"class","season-stat-value"),A(u,"class","season-stat-text"),A(n,"class","season-stat goals-per-game"),A($,"class",b="season-stat-position ssp-"+e[5].xC),A($,"id","ssp2"),A(p,"class","season-stat-value"),A(T,"class","season-stat-text"),A(m,"class","season-stat conceded-per-game"),A(H,"class",F="season-stat-position ssp-"+e[5].cleanSheetRatio),A(H,"id","ssp3"),A(L,"class","season-stat-value"),A(z,"class","season-stat-text"),A(B,"class","season-stat clean-sheet-ratio"),A(a,"class","season-stats")},m(t,i){E(t,a,i),w(a,n),w(n,r),w(r,o),w(r,l),w(r,s),w(s,c),e[6](s),w(n,d),w(n,u),w(u,f),w(a,h),w(a,m),w(m,p),w(p,g),w(p,v),w(p,$),w($,y),e[7]($),w(m,I),w(m,T),w(T,_),w(a,k),w(a,B),w(B,L),w(L,P),w(L,M),w(L,H),w(H,U),e[8](H),w(B,R),w(B,z),w(z,W)},p(t,[e]){3&e&&Y!==(Y=t[0].seasonStats[t[1]].xG+"")&&j(o,Y),32&e&&q!==(q=t[5].xG+"")&&j(c,q),32&e&&i!==(i="season-stat-position ssp-"+t[5].xG)&&A(s,"class",i),3&e&&X!==(X=t[0].seasonStats[t[1]].xC+"")&&j(g,X),32&e&&K!==(K=t[5].xC+"")&&j(y,K),32&e&&b!==(b="season-stat-position ssp-"+t[5].xC)&&A($,"class",b),3&e&&Z!==(Z=t[0].seasonStats[t[1]].cleanSheetRatio+"")&&j(P,Z),32&e&&J!==(J=t[5].cleanSheetRatio+"")&&j(U,J),32&e&&F!==(F="season-stat-position ssp-"+t[5].cleanSheetRatio)&&A(H,"class",F)},i:t,o:t,d(t){t&&x(a),e[6](null),e[7](null),e[8](null)}}}function Qe(t){let e=t%100;return t+([,"st","nd","rd"][e>20?e%10:e]||"th")}function ta(t,e,a,n){let r=Object.keys(t.seasonStats).sort((function(a,n){return t.seasonStats[n][e]-t.seasonStats[a][e]})).indexOf(a)+1;return n&&(r=21-r),r}function ea(t,e,a){function n(){document.documentElement.style.setProperty("--ssp1-offset",-o.clientWidth/2+"px"),document.documentElement.style.setProperty("--ssp2-offset",-l.clientWidth/2+"px"),document.documentElement.style.setProperty("--ssp3-offset",-s.clientWidth/2+"px")}function r(){a(5,c=function(t,e){return{xG:Qe(ta(t,"xG",e,!1)),xC:Qe(ta(t,"xC",e,!0)),cleanSheetRatio:Qe(ta(t,"cleanSheetRatio",e,!1))}}(d,u)),window.addEventListener("resize",n)}let o,l,s,c={xG:"",xC:"",cleanSheetRatio:""},i=!1;z((()=>{r(),i=!0}));let{data:d,fullTeamName:u}=e;return t.$$set=t=>{"data"in t&&a(0,d=t.data),"fullTeamName"in t&&a(1,u=t.fullTeamName)},t.$$.update=()=>{2&t.$$.dirty&&u&&i&&r()},[d,u,o,l,s,c,function(t){K[t?"unshift":"push"]((()=>{o=t,a(2,o)}))},function(t){K[t?"unshift":"push"]((()=>{l=t,a(3,l)}))},function(t){K[t?"unshift":"push"]((()=>{s=t,a(4,s)}))}]}class aa extends It{constructor(t){super(),xt(this,t,ea,Je,l,{data:0,fullTeamName:1})}}function na(t){let e,a,n,r;return{c(){e=D("div"),a=N("Last updated: "),n=N(t[0]),r=N(" UTC"),this.h()},l(o){e=S(o,"DIV",{class:!0});var l=C(e);a=G(l,"Last updated: "),n=G(l,t[0]),r=G(l," UTC"),l.forEach(x),this.h()},h(){A(e,"class","last-updated")},m(t,o){E(t,e,o),w(e,a),w(e,n),w(e,r)},p(t,e){1&e&&j(n,t[0])},d(t){t&&x(e)}}}function ra(e){let a,n,r,o,l,s,i,d,u,f,h,m,p,g,v,$,y,b,I,T,_,k,B,L,P,M,j,H,U,F,R,z,W,Y=null!=e[0]&&na(e);return{c(){a=D("div"),n=D("a"),r=D("img"),l=V(),s=D("div"),i=N("Support Me"),d=V(),u=D("div"),Y&&Y.c(),f=V(),h=D("div"),m=D("div"),p=N("Data provided by\r\n        "),g=D("a"),v=N("football-data.org"),$=V(),y=D("div"),b=N("Graphs created using\r\n        "),I=D("a"),T=N("Plotly"),_=V(),k=D("div"),B=N("Font made from\r\n        "),L=D("a"),P=N("oNline Web Fonts"),M=N("\r\n        is licensed by CC BY 3.0"),j=V(),H=D("div"),U=D("div"),F=N("Created by Tom Draper"),R=V(),z=D("div"),W=N("v2.0"),this.h()},l(t){a=S(t,"DIV",{class:!0});var e=C(a);n=S(e,"A",{class:!0,href:!0,target:!0});var o=C(n);r=S(o,"IMG",{class:!0,src:!0,alt:!0}),l=O(o),s=S(o,"DIV",{class:!0});var c=C(s);i=G(c,"Support Me"),c.forEach(x),o.forEach(x),d=O(e),u=S(e,"DIV",{class:!0});var w=C(u);Y&&Y.l(w),f=O(w),h=S(w,"DIV",{class:!0});var E=C(h);m=S(E,"DIV",{class:!0});var D=C(m);p=G(D,"Data provided by\r\n        "),g=S(D,"A",{class:!0,href:!0});var N=C(g);v=G(N,"football-data.org"),N.forEach(x),D.forEach(x),$=O(E),y=S(E,"DIV",{class:!0});var V=C(y);b=G(V,"Graphs created using\r\n        "),I=S(V,"A",{class:!0,href:!0});var A=C(I);T=G(A,"Plotly"),A.forEach(x),V.forEach(x),_=O(E),k=S(E,"DIV",{class:!0});var q=C(k);B=G(q,"Font made from\r\n        "),L=S(q,"A",{class:!0,href:!0});var X=C(L);P=G(X,"oNline Web Fonts"),X.forEach(x),M=G(q,"\r\n        is licensed by CC BY 3.0"),q.forEach(x),E.forEach(x),j=O(w),H=S(w,"DIV",{class:!0});var K=C(H);U=S(K,"DIV",{class:!0});var Z=C(U);F=G(Z,"Created by Tom Draper"),Z.forEach(x),R=O(K),z=S(K,"DIV",{class:!0});var J=C(z);W=G(J,"v2.0"),J.forEach(x),K.forEach(x),w.forEach(x),e.forEach(x),this.h()},h(){A(r,"class","ko-fi-img"),c(r.src,o="img/kofi.png")||A(r,"src","img/kofi.png"),A(r,"alt",""),A(s,"class","ko-fi-text"),A(n,"class","ko-fi"),A(n,"href","https://ko-fi.com/C0C069FOI"),A(n,"target","_blank"),A(g,"class","footer-text-colour underline"),A(g,"href","https://www.football-data.org/"),A(m,"class","footer-detail footer-text-colour"),A(I,"class","footer-text-colour underline"),A(I,"href","https://plotly.com/"),A(y,"class","footer-detail footer-text-colour"),A(L,"class","footer-text-colour"),A(L,"href","http://www.onlinewebfonts.com"),A(k,"class","footer-detail footer-text-colour"),A(h,"class","footer-details"),A(U,"class","created-by footer-text-colour"),A(z,"class","version footer-text-colour"),A(H,"class","footer-bottom"),A(u,"class","teams-footer-bottom"),A(a,"class","teams-footer footer-text-colour")},m(t,e){E(t,a,e),w(a,n),w(n,r),w(n,l),w(n,s),w(s,i),w(a,d),w(a,u),Y&&Y.m(u,null),w(u,f),w(u,h),w(h,m),w(m,p),w(m,g),w(g,v),w(h,$),w(h,y),w(y,b),w(y,I),w(I,T),w(h,_),w(h,k),w(k,B),w(k,L),w(L,P),w(k,M),w(u,j),w(u,H),w(H,U),w(U,F),w(H,R),w(H,z),w(z,W)},p(t,[e]){null!=t[0]?Y?Y.p(t,e):(Y=na(t),Y.c(),Y.m(u,f)):Y&&(Y.d(1),Y=null)},i:t,o:t,d(t){t&&x(a),Y&&Y.d()}}}function oa(t,e,a){let{lastUpdated:n}=e;return t.$$set=t=>{"lastUpdated"in t&&a(0,n=t.lastUpdated)},[n]}class la extends It{constructor(t){super(),xt(this,t,oa,ra,l,{lastUpdated:0})}}function sa(e){let a,n;return{c(){a=D("div"),n=D("div"),this.h()},l(t){a=S(t,"DIV",{id:!0});var e=C(a);n=S(e,"DIV",{id:!0}),C(n).forEach(x),e.forEach(x),this.h()},h(){A(n,"id","plotDiv"),A(a,"id","plotly")},m(t,r){E(t,a,r),w(a,n),e[3](n)},p:t,i:t,o:t,d(t){t&&x(a),e[3](null)}}}function ca(t){let e,a=t.atHome?"Home":"Away";return e=null!=t.score?`${t.team} (${a}) ${t.score}`:`${t.team} (${a})`,e}function ia(t,e){let a=[];return t<=e&&(a={type:"line",x0:t,y0:-4,x1:t,y1:104,line:{color:"black",dash:"dot",width:1}}),a}function da(t,e,a){function n(t){let[e,a,n]=function(){let t=[],e=[],a=[];for(let n=1;n<=38;n++){let r=c.fixtures[i][n];t.push(new Date(r.date));let o=c.teamRatings[r.team].totalRating;r.atHome&&(o*=1-c.homeAdvantages[r.team].totalHomeAdvantage),e.push(100*o);let l=ca(r);a.push(l)}return[t,e,a]}();!function(t,e,a){let n=[];for(let r=0;r<t.length;r++)n.push({x:t[r],y:e[r],details:a[r]});n.sort((function(t,e){return t.x<e.x?-1:t.x==e.x?0:1}));for(let r=0;r<n.length;r++)t[r]=n[r].x,e[r]=n[r].y,a[r]=n[r].details}(e,a,n);let r=Array.from({length:38},((t,e)=>e+1)),o=Array(e.length).fill(13);return o=function(t,e,a,n){let r,o=Number.POSITIVE_INFINITY;for(let t=0;t<e.length;t++){let n=e[t]-a;0<n&&n<o&&(o=n,r=t)}return null!=r&&(t[r]=n),t}(o,e,t,26),{x:e,y:a,type:"scatter",mode:"lines+markers",text:n,line:{color:"#737373"},marker:{size:o,colorscale:[[0,"#01c626"],[.5,"#f3f3f3"],[1,"#fc1303"]],color:a},customdata:r,hovertemplate:"<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>"}}function r(t,e){let a=Date.now(),r=n(a),o=Array.from(Array(11),((t,e)=>10*e)),[l,s]=function(t){let e=new Date(t[0]);e.setDate(e.getDate()-12);let a=new Date(t[t.length-1]);return a.setDate(a.getDate()+12),[e,a]}(r.x);return{data:[r],layout:{title:!1,autosize:!0,margin:{r:20,l:50,t:5,b:40,pad:5},hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Team Rating"},gridcolor:"gray",showline:!1,zeroline:!1,fixedrange:!0,ticktext:o,tickvals:o},xaxis:{linecolor:"black",showgrid:!1,showline:!1,range:[l,s],fixedrange:!0},shapes:[ia(a,s)]},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}let o,l,s=!1;z((()=>{l=r(),new Plotly.newPlot(o,l.data,l.layout,l.config).then((t=>{t.children[0].children[0].classList.add("resizable-graph")})),s=!0}));let{data:c,fullTeamName:i}=e;return t.$$set=t=>{"data"in t&&a(1,c=t.data),"fullTeamName"in t&&a(2,i=t.fullTeamName)},t.$$.update=()=>{4&t.$$.dirty&&i&&function(){if(s){let t=n(Date.now());l.data[0]=t,Plotly.redraw(o)}}()},[o,c,i,function(t){K[t?"unshift":"push"]((()=>{o=t,a(0,o)}))}]}class ua extends It{constructor(t){super(),xt(this,t,da,sa,l,{data:1,fullTeamName:2})}}function fa(e){let a,n;return{c(){a=D("div"),n=D("div"),this.h()},l(t){a=S(t,"DIV",{id:!0});var e=C(a);n=S(e,"DIV",{id:!0}),C(n).forEach(x),e.forEach(x),this.h()},h(){A(n,"id","plotDiv"),A(a,"id","plotly")},m(t,r){E(t,a,r),w(a,n),e[3](n)},p:t,i:t,o:t,d(t){t&&x(a),e[3](null)}}}function ha(t,e,a,n){let r,o=Object.keys(t.form[t._id][a]),l=[];for(let e of o){let n=t.form[t._id][a][e].formRating5;l.push(100*n)}if(n){let t=a[0].toLowerCase()+a.slice(1);t=t.replace(/ ([A-Z])/g,"-$1").toLowerCase(),r={color:getComputedStyle(document.documentElement).getPropertyValue(`--${t}`),width:4}}else r={color:"#d3d3d3"};return{x:e,y:l,name:a,mode:"lines",line:r,text:o,hovertemplate:`<b>${a}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,showlegend:!1}}function ma(t,e,a){function n(t){let e=[];for(let a=0;a<c.teamNames.length;a++)if(c.teamNames[a]!=i){let n=ha(c,t,c.teamNames[a],!1);e.push(n)}let a=ha(c,t,i,!0);return e.push(a),e}function r(t,e){let a=function(t,e){let a=Object.keys(t.form[t._id][e]);a.length<=1&&(a=Object.keys(t.fixtures[e]));let n=[];for(let e of a){let a=[];for(let n of t.teamNames)a.push(t.fixtures[n][e].date);a=a.map((t=>new Date(t))),a=a.sort(),n.push(a[Math.floor(a.length/2)])}return n.sort((function(t,e){return t-e})),n}(t,e),r=Array.from(Array(11),((t,e)=>10*e));return{data:n(a),layout:{title:!1,autosize:!0,margin:{r:20,l:50,t:15,b:40,pad:5},hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Form Rating"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0,ticktext:r,tickvals:r,range:[0,100]},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0,range:[a[0],a[a.length-1]]}},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}let o,l,s=!1;z((()=>{l=r(c,i),new Plotly.newPlot(o,l.data,l.layout,l.config).then((t=>{t.children[0].children[0].classList.add("resizable-graph")})),s=!0}));let{data:c,fullTeamName:i}=e;return t.$$set=t=>{"data"in t&&a(1,c=t.data),"fullTeamName"in t&&a(2,i=t.fullTeamName)},t.$$.update=()=>{4&t.$$.dirty&&i&&function(){if(s){let t=r(c,i);for(let e=0;e<20;e++)l.data[e]=t.data[e];Plotly.redraw(o)}}()},[o,c,i,function(t){K[t?"unshift":"push"]((()=>{o=t,a(0,o)}))}]}class pa extends It{constructor(t){super(),xt(this,t,ma,fa,l,{data:1,fullTeamName:2})}}function ga(e){let a,n;return{c(){a=D("div"),n=D("div"),this.h()},l(t){a=S(t,"DIV",{id:!0});var e=C(a);n=S(e,"DIV",{id:!0}),C(n).forEach(x),e.forEach(x),this.h()},h(){A(n,"id","plotDiv"),A(a,"id","plotly")},m(t,r){E(t,a,r),w(a,n),e[3](n)},p:t,i:t,o:t,d(t){t&&x(a),e[3](null)}}}function va(t,e,a,n){let r,o=Object.keys(t.form[t._id][a]),l=[];for(let e of o){let n=t.form[t._id][a][e].position;l.push(n)}if(n){let t=a[0].toLowerCase()+a.slice(1);t=t.replace(/ ([A-Z])/g,"-$1").toLowerCase(),r={color:getComputedStyle(document.documentElement).getPropertyValue(`--${t}`),width:4}}else r={color:"#d3d3d3"};return{x:e,y:l,name:a,mode:"lines",line:r,text:o,hovertemplate:`<b>${a}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,showlegend:!1}}function $a(t,e,a){function n(t){let e=[];for(let a=0;a<c.teamNames.length;a++)if(c.teamNames[a]!=i){let n=va(c,t,c.teamNames[a],!1);e.push(n)}let a=va(c,t,i,!0);return e.push(a),e}function r(t,e){let a=function(t,e){let a=Object.keys(t.form[t._id][e]);a.length<=1&&(a=Object.keys(t.fixtures[e]));let n=[];for(let e of a){let a=[];t.teamNames.forEach((n=>{a.push(t.fixtures[n][e].date)})),a=a.map((t=>new Date(t))),a=a.sort(),n.push(a[Math.floor(a.length/2)])}return n.sort((function(t,e){return t-e})),n}(t,e),r=Array.from(Array(20),((t,e)=>e+1));return{data:n(a),layout:{title:!1,autosize:!0,margin:{r:20,l:50,t:15,b:40,pad:5},hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Position"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,autorange:"reversed",fixedrange:!0,ticktext:r,tickvals:r},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0},shapes:[{type:"rect",x0:a[0],y0:4.5,x1:a[a.length-1],y1:.5,line:{width:0},fillcolor:"#77DD77",opacity:.3,layer:"below"},{type:"rect",x0:a[0],y0:6.5,x1:a[a.length-1],y1:4.5,line:{width:0},fillcolor:"#4CDEEE",opacity:.3,layer:"below"},{type:"rect",x0:a[0],y0:20.5,x1:a[a.length-1],y1:17.5,line:{width:0},fillcolor:"#C23B22",opacity:.3,layer:"below"}]},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}let o,l,s=!1;z((()=>{l=r(c,i),new Plotly.newPlot(o,l.data,l.layout,l.config).then((t=>{t.children[0].children[0].classList.add("resizable-graph")})),s=!0}));let{data:c,fullTeamName:i}=e;return t.$$set=t=>{"data"in t&&a(1,c=t.data),"fullTeamName"in t&&a(2,i=t.fullTeamName)},t.$$.update=()=>{4&t.$$.dirty&&i&&function(){if(s){let t=r(c,i);for(let e=0;e<20;e++)l.data[e]=t.data[e];Plotly.redraw(o)}}()},[o,c,i,function(t){K[t?"unshift":"push"]((()=>{o=t,a(0,o)}))}]}class ya extends It{constructor(t){super(),xt(this,t,$a,ga,l,{data:1,fullTeamName:2})}}function ba(e){let a,n;return{c(){a=D("div"),n=D("div"),this.h()},l(t){a=S(t,"DIV",{id:!0});var e=C(a);n=S(e,"DIV",{id:!0}),C(n).forEach(x),e.forEach(x),this.h()},h(){A(n,"id","plotDiv"),A(a,"id","plotly")},m(t,r){E(t,a,r),w(a,n),e[3](n)},p:t,i:t,o:t,d(t){t&&x(a),e[3](null)}}}function wa(t,e){let a=function(t){let e={};for(let a of t.teamNames)for(let n of Object.keys(t.form[t._id][a])){let r=t.form[t._id][a][n].score;if(null!=r){let[t,a,o]=r.split(" ");t=parseInt(t),o=parseInt(o),n in e?e[n]+=t+o:e[n]=t+o}}for(let t of Object.keys(e))e[t]/=20;return e}(t),n=function(t){let e=[];for(let a=1;a<=38;a++){let n=[];for(let e of t.teamNames)n.push(t.fixtures[e][a].date);n=n.map((t=>new Date(t))),n=n.sort(),e.push(n[Math.floor(n.length/2)])}return e.sort((function(t,e){return t-e})),e}(t),r=Object.keys(a),[o,l]=function(t,e){let a={},n={};for(let r of Object.keys(t.form[t._id][e])){let o=t.form[t._id][e][r].score;if(null!=o){let[l,s,c]=o.split(" ");l=parseInt(l),c=parseInt(c),t.form[t._id][e][r].atHome?(a[r]=l,n[r]=c):(a[r]=c,n[r]=l)}}return[a,n]}(t,e);return{data:[{name:"Scored",type:"bar",x:n,y:Object.values(o),text:r,marker:{color:"#77DD77"},hovertemplate:"<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>"},{name:"Conceded",type:"bar",x:n,y:Object.values(l),text:r,marker:{color:"C23B22"},hovertemplate:"<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>"},{name:"Avg",type:"line",x:n,y:Object.values(a),text:r,hovertemplate:"<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",line:{color:"#0080FF",width:2}}],layout:{title:!1,autosize:!0,margin:{r:20,l:50,t:15,b:15,pad:5},barmode:"stack",hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Goals Scored"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0,rangemode:"nonnegative"},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0,showticklabels:!1},legend:{x:1,xanchor:"right",y:1}},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}function Ea(t,e,a){let n,r,o=!1;z((()=>{r=wa(l,s),new Plotly.newPlot(n,r.data,r.layout,r.config).then((t=>{t.children[0].children[0].classList.add("resizable-graph")})),o=!0}));let{data:l,fullTeamName:s}=e;return t.$$set=t=>{"data"in t&&a(1,l=t.data),"fullTeamName"in t&&a(2,s=t.fullTeamName)},t.$$.update=()=>{4&t.$$.dirty&&s&&function(){if(o){let t=wa(l,s);r.data[0]=t.data[0],r.data[1]=t.data[1],Plotly.redraw(n)}}()},[n,l,s,function(t){K[t?"unshift":"push"]((()=>{n=t,a(0,n)}))}]}class xa extends It{constructor(t){super(),xt(this,t,Ea,ba,l,{data:1,fullTeamName:2})}}function Ia(e){let a,n;return{c(){a=D("div"),n=D("div"),this.h()},l(t){a=S(t,"DIV",{id:!0});var e=C(a);n=S(e,"DIV",{id:!0}),C(n).forEach(x),e.forEach(x),this.h()},h(){A(n,"id","plotDiv"),A(a,"id","plotly")},m(t,r){E(t,a,r),w(a,n),e[3](n)},p:t,i:t,o:t,d(t){t&&x(a),e[3](null)}}}function Da(t,e){let a=function(t){let e=[];for(let a=1;a<=38;a++){let n=[];for(let e of t.teamNames)n.push(t.fixtures[e][a].date);n=n.map((t=>new Date(t))),n=n.sort(),e.push(n[Math.floor(n.length/2)])}return e.sort((function(t,e){return t-e})),e}(t),n=Object.keys(t.form[t._id][e]),[r,o]=function(t,e){let a=[],n=[];for(let r of Object.keys(t.form[t._id][e])){let o=t.form[t._id][e][r].score;if(null!=o){let[l,s,c]=o.split(" ");l=parseInt(l),c=parseInt(c),t.form[t._id][e][r].atHome?c>0?(a.push(1),n.push(0)):(n.push(1),a.push(0)):l>0?(a.push(1),n.push(0)):(n.push(1),a.push(0))}}return[n,a]}(t,e);return{data:[{name:"Clean sheets",type:"bar",x:a,y:r,text:n,marker:{color:"#77DD77"},hovertemplate:"<b>Clean sheet<extra></extra>",showlegend:!1},{name:"Conceded",type:"bar",x:a,y:o,text:n,marker:{color:"C23B22"},hovertemplate:"<b>Goals conceded<extra></extra>",showlegend:!1}],layout:{title:!1,autosize:!0,height:60,margin:{r:20,l:50,t:0,b:40,pad:5},barmode:"stack",hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:""},showticklabels:!1,gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0},shapes:[{type:"line",x0:a[0],y0:.5,x1:a[a.length-1],y1:.5,layer:"below",line:{color:"#d3d3d3",width:2}}]},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}function Ta(t,e,a){let n,r,o=!1;z((()=>{r=Da(l,s),new Plotly.newPlot(n,r.data,r.layout,r.config),o=!0}));let{data:l,fullTeamName:s}=e;return t.$$set=t=>{"data"in t&&a(1,l=t.data),"fullTeamName"in t&&a(2,s=t.fullTeamName)},t.$$.update=()=>{4&t.$$.dirty&&s&&function(){if(o){let t=Da(l,s);r.data[0]=t.data[0],r.data[1]=t.data[1],Plotly.redraw(n)}}()},[n,l,s,function(t){K[t?"unshift":"push"]((()=>{n=t,a(0,n)}))}]}class Na extends It{constructor(t){super(),xt(this,t,Ta,Ia,l,{data:1,fullTeamName:2})}}function Va(e){let a,n;return{c(){a=D("div"),n=D("div"),this.h()},l(t){a=S(t,"DIV",{id:!0});var e=C(a);n=S(e,"DIV",{id:!0}),C(n).forEach(x),e.forEach(x),this.h()},h(){A(n,"id","plotDiv"),A(a,"id","plotly")},m(t,r){E(t,a,r),w(a,n),e[5](n)},p:t,i:t,o:t,d(t){t&&x(a),e[5](null)}}}function _a(t,e,a){let n,r,o=!1;z((()=>{r=function(){let t=i();return{data:s(),layout:{title:!1,autosize:!0,margin:{r:0,l:50,t:15,b:40,pad:5},hovermode:"closest",barmode:"overlay",bargap:0,plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Frequency"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0,rangemode:"nonnegative"},xaxis:{title:{text:"Goals Scored"},linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0,ticktext:t,tickvals:t},legend:{x:1,xanchor:"right",y:.95}},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}(),new Plotly.newPlot(n,r.data,r.layout,r.config).then((t=>{t.children[0].children[0].classList.add("resizable-graph")})),o=!0}));let{fullTeamName:l,getScoredBars:s,getScoredTeamBars:c,getXLabels:i}=e;return t.$$set=t=>{"fullTeamName"in t&&a(1,l=t.fullTeamName),"getScoredBars"in t&&a(2,s=t.getScoredBars),"getScoredTeamBars"in t&&a(3,c=t.getScoredTeamBars),"getXLabels"in t&&a(4,i=t.getXLabels)},t.$$.update=()=>{2&t.$$.dirty&&l&&o&&(r.data[1]=c(),Plotly.redraw(n))},[n,l,s,c,i,function(t){K[t?"unshift":"push"]((()=>{n=t,a(0,n)}))}]}class ka extends It{constructor(t){super(),xt(this,t,_a,Va,l,{fullTeamName:1,getScoredBars:2,getScoredTeamBars:3,getXLabels:4})}}function Aa(e){let a,n;return{c(){a=D("div"),n=D("div"),this.h()},l(t){a=S(t,"DIV",{id:!0});var e=C(a);n=S(e,"DIV",{id:!0}),C(n).forEach(x),e.forEach(x),this.h()},h(){A(n,"id","plotDiv"),A(a,"id","plotly")},m(t,r){E(t,a,r),w(a,n),e[5](n)},p:t,i:t,o:t,d(t){t&&x(a),e[5](null)}}}function Ba(t,e,a){let n,r,o=!1;z((()=>{r=function(){let t=i();return{data:s(),layout:{title:!1,autosize:!0,margin:{r:0,l:50,t:15,b:40,pad:5},hovermode:"closest",barmode:"overlay",bargap:0,plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Frequency"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0,rangemode:"nonnegative"},xaxis:{title:{text:"Goals Conceded"},linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0,ticktext:t,tickvals:t},legend:{x:1,xanchor:"right",y:.95}},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}(),new Plotly.newPlot(n,r.data,r.layout,r.config).then((t=>{t.children[0].children[0].classList.add("resizable-graph")})),o=!0}));let{fullTeamName:l,getConcededBars:s,getConcededTeamBars:c,getXLabels:i}=e;return t.$$set=t=>{"fullTeamName"in t&&a(1,l=t.fullTeamName),"getConcededBars"in t&&a(2,s=t.getConcededBars),"getConcededTeamBars"in t&&a(3,c=t.getConcededTeamBars),"getXLabels"in t&&a(4,i=t.getXLabels)},t.$$.update=()=>{2&t.$$.dirty&&l&&o&&(r.data[1]=c(),Plotly.redraw(n))},[n,l,s,c,i,function(t){K[t?"unshift":"push"]((()=>{n=t,a(0,n)}))}]}class Ca extends It{constructor(t){super(),xt(this,t,Ba,Aa,l,{fullTeamName:1,getConcededBars:2,getConcededTeamBars:3,getXLabels:4})}}function La(t){let e,a,n,r,o,l;return a=new ka({props:{fullTeamName:t[0],getScoredBars:t[3],getScoredTeamBars:t[4],getXLabels:t[6]}}),o=new Ca({props:{fullTeamName:t[0],getConcededBars:t[2],getConcededTeamBars:t[5],getXLabels:t[6]}}),{c(){e=D("div"),$t(a.$$.fragment),n=V(),r=D("div"),$t(o.$$.fragment),this.h()},l(t){e=S(t,"DIV",{class:!0});var l=C(e);yt(a.$$.fragment,l),l.forEach(x),n=O(t),r=S(t,"DIV",{class:!0});var s=C(r);yt(o.$$.fragment,s),s.forEach(x),this.h()},h(){A(e,"class","graph freq-graph mini-graph"),A(r,"class","graph freq-graph mini-graphh")},m(t,s){E(t,e,s),bt(a,e,null),E(t,n,s),E(t,r,s),bt(o,r,null),l=!0},p(t,e){const n={};1&e&&(n.fullTeamName=t[0]),a.$set(n);const r={};1&e&&(r.fullTeamName=t[0]),o.$set(r)},i(t){l||(dt(a.$$.fragment,t),dt(o.$$.fragment,t),l=!0)},o(t){ut(a.$$.fragment,t),ut(o.$$.fragment,t),l=!1},d(t){t&&x(e),wt(a),t&&x(n),t&&x(r),wt(o)}}}function Pa(t){let e,a,n=t[1]&&La(t);return{c(){e=D("div"),n&&n.c(),this.h()},l(t){e=S(t,"DIV",{class:!0});var a=C(e);n&&n.l(a),a.forEach(x),this.h()},h(){A(e,"class","two-graphs")},m(t,r){E(t,e,r),n&&n.m(e,null),a=!0},p(t,[a]){t[1]?n?(n.p(t,a),2&a&&dt(n,1)):(n=La(t),n.c(),dt(n,1),n.m(e,null)):n&&(ct(),ut(n,1,1,(()=>{n=null})),it())},i(t){a||(dt(n),a=!0)},o(t){ut(n),a=!1},d(t){t&&x(e),n&&n.d()}}}function Sa(t,e,a){return{x:Object.keys(t),y:Object.values(t),type:"bar",name:e,marker:{color:a},line:{width:0},hovertemplate:"%{x} goals in %{y} games<extra></extra>",hoverinfo:"x+y",opacity:.6}}function Ma(t,e){let a={};for(let n of Object.keys(t.form[t._id][e])){let r=t.form[t._id][e][n].score;if(null!=r){let[o,l,s]=r.split(" ");t.form[t._id][e][n].atHome?o in a?a[o]+=1:a[o]=1:s in a?a[s]+=1:a[s]=1}}return a}function Ga(t,e){let a={};for(let n of Object.keys(t.form[t._id][e])){let r=t.form[t._id][e][n].score;if(null!=r){let[o,l,s]=r.split(" ");t.form[t._id][e][n].atHome?s in a?a[s]+=1:a[s]=1:o in a?a[o]+=1:a[o]=1}}return a}function Oa(t,e,a){function n(t,e,a){return[{x:Object.keys(r),y:Object.values(r),type:"bar",name:"Avg",marker:{color:"#C6C6C6"},line:{width:0},hovertemplate:"%{x} goals in %{y} games<extra></extra>",hoverinfo:"x+y"},Sa(t,e,a)]}let r,o,l,s=!1;z((()=>{r=function(t){let e={};for(let a of t.teamNames)for(let n of Object.keys(t.form[t._id][a])){let r=t.form[t._id][a][n].score;if(null!=r){let[o,l,s]=r.split(" ");t.form[t._id][a][n].atHome&&(o in e?e[o]+=1:e[o]=1,s in e?e[s]+=1:e[s]=1)}}for(let t of Object.keys(e))e[t]/=20;return e}(c),o=Ma(c,i),l=Ga(c,i),a(1,s=!0)}));let{data:c,fullTeamName:i}=e;return t.$$set=t=>{"data"in t&&a(7,c=t.data),"fullTeamName"in t&&a(0,i=t.fullTeamName)},t.$$.update=()=>{1&t.$$.dirty&&i&&s&&(o=Ma(c,i),l=Ga(c,i))},[i,s,function(){return n(l,"Goals conceded","#C23B22")},function(){return n(o,"Goals scored","#77DD77")},function(){return Sa(l,"Goals conceded","#C23B22")},function(){return Sa(o,"Goals scored","#77DD77")},function(){return Object.keys(r)},c]}class ja extends It{constructor(t){super(),xt(this,t,Oa,Pa,l,{data:7,fullTeamName:0})}}function Ha(t,e,a){const n=t.slice();return n[30]=e[a],n}function Ua(t){let e,a,n,r,o=t[2](t[30])+"";return{c(){e=D("button"),a=N(o),this.h()},l(t){e=S(t,"BUTTON",{class:!0});var n=C(e);a=G(n,o),n.forEach(x),this.h()},h(){A(e,"class","spider-opp-team-btn")},m(o,l){E(o,e,l),w(e,a),n||(r=k(e,"click",t[7]),n=!0)},p(t,e){5&e[0]&&o!==(o=t[2](t[30])+"")&&j(a,o)},d(t){t&&x(e),n=!1,r()}}}function Fa(t){let e,a=t[30]!=t[1]&&Ua(t);return{c(){a&&a.c(),e=_()},l(t){a&&a.l(t),e=_()},m(t,n){a&&a.m(t,n),E(t,e,n)},p(t,n){t[30]!=t[1]?a?a.p(t,n):(a=Ua(t),a.c(),a.m(e.parentNode,e)):a&&(a.d(1),a=null)},d(t){a&&a.d(t),t&&x(e)}}}function Ra(e){let a,n,r,o,l,s,c=e[0].teamNames,i=[];for(let t=0;t<c.length;t+=1)i[t]=Fa(Ha(e,c,t));return{c(){a=D("div"),n=D("div"),r=D("div"),o=V(),l=D("div"),s=D("div");for(let t=0;t<i.length;t+=1)i[t].c();this.h()},l(t){a=S(t,"DIV",{class:!0});var e=C(a);n=S(e,"DIV",{id:!0});var c=C(n);r=S(c,"DIV",{id:!0}),C(r).forEach(x),c.forEach(x),e.forEach(x),o=O(t),l=S(t,"DIV",{class:!0});var d=C(l);s=S(d,"DIV",{class:!0,id:!0});var u=C(s);for(let t=0;t<i.length;t+=1)i[t].l(u);u.forEach(x),d.forEach(x),this.h()},h(){A(r,"id","plotDiv"),A(n,"id","plotly"),A(a,"class","spider-chart"),A(s,"class","spider-opp-team-btns"),A(s,"id","spider-opp-teams"),A(l,"class","spider-opp-team-selector")},m(t,c){E(t,a,c),w(a,n),w(n,r),e[6](r),E(t,o,c),E(t,l,c),w(l,s);for(let t=0;t<i.length;t+=1)i[t].m(s,null)},p(t,e){if(23&e[0]){let a;for(c=t[0].teamNames,a=0;a<c.length;a+=1){const n=Ha(t,c,a);i[a]?i[a].p(n,e):(i[a]=Fa(n),i[a].c(),i[a].m(s,null))}for(;a<i.length;a+=1)i[a].d(1);i.length=c.length}},i:t,o:t,d(t){t&&x(a),e[6](null),t&&x(o),t&&x(l),I(i,t)}}}function za(t){let e=t[0].toLowerCase()+t.slice(1);return e=e.replace(/ /g,"-").toLowerCase(),getComputedStyle(document.documentElement).getPropertyValue(`--${e}`)}function Wa(t,e){let a=0;for(let n in t)t[n]=t[n]/e*100,a+=t[n];return a/Object.keys(t).length}function Ya(t){let e=0;for(let a in t)e+=t[a];return e/Object.keys(t).length}function qa(t){let[e,a]=function(t){let e={},a=Number.NEGATIVE_INFINITY,n=Number.POSITIVE_INFINITY;for(let r of t.teamNames){let o=0,l=0;for(let e in t.standings[r]){let s=t.standings[r][e].gF;s>0&&(o+=s,s>a?a=s:s<n&&(n=s),l+=1)}let s=null;l>0&&(s=o/l),e[r]=s}return[e,[n,a]]}(t);return e=function(t,e){let[a,n]=e;for(let e in t)null==t[e]?t[e]=0:t[e]=(t[e]-a)/(n-a)*100;return t}(e,a),e.avg=Ya(e),e}function Xa(t){let[e,a]=function(t){let e={},a=Number.NEGATIVE_INFINITY,n=Number.POSITIVE_INFINITY;for(let r of t.teamNames){let o=0,l=0;for(let e in t.standings[r]){let s=t.standings[r][e].gA;s>0&&(o+=s,s>a?a=s:s<n&&(n=s),l+=1)}let s=null;l>0&&(s=o/l),e[r]=s}return[e,[n,a]]}(t);return e=function(t,e){let[a,n]=e;for(let e in t)null==t[e]?t[e]=0:t[e]=100-(t[e]-a)/(n-a)*100;return t}(e,a),e.avg=Ya(e),e}function Ka(t,e){let a=0;for(let n of Object.keys(t[e])){let r=t[e][n];if(null!=r.score){let[t,e,n]=r.score.split(" ");r.atHome&&0==n?a+=1:r.atHome||0!=t||(a+=1)}}return a}function Za(t,e){let a=0,n=null;for(let r in t[e]){let o=t[e][r];if(null!=o.score){let t,[e,r,l]=o.score.split(" ");t=o.atHome&&e>l||!o.atHome&&e<l?"win":o.atHome&&e<l||!o.atHome&&e>l?"lost":"draw",null!=n&&n==t&&(a+=1),n=t}}return a}function Ja(t,e){let a=0,n=0;for(let r in t[e]){let o=t[e][r];if(null!=o.score){let[t,e,r]=o.score.split(" ");o.atHome&&t>r||!o.atHome&&t<r?(n+=1,n>a&&(a=n)):n=0}}return a}function Qa(t,e){let a=t.indexOf(e);return a>-1&&t.splice(a,1),t}function tn(t,e,a){let n=0;for(let r in t[e]){let o=t[e][r];if(null!=o.score&&a.includes(o.team)){let[t,e,a]=o.score.split(" ");(o.atHome&&t>a||!o.atHome&&t<a)&&(n+=1)}}return n}function en(t,e,a){function n(){let t=l();g.data.unshift(t)}function r(t){let e=I(t.innerHTML);if(""==t.style.background){let a=e.toLowerCase().replace(/ /g,"-");t.style.background=`var(--${a})`,t.style.color=`var(--${a}-secondary)`}else t.style.background="",t.style.color="black";0==$.length&&g.data.splice(0,1),$.includes(e)?(!function(t){for(let e=0;e<g.data.length;e++)if(g.data[e].name==t){g.data.splice(e,1);break}1==$.length&&n(g.data),Plotly.redraw(p)}(e),Qa($,e)):(!function(t){let e=za(t),a={name:t,type:"scatterpolar",r:[i[t],d[t],u[t],f[t],h[t],m[t]],theta:v,fill:"toself",marker:{color:e}};g.data.push(a),Plotly.redraw(p)}(e),$.push(e))}function o(t,e,a){return{name:t,type:"scatterpolar",r:e,theta:v,fill:"toself",marker:{color:a},hovertemplate:`<b>${t}</b><br>%{theta}: %{r}<extra></extra>`,hoveron:"points"}}function l(){return o("Avg",[i.avg,d.avg,u.avg,f.avg,h.avg,m.avg],"#ADADAD")}function s(t){let e=l(),a=function(t){let e=za(t);return o(t,[i[t],d[t],u[t],f[t],h[t],m[t]],e)}(t);return[e,a]}function c(t){i=qa(t),d=Xa(t),u=function(t){let e={},a=Number.NEGATIVE_INFINITY;for(let n of t.teamNames){let r=Ka(t.form[t._id],n);n in t.form[t._id-1]&&(r+=Ka(t.form[t._id-1],n)),r>a&&(a=r),e[n]=r}return e.avg=Wa(e,a),e}(t),f=function(t){let e={},a=Number.NEGATIVE_INFINITY;for(let n of t.teamNames){let r=Za(t.form[t._id],n);n in t.form[t._id-1]&&(r+=Za(t.form[t._id-1],n)),r>a&&(a=r),e[n]=r}return e.avg=Wa(e,a),e}(t),h=function(t){let e={},a=Number.NEGATIVE_INFINITY;for(let n of t.teamNames){let r=Ja(t.form[t._id],n);n in t.form[t._id-1]&&(r+=Ja(t.form[t._id-1],n)),r>a&&(a=r),e[n]=r}return e.avg=Wa(e,a),e}(t),m=function(t){let e={},a=Number.NEGATIVE_INFINITY;for(let n of t.teamNames){let r=["Manchester United","Liverpool","Manchester City","Arsenal","Chelsea","Tottenham Hotspur"];r=Qa(r,n);let o=tn(t.form[t._id],n,r);n in t.form[t._id-1]&&(o+=tn(t.form[t._id-1],n,r)),o>a&&(a=o),e[n]=o}return e.avg=Wa(e,a),e}(t)}let i,d,u,f,h,m,p,g,v=["Attack","Defence","Clean Sheets","Consistency","Win Streak","vs Big 6"],$=[],y=!1;function b(){if(y){let t=s(E);!function(t){let e=t.length;for(let a=0;a<e;a++)t.pop()}(g.data),g.data.push(t[0]),g.data.push(t[1]),function(){for(let t=0;t<$.length;t++){for(let t=0;t<g.data.length;t++)if(g.data[t].name==$[t]){g.data.splice(t,1);break}1==$.length&&n(g.data),Qa($,$[t])}Plotly.redraw(p)}(),function(){let t=document.getElementById("spider-opp-teams");for(let e=0;e<t.children.length;e++){let a=t.children[e];""!=a.style.background&&(a.style.background="",a.style.color="black")}}()}}z((()=>{g=function(t,e){return c(t),{data:s(e),layout:{height:550,polar:{radialaxis:{visible:!0,range:[0,100]}},hover:"closest",margin:{t:25,b:25,l:75,r:75},showlegend:!1,plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa"},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}(w,E),new Plotly.newPlot(p,g.data,g.layout,g.config).then((t=>{t.children[0].children[0].classList.add("resizable-spider-chart")})),document.getElementById("spider-opp-teams").children[0].classList.add("top-spider-opp-team-btn"),document.getElementById("spider-opp-teams").children[18].classList.add("bottom-spider-opp-team-btn"),y=!0}));let{data:w,fullTeamName:E,getAlias:x,getName:I}=e;return t.$$set=t=>{"data"in t&&a(0,w=t.data),"fullTeamName"in t&&a(1,E=t.fullTeamName),"getAlias"in t&&a(2,x=t.getAlias),"getName"in t&&a(5,I=t.getName)},t.$$.update=()=>{2&t.$$.dirty[0]&&E&&b()},[w,E,x,p,r,I,function(t){K[t?"unshift":"push"]((()=>{p=t,a(3,p)}))},t=>{r(t.target)}]}class an extends It{constructor(t){super(),xt(this,t,en,Ra,l,{data:0,fullTeamName:1,getAlias:2,getName:5},null,[-1,-1])}}function nn(t,e,a){const n=t.slice();return n[5]=e[a],n[7]=a,n}function rn(t){let e,a,n,r,o,l,s=t[2](t[5])+"";function c(){return t[4](t[5])}return{c(){e=D("button"),a=D("div"),n=N(s),r=V(),this.h()},l(t){e=S(t,"BUTTON",{class:!0});var o=C(e);a=S(o,"DIV",{class:!0});var l=C(a);n=G(l,s),l.forEach(x),r=O(o),o.forEach(x),this.h()},h(){A(a,"class","team-name"),A(e,"class","team-link")},m(t,s){E(t,e,s),w(e,a),w(a,n),w(e,r),o||(l=k(e,"click",c),o=!0)},p(e,a){t=e,6&a&&s!==(s=t[2](t[5])+"")&&j(n,s)},d(t){t&&x(e),o=!1,l()}}}function on(t){let e,a,n,r,o,l=t[2](t[5])+"";return{c(){e=D("a"),a=D("div"),n=N(l),r=V(),this.h()},l(t){e=S(t,"A",{href:!0,class:!0});var o=C(e);a=S(o,"DIV",{class:!0,style:!0});var s=C(a);n=G(s,l),s.forEach(x),r=O(o),o.forEach(x),this.h()},h(){A(a,"class","this-team-name"),H(a,"color","var(--"+t[5].toLowerCase().replace(/ /g,"-")+"-secondary)"),H(a,"background-color","var(--"+t[5].toLowerCase().replace(/ /g,"-")+")"),A(e,"href",o="/"+t[5].toLowerCase().replace(/ /g,"-")),A(e,"class","team-link")},m(t,o){E(t,e,o),w(e,a),w(a,n),w(e,r)},p(t,r){6&r&&l!==(l=t[2](t[5])+"")&&j(n,l),2&r&&H(a,"color","var(--"+t[5].toLowerCase().replace(/ /g,"-")+"-secondary)"),2&r&&H(a,"background-color","var(--"+t[5].toLowerCase().replace(/ /g,"-")+")"),2&r&&o!==(o="/"+t[5].toLowerCase().replace(/ /g,"-"))&&A(e,"href",o)},d(t){t&&x(e)}}}function ln(t,e){let a,n,r;function o(t,e){return 3&e&&(n=null),null==n&&(n=!(t[5].toLowerCase().replace(/ /g,"-")!=t[0])),n?on:rn}let l=o(e,-1),s=l(e);return{key:t,first:null,c(){a=_(),s.c(),r=_(),this.h()},l(t){a=_(),s.l(t),r=_(),this.h()},h(){this.first=a},m(t,e){E(t,a,e),s.m(t,e),E(t,r,e)},p(t,a){l===(l=o(e=t,a))&&s?s.p(e,a):(s.d(1),s=l(e),s&&(s.c(),s.m(r.parentNode,r)))},d(t){t&&x(a),s.d(t),t&&x(r)}}}function sn(e){let a,n,r,o,l,s,i,d,u,f,h,m,p,g,v,$=[],y=new Map,b=e[1];const I=t=>t[5];for(let t=0;t<b.length;t+=1){let a=nn(e,b,t),n=I(a);y.set(n,$[t]=ln(n,a))}return{c(){a=D("nav"),n=D("div"),r=D("p"),o=D("span"),l=N("pl"),s=N("dashboard"),i=V(),d=D("div");for(let t=0;t<$.length;t+=1)$[t].c();u=V(),f=D("div"),h=D("button"),m=D("img"),this.h()},l(t){a=S(t,"NAV",{});var e=C(a);n=S(e,"DIV",{class:!0});var c=C(n);r=S(c,"P",{});var p=C(r);o=S(p,"SPAN",{style:!0});var g=C(o);l=G(g,"pl"),g.forEach(x),s=G(p,"dashboard"),p.forEach(x),c.forEach(x),i=O(e),d=S(e,"DIV",{class:!0});var v=C(d);for(let t=0;t<$.length;t+=1)$[t].l(v);v.forEach(x),u=O(e),f=S(e,"DIV",{class:!0});var y=C(f);h=S(y,"BUTTON",{class:!0});var b=C(h);m=S(b,"IMG",{src:!0,alt:!0}),b.forEach(x),y.forEach(x),e.forEach(x),this.h()},h(){H(o,"color","#00fe87"),A(n,"class","title no-selection"),A(d,"class","team-links"),c(m.src,p="img/arrow-bar-left.svg")||A(m,"src","img/arrow-bar-left.svg"),A(m,"alt",""),A(h,"class","close-btn"),A(f,"class","close")},m(t,e){E(t,a,e),w(a,n),w(n,r),w(r,o),w(o,l),w(r,s),w(a,i),w(a,d);for(let t=0;t<$.length;t+=1)$[t].m(d,null);w(a,u),w(a,f),w(f,h),w(h,m),g||(v=k(h,"click",cn),g=!0)},p(t,[e]){15&e&&(b=t[1],$=pt($,e,I,1,t,b,y,d,ht,ln,null,nn))},i:t,o:t,d(t){t&&x(a);for(let t=0;t<$.length;t+=1)$[t].d();g=!1,v()}}}function cn(){document.getElementById("navBar").style.display="none",document.getElementById("dashboard").style.marginLeft=0,window.dispatchEvent(new Event("resize"))}function dn(t,e,a){let{team:n,teams:r,getAlias:o,switchTeam:l}=e;return t.$$set=t=>{"team"in t&&a(0,n=t.team),"teams"in t&&a(1,r=t.teams),"getAlias"in t&&a(2,o=t.getAlias),"switchTeam"in t&&a(3,l=t.switchTeam)},[n,r,o,l,t=>{l(t.toLowerCase().replace(/ /g,"-"))}]}class un extends It{constructor(t){super(),xt(this,t,dn,sn,l,{team:0,teams:1,getAlias:2,switchTeam:3})}}function fn(t,e,a){const n=t.slice();return n[10]=e[a],n[12]=a,n}function hn(t){let e,a,n,r,o=t[2],l=[];for(let e=0;e<o.length;e+=1)l[e]=$n(fn(t,o,e));return{c(){e=D("div"),a=N("Other Teams"),n=V(),r=D("div");for(let t=0;t<l.length;t+=1)l[t].c();this.h()},l(t){e=S(t,"DIV",{class:!0});var o=C(e);a=G(o,"Other Teams"),o.forEach(x),n=O(t),r=S(t,"DIV",{class:!0});var s=C(r);for(let t=0;t<l.length;t+=1)l[t].l(s);s.forEach(x),this.h()},h(){A(e,"class","nav-title"),A(r,"class","team-links")},m(t,o){E(t,e,o),w(e,a),E(t,n,o),E(t,r,o);for(let t=0;t<l.length;t+=1)l[t].m(r,null)},p(t,e){if(15&e){let a;for(o=t[2],a=0;a<o.length;a+=1){const n=fn(t,o,a);l[a]?l[a].p(n,e):(l[a]=$n(n),l[a].c(),l[a].m(r,null))}for(;a<l.length;a+=1)l[a].d(1);l.length=o.length}},d(t){t&&x(e),t&&x(n),t&&x(r),I(l,t)}}}function mn(t){let e;function a(t,e){return 0==t[12]||1==t[12]&&null==t[2][0]?vn:t[12]==t[2].length-1||t[12]==t[2].length-2&&null==t[2][t[2].length-1]?gn:pn}let n=a(t),r=n(t);return{c(){r.c(),e=_()},l(t){r.l(t),e=_()},m(t,a){r.m(t,a),E(t,e,a)},p(t,o){n===(n=a(t))&&r?r.p(t,o):(r.d(1),r=n(t),r&&(r.c(),r.m(e.parentNode,e)))},d(t){r.d(t),t&&x(e)}}}function pn(t){let e,a,n,r,o=t[1](t[0][t[12]])+"";function l(){return t[8](t[10])}return{c(){e=D("button"),a=N(o),this.h()},l(t){e=S(t,"BUTTON",{style:!0,class:!0});var n=C(e);a=G(n,o),n.forEach(x),this.h()},h(){H(e,"color","var(--"+t[10]+"-secondary)"),H(e,"background-color","var(--"+t[10]+")"),A(e,"class","team-link")},m(t,o){E(t,e,o),w(e,a),n||(r=k(e,"click",l),n=!0)},p(n,r){t=n,3&r&&o!==(o=t[1](t[0][t[12]])+"")&&j(a,o),4&r&&H(e,"color","var(--"+t[10]+"-secondary)"),4&r&&H(e,"background-color","var(--"+t[10]+")")},d(t){t&&x(e),n=!1,r()}}}function gn(t){let e,a,n,r,o=t[1](t[0][t[12]])+"";function l(){return t[7](t[12])}return{c(){e=D("button"),a=N(o),this.h()},l(t){e=S(t,"BUTTON",{style:!0,class:!0});var n=C(e);a=G(n,o),n.forEach(x),this.h()},h(){H(e,"color","var(--"+t[2][t[12]]+"-secondary)"),H(e,"background-color","var(--"+t[2][t[12]]+")"),A(e,"class","team-link last-team")},m(t,o){E(t,e,o),w(e,a),n||(r=k(e,"click",l),n=!0)},p(n,r){t=n,3&r&&o!==(o=t[1](t[0][t[12]])+"")&&j(a,o),4&r&&H(e,"color","var(--"+t[2][t[12]]+"-secondary)"),4&r&&H(e,"background-color","var(--"+t[2][t[12]]+")")},d(t){t&&x(e),n=!1,r()}}}function vn(t){let e,a,n,r,o=t[1](t[0][t[12]])+"";function l(){return t[6](t[12])}return{c(){e=D("button"),a=N(o),this.h()},l(t){e=S(t,"BUTTON",{style:!0,class:!0});var n=C(e);a=G(n,o),n.forEach(x),this.h()},h(){H(e,"color","var(--"+t[2][t[12]]+"-secondary)"),H(e,"background-color","var(--"+t[2][t[12]]+")"),A(e,"class","team-link first-team")},m(t,o){E(t,e,o),w(e,a),n||(r=k(e,"click",l),n=!0)},p(n,r){t=n,3&r&&o!==(o=t[1](t[0][t[12]])+"")&&j(a,o),4&r&&H(e,"color","var(--"+t[2][t[12]]+"-secondary)"),4&r&&H(e,"background-color","var(--"+t[2][t[12]]+")")},d(t){t&&x(e),n=!1,r()}}}function $n(t){let e,a=null!=t[10]&&mn(t);return{c(){a&&a.c(),e=_()},l(t){a&&a.l(t),e=_()},m(t,n){a&&a.m(t,n),E(t,e,n)},p(t,n){null!=t[10]?a?a.p(t,n):(a=mn(t),a.c(),a.m(e.parentNode,e)):a&&(a.d(1),a=null)},d(t){a&&a.d(t),t&&x(e)}}}function yn(e){let a,n=null!=e[2]&&hn(e);return{c(){a=D("nav"),n&&n.c()},l(t){a=S(t,"NAV",{});var e=C(a);n&&n.l(e),e.forEach(x)},m(t,e){E(t,a,e),n&&n.m(a,null)},p(t,[e]){null!=t[2]?n?n.p(t,e):(n=hn(t),n.c(),n.m(a,null)):n&&(n.d(1),n=null)},i:t,o:t,d(t){t&&x(a),n&&n.d()}}}function bn(t,e,a){function n(t){c(t),window.scrollTo(0,0)}let r,{team:o,teams:l,getAlias:s,switchTeam:c}=e;return t.$$set=t=>{"team"in t&&a(4,o=t.team),"teams"in t&&a(0,l=t.teams),"getAlias"in t&&a(1,s=t.getAlias),"switchTeam"in t&&a(5,c=t.switchTeam)},t.$$.update=()=>{17&t.$$.dirty&&function(t){let e=[];for(let a=0;a<t.length;a++){let n=t[a].toLowerCase().replace(/ /g,"-");n!=o?e.push(n):e.push(null)}a(2,r=e)}(l)},[l,s,r,n,o,c,t=>{n(r[t])},t=>{n(r[t])},t=>{n(t)}]}class wn extends It{constructor(t){super(),xt(this,t,bn,yn,l,{team:4,teams:0,getAlias:1,switchTeam:5})}}const{document:En}=ft;function xn(e){let a,n;return{c(){a=D("div"),n=D("div"),this.h()},l(t){a=S(t,"DIV",{class:!0});var e=C(a);n=S(e,"DIV",{class:!0}),C(n).forEach(x),e.forEach(x),this.h()},h(){A(n,"class","loading-spinner"),A(a,"class","loading-spinner-container")},m(t,e){E(t,a,e),w(a,n)},p:t,i:t,o:t,d(t){t&&x(a)}}}function In(t){let e,a,n,r,o,l,s,c,i,d,u,f,h,m,p,g,v,$,y,b,I,T,_,k,B,L,P,M,j,H,U,F,R,z,W,Y,q,X,K,Z,J,Q,tt,et,at,nt,rt,ot,lt,st,ct,it,ft,ht,mt,pt,gt,vt,Et,xt,It,Dt,Tt,Nt,Vt,_t,kt;let At=Dn(t);return i=new ua({props:{data:t[3],fullTeamName:t[1]}}),h=new $e({props:{data:t[3],currentMatchday:t[2],fullTeamName:t[1]}}),p=new ke({props:{data:t[3],team:t[0],fullTeamName:t[1],getAlias:t[4],switchTeam:t[7]}}),$=new Ze({props:{data:t[3],currentMatchday:t[2],fullTeamName:t[1],showBadge:Vn,getAlias:t[4],switchTeam:t[7]}}),L=new pa({props:{data:t[3],fullTeamName:t[1]}}),z=new ya({props:{data:t[3],fullTeamName:t[1]}}),Q=new xa({props:{data:t[3],fullTeamName:t[1]}}),rt=new Na({props:{data:t[3],fullTeamName:t[1]}}),st=new aa({props:{data:t[3],fullTeamName:t[1]}}),gt=new ja({props:{data:t[3],fullTeamName:t[1]}}),Dt=new an({props:{data:t[3],fullTeamName:t[1],getAlias:t[4],getName:t[5]}}),Nt=new wn({props:{team:t[0],teams:t[6],getAlias:t[4],switchTeam:t[7]}}),_t=new la({props:{lastUpdated:t[3].lastUpdated}}),{c(){e=D("div"),a=D("div"),At.c(),n=V(),r=D("div"),o=D("h1"),l=N("Fixtures"),s=V(),c=D("div"),$t(i.$$.fragment),d=V(),u=D("div"),f=D("div"),$t(h.$$.fragment),m=V(),$t(p.$$.fragment),g=V(),v=D("div"),$t($.$$.fragment),y=V(),b=D("div"),I=D("div"),T=D("h1"),_=N("Form Over Time"),k=V(),B=D("div"),$t(L.$$.fragment),P=V(),M=D("div"),j=D("div"),H=D("h1"),U=N("Position Over Time"),F=V(),R=D("div"),$t(z.$$.fragment),W=V(),Y=D("div"),q=D("div"),X=D("h1"),K=N("Goals Scored and Conceded"),Z=V(),J=D("div"),$t(Q.$$.fragment),tt=V(),et=D("div"),at=D("div"),nt=D("div"),$t(rt.$$.fragment),ot=V(),lt=D("div"),$t(st.$$.fragment),ct=V(),it=D("div"),ft=D("div"),ht=D("h1"),mt=N("Goals Per Game"),pt=V(),$t(gt.$$.fragment),vt=V(),Et=D("div"),xt=D("div"),It=D("div"),$t(Dt.$$.fragment),Tt=V(),$t(Nt.$$.fragment),Vt=V(),$t(_t.$$.fragment),this.h()},l(t){e=S(t,"DIV",{class:!0});var w=C(e);a=S(w,"DIV",{class:!0});var E=C(a);At.l(E),n=O(E),r=S(E,"DIV",{class:!0});var D=C(r);o=S(D,"H1",{class:!0});var N=C(o);l=G(N,"Fixtures"),N.forEach(x),s=O(D),c=S(D,"DIV",{class:!0});var V=C(c);yt(i.$$.fragment,V),V.forEach(x),D.forEach(x),E.forEach(x),d=O(w),u=S(w,"DIV",{class:!0});var A=C(u);f=S(A,"DIV",{class:!0});var dt=C(f);yt(h.$$.fragment,dt),m=O(dt),yt(p.$$.fragment,dt),dt.forEach(x),g=O(A),v=S(A,"DIV",{class:!0});var ut=C(v);yt($.$$.fragment,ut),ut.forEach(x),A.forEach(x),y=O(w),b=S(w,"DIV",{class:!0});var $t=C(b);I=S($t,"DIV",{class:!0});var bt=C(I);T=S(bt,"H1",{class:!0});var wt=C(T);_=G(wt,"Form Over Time"),wt.forEach(x),k=O(bt),B=S(bt,"DIV",{class:!0});var kt=C(B);yt(L.$$.fragment,kt),kt.forEach(x),bt.forEach(x),$t.forEach(x),P=O(w),M=S(w,"DIV",{class:!0});var Bt=C(M);j=S(Bt,"DIV",{class:!0});var Ct=C(j);H=S(Ct,"H1",{class:!0});var Lt=C(H);U=G(Lt,"Position Over Time"),Lt.forEach(x),F=O(Ct),R=S(Ct,"DIV",{class:!0});var Pt=C(R);yt(z.$$.fragment,Pt),Pt.forEach(x),Ct.forEach(x),Bt.forEach(x),W=O(w),Y=S(w,"DIV",{class:!0});var St=C(Y);q=S(St,"DIV",{class:!0});var Mt=C(q);X=S(Mt,"H1",{class:!0});var Gt=C(X);K=G(Gt,"Goals Scored and Conceded"),Gt.forEach(x),Z=O(Mt),J=S(Mt,"DIV",{class:!0});var Ot=C(J);yt(Q.$$.fragment,Ot),Ot.forEach(x),Mt.forEach(x),St.forEach(x),tt=O(w),et=S(w,"DIV",{class:!0});var jt=C(et);at=S(jt,"DIV",{class:!0});var Ht=C(at);nt=S(Ht,"DIV",{class:!0});var Ut=C(nt);yt(rt.$$.fragment,Ut),Ut.forEach(x),Ht.forEach(x),jt.forEach(x),ot=O(w),lt=S(w,"DIV",{class:!0});var Ft=C(lt);yt(st.$$.fragment,Ft),Ft.forEach(x),ct=O(w),it=S(w,"DIV",{class:!0});var Rt=C(it);ft=S(Rt,"DIV",{class:!0});var zt=C(ft);ht=S(zt,"H1",{});var Wt=C(ht);mt=G(Wt,"Goals Per Game"),Wt.forEach(x),pt=O(zt),yt(gt.$$.fragment,zt),zt.forEach(x),Rt.forEach(x),vt=O(w),Et=S(w,"DIV",{class:!0});var Yt=C(Et);xt=S(Yt,"DIV",{class:!0});var qt=C(xt);It=S(qt,"DIV",{class:!0});var Xt=C(It);yt(Dt.$$.fragment,Xt),Xt.forEach(x),qt.forEach(x),Yt.forEach(x),Tt=O(w),yt(Nt.$$.fragment,w),Vt=O(w),yt(_t.$$.fragment,w),w.forEach(x),this.h()},h(){A(o,"class","lowered"),A(c,"class","graph mini-graph"),A(r,"class","row-right fixtures-graph row-graph"),A(a,"class","row multi-element-row small-bottom-margin"),A(f,"class","row-left form-details"),A(v,"class","row-right"),A(u,"class","row multi-element-row"),A(T,"class","lowered"),A(B,"class","graph full-row-graph"),A(I,"class","form-graph row-graph"),A(b,"class","row"),A(H,"class","lowered"),A(R,"class","graph full-row-graph"),A(j,"class","position-over-time-graph row-graph"),A(M,"class","row"),A(X,"class","lowered"),A(J,"class","graph full-row-graph"),A(q,"class","goals-scored-vs-conceded-graph row-graph"),A(Y,"class","row no-bottom-margin"),A(nt,"class","clean-sheets graph full-row-graph"),A(at,"class","row-graph"),A(et,"class","row"),A(lt,"class","season-stats-row"),A(ft,"class","goals-freq-row row-graph"),A(it,"class","row"),A(It,"class","spider-chart-container"),A(xt,"class","spider-chart-row row-graph"),A(Et,"class","row"),A(e,"class","page-content")},m(t,x){E(t,e,x),w(e,a),At.m(a,null),w(a,n),w(a,r),w(r,o),w(o,l),w(r,s),w(r,c),bt(i,c,null),w(e,d),w(e,u),w(u,f),bt(h,f,null),w(f,m),bt(p,f,null),w(u,g),w(u,v),bt($,v,null),w(e,y),w(e,b),w(b,I),w(I,T),w(T,_),w(I,k),w(I,B),bt(L,B,null),w(e,P),w(e,M),w(M,j),w(j,H),w(H,U),w(j,F),w(j,R),bt(z,R,null),w(e,W),w(e,Y),w(Y,q),w(q,X),w(X,K),w(q,Z),w(q,J),bt(Q,J,null),w(e,tt),w(e,et),w(et,at),w(at,nt),bt(rt,nt,null),w(e,ot),w(e,lt),bt(st,lt,null),w(e,ct),w(e,it),w(it,ft),w(ft,ht),w(ht,mt),w(ft,pt),bt(gt,ft,null),w(e,vt),w(e,Et),w(Et,xt),w(xt,It),bt(Dt,It,null),w(e,Tt),bt(Nt,e,null),w(e,Vt),bt(_t,e,null),kt=!0},p(t,e){At.p(t,e);const a={};8&e&&(a.data=t[3]),2&e&&(a.fullTeamName=t[1]),i.$set(a);const n={};8&e&&(n.data=t[3]),4&e&&(n.currentMatchday=t[2]),2&e&&(n.fullTeamName=t[1]),h.$set(n);const r={};8&e&&(r.data=t[3]),1&e&&(r.team=t[0]),2&e&&(r.fullTeamName=t[1]),p.$set(r);const o={};8&e&&(o.data=t[3]),4&e&&(o.currentMatchday=t[2]),2&e&&(o.fullTeamName=t[1]),$.$set(o);const l={};8&e&&(l.data=t[3]),2&e&&(l.fullTeamName=t[1]),L.$set(l);const s={};8&e&&(s.data=t[3]),2&e&&(s.fullTeamName=t[1]),z.$set(s);const c={};8&e&&(c.data=t[3]),2&e&&(c.fullTeamName=t[1]),Q.$set(c);const d={};8&e&&(d.data=t[3]),2&e&&(d.fullTeamName=t[1]),rt.$set(d);const u={};8&e&&(u.data=t[3]),2&e&&(u.fullTeamName=t[1]),st.$set(u);const f={};8&e&&(f.data=t[3]),2&e&&(f.fullTeamName=t[1]),gt.$set(f);const m={};8&e&&(m.data=t[3]),2&e&&(m.fullTeamName=t[1]),Dt.$set(m);const g={};1&e&&(g.team=t[0]),Nt.$set(g);const v={};8&e&&(v.lastUpdated=t[3].lastUpdated),_t.$set(v)},i(t){kt||(dt(i.$$.fragment,t),dt(h.$$.fragment,t),dt(p.$$.fragment,t),dt($.$$.fragment,t),dt(L.$$.fragment,t),dt(z.$$.fragment,t),dt(Q.$$.fragment,t),dt(rt.$$.fragment,t),dt(st.$$.fragment,t),dt(gt.$$.fragment,t),dt(Dt.$$.fragment,t),dt(Nt.$$.fragment,t),dt(_t.$$.fragment,t),kt=!0)},o(t){ut(i.$$.fragment,t),ut(h.$$.fragment,t),ut(p.$$.fragment,t),ut($.$$.fragment,t),ut(L.$$.fragment,t),ut(z.$$.fragment,t),ut(Q.$$.fragment,t),ut(rt.$$.fragment,t),ut(st.$$.fragment,t),ut(gt.$$.fragment,t),ut(Dt.$$.fragment,t),ut(Nt.$$.fragment,t),ut(_t.$$.fragment,t),kt=!1},d(t){t&&x(e),At.d(),wt(i),wt(h),wt(p),wt($),wt(L),wt(z),wt(Q),wt(rt),wt(st),wt(gt),wt(Dt),wt(Nt),wt(_t)}}}function Dn(t){let e,a,n,r,o,l,s,c,i,d,u,f,h=t[3].standings[t[1]][t[3]._id].position+"";return{c(){e=D("div"),a=D("div"),n=T("svg"),r=T("circle"),l=T("circle"),c=T("circle"),d=V(),u=D("div"),f=N(h),this.h()},l(t){e=S(t,"DIV",{class:!0});var o=C(e);a=S(o,"DIV",{class:!0});var s=C(a);n=M(s,"svg",{class:!0});var i=C(n);r=M(i,"circle",{cx:!0,cy:!0,r:!0,"stroke-width":!0,fill:!0}),C(r).forEach(x),l=M(i,"circle",{cx:!0,cy:!0,r:!0,"stroke-width":!0,fill:!0}),C(l).forEach(x),c=M(i,"circle",{cx:!0,cy:!0,r:!0,"stroke-width":!0,fill:!0}),C(c).forEach(x),i.forEach(x),s.forEach(x),d=O(o),u=S(o,"DIV",{class:!0});var m=C(u);f=G(m,h),m.forEach(x),o.forEach(x),this.h()},h(){A(r,"cx","300"),A(r,"cy","150"),A(r,"r","100"),A(r,"stroke-width","0"),A(r,"fill",o="var(--"+t[0]+"-secondary)"),A(l,"cx","170"),A(l,"cy","170"),A(l,"r","140"),A(l,"stroke-width","0"),A(l,"fill",s="var(--"+t[0]+")"),A(c,"cx","300"),A(c,"cy","320"),A(c,"r","170"),A(c,"stroke-width","0"),A(c,"fill",i="var(--"+t[0]+")"),A(n,"class","circles-background"),A(a,"class","circles-background-container"),A(u,"class","position-central"),A(e,"class","row-left position-no-badge")},m(t,o){E(t,e,o),w(e,a),w(a,n),w(n,r),w(n,l),w(n,c),w(e,d),w(e,u),w(u,f)},p(t,e){1&e&&o!==(o="var(--"+t[0]+"-secondary)")&&A(r,"fill",o),1&e&&s!==(s="var(--"+t[0]+")")&&A(l,"fill",s),1&e&&i!==(i="var(--"+t[0]+")")&&A(c,"fill",i),10&e&&h!==(h=t[3].standings[t[1]][t[3]._id].position+"")&&j(f,h)},d(t){t&&x(e)}}}function Tn(t){let e,a,n,r,o,l,s,c,i,d,u,f,h,m,p=t[4](t[1])+"";n=new un({props:{team:t[0],teams:t[6],getAlias:t[4],switchTeam:t[7]}});const g=[In,xn],v=[];function $(t,e){return null!=t[3]?0:1}return f=$(t),h=v[f]=g[f](t),{c(){e=D("div"),a=D("div"),$t(n.$$.fragment),r=V(),o=D("div"),l=D("div"),s=D("a"),c=D("div"),i=N(p),u=V(),h.c(),this.h()},l(t){e=S(t,"DIV",{id:!0});var d=C(e);a=S(d,"DIV",{id:!0});var f=C(a);yt(n.$$.fragment,f),f.forEach(x),r=O(d),o=S(d,"DIV",{id:!0});var m=C(o);l=S(m,"DIV",{class:!0,style:!0});var g=C(l);s=S(g,"A",{class:!0,href:!0});var v=C(s);c=S(v,"DIV",{class:!0,style:!0});var $=C(c);i=G($,p),$.forEach(x),v.forEach(x),g.forEach(x),u=O(m),h.l(m),m.forEach(x),d.forEach(x),this.h()},h(){A(a,"id","navBar"),A(c,"class","title"),H(c,"color","var(--"+t[0]+"-secondary)"),A(s,"class","main-link no-decoration"),A(s,"href",d="/"+t[0]),A(l,"class","header"),H(l,"background-color","var(--"+t[0]+")"),A(o,"id","dashboard"),A(e,"id","team")},m(t,d){E(t,e,d),w(e,a),bt(n,a,null),w(e,r),w(e,o),w(o,l),w(l,s),w(s,c),w(c,i),w(o,u),v[f].m(o,null),m=!0},p(t,e){const a={};1&e&&(a.team=t[0]),n.$set(a),(!m||2&e)&&p!==(p=t[4](t[1])+"")&&j(i,p),(!m||1&e)&&H(c,"color","var(--"+t[0]+"-secondary)"),(!m||1&e&&d!==(d="/"+t[0]))&&A(s,"href",d),(!m||1&e)&&H(l,"background-color","var(--"+t[0]+")");let r=f;f=$(t),f===r?v[f].p(t,e):(ct(),ut(v[r],1,1,(()=>{v[r]=null})),it(),h=v[f],h?h.p(t,e):(h=v[f]=g[f](t),h.c()),dt(h,1),h.m(o,null))},i(t){m||(dt(n.$$.fragment,t),dt(h),m=!0)},o(t){ut(n.$$.fragment,t),ut(h),m=!1},d(t){t&&x(e),wt(n),v[f].d()}}}function Nn(t){let e,a,n,r,o;return En.title=e=t[1],r=new Rt({props:{$$slots:{default:[Tn]},$$scope:{ctx:t}}}),{c(){a=D("meta"),n=V(),$t(r.$$.fragment),this.h()},l(t){const e=U('[data-svelte="svelte-1qp08hs"]',En.head);a=S(e,"META",{name:!0,content:!0}),e.forEach(x),n=O(t),yt(r.$$.fragment,t),this.h()},h(){A(a,"name","description"),A(a,"content","Premier League Statistics Dashboard")},m(t,e){w(En.head,a),E(t,n,e),bt(r,t,e),o=!0},p(t,[a]){(!o||2&a)&&e!==(e=t[1])&&(En.title=e);const n={};1039&a&&(n.$$scope={dirty:a,ctx:t}),r.$set(n)},i(t){o||(dt(r.$$.fragment,t),o=!0)},o(t){ut(r.$$.fragment,t),o=!1},d(t){x(a),t&&x(n),wt(r,t)}}}const Vn=!1;function _n(t){return t.toLowerCase().split(" ").map((function(t){return t.charAt(0).toUpperCase()+t.slice(1)})).join(" ").replace("And","and")}function kn(t,e){return 0==Object.keys(t.form[t._id][e]).length?null:Object.keys(t.form[t._id][e]).reduce(((a,n)=>t.form[t._id][e][a]>t.form[t._id][e][n]?a:n))}function An(t,e,a){let n={"Wolverhampton Wanderers":"Wolves","Tottenham Hotspur":"Spurs","Leeds United":"Leeds","West Ham United":"West Ham","Brighton and Hove Albion":"Brighton"};function r(){a(1,s=_n(c.replace(/\-/g," "))),async function(t){const e=await fetch(t);return await e.json()}("https://pldashboard.herokuapp.com/api/teams").then((t=>{a(2,o=kn(t,s)),a(3,l=t),console.log(l)})).then((()=>{window.dispatchEvent(new Event("resize"))}))}let o,l,s="";z((()=>{r()}));let{team:c}=e;return t.$$set=t=>{"team"in t&&a(0,c=t.team)},[c,s,o,l,function(t){return t in n?n[t]:t},function(t){return Object.values(n).includes(t)?Object.keys(n).find((e=>n[e]===t)):t},["Manchester City","Liverpool","Chelsea","Tottenham Hotspur","Arsenal","Manchester United","West Ham United","Leicester City","Brighton and Hove Albion","Wolverhampton Wanderers","Newcastle United","Crystal Palace","Brentford","Aston Villa","Southampton","Everton","Leeds United","Fulham","Bournemouth","Nottingham Forest"],function(t){a(0,c=t),a(1,s=_n(c.replace(/\-/g," "))),a(2,o=kn(l,s)),window.history.pushState(null,null,c)}]}class Bn extends It{constructor(t){super(),xt(this,t,An,Nn,l,{team:0})}}function Cn(e){let a,n,r,o,l,s,i,d,u,f,h,m,p;return{c(){a=D("div"),n=D("div"),r=D("img"),l=V(),s=D("div"),i=D("div"),d=D("a"),u=N("Dashboard"),f=V(),h=D("div"),m=D("a"),p=N("FPL"),this.h()},l(t){a=S(t,"DIV",{id:!0});var e=C(a);n=S(e,"DIV",{class:!0});var o=C(n);r=S(o,"IMG",{src:!0,alt:!0}),l=O(o),s=S(o,"DIV",{class:!0});var c=C(s);i=S(c,"DIV",{class:!0});var g=C(i);d=S(g,"A",{class:!0,href:!0});var v=C(d);u=G(v,"Dashboard"),v.forEach(x),g.forEach(x),f=O(c),h=S(c,"DIV",{class:!0});var $=C(h);m=S($,"A",{class:!0,href:!0});var y=C(m);p=G(y,"FPL"),y.forEach(x),$.forEach(x),c.forEach(x),o.forEach(x),e.forEach(x),this.h()},h(){c(r.src,o="img/pldashboard4.png")||A(r,"src","img/pldashboard4.png"),A(r,"alt","pldashboard"),A(d,"class","dashboard-link"),A(d,"href","/"),A(i,"class","dashboard-link-container"),A(m,"class","fantasy-link"),A(m,"href","/"),A(h,"class","fantasy-link-container"),A(s,"class","links"),A(n,"class","content"),A(a,"id","home")},m(t,e){E(t,a,e),w(a,n),w(n,r),w(n,l),w(n,s),w(s,i),w(i,d),w(d,u),w(s,f),w(s,h),w(h,m),w(m,p)},p:t,d(t){t&&x(a)}}}function Ln(t){let e,a,n,r;return n=new Rt({props:{$$slots:{default:[Cn]},$$scope:{ctx:t}}}),{c(){e=D("meta"),a=V(),$t(n.$$.fragment),this.h()},l(t){const r=U('[data-svelte="svelte-1rqatx0"]',document.head);e=S(r,"META",{name:!0,content:!0}),r.forEach(x),a=O(t),yt(n.$$.fragment,t),this.h()},h(){document.title="Premier League",A(e,"name","description"),A(e,"content","Premier League Statistics Dashboard")},m(t,o){w(document.head,e),E(t,a,o),bt(n,t,o),r=!0},p(t,[e]){const a={};1&e&&(a.$$scope={dirty:e,ctx:t}),n.$set(a)},i(t){r||(dt(n.$$.fragment,t),r=!0)},o(t){ut(n.$$.fragment,t),r=!1},d(t){x(e),t&&x(a),wt(n,t)}}}class Pn extends It{constructor(t){super(),xt(this,t,null,Ln,l,{})}}const{document:Sn}=ft;function Mn(t,e,a){const n=t.slice();return n[2]=e[a]._id,n[3]=e[a].predictions,n}function Gn(t,e,a){const n=t.slice();return n[6]=e[a],n}function On(e){let a,n;return{c(){a=D("div"),n=D("div"),this.h()},l(t){a=S(t,"DIV",{class:!0});var e=C(a);n=S(e,"DIV",{class:!0}),C(n).forEach(x),e.forEach(x),this.h()},h(){A(n,"class","loading-spinner"),A(a,"class","loading-spinner-container")},m(t,e){E(t,a,e),w(a,n)},p:t,d(t){t&&x(a)}}}function jn(t){let e,a,n,r,o,l,s,c,i,d,u,f,h,m,p,g,v,$,y,b,I,T,_=(100*t[0].accuracy.scoreAccuracy).toFixed(2)+"",k=(100*t[0].accuracy.resultAccuracy).toFixed(2)+"",B=null!=t[0].predictions&&Hn(t);return{c(){e=D("div"),a=D("div"),n=D("div"),r=D("span"),o=N("Predicting with accuracy: "),l=D("b"),s=N(_),c=N("%"),i=D("br"),d=V(),u=D("div"),f=N("General results accuracy: "),h=D("b"),m=N(k),p=N("%"),g=V(),v=D("div"),$=D("div"),B&&B.c(),y=V(),b=D("div"),I=D("div"),T=N("Predictions are calculated using previous results and then adjusting by\r\n        recent form and home advantage."),this.h()},l(t){e=S(t,"DIV",{class:!0});var w=C(e);a=S(w,"DIV",{class:!0});var E=C(a);n=S(E,"DIV",{class:!0});var D=C(n);r=S(D,"SPAN",{class:!0});var N=C(r);o=G(N,"Predicting with accuracy: "),l=S(N,"B",{});var V=C(l);s=G(V,_),c=G(V,"%"),V.forEach(x),N.forEach(x),i=S(D,"BR",{}),d=O(D),u=S(D,"DIV",{class:!0});var A=C(u);f=G(A,"General results accuracy: "),h=S(A,"B",{});var L=C(h);m=G(L,k),p=G(L,"%"),L.forEach(x),A.forEach(x),D.forEach(x),E.forEach(x),g=O(w),v=S(w,"DIV",{class:!0});var P=C(v);$=S(P,"DIV",{class:!0});var M=C($);B&&B.l(M),M.forEach(x),P.forEach(x),w.forEach(x),y=O(t),b=S(t,"DIV",{class:!0});var j=C(b);I=S(j,"DIV",{class:!0});var H=C(I);T=G(H,"Predictions are calculated using previous results and then adjusting by\r\n        recent form and home advantage."),H.forEach(x),j.forEach(x),this.h()},h(){A(r,"class","accuracy-item"),A(u,"class","accuracy-item"),A(n,"class","accuracy"),A(a,"class","accuracy-display"),A($,"class","predictions"),A(v,"class","predictions-container"),A(e,"class","page-content"),A(I,"class","method-description"),A(b,"class","predictions-footer footer-text-colour")},m(t,x){E(t,e,x),w(e,a),w(a,n),w(n,r),w(r,o),w(r,l),w(l,s),w(l,c),w(n,i),w(n,d),w(n,u),w(u,f),w(u,h),w(h,m),w(h,p),w(e,g),w(e,v),w(v,$),B&&B.m($,null),E(t,y,x),E(t,b,x),w(b,I),w(I,T)},p(t,e){1&e&&_!==(_=(100*t[0].accuracy.scoreAccuracy).toFixed(2)+"")&&j(s,_),1&e&&k!==(k=(100*t[0].accuracy.resultAccuracy).toFixed(2)+"")&&j(m,k),null!=t[0].predictions?B?B.p(t,e):(B=Hn(t),B.c(),B.m($,null)):B&&(B.d(1),B=null)},d(t){t&&x(e),B&&B.d(),t&&x(y),t&&x(b)}}}function Hn(t){let e,a=t[0].predictions,n=[];for(let e=0;e<a.length;e+=1)n[e]=Wn(Mn(t,a,e));return{c(){for(let t=0;t<n.length;t+=1)n[t].c();e=_()},l(t){for(let e=0;e<n.length;e+=1)n[e].l(t);e=_()},m(t,a){for(let e=0;e<n.length;e+=1)n[e].m(t,a);E(t,e,a)},p(t,r){if(1&r){let o;for(a=t[0].predictions,o=0;o<a.length;o+=1){const l=Mn(t,a,o);n[o]?n[o].p(l,r):(n[o]=Wn(l),n[o].c(),n[o].m(e.parentNode,e))}for(;o<n.length;o+=1)n[o].d(1);n.length=a.length}},d(t){I(n,t),t&&x(e)}}}function Un(t){let e,a,n=Zn(t[6].datetime)+"";return{c(){e=D("div"),a=N(n),this.h()},l(t){e=S(t,"DIV",{class:!0});var r=C(e);a=G(r,n),r.forEach(x),this.h()},h(){A(e,"class","prediction-time")},m(t,n){E(t,e,n),w(e,a)},p(t,e){1&e&&n!==(n=Zn(t[6].datetime)+"")&&j(a,n)},d(t){t&&x(e)}}}function Fn(t){let e,a,n,r,o,l,s,c,i,d,u,f,h,m,p,g=t[6].home+"",v=t[6].actual.homeGoals+"",$=t[6].actual.awayGoals+"",y=t[6].away+"";return{c(){e=D("div"),a=D("div"),n=N("Actual:"),r=V(),o=D("div"),l=D("div"),s=N(g),c=V(),i=D("div"),d=N(v),u=N(" - "),f=N($),h=V(),m=D("div"),p=N(y),this.h()},l(t){e=S(t,"DIV",{class:!0});var b=C(e);a=S(b,"DIV",{class:!0});var w=C(a);n=G(w,"Actual:"),w.forEach(x),r=O(b),o=S(b,"DIV",{class:!0});var E=C(o);l=S(E,"DIV",{class:!0});var I=C(l);s=G(I,g),I.forEach(x),c=O(E),i=S(E,"DIV",{class:!0});var D=C(i);d=G(D,v),u=G(D," - "),f=G(D,$),D.forEach(x),h=O(E),m=S(E,"DIV",{class:!0});var T=C(m);p=G(T,y),T.forEach(x),E.forEach(x),b.forEach(x),this.h()},h(){A(a,"class","prediction-label"),A(l,"class","prediction-initials"),A(i,"class","prediction-score"),A(m,"class","prediction-initials"),A(o,"class","prediction-value"),A(e,"class","actual prediction-item")},m(t,g){E(t,e,g),w(e,a),w(a,n),w(e,r),w(e,o),w(o,l),w(l,s),w(o,c),w(o,i),w(i,d),w(i,u),w(i,f),w(o,h),w(o,m),w(m,p)},p(t,e){1&e&&g!==(g=t[6].home+"")&&j(s,g),1&e&&v!==(v=t[6].actual.homeGoals+"")&&j(d,v),1&e&&$!==($=t[6].actual.awayGoals+"")&&j(f,$),1&e&&y!==(y=t[6].away+"")&&j(p,y)},d(t){t&&x(e)}}}function Rn(t){let e,a,n,r,o,l,s,c=t[6].prediction.homeGoals+"",i=t[6].prediction.awayGoals+"";return{c(){e=D("div"),a=D("div"),n=D("b"),r=N(c),o=N(" - "),l=N(i),this.h()},l(t){e=S(t,"DIV",{class:!0,id:!0});var s=C(e);a=S(s,"DIV",{class:!0});var d=C(a);n=S(d,"B",{});var u=C(n);r=G(u,c),o=G(u," - "),l=G(u,i),u.forEach(x),d.forEach(x),s.forEach(x),this.h()},h(){A(a,"class","detailed-predicted-score"),A(e,"class","prediction-details"),A(e,"id",s=t[6]._id)},m(t,s){E(t,e,s),w(e,a),w(a,n),w(n,r),w(n,o),w(n,l)},p(t,a){1&a&&c!==(c=t[6].prediction.homeGoals+"")&&j(r,c),1&a&&i!==(i=t[6].prediction.awayGoals+"")&&j(l,i),1&a&&s!==(s=t[6]._id)&&A(e,"id",s)},d(t){t&&x(e)}}}function zn(t){let e,a,n,r,o,l,s,c,i,d,u,f,h,m,p,g,v,$,y,b,I,T=t[6].home+"",_=Math.round(t[6].prediction.homeGoals)+"",B=Math.round(t[6].prediction.awayGoals)+"",L=t[6].away+"";function P(t,e){return null!=t[6].actual?Fn:Un}let M=P(t),H=M(t),U=null!=t[6].prediction&&Rn(t);function F(){return t[1](t[6])}return{c(){e=D("button"),a=D("div"),n=D("div"),r=N("Predicted:"),o=V(),l=D("div"),s=D("div"),c=N(T),i=V(),d=D("div"),u=N(_),f=N(" - "),h=N(B),m=V(),p=D("div"),g=N(L),v=V(),H.c(),$=V(),U&&U.c(),this.h()},l(t){e=S(t,"BUTTON",{class:!0});var y=C(e);a=S(y,"DIV",{class:!0});var b=C(a);n=S(b,"DIV",{class:!0});var w=C(n);r=G(w,"Predicted:"),w.forEach(x),o=O(b),l=S(b,"DIV",{class:!0});var E=C(l);s=S(E,"DIV",{class:!0});var I=C(s);c=G(I,T),I.forEach(x),i=O(E),d=S(E,"DIV",{class:!0});var D=C(d);u=G(D,_),f=G(D," - "),h=G(D,B),D.forEach(x),m=O(E),p=S(E,"DIV",{class:!0});var N=C(p);g=G(N,L),N.forEach(x),E.forEach(x),b.forEach(x),v=O(y),H.l(y),$=O(y),U&&U.l(y),y.forEach(x),this.h()},h(){A(n,"class","prediction-label"),A(s,"class","prediction-initials"),A(d,"class","prediction-score"),A(p,"class","prediction-initials"),A(l,"class","prediction-value"),A(a,"class","prediction prediction-item"),A(e,"class",y="prediction-container "+t[6].colour)},m(t,y){E(t,e,y),w(e,a),w(a,n),w(n,r),w(a,o),w(a,l),w(l,s),w(s,c),w(l,i),w(l,d),w(d,u),w(d,f),w(d,h),w(l,m),w(l,p),w(p,g),w(e,v),H.m(e,null),w(e,$),U&&U.m(e,null),b||(I=k(e,"click",F),b=!0)},p(a,n){t=a,1&n&&T!==(T=t[6].home+"")&&j(c,T),1&n&&_!==(_=Math.round(t[6].prediction.homeGoals)+"")&&j(u,_),1&n&&B!==(B=Math.round(t[6].prediction.awayGoals)+"")&&j(h,B),1&n&&L!==(L=t[6].away+"")&&j(g,L),M===(M=P(t))&&H?H.p(t,n):(H.d(1),H=M(t),H&&(H.c(),H.m(e,$))),null!=t[6].prediction?U?U.p(t,n):(U=Rn(t),U.c(),U.m(e,null)):U&&(U.d(1),U=null),1&n&&y!==(y="prediction-container "+t[6].colour)&&A(e,"class",y)},d(t){t&&x(e),H.d(),U&&U.d(),b=!1,I()}}}function Wn(t){let e,a,n,r,o,l,s,c=t[2]+"",i=t[3],d=[];for(let e=0;e<i.length;e+=1)d[e]=zn(Gn(t,i,e));return{c(){e=D("div"),a=N(c),n=V(),r=D("div"),o=V();for(let t=0;t<d.length;t+=1)d[t].c();l=V(),s=D("div"),this.h()},l(t){e=S(t,"DIV",{class:!0});var i=C(e);a=G(i,c),i.forEach(x),n=O(t),r=S(t,"DIV",{class:!0}),C(r).forEach(x),o=O(t);for(let e=0;e<d.length;e+=1)d[e].l(t);l=O(t),s=S(t,"DIV",{class:!0}),C(s).forEach(x),this.h()},h(){A(e,"class","date"),A(r,"class","medium-predictions-divider"),A(s,"class","predictions-gap")},m(t,c){E(t,e,c),w(e,a),E(t,n,c),E(t,r,c),E(t,o,c);for(let e=0;e<d.length;e+=1)d[e].m(t,c);E(t,l,c),E(t,s,c)},p(t,e){if(1&e&&c!==(c=t[2]+"")&&j(a,c),1&e){let a;for(i=t[3],a=0;a<i.length;a+=1){const n=Gn(t,i,a);d[a]?d[a].p(n,e):(d[a]=zn(n),d[a].c(),d[a].m(l.parentNode,l))}for(;a<d.length;a+=1)d[a].d(1);d.length=i.length}},d(t){t&&x(e),t&&x(n),t&&x(r),t&&x(o),I(d,t),t&&x(l),t&&x(s)}}}function Yn(t){let e,a,n,r,o;function l(t,e){return null!=t[0]?jn:On}let s=l(t),c=s(t);return{c(){e=D("div"),a=D("div"),n=D("a"),r=N("Predictions"),o=V(),c.c(),this.h()},l(t){e=S(t,"DIV",{id:!0});var l=C(e);a=S(l,"DIV",{class:!0});var s=C(a);n=S(s,"A",{class:!0,href:!0});var i=C(n);r=G(i,"Predictions"),i.forEach(x),s.forEach(x),o=O(l),c.l(l),l.forEach(x),this.h()},h(){A(n,"class","predictions-title"),A(n,"href","/predictions"),A(a,"class","predictions-header"),A(e,"id","predictions")},m(t,l){E(t,e,l),w(e,a),w(a,n),w(n,r),w(e,o),c.m(e,null)},p(t,a){s===(s=l(t))&&c?c.p(t,a):(c.d(1),c=s(t),c&&(c.c(),c.m(e,null)))},d(t){t&&x(e),c.d()}}}function qn(t){let e,a,n,r;return n=new Rt({props:{$$slots:{default:[Yn]},$$scope:{ctx:t}}}),{c(){e=D("meta"),a=V(),$t(n.$$.fragment),this.h()},l(t){const r=U('[data-svelte="svelte-1w56yuh"]',Sn.head);e=S(r,"META",{name:!0,content:!0}),r.forEach(x),a=O(t),yt(n.$$.fragment,t),this.h()},h(){Sn.title="Predictions",A(e,"name","description"),A(e,"content","Premier League Statistics Dashboard")},m(t,o){w(Sn.head,e),E(t,a,o),bt(n,t,o),r=!0},p(t,[e]){const a={};513&e&&(a.$$scope={dirty:e,ctx:t}),n.$set(a)},i(t){r||(dt(n.$$.fragment,t),r=!0)},o(t){ut(n.$$.fragment,t),r=!1},d(t){x(e),t&&x(a),wt(n,t)}}}function Xn(t,e){return Math.round(t.homeGoals)==e.homeGoals&&Math.round(t.awayGoals)==e.awayGoals}function Kn(t,e){return t.homeGoals>t.awayGoals&&e.homeGoals>e.awayGoals||t.homeGoals==t.awayGoals&&e.homeGoals==e.awayGoals||t.homeGoals<t.awayGoals&&e.homeGoals<e.awayGoals}function Zn(t){let e=new Date(t);return e=e.toTimeString().slice(0,5),e}function Jn(t,e,a){let n;z((()=>{(async function(t){const e=await fetch(t);return await e.json()})("https://pldashboard.herokuapp.com/api/predictions").then((t=>{!function(t){t.predictions.sort(((t,e)=>new Date(e._id)-new Date(t._id)));for(let e=0;e<t.predictions.length;e++)t.predictions[e].predictions.sort(((t,e)=>new Date(t._id)-new Date(e._id)))}(t),function(t){for(let e=0;e<t.predictions.length;e++)for(let a=0;a<t.predictions[e].predictions.length;a++){let n=t.predictions[e].predictions[a];null!=n.actual&&(Xn(n.prediction,n.actual)?n.colour="green":Kn(n.prediction,n.actual)?n.colour="yellow":n.colour="red")}}(t),a(0,n=t),console.log(n.predictions)}))}));return[n,t=>function(t){let e=document.getElementById(t);null!=e&&e.classList.toggle("expanded")}(t._id)]}class Qn extends It{constructor(t){super(),xt(this,t,Jn,qn,l,{})}}function tr(e){let a,n;return a=new Bn({props:{team:"manchester-city"}}),{c(){$t(a.$$.fragment)},l(t){yt(a.$$.fragment,t)},m(t,e){bt(a,t,e),n=!0},p:t,i(t){n||(dt(a.$$.fragment,t),n=!0)},o(t){ut(a.$$.fragment,t),n=!1},d(t){wt(a,t)}}}function er(t){let e,a;return e=new Bn({props:{team:t[1].team}}),{c(){$t(e.$$.fragment)},l(t){yt(e.$$.fragment,t)},m(t,n){bt(e,t,n),a=!0},p(t,a){const n={};2&a&&(n.team=t[1].team),e.$set(n)},i(t){a||(dt(e.$$.fragment,t),a=!0)},o(t){ut(e.$$.fragment,t),a=!1},d(t){wt(e,t)}}}function ar(t){let e,a,n,r,o,l,s,c,i,d;return e=new Jt({props:{path:"/",$$slots:{default:[tr]},$$scope:{ctx:t}}}),n=new Jt({props:{path:"/predictions",component:Qn}}),o=new Jt({props:{path:"/:team",$$slots:{default:[er,({params:t})=>({1:t}),({params:t})=>t?2:0]},$$scope:{ctx:t}}}),s=new Jt({props:{path:"/teams",component:ue}}),i=new Jt({props:{path:"/home",component:Pn}}),{c(){$t(e.$$.fragment),a=V(),$t(n.$$.fragment),r=V(),$t(o.$$.fragment),l=V(),$t(s.$$.fragment),c=V(),$t(i.$$.fragment)},l(t){yt(e.$$.fragment,t),a=O(t),yt(n.$$.fragment,t),r=O(t),yt(o.$$.fragment,t),l=O(t),yt(s.$$.fragment,t),c=O(t),yt(i.$$.fragment,t)},m(t,u){bt(e,t,u),E(t,a,u),bt(n,t,u),E(t,r,u),bt(o,t,u),E(t,l,u),bt(s,t,u),E(t,c,u),bt(i,t,u),d=!0},p(t,a){const n={};4&a&&(n.$$scope={dirty:a,ctx:t}),e.$set(n);const r={};6&a&&(r.$$scope={dirty:a,ctx:t}),o.$set(r)},i(t){d||(dt(e.$$.fragment,t),dt(n.$$.fragment,t),dt(o.$$.fragment,t),dt(s.$$.fragment,t),dt(i.$$.fragment,t),d=!0)},o(t){ut(e.$$.fragment,t),ut(n.$$.fragment,t),ut(o.$$.fragment,t),ut(s.$$.fragment,t),ut(i.$$.fragment,t),d=!1},d(t){wt(e,t),t&&x(a),wt(n,t),t&&x(r),wt(o,t),t&&x(l),wt(s,t),t&&x(c),wt(i,t)}}}function nr(t){let e,a;return e=new Rt({props:{url:t[0],$$slots:{default:[ar]},$$scope:{ctx:t}}}),{c(){$t(e.$$.fragment)},l(t){yt(e.$$.fragment,t)},m(t,n){bt(e,t,n),a=!0},p(t,[a]){const n={};1&a&&(n.url=t[0]),4&a&&(n.$$scope={dirty:a,ctx:t}),e.$set(n)},i(t){a||(dt(e.$$.fragment,t),a=!0)},o(t){ut(e.$$.fragment,t),a=!1},d(t){wt(e,t)}}}function rr(t,e,a){let{url:n=""}=e;return t.$$set=t=>{"url"in t&&a(0,n=t.url)},[n]}new class extends It{constructor(t){super(),xt(this,t,rr,nr,l,{url:0})}}({target:document.getElementById("app"),hydrate:!0})}();
+
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+(function () {
+    'use strict';
+
+    function noop() { }
+    function assign(tar, src) {
+        // @ts-ignore
+        for (const k in src)
+            tar[k] = src[k];
+        return tar;
+    }
+    function run(fn) {
+        return fn();
+    }
+    function blank_object() {
+        return Object.create(null);
+    }
+    function run_all(fns) {
+        fns.forEach(run);
+    }
+    function is_function(thing) {
+        return typeof thing === 'function';
+    }
+    function safe_not_equal(a, b) {
+        return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+    }
+    let src_url_equal_anchor;
+    function src_url_equal(element_src, url) {
+        if (!src_url_equal_anchor) {
+            src_url_equal_anchor = document.createElement('a');
+        }
+        src_url_equal_anchor.href = url;
+        return element_src === src_url_equal_anchor.href;
+    }
+    function is_empty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+    function subscribe(store, ...callbacks) {
+        if (store == null) {
+            return noop;
+        }
+        const unsub = store.subscribe(...callbacks);
+        return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
+    }
+    function component_subscribe(component, store, callback) {
+        component.$$.on_destroy.push(subscribe(store, callback));
+    }
+    function create_slot(definition, ctx, $$scope, fn) {
+        if (definition) {
+            const slot_ctx = get_slot_context(definition, ctx, $$scope, fn);
+            return definition[0](slot_ctx);
+        }
+    }
+    function get_slot_context(definition, ctx, $$scope, fn) {
+        return definition[1] && fn
+            ? assign($$scope.ctx.slice(), definition[1](fn(ctx)))
+            : $$scope.ctx;
+    }
+    function get_slot_changes(definition, $$scope, dirty, fn) {
+        if (definition[2] && fn) {
+            const lets = definition[2](fn(dirty));
+            if ($$scope.dirty === undefined) {
+                return lets;
+            }
+            if (typeof lets === 'object') {
+                const merged = [];
+                const len = Math.max($$scope.dirty.length, lets.length);
+                for (let i = 0; i < len; i += 1) {
+                    merged[i] = $$scope.dirty[i] | lets[i];
+                }
+                return merged;
+            }
+            return $$scope.dirty | lets;
+        }
+        return $$scope.dirty;
+    }
+    function update_slot_base(slot, slot_definition, ctx, $$scope, slot_changes, get_slot_context_fn) {
+        if (slot_changes) {
+            const slot_context = get_slot_context(slot_definition, ctx, $$scope, get_slot_context_fn);
+            slot.p(slot_context, slot_changes);
+        }
+    }
+    function get_all_dirty_from_scope($$scope) {
+        if ($$scope.ctx.length > 32) {
+            const dirty = [];
+            const length = $$scope.ctx.length / 32;
+            for (let i = 0; i < length; i++) {
+                dirty[i] = -1;
+            }
+            return dirty;
+        }
+        return -1;
+    }
+    function exclude_internal_props(props) {
+        const result = {};
+        for (const k in props)
+            if (k[0] !== '$')
+                result[k] = props[k];
+        return result;
+    }
+    function compute_rest_props(props, keys) {
+        const rest = {};
+        keys = new Set(keys);
+        for (const k in props)
+            if (!keys.has(k) && k[0] !== '$')
+                rest[k] = props[k];
+        return rest;
+    }
+
+    // Track which nodes are claimed during hydration. Unclaimed nodes can then be removed from the DOM
+    // at the end of hydration without touching the remaining nodes.
+    let is_hydrating = false;
+    function start_hydrating() {
+        is_hydrating = true;
+    }
+    function end_hydrating() {
+        is_hydrating = false;
+    }
+    function upper_bound(low, high, key, value) {
+        // Return first index of value larger than input value in the range [low, high)
+        while (low < high) {
+            const mid = low + ((high - low) >> 1);
+            if (key(mid) <= value) {
+                low = mid + 1;
+            }
+            else {
+                high = mid;
+            }
+        }
+        return low;
+    }
+    function init_hydrate(target) {
+        if (target.hydrate_init)
+            return;
+        target.hydrate_init = true;
+        // We know that all children have claim_order values since the unclaimed have been detached if target is not <head>
+        let children = target.childNodes;
+        // If target is <head>, there may be children without claim_order
+        if (target.nodeName === 'HEAD') {
+            const myChildren = [];
+            for (let i = 0; i < children.length; i++) {
+                const node = children[i];
+                if (node.claim_order !== undefined) {
+                    myChildren.push(node);
+                }
+            }
+            children = myChildren;
+        }
+        /*
+        * Reorder claimed children optimally.
+        * We can reorder claimed children optimally by finding the longest subsequence of
+        * nodes that are already claimed in order and only moving the rest. The longest
+        * subsequence subsequence of nodes that are claimed in order can be found by
+        * computing the longest increasing subsequence of .claim_order values.
+        *
+        * This algorithm is optimal in generating the least amount of reorder operations
+        * possible.
+        *
+        * Proof:
+        * We know that, given a set of reordering operations, the nodes that do not move
+        * always form an increasing subsequence, since they do not move among each other
+        * meaning that they must be already ordered among each other. Thus, the maximal
+        * set of nodes that do not move form a longest increasing subsequence.
+        */
+        // Compute longest increasing subsequence
+        // m: subsequence length j => index k of smallest value that ends an increasing subsequence of length j
+        const m = new Int32Array(children.length + 1);
+        // Predecessor indices + 1
+        const p = new Int32Array(children.length);
+        m[0] = -1;
+        let longest = 0;
+        for (let i = 0; i < children.length; i++) {
+            const current = children[i].claim_order;
+            // Find the largest subsequence length such that it ends in a value less than our current value
+            // upper_bound returns first greater value, so we subtract one
+            // with fast path for when we are on the current longest subsequence
+            const seqLen = ((longest > 0 && children[m[longest]].claim_order <= current) ? longest + 1 : upper_bound(1, longest, idx => children[m[idx]].claim_order, current)) - 1;
+            p[i] = m[seqLen] + 1;
+            const newLen = seqLen + 1;
+            // We can guarantee that current is the smallest value. Otherwise, we would have generated a longer sequence.
+            m[newLen] = i;
+            longest = Math.max(newLen, longest);
+        }
+        // The longest increasing subsequence of nodes (initially reversed)
+        const lis = [];
+        // The rest of the nodes, nodes that will be moved
+        const toMove = [];
+        let last = children.length - 1;
+        for (let cur = m[longest] + 1; cur != 0; cur = p[cur - 1]) {
+            lis.push(children[cur - 1]);
+            for (; last >= cur; last--) {
+                toMove.push(children[last]);
+            }
+            last--;
+        }
+        for (; last >= 0; last--) {
+            toMove.push(children[last]);
+        }
+        lis.reverse();
+        // We sort the nodes being moved to guarantee that their insertion order matches the claim order
+        toMove.sort((a, b) => a.claim_order - b.claim_order);
+        // Finally, we move the nodes
+        for (let i = 0, j = 0; i < toMove.length; i++) {
+            while (j < lis.length && toMove[i].claim_order >= lis[j].claim_order) {
+                j++;
+            }
+            const anchor = j < lis.length ? lis[j] : null;
+            target.insertBefore(toMove[i], anchor);
+        }
+    }
+    function append_hydration(target, node) {
+        if (is_hydrating) {
+            init_hydrate(target);
+            if ((target.actual_end_child === undefined) || ((target.actual_end_child !== null) && (target.actual_end_child.parentElement !== target))) {
+                target.actual_end_child = target.firstChild;
+            }
+            // Skip nodes of undefined ordering
+            while ((target.actual_end_child !== null) && (target.actual_end_child.claim_order === undefined)) {
+                target.actual_end_child = target.actual_end_child.nextSibling;
+            }
+            if (node !== target.actual_end_child) {
+                // We only insert if the ordering of this node should be modified or the parent node is not target
+                if (node.claim_order !== undefined || node.parentNode !== target) {
+                    target.insertBefore(node, target.actual_end_child);
+                }
+            }
+            else {
+                target.actual_end_child = node.nextSibling;
+            }
+        }
+        else if (node.parentNode !== target || node.nextSibling !== null) {
+            target.appendChild(node);
+        }
+    }
+    function insert_hydration(target, node, anchor) {
+        if (is_hydrating && !anchor) {
+            append_hydration(target, node);
+        }
+        else if (node.parentNode !== target || node.nextSibling != anchor) {
+            target.insertBefore(node, anchor || null);
+        }
+    }
+    function detach(node) {
+        node.parentNode.removeChild(node);
+    }
+    function destroy_each(iterations, detaching) {
+        for (let i = 0; i < iterations.length; i += 1) {
+            if (iterations[i])
+                iterations[i].d(detaching);
+        }
+    }
+    function element(name) {
+        return document.createElement(name);
+    }
+    function svg_element(name) {
+        return document.createElementNS('http://www.w3.org/2000/svg', name);
+    }
+    function text(data) {
+        return document.createTextNode(data);
+    }
+    function space() {
+        return text(' ');
+    }
+    function empty() {
+        return text('');
+    }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
+    function attr(node, attribute, value) {
+        if (value == null)
+            node.removeAttribute(attribute);
+        else if (node.getAttribute(attribute) !== value)
+            node.setAttribute(attribute, value);
+    }
+    function set_attributes(node, attributes) {
+        // @ts-ignore
+        const descriptors = Object.getOwnPropertyDescriptors(node.__proto__);
+        for (const key in attributes) {
+            if (attributes[key] == null) {
+                node.removeAttribute(key);
+            }
+            else if (key === 'style') {
+                node.style.cssText = attributes[key];
+            }
+            else if (key === '__value') {
+                node.value = node[key] = attributes[key];
+            }
+            else if (descriptors[key] && descriptors[key].set) {
+                node[key] = attributes[key];
+            }
+            else {
+                attr(node, key, attributes[key]);
+            }
+        }
+    }
+    function children(element) {
+        return Array.from(element.childNodes);
+    }
+    function init_claim_info(nodes) {
+        if (nodes.claim_info === undefined) {
+            nodes.claim_info = { last_index: 0, total_claimed: 0 };
+        }
+    }
+    function claim_node(nodes, predicate, processNode, createNode, dontUpdateLastIndex = false) {
+        // Try to find nodes in an order such that we lengthen the longest increasing subsequence
+        init_claim_info(nodes);
+        const resultNode = (() => {
+            // We first try to find an element after the previous one
+            for (let i = nodes.claim_info.last_index; i < nodes.length; i++) {
+                const node = nodes[i];
+                if (predicate(node)) {
+                    const replacement = processNode(node);
+                    if (replacement === undefined) {
+                        nodes.splice(i, 1);
+                    }
+                    else {
+                        nodes[i] = replacement;
+                    }
+                    if (!dontUpdateLastIndex) {
+                        nodes.claim_info.last_index = i;
+                    }
+                    return node;
+                }
+            }
+            // Otherwise, we try to find one before
+            // We iterate in reverse so that we don't go too far back
+            for (let i = nodes.claim_info.last_index - 1; i >= 0; i--) {
+                const node = nodes[i];
+                if (predicate(node)) {
+                    const replacement = processNode(node);
+                    if (replacement === undefined) {
+                        nodes.splice(i, 1);
+                    }
+                    else {
+                        nodes[i] = replacement;
+                    }
+                    if (!dontUpdateLastIndex) {
+                        nodes.claim_info.last_index = i;
+                    }
+                    else if (replacement === undefined) {
+                        // Since we spliced before the last_index, we decrease it
+                        nodes.claim_info.last_index--;
+                    }
+                    return node;
+                }
+            }
+            // If we can't find any matching node, we create a new one
+            return createNode();
+        })();
+        resultNode.claim_order = nodes.claim_info.total_claimed;
+        nodes.claim_info.total_claimed += 1;
+        return resultNode;
+    }
+    function claim_element_base(nodes, name, attributes, create_element) {
+        return claim_node(nodes, (node) => node.nodeName === name, (node) => {
+            const remove = [];
+            for (let j = 0; j < node.attributes.length; j++) {
+                const attribute = node.attributes[j];
+                if (!attributes[attribute.name]) {
+                    remove.push(attribute.name);
+                }
+            }
+            remove.forEach(v => node.removeAttribute(v));
+            return undefined;
+        }, () => create_element(name));
+    }
+    function claim_element(nodes, name, attributes) {
+        return claim_element_base(nodes, name, attributes, element);
+    }
+    function claim_svg_element(nodes, name, attributes) {
+        return claim_element_base(nodes, name, attributes, svg_element);
+    }
+    function claim_text(nodes, data) {
+        return claim_node(nodes, (node) => node.nodeType === 3, (node) => {
+            const dataStr = '' + data;
+            if (node.data.startsWith(dataStr)) {
+                if (node.data.length !== dataStr.length) {
+                    return node.splitText(dataStr.length);
+                }
+            }
+            else {
+                node.data = dataStr;
+            }
+        }, () => text(data), true // Text nodes should not update last index since it is likely not worth it to eliminate an increasing subsequence of actual elements
+        );
+    }
+    function claim_space(nodes) {
+        return claim_text(nodes, ' ');
+    }
+    function set_data(text, data) {
+        data = '' + data;
+        if (text.wholeText !== data)
+            text.data = data;
+    }
+    function set_style(node, key, value, important) {
+        if (value === null) {
+            node.style.removeProperty(key);
+        }
+        else {
+            node.style.setProperty(key, value, important ? 'important' : '');
+        }
+    }
+    function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
+        const e = document.createEvent('CustomEvent');
+        e.initCustomEvent(type, bubbles, cancelable, detail);
+        return e;
+    }
+    function query_selector_all(selector, parent = document.body) {
+        return Array.from(parent.querySelectorAll(selector));
+    }
+
+    let current_component;
+    function set_current_component(component) {
+        current_component = component;
+    }
+    function get_current_component() {
+        if (!current_component)
+            throw new Error('Function called outside component initialization');
+        return current_component;
+    }
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
+    }
+    function onDestroy(fn) {
+        get_current_component().$$.on_destroy.push(fn);
+    }
+    function createEventDispatcher() {
+        const component = get_current_component();
+        return (type, detail, { cancelable = false } = {}) => {
+            const callbacks = component.$$.callbacks[type];
+            if (callbacks) {
+                // TODO are there situations where events could be dispatched
+                // in a server (non-DOM) environment?
+                const event = custom_event(type, detail, { cancelable });
+                callbacks.slice().forEach(fn => {
+                    fn.call(component, event);
+                });
+                return !event.defaultPrevented;
+            }
+            return true;
+        };
+    }
+    function setContext(key, context) {
+        get_current_component().$$.context.set(key, context);
+        return context;
+    }
+    function getContext(key) {
+        return get_current_component().$$.context.get(key);
+    }
+
+    const dirty_components = [];
+    const binding_callbacks = [];
+    const render_callbacks = [];
+    const flush_callbacks = [];
+    const resolved_promise = Promise.resolve();
+    let update_scheduled = false;
+    function schedule_update() {
+        if (!update_scheduled) {
+            update_scheduled = true;
+            resolved_promise.then(flush);
+        }
+    }
+    function add_render_callback(fn) {
+        render_callbacks.push(fn);
+    }
+    // flush() calls callbacks in this order:
+    // 1. All beforeUpdate callbacks, in order: parents before children
+    // 2. All bind:this callbacks, in reverse order: children before parents.
+    // 3. All afterUpdate callbacks, in order: parents before children. EXCEPT
+    //    for afterUpdates called during the initial onMount, which are called in
+    //    reverse order: children before parents.
+    // Since callbacks might update component values, which could trigger another
+    // call to flush(), the following steps guard against this:
+    // 1. During beforeUpdate, any updated components will be added to the
+    //    dirty_components array and will cause a reentrant call to flush(). Because
+    //    the flush index is kept outside the function, the reentrant call will pick
+    //    up where the earlier call left off and go through all dirty components. The
+    //    current_component value is saved and restored so that the reentrant call will
+    //    not interfere with the "parent" flush() call.
+    // 2. bind:this callbacks cannot trigger new flush() calls.
+    // 3. During afterUpdate, any updated components will NOT have their afterUpdate
+    //    callback called a second time; the seen_callbacks set, outside the flush()
+    //    function, guarantees this behavior.
+    const seen_callbacks = new Set();
+    let flushidx = 0; // Do *not* move this inside the flush() function
+    function flush() {
+        const saved_component = current_component;
+        do {
+            // first, call beforeUpdate functions
+            // and update components
+            while (flushidx < dirty_components.length) {
+                const component = dirty_components[flushidx];
+                flushidx++;
+                set_current_component(component);
+                update(component.$$);
+            }
+            set_current_component(null);
+            dirty_components.length = 0;
+            flushidx = 0;
+            while (binding_callbacks.length)
+                binding_callbacks.pop()();
+            // then, once components are updated, call
+            // afterUpdate functions. This may cause
+            // subsequent updates...
+            for (let i = 0; i < render_callbacks.length; i += 1) {
+                const callback = render_callbacks[i];
+                if (!seen_callbacks.has(callback)) {
+                    // ...so guard against infinite loops
+                    seen_callbacks.add(callback);
+                    callback();
+                }
+            }
+            render_callbacks.length = 0;
+        } while (dirty_components.length);
+        while (flush_callbacks.length) {
+            flush_callbacks.pop()();
+        }
+        update_scheduled = false;
+        seen_callbacks.clear();
+        set_current_component(saved_component);
+    }
+    function update($$) {
+        if ($$.fragment !== null) {
+            $$.update();
+            run_all($$.before_update);
+            const dirty = $$.dirty;
+            $$.dirty = [-1];
+            $$.fragment && $$.fragment.p($$.ctx, dirty);
+            $$.after_update.forEach(add_render_callback);
+        }
+    }
+    const outroing = new Set();
+    let outros;
+    function group_outros() {
+        outros = {
+            r: 0,
+            c: [],
+            p: outros // parent group
+        };
+    }
+    function check_outros() {
+        if (!outros.r) {
+            run_all(outros.c);
+        }
+        outros = outros.p;
+    }
+    function transition_in(block, local) {
+        if (block && block.i) {
+            outroing.delete(block);
+            block.i(local);
+        }
+    }
+    function transition_out(block, local, detach, callback) {
+        if (block && block.o) {
+            if (outroing.has(block))
+                return;
+            outroing.add(block);
+            outros.c.push(() => {
+                outroing.delete(block);
+                if (callback) {
+                    if (detach)
+                        block.d(1);
+                    callback();
+                }
+            });
+            block.o(local);
+        }
+        else if (callback) {
+            callback();
+        }
+    }
+
+    const globals = (typeof window !== 'undefined'
+        ? window
+        : typeof globalThis !== 'undefined'
+            ? globalThis
+            : global);
+
+    function destroy_block(block, lookup) {
+        block.d(1);
+        lookup.delete(block.key);
+    }
+    function outro_and_destroy_block(block, lookup) {
+        transition_out(block, 1, 1, () => {
+            lookup.delete(block.key);
+        });
+    }
+    function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
+        let o = old_blocks.length;
+        let n = list.length;
+        let i = o;
+        const old_indexes = {};
+        while (i--)
+            old_indexes[old_blocks[i].key] = i;
+        const new_blocks = [];
+        const new_lookup = new Map();
+        const deltas = new Map();
+        i = n;
+        while (i--) {
+            const child_ctx = get_context(ctx, list, i);
+            const key = get_key(child_ctx);
+            let block = lookup.get(key);
+            if (!block) {
+                block = create_each_block(key, child_ctx);
+                block.c();
+            }
+            else if (dynamic) {
+                block.p(child_ctx, dirty);
+            }
+            new_lookup.set(key, new_blocks[i] = block);
+            if (key in old_indexes)
+                deltas.set(key, Math.abs(i - old_indexes[key]));
+        }
+        const will_move = new Set();
+        const did_move = new Set();
+        function insert(block) {
+            transition_in(block, 1);
+            block.m(node, next);
+            lookup.set(block.key, block);
+            next = block.first;
+            n--;
+        }
+        while (o && n) {
+            const new_block = new_blocks[n - 1];
+            const old_block = old_blocks[o - 1];
+            const new_key = new_block.key;
+            const old_key = old_block.key;
+            if (new_block === old_block) {
+                // do nothing
+                next = new_block.first;
+                o--;
+                n--;
+            }
+            else if (!new_lookup.has(old_key)) {
+                // remove old block
+                destroy(old_block, lookup);
+                o--;
+            }
+            else if (!lookup.has(new_key) || will_move.has(new_key)) {
+                insert(new_block);
+            }
+            else if (did_move.has(old_key)) {
+                o--;
+            }
+            else if (deltas.get(new_key) > deltas.get(old_key)) {
+                did_move.add(new_key);
+                insert(new_block);
+            }
+            else {
+                will_move.add(old_key);
+                o--;
+            }
+        }
+        while (o--) {
+            const old_block = old_blocks[o];
+            if (!new_lookup.has(old_block.key))
+                destroy(old_block, lookup);
+        }
+        while (n)
+            insert(new_blocks[n - 1]);
+        return new_blocks;
+    }
+
+    function get_spread_update(levels, updates) {
+        const update = {};
+        const to_null_out = {};
+        const accounted_for = { $$scope: 1 };
+        let i = levels.length;
+        while (i--) {
+            const o = levels[i];
+            const n = updates[i];
+            if (n) {
+                for (const key in o) {
+                    if (!(key in n))
+                        to_null_out[key] = 1;
+                }
+                for (const key in n) {
+                    if (!accounted_for[key]) {
+                        update[key] = n[key];
+                        accounted_for[key] = 1;
+                    }
+                }
+                levels[i] = n;
+            }
+            else {
+                for (const key in o) {
+                    accounted_for[key] = 1;
+                }
+            }
+        }
+        for (const key in to_null_out) {
+            if (!(key in update))
+                update[key] = undefined;
+        }
+        return update;
+    }
+    function get_spread_object(spread_props) {
+        return typeof spread_props === 'object' && spread_props !== null ? spread_props : {};
+    }
+    function create_component(block) {
+        block && block.c();
+    }
+    function claim_component(block, parent_nodes) {
+        block && block.l(parent_nodes);
+    }
+    function mount_component(component, target, anchor, customElement) {
+        const { fragment, on_mount, on_destroy, after_update } = component.$$;
+        fragment && fragment.m(target, anchor);
+        if (!customElement) {
+            // onMount happens before the initial afterUpdate
+            add_render_callback(() => {
+                const new_on_destroy = on_mount.map(run).filter(is_function);
+                if (on_destroy) {
+                    on_destroy.push(...new_on_destroy);
+                }
+                else {
+                    // Edge case - component was destroyed immediately,
+                    // most likely as a result of a binding initialising
+                    run_all(new_on_destroy);
+                }
+                component.$$.on_mount = [];
+            });
+        }
+        after_update.forEach(add_render_callback);
+    }
+    function destroy_component(component, detaching) {
+        const $$ = component.$$;
+        if ($$.fragment !== null) {
+            run_all($$.on_destroy);
+            $$.fragment && $$.fragment.d(detaching);
+            // TODO null out other refs, including component.$$ (but need to
+            // preserve final state?)
+            $$.on_destroy = $$.fragment = null;
+            $$.ctx = [];
+        }
+    }
+    function make_dirty(component, i) {
+        if (component.$$.dirty[0] === -1) {
+            dirty_components.push(component);
+            schedule_update();
+            component.$$.dirty.fill(0);
+        }
+        component.$$.dirty[(i / 31) | 0] |= (1 << (i % 31));
+    }
+    function init(component, options, instance, create_fragment, not_equal, props, append_styles, dirty = [-1]) {
+        const parent_component = current_component;
+        set_current_component(component);
+        const $$ = component.$$ = {
+            fragment: null,
+            ctx: null,
+            // state
+            props,
+            update: noop,
+            not_equal,
+            bound: blank_object(),
+            // lifecycle
+            on_mount: [],
+            on_destroy: [],
+            on_disconnect: [],
+            before_update: [],
+            after_update: [],
+            context: new Map(options.context || (parent_component ? parent_component.$$.context : [])),
+            // everything else
+            callbacks: blank_object(),
+            dirty,
+            skip_bound: false,
+            root: options.target || parent_component.$$.root
+        };
+        append_styles && append_styles($$.root);
+        let ready = false;
+        $$.ctx = instance
+            ? instance(component, options.props || {}, (i, ret, ...rest) => {
+                const value = rest.length ? rest[0] : ret;
+                if ($$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value)) {
+                    if (!$$.skip_bound && $$.bound[i])
+                        $$.bound[i](value);
+                    if (ready)
+                        make_dirty(component, i);
+                }
+                return ret;
+            })
+            : [];
+        $$.update();
+        ready = true;
+        run_all($$.before_update);
+        // `false` as a special case of no DOM component
+        $$.fragment = create_fragment ? create_fragment($$.ctx) : false;
+        if (options.target) {
+            if (options.hydrate) {
+                start_hydrating();
+                const nodes = children(options.target);
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                $$.fragment && $$.fragment.l(nodes);
+                nodes.forEach(detach);
+            }
+            else {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                $$.fragment && $$.fragment.c();
+            }
+            if (options.intro)
+                transition_in(component.$$.fragment);
+            mount_component(component, options.target, options.anchor, options.customElement);
+            end_hydrating();
+            flush();
+        }
+        set_current_component(parent_component);
+    }
+    /**
+     * Base class for Svelte components. Used when dev=false.
+     */
+    class SvelteComponent {
+        $destroy() {
+            destroy_component(this, 1);
+            this.$destroy = noop;
+        }
+        $on(type, callback) {
+            const callbacks = (this.$$.callbacks[type] || (this.$$.callbacks[type] = []));
+            callbacks.push(callback);
+            return () => {
+                const index = callbacks.indexOf(callback);
+                if (index !== -1)
+                    callbacks.splice(index, 1);
+            };
+        }
+        $set($$props) {
+            if (this.$$set && !is_empty($$props)) {
+                this.$$.skip_bound = true;
+                this.$$set($$props);
+                this.$$.skip_bound = false;
+            }
+        }
+    }
+
+    const subscriber_queue = [];
+    /**
+     * Creates a `Readable` store that allows reading by subscription.
+     * @param value initial value
+     * @param {StartStopNotifier}start start and stop notifications for subscriptions
+     */
+    function readable(value, start) {
+        return {
+            subscribe: writable(value, start).subscribe
+        };
+    }
+    /**
+     * Create a `Writable` store that allows both updating and reading by subscription.
+     * @param {*=}value initial value
+     * @param {StartStopNotifier=}start start and stop notifications for subscriptions
+     */
+    function writable(value, start = noop) {
+        let stop;
+        const subscribers = new Set();
+        function set(new_value) {
+            if (safe_not_equal(value, new_value)) {
+                value = new_value;
+                if (stop) { // store is ready
+                    const run_queue = !subscriber_queue.length;
+                    for (const subscriber of subscribers) {
+                        subscriber[1]();
+                        subscriber_queue.push(subscriber, value);
+                    }
+                    if (run_queue) {
+                        for (let i = 0; i < subscriber_queue.length; i += 2) {
+                            subscriber_queue[i][0](subscriber_queue[i + 1]);
+                        }
+                        subscriber_queue.length = 0;
+                    }
+                }
+            }
+        }
+        function update(fn) {
+            set(fn(value));
+        }
+        function subscribe(run, invalidate = noop) {
+            const subscriber = [run, invalidate];
+            subscribers.add(subscriber);
+            if (subscribers.size === 1) {
+                stop = start(set) || noop;
+            }
+            run(value);
+            return () => {
+                subscribers.delete(subscriber);
+                if (subscribers.size === 0) {
+                    stop();
+                    stop = null;
+                }
+            };
+        }
+        return { set, update, subscribe };
+    }
+    function derived(stores, fn, initial_value) {
+        const single = !Array.isArray(stores);
+        const stores_array = single
+            ? [stores]
+            : stores;
+        const auto = fn.length < 2;
+        return readable(initial_value, (set) => {
+            let inited = false;
+            const values = [];
+            let pending = 0;
+            let cleanup = noop;
+            const sync = () => {
+                if (pending) {
+                    return;
+                }
+                cleanup();
+                const result = fn(single ? values[0] : values, set);
+                if (auto) {
+                    set(result);
+                }
+                else {
+                    cleanup = is_function(result) ? result : noop;
+                }
+            };
+            const unsubscribers = stores_array.map((store, i) => subscribe(store, (value) => {
+                values[i] = value;
+                pending &= ~(1 << i);
+                if (inited) {
+                    sync();
+                }
+            }, () => {
+                pending |= (1 << i);
+            }));
+            inited = true;
+            sync();
+            return function stop() {
+                run_all(unsubscribers);
+                cleanup();
+            };
+        });
+    }
+
+    const LOCATION = {};
+    const ROUTER = {};
+
+    /**
+     * Adapted from https://github.com/reach/router/blob/b60e6dd781d5d3a4bdaaf4de665649c0f6a7e78d/src/lib/history.js
+     *
+     * https://github.com/reach/router/blob/master/LICENSE
+     * */
+
+    function getLocation(source) {
+      return {
+        ...source.location,
+        state: source.history.state,
+        key: (source.history.state && source.history.state.key) || "initial"
+      };
+    }
+
+    function createHistory(source, options) {
+      const listeners = [];
+      let location = getLocation(source);
+
+      return {
+        get location() {
+          return location;
+        },
+
+        listen(listener) {
+          listeners.push(listener);
+
+          const popstateListener = () => {
+            location = getLocation(source);
+            listener({ location, action: "POP" });
+          };
+
+          source.addEventListener("popstate", popstateListener);
+
+          return () => {
+            source.removeEventListener("popstate", popstateListener);
+
+            const index = listeners.indexOf(listener);
+            listeners.splice(index, 1);
+          };
+        },
+
+        navigate(to, { state, replace = false } = {}) {
+          state = { ...state, key: Date.now() + "" };
+          // try...catch iOS Safari limits to 100 pushState calls
+          try {
+            if (replace) {
+              source.history.replaceState(state, null, to);
+            } else {
+              source.history.pushState(state, null, to);
+            }
+          } catch (e) {
+            source.location[replace ? "replace" : "assign"](to);
+          }
+
+          location = getLocation(source);
+          listeners.forEach(listener => listener({ location, action: "PUSH" }));
+        }
+      };
+    }
+
+    // Stores history entries in memory for testing or other platforms like Native
+    function createMemorySource(initialPathname = "/") {
+      let index = 0;
+      const stack = [{ pathname: initialPathname, search: "" }];
+      const states = [];
+
+      return {
+        get location() {
+          return stack[index];
+        },
+        addEventListener(name, fn) {},
+        removeEventListener(name, fn) {},
+        history: {
+          get entries() {
+            return stack;
+          },
+          get index() {
+            return index;
+          },
+          get state() {
+            return states[index];
+          },
+          pushState(state, _, uri) {
+            const [pathname, search = ""] = uri.split("?");
+            index++;
+            stack.push({ pathname, search });
+            states.push(state);
+          },
+          replaceState(state, _, uri) {
+            const [pathname, search = ""] = uri.split("?");
+            stack[index] = { pathname, search };
+            states[index] = state;
+          }
+        }
+      };
+    }
+
+    // Global history uses window.history as the source if available,
+    // otherwise a memory history
+    const canUseDOM = Boolean(
+      typeof window !== "undefined" &&
+        window.document &&
+        window.document.createElement
+    );
+    const globalHistory = createHistory(canUseDOM ? window : createMemorySource());
+    const { navigate } = globalHistory;
+
+    /**
+     * Adapted from https://github.com/reach/router/blob/b60e6dd781d5d3a4bdaaf4de665649c0f6a7e78d/src/lib/utils.js
+     *
+     * https://github.com/reach/router/blob/master/LICENSE
+     * */
+
+    const paramRe = /^:(.+)/;
+
+    const SEGMENT_POINTS = 4;
+    const STATIC_POINTS = 3;
+    const DYNAMIC_POINTS = 2;
+    const SPLAT_PENALTY = 1;
+    const ROOT_POINTS = 1;
+
+    /**
+     * Check if `string` starts with `search`
+     * @param {string} string
+     * @param {string} search
+     * @return {boolean}
+     */
+    function startsWith(string, search) {
+      return string.substr(0, search.length) === search;
+    }
+
+    /**
+     * Check if `segment` is a root segment
+     * @param {string} segment
+     * @return {boolean}
+     */
+    function isRootSegment(segment) {
+      return segment === "";
+    }
+
+    /**
+     * Check if `segment` is a dynamic segment
+     * @param {string} segment
+     * @return {boolean}
+     */
+    function isDynamic(segment) {
+      return paramRe.test(segment);
+    }
+
+    /**
+     * Check if `segment` is a splat
+     * @param {string} segment
+     * @return {boolean}
+     */
+    function isSplat(segment) {
+      return segment[0] === "*";
+    }
+
+    /**
+     * Split up the URI into segments delimited by `/`
+     * @param {string} uri
+     * @return {string[]}
+     */
+    function segmentize(uri) {
+      return (
+        uri
+          // Strip starting/ending `/`
+          .replace(/(^\/+|\/+$)/g, "")
+          .split("/")
+      );
+    }
+
+    /**
+     * Strip `str` of potential start and end `/`
+     * @param {string} str
+     * @return {string}
+     */
+    function stripSlashes(str) {
+      return str.replace(/(^\/+|\/+$)/g, "");
+    }
+
+    /**
+     * Score a route depending on how its individual segments look
+     * @param {object} route
+     * @param {number} index
+     * @return {object}
+     */
+    function rankRoute(route, index) {
+      const score = route.default
+        ? 0
+        : segmentize(route.path).reduce((score, segment) => {
+            score += SEGMENT_POINTS;
+
+            if (isRootSegment(segment)) {
+              score += ROOT_POINTS;
+            } else if (isDynamic(segment)) {
+              score += DYNAMIC_POINTS;
+            } else if (isSplat(segment)) {
+              score -= SEGMENT_POINTS + SPLAT_PENALTY;
+            } else {
+              score += STATIC_POINTS;
+            }
+
+            return score;
+          }, 0);
+
+      return { route, score, index };
+    }
+
+    /**
+     * Give a score to all routes and sort them on that
+     * @param {object[]} routes
+     * @return {object[]}
+     */
+    function rankRoutes(routes) {
+      return (
+        routes
+          .map(rankRoute)
+          // If two routes have the exact same score, we go by index instead
+          .sort((a, b) =>
+            a.score < b.score ? 1 : a.score > b.score ? -1 : a.index - b.index
+          )
+      );
+    }
+
+    /**
+     * Ranks and picks the best route to match. Each segment gets the highest
+     * amount of points, then the type of segment gets an additional amount of
+     * points where
+     *
+     *  static > dynamic > splat > root
+     *
+     * This way we don't have to worry about the order of our routes, let the
+     * computers do it.
+     *
+     * A route looks like this
+     *
+     *  { path, default, value }
+     *
+     * And a returned match looks like:
+     *
+     *  { route, params, uri }
+     *
+     * @param {object[]} routes
+     * @param {string} uri
+     * @return {?object}
+     */
+    function pick(routes, uri) {
+      let match;
+      let default_;
+
+      const [uriPathname] = uri.split("?");
+      const uriSegments = segmentize(uriPathname);
+      const isRootUri = uriSegments[0] === "";
+      const ranked = rankRoutes(routes);
+
+      for (let i = 0, l = ranked.length; i < l; i++) {
+        const route = ranked[i].route;
+        let missed = false;
+
+        if (route.default) {
+          default_ = {
+            route,
+            params: {},
+            uri
+          };
+          continue;
+        }
+
+        const routeSegments = segmentize(route.path);
+        const params = {};
+        const max = Math.max(uriSegments.length, routeSegments.length);
+        let index = 0;
+
+        for (; index < max; index++) {
+          const routeSegment = routeSegments[index];
+          const uriSegment = uriSegments[index];
+
+          if (routeSegment !== undefined && isSplat(routeSegment)) {
+            // Hit a splat, just grab the rest, and return a match
+            // uri:   /files/documents/work
+            // route: /files/* or /files/*splatname
+            const splatName = routeSegment === "*" ? "*" : routeSegment.slice(1);
+
+            params[splatName] = uriSegments
+              .slice(index)
+              .map(decodeURIComponent)
+              .join("/");
+            break;
+          }
+
+          if (uriSegment === undefined) {
+            // URI is shorter than the route, no match
+            // uri:   /users
+            // route: /users/:userId
+            missed = true;
+            break;
+          }
+
+          let dynamicMatch = paramRe.exec(routeSegment);
+
+          if (dynamicMatch && !isRootUri) {
+            const value = decodeURIComponent(uriSegment);
+            params[dynamicMatch[1]] = value;
+          } else if (routeSegment !== uriSegment) {
+            // Current segments don't match, not dynamic, not splat, so no match
+            // uri:   /users/123/settings
+            // route: /users/:id/profile
+            missed = true;
+            break;
+          }
+        }
+
+        if (!missed) {
+          match = {
+            route,
+            params,
+            uri: "/" + uriSegments.slice(0, index).join("/")
+          };
+          break;
+        }
+      }
+
+      return match || default_ || null;
+    }
+
+    /**
+     * Check if the `path` matches the `uri`.
+     * @param {string} path
+     * @param {string} uri
+     * @return {?object}
+     */
+    function match(route, uri) {
+      return pick([route], uri);
+    }
+
+    /**
+     * Add the query to the pathname if a query is given
+     * @param {string} pathname
+     * @param {string} [query]
+     * @return {string}
+     */
+    function addQuery(pathname, query) {
+      return pathname + (query ? `?${query}` : "");
+    }
+
+    /**
+     * Resolve URIs as though every path is a directory, no files. Relative URIs
+     * in the browser can feel awkward because not only can you be "in a directory",
+     * you can be "at a file", too. For example:
+     *
+     *  browserSpecResolve('foo', '/bar/') => /bar/foo
+     *  browserSpecResolve('foo', '/bar') => /foo
+     *
+     * But on the command line of a file system, it's not as complicated. You can't
+     * `cd` from a file, only directories. This way, links have to know less about
+     * their current path. To go deeper you can do this:
+     *
+     *  <Link to="deeper"/>
+     *  // instead of
+     *  <Link to=`{${props.uri}/deeper}`/>
+     *
+     * Just like `cd`, if you want to go deeper from the command line, you do this:
+     *
+     *  cd deeper
+     *  # not
+     *  cd $(pwd)/deeper
+     *
+     * By treating every path as a directory, linking to relative paths should
+     * require less contextual information and (fingers crossed) be more intuitive.
+     * @param {string} to
+     * @param {string} base
+     * @return {string}
+     */
+    function resolve(to, base) {
+      // /foo/bar, /baz/qux => /foo/bar
+      if (startsWith(to, "/")) {
+        return to;
+      }
+
+      const [toPathname, toQuery] = to.split("?");
+      const [basePathname] = base.split("?");
+      const toSegments = segmentize(toPathname);
+      const baseSegments = segmentize(basePathname);
+
+      // ?a=b, /users?b=c => /users?a=b
+      if (toSegments[0] === "") {
+        return addQuery(basePathname, toQuery);
+      }
+
+      // profile, /users/789 => /users/789/profile
+      if (!startsWith(toSegments[0], ".")) {
+        const pathname = baseSegments.concat(toSegments).join("/");
+
+        return addQuery((basePathname === "/" ? "" : "/") + pathname, toQuery);
+      }
+
+      // ./       , /users/123 => /users/123
+      // ../      , /users/123 => /users
+      // ../..    , /users/123 => /
+      // ../../one, /a/b/c/d   => /a/b/one
+      // .././one , /a/b/c/d   => /a/b/c/one
+      const allSegments = baseSegments.concat(toSegments);
+      const segments = [];
+
+      allSegments.forEach(segment => {
+        if (segment === "..") {
+          segments.pop();
+        } else if (segment !== ".") {
+          segments.push(segment);
+        }
+      });
+
+      return addQuery("/" + segments.join("/"), toQuery);
+    }
+
+    /**
+     * Combines the `basepath` and the `path` into one path.
+     * @param {string} basepath
+     * @param {string} path
+     */
+    function combinePaths(basepath, path) {
+      return `${stripSlashes(
+    path === "/" ? basepath : `${stripSlashes(basepath)}/${stripSlashes(path)}`
+  )}/`;
+    }
+
+    /**
+     * Decides whether a given `event` should result in a navigation or not.
+     * @param {object} event
+     */
+    function shouldNavigate(event) {
+      return (
+        !event.defaultPrevented &&
+        event.button === 0 &&
+        !(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey)
+      );
+    }
+
+    /* node_modules\svelte-routing\src\Router.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$p(ctx) {
+    	let current;
+    	const default_slot_template = /*#slots*/ ctx[9].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[8], null);
+
+    	return {
+    		c() {
+    			if (default_slot) default_slot.c();
+    		},
+    		l(nodes) {
+    			if (default_slot) default_slot.l(nodes);
+    		},
+    		m(target, anchor) {
+    			if (default_slot) {
+    				default_slot.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p(ctx, [dirty]) {
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 256)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[8],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[8])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[8], dirty, null),
+    						null
+    					);
+    				}
+    			}
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if (default_slot) default_slot.d(detaching);
+    		}
+    	};
+    }
+
+    function instance$o($$self, $$props, $$invalidate) {
+    	let $location;
+    	let $routes;
+    	let $base;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	let { basepath = "/" } = $$props;
+    	let { url = null } = $$props;
+    	const locationContext = getContext(LOCATION);
+    	const routerContext = getContext(ROUTER);
+    	const routes = writable([]);
+    	component_subscribe($$self, routes, value => $$invalidate(6, $routes = value));
+    	const activeRoute = writable(null);
+    	let hasActiveRoute = false; // Used in SSR to synchronously set that a Route is active.
+
+    	// If locationContext is not set, this is the topmost Router in the tree.
+    	// If the `url` prop is given we force the location to it.
+    	const location = locationContext || writable(url ? { pathname: url } : globalHistory.location);
+
+    	component_subscribe($$self, location, value => $$invalidate(5, $location = value));
+
+    	// If routerContext is set, the routerBase of the parent Router
+    	// will be the base for this Router's descendants.
+    	// If routerContext is not set, the path and resolved uri will both
+    	// have the value of the basepath prop.
+    	const base = routerContext
+    	? routerContext.routerBase
+    	: writable({ path: basepath, uri: basepath });
+
+    	component_subscribe($$self, base, value => $$invalidate(7, $base = value));
+
+    	const routerBase = derived([base, activeRoute], ([base, activeRoute]) => {
+    		// If there is no activeRoute, the routerBase will be identical to the base.
+    		if (activeRoute === null) {
+    			return base;
+    		}
+
+    		const { path: basepath } = base;
+    		const { route, uri } = activeRoute;
+
+    		// Remove the potential /* or /*splatname from
+    		// the end of the child Routes relative paths.
+    		const path = route.default
+    		? basepath
+    		: route.path.replace(/\*.*$/, "");
+
+    		return { path, uri };
+    	});
+
+    	function registerRoute(route) {
+    		const { path: basepath } = $base;
+    		let { path } = route;
+
+    		// We store the original path in the _path property so we can reuse
+    		// it when the basepath changes. The only thing that matters is that
+    		// the route reference is intact, so mutation is fine.
+    		route._path = path;
+
+    		route.path = combinePaths(basepath, path);
+
+    		if (typeof window === "undefined") {
+    			// In SSR we should set the activeRoute immediately if it is a match.
+    			// If there are more Routes being registered after a match is found,
+    			// we just skip them.
+    			if (hasActiveRoute) {
+    				return;
+    			}
+
+    			const matchingRoute = match(route, $location.pathname);
+
+    			if (matchingRoute) {
+    				activeRoute.set(matchingRoute);
+    				hasActiveRoute = true;
+    			}
+    		} else {
+    			routes.update(rs => {
+    				rs.push(route);
+    				return rs;
+    			});
+    		}
+    	}
+
+    	function unregisterRoute(route) {
+    		routes.update(rs => {
+    			const index = rs.indexOf(route);
+    			rs.splice(index, 1);
+    			return rs;
+    		});
+    	}
+
+    	if (!locationContext) {
+    		// The topmost Router in the tree is responsible for updating
+    		// the location store and supplying it through context.
+    		onMount(() => {
+    			const unlisten = globalHistory.listen(history => {
+    				location.set(history.location);
+    			});
+
+    			return unlisten;
+    		});
+
+    		setContext(LOCATION, location);
+    	}
+
+    	setContext(ROUTER, {
+    		activeRoute,
+    		base,
+    		routerBase,
+    		registerRoute,
+    		unregisterRoute
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('basepath' in $$props) $$invalidate(3, basepath = $$props.basepath);
+    		if ('url' in $$props) $$invalidate(4, url = $$props.url);
+    		if ('$$scope' in $$props) $$invalidate(8, $$scope = $$props.$$scope);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*$base*/ 128) {
+    			// This reactive statement will update all the Routes' path when
+    			// the basepath changes.
+    			{
+    				const { path: basepath } = $base;
+
+    				routes.update(rs => {
+    					rs.forEach(r => r.path = combinePaths(basepath, r._path));
+    					return rs;
+    				});
+    			}
+    		}
+
+    		if ($$self.$$.dirty & /*$routes, $location*/ 96) {
+    			// This reactive statement will be run when the Router is created
+    			// when there are no Routes and then again the following tick, so it
+    			// will not find an active Route in SSR and in the browser it will only
+    			// pick an active Route after all Routes have been registered.
+    			{
+    				const bestMatch = pick($routes, $location.pathname);
+    				activeRoute.set(bestMatch);
+    			}
+    		}
+    	};
+
+    	return [
+    		routes,
+    		location,
+    		base,
+    		basepath,
+    		url,
+    		$location,
+    		$routes,
+    		$base,
+    		$$scope,
+    		slots
+    	];
+    }
+
+    class Router extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$o, create_fragment$p, safe_not_equal, { basepath: 3, url: 4 });
+    	}
+    }
+
+    /* node_modules\svelte-routing\src\Route.svelte generated by Svelte v3.49.0 */
+
+    const get_default_slot_changes = dirty => ({
+    	params: dirty & /*routeParams*/ 4,
+    	location: dirty & /*$location*/ 16
+    });
+
+    const get_default_slot_context = ctx => ({
+    	params: /*routeParams*/ ctx[2],
+    	location: /*$location*/ ctx[4]
+    });
+
+    // (40:0) {#if $activeRoute !== null && $activeRoute.route === route}
+    function create_if_block$b(ctx) {
+    	let current_block_type_index;
+    	let if_block;
+    	let if_block_anchor;
+    	let current;
+    	const if_block_creators = [create_if_block_1$6, create_else_block$8];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*component*/ ctx[0] !== null) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	return {
+    		c() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l(nodes) {
+    			if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m(target, anchor) {
+    			if_blocks[current_block_type_index].m(target, anchor);
+    			insert_hydration(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p(ctx, dirty) {
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    			}
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if_blocks[current_block_type_index].d(detaching);
+    			if (detaching) detach(if_block_anchor);
+    		}
+    	};
+    }
+
+    // (43:2) {:else}
+    function create_else_block$8(ctx) {
+    	let current;
+    	const default_slot_template = /*#slots*/ ctx[10].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[9], get_default_slot_context);
+
+    	return {
+    		c() {
+    			if (default_slot) default_slot.c();
+    		},
+    		l(nodes) {
+    			if (default_slot) default_slot.l(nodes);
+    		},
+    		m(target, anchor) {
+    			if (default_slot) {
+    				default_slot.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p(ctx, dirty) {
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope, routeParams, $location*/ 532)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[9],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[9])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[9], dirty, get_default_slot_changes),
+    						get_default_slot_context
+    					);
+    				}
+    			}
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if (default_slot) default_slot.d(detaching);
+    		}
+    	};
+    }
+
+    // (41:2) {#if component !== null}
+    function create_if_block_1$6(ctx) {
+    	let switch_instance;
+    	let switch_instance_anchor;
+    	let current;
+
+    	const switch_instance_spread_levels = [
+    		{ location: /*$location*/ ctx[4] },
+    		/*routeParams*/ ctx[2],
+    		/*routeProps*/ ctx[3]
+    	];
+
+    	var switch_value = /*component*/ ctx[0];
+
+    	function switch_props(ctx) {
+    		let switch_instance_props = {};
+
+    		for (let i = 0; i < switch_instance_spread_levels.length; i += 1) {
+    			switch_instance_props = assign(switch_instance_props, switch_instance_spread_levels[i]);
+    		}
+
+    		return { props: switch_instance_props };
+    	}
+
+    	if (switch_value) {
+    		switch_instance = new switch_value(switch_props());
+    	}
+
+    	return {
+    		c() {
+    			if (switch_instance) create_component(switch_instance.$$.fragment);
+    			switch_instance_anchor = empty();
+    		},
+    		l(nodes) {
+    			if (switch_instance) claim_component(switch_instance.$$.fragment, nodes);
+    			switch_instance_anchor = empty();
+    		},
+    		m(target, anchor) {
+    			if (switch_instance) {
+    				mount_component(switch_instance, target, anchor);
+    			}
+
+    			insert_hydration(target, switch_instance_anchor, anchor);
+    			current = true;
+    		},
+    		p(ctx, dirty) {
+    			const switch_instance_changes = (dirty & /*$location, routeParams, routeProps*/ 28)
+    			? get_spread_update(switch_instance_spread_levels, [
+    					dirty & /*$location*/ 16 && { location: /*$location*/ ctx[4] },
+    					dirty & /*routeParams*/ 4 && get_spread_object(/*routeParams*/ ctx[2]),
+    					dirty & /*routeProps*/ 8 && get_spread_object(/*routeProps*/ ctx[3])
+    				])
+    			: {};
+
+    			if (switch_value !== (switch_value = /*component*/ ctx[0])) {
+    				if (switch_instance) {
+    					group_outros();
+    					const old_component = switch_instance;
+
+    					transition_out(old_component.$$.fragment, 1, 0, () => {
+    						destroy_component(old_component, 1);
+    					});
+
+    					check_outros();
+    				}
+
+    				if (switch_value) {
+    					switch_instance = new switch_value(switch_props());
+    					create_component(switch_instance.$$.fragment);
+    					transition_in(switch_instance.$$.fragment, 1);
+    					mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
+    				} else {
+    					switch_instance = null;
+    				}
+    			} else if (switch_value) {
+    				switch_instance.$set(switch_instance_changes);
+    			}
+    		},
+    		i(local) {
+    			if (current) return;
+    			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if (detaching) detach(switch_instance_anchor);
+    			if (switch_instance) destroy_component(switch_instance, detaching);
+    		}
+    	};
+    }
+
+    function create_fragment$o(ctx) {
+    	let if_block_anchor;
+    	let current;
+    	let if_block = /*$activeRoute*/ ctx[1] !== null && /*$activeRoute*/ ctx[1].route === /*route*/ ctx[7] && create_if_block$b(ctx);
+
+    	return {
+    		c() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l(nodes) {
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p(ctx, [dirty]) {
+    			if (/*$activeRoute*/ ctx[1] !== null && /*$activeRoute*/ ctx[1].route === /*route*/ ctx[7]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*$activeRoute*/ 2) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$b(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach(if_block_anchor);
+    		}
+    	};
+    }
+
+    function instance$n($$self, $$props, $$invalidate) {
+    	let $activeRoute;
+    	let $location;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	let { path = "" } = $$props;
+    	let { component = null } = $$props;
+    	const { registerRoute, unregisterRoute, activeRoute } = getContext(ROUTER);
+    	component_subscribe($$self, activeRoute, value => $$invalidate(1, $activeRoute = value));
+    	const location = getContext(LOCATION);
+    	component_subscribe($$self, location, value => $$invalidate(4, $location = value));
+
+    	const route = {
+    		path,
+    		// If no path prop is given, this Route will act as the default Route
+    		// that is rendered if no other Route in the Router is a match.
+    		default: path === ""
+    	};
+
+    	let routeParams = {};
+    	let routeProps = {};
+    	registerRoute(route);
+
+    	// There is no need to unregister Routes in SSR since it will all be
+    	// thrown away anyway.
+    	if (typeof window !== "undefined") {
+    		onDestroy(() => {
+    			unregisterRoute(route);
+    		});
+    	}
+
+    	$$self.$$set = $$new_props => {
+    		$$invalidate(13, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+    		if ('path' in $$new_props) $$invalidate(8, path = $$new_props.path);
+    		if ('component' in $$new_props) $$invalidate(0, component = $$new_props.component);
+    		if ('$$scope' in $$new_props) $$invalidate(9, $$scope = $$new_props.$$scope);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*$activeRoute*/ 2) {
+    			if ($activeRoute && $activeRoute.route === route) {
+    				$$invalidate(2, routeParams = $activeRoute.params);
+    			}
+    		}
+
+    		{
+    			const { path, component, ...rest } = $$props;
+    			$$invalidate(3, routeProps = rest);
+    		}
+    	};
+
+    	$$props = exclude_internal_props($$props);
+
+    	return [
+    		component,
+    		$activeRoute,
+    		routeParams,
+    		routeProps,
+    		$location,
+    		activeRoute,
+    		location,
+    		route,
+    		path,
+    		$$scope,
+    		slots
+    	];
+    }
+
+    class Route extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$n, create_fragment$o, safe_not_equal, { path: 8, component: 0 });
+    	}
+    }
+
+    /* node_modules\svelte-routing\src\Link.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$n(ctx) {
+    	let a;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const default_slot_template = /*#slots*/ ctx[16].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[15], null);
+
+    	let a_levels = [
+    		{ href: /*href*/ ctx[0] },
+    		{ "aria-current": /*ariaCurrent*/ ctx[2] },
+    		/*props*/ ctx[1],
+    		/*$$restProps*/ ctx[6]
+    	];
+
+    	let a_data = {};
+
+    	for (let i = 0; i < a_levels.length; i += 1) {
+    		a_data = assign(a_data, a_levels[i]);
+    	}
+
+    	return {
+    		c() {
+    			a = element("a");
+    			if (default_slot) default_slot.c();
+    			this.h();
+    		},
+    		l(nodes) {
+    			a = claim_element(nodes, "A", { href: true, "aria-current": true });
+    			var a_nodes = children(a);
+    			if (default_slot) default_slot.l(a_nodes);
+    			a_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			set_attributes(a, a_data);
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, a, anchor);
+
+    			if (default_slot) {
+    				default_slot.m(a, null);
+    			}
+
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = listen(a, "click", /*onClick*/ ctx[5]);
+    				mounted = true;
+    			}
+    		},
+    		p(ctx, [dirty]) {
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 32768)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[15],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[15])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[15], dirty, null),
+    						null
+    					);
+    				}
+    			}
+
+    			set_attributes(a, a_data = get_spread_update(a_levels, [
+    				(!current || dirty & /*href*/ 1) && { href: /*href*/ ctx[0] },
+    				(!current || dirty & /*ariaCurrent*/ 4) && { "aria-current": /*ariaCurrent*/ ctx[2] },
+    				dirty & /*props*/ 2 && /*props*/ ctx[1],
+    				dirty & /*$$restProps*/ 64 && /*$$restProps*/ ctx[6]
+    			]));
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if (detaching) detach(a);
+    			if (default_slot) default_slot.d(detaching);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+    }
+
+    function instance$m($$self, $$props, $$invalidate) {
+    	let ariaCurrent;
+    	const omit_props_names = ["to","replace","state","getProps"];
+    	let $$restProps = compute_rest_props($$props, omit_props_names);
+    	let $location;
+    	let $base;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	let { to = "#" } = $$props;
+    	let { replace = false } = $$props;
+    	let { state = {} } = $$props;
+    	let { getProps = () => ({}) } = $$props;
+    	const { base } = getContext(ROUTER);
+    	component_subscribe($$self, base, value => $$invalidate(14, $base = value));
+    	const location = getContext(LOCATION);
+    	component_subscribe($$self, location, value => $$invalidate(13, $location = value));
+    	const dispatch = createEventDispatcher();
+    	let href, isPartiallyCurrent, isCurrent, props;
+
+    	function onClick(event) {
+    		dispatch("click", event);
+
+    		if (shouldNavigate(event)) {
+    			event.preventDefault();
+
+    			// Don't push another entry to the history stack when the user
+    			// clicks on a Link to the page they are currently on.
+    			const shouldReplace = $location.pathname === href || replace;
+
+    			navigate(href, { state, replace: shouldReplace });
+    		}
+    	}
+
+    	$$self.$$set = $$new_props => {
+    		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
+    		$$invalidate(6, $$restProps = compute_rest_props($$props, omit_props_names));
+    		if ('to' in $$new_props) $$invalidate(7, to = $$new_props.to);
+    		if ('replace' in $$new_props) $$invalidate(8, replace = $$new_props.replace);
+    		if ('state' in $$new_props) $$invalidate(9, state = $$new_props.state);
+    		if ('getProps' in $$new_props) $$invalidate(10, getProps = $$new_props.getProps);
+    		if ('$$scope' in $$new_props) $$invalidate(15, $$scope = $$new_props.$$scope);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*to, $base*/ 16512) {
+    			$$invalidate(0, href = to === "/" ? $base.uri : resolve(to, $base.uri));
+    		}
+
+    		if ($$self.$$.dirty & /*$location, href*/ 8193) {
+    			$$invalidate(11, isPartiallyCurrent = startsWith($location.pathname, href));
+    		}
+
+    		if ($$self.$$.dirty & /*href, $location*/ 8193) {
+    			$$invalidate(12, isCurrent = href === $location.pathname);
+    		}
+
+    		if ($$self.$$.dirty & /*isCurrent*/ 4096) {
+    			$$invalidate(2, ariaCurrent = isCurrent ? "page" : undefined);
+    		}
+
+    		if ($$self.$$.dirty & /*getProps, $location, href, isPartiallyCurrent, isCurrent*/ 15361) {
+    			$$invalidate(1, props = getProps({
+    				location: $location,
+    				href,
+    				isPartiallyCurrent,
+    				isCurrent
+    			}));
+    		}
+    	};
+
+    	return [
+    		href,
+    		props,
+    		ariaCurrent,
+    		base,
+    		location,
+    		onClick,
+    		$$restProps,
+    		to,
+    		replace,
+    		state,
+    		getProps,
+    		isPartiallyCurrent,
+    		isCurrent,
+    		$location,
+    		$base,
+    		$$scope,
+    		slots
+    	];
+    }
+
+    class Link extends SvelteComponent {
+    	constructor(options) {
+    		super();
+
+    		init(this, options, instance$m, create_fragment$n, safe_not_equal, {
+    			to: 7,
+    			replace: 8,
+    			state: 9,
+    			getProps: 10
+    		});
+    	}
+    }
+
+    /* src\routes\Teams.svelte generated by Svelte v3.49.0 */
+
+    const { document: document_1$2 } = globals;
+
+    function get_each_context$6(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[1] = list[i];
+    	child_ctx[3] = i;
+    	return child_ctx;
+    }
+
+    // (80:4) <Link to="/">
+    function create_default_slot_2$1(ctx) {
+    	let div;
+    	let t;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			t = text("Premier League");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t = claim_text(div_nodes, "Premier League");
+    			div_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "title main-link no-decoration");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    			append_hydration(div, t);
+    		},
+    		p: noop,
+    		d(detaching) {
+    			if (detaching) detach(div);
+    		}
+    	};
+    }
+
+    // (87:8) <Link            to="/{team.toLowerCase().replace(/ /g, '-')}"            class="team-button"            id="team-{i + 1}"            style="background-color: var(--{team              .toLowerCase()              .replace(/ /g, '-')});"          >
+    function create_default_slot_1$1(ctx) {
+    	let div;
+    	let t0_value = /*team*/ ctx[1] + "";
+    	let t0;
+    	let t1;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true, style: true });
+    			var div_nodes = children(div);
+    			t0 = claim_text(div_nodes, t0_value);
+    			div_nodes.forEach(detach);
+    			t1 = claim_space(nodes);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "main-link");
+    			set_style(div, "color", "var(--" + /*team*/ ctx[1].toLowerCase().replace(/ /g, '-') + "-secondary)");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    			append_hydration(div, t0);
+    			insert_hydration(target, t1, anchor);
+    		},
+    		p: noop,
+    		d(detaching) {
+    			if (detaching) detach(div);
+    			if (detaching) detach(t1);
+    		}
+    	};
+    }
+
+    // (86:6) {#each teams as team, i (team)}
+    function create_each_block$6(key_1, ctx) {
+    	let first;
+    	let link;
+    	let current;
+
+    	link = new Link({
+    			props: {
+    				to: "/" + /*team*/ ctx[1].toLowerCase().replace(/ /g, '-'),
+    				class: "team-button",
+    				id: "team-" + (/*i*/ ctx[3] + 1),
+    				style: "background-color: var(--" + /*team*/ ctx[1].toLowerCase().replace(/ /g, '-') + ");",
+    				$$slots: { default: [create_default_slot_1$1] },
+    				$$scope: { ctx }
+    			}
+    		});
+
+    	return {
+    		key: key_1,
+    		first: null,
+    		c() {
+    			first = empty();
+    			create_component(link.$$.fragment);
+    			this.h();
+    		},
+    		l(nodes) {
+    			first = empty();
+    			claim_component(link.$$.fragment, nodes);
+    			this.h();
+    		},
+    		h() {
+    			this.first = first;
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, first, anchor);
+    			mount_component(link, target, anchor);
+    			current = true;
+    		},
+    		p(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			const link_changes = {};
+
+    			if (dirty & /*$$scope*/ 16) {
+    				link_changes.$$scope = { dirty, ctx };
+    			}
+
+    			link.$set(link_changes);
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(link.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(link.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if (detaching) detach(first);
+    			destroy_component(link, detaching);
+    		}
+    	};
+    }
+
+    // (78:0) <Router>
+    function create_default_slot$4(ctx) {
+    	let div0;
+    	let link;
+    	let t;
+    	let div2;
+    	let div1;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
+    	let current;
+
+    	link = new Link({
+    			props: {
+    				to: "/",
+    				$$slots: { default: [create_default_slot_2$1] },
+    				$$scope: { ctx }
+    			}
+    		});
+
+    	let each_value = /*teams*/ ctx[0];
+    	const get_key = ctx => /*team*/ ctx[1];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context$6(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$6(key, child_ctx));
+    	}
+
+    	return {
+    		c() {
+    			div0 = element("div");
+    			create_component(link.$$.fragment);
+    			t = space();
+    			div2 = element("div");
+    			div1 = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			this.h();
+    		},
+    		l(nodes) {
+    			div0 = claim_element(nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			claim_component(link.$$.fragment, div0_nodes);
+    			div0_nodes.forEach(detach);
+    			t = claim_space(nodes);
+    			div2 = claim_element(nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(div1_nodes);
+    			}
+
+    			div1_nodes.forEach(detach);
+    			div2_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "header");
+    			attr(div1, "class", "teams svelte-i9b06i");
+    			attr(div2, "class", "page-content");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div0, anchor);
+    			mount_component(link, div0, null);
+    			insert_hydration(target, t, anchor);
+    			insert_hydration(target, div2, anchor);
+    			append_hydration(div2, div1);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div1, null);
+    			}
+
+    			current = true;
+    		},
+    		p(ctx, dirty) {
+    			const link_changes = {};
+
+    			if (dirty & /*$$scope*/ 16) {
+    				link_changes.$$scope = { dirty, ctx };
+    			}
+
+    			link.$set(link_changes);
+
+    			if (dirty & /*teams*/ 1) {
+    				each_value = /*teams*/ ctx[0];
+    				group_outros();
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div1, outro_and_destroy_block, create_each_block$6, null, get_each_context$6);
+    				check_outros();
+    			}
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(link.$$.fragment, local);
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(link.$$.fragment, local);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div0);
+    			destroy_component(link);
+    			if (detaching) detach(t);
+    			if (detaching) detach(div2);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d();
+    			}
+    		}
+    	};
+    }
+
+    function create_fragment$m(ctx) {
+    	let meta;
+    	let t;
+    	let router;
+    	let current;
+
+    	router = new Router({
+    			props: {
+    				$$slots: { default: [create_default_slot$4] },
+    				$$scope: { ctx }
+    			}
+    		});
+
+    	return {
+    		c() {
+    			meta = element("meta");
+    			t = space();
+    			create_component(router.$$.fragment);
+    			this.h();
+    		},
+    		l(nodes) {
+    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1rqatx0\"]', document_1$2.head);
+    			meta = claim_element(head_nodes, "META", { name: true, content: true });
+    			head_nodes.forEach(detach);
+    			t = claim_space(nodes);
+    			claim_component(router.$$.fragment, nodes);
+    			this.h();
+    		},
+    		h() {
+    			document_1$2.title = "Premier League";
+    			attr(meta, "name", "description");
+    			attr(meta, "content", "Premier League Statistics Dashboard");
+    		},
+    		m(target, anchor) {
+    			append_hydration(document_1$2.head, meta);
+    			insert_hydration(target, t, anchor);
+    			mount_component(router, target, anchor);
+    			current = true;
+    		},
+    		p(ctx, [dirty]) {
+    			const router_changes = {};
+
+    			if (dirty & /*$$scope*/ 16) {
+    				router_changes.$$scope = { dirty, ctx };
+    			}
+
+    			router.$set(router_changes);
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(router.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(router.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			detach(meta);
+    			if (detaching) detach(t);
+    			destroy_component(router, detaching);
+    		}
+    	};
+    }
+
+    function removeBorderRadius() {
+    	document.getElementById("team-1").classList.remove("top-left");
+    	document.getElementById("team-1").classList.remove("top-right");
+    	document.getElementById("team-2").classList.remove("top-right");
+    	document.getElementById("team-4").classList.remove("top-right");
+    	document.getElementById("team-17").classList.remove("bottom-left");
+    	document.getElementById("team-18").classList.remove("bottom-left");
+    	document.getElementById("team-19").classList.remove("bottom-left");
+    	document.getElementById("team-20").classList.remove("bottom-left");
+    	document.getElementById("team-20").classList.remove("bottom-right");
+    }
+
+    function setBorderRadius() {
+    	let width = window.innerWidth;
+    	removeBorderRadius();
+
+    	if (width < 500) {
+    		// 20 rows of 1 column
+    		document.getElementById("team-1").classList.add("top-both");
+
+    		document.getElementById("team-20").classList.add("bottom-both");
+    	} else if (width < 1100) {
+    		// 10 rows of 2 columns
+    		document.getElementById("team-1").classList.add("top-left");
+
+    		document.getElementById("team-2").classList.add("top-right");
+    		document.getElementById("team-19").classList.add("bottom-left");
+    		document.getElementById("team-20").classList.add("bottom-right");
+    	} else {
+    		// 5 rows of 4 columns
+    		document.getElementById("team-1").classList.add("top-left");
+
+    		document.getElementById("team-4").classList.add("top-right");
+    		document.getElementById("team-17").classList.add("bottom-left");
+    		document.getElementById("team-20").classList.add("bottom-right");
+    	}
+    }
+
+    function instance$l($$self) {
+    	let teams = [
+    		"Manchester City",
+    		"Liverpool",
+    		"Chelsea",
+    		"Tottenham Hotspur",
+    		"Arsenal",
+    		"Manchester United",
+    		"West Ham United",
+    		"Leicester City",
+    		"Brighton and Hove Albion",
+    		"Wolverhampton Wanderers",
+    		"Newcastle United",
+    		"Crystal Palace",
+    		"Brentford",
+    		"Aston Villa",
+    		"Southampton",
+    		"Everton",
+    		"Leeds United",
+    		"Fulham",
+    		"Bournemouth",
+    		"Nottingham Forest"
+    	];
+
+    	onMount(() => {
+    		window.addEventListener("resize", setBorderRadius, true);
+    		setBorderRadius();
+
+    		return () => {
+    			// Called when component is destroyed
+    			window.removeEventListener("resize", setBorderRadius, true);
+    		};
+    	});
+
+    	return [teams];
+    }
+
+    class Teams extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$l, create_fragment$m, safe_not_equal, {});
+    	}
+    }
+
+    /* src\components\CurrentForm.svelte generated by Svelte v3.49.0 */
+
+    function create_if_block_1$5(ctx) {
+    	let div5;
+    	let div0;
+    	let div0_class_value;
+    	let t0;
+    	let div1;
+    	let div1_class_value;
+    	let t1;
+    	let div2;
+    	let div2_class_value;
+    	let t2;
+    	let div3;
+    	let div3_class_value;
+    	let t3;
+    	let div4;
+    	let div4_class_value;
+    	let t4;
+    	let div11;
+    	let div6;
+    	let t5_value = /*formInitials*/ ctx[5][0] + "";
+    	let t5;
+    	let t6;
+    	let div7;
+    	let t7_value = /*formInitials*/ ctx[5][1] + "";
+    	let t7;
+    	let t8;
+    	let div8;
+    	let t9_value = /*formInitials*/ ctx[5][2] + "";
+    	let t9;
+    	let t10;
+    	let div9;
+    	let t11_value = /*formInitials*/ ctx[5][3] + "";
+    	let t11;
+    	let t12;
+    	let div10;
+    	let t13_value = /*formInitials*/ ctx[5][4] + "";
+    	let t13;
+
+    	return {
+    		c() {
+    			div5 = element("div");
+    			div0 = element("div");
+    			t0 = space();
+    			div1 = element("div");
+    			t1 = space();
+    			div2 = element("div");
+    			t2 = space();
+    			div3 = element("div");
+    			t3 = space();
+    			div4 = element("div");
+    			t4 = space();
+    			div11 = element("div");
+    			div6 = element("div");
+    			t5 = text(t5_value);
+    			t6 = space();
+    			div7 = element("div");
+    			t7 = text(t7_value);
+    			t8 = space();
+    			div8 = element("div");
+    			t9 = text(t9_value);
+    			t10 = space();
+    			div9 = element("div");
+    			t11 = text(t11_value);
+    			t12 = space();
+    			div10 = element("div");
+    			t13 = text(t13_value);
+    			this.h();
+    		},
+    		l(nodes) {
+    			div5 = claim_element(nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div0 = claim_element(div5_nodes, "DIV", { class: true });
+    			children(div0).forEach(detach);
+    			t0 = claim_space(div5_nodes);
+    			div1 = claim_element(div5_nodes, "DIV", { class: true });
+    			children(div1).forEach(detach);
+    			t1 = claim_space(div5_nodes);
+    			div2 = claim_element(div5_nodes, "DIV", { class: true });
+    			children(div2).forEach(detach);
+    			t2 = claim_space(div5_nodes);
+    			div3 = claim_element(div5_nodes, "DIV", { class: true });
+    			children(div3).forEach(detach);
+    			t3 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			children(div4).forEach(detach);
+    			div5_nodes.forEach(detach);
+    			t4 = claim_space(nodes);
+    			div11 = claim_element(nodes, "DIV", { class: true });
+    			var div11_nodes = children(div11);
+    			div6 = claim_element(div11_nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			t5 = claim_text(div6_nodes, t5_value);
+    			div6_nodes.forEach(detach);
+    			t6 = claim_space(div11_nodes);
+    			div7 = claim_element(div11_nodes, "DIV", { class: true });
+    			var div7_nodes = children(div7);
+    			t7 = claim_text(div7_nodes, t7_value);
+    			div7_nodes.forEach(detach);
+    			t8 = claim_space(div11_nodes);
+    			div8 = claim_element(div11_nodes, "DIV", { class: true });
+    			var div8_nodes = children(div8);
+    			t9 = claim_text(div8_nodes, t9_value);
+    			div8_nodes.forEach(detach);
+    			t10 = claim_space(div11_nodes);
+    			div9 = claim_element(div11_nodes, "DIV", { class: true });
+    			var div9_nodes = children(div9);
+    			t11 = claim_text(div9_nodes, t11_value);
+    			div9_nodes.forEach(detach);
+    			t12 = claim_space(div11_nodes);
+    			div10 = claim_element(div11_nodes, "DIV", { class: true });
+    			var div10_nodes = children(div10);
+    			t13 = claim_text(div10_nodes, t13_value);
+    			div10_nodes.forEach(detach);
+    			div11_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", div0_class_value = "icon pos-0 " + /*formIcons*/ ctx[3][0] + " " + /*formStarTeams*/ ctx[4][0] + " svelte-b4v5qq");
+    			attr(div1, "class", div1_class_value = "icon pos-1 " + /*formIcons*/ ctx[3][1] + " " + /*formStarTeams*/ ctx[4][1] + " svelte-b4v5qq");
+    			attr(div2, "class", div2_class_value = "icon pos-2 " + /*formIcons*/ ctx[3][2] + " " + /*formStarTeams*/ ctx[4][2] + " svelte-b4v5qq");
+    			attr(div3, "class", div3_class_value = "icon pos-3 " + /*formIcons*/ ctx[3][3] + " " + /*formStarTeams*/ ctx[4][3] + " svelte-b4v5qq");
+    			attr(div4, "class", div4_class_value = "icon pos-4 " + /*formIcons*/ ctx[3][4] + " " + /*formStarTeams*/ ctx[4][4] + " svelte-b4v5qq");
+    			attr(div5, "class", "current-form-row svelte-b4v5qq");
+    			attr(div6, "class", "icon-name pos-0 svelte-b4v5qq");
+    			attr(div7, "class", "icon-name pos-1 svelte-b4v5qq");
+    			attr(div8, "class", "icon-name pos-2 svelte-b4v5qq");
+    			attr(div9, "class", "icon-name pos-3 svelte-b4v5qq");
+    			attr(div10, "class", "icon-name pos-4 svelte-b4v5qq");
+    			attr(div11, "class", "current-form-row svelte-b4v5qq");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div5, anchor);
+    			append_hydration(div5, div0);
+    			append_hydration(div5, t0);
+    			append_hydration(div5, div1);
+    			append_hydration(div5, t1);
+    			append_hydration(div5, div2);
+    			append_hydration(div5, t2);
+    			append_hydration(div5, div3);
+    			append_hydration(div5, t3);
+    			append_hydration(div5, div4);
+    			insert_hydration(target, t4, anchor);
+    			insert_hydration(target, div11, anchor);
+    			append_hydration(div11, div6);
+    			append_hydration(div6, t5);
+    			append_hydration(div11, t6);
+    			append_hydration(div11, div7);
+    			append_hydration(div7, t7);
+    			append_hydration(div11, t8);
+    			append_hydration(div11, div8);
+    			append_hydration(div8, t9);
+    			append_hydration(div11, t10);
+    			append_hydration(div11, div9);
+    			append_hydration(div9, t11);
+    			append_hydration(div11, t12);
+    			append_hydration(div11, div10);
+    			append_hydration(div10, t13);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*formIcons, formStarTeams*/ 24 && div0_class_value !== (div0_class_value = "icon pos-0 " + /*formIcons*/ ctx[3][0] + " " + /*formStarTeams*/ ctx[4][0] + " svelte-b4v5qq")) {
+    				attr(div0, "class", div0_class_value);
+    			}
+
+    			if (dirty & /*formIcons, formStarTeams*/ 24 && div1_class_value !== (div1_class_value = "icon pos-1 " + /*formIcons*/ ctx[3][1] + " " + /*formStarTeams*/ ctx[4][1] + " svelte-b4v5qq")) {
+    				attr(div1, "class", div1_class_value);
+    			}
+
+    			if (dirty & /*formIcons, formStarTeams*/ 24 && div2_class_value !== (div2_class_value = "icon pos-2 " + /*formIcons*/ ctx[3][2] + " " + /*formStarTeams*/ ctx[4][2] + " svelte-b4v5qq")) {
+    				attr(div2, "class", div2_class_value);
+    			}
+
+    			if (dirty & /*formIcons, formStarTeams*/ 24 && div3_class_value !== (div3_class_value = "icon pos-3 " + /*formIcons*/ ctx[3][3] + " " + /*formStarTeams*/ ctx[4][3] + " svelte-b4v5qq")) {
+    				attr(div3, "class", div3_class_value);
+    			}
+
+    			if (dirty & /*formIcons, formStarTeams*/ 24 && div4_class_value !== (div4_class_value = "icon pos-4 " + /*formIcons*/ ctx[3][4] + " " + /*formStarTeams*/ ctx[4][4] + " svelte-b4v5qq")) {
+    				attr(div4, "class", div4_class_value);
+    			}
+
+    			if (dirty & /*formInitials*/ 32 && t5_value !== (t5_value = /*formInitials*/ ctx[5][0] + "")) set_data(t5, t5_value);
+    			if (dirty & /*formInitials*/ 32 && t7_value !== (t7_value = /*formInitials*/ ctx[5][1] + "")) set_data(t7, t7_value);
+    			if (dirty & /*formInitials*/ 32 && t9_value !== (t9_value = /*formInitials*/ ctx[5][2] + "")) set_data(t9, t9_value);
+    			if (dirty & /*formInitials*/ 32 && t11_value !== (t11_value = /*formInitials*/ ctx[5][3] + "")) set_data(t11, t11_value);
+    			if (dirty & /*formInitials*/ 32 && t13_value !== (t13_value = /*formInitials*/ ctx[5][4] + "")) set_data(t13, t13_value);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div5);
+    			if (detaching) detach(t4);
+    			if (detaching) detach(div11);
+    		}
+    	};
+    }
+
+    // (130:2) {:else}
+    function create_else_block$7(ctx) {
+    	let t;
+
+    	return {
+    		c() {
+    			t = text("None");
+    		},
+    		l(nodes) {
+    			t = claim_text(nodes, "None");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, t, anchor);
+    		},
+    		p: noop,
+    		d(detaching) {
+    			if (detaching) detach(t);
+    		}
+    	};
+    }
+
+    // (125:2) {#if currentMatchday != null}
+    function create_if_block$a(ctx) {
+    	let t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*fullTeamName*/ ctx[2]][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "";
+    	let t0;
+    	let t1;
+
+    	return {
+    		c() {
+    			t0 = text(t0_value);
+    			t1 = text("%");
+    		},
+    		l(nodes) {
+    			t0 = claim_text(nodes, t0_value);
+    			t1 = claim_text(nodes, "%");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, t0, anchor);
+    			insert_hydration(target, t1, anchor);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*data, fullTeamName, currentMatchday*/ 7 && t0_value !== (t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*fullTeamName*/ ctx[2]][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "")) set_data(t0, t0_value);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(t0);
+    			if (detaching) detach(t1);
+    		}
+    	};
+    }
+
+    function create_fragment$l(ctx) {
+    	let t0;
+    	let div;
+    	let t1;
+    	let if_block0 = /*formInitials*/ ctx[5] != undefined && create_if_block_1$5(ctx);
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*currentMatchday*/ ctx[1] != null) return create_if_block$a;
+    		return create_else_block$7;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block1 = current_block_type(ctx);
+
+    	return {
+    		c() {
+    			if (if_block0) if_block0.c();
+    			t0 = space();
+    			div = element("div");
+    			t1 = text("Current form:\r\n  ");
+    			if_block1.c();
+    			this.h();
+    		},
+    		l(nodes) {
+    			if (if_block0) if_block0.l(nodes);
+    			t0 = claim_space(nodes);
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t1 = claim_text(div_nodes, "Current form:\r\n  ");
+    			if_block1.l(div_nodes);
+    			div_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "current-form svelte-b4v5qq");
+    		},
+    		m(target, anchor) {
+    			if (if_block0) if_block0.m(target, anchor);
+    			insert_hydration(target, t0, anchor);
+    			insert_hydration(target, div, anchor);
+    			append_hydration(div, t1);
+    			if_block1.m(div, null);
+    		},
+    		p(ctx, [dirty]) {
+    			if (/*formInitials*/ ctx[5] != undefined) {
+    				if (if_block0) {
+    					if_block0.p(ctx, dirty);
+    				} else {
+    					if_block0 = create_if_block_1$5(ctx);
+    					if_block0.c();
+    					if_block0.m(t0.parentNode, t0);
+    				}
+    			} else if (if_block0) {
+    				if_block0.d(1);
+    				if_block0 = null;
+    			}
+
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block1) {
+    				if_block1.p(ctx, dirty);
+    			} else {
+    				if_block1.d(1);
+    				if_block1 = current_block_type(ctx);
+
+    				if (if_block1) {
+    					if_block1.c();
+    					if_block1.m(div, null);
+    				}
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (if_block0) if_block0.d(detaching);
+    			if (detaching) detach(t0);
+    			if (detaching) detach(div);
+    			if_block1.d();
+    		}
+    	};
+    }
+
+    function toInitials(team) {
+    	switch (team) {
+    		case "Brighton and Hove Albion":
+    			return "BHA";
+    		case "Manchester City":
+    			return "MCI";
+    		case "Manchester United":
+    			return "MUN";
+    		case "Aston Villa":
+    			return "AVL";
+    		case "Sheffield United":
+    			return "SHU";
+    		case "West Bromwich Albion":
+    			return "WBA";
+    		case "West Ham United":
+    			return "WHU";
+    	}
+
+    	return team.slice(0, 3).toUpperCase();
+    }
+
+    function getSortedMatchdays(data, team) {
+    	let matchdays = Object.keys(data.form[data._id][team]).sort(function (a, b) {
+    		return new Date(data.form[data._id][team][a].date) - new Date(data.form[data._id][team][b].date);
+    	});
+
+    	return matchdays;
+    }
+
+    function getFormStarTeams(data, team, matchdays) {
+    	let formStarTeams = [];
+
+    	for (let matchday of matchdays) {
+    		formStarTeams.unshift(data.form[data._id][team][matchday].beatStarTeam
+    		? "star-team"
+    		: "");
+    	}
+
+    	// Fill in blanks
+    	for (let i = formStarTeams.length; i < 5; i++) {
+    		formStarTeams.unshift("");
+    	}
+
+    	return formStarTeams;
+    }
+
+    function getFormInitials(data, team, matchdays) {
+    	let formInitials = [];
+
+    	for (let matchday of matchdays) {
+    		formInitials.unshift(toInitials(data.form[data._id][team][matchday].team));
+    	}
+
+    	// Fill in blanks with None icons
+    	for (let i = formInitials.length; i < 5; i++) {
+    		formInitials.unshift("");
+    	}
+
+    	return formInitials;
+    }
+
+    function instance$k($$self, $$props, $$invalidate) {
+    	function getFormIcons(data, team) {
+    		let formIcons = [];
+
+    		if (Object.keys(data.form[data._id][team][currentMatchday]).length > 0) {
+    			formIcons = data.form[data._id][team][currentMatchday].form5.split("");
+    		}
+
+    		// Fill in blanks with None icons
+    		for (let i = formIcons.length; i < 5; i++) {
+    			formIcons.unshift("N");
+    		}
+
+    		return formIcons;
+    	}
+
+    	let formIcons, formStarTeams, formInitials;
+
+    	function setFormValues() {
+    		let sortedMatchdays = getSortedMatchdays(data, fullTeamName);
+    		let matchdays = sortedMatchdays.slice(-5);
+    		$$invalidate(3, formIcons = getFormIcons(data, fullTeamName));
+    		$$invalidate(4, formStarTeams = getFormStarTeams(data, fullTeamName, matchdays));
+    		$$invalidate(5, formInitials = getFormInitials(data, fullTeamName, matchdays));
+    	}
+
+    	let { data, currentMatchday, fullTeamName } = $$props;
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
+    		if ('currentMatchday' in $$props) $$invalidate(1, currentMatchday = $$props.currentMatchday);
+    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
+    			fullTeamName && setFormValues();
+    		}
+    	};
+
+    	return [data, currentMatchday, fullTeamName, formIcons, formStarTeams, formInitials];
+    }
+
+    class CurrentForm extends SvelteComponent {
+    	constructor(options) {
+    		super();
+
+    		init(this, options, instance$k, create_fragment$l, safe_not_equal, {
+    			data: 0,
+    			currentMatchday: 1,
+    			fullTeamName: 2
+    		});
+    	}
+    }
+
+    /* src\components\TableSnippet.svelte generated by Svelte v3.49.0 */
+
+    function get_each_context$5(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[8] = list[i];
+    	child_ctx[10] = i;
+    	return child_ctx;
+    }
+
+    // (58:2) {#if tableSnippet != undefined}
+    function create_if_block$9(ctx) {
+    	let div0;
+    	let t0;
+    	let div5;
+    	let div1;
+    	let t1;
+    	let div2;
+    	let t2;
+    	let t3;
+    	let div3;
+    	let t4;
+    	let t5;
+    	let div4;
+    	let t6;
+    	let t7;
+    	let t8;
+    	let if_block_anchor;
+    	let each_value = /*tableSnippet*/ ctx[3].rows;
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$5(get_each_context$5(ctx, each_value, i));
+    	}
+
+    	let if_block = /*tableSnippet*/ ctx[3].teamTableIdx != 6 && create_if_block_1$4();
+
+    	return {
+    		c() {
+    			div0 = element("div");
+    			t0 = space();
+    			div5 = element("div");
+    			div1 = element("div");
+    			t1 = space();
+    			div2 = element("div");
+    			t2 = text("Team");
+    			t3 = space();
+    			div3 = element("div");
+    			t4 = text("GD");
+    			t5 = space();
+    			div4 = element("div");
+    			t6 = text("Points");
+    			t7 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t8 = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    			this.h();
+    		},
+    		l(nodes) {
+    			div0 = claim_element(nodes, "DIV", { class: true });
+    			children(div0).forEach(detach);
+    			t0 = claim_space(nodes);
+    			div5 = claim_element(nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div1 = claim_element(div5_nodes, "DIV", { class: true });
+    			children(div1).forEach(detach);
+    			t1 = claim_space(div5_nodes);
+    			div2 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t2 = claim_text(div2_nodes, "Team");
+    			div2_nodes.forEach(detach);
+    			t3 = claim_space(div5_nodes);
+    			div3 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			t4 = claim_text(div3_nodes, "GD");
+    			div3_nodes.forEach(detach);
+    			t5 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			t6 = claim_text(div4_nodes, "Points");
+    			div4_nodes.forEach(detach);
+    			div5_nodes.forEach(detach);
+    			t7 = claim_space(nodes);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(nodes);
+    			}
+
+    			t8 = claim_space(nodes);
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "divider");
+    			attr(div1, "class", "table-element table-position column-title svelte-13u0ebo");
+    			attr(div2, "class", "table-element table-team-name column-title svelte-13u0ebo");
+    			attr(div3, "class", "table-element table-gd column-title svelte-13u0ebo");
+    			attr(div4, "class", "table-element table-points column-title svelte-13u0ebo");
+    			attr(div5, "class", "table-row svelte-13u0ebo");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div0, anchor);
+    			insert_hydration(target, t0, anchor);
+    			insert_hydration(target, div5, anchor);
+    			append_hydration(div5, div1);
+    			append_hydration(div5, t1);
+    			append_hydration(div5, div2);
+    			append_hydration(div2, t2);
+    			append_hydration(div5, t3);
+    			append_hydration(div5, div3);
+    			append_hydration(div3, t4);
+    			append_hydration(div5, t5);
+    			append_hydration(div5, div4);
+    			append_hydration(div4, t6);
+    			insert_hydration(target, t7, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_hydration(target, t8, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration(target, if_block_anchor, anchor);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*team, tableSnippet, getAlias, switchTeam*/ 15) {
+    				each_value = /*tableSnippet*/ ctx[3].rows;
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$5(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$5(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(t8.parentNode, t8);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+
+    			if (/*tableSnippet*/ ctx[3].teamTableIdx != 6) {
+    				if (if_block) ; else {
+    					if_block = create_if_block_1$4();
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div0);
+    			if (detaching) detach(t0);
+    			if (detaching) detach(div5);
+    			if (detaching) detach(t7);
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach(t8);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach(if_block_anchor);
+    		}
+    	};
+    }
+
+    // (73:85) 
+    function create_if_block_5(ctx) {
+    	let div;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { id: true, class: true });
+    			children(div).forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "id", "divider");
+    			attr(div, "class", "svelte-13u0ebo");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    		},
+    		p: noop,
+    		d(detaching) {
+    			if (detaching) detach(div);
+    		}
+    	};
+    }
+
+    // (69:6) {#if i == 0}
+    function create_if_block_3$2(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*i*/ ctx[10] != /*tableSnippet*/ ctx[3].teamTableIdx && create_if_block_4();
+
+    	return {
+    		c() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l(nodes) {
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration(target, if_block_anchor, anchor);
+    		},
+    		p(ctx, dirty) {
+    			if (/*i*/ ctx[10] != /*tableSnippet*/ ctx[3].teamTableIdx) {
+    				if (if_block) ; else {
+    					if_block = create_if_block_4();
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach(if_block_anchor);
+    		}
+    	};
+    }
+
+    // (70:8) {#if i != tableSnippet.teamTableIdx}
+    function create_if_block_4(ctx) {
+    	let div;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { id: true, class: true });
+    			children(div).forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "id", "divider");
+    			attr(div, "class", "svelte-13u0ebo");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div);
+    		}
+    	};
+    }
+
+    // (109:6) {:else}
+    function create_else_block$6(ctx) {
+    	let div3;
+    	let div0;
+    	let t0_value = /*row*/ ctx[8].position + "";
+    	let t0;
+    	let t1;
+    	let button;
+    	let t2_value = /*getAlias*/ ctx[1](/*row*/ ctx[8].name) + "";
+    	let t2;
+    	let t3;
+    	let div1;
+    	let t4_value = /*row*/ ctx[8].gd + "";
+    	let t4;
+    	let t5;
+    	let div2;
+    	let t6_value = /*row*/ ctx[8].points + "";
+    	let t6;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[6](/*row*/ ctx[8]);
+    	}
+
+    	return {
+    		c() {
+    			div3 = element("div");
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			button = element("button");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			div1 = element("div");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			div2 = element("div");
+    			t6 = text(t6_value);
+    			this.h();
+    		},
+    		l(nodes) {
+    			div3 = claim_element(nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			div0 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, t0_value);
+    			div0_nodes.forEach(detach);
+    			t1 = claim_space(div3_nodes);
+    			button = claim_element(div3_nodes, "BUTTON", { class: true });
+    			var button_nodes = children(button);
+    			t2 = claim_text(button_nodes, t2_value);
+    			button_nodes.forEach(detach);
+    			t3 = claim_space(div3_nodes);
+    			div1 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t4 = claim_text(div1_nodes, t4_value);
+    			div1_nodes.forEach(detach);
+    			t5 = claim_space(div3_nodes);
+    			div2 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t6 = claim_text(div2_nodes, t6_value);
+    			div2_nodes.forEach(detach);
+    			div3_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "table-element table-position svelte-13u0ebo");
+    			attr(button, "class", "table-element table-team-name svelte-13u0ebo");
+    			attr(div1, "class", "table-element table-gd svelte-13u0ebo");
+    			attr(div2, "class", "table-element table-points svelte-13u0ebo");
+    			attr(div3, "class", "table-row svelte-13u0ebo");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div3, anchor);
+    			append_hydration(div3, div0);
+    			append_hydration(div0, t0);
+    			append_hydration(div3, t1);
+    			append_hydration(div3, button);
+    			append_hydration(button, t2);
+    			append_hydration(div3, t3);
+    			append_hydration(div3, div1);
+    			append_hydration(div1, t4);
+    			append_hydration(div3, t5);
+    			append_hydration(div3, div2);
+    			append_hydration(div2, t6);
+
+    			if (!mounted) {
+    				dispose = listen(button, "click", click_handler);
+    				mounted = true;
+    			}
+    		},
+    		p(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*tableSnippet*/ 8 && t0_value !== (t0_value = /*row*/ ctx[8].position + "")) set_data(t0, t0_value);
+    			if (dirty & /*getAlias, tableSnippet*/ 10 && t2_value !== (t2_value = /*getAlias*/ ctx[1](/*row*/ ctx[8].name) + "")) set_data(t2, t2_value);
+    			if (dirty & /*tableSnippet*/ 8 && t4_value !== (t4_value = /*row*/ ctx[8].gd + "")) set_data(t4, t4_value);
+    			if (dirty & /*tableSnippet*/ 8 && t6_value !== (t6_value = /*row*/ ctx[8].points + "")) set_data(t6, t6_value);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div3);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+    }
+
+    // (77:6) {#if i == tableSnippet.teamTableIdx}
+    function create_if_block_2$3(ctx) {
+    	let div3;
+    	let div0;
+    	let t0_value = /*row*/ ctx[8].position + "";
+    	let t0;
+    	let t1;
+    	let a;
+    	let t2_value = /*getAlias*/ ctx[1](/*row*/ ctx[8].name) + "";
+    	let t2;
+    	let a_href_value;
+    	let t3;
+    	let div1;
+    	let t4_value = /*row*/ ctx[8].gd + "";
+    	let t4;
+    	let t5;
+    	let div2;
+    	let t6_value = /*row*/ ctx[8].points + "";
+    	let t6;
+
+    	return {
+    		c() {
+    			div3 = element("div");
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			a = element("a");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			div1 = element("div");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			div2 = element("div");
+    			t6 = text(t6_value);
+    			this.h();
+    		},
+    		l(nodes) {
+    			div3 = claim_element(nodes, "DIV", { class: true, style: true });
+    			var div3_nodes = children(div3);
+    			div0 = claim_element(div3_nodes, "DIV", { class: true, style: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, t0_value);
+    			div0_nodes.forEach(detach);
+    			t1 = claim_space(div3_nodes);
+    			a = claim_element(div3_nodes, "A", { href: true, class: true, style: true });
+    			var a_nodes = children(a);
+    			t2 = claim_text(a_nodes, t2_value);
+    			a_nodes.forEach(detach);
+    			t3 = claim_space(div3_nodes);
+    			div1 = claim_element(div3_nodes, "DIV", { class: true, style: true });
+    			var div1_nodes = children(div1);
+    			t4 = claim_text(div1_nodes, t4_value);
+    			div1_nodes.forEach(detach);
+    			t5 = claim_space(div3_nodes);
+    			div2 = claim_element(div3_nodes, "DIV", { class: true, style: true });
+    			var div2_nodes = children(div2);
+    			t6 = claim_text(div2_nodes, t6_value);
+    			div2_nodes.forEach(detach);
+    			div3_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "table-element table-position this-team svelte-13u0ebo");
+    			set_style(div0, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			attr(a, "href", a_href_value = "/" + /*team*/ ctx[0]);
+    			attr(a, "class", "table-element table-team-name this-team svelte-13u0ebo");
+    			set_style(a, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			attr(div1, "class", "table-element table-gd this-team svelte-13u0ebo");
+    			set_style(div1, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			attr(div2, "class", "table-element table-points this-team svelte-13u0ebo");
+    			set_style(div2, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			attr(div3, "class", "table-row this-team svelte-13u0ebo");
+    			set_style(div3, "background-color", "var(--" + /*team*/ ctx[0] + ")");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div3, anchor);
+    			append_hydration(div3, div0);
+    			append_hydration(div0, t0);
+    			append_hydration(div3, t1);
+    			append_hydration(div3, a);
+    			append_hydration(a, t2);
+    			append_hydration(div3, t3);
+    			append_hydration(div3, div1);
+    			append_hydration(div1, t4);
+    			append_hydration(div3, t5);
+    			append_hydration(div3, div2);
+    			append_hydration(div2, t6);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*tableSnippet*/ 8 && t0_value !== (t0_value = /*row*/ ctx[8].position + "")) set_data(t0, t0_value);
+
+    			if (dirty & /*team*/ 1) {
+    				set_style(div0, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			}
+
+    			if (dirty & /*getAlias, tableSnippet*/ 10 && t2_value !== (t2_value = /*getAlias*/ ctx[1](/*row*/ ctx[8].name) + "")) set_data(t2, t2_value);
+
+    			if (dirty & /*team*/ 1 && a_href_value !== (a_href_value = "/" + /*team*/ ctx[0])) {
+    				attr(a, "href", a_href_value);
+    			}
+
+    			if (dirty & /*team*/ 1) {
+    				set_style(a, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			}
+
+    			if (dirty & /*tableSnippet*/ 8 && t4_value !== (t4_value = /*row*/ ctx[8].gd + "")) set_data(t4, t4_value);
+
+    			if (dirty & /*team*/ 1) {
+    				set_style(div1, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			}
+
+    			if (dirty & /*tableSnippet*/ 8 && t6_value !== (t6_value = /*row*/ ctx[8].points + "")) set_data(t6, t6_value);
+
+    			if (dirty & /*team*/ 1) {
+    				set_style(div2, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			}
+
+    			if (dirty & /*team*/ 1) {
+    				set_style(div3, "background-color", "var(--" + /*team*/ ctx[0] + ")");
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div3);
+    		}
+    	};
+    }
+
+    // (67:4) {#each tableSnippet.rows as row, i}
+    function create_each_block$5(ctx) {
+    	let t;
+    	let if_block1_anchor;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*i*/ ctx[10] == 0) return create_if_block_3$2;
+    		if (/*i*/ ctx[10] - 1 != /*tableSnippet*/ ctx[3].teamTableIdx && /*i*/ ctx[10] != /*tableSnippet*/ ctx[3].teamTableIdx) return create_if_block_5;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block0 = current_block_type && current_block_type(ctx);
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*i*/ ctx[10] == /*tableSnippet*/ ctx[3].teamTableIdx) return create_if_block_2$3;
+    		return create_else_block$6;
+    	}
+
+    	let current_block_type_1 = select_block_type_1(ctx);
+    	let if_block1 = current_block_type_1(ctx);
+
+    	return {
+    		c() {
+    			if (if_block0) if_block0.c();
+    			t = space();
+    			if_block1.c();
+    			if_block1_anchor = empty();
+    		},
+    		l(nodes) {
+    			if (if_block0) if_block0.l(nodes);
+    			t = claim_space(nodes);
+    			if_block1.l(nodes);
+    			if_block1_anchor = empty();
+    		},
+    		m(target, anchor) {
+    			if (if_block0) if_block0.m(target, anchor);
+    			insert_hydration(target, t, anchor);
+    			if_block1.m(target, anchor);
+    			insert_hydration(target, if_block1_anchor, anchor);
+    		},
+    		p(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block0) {
+    				if_block0.p(ctx, dirty);
+    			} else {
+    				if (if_block0) if_block0.d(1);
+    				if_block0 = current_block_type && current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(t.parentNode, t);
+    				}
+    			}
+
+    			if (current_block_type_1 === (current_block_type_1 = select_block_type_1(ctx)) && if_block1) {
+    				if_block1.p(ctx, dirty);
+    			} else {
+    				if_block1.d(1);
+    				if_block1 = current_block_type_1(ctx);
+
+    				if (if_block1) {
+    					if_block1.c();
+    					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
+    				}
+    			}
+    		},
+    		d(detaching) {
+    			if (if_block0) {
+    				if_block0.d(detaching);
+    			}
+
+    			if (detaching) detach(t);
+    			if_block1.d(detaching);
+    			if (detaching) detach(if_block1_anchor);
+    		}
+    	};
+    }
+
+    // (130:4) {#if tableSnippet.teamTableIdx != 6}
+    function create_if_block_1$4(ctx) {
+    	let div;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { id: true, class: true });
+    			children(div).forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "id", "divider");
+    			attr(div, "class", "svelte-13u0ebo");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div);
+    		}
+    	};
+    }
+
+    function create_fragment$k(ctx) {
+    	let div;
+    	let if_block = /*tableSnippet*/ ctx[3] != undefined && create_if_block$9(ctx);
+
+    	return {
+    		c() {
+    			div = element("div");
+    			if (if_block) if_block.c();
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			if (if_block) if_block.l(div_nodes);
+    			div_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "table-snippet svelte-13u0ebo");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    			if (if_block) if_block.m(div, null);
+    		},
+    		p(ctx, [dirty]) {
+    			if (/*tableSnippet*/ ctx[3] != undefined) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$9(ctx);
+    					if_block.c();
+    					if_block.m(div, null);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div);
+    			if (if_block) if_block.d();
+    		}
+    	};
+    }
+
+    function tableSnippetRange(sortedTeams, fullTeamName) {
+    	let teamStandingsIdx = sortedTeams.indexOf(fullTeamName);
+    	let low = teamStandingsIdx - 3;
+    	let high = teamStandingsIdx + 4;
+
+    	if (low < 0) {
+    		let overflow = low;
+    		high -= overflow;
+    		low = 0;
+    	}
+
+    	if (high > sortedTeams.length - 1) {
+    		let overflow = high - sortedTeams.length;
+    		low -= overflow;
+    		high = sortedTeams.length;
+    	}
+
+    	return [low, high];
+    }
+
+    function instance$j($$self, $$props, $$invalidate) {
+    	function buildTableSnippet() {
+    		let sortedTeams = Object.keys(data.standings).sort(function (teamA, teamB) {
+    			return data.standings[teamA][data._id].position - data.standings[teamB][data._id].position;
+    		});
+
+    		let [low, high] = tableSnippetRange(sortedTeams, fullTeamName);
+    		let teamTableIdx;
+    		let rows = [];
+
+    		for (let i = low; i < high; i++) {
+    			if (sortedTeams[i] == fullTeamName) {
+    				teamTableIdx = i - low;
+    			}
+
+    			rows.push({
+    				name: sortedTeams[i],
+    				position: data.standings[sortedTeams[i]][data._id].position,
+    				points: data.standings[sortedTeams[i]][data._id].points,
+    				gd: data.standings[sortedTeams[i]][data._id].gD
+    			});
+    		}
+
+    		$$invalidate(3, tableSnippet = { teamTableIdx, rows });
+    	}
+
+    	let tableSnippet;
+    	let { data, team, fullTeamName, getAlias, switchTeam } = $$props;
+
+    	const click_handler = row => {
+    		switchTeam(row.name.toLowerCase().replace(/ /g, '-'));
+    	};
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(4, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    		if ('fullTeamName' in $$props) $$invalidate(5, fullTeamName = $$props.fullTeamName);
+    		if ('getAlias' in $$props) $$invalidate(1, getAlias = $$props.getAlias);
+    		if ('switchTeam' in $$props) $$invalidate(2, switchTeam = $$props.switchTeam);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 32) {
+    			fullTeamName && buildTableSnippet();
+    		}
+    	};
+
+    	return [team, getAlias, switchTeam, tableSnippet, data, fullTeamName, click_handler];
+    }
+
+    class TableSnippet extends SvelteComponent {
+    	constructor(options) {
+    		super();
+
+    		init(this, options, instance$j, create_fragment$k, safe_not_equal, {
+    			data: 4,
+    			team: 0,
+    			fullTeamName: 5,
+    			getAlias: 1,
+    			switchTeam: 2
+    		});
+    	}
+    }
+
+    /* src\components\next_game\SeasonComplete.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$j(ctx) {
+    	let div1;
+    	let div0;
+    	let h1;
+    	let t0_value = /*data*/ ctx[0]._id + "";
+    	let t0;
+    	let t1;
+    	let t2_value = /*data*/ ctx[0]._id + 1 + "";
+    	let t2;
+    	let t3;
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			h1 = element("h1");
+    			t0 = text(t0_value);
+    			t1 = text("/");
+    			t2 = text(t2_value);
+    			t3 = text(" SEASON COMPLETE");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			h1 = claim_element(div0_nodes, "H1", { class: true });
+    			var h1_nodes = children(h1);
+    			t0 = claim_text(h1_nodes, t0_value);
+    			t1 = claim_text(h1_nodes, "/");
+    			t2 = claim_text(h1_nodes, t2_value);
+    			t3 = claim_text(h1_nodes, " SEASON COMPLETE");
+    			h1_nodes.forEach(detach);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(h1, "class", "next-game-title-text");
+    			attr(div0, "class", "next-game-season-complete");
+    			attr(div1, "class", "next-game-prediction");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    			append_hydration(div0, h1);
+    			append_hydration(h1, t0);
+    			append_hydration(h1, t1);
+    			append_hydration(h1, t2);
+    			append_hydration(h1, t3);
+    		},
+    		p(ctx, [dirty]) {
+    			if (dirty & /*data*/ 1 && t0_value !== (t0_value = /*data*/ ctx[0]._id + "")) set_data(t0, t0_value);
+    			if (dirty & /*data*/ 1 && t2_value !== (t2_value = /*data*/ ctx[0]._id + 1 + "")) set_data(t2, t2_value);
+    		},
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    		}
+    	};
+    }
+
+    function instance$i($$self, $$props, $$invalidate) {
+    	let { data } = $$props;
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
+    	};
+
+    	return [data];
+    }
+
+    class SeasonComplete extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$i, create_fragment$j, safe_not_equal, { data: 0 });
+    	}
+    }
+
+    /* src\components\next_game\NextGameStats.svelte generated by Svelte v3.49.0 */
+
+    function get_each_context$4(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[9] = list[i];
+    	return child_ctx;
+    }
+
+    // (45:6) {:else}
+    function create_else_block_2(ctx) {
+    	let div;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			children(div).forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "next-game-position svelte-1tklhzf");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    		},
+    		p: noop,
+    		d(detaching) {
+    			if (detaching) detach(div);
+    		}
+    	};
+    }
+
+    // (38:6) {#if showBadge}
+    function create_if_block_2$2(ctx) {
+    	let div;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true, style: true });
+    			children(div).forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "next-game-logo opposition-badge svelte-1tklhzf");
+    			set_style(div, "background-image", "url('" + /*data*/ ctx[0].logoURLs[/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam] + "')");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*data, fullTeamName*/ 3) {
+    				set_style(div, "background-image", "url('" + /*data*/ ctx[0].logoURLs[/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam] + "')");
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div);
+    		}
+    	};
+    }
+
+    // (64:10) {:else}
+    function create_else_block_1$2(ctx) {
+    	let t;
+
+    	return {
+    		c() {
+    			t = text("None");
+    		},
+    		l(nodes) {
+    			t = claim_text(nodes, "None");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, t, anchor);
+    		},
+    		p: noop,
+    		d(detaching) {
+    			if (detaching) detach(t);
+    		}
+    	};
+    }
+
+    // (59:10) {#if currentMatchday != null}
+    function create_if_block_1$3(ctx) {
+    	let b;
+    	let t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam][/*currentMatchday*/ ctx[2]].formRating5 * 100).toFixed(1) + "";
+    	let t0;
+    	let t1;
+
+    	return {
+    		c() {
+    			b = element("b");
+    			t0 = text(t0_value);
+    			t1 = text("%");
+    		},
+    		l(nodes) {
+    			b = claim_element(nodes, "B", {});
+    			var b_nodes = children(b);
+    			t0 = claim_text(b_nodes, t0_value);
+    			t1 = claim_text(b_nodes, "%");
+    			b_nodes.forEach(detach);
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, b, anchor);
+    			append_hydration(b, t0);
+    			append_hydration(b, t1);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*data, fullTeamName, currentMatchday*/ 7 && t0_value !== (t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam][/*currentMatchday*/ ctx[2]].formRating5 * 100).toFixed(1) + "")) set_data(t0, t0_value);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(b);
+    		}
+    	};
+    }
+
+    // (95:6) {:else}
+    function create_else_block$5(ctx) {
+    	let div;
+    	let t;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			t = text("Previous Results");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t = claim_text(div_nodes, "Previous Results");
+    			div_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "next-game-item prev-results-title svelte-1tklhzf");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    			append_hydration(div, t);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div);
+    		}
+    	};
+    }
+
+    // (91:6) {#if data.upcoming[fullTeamName].prevMatches.length == 0}
+    function create_if_block$8(ctx) {
+    	let div;
+    	let t;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			t = text("No Previous Results");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t = claim_text(div_nodes, "No Previous Results");
+    			div_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "next-game-item prev-results-title no-prev-results svelte-1tklhzf");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    			append_hydration(div, t);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div);
+    		}
+    	};
+    }
+
+    // (100:6) {#each data.upcoming[fullTeamName].prevMatches as prevMatch}
+    function create_each_block$4(ctx) {
+    	let div6;
+    	let div3;
+    	let div0;
+    	let t0_value = /*getAlias*/ ctx[4](/*prevMatch*/ ctx[9].homeTeam) + "";
+    	let t0;
+    	let t1;
+    	let div1;
+    	let t2_value = /*prevMatch*/ ctx[9].homeGoals + "";
+    	let t2;
+    	let t3;
+    	let t4_value = /*prevMatch*/ ctx[9].awayGoals + "";
+    	let t4;
+    	let t5;
+    	let div2;
+    	let t6_value = /*getAlias*/ ctx[4](/*prevMatch*/ ctx[9].awayTeam) + "";
+    	let t6;
+    	let t7;
+    	let div4;
+    	let t8;
+    	let div5;
+
+    	let t9_value = new Date(/*prevMatch*/ ctx[9].date).toLocaleDateString("en-us", {
+    		weekday: "long",
+    		year: "numeric",
+    		month: "short",
+    		day: "numeric"
+    	}) + "";
+
+    	let t9;
+    	let t10;
+    	let div6_class_value;
+
+    	return {
+    		c() {
+    			div6 = element("div");
+    			div3 = element("div");
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			div1 = element("div");
+    			t2 = text(t2_value);
+    			t3 = text(" - ");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			div2 = element("div");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div4 = element("div");
+    			t8 = space();
+    			div5 = element("div");
+    			t9 = text(t9_value);
+    			t10 = space();
+    			this.h();
+    		},
+    		l(nodes) {
+    			div6 = claim_element(nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			div3 = claim_element(div6_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			div0 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, t0_value);
+    			div0_nodes.forEach(detach);
+    			t1 = claim_space(div3_nodes);
+    			div1 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t2 = claim_text(div1_nodes, t2_value);
+    			t3 = claim_text(div1_nodes, " - ");
+    			t4 = claim_text(div1_nodes, t4_value);
+    			div1_nodes.forEach(detach);
+    			t5 = claim_space(div3_nodes);
+    			div2 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t6 = claim_text(div2_nodes, t6_value);
+    			div2_nodes.forEach(detach);
+    			div3_nodes.forEach(detach);
+    			t7 = claim_space(div6_nodes);
+    			div4 = claim_element(div6_nodes, "DIV", { style: true });
+    			children(div4).forEach(detach);
+    			t8 = claim_space(div6_nodes);
+    			div5 = claim_element(div6_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			t9 = claim_text(div5_nodes, t9_value);
+    			div5_nodes.forEach(detach);
+    			t10 = claim_space(div6_nodes);
+    			div6_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "home-team svelte-1tklhzf");
+    			attr(div1, "class", "score svelte-1tklhzf");
+    			attr(div2, "class", "away-team svelte-1tklhzf");
+    			attr(div3, "class", "past-result svelte-1tklhzf");
+    			set_style(div4, "clear", "both");
+    			attr(div5, "class", "past-result-date svelte-1tklhzf");
+    			attr(div6, "class", div6_class_value = "next-game-item " + /*prevMatch*/ ctx[9].result + " svelte-1tklhzf");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div6, anchor);
+    			append_hydration(div6, div3);
+    			append_hydration(div3, div0);
+    			append_hydration(div0, t0);
+    			append_hydration(div3, t1);
+    			append_hydration(div3, div1);
+    			append_hydration(div1, t2);
+    			append_hydration(div1, t3);
+    			append_hydration(div1, t4);
+    			append_hydration(div3, t5);
+    			append_hydration(div3, div2);
+    			append_hydration(div2, t6);
+    			append_hydration(div6, t7);
+    			append_hydration(div6, div4);
+    			append_hydration(div6, t8);
+    			append_hydration(div6, div5);
+    			append_hydration(div5, t9);
+    			append_hydration(div6, t10);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*getAlias, data, fullTeamName*/ 19 && t0_value !== (t0_value = /*getAlias*/ ctx[4](/*prevMatch*/ ctx[9].homeTeam) + "")) set_data(t0, t0_value);
+    			if (dirty & /*data, fullTeamName*/ 3 && t2_value !== (t2_value = /*prevMatch*/ ctx[9].homeGoals + "")) set_data(t2, t2_value);
+    			if (dirty & /*data, fullTeamName*/ 3 && t4_value !== (t4_value = /*prevMatch*/ ctx[9].awayGoals + "")) set_data(t4, t4_value);
+    			if (dirty & /*getAlias, data, fullTeamName*/ 19 && t6_value !== (t6_value = /*getAlias*/ ctx[4](/*prevMatch*/ ctx[9].awayTeam) + "")) set_data(t6, t6_value);
+
+    			if (dirty & /*data, fullTeamName*/ 3 && t9_value !== (t9_value = new Date(/*prevMatch*/ ctx[9].date).toLocaleDateString("en-us", {
+    				weekday: "long",
+    				year: "numeric",
+    				month: "short",
+    				day: "numeric"
+    			}) + "")) set_data(t9, t9_value);
+
+    			if (dirty & /*data, fullTeamName*/ 3 && div6_class_value !== (div6_class_value = "next-game-item " + /*prevMatch*/ ctx[9].result + " svelte-1tklhzf")) {
+    				attr(div6, "class", div6_class_value);
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div6);
+    		}
+    	};
+    }
+
+    function create_fragment$i(ctx) {
+    	let div9;
+    	let div0;
+    	let h1;
+    	let t0;
+    	let button;
+    	let t1_value = /*getAlias*/ ctx[4](/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam) + "";
+    	let t1;
+    	let t2;
+    	let t3;
+
+    	let t4_value = (/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].atHome
+    	? "Home"
+    	: "Away") + "";
+
+    	let t4;
+    	let t5;
+    	let t6;
+    	let div8;
+    	let div6;
+    	let t7;
+    	let div5;
+    	let div2;
+    	let div1;
+    	let t8_value = ordinal$1(/*data*/ ctx[0].standings[/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam][/*data*/ ctx[0]._id].position) + "";
+    	let t8;
+    	let t9;
+    	let div3;
+    	let t10;
+    	let t11;
+    	let div4;
+    	let t12;
+    	let br0;
+    	let t13;
+    	let a;
+    	let b;
+    	let t14_value = Math.round(/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prediction.homeGoals) + "";
+    	let t14;
+    	let t15;
+    	let t16_value = Math.round(/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prediction.awayGoals) + "";
+    	let t16;
+    	let t17;
+    	let br1;
+    	let t18;
+    	let div7;
+    	let t19;
+    	let mounted;
+    	let dispose;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*showBadge*/ ctx[3]) return create_if_block_2$2;
+    		return create_else_block_2;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block0 = current_block_type(ctx);
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*currentMatchday*/ ctx[2] != null) return create_if_block_1$3;
+    		return create_else_block_1$2;
+    	}
+
+    	let current_block_type_1 = select_block_type_1(ctx);
+    	let if_block1 = current_block_type_1(ctx);
+
+    	function select_block_type_2(ctx, dirty) {
+    		if (/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prevMatches.length == 0) return create_if_block$8;
+    		return create_else_block$5;
+    	}
+
+    	let current_block_type_2 = select_block_type_2(ctx);
+    	let if_block2 = current_block_type_2(ctx);
+    	let each_value = /*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prevMatches;
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$4(get_each_context$4(ctx, each_value, i));
+    	}
+
+    	return {
+    		c() {
+    			div9 = element("div");
+    			div0 = element("div");
+    			h1 = element("h1");
+    			t0 = text("Next Game: \r\n      ");
+    			button = element("button");
+    			t1 = text(t1_value);
+    			t2 = text(" ");
+    			t3 = text("\r\n      (");
+    			t4 = text(t4_value);
+    			t5 = text(")");
+    			t6 = space();
+    			div8 = element("div");
+    			div6 = element("div");
+    			if_block0.c();
+    			t7 = space();
+    			div5 = element("div");
+    			div2 = element("div");
+    			div1 = element("div");
+    			t8 = text(t8_value);
+    			t9 = space();
+    			div3 = element("div");
+    			t10 = text("Current form:\r\n          ");
+    			if_block1.c();
+    			t11 = space();
+    			div4 = element("div");
+    			t12 = text("Score prediction\r\n          ");
+    			br0 = element("br");
+    			t13 = space();
+    			a = element("a");
+    			b = element("b");
+    			t14 = text(t14_value);
+    			t15 = text(" - ");
+    			t16 = text(t16_value);
+    			t17 = space();
+    			br1 = element("br");
+    			t18 = space();
+    			div7 = element("div");
+    			if_block2.c();
+    			t19 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			this.h();
+    		},
+    		l(nodes) {
+    			div9 = claim_element(nodes, "DIV", { class: true, style: true });
+    			var div9_nodes = children(div9);
+    			div0 = claim_element(div9_nodes, "DIV", { class: true, style: true });
+    			var div0_nodes = children(div0);
+    			h1 = claim_element(div0_nodes, "H1", { class: true, style: true });
+    			var h1_nodes = children(h1);
+    			t0 = claim_text(h1_nodes, "Next Game: \r\n      ");
+    			button = claim_element(h1_nodes, "BUTTON", { style: true, class: true });
+    			var button_nodes = children(button);
+    			t1 = claim_text(button_nodes, t1_value);
+    			t2 = claim_text(button_nodes, " ");
+    			button_nodes.forEach(detach);
+    			t3 = claim_text(h1_nodes, "\r\n      (");
+    			t4 = claim_text(h1_nodes, t4_value);
+    			t5 = claim_text(h1_nodes, ")");
+    			h1_nodes.forEach(detach);
+    			div0_nodes.forEach(detach);
+    			t6 = claim_space(div9_nodes);
+    			div8 = claim_element(div9_nodes, "DIV", { class: true });
+    			var div8_nodes = children(div8);
+    			div6 = claim_element(div8_nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			if_block0.l(div6_nodes);
+    			t7 = claim_space(div6_nodes);
+    			div5 = claim_element(div6_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div2 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t8 = claim_text(div1_nodes, t8_value);
+    			div1_nodes.forEach(detach);
+    			div2_nodes.forEach(detach);
+    			t9 = claim_space(div5_nodes);
+    			div3 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			t10 = claim_text(div3_nodes, "Current form:\r\n          ");
+    			if_block1.l(div3_nodes);
+    			div3_nodes.forEach(detach);
+    			t11 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			t12 = claim_text(div4_nodes, "Score prediction\r\n          ");
+    			br0 = claim_element(div4_nodes, "BR", {});
+    			t13 = claim_space(div4_nodes);
+    			a = claim_element(div4_nodes, "A", { class: true, href: true });
+    			var a_nodes = children(a);
+    			b = claim_element(a_nodes, "B", {});
+    			var b_nodes = children(b);
+    			t14 = claim_text(b_nodes, t14_value);
+    			t15 = claim_text(b_nodes, " - ");
+    			t16 = claim_text(b_nodes, t16_value);
+    			b_nodes.forEach(detach);
+    			a_nodes.forEach(detach);
+    			t17 = claim_space(div4_nodes);
+    			br1 = claim_element(div4_nodes, "BR", {});
+    			div4_nodes.forEach(detach);
+    			div5_nodes.forEach(detach);
+    			div6_nodes.forEach(detach);
+    			t18 = claim_space(div8_nodes);
+    			div7 = claim_element(div8_nodes, "DIV", { class: true });
+    			var div7_nodes = children(div7);
+    			if_block2.l(div7_nodes);
+    			t19 = claim_space(div7_nodes);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(div7_nodes);
+    			}
+
+    			div7_nodes.forEach(detach);
+    			div8_nodes.forEach(detach);
+    			div9_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			set_style(button, "color", "inherit");
+    			attr(button, "class", "svelte-1tklhzf");
+    			attr(h1, "class", "next-game-title-text svelte-1tklhzf");
+    			set_style(h1, "color", "var(--" + /*oppTeam*/ ctx[6] + "-secondary)");
+    			attr(div0, "class", "next-game-title svelte-1tklhzf");
+    			set_style(div0, "background-color", "var(--" + /*oppTeam*/ ctx[6] + ")");
+    			attr(div1, "class", "next-game-position svelte-1tklhzf");
+    			attr(div2, "class", "next-game-item svelte-1tklhzf");
+    			attr(div3, "class", "next-game-item svelte-1tklhzf");
+    			attr(a, "class", "predictions-link svelte-1tklhzf");
+    			attr(a, "href", "/predictions");
+    			attr(div4, "class", "next-game-item svelte-1tklhzf");
+    			attr(div5, "class", "predictions");
+    			attr(div6, "class", "predictions-and-logo svelte-1tklhzf");
+    			attr(div7, "class", "past-results svelte-1tklhzf");
+    			attr(div8, "class", "next-game-values svelte-1tklhzf");
+    			attr(div9, "class", "next-game-prediction svelte-1tklhzf");
+    			set_style(div9, "border", "6px solid var(--" + /*oppTeam*/ ctx[6] + ")");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div9, anchor);
+    			append_hydration(div9, div0);
+    			append_hydration(div0, h1);
+    			append_hydration(h1, t0);
+    			append_hydration(h1, button);
+    			append_hydration(button, t1);
+    			append_hydration(button, t2);
+    			append_hydration(h1, t3);
+    			append_hydration(h1, t4);
+    			append_hydration(h1, t5);
+    			append_hydration(div9, t6);
+    			append_hydration(div9, div8);
+    			append_hydration(div8, div6);
+    			if_block0.m(div6, null);
+    			append_hydration(div6, t7);
+    			append_hydration(div6, div5);
+    			append_hydration(div5, div2);
+    			append_hydration(div2, div1);
+    			append_hydration(div1, t8);
+    			append_hydration(div5, t9);
+    			append_hydration(div5, div3);
+    			append_hydration(div3, t10);
+    			if_block1.m(div3, null);
+    			append_hydration(div5, t11);
+    			append_hydration(div5, div4);
+    			append_hydration(div4, t12);
+    			append_hydration(div4, br0);
+    			append_hydration(div4, t13);
+    			append_hydration(div4, a);
+    			append_hydration(a, b);
+    			append_hydration(b, t14);
+    			append_hydration(b, t15);
+    			append_hydration(b, t16);
+    			append_hydration(div4, t17);
+    			append_hydration(div4, br1);
+    			append_hydration(div8, t18);
+    			append_hydration(div8, div7);
+    			if_block2.m(div7, null);
+    			append_hydration(div7, t19);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div7, null);
+    			}
+
+    			if (!mounted) {
+    				dispose = listen(button, "click", /*click_handler*/ ctx[7]);
+    				mounted = true;
+    			}
+    		},
+    		p(ctx, [dirty]) {
+    			if (dirty & /*getAlias, data, fullTeamName*/ 19 && t1_value !== (t1_value = /*getAlias*/ ctx[4](/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam) + "")) set_data(t1, t1_value);
+
+    			if (dirty & /*data, fullTeamName*/ 3 && t4_value !== (t4_value = (/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].atHome
+    			? "Home"
+    			: "Away") + "")) set_data(t4, t4_value);
+
+    			if (dirty & /*oppTeam*/ 64) {
+    				set_style(h1, "color", "var(--" + /*oppTeam*/ ctx[6] + "-secondary)");
+    			}
+
+    			if (dirty & /*oppTeam*/ 64) {
+    				set_style(div0, "background-color", "var(--" + /*oppTeam*/ ctx[6] + ")");
+    			}
+
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block0) {
+    				if_block0.p(ctx, dirty);
+    			} else {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(div6, t7);
+    				}
+    			}
+
+    			if (dirty & /*data, fullTeamName*/ 3 && t8_value !== (t8_value = ordinal$1(/*data*/ ctx[0].standings[/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam][/*data*/ ctx[0]._id].position) + "")) set_data(t8, t8_value);
+
+    			if (current_block_type_1 === (current_block_type_1 = select_block_type_1(ctx)) && if_block1) {
+    				if_block1.p(ctx, dirty);
+    			} else {
+    				if_block1.d(1);
+    				if_block1 = current_block_type_1(ctx);
+
+    				if (if_block1) {
+    					if_block1.c();
+    					if_block1.m(div3, null);
+    				}
+    			}
+
+    			if (dirty & /*data, fullTeamName*/ 3 && t14_value !== (t14_value = Math.round(/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prediction.homeGoals) + "")) set_data(t14, t14_value);
+    			if (dirty & /*data, fullTeamName*/ 3 && t16_value !== (t16_value = Math.round(/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prediction.awayGoals) + "")) set_data(t16, t16_value);
+
+    			if (current_block_type_2 !== (current_block_type_2 = select_block_type_2(ctx))) {
+    				if_block2.d(1);
+    				if_block2 = current_block_type_2(ctx);
+
+    				if (if_block2) {
+    					if_block2.c();
+    					if_block2.m(div7, t19);
+    				}
+    			}
+
+    			if (dirty & /*data, fullTeamName, Date, getAlias*/ 19) {
+    				each_value = /*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prevMatches;
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$4(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$4(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div7, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+
+    			if (dirty & /*oppTeam*/ 64) {
+    				set_style(div9, "border", "6px solid var(--" + /*oppTeam*/ ctx[6] + ")");
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div9);
+    			if_block0.d();
+    			if_block1.d();
+    			if_block2.d();
+    			destroy_each(each_blocks, detaching);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+    }
+
+    function ordinal$1(n) {
+    	let ord = [,"st", "nd", "rd"];
+    	let a = n % 100;
+    	return n + (ord[a > 20 ? a % 10 : a] || "th");
+    }
+
+    function instance$h($$self, $$props, $$invalidate) {
+    	function setOppTeam() {
+    		if (data.upcoming[fullTeamName].nextTeam != null) {
+    			$$invalidate(6, oppTeam = data.upcoming[fullTeamName].nextTeam.toLowerCase().replace(/ /g, "-"));
+    		}
+    	}
+
+    	let oppTeam;
+    	let { data, fullTeamName, currentMatchday, showBadge, getAlias, switchTeam } = $$props;
+
+    	const click_handler = () => {
+    		switchTeam(data.upcoming[fullTeamName].nextTeam.toLowerCase().replace(/ /g, '-'));
+    	};
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
+    		if ('fullTeamName' in $$props) $$invalidate(1, fullTeamName = $$props.fullTeamName);
+    		if ('currentMatchday' in $$props) $$invalidate(2, currentMatchday = $$props.currentMatchday);
+    		if ('showBadge' in $$props) $$invalidate(3, showBadge = $$props.showBadge);
+    		if ('getAlias' in $$props) $$invalidate(4, getAlias = $$props.getAlias);
+    		if ('switchTeam' in $$props) $$invalidate(5, switchTeam = $$props.switchTeam);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 2) {
+    			fullTeamName && setOppTeam();
+    		}
+    	};
+
+    	return [
+    		data,
+    		fullTeamName,
+    		currentMatchday,
+    		showBadge,
+    		getAlias,
+    		switchTeam,
+    		oppTeam,
+    		click_handler
+    	];
+    }
+
+    class NextGameStats extends SvelteComponent {
+    	constructor(options) {
+    		super();
+
+    		init(this, options, instance$h, create_fragment$i, safe_not_equal, {
+    			data: 0,
+    			fullTeamName: 1,
+    			currentMatchday: 2,
+    			showBadge: 3,
+    			getAlias: 4,
+    			switchTeam: 5
+    		});
+    	}
+    }
+
+    /* src\components\next_game\NextGame.svelte generated by Svelte v3.49.0 */
+
+    function create_if_block$7(ctx) {
+    	let current_block_type_index;
+    	let if_block;
+    	let if_block_anchor;
+    	let current;
+    	const if_block_creators = [create_if_block_1$2, create_else_block$4];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[2]].nextTeam == null) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	return {
+    		c() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l(nodes) {
+    			if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m(target, anchor) {
+    			if_blocks[current_block_type_index].m(target, anchor);
+    			insert_hydration(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p(ctx, dirty) {
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    			}
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if_blocks[current_block_type_index].d(detaching);
+    			if (detaching) detach(if_block_anchor);
+    		}
+    	};
+    }
+
+    // (11:2) {:else}
+    function create_else_block$4(ctx) {
+    	let nextgamestats;
+    	let current;
+
+    	nextgamestats = new NextGameStats({
+    			props: {
+    				data: /*data*/ ctx[0],
+    				currentMatchday: /*currentMatchday*/ ctx[1],
+    				fullTeamName: /*fullTeamName*/ ctx[2],
+    				showBadge: /*showBadge*/ ctx[3],
+    				getAlias: /*getAlias*/ ctx[4],
+    				switchTeam: /*switchTeam*/ ctx[5]
+    			}
+    		});
+
+    	return {
+    		c() {
+    			create_component(nextgamestats.$$.fragment);
+    		},
+    		l(nodes) {
+    			claim_component(nextgamestats.$$.fragment, nodes);
+    		},
+    		m(target, anchor) {
+    			mount_component(nextgamestats, target, anchor);
+    			current = true;
+    		},
+    		p(ctx, dirty) {
+    			const nextgamestats_changes = {};
+    			if (dirty & /*data*/ 1) nextgamestats_changes.data = /*data*/ ctx[0];
+    			if (dirty & /*currentMatchday*/ 2) nextgamestats_changes.currentMatchday = /*currentMatchday*/ ctx[1];
+    			if (dirty & /*fullTeamName*/ 4) nextgamestats_changes.fullTeamName = /*fullTeamName*/ ctx[2];
+    			if (dirty & /*showBadge*/ 8) nextgamestats_changes.showBadge = /*showBadge*/ ctx[3];
+    			if (dirty & /*getAlias*/ 16) nextgamestats_changes.getAlias = /*getAlias*/ ctx[4];
+    			if (dirty & /*switchTeam*/ 32) nextgamestats_changes.switchTeam = /*switchTeam*/ ctx[5];
+    			nextgamestats.$set(nextgamestats_changes);
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(nextgamestats.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(nextgamestats.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			destroy_component(nextgamestats, detaching);
+    		}
+    	};
+    }
+
+    // (9:2) {#if data.upcoming[fullTeamName].nextTeam == null}
+    function create_if_block_1$2(ctx) {
+    	let seasoncomplete;
+    	let current;
+    	seasoncomplete = new SeasonComplete({ props: { data: /*data*/ ctx[0] } });
+
+    	return {
+    		c() {
+    			create_component(seasoncomplete.$$.fragment);
+    		},
+    		l(nodes) {
+    			claim_component(seasoncomplete.$$.fragment, nodes);
+    		},
+    		m(target, anchor) {
+    			mount_component(seasoncomplete, target, anchor);
+    			current = true;
+    		},
+    		p(ctx, dirty) {
+    			const seasoncomplete_changes = {};
+    			if (dirty & /*data*/ 1) seasoncomplete_changes.data = /*data*/ ctx[0];
+    			seasoncomplete.$set(seasoncomplete_changes);
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(seasoncomplete.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(seasoncomplete.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			destroy_component(seasoncomplete, detaching);
+    		}
+    	};
+    }
+
+    function create_fragment$h(ctx) {
+    	let if_block_anchor;
+    	let current;
+    	let if_block = /*data*/ ctx[0] != undefined && create_if_block$7(ctx);
+
+    	return {
+    		c() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l(nodes) {
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p(ctx, [dirty]) {
+    			if (/*data*/ ctx[0] != undefined) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*data*/ 1) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$7(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach(if_block_anchor);
+    		}
+    	};
+    }
+
+    function instance$g($$self, $$props, $$invalidate) {
+    	let { data, currentMatchday, fullTeamName, showBadge, getAlias, switchTeam } = $$props;
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
+    		if ('currentMatchday' in $$props) $$invalidate(1, currentMatchday = $$props.currentMatchday);
+    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    		if ('showBadge' in $$props) $$invalidate(3, showBadge = $$props.showBadge);
+    		if ('getAlias' in $$props) $$invalidate(4, getAlias = $$props.getAlias);
+    		if ('switchTeam' in $$props) $$invalidate(5, switchTeam = $$props.switchTeam);
+    	};
+
+    	return [data, currentMatchday, fullTeamName, showBadge, getAlias, switchTeam];
+    }
+
+    class NextGame extends SvelteComponent {
+    	constructor(options) {
+    		super();
+
+    		init(this, options, instance$g, create_fragment$h, safe_not_equal, {
+    			data: 0,
+    			currentMatchday: 1,
+    			fullTeamName: 2,
+    			showBadge: 3,
+    			getAlias: 4,
+    			switchTeam: 5
+    		});
+    	}
+    }
+
+    /* src\components\SeasonStats.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$g(ctx) {
+    	let div12;
+    	let div3;
+    	let div1;
+    	let t0_value = /*data*/ ctx[0].seasonStats[/*fullTeamName*/ ctx[1]].xG + "";
+    	let t0;
+    	let t1;
+    	let div0;
+    	let t2_value = /*rank*/ ctx[5].xG + "";
+    	let t2;
+    	let div0_class_value;
+    	let t3;
+    	let div2;
+    	let t4;
+    	let t5;
+    	let div7;
+    	let div5;
+    	let t6_value = /*data*/ ctx[0].seasonStats[/*fullTeamName*/ ctx[1]].xC + "";
+    	let t6;
+    	let t7;
+    	let div4;
+    	let t8_value = /*rank*/ ctx[5].xC + "";
+    	let t8;
+    	let div4_class_value;
+    	let t9;
+    	let div6;
+    	let t10;
+    	let t11;
+    	let div11;
+    	let div9;
+    	let t12_value = /*data*/ ctx[0].seasonStats[/*fullTeamName*/ ctx[1]].cleanSheetRatio + "";
+    	let t12;
+    	let t13;
+    	let div8;
+    	let t14_value = /*rank*/ ctx[5].cleanSheetRatio + "";
+    	let t14;
+    	let div8_class_value;
+    	let t15;
+    	let div10;
+    	let t16;
+
+    	return {
+    		c() {
+    			div12 = element("div");
+    			div3 = element("div");
+    			div1 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			div0 = element("div");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			div2 = element("div");
+    			t4 = text("goals per game");
+    			t5 = space();
+    			div7 = element("div");
+    			div5 = element("div");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div4 = element("div");
+    			t8 = text(t8_value);
+    			t9 = space();
+    			div6 = element("div");
+    			t10 = text("conceded per game");
+    			t11 = space();
+    			div11 = element("div");
+    			div9 = element("div");
+    			t12 = text(t12_value);
+    			t13 = space();
+    			div8 = element("div");
+    			t14 = text(t14_value);
+    			t15 = space();
+    			div10 = element("div");
+    			t16 = text("clean sheets");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div12 = claim_element(nodes, "DIV", { class: true });
+    			var div12_nodes = children(div12);
+    			div3 = claim_element(div12_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			div1 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t0 = claim_text(div1_nodes, t0_value);
+    			t1 = claim_space(div1_nodes);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true, id: true });
+    			var div0_nodes = children(div0);
+    			t2 = claim_text(div0_nodes, t2_value);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			t3 = claim_space(div3_nodes);
+    			div2 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t4 = claim_text(div2_nodes, "goals per game");
+    			div2_nodes.forEach(detach);
+    			div3_nodes.forEach(detach);
+    			t5 = claim_space(div12_nodes);
+    			div7 = claim_element(div12_nodes, "DIV", { class: true });
+    			var div7_nodes = children(div7);
+    			div5 = claim_element(div7_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			t6 = claim_text(div5_nodes, t6_value);
+    			t7 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true, id: true });
+    			var div4_nodes = children(div4);
+    			t8 = claim_text(div4_nodes, t8_value);
+    			div4_nodes.forEach(detach);
+    			div5_nodes.forEach(detach);
+    			t9 = claim_space(div7_nodes);
+    			div6 = claim_element(div7_nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			t10 = claim_text(div6_nodes, "conceded per game");
+    			div6_nodes.forEach(detach);
+    			div7_nodes.forEach(detach);
+    			t11 = claim_space(div12_nodes);
+    			div11 = claim_element(div12_nodes, "DIV", { class: true });
+    			var div11_nodes = children(div11);
+    			div9 = claim_element(div11_nodes, "DIV", { class: true });
+    			var div9_nodes = children(div9);
+    			t12 = claim_text(div9_nodes, t12_value);
+    			t13 = claim_space(div9_nodes);
+    			div8 = claim_element(div9_nodes, "DIV", { class: true, id: true });
+    			var div8_nodes = children(div8);
+    			t14 = claim_text(div8_nodes, t14_value);
+    			div8_nodes.forEach(detach);
+    			div9_nodes.forEach(detach);
+    			t15 = claim_space(div11_nodes);
+    			div10 = claim_element(div11_nodes, "DIV", { class: true });
+    			var div10_nodes = children(div10);
+    			t16 = claim_text(div10_nodes, "clean sheets");
+    			div10_nodes.forEach(detach);
+    			div11_nodes.forEach(detach);
+    			div12_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", div0_class_value = "season-stat-position ssp-" + /*rank*/ ctx[5].xG + " svelte-jyia24");
+    			attr(div0, "id", "ssp1");
+    			attr(div1, "class", "season-stat-value svelte-jyia24");
+    			attr(div2, "class", "season-stat-text svelte-jyia24");
+    			attr(div3, "class", "season-stat goals-per-game svelte-jyia24");
+    			attr(div4, "class", div4_class_value = "season-stat-position ssp-" + /*rank*/ ctx[5].xC + " svelte-jyia24");
+    			attr(div4, "id", "ssp2");
+    			attr(div5, "class", "season-stat-value svelte-jyia24");
+    			attr(div6, "class", "season-stat-text svelte-jyia24");
+    			attr(div7, "class", "season-stat conceded-per-game svelte-jyia24");
+    			attr(div8, "class", div8_class_value = "season-stat-position ssp-" + /*rank*/ ctx[5].cleanSheetRatio + " svelte-jyia24");
+    			attr(div8, "id", "ssp3");
+    			attr(div9, "class", "season-stat-value svelte-jyia24");
+    			attr(div10, "class", "season-stat-text svelte-jyia24");
+    			attr(div11, "class", "season-stat clean-sheet-ratio svelte-jyia24");
+    			attr(div12, "class", "season-stats svelte-jyia24");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div12, anchor);
+    			append_hydration(div12, div3);
+    			append_hydration(div3, div1);
+    			append_hydration(div1, t0);
+    			append_hydration(div1, t1);
+    			append_hydration(div1, div0);
+    			append_hydration(div0, t2);
+    			/*div0_binding*/ ctx[6](div0);
+    			append_hydration(div3, t3);
+    			append_hydration(div3, div2);
+    			append_hydration(div2, t4);
+    			append_hydration(div12, t5);
+    			append_hydration(div12, div7);
+    			append_hydration(div7, div5);
+    			append_hydration(div5, t6);
+    			append_hydration(div5, t7);
+    			append_hydration(div5, div4);
+    			append_hydration(div4, t8);
+    			/*div4_binding*/ ctx[7](div4);
+    			append_hydration(div7, t9);
+    			append_hydration(div7, div6);
+    			append_hydration(div6, t10);
+    			append_hydration(div12, t11);
+    			append_hydration(div12, div11);
+    			append_hydration(div11, div9);
+    			append_hydration(div9, t12);
+    			append_hydration(div9, t13);
+    			append_hydration(div9, div8);
+    			append_hydration(div8, t14);
+    			/*div8_binding*/ ctx[8](div8);
+    			append_hydration(div11, t15);
+    			append_hydration(div11, div10);
+    			append_hydration(div10, t16);
+    		},
+    		p(ctx, [dirty]) {
+    			if (dirty & /*data, fullTeamName*/ 3 && t0_value !== (t0_value = /*data*/ ctx[0].seasonStats[/*fullTeamName*/ ctx[1]].xG + "")) set_data(t0, t0_value);
+    			if (dirty & /*rank*/ 32 && t2_value !== (t2_value = /*rank*/ ctx[5].xG + "")) set_data(t2, t2_value);
+
+    			if (dirty & /*rank*/ 32 && div0_class_value !== (div0_class_value = "season-stat-position ssp-" + /*rank*/ ctx[5].xG + " svelte-jyia24")) {
+    				attr(div0, "class", div0_class_value);
+    			}
+
+    			if (dirty & /*data, fullTeamName*/ 3 && t6_value !== (t6_value = /*data*/ ctx[0].seasonStats[/*fullTeamName*/ ctx[1]].xC + "")) set_data(t6, t6_value);
+    			if (dirty & /*rank*/ 32 && t8_value !== (t8_value = /*rank*/ ctx[5].xC + "")) set_data(t8, t8_value);
+
+    			if (dirty & /*rank*/ 32 && div4_class_value !== (div4_class_value = "season-stat-position ssp-" + /*rank*/ ctx[5].xC + " svelte-jyia24")) {
+    				attr(div4, "class", div4_class_value);
+    			}
+
+    			if (dirty & /*data, fullTeamName*/ 3 && t12_value !== (t12_value = /*data*/ ctx[0].seasonStats[/*fullTeamName*/ ctx[1]].cleanSheetRatio + "")) set_data(t12, t12_value);
+    			if (dirty & /*rank*/ 32 && t14_value !== (t14_value = /*rank*/ ctx[5].cleanSheetRatio + "")) set_data(t14, t14_value);
+
+    			if (dirty & /*rank*/ 32 && div8_class_value !== (div8_class_value = "season-stat-position ssp-" + /*rank*/ ctx[5].cleanSheetRatio + " svelte-jyia24")) {
+    				attr(div8, "class", div8_class_value);
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div12);
+    			/*div0_binding*/ ctx[6](null);
+    			/*div4_binding*/ ctx[7](null);
+    			/*div8_binding*/ ctx[8](null);
+    		}
+    	};
+    }
+
+    function ordinal(n) {
+    	let ord = [,"st", "nd", "rd"];
+    	let a = n % 100;
+    	return n + (ord[a > 20 ? a % 10 : a] || "th");
+    }
+
+    function getStatsRank(data, attribute, fullTeamName, reverse) {
+    	let sorted = Object.keys(data.seasonStats).sort(function (a, b) {
+    		return data.seasonStats[b][attribute] - data.seasonStats[a][attribute];
+    	});
+
+    	let rank = sorted.indexOf(fullTeamName) + 1;
+
+    	if (reverse) {
+    		rank = 21 - rank;
+    	}
+
+    	return rank;
+    }
+
+    function getStatsRankings(data, fullTeamName) {
+    	let xGRank = ordinal(getStatsRank(data, "xG", fullTeamName, false));
+
+    	// Reverse - lower rank the better
+    	let xCRank = ordinal(getStatsRank(data, "xC", fullTeamName, true));
+
+    	let cleanSheetRatioRank = ordinal(getStatsRank(data, "cleanSheetRatio", fullTeamName, false));
+
+    	return {
+    		xG: xGRank,
+    		xC: xCRank,
+    		cleanSheetRatio: cleanSheetRatioRank
+    	};
+    }
+
+    function instance$f($$self, $$props, $$invalidate) {
+    	function setPositionalOffset() {
+    		document.documentElement.style.setProperty("--ssp1-offset", -ssp1.clientWidth / 2 + "px");
+    		document.documentElement.style.setProperty("--ssp2-offset", -ssp2.clientWidth / 2 + "px");
+    		document.documentElement.style.setProperty("--ssp3-offset", -ssp3.clientWidth / 2 + "px");
+    	}
+
+    	function setStatsValues() {
+    		$$invalidate(5, rank = getStatsRankings(data, fullTeamName));
+
+    		// Keep ordinal values at the correct offset
+    		window.addEventListener("resize", setPositionalOffset);
+    	} // Once rank values have updated, init positional offset for ordinal values
+    	// setTimeout(function () {
+
+    	//   setPositionalOffset();
+    	// }, 0);
+    	function refreshStatsValues() {
+    		if (setup) {
+    			setStatsValues();
+    		}
+    	}
+
+    	let ssp1, ssp2, ssp3;
+    	let rank = { xG: "", xC: "", cleanSheetRatio: "" };
+    	let setup = false;
+
+    	onMount(() => {
+    		setStatsValues();
+    		setup = true;
+    	});
+
+    	let { data, fullTeamName } = $$props;
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			ssp1 = $$value;
+    			$$invalidate(2, ssp1);
+    		});
+    	}
+
+    	function div4_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			ssp2 = $$value;
+    			$$invalidate(3, ssp2);
+    		});
+    	}
+
+    	function div8_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			ssp3 = $$value;
+    			$$invalidate(4, ssp3);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
+    		if ('fullTeamName' in $$props) $$invalidate(1, fullTeamName = $$props.fullTeamName);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 2) {
+    			fullTeamName && refreshStatsValues();
+    		}
+    	};
+
+    	return [
+    		data,
+    		fullTeamName,
+    		ssp1,
+    		ssp2,
+    		ssp3,
+    		rank,
+    		div0_binding,
+    		div4_binding,
+    		div8_binding
+    	];
+    }
+
+    class SeasonStats extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$f, create_fragment$g, safe_not_equal, { data: 0, fullTeamName: 1 });
+    	}
+    }
+
+    /* src\components\TeamsFooter.svelte generated by Svelte v3.49.0 */
+
+    function create_if_block$6(ctx) {
+    	let div;
+    	let t0;
+    	let t1;
+    	let t2;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			t0 = text("Last updated: ");
+    			t1 = text(/*lastUpdated*/ ctx[0]);
+    			t2 = text(" UTC");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t0 = claim_text(div_nodes, "Last updated: ");
+    			t1 = claim_text(div_nodes, /*lastUpdated*/ ctx[0]);
+    			t2 = claim_text(div_nodes, " UTC");
+    			div_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "last-updated svelte-qr69iz");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    			append_hydration(div, t0);
+    			append_hydration(div, t1);
+    			append_hydration(div, t2);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*lastUpdated*/ 1) set_data(t1, /*lastUpdated*/ ctx[0]);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div);
+    		}
+    	};
+    }
+
+    function create_fragment$f(ctx) {
+    	let div9;
+    	let a0;
+    	let img;
+    	let img_src_value;
+    	let t0;
+    	let div0;
+    	let t1;
+    	let t2;
+    	let div8;
+    	let t3;
+    	let div4;
+    	let div1;
+    	let t4;
+    	let a1;
+    	let t5;
+    	let t6;
+    	let div2;
+    	let t7;
+    	let a2;
+    	let t8;
+    	let t9;
+    	let div3;
+    	let t10;
+    	let a3;
+    	let t11;
+    	let t12;
+    	let t13;
+    	let div7;
+    	let div5;
+    	let t14;
+    	let t15;
+    	let div6;
+    	let t16;
+    	let if_block = /*lastUpdated*/ ctx[0] != null && create_if_block$6(ctx);
+
+    	return {
+    		c() {
+    			div9 = element("div");
+    			a0 = element("a");
+    			img = element("img");
+    			t0 = space();
+    			div0 = element("div");
+    			t1 = text("Support Me");
+    			t2 = space();
+    			div8 = element("div");
+    			if (if_block) if_block.c();
+    			t3 = space();
+    			div4 = element("div");
+    			div1 = element("div");
+    			t4 = text("Data provided by\r\n        ");
+    			a1 = element("a");
+    			t5 = text("football-data.org");
+    			t6 = space();
+    			div2 = element("div");
+    			t7 = text("Graphs created using\r\n        ");
+    			a2 = element("a");
+    			t8 = text("Plotly");
+    			t9 = space();
+    			div3 = element("div");
+    			t10 = text("Font made from\r\n        ");
+    			a3 = element("a");
+    			t11 = text("oNline Web Fonts");
+    			t12 = text("\r\n        is licensed by CC BY 3.0");
+    			t13 = space();
+    			div7 = element("div");
+    			div5 = element("div");
+    			t14 = text("Created by Tom Draper");
+    			t15 = space();
+    			div6 = element("div");
+    			t16 = text("v2.0");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div9 = claim_element(nodes, "DIV", { class: true });
+    			var div9_nodes = children(div9);
+    			a0 = claim_element(div9_nodes, "A", { class: true, href: true, target: true });
+    			var a0_nodes = children(a0);
+    			img = claim_element(a0_nodes, "IMG", { class: true, src: true, alt: true });
+    			t0 = claim_space(a0_nodes);
+    			div0 = claim_element(a0_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t1 = claim_text(div0_nodes, "Support Me");
+    			div0_nodes.forEach(detach);
+    			a0_nodes.forEach(detach);
+    			t2 = claim_space(div9_nodes);
+    			div8 = claim_element(div9_nodes, "DIV", { class: true });
+    			var div8_nodes = children(div8);
+    			if (if_block) if_block.l(div8_nodes);
+    			t3 = claim_space(div8_nodes);
+    			div4 = claim_element(div8_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			div1 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t4 = claim_text(div1_nodes, "Data provided by\r\n        ");
+    			a1 = claim_element(div1_nodes, "A", { class: true, href: true });
+    			var a1_nodes = children(a1);
+    			t5 = claim_text(a1_nodes, "football-data.org");
+    			a1_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			t6 = claim_space(div4_nodes);
+    			div2 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t7 = claim_text(div2_nodes, "Graphs created using\r\n        ");
+    			a2 = claim_element(div2_nodes, "A", { class: true, href: true });
+    			var a2_nodes = children(a2);
+    			t8 = claim_text(a2_nodes, "Plotly");
+    			a2_nodes.forEach(detach);
+    			div2_nodes.forEach(detach);
+    			t9 = claim_space(div4_nodes);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			t10 = claim_text(div3_nodes, "Font made from\r\n        ");
+    			a3 = claim_element(div3_nodes, "A", { class: true, href: true });
+    			var a3_nodes = children(a3);
+    			t11 = claim_text(a3_nodes, "oNline Web Fonts");
+    			a3_nodes.forEach(detach);
+    			t12 = claim_text(div3_nodes, "\r\n        is licensed by CC BY 3.0");
+    			div3_nodes.forEach(detach);
+    			div4_nodes.forEach(detach);
+    			t13 = claim_space(div8_nodes);
+    			div7 = claim_element(div8_nodes, "DIV", { class: true });
+    			var div7_nodes = children(div7);
+    			div5 = claim_element(div7_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			t14 = claim_text(div5_nodes, "Created by Tom Draper");
+    			div5_nodes.forEach(detach);
+    			t15 = claim_space(div7_nodes);
+    			div6 = claim_element(div7_nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			t16 = claim_text(div6_nodes, "v2.0");
+    			div6_nodes.forEach(detach);
+    			div7_nodes.forEach(detach);
+    			div8_nodes.forEach(detach);
+    			div9_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(img, "class", "ko-fi-img svelte-qr69iz");
+    			if (!src_url_equal(img.src, img_src_value = "img/kofi.png")) attr(img, "src", img_src_value);
+    			attr(img, "alt", "");
+    			attr(div0, "class", "ko-fi-text svelte-qr69iz");
+    			attr(a0, "class", "ko-fi svelte-qr69iz");
+    			attr(a0, "href", "https://ko-fi.com/C0C069FOI");
+    			attr(a0, "target", "_blank");
+    			attr(a1, "class", "footer-text-colour underline");
+    			attr(a1, "href", "https://www.football-data.org/");
+    			attr(div1, "class", "footer-detail footer-text-colour svelte-qr69iz");
+    			attr(a2, "class", "footer-text-colour underline");
+    			attr(a2, "href", "https://plotly.com/");
+    			attr(div2, "class", "footer-detail footer-text-colour svelte-qr69iz");
+    			attr(a3, "class", "footer-text-colour");
+    			attr(a3, "href", "http://www.onlinewebfonts.com");
+    			attr(div3, "class", "footer-detail footer-text-colour svelte-qr69iz");
+    			attr(div4, "class", "footer-details svelte-qr69iz");
+    			attr(div5, "class", "created-by footer-text-colour svelte-qr69iz");
+    			attr(div6, "class", "version footer-text-colour svelte-qr69iz");
+    			attr(div7, "class", "footer-bottom");
+    			attr(div8, "class", "teams-footer-bottom svelte-qr69iz");
+    			attr(div9, "class", "teams-footer footer-text-colour svelte-qr69iz");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div9, anchor);
+    			append_hydration(div9, a0);
+    			append_hydration(a0, img);
+    			append_hydration(a0, t0);
+    			append_hydration(a0, div0);
+    			append_hydration(div0, t1);
+    			append_hydration(div9, t2);
+    			append_hydration(div9, div8);
+    			if (if_block) if_block.m(div8, null);
+    			append_hydration(div8, t3);
+    			append_hydration(div8, div4);
+    			append_hydration(div4, div1);
+    			append_hydration(div1, t4);
+    			append_hydration(div1, a1);
+    			append_hydration(a1, t5);
+    			append_hydration(div4, t6);
+    			append_hydration(div4, div2);
+    			append_hydration(div2, t7);
+    			append_hydration(div2, a2);
+    			append_hydration(a2, t8);
+    			append_hydration(div4, t9);
+    			append_hydration(div4, div3);
+    			append_hydration(div3, t10);
+    			append_hydration(div3, a3);
+    			append_hydration(a3, t11);
+    			append_hydration(div3, t12);
+    			append_hydration(div8, t13);
+    			append_hydration(div8, div7);
+    			append_hydration(div7, div5);
+    			append_hydration(div5, t14);
+    			append_hydration(div7, t15);
+    			append_hydration(div7, div6);
+    			append_hydration(div6, t16);
+    		},
+    		p(ctx, [dirty]) {
+    			if (/*lastUpdated*/ ctx[0] != null) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$6(ctx);
+    					if_block.c();
+    					if_block.m(div8, t3);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div9);
+    			if (if_block) if_block.d();
+    		}
+    	};
+    }
+
+    function instance$e($$self, $$props, $$invalidate) {
+    	let { lastUpdated } = $$props;
+
+    	$$self.$$set = $$props => {
+    		if ('lastUpdated' in $$props) $$invalidate(0, lastUpdated = $$props.lastUpdated);
+    	};
+
+    	return [lastUpdated];
+    }
+
+    class TeamsFooter extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$e, create_fragment$f, safe_not_equal, { lastUpdated: 0 });
+    	}
+    }
+
+    /* src\components\Fixtures.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$e(ctx) {
+    	let div1;
+    	let div0;
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "id", "plotDiv");
+    			attr(div1, "id", "plotly");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    			/*div0_binding*/ ctx[3](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    			/*div0_binding*/ ctx[3](null);
+    		}
+    	};
+    }
+
+    function getMatchDetail(match) {
+    	let matchDetail;
+    	let homeAway = match.atHome ? "Home" : "Away";
+
+    	if (match.score != null) {
+    		matchDetail = `${match.team} (${homeAway}) ${match.score}`;
+    	} else {
+    		matchDetail = `${match.team} (${homeAway})`;
+    	}
+
+    	return matchDetail;
+    }
+
+    function sortByMatchDate(x, y, details) {
+    	let list = [];
+
+    	for (let i = 0; i < x.length; i++) {
+    		list.push({ x: x[i], y: y[i], details: details[i] });
+    	}
+
+    	list.sort(function (a, b) {
+    		return a.x < b.x ? -1 : a.x == b.x ? 0 : 1;
+    	});
+
+    	for (let i = 0; i < list.length; i++) {
+    		x[i] = list[i].x;
+    		y[i] = list[i].y;
+    		details[i] = list[i].details;
+    	}
+    }
+
+    function increaseNextGameMarker(sizes, x, now, bigMarkerSize) {
+    	// Get matchday date with smallest time difference to now
+    	let nextGameIdx;
+
+    	let minDiff = Number.POSITIVE_INFINITY;
+
+    	for (let i = 0; i < x.length; i++) {
+    		let diff = x[i] - now;
+
+    		if (0 < diff && diff < minDiff) {
+    			minDiff = diff;
+    			nextGameIdx = i;
+    		}
+    	}
+
+    	// Increase marker size of next game
+    	if (nextGameIdx != undefined) {
+    		sizes[nextGameIdx] = bigMarkerSize;
+    	}
+
+    	return sizes;
+    }
+
+    function nowLine(now, maxX) {
+    	let nowLine = [];
+
+    	if (now <= maxX) {
+    		// Vertical line shapw marking current day
+    		nowLine = {
+    			type: "line",
+    			x0: now,
+    			y0: -4,
+    			x1: now,
+    			y1: 104,
+    			line: { color: "black", dash: "dot", width: 1 }
+    		};
+    	}
+
+    	return nowLine;
+    }
+
+    function xRange(x) {
+    	let minX = new Date(x[0]);
+    	minX.setDate(minX.getDate() - 12);
+
+    	// let maxX = new Date(Math.max(x[x.length - 1], now));
+    	let maxX = new Date(x[x.length - 1]);
+
+    	maxX.setDate(maxX.getDate() + 12);
+    	return [minX, maxX];
+    }
+
+    function instance$d($$self, $$props, $$invalidate) {
+    	function linePoints() {
+    		let x = [];
+    		let y = [];
+    		let details = [];
+
+    		for (let matchday = 1; matchday <= 38; matchday++) {
+    			let match = data.fixtures[fullTeamName][matchday];
+    			x.push(new Date(match.date));
+    			let oppTeamRating = data.teamRatings[match.team].totalRating;
+
+    			if (match.atHome) {
+    				// If team playing at home, decrease opposition rating by the amount of home advantage the team gains
+    				oppTeamRating *= 1 - data.homeAdvantages[match.team].totalHomeAdvantage;
+    			}
+
+    			y.push(oppTeamRating * 100);
+    			let matchDetail = getMatchDetail(match);
+    			details.push(matchDetail);
+    		}
+
+    		return [x, y, details];
+    	}
+
+    	function line(now) {
+    		let [x, y, details] = linePoints();
+    		sortByMatchDate(x, y, details);
+    		let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
+    		let sizes = Array(x.length).fill(13);
+    		sizes = increaseNextGameMarker(sizes, x, now, 26);
+
+    		return {
+    			x,
+    			y,
+    			type: "scatter",
+    			mode: "lines+markers",
+    			text: details,
+    			line: { color: "#737373" },
+    			marker: {
+    				size: sizes,
+    				// colorscale: [
+    				//   [0, "#01c626"],
+    				//   [0.1, "#08a825"],
+    				//   [0.2, "#0b7c20"],
+    				//   [0.3, "#0a661b"],
+    				//   [0.4, "#064411"],
+    				//   [0.5, "#000000"],
+    				//   [0.6, "#5b1d15"],
+    				//   [0.7, "#85160f"],
+    				//   [0.8, "#ad1a10"],
+    				//   [0.9, "#db1a0d"],
+    				//   [1, "#fc1303"],
+    				// ],
+    				colorscale: [[0, "#01c626"], [0.5, "#f3f3f3"], [1, "#fc1303"]],
+    				color: y
+    			},
+    			customdata: matchdays,
+    			hovertemplate: "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>"
+    		};
+    	}
+
+    	function buildPlotData(data, fullTeamName) {
+    		// Build data to create a fixtures line graph displaying the date along the
+    		// x-axis and opponent strength along the y-axis
+    		let now = Date.now();
+
+    		let l = line(now);
+    		let yLabels = Array.from(Array(11), (_, i) => i * 10);
+    		let [minX, maxX] = xRange(l.x);
+
+    		let plotData = {
+    			data: [l],
+    			layout: {
+    				title: false,
+    				autosize: true,
+    				margin: { r: 20, l: 50, t: 5, b: 40, pad: 5 },
+    				hovermode: "closest",
+    				plot_bgcolor: "#fafafa",
+    				paper_bgcolor: "#fafafa",
+    				yaxis: {
+    					title: { text: "Team Rating" },
+    					gridcolor: "gray",
+    					showline: false,
+    					zeroline: false,
+    					fixedrange: true,
+    					ticktext: yLabels,
+    					tickvals: yLabels
+    				},
+    				xaxis: {
+    					linecolor: "black",
+    					showgrid: false,
+    					showline: false,
+    					range: [minX, maxX],
+    					fixedrange: true
+    				},
+    				shapes: [nowLine(now, maxX)]
+    			},
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
+    	function genPlot() {
+    		plotData = buildPlotData(data);
+
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let now = Date.now();
+    			let l = line(now);
+    			plotData.data[0] = l; // Overwrite plot data
+    			Plotly.redraw(plotDiv);
+    		}
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		setup = true;
+    	});
+
+    	let { data, fullTeamName } = $$props;
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
+    			fullTeamName && refreshPlot();
+    		}
+    	};
+
+    	return [plotDiv, data, fullTeamName, div0_binding];
+    }
+
+    class Fixtures extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$d, create_fragment$e, safe_not_equal, { data: 1, fullTeamName: 2 });
+    	}
+    }
+
+    /* src\components\FormOverTime.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$d(ctx) {
+    	let div1;
+    	let div0;
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "id", "plotDiv");
+    			attr(div1, "id", "plotly");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    			/*div0_binding*/ ctx[3](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    			/*div0_binding*/ ctx[3](null);
+    		}
+    	};
+    }
+
+    function getFormLine(data, x, teamName, isMainTeam) {
+    	let matchdays = Object.keys(data.form[data._id][teamName]); // Played matchdays
+    	let y = [];
+
+    	for (let matchday of matchdays) {
+    		let form = data.form[data._id][teamName][matchday].formRating5;
+    		y.push(form * 100);
+    	}
+
+    	let lineVal;
+
+    	if (isMainTeam) {
+    		// Get team primary colour from css variable
+    		let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
+
+    		teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
+    		let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
+    		lineVal = { color: lineColor, width: 4 };
+    	} else {
+    		lineVal = { color: "#d3d3d3" };
+    	}
+
+    	let line = {
+    		x,
+    		y,
+    		name: teamName,
+    		mode: "lines",
+    		line: lineVal,
+    		text: matchdays,
+    		hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
+    		showlegend: false
+    	};
+
+    	return line;
+    }
+
+    function getMatchdayDates$3(data, teamName) {
+    	let matchdays = Object.keys(data.form[data._id][teamName]); // Played matchdasy
+
+    	// If played one or no games, take x-axis from whole season dates
+    	if (matchdays.length <= 1) {
+    		matchdays = Object.keys(data.fixtures[teamName]);
+    	}
+
+    	let x = [];
+
+    	// Find median matchday date across all teams for each matchday
+    	for (let matchday of matchdays) {
+    		let matchdayDates = [];
+
+    		for (let team of data.teamNames) {
+    			matchdayDates.push(data.fixtures[team][matchday].date);
+    		}
+
+    		matchdayDates = matchdayDates.map(val => {
+    			return new Date(val);
+    		});
+
+    		matchdayDates = matchdayDates.sort();
+    		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
+    	}
+
+    	x.sort(function (a, b) {
+    		return a - b;
+    	});
+
+    	return x;
+    }
+
+    function instance$c($$self, $$props, $$invalidate) {
+    	function lines(x) {
+    		let lines = [];
+
+    		for (let i = 0; i < data.teamNames.length; i++) {
+    			if (data.teamNames[i] != fullTeamName) {
+    				let line = getFormLine(data, x, data.teamNames[i], false);
+    				lines.push(line);
+    			}
+    		}
+
+    		// Add this team last to ensure it overlaps all other lines
+    		let line = getFormLine(data, x, fullTeamName, true);
+
+    		lines.push(line);
+    		return lines;
+    	}
+
+    	function buildPlotData(data, fullTeamName) {
+    		let x = getMatchdayDates$3(data, fullTeamName); // All lines use the same x
+    		let yLabels = Array.from(Array(11), (_, i) => i * 10);
+
+    		let graphData = {
+    			data: lines(x),
+    			layout: {
+    				title: false,
+    				autosize: true,
+    				margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
+    				hovermode: "closest",
+    				plot_bgcolor: "#fafafa",
+    				paper_bgcolor: "#fafafa",
+    				yaxis: {
+    					title: { text: "Form Rating" },
+    					gridcolor: "gray",
+    					showgrid: false,
+    					showline: false,
+    					zeroline: false,
+    					fixedrange: true,
+    					ticktext: yLabels,
+    					tickvals: yLabels,
+    					range: [0, 100]
+    				},
+    				xaxis: {
+    					linecolor: "black",
+    					showgrid: false,
+    					showline: false,
+    					fixedrange: true,
+    					range: [x[0], x[x.length - 1]]
+    				}
+    			},
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return graphData;
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		setup = true;
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData(data, fullTeamName);
+
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let newPlotData = buildPlotData(data, fullTeamName);
+
+    			for (let i = 0; i < 20; i++) {
+    				plotData.data[i] = newPlotData.data[i];
+    			}
+
+    			Plotly.redraw(plotDiv);
+    		}
+    	}
+
+    	let { data, fullTeamName } = $$props;
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
+    			fullTeamName && refreshPlot();
+    		}
+    	};
+
+    	return [plotDiv, data, fullTeamName, div0_binding];
+    }
+
+    class FormOverTime extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$c, create_fragment$d, safe_not_equal, { data: 1, fullTeamName: 2 });
+    	}
+    }
+
+    /* src\components\PositionOverTime.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$c(ctx) {
+    	let div1;
+    	let div0;
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "id", "plotDiv");
+    			attr(div1, "id", "plotly");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    			/*div0_binding*/ ctx[3](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    			/*div0_binding*/ ctx[3](null);
+    		}
+    	};
+    }
+
+    function getLine(data, x, teamName, isMainTeam) {
+    	let matchdays = Object.keys(data.form[data._id][teamName]);
+    	let y = [];
+
+    	for (let matchday of matchdays) {
+    		let position = data.form[data._id][teamName][matchday].position;
+    		y.push(position);
+    	}
+
+    	let lineVal;
+
+    	if (isMainTeam) {
+    		// Get team primary colour from css variable
+    		let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
+
+    		teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
+    		let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
+    		lineVal = { color: lineColor, width: 4 };
+    	} else {
+    		lineVal = { color: "#d3d3d3" };
+    	}
+
+    	let line = {
+    		x,
+    		y,
+    		name: teamName,
+    		mode: "lines",
+    		line: lineVal,
+    		text: matchdays,
+    		hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
+    		showlegend: false
+    	};
+
+    	return line;
+    }
+
+    function getMatchdayDates$2(data, teamName) {
+    	let matchdays = Object.keys(data.form[data._id][teamName]);
+
+    	// If played one or no games, take x-axis from whole season dates
+    	if (matchdays.length <= 1) {
+    		matchdays = Object.keys(data.fixtures[teamName]);
+    	}
+
+    	// Find median matchday date across all teams for each matchday
+    	let x = [];
+
+    	for (let matchday of matchdays) {
+    		let matchdayDates = [];
+
+    		data.teamNames.forEach(team => {
+    			matchdayDates.push(data.fixtures[team][matchday].date);
+    		});
+
+    		matchdayDates = matchdayDates.map(val => {
+    			return new Date(val);
+    		});
+
+    		matchdayDates = matchdayDates.sort();
+    		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
+    	}
+
+    	x.sort(function (a, b) {
+    		return a - b;
+    	});
+
+    	return x;
+    }
+
+    function instance$b($$self, $$props, $$invalidate) {
+    	function lines(x) {
+    		let lines = [];
+
+    		for (let i = 0; i < data.teamNames.length; i++) {
+    			if (data.teamNames[i] != fullTeamName) {
+    				let line = getLine(data, x, data.teamNames[i], false);
+    				lines.push(line);
+    			}
+    		}
+
+    		// Add this team last to ensure it overlaps all other lines
+    		let line = getLine(data, x, fullTeamName, true);
+
+    		lines.push(line);
+    		return lines;
+    	}
+
+    	function buildPlotData(data, fullTeamName) {
+    		let x = getMatchdayDates$2(data, fullTeamName); // All lines use the same x
+    		let yLabels = Array.from(Array(20), (_, i) => i + 1);
+
+    		let graphData = {
+    			data: lines(x),
+    			layout: {
+    				title: false,
+    				autosize: true,
+    				margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
+    				hovermode: "closest",
+    				plot_bgcolor: "#fafafa",
+    				paper_bgcolor: "#fafafa",
+    				yaxis: {
+    					title: { text: "Position" },
+    					gridcolor: "gray",
+    					showgrid: false,
+    					showline: false,
+    					zeroline: false,
+    					autorange: "reversed",
+    					fixedrange: true,
+    					ticktext: yLabels,
+    					tickvals: yLabels
+    				},
+    				xaxis: {
+    					linecolor: "black",
+    					showgrid: false,
+    					showline: false,
+    					fixedrange: true
+    				},
+    				shapes: [
+    					{
+    						type: "rect",
+    						x0: x[0],
+    						y0: 4.5,
+    						x1: x[x.length - 1],
+    						y1: 0.5,
+    						line: { width: 0 },
+    						fillcolor: "#77DD77",
+    						opacity: 0.3,
+    						layer: "below"
+    					},
+    					{
+    						type: "rect",
+    						x0: x[0],
+    						y0: 6.5,
+    						x1: x[x.length - 1],
+    						y1: 4.5,
+    						line: { width: 0 },
+    						fillcolor: "#4CDEEE",
+    						opacity: 0.3,
+    						layer: "below"
+    					},
+    					{
+    						type: "rect",
+    						x0: x[0],
+    						y0: 20.5,
+    						x1: x[x.length - 1],
+    						y1: 17.5,
+    						line: { width: 0 },
+    						fillcolor: "#C23B22",
+    						opacity: 0.3,
+    						layer: "below"
+    					}
+    				]
+    			},
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return graphData;
+    	}
+
+    	let plotDiv;
+    	let plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		setup = true;
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData(data, fullTeamName);
+
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let newPlotData = buildPlotData(data, fullTeamName);
+
+    			for (let i = 0; i < 20; i++) {
+    				plotData.data[i] = newPlotData.data[i];
+    			}
+
+    			Plotly.redraw(plotDiv);
+    		}
+    	}
+
+    	let { data, fullTeamName } = $$props;
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
+    			fullTeamName && refreshPlot();
+    		}
+    	};
+
+    	return [plotDiv, data, fullTeamName, div0_binding];
+    }
+
+    class PositionOverTime extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$b, create_fragment$c, safe_not_equal, { data: 1, fullTeamName: 2 });
+    	}
+    }
+
+    /* src\components\goals_scored_and_conceded\GoalsScoredAndConceded.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$b(ctx) {
+    	let div1;
+    	let div0;
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "id", "plotDiv");
+    			attr(div1, "id", "plotly");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    			/*div0_binding*/ ctx[3](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    			/*div0_binding*/ ctx[3](null);
+    		}
+    	};
+    }
+
+    function getAvgGoalsPerGame(data) {
+    	let avgGoals = {};
+
+    	for (let team of data.teamNames) {
+    		for (let matchday of Object.keys(data.form[data._id][team])) {
+    			let score = data.form[data._id][team][matchday].score;
+
+    			if (score != null) {
+    				let [h, _, a] = score.split(" ");
+    				h = parseInt(h);
+    				a = parseInt(a);
+
+    				if (matchday in avgGoals) {
+    					avgGoals[matchday] += h + a;
+    				} else {
+    					avgGoals[matchday] = h + a;
+    				}
+    			}
+    		}
+    	}
+
+    	// Divide by number of teams to get avg goals per gameweek
+    	for (let matchday of Object.keys(avgGoals)) {
+    		avgGoals[matchday] /= 20;
+    	}
+
+    	return avgGoals;
+    }
+
+    function getTeamGoalsPerGame(data, team) {
+    	let scored = {};
+    	let conceded = {};
+
+    	for (let matchday of Object.keys(data.form[data._id][team])) {
+    		let score = data.form[data._id][team][matchday].score;
+
+    		if (score != null) {
+    			let [h, _, a] = score.split(" ");
+    			h = parseInt(h);
+    			a = parseInt(a);
+
+    			if (data.form[data._id][team][matchday].atHome) {
+    				scored[matchday] = h;
+    				conceded[matchday] = a;
+    			} else {
+    				scored[matchday] = a;
+    				conceded[matchday] = h;
+    			}
+    		}
+    	}
+
+    	return [scored, conceded];
+    }
+
+    function getMatchdayDates$1(data) {
+    	// Find median matchday date across all teams for each matchday
+    	let x = [];
+
+    	for (let i = 1; i <= 38; i++) {
+    		let matchdayDates = [];
+
+    		for (let team of data.teamNames) {
+    			matchdayDates.push(data.fixtures[team][i].date);
+    		}
+
+    		matchdayDates = matchdayDates.map(val => {
+    			return new Date(val);
+    		});
+
+    		matchdayDates = matchdayDates.sort();
+    		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
+    	}
+
+    	x.sort(function (a, b) {
+    		return a - b;
+    	});
+
+    	return x;
+    }
+
+    function buildPlotData$1(data, fullTeamName) {
+    	let avgGoals = getAvgGoalsPerGame(data);
+    	let x = getMatchdayDates$1(data);
+    	let matchdays = Object.keys(avgGoals);
+    	let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
+
+    	let plotData = {
+    		data: [
+    			{
+    				name: "Scored",
+    				type: "bar",
+    				x,
+    				y: Object.values(teamScored),
+    				text: matchdays,
+    				marker: { color: "#77DD77" },
+    				hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>"
+    			},
+    			{
+    				name: "Conceded",
+    				type: "bar",
+    				x,
+    				y: Object.values(teamConceded),
+    				text: matchdays,
+    				marker: { color: "C23B22" },
+    				hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>"
+    			},
+    			{
+    				name: "Avg",
+    				type: "line",
+    				x,
+    				y: Object.values(avgGoals),
+    				text: matchdays,
+    				hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",
+    				line: { color: "#0080FF", width: 2 }
+    			}
+    		],
+    		layout: {
+    			title: false,
+    			autosize: true,
+    			margin: { r: 20, l: 50, t: 15, b: 15, pad: 5 },
+    			barmode: "stack",
+    			hovermode: "closest",
+    			plot_bgcolor: "#fafafa",
+    			paper_bgcolor: "#fafafa",
+    			yaxis: {
+    				title: { text: "Goals Scored" },
+    				gridcolor: "gray",
+    				showgrid: false,
+    				showline: false,
+    				zeroline: false,
+    				fixedrange: true,
+    				rangemode: 'nonnegative'
+    			},
+    			xaxis: {
+    				linecolor: "black",
+    				showgrid: false,
+    				showline: false,
+    				fixedrange: true,
+    				showticklabels: false
+    			},
+    			legend: { x: 1, xanchor: "right", y: 1 }
+    		},
+    		config: {
+    			responsive: true,
+    			showSendToCloud: false,
+    			displayModeBar: false
+    		}
+    	};
+
+    	return plotData;
+    }
+
+    function instance$a($$self, $$props, $$invalidate) {
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		setup = true;
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData$1(data, fullTeamName);
+
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let newPlotData = buildPlotData$1(data, fullTeamName);
+    			plotData.data[0] = newPlotData.data[0];
+    			plotData.data[1] = newPlotData.data[1];
+    			Plotly.redraw(plotDiv);
+    		}
+    	}
+
+    	let { data, fullTeamName } = $$props;
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
+    			fullTeamName && refreshPlot();
+    		}
+    	};
+
+    	return [plotDiv, data, fullTeamName, div0_binding];
+    }
+
+    class GoalsScoredAndConceded extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$a, create_fragment$b, safe_not_equal, { data: 1, fullTeamName: 2 });
+    	}
+    }
+
+    /* src\components\goals_scored_and_conceded\CleanSheets.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$a(ctx) {
+    	let div1;
+    	let div0;
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "id", "plotDiv");
+    			attr(div1, "id", "plotly");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    			/*div0_binding*/ ctx[3](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    			/*div0_binding*/ ctx[3](null);
+    		}
+    	};
+    }
+
+    function getTeamCleanSheets(data, team) {
+    	let notCleanSheets = [];
+    	let cleanSheets = [];
+
+    	for (let matchday of Object.keys(data.form[data._id][team])) {
+    		let score = data.form[data._id][team][matchday].score;
+
+    		if (score != null) {
+    			let [h, _, a] = score.split(" ");
+    			h = parseInt(h);
+    			a = parseInt(a);
+
+    			if (data.form[data._id][team][matchday].atHome) {
+    				if (a > 0) {
+    					notCleanSheets.push(1);
+    					cleanSheets.push(0);
+    				} else {
+    					cleanSheets.push(1);
+    					notCleanSheets.push(0);
+    				}
+    			} else {
+    				if (h > 0) {
+    					notCleanSheets.push(1);
+    					cleanSheets.push(0);
+    				} else {
+    					cleanSheets.push(1);
+    					notCleanSheets.push(0);
+    				}
+    			}
+    		}
+    	}
+
+    	return [cleanSheets, notCleanSheets];
+    }
+
+    function getMatchdayDates(data) {
+    	// Find median matchday date across all teams for each matchday
+    	let x = [];
+
+    	for (let i = 1; i <= 38; i++) {
+    		let matchdayDates = [];
+
+    		for (let team of data.teamNames) {
+    			matchdayDates.push(data.fixtures[team][i].date);
+    		}
+
+    		matchdayDates = matchdayDates.map(val => {
+    			return new Date(val);
+    		});
+
+    		matchdayDates = matchdayDates.sort();
+    		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
+    	}
+
+    	x.sort(function (a, b) {
+    		return a - b;
+    	});
+
+    	return x;
+    }
+
+    function buildPlotData(data, fullTeamName) {
+    	let x = getMatchdayDates(data);
+    	let matchdays = Object.keys(data.form[data._id][fullTeamName]);
+    	let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, fullTeamName);
+
+    	let plotData = {
+    		data: [
+    			{
+    				name: "Clean sheets",
+    				type: "bar",
+    				x,
+    				y: cleanSheets,
+    				text: matchdays,
+    				marker: { color: "#77DD77" },
+    				hovertemplate: "<b>Clean sheet<extra></extra>",
+    				showlegend: false
+    			},
+    			{
+    				name: "Conceded",
+    				type: "bar",
+    				x,
+    				y: notCleanSheets,
+    				text: matchdays,
+    				marker: { color: "C23B22" },
+    				hovertemplate: "<b>Goals conceded<extra></extra>",
+    				showlegend: false
+    			}
+    		],
+    		layout: {
+    			title: false,
+    			autosize: true,
+    			height: 60,
+    			margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
+    			barmode: "stack",
+    			hovermode: "closest",
+    			plot_bgcolor: "#fafafa",
+    			paper_bgcolor: "#fafafa",
+    			yaxis: {
+    				title: { text: "" },
+    				showticklabels: false,
+    				gridcolor: "gray",
+    				showgrid: false,
+    				showline: false,
+    				zeroline: false,
+    				fixedrange: true
+    			},
+    			xaxis: {
+    				linecolor: "black",
+    				showgrid: false,
+    				showline: false,
+    				fixedrange: true
+    			},
+    			shapes: [
+    				{
+    					type: "line",
+    					x0: x[0],
+    					y0: 0.5,
+    					x1: x[x.length - 1],
+    					y1: 0.5,
+    					layer: "below",
+    					line: { color: "#d3d3d3", width: 2 }
+    				}
+    			]
+    		},
+    		config: {
+    			responsive: true,
+    			showSendToCloud: false,
+    			displayModeBar: false
+    		}
+    	};
+
+    	return plotData;
+    }
+
+    function instance$9($$self, $$props, $$invalidate) {
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		setup = true;
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData(data, fullTeamName);
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let newPlotData = buildPlotData(data, fullTeamName);
+    			plotData.data[0] = newPlotData.data[0];
+    			plotData.data[1] = newPlotData.data[1];
+    			Plotly.redraw(plotDiv);
+    		}
+    	}
+
+    	let { data, fullTeamName } = $$props;
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
+    			fullTeamName && refreshPlot();
+    		}
+    	};
+
+    	return [plotDiv, data, fullTeamName, div0_binding];
+    }
+
+    class CleanSheets extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$9, create_fragment$a, safe_not_equal, { data: 1, fullTeamName: 2 });
+    	}
+    }
+
+    /* src\components\goals_per_game\GoalsScoredFreq.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$9(ctx) {
+    	let div1;
+    	let div0;
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "id", "plotDiv");
+    			attr(div1, "id", "plotly");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    			/*div0_binding*/ ctx[5](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    			/*div0_binding*/ ctx[5](null);
+    		}
+    	};
+    }
+
+    function instance$8($$self, $$props, $$invalidate) {
+    	function buildPlotData() {
+    		let xLabels = getXLabels();
+
+    		let plotData = {
+    			data: getScoredBars(),
+    			layout: {
+    				title: false,
+    				autosize: true,
+    				margin: { r: 0, l: 50, t: 15, b: 40, pad: 5 },
+    				hovermode: "closest",
+    				barmode: "overlay",
+    				bargap: 0,
+    				plot_bgcolor: "#fafafa",
+    				paper_bgcolor: "#fafafa",
+    				yaxis: {
+    					title: { text: "Frequency" },
+    					gridcolor: "gray",
+    					showgrid: false,
+    					showline: false,
+    					zeroline: false,
+    					fixedrange: true,
+    					rangemode: "nonnegative"
+    				},
+    				xaxis: {
+    					title: { text: "Goals Scored" },
+    					linecolor: "black",
+    					showgrid: false,
+    					showline: false,
+    					fixedrange: true,
+    					ticktext: xLabels,
+    					tickvals: xLabels
+    				},
+    				legend: { x: 1, xanchor: "right", y: 0.95 }
+    			},
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		setup = true;
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData();
+
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			plotData.data[1] = getScoredTeamBars(); // Update team bars
+    			Plotly.redraw(plotDiv);
+    		}
+    	}
+
+    	let { fullTeamName, getScoredBars, getScoredTeamBars, getXLabels } = $$props;
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('fullTeamName' in $$props) $$invalidate(1, fullTeamName = $$props.fullTeamName);
+    		if ('getScoredBars' in $$props) $$invalidate(2, getScoredBars = $$props.getScoredBars);
+    		if ('getScoredTeamBars' in $$props) $$invalidate(3, getScoredTeamBars = $$props.getScoredTeamBars);
+    		if ('getXLabels' in $$props) $$invalidate(4, getXLabels = $$props.getXLabels);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 2) {
+    			fullTeamName && refreshPlot();
+    		}
+    	};
+
+    	return [
+    		plotDiv,
+    		fullTeamName,
+    		getScoredBars,
+    		getScoredTeamBars,
+    		getXLabels,
+    		div0_binding
+    	];
+    }
+
+    class GoalsScoredFreq extends SvelteComponent {
+    	constructor(options) {
+    		super();
+
+    		init(this, options, instance$8, create_fragment$9, safe_not_equal, {
+    			fullTeamName: 1,
+    			getScoredBars: 2,
+    			getScoredTeamBars: 3,
+    			getXLabels: 4
+    		});
+    	}
+    }
+
+    /* src\components\goals_per_game\GoalsConcededFreq.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$8(ctx) {
+    	let div1;
+    	let div0;
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "id", "plotDiv");
+    			attr(div1, "id", "plotly");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    			/*div0_binding*/ ctx[5](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    			/*div0_binding*/ ctx[5](null);
+    		}
+    	};
+    }
+
+    function instance$7($$self, $$props, $$invalidate) {
+    	function buildPlotData() {
+    		let xLabels = getXLabels();
+
+    		let graphData = {
+    			data: getConcededBars(),
+    			layout: {
+    				title: false,
+    				autosize: true,
+    				margin: { r: 0, l: 50, t: 15, b: 40, pad: 5 },
+    				hovermode: "closest",
+    				barmode: "overlay",
+    				bargap: 0,
+    				plot_bgcolor: "#fafafa",
+    				paper_bgcolor: "#fafafa",
+    				yaxis: {
+    					title: { text: "Frequency" },
+    					gridcolor: "gray",
+    					showgrid: false,
+    					showline: false,
+    					zeroline: false,
+    					fixedrange: true,
+    					rangemode: 'nonnegative'
+    				},
+    				xaxis: {
+    					title: { text: "Goals Conceded" },
+    					linecolor: "black",
+    					showgrid: false,
+    					showline: false,
+    					fixedrange: true,
+    					ticktext: xLabels,
+    					tickvals: xLabels
+    				},
+    				legend: { x: 1, xanchor: "right", y: 0.95 }
+    			},
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return graphData;
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		setup = true;
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData();
+
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			plotData.data[1] = getConcededTeamBars();
+    			Plotly.redraw(plotDiv);
+    		}
+    	}
+
+    	let { fullTeamName, getConcededBars, getConcededTeamBars, getXLabels } = $$props;
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('fullTeamName' in $$props) $$invalidate(1, fullTeamName = $$props.fullTeamName);
+    		if ('getConcededBars' in $$props) $$invalidate(2, getConcededBars = $$props.getConcededBars);
+    		if ('getConcededTeamBars' in $$props) $$invalidate(3, getConcededTeamBars = $$props.getConcededTeamBars);
+    		if ('getXLabels' in $$props) $$invalidate(4, getXLabels = $$props.getXLabels);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 2) {
+    			fullTeamName && refreshPlot();
+    		}
+    	};
+
+    	return [
+    		plotDiv,
+    		fullTeamName,
+    		getConcededBars,
+    		getConcededTeamBars,
+    		getXLabels,
+    		div0_binding
+    	];
+    }
+
+    class GoalsConcededFreq extends SvelteComponent {
+    	constructor(options) {
+    		super();
+
+    		init(this, options, instance$7, create_fragment$8, safe_not_equal, {
+    			fullTeamName: 1,
+    			getConcededBars: 2,
+    			getConcededTeamBars: 3,
+    			getXLabels: 4
+    		});
+    	}
+    }
+
+    /* src\components\goals_per_game\GoalsPerGame.svelte generated by Svelte v3.49.0 */
+
+    function create_if_block$5(ctx) {
+    	let div0;
+    	let goalsscoredfreq;
+    	let t;
+    	let div1;
+    	let goalsconcededfreq;
+    	let current;
+
+    	goalsscoredfreq = new GoalsScoredFreq({
+    			props: {
+    				fullTeamName: /*fullTeamName*/ ctx[0],
+    				getScoredBars: /*getScoredBars*/ ctx[3],
+    				getScoredTeamBars: /*getScoredTeamBars*/ ctx[4],
+    				getXLabels: /*getXLabels*/ ctx[6]
+    			}
+    		});
+
+    	goalsconcededfreq = new GoalsConcededFreq({
+    			props: {
+    				fullTeamName: /*fullTeamName*/ ctx[0],
+    				getConcededBars: /*getConcededBars*/ ctx[2],
+    				getConcededTeamBars: /*getConcededTeamBars*/ ctx[5],
+    				getXLabels: /*getXLabels*/ ctx[6]
+    			}
+    		});
+
+    	return {
+    		c() {
+    			div0 = element("div");
+    			create_component(goalsscoredfreq.$$.fragment);
+    			t = space();
+    			div1 = element("div");
+    			create_component(goalsconcededfreq.$$.fragment);
+    			this.h();
+    		},
+    		l(nodes) {
+    			div0 = claim_element(nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			claim_component(goalsscoredfreq.$$.fragment, div0_nodes);
+    			div0_nodes.forEach(detach);
+    			t = claim_space(nodes);
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			claim_component(goalsconcededfreq.$$.fragment, div1_nodes);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "graph freq-graph mini-graph");
+    			attr(div1, "class", "graph freq-graph mini-graphh");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div0, anchor);
+    			mount_component(goalsscoredfreq, div0, null);
+    			insert_hydration(target, t, anchor);
+    			insert_hydration(target, div1, anchor);
+    			mount_component(goalsconcededfreq, div1, null);
+    			current = true;
+    		},
+    		p(ctx, dirty) {
+    			const goalsscoredfreq_changes = {};
+    			if (dirty & /*fullTeamName*/ 1) goalsscoredfreq_changes.fullTeamName = /*fullTeamName*/ ctx[0];
+    			goalsscoredfreq.$set(goalsscoredfreq_changes);
+    			const goalsconcededfreq_changes = {};
+    			if (dirty & /*fullTeamName*/ 1) goalsconcededfreq_changes.fullTeamName = /*fullTeamName*/ ctx[0];
+    			goalsconcededfreq.$set(goalsconcededfreq_changes);
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(goalsscoredfreq.$$.fragment, local);
+    			transition_in(goalsconcededfreq.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(goalsscoredfreq.$$.fragment, local);
+    			transition_out(goalsconcededfreq.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div0);
+    			destroy_component(goalsscoredfreq);
+    			if (detaching) detach(t);
+    			if (detaching) detach(div1);
+    			destroy_component(goalsconcededfreq);
+    		}
+    	};
+    }
+
+    function create_fragment$7(ctx) {
+    	let div;
+    	let current;
+    	let if_block = /*setup*/ ctx[1] && create_if_block$5(ctx);
+
+    	return {
+    		c() {
+    			div = element("div");
+    			if (if_block) if_block.c();
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			if (if_block) if_block.l(div_nodes);
+    			div_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "two-graphs");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    			if (if_block) if_block.m(div, null);
+    			current = true;
+    		},
+    		p(ctx, [dirty]) {
+    			if (/*setup*/ ctx[1]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*setup*/ 2) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$5(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(div, null);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div);
+    			if (if_block) if_block.d();
+    		}
+    	};
+    }
+
+    function teamBars(data, name, color) {
+    	return {
+    		x: Object.keys(data),
+    		y: Object.values(data),
+    		type: "bar",
+    		name,
+    		marker: { color },
+    		line: { width: 0 },
+    		hovertemplate: "%{x} goals in %{y} games<extra></extra>",
+    		hoverinfo: "x+y",
+    		opacity: 0.6
+    	};
+    }
+
+    function avgGoalFrequencies(data) {
+    	let goalFreq = {};
+
+    	for (let team of data.teamNames) {
+    		for (let matchday of Object.keys(data.form[data._id][team])) {
+    			let score = data.form[data._id][team][matchday].score;
+
+    			if (score != null) {
+    				let [h, _, a] = score.split(" ");
+
+    				// Also collect opposition goals scored
+    				if (data.form[data._id][team][matchday].atHome) {
+    					if (h in goalFreq) {
+    						goalFreq[h] += 1;
+    					} else {
+    						goalFreq[h] = 1;
+    					}
+
+    					if (a in goalFreq) {
+    						goalFreq[a] += 1;
+    					} else {
+    						goalFreq[a] = 1;
+    					}
+    				}
+    			}
+    		}
+    	}
+
+    	// Divide by number of teams to get avg
+    	for (let goals of Object.keys(goalFreq)) {
+    		goalFreq[goals] /= 20;
+    	}
+
+    	return goalFreq;
+    }
+
+    function teamScoredFrequencies(data, team) {
+    	let goalFreq = {};
+
+    	for (let matchday of Object.keys(data.form[data._id][team])) {
+    		let score = data.form[data._id][team][matchday].score;
+
+    		if (score != null) {
+    			let [h, _, a] = score.split(" ");
+
+    			if (data.form[data._id][team][matchday].atHome) {
+    				if (h in goalFreq) {
+    					goalFreq[h] += 1;
+    				} else {
+    					goalFreq[h] = 1;
+    				}
+    			} else {
+    				if (a in goalFreq) {
+    					goalFreq[a] += 1;
+    				} else {
+    					goalFreq[a] = 1;
+    				}
+    			}
+    		}
+    	}
+
+    	return goalFreq;
+    }
+
+    function teamConcededFrequencies(data, team) {
+    	let goalFreq = {};
+
+    	for (let matchday of Object.keys(data.form[data._id][team])) {
+    		let score = data.form[data._id][team][matchday].score;
+
+    		if (score != null) {
+    			let [h, _, a] = score.split(" ");
+
+    			if (data.form[data._id][team][matchday].atHome) {
+    				if (a in goalFreq) {
+    					goalFreq[a] += 1;
+    				} else {
+    					goalFreq[a] = 1;
+    				}
+    			} else {
+    				if (h in goalFreq) {
+    					goalFreq[h] += 1;
+    				} else {
+    					goalFreq[h] = 1;
+    				}
+    			}
+    		}
+    	}
+
+    	return goalFreq;
+    }
+
+    function instance$6($$self, $$props, $$invalidate) {
+    	function avgBars() {
+    		return {
+    			x: Object.keys(goalFreq),
+    			y: Object.values(goalFreq),
+    			type: "bar",
+    			name: "Avg",
+    			marker: { color: "#C6C6C6" },
+    			line: { width: 0 },
+    			hovertemplate: "%{x} goals in %{y} games<extra></extra>",
+    			hoverinfo: "x+y"
+    		};
+    	}
+
+    	function bars(data, name, color) {
+    		return [avgBars(), teamBars(data, name, color)];
+    	}
+
+    	function getConcededBars() {
+    		return bars(teamConcededFreq, "Goals conceded", "#C23B22");
+    	}
+
+    	function getScoredBars() {
+    		return bars(teamScoredFreq, "Goals scored", "#77DD77");
+    	}
+
+    	function getScoredTeamBars() {
+    		return teamBars(teamConcededFreq, "Goals conceded", "#C23B22");
+    	}
+
+    	function getConcededTeamBars() {
+    		return teamBars(teamScoredFreq, "Goals scored", "#77DD77");
+    	}
+
+    	function getXLabels() {
+    		return Object.keys(goalFreq);
+    	}
+
+    	function refreshTeamData() {
+    		if (setup) {
+    			teamScoredFreq = teamScoredFrequencies(data, fullTeamName);
+    			teamConcededFreq = teamConcededFrequencies(data, fullTeamName);
+    		}
+    	}
+
+    	let goalFreq, teamScoredFreq, teamConcededFreq;
+    	let setup = false;
+
+    	onMount(() => {
+    		goalFreq = avgGoalFrequencies(data);
+    		teamScoredFreq = teamScoredFrequencies(data, fullTeamName);
+    		teamConcededFreq = teamConcededFrequencies(data, fullTeamName);
+    		$$invalidate(1, setup = true);
+    	});
+
+    	let { data, fullTeamName } = $$props;
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(7, data = $$props.data);
+    		if ('fullTeamName' in $$props) $$invalidate(0, fullTeamName = $$props.fullTeamName);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 1) {
+    			fullTeamName && refreshTeamData();
+    		}
+    	};
+
+    	return [
+    		fullTeamName,
+    		setup,
+    		getConcededBars,
+    		getScoredBars,
+    		getScoredTeamBars,
+    		getConcededTeamBars,
+    		getXLabels,
+    		data
+    	];
+    }
+
+    class GoalsPerGame extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$6, create_fragment$7, safe_not_equal, { data: 7, fullTeamName: 0 });
+    	}
+    }
+
+    /* src\components\Spider.svelte generated by Svelte v3.49.0 */
+
+    function get_each_context$3(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[30] = list[i];
+    	return child_ctx;
+    }
+
+    // (576:6) {#if teamName != fullTeamName}
+    function create_if_block$4(ctx) {
+    	let button;
+    	let t_value = /*getAlias*/ ctx[2](/*teamName*/ ctx[30]) + "";
+    	let t;
+    	let mounted;
+    	let dispose;
+
+    	return {
+    		c() {
+    			button = element("button");
+    			t = text(t_value);
+    			this.h();
+    		},
+    		l(nodes) {
+    			button = claim_element(nodes, "BUTTON", { class: true });
+    			var button_nodes = children(button);
+    			t = claim_text(button_nodes, t_value);
+    			button_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(button, "class", "spider-opp-team-btn svelte-1gpl4ff");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, button, anchor);
+    			append_hydration(button, t);
+
+    			if (!mounted) {
+    				dispose = listen(button, "click", /*click_handler*/ ctx[7]);
+    				mounted = true;
+    			}
+    		},
+    		p(ctx, dirty) {
+    			if (dirty[0] & /*getAlias, data*/ 5 && t_value !== (t_value = /*getAlias*/ ctx[2](/*teamName*/ ctx[30]) + "")) set_data(t, t_value);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+    }
+
+    // (575:4) {#each data.teamNames as teamName}
+    function create_each_block$3(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*teamName*/ ctx[30] != /*fullTeamName*/ ctx[1] && create_if_block$4(ctx);
+
+    	return {
+    		c() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l(nodes) {
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration(target, if_block_anchor, anchor);
+    		},
+    		p(ctx, dirty) {
+    			if (/*teamName*/ ctx[30] != /*fullTeamName*/ ctx[1]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$4(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach(if_block_anchor);
+    		}
+    	};
+    }
+
+    function create_fragment$6(ctx) {
+    	let div2;
+    	let div1;
+    	let div0;
+    	let t;
+    	let div4;
+    	let div3;
+    	let each_value = /*data*/ ctx[0].teamNames;
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$3(get_each_context$3(ctx, each_value, i));
+    	}
+
+    	return {
+    		c() {
+    			div2 = element("div");
+    			div1 = element("div");
+    			div0 = element("div");
+    			t = space();
+    			div4 = element("div");
+    			div3 = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			this.h();
+    		},
+    		l(nodes) {
+    			div2 = claim_element(nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div1 = claim_element(div2_nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			div2_nodes.forEach(detach);
+    			t = claim_space(nodes);
+    			div4 = claim_element(nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true, id: true });
+    			var div3_nodes = children(div3);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(div3_nodes);
+    			}
+
+    			div3_nodes.forEach(detach);
+    			div4_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "id", "plotDiv");
+    			attr(div1, "id", "plotly");
+    			attr(div2, "class", "spider-chart svelte-1gpl4ff");
+    			attr(div3, "class", "spider-opp-team-btns svelte-1gpl4ff");
+    			attr(div3, "id", "spider-opp-teams");
+    			attr(div4, "class", "spider-opp-team-selector svelte-1gpl4ff");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div2, anchor);
+    			append_hydration(div2, div1);
+    			append_hydration(div1, div0);
+    			/*div0_binding*/ ctx[6](div0);
+    			insert_hydration(target, t, anchor);
+    			insert_hydration(target, div4, anchor);
+    			append_hydration(div4, div3);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div3, null);
+    			}
+    		},
+    		p(ctx, dirty) {
+    			if (dirty[0] & /*spiderBtnClick, getAlias, data, fullTeamName*/ 23) {
+    				each_value = /*data*/ ctx[0].teamNames;
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$3(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$3(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div3, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div2);
+    			/*div0_binding*/ ctx[6](null);
+    			if (detaching) detach(t);
+    			if (detaching) detach(div4);
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+    }
+
+    function getTeamColor(teamName) {
+    	let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
+    	teamKey = teamKey.replace(/ /g, "-").toLowerCase();
+    	let teamColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
+    	return teamColor;
+    }
+
+    function resetTeamComparisonBtns() {
+    	let btns = document.getElementById("spider-opp-teams");
+
+    	for (let i = 0; i < btns.children.length; i++) {
+    		let btn = btns.children[i];
+
+    		if (btn.style.background != "") {
+    			btn.style.background = "";
+    			btn.style.color = "black";
+    		}
+    	}
+    }
+
+    function goalsPerSeason(data) {
+    	let attack = {};
+    	let maxGoals = Number.NEGATIVE_INFINITY;
+    	let minGoals = Number.POSITIVE_INFINITY;
+
+    	for (let teamName of data.teamNames) {
+    		let totalGoals = 0;
+    		let seasonsPlayed = 0;
+
+    		for (let year in data.standings[teamName]) {
+    			let goals = data.standings[teamName][year].gF;
+
+    			if (goals > 0) {
+    				totalGoals += goals;
+
+    				if (goals > maxGoals) {
+    					maxGoals = goals;
+    				} else if (goals < minGoals) {
+    					minGoals = goals;
+    				}
+
+    				seasonsPlayed += 1;
+    			}
+    		}
+
+    		let goalsPerSeason = null;
+
+    		if (seasonsPlayed > 0) {
+    			goalsPerSeason = totalGoals / seasonsPlayed;
+    		}
+
+    		attack[teamName] = goalsPerSeason;
+    	}
+
+    	return [attack, [minGoals, maxGoals]];
+    }
+
+    function scaleAttack(attack, range) {
+    	let [lower, upper] = range;
+
+    	for (let teamName in attack) {
+    		if (attack[teamName] == null) {
+    			attack[teamName] = 0;
+    		} else {
+    			attack[teamName] = (attack[teamName] - lower) / (upper - lower) * 100;
+    		}
+    	}
+
+    	return attack;
+    }
+
+    function formMetricAvgScaled(formMetric, max) {
+    	let total = 0;
+
+    	for (let teamName in formMetric) {
+    		formMetric[teamName] = formMetric[teamName] / max * 100;
+    		total += formMetric[teamName];
+    	}
+
+    	let avg = total / Object.keys(formMetric).length;
+    	return avg;
+    }
+
+    function formMetricAvg(formMetric) {
+    	let total = 0;
+
+    	for (let teamName in formMetric) {
+    		total += formMetric[teamName];
+    	}
+
+    	let avg = total / Object.keys(formMetric).length;
+    	return avg;
+    }
+
+    function getAttack(data) {
+    	let [attack, maxGoals] = goalsPerSeason(data);
+    	attack = scaleAttack(attack, maxGoals);
+    	attack.avg = formMetricAvg(attack);
+    	return attack;
+    }
+
+    function concededPerSeason(data) {
+    	let defence = {};
+    	let maxConceded = Number.NEGATIVE_INFINITY;
+    	let minConceded = Number.POSITIVE_INFINITY;
+
+    	for (let teamName of data.teamNames) {
+    		let totalConceded = 0;
+    		let seasonsPlayed = 0;
+
+    		for (let year in data.standings[teamName]) {
+    			let goals = data.standings[teamName][year].gA;
+
+    			if (goals > 0) {
+    				totalConceded += goals;
+
+    				if (goals > maxConceded) {
+    					maxConceded = goals;
+    				} else if (goals < minConceded) {
+    					minConceded = goals;
+    				}
+
+    				seasonsPlayed += 1;
+    			}
+    		}
+
+    		let goalsPerSeason = null;
+
+    		if (seasonsPlayed > 0) {
+    			goalsPerSeason = totalConceded / seasonsPlayed;
+    		}
+
+    		defence[teamName] = goalsPerSeason;
+    	}
+
+    	return [defence, [minConceded, maxConceded]];
+    }
+
+    function scaleDefence(defence, range) {
+    	let [lower, upper] = range;
+
+    	for (let teamName in defence) {
+    		if (defence[teamName] == null) {
+    			defence[teamName] = 0;
+    		} else {
+    			defence[teamName] = 100 - (defence[teamName] - lower) / (upper - lower) * 100;
+    		}
+    	}
+
+    	return defence;
+    }
+
+    function getDefence(data) {
+    	let [defence, range] = concededPerSeason(data);
+    	defence = scaleDefence(defence, range);
+    	defence.avg = formMetricAvg(defence);
+    	return defence;
+    }
+
+    function formCleanSheets(form, teamName) {
+    	let nCleanSheets = 0;
+
+    	for (let matchday of Object.keys(form[teamName])) {
+    		let match = form[teamName][matchday];
+
+    		if (match.score != null) {
+    			let [h, _, a] = match.score.split(" ");
+
+    			if (match.atHome && a == 0) {
+    				nCleanSheets += 1;
+    			} else if (!match.atHome && h == 0) {
+    				nCleanSheets += 1;
+    			}
+    		}
+    	}
+
+    	return nCleanSheets;
+    }
+
+    function getCleanSheets(data) {
+    	let cleanSheets = {};
+    	let maxCleanSheets = Number.NEGATIVE_INFINITY;
+
+    	for (let teamName of data.teamNames) {
+    		let nCleanSheets = formCleanSheets(data.form[data._id], teamName);
+
+    		if (teamName in data.form[data._id - 1]) {
+    			nCleanSheets += formCleanSheets(data.form[data._id - 1], teamName);
+    		}
+
+    		if (nCleanSheets > maxCleanSheets) {
+    			maxCleanSheets = nCleanSheets;
+    		}
+
+    		cleanSheets[teamName] = nCleanSheets;
+    	}
+
+    	cleanSheets.avg = formMetricAvgScaled(cleanSheets, maxCleanSheets);
+    	return cleanSheets;
+    }
+
+    function formConsistency(form, teamName) {
+    	let backToBack = 0; // Counts pairs of back to back identical match results
+    	let prevResult = null;
+
+    	for (let matchday in form[teamName]) {
+    		let match = form[teamName][matchday];
+
+    		if (match.score != null) {
+    			let [h, _, a] = match.score.split(" ");
+    			let result;
+
+    			if (match.atHome && h > a || !match.atHome && h < a) {
+    				result = "win";
+    			} else if (match.atHome && h < a || !match.atHome && h > a) {
+    				result = "lost";
+    			} else {
+    				result = "draw";
+    			}
+
+    			if (prevResult != null && prevResult == result) {
+    				backToBack += 1;
+    			}
+
+    			prevResult = result;
+    		}
+    	}
+
+    	return backToBack;
+    }
+
+    function getConsistency(data) {
+    	let consistency = {};
+    	let maxConsistency = Number.NEGATIVE_INFINITY;
+
+    	for (let teamName of data.teamNames) {
+    		let backToBack = formConsistency(data.form[data._id], teamName);
+
+    		if (teamName in data.form[data._id - 1]) {
+    			backToBack += formConsistency(data.form[data._id - 1], teamName);
+    		}
+
+    		if (backToBack > maxConsistency) {
+    			maxConsistency = backToBack;
+    		}
+
+    		consistency[teamName] = backToBack;
+    	}
+
+    	consistency.avg = formMetricAvgScaled(consistency, maxConsistency);
+    	return consistency;
+    }
+
+    function formWinStreak(form, teamName) {
+    	let winStreak = 0;
+    	let tempWinStreak = 0;
+
+    	for (let matchday in form[teamName]) {
+    		let match = form[teamName][matchday];
+
+    		if (match.score != null) {
+    			let [h, _, a] = match.score.split(" ");
+
+    			if (match.atHome && h > a || !match.atHome && h < a) {
+    				tempWinStreak += 1;
+
+    				if (tempWinStreak > winStreak) {
+    					winStreak = tempWinStreak;
+    				}
+    			} else {
+    				tempWinStreak = 0;
+    			}
+    		}
+    	}
+
+    	return winStreak;
+    }
+
+    function getWinStreak(data) {
+    	let winStreaks = {};
+    	let maxWinStreaks = Number.NEGATIVE_INFINITY;
+
+    	for (let teamName of data.teamNames) {
+    		let winStreak = formWinStreak(data.form[data._id], teamName);
+
+    		if (teamName in data.form[data._id - 1]) {
+    			winStreak += formWinStreak(data.form[data._id - 1], teamName);
+    		}
+
+    		if (winStreak > maxWinStreaks) {
+    			maxWinStreaks = winStreak;
+    		}
+
+    		winStreaks[teamName] = winStreak;
+    	}
+
+    	winStreaks.avg = formMetricAvgScaled(winStreaks, maxWinStreaks);
+    	return winStreaks;
+    }
+
+    function removeItem(arr, value) {
+    	let index = arr.indexOf(value);
+
+    	if (index > -1) {
+    		arr.splice(index, 1);
+    	}
+
+    	return arr;
+    }
+
+    function formWinsVsBig6(form, teamName, big6) {
+    	let winsVsBig6 = 0;
+
+    	for (let matchday in form[teamName]) {
+    		let match = form[teamName][matchday];
+
+    		if (match.score != null && big6.includes(match.team)) {
+    			let [h, _, a] = match.score.split(" ");
+
+    			if (match.atHome && h > a || !match.atHome && h < a) {
+    				winsVsBig6 += 1;
+    			}
+    		}
+    	}
+
+    	return winsVsBig6;
+    }
+
+    function getVsBig6(data) {
+    	let vsBig6 = {};
+    	let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
+
+    	for (let teamName of data.teamNames) {
+    		let big6 = [
+    			"Manchester United",
+    			"Liverpool",
+    			"Manchester City",
+    			"Arsenal",
+    			"Chelsea",
+    			"Tottenham Hotspur"
+    		];
+
+    		big6 = removeItem(big6, teamName);
+    		let winsVsBig6 = formWinsVsBig6(data.form[data._id], teamName, big6);
+
+    		if (teamName in data.form[data._id - 1]) {
+    			winsVsBig6 += formWinsVsBig6(data.form[data._id - 1], teamName, big6);
+    		}
+
+    		if (winsVsBig6 > maxWinsVsBig6) {
+    			maxWinsVsBig6 = winsVsBig6;
+    		}
+
+    		vsBig6[teamName] = winsVsBig6;
+    	}
+
+    	vsBig6.avg = formMetricAvgScaled(vsBig6, maxWinsVsBig6);
+    	return vsBig6;
+    }
+
+    function emptyArray(arr) {
+    	let length = arr.length;
+
+    	for (let i = 0; i < length; i++) {
+    		arr.pop();
+    	}
+    }
+
+    function instance$5($$self, $$props, $$invalidate) {
+    	function addTeamComparison(teamName) {
+    		let teamColor = getTeamColor(teamName);
+
+    		let teamData = {
+    			name: teamName,
+    			type: "scatterpolar",
+    			r: [
+    				attack[teamName],
+    				defence[teamName],
+    				cleanSheets[teamName],
+    				consistency[teamName],
+    				winStreaks[teamName],
+    				vsBig6[teamName]
+    			],
+    			theta: labels,
+    			fill: "toself",
+    			marker: { color: teamColor }
+    		};
+
+    		plotData.data.push(teamData);
+    		Plotly.redraw(plotDiv); // Redraw with teamName added
+    	}
+
+    	function addAvg() {
+    		let avg = avgScatterPlot();
+    		plotData.data.unshift(avg); // Add avg below the teamName spider plot
+    	}
+
+    	function removeTeamComparison(teamName) {
+    		// Remove spider plot for this teamName
+    		for (let i = 0; i < plotData.data.length; i++) {
+    			if (plotData.data[i].name == teamName) {
+    				plotData.data.splice(i, 1);
+    				break;
+    			}
+    		}
+
+    		// If removing only comparison teamName, re-insert the initial avg spider plot
+    		if (comparisonTeams.length == 1) {
+    			addAvg(plotData.data);
+    		}
+
+    		Plotly.redraw(plotDiv); // Redraw with teamName removed
+    	}
+
+    	function removeAllTeamComparisons() {
+    		for (let i = 0; i < comparisonTeams.length; i++) {
+    			// Remove spider plot for this teamName
+    			for (let i = 0; i < plotData.data.length; i++) {
+    				if (plotData.data[i].name == comparisonTeams[i]) {
+    					plotData.data.splice(i, 1);
+    					break;
+    				}
+    			}
+
+    			// If removing only comparison teamName, re-insert the initial avg spider plot
+    			if (comparisonTeams.length == 1) {
+    				addAvg(plotData.data);
+    			}
+
+    			removeItem(comparisonTeams, comparisonTeams[i]); // Remove from comparison teams
+    		}
+
+    		Plotly.redraw(plotDiv); // Redraw with teamName removed
+    	}
+
+    	function spiderBtnClick(btn) {
+    		let teamName = getName(btn.innerHTML);
+
+    		if (btn.style.background == "") {
+    			let teamKey = teamName.toLowerCase().replace(/ /g, "-");
+    			btn.style.background = `var(--${teamKey})`;
+    			btn.style.color = `var(--${teamKey}-secondary)`;
+    		} else {
+    			btn.style.background = "";
+    			btn.style.color = "black";
+    		}
+
+    		if (comparisonTeams.length == 0) {
+    			plotData.data.splice(0, 1); // Remove avg
+    		}
+
+    		if (comparisonTeams.includes(teamName)) {
+    			removeTeamComparison(teamName); // Remove from spider chart
+    			removeItem(comparisonTeams, teamName); // Remove from comparison teams
+    		} else {
+    			addTeamComparison(teamName); // Add teamName to spider chart
+    			comparisonTeams.push(teamName); // Add to comparison teams
+    		}
+    	}
+
+    	function scatterPlot(name, r, color) {
+    		return {
+    			name,
+    			type: "scatterpolar",
+    			r,
+    			theta: labels,
+    			fill: "toself",
+    			marker: { color },
+    			hovertemplate: `<b>${name}</b><br>%{theta}: %{r}<extra></extra>`,
+    			hoveron: "points"
+    		};
+    	}
+
+    	function avgScatterPlot() {
+    		return scatterPlot(
+    			"Avg",
+    			[
+    				attack.avg,
+    				defence.avg,
+    				cleanSheets.avg,
+    				consistency.avg,
+    				winStreaks.avg,
+    				vsBig6.avg
+    			],
+    			"#ADADAD"
+    		);
+    	}
+
+    	function getTeamData(teamName) {
+    		let teamColor = getTeamColor(teamName);
+
+    		let teamData = scatterPlot(
+    			teamName,
+    			[
+    				attack[teamName],
+    				defence[teamName],
+    				cleanSheets[teamName],
+    				consistency[teamName],
+    				winStreaks[teamName],
+    				vsBig6[teamName]
+    			],
+    			teamColor
+    		);
+
+    		return teamData;
+    	}
+
+    	function initSpiderPlots(teamName) {
+    		let avgData = avgScatterPlot();
+    		let teamData = getTeamData(teamName);
+    		return [avgData, teamData];
+    	}
+
+    	function computePlotData(data) {
+    		attack = getAttack(data);
+    		defence = getDefence(data);
+    		cleanSheets = getCleanSheets(data);
+    		consistency = getConsistency(data);
+    		winStreaks = getWinStreak(data);
+    		vsBig6 = getVsBig6(data);
+    	}
+
+    	function buildPlotData(data, teamName) {
+    		computePlotData(data);
+    		let spiderPlots = initSpiderPlots(teamName);
+
+    		let plotData = {
+    			data: spiderPlots,
+    			layout: {
+    				height: 550,
+    				polar: {
+    					radialaxis: { visible: true, range: [0, 100] }
+    				},
+    				hover: "closest",
+    				margin: { t: 25, b: 25, l: 75, r: 75 },
+    				showlegend: false,
+    				plot_bgcolor: "#fafafa",
+    				paper_bgcolor: "#fafafa"
+    			},
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
+    	let attack, defence, cleanSheets, consistency, winStreaks, vsBig6;
+    	let labels = ["Attack", "Defence", "Clean Sheets", "Consistency", "Win Streak", "vs Big 6"];
+    	let plotDiv, plotData;
+    	let comparisonTeams = [];
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		setup = true;
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData(data, fullTeamName);
+
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-spider-chart");
+    		});
+
+    		// Add inner border radius to top and bottom teams
+    		document.getElementById("spider-opp-teams").children[0].classList.add("top-spider-opp-team-btn");
+
+    		document.getElementById("spider-opp-teams").children[18].classList.add("bottom-spider-opp-team-btn");
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let spiderPlots = initSpiderPlots(fullTeamName);
+
+    			// Remove all but two plots
+    			emptyArray(plotData.data);
+
+    			// Replace final two plots with defaults
+    			plotData.data.push(spiderPlots[0]); // Reset to avg
+
+    			plotData.data.push(spiderPlots[1]); // Reset to team data
+    			removeAllTeamComparisons();
+    			resetTeamComparisonBtns();
+    		}
+    	}
+
+    	let { data, fullTeamName, getAlias, getName } = $$props;
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(3, plotDiv);
+    		});
+    	}
+
+    	const click_handler = e => {
+    		spiderBtnClick(e.target);
+    	};
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
+    		if ('fullTeamName' in $$props) $$invalidate(1, fullTeamName = $$props.fullTeamName);
+    		if ('getAlias' in $$props) $$invalidate(2, getAlias = $$props.getAlias);
+    		if ('getName' in $$props) $$invalidate(5, getName = $$props.getName);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty[0] & /*fullTeamName*/ 2) {
+    			fullTeamName && refreshPlot();
+    		}
+    	};
+
+    	return [
+    		data,
+    		fullTeamName,
+    		getAlias,
+    		plotDiv,
+    		spiderBtnClick,
+    		getName,
+    		div0_binding,
+    		click_handler
+    	];
+    }
+
+    class Spider extends SvelteComponent {
+    	constructor(options) {
+    		super();
+
+    		init(
+    			this,
+    			options,
+    			instance$5,
+    			create_fragment$6,
+    			safe_not_equal,
+    			{
+    				data: 0,
+    				fullTeamName: 1,
+    				getAlias: 2,
+    				getName: 5
+    			},
+    			null,
+    			[-1, -1]
+    		);
+    	}
+    }
+
+    /* src\components\NavBar.svelte generated by Svelte v3.49.0 */
+
+    function get_each_context$2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[5] = list[i];
+    	child_ctx[7] = i;
+    	return child_ctx;
+    }
+
+    // (36:6) {:else}
+    function create_else_block$3(ctx) {
+    	let button;
+    	let div;
+    	let t0_value = /*getAlias*/ ctx[2](/*_team*/ ctx[5]) + "";
+    	let t0;
+    	let t1;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[4](/*_team*/ ctx[5]);
+    	}
+
+    	return {
+    		c() {
+    			button = element("button");
+    			div = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			this.h();
+    		},
+    		l(nodes) {
+    			button = claim_element(nodes, "BUTTON", { class: true });
+    			var button_nodes = children(button);
+    			div = claim_element(button_nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t0 = claim_text(div_nodes, t0_value);
+    			div_nodes.forEach(detach);
+    			t1 = claim_space(button_nodes);
+    			button_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "team-name svelte-1q37vn5");
+    			attr(button, "class", "team-link svelte-1q37vn5");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, button, anchor);
+    			append_hydration(button, div);
+    			append_hydration(div, t0);
+    			append_hydration(button, t1);
+
+    			if (!mounted) {
+    				dispose = listen(button, "click", click_handler);
+    				mounted = true;
+    			}
+    		},
+    		p(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*getAlias, teams*/ 6 && t0_value !== (t0_value = /*getAlias*/ ctx[2](/*_team*/ ctx[5]) + "")) set_data(t0, t0_value);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+    }
+
+    // (24:6) {#if _team.toLowerCase().replace(/ /g, "-") == team}
+    function create_if_block$3(ctx) {
+    	let a;
+    	let div;
+    	let t0_value = /*getAlias*/ ctx[2](/*_team*/ ctx[5]) + "";
+    	let t0;
+    	let t1;
+    	let a_href_value;
+
+    	return {
+    		c() {
+    			a = element("a");
+    			div = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			this.h();
+    		},
+    		l(nodes) {
+    			a = claim_element(nodes, "A", { href: true, class: true });
+    			var a_nodes = children(a);
+    			div = claim_element(a_nodes, "DIV", { class: true, style: true });
+    			var div_nodes = children(div);
+    			t0 = claim_text(div_nodes, t0_value);
+    			div_nodes.forEach(detach);
+    			t1 = claim_space(a_nodes);
+    			a_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "this-team-name svelte-1q37vn5");
+    			set_style(div, "color", "var(--" + /*_team*/ ctx[5].toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			set_style(div, "background-color", "var(--" + /*_team*/ ctx[5].toLowerCase().replace(/ /g, '-') + ")");
+    			attr(a, "href", a_href_value = "/" + /*_team*/ ctx[5].toLowerCase().replace(/ /g, '-'));
+    			attr(a, "class", "team-link");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, a, anchor);
+    			append_hydration(a, div);
+    			append_hydration(div, t0);
+    			append_hydration(a, t1);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*getAlias, teams*/ 6 && t0_value !== (t0_value = /*getAlias*/ ctx[2](/*_team*/ ctx[5]) + "")) set_data(t0, t0_value);
+
+    			if (dirty & /*teams*/ 2) {
+    				set_style(div, "color", "var(--" + /*_team*/ ctx[5].toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			}
+
+    			if (dirty & /*teams*/ 2) {
+    				set_style(div, "background-color", "var(--" + /*_team*/ ctx[5].toLowerCase().replace(/ /g, '-') + ")");
+    			}
+
+    			if (dirty & /*teams*/ 2 && a_href_value !== (a_href_value = "/" + /*_team*/ ctx[5].toLowerCase().replace(/ /g, '-'))) {
+    				attr(a, "href", a_href_value);
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(a);
+    		}
+    	};
+    }
+
+    // (23:4) {#each teams as _team, _ (_team)}
+    function create_each_block$2(key_1, ctx) {
+    	let first;
+    	let show_if;
+    	let if_block_anchor;
+
+    	function select_block_type(ctx, dirty) {
+    		if (dirty & /*teams, team*/ 3) show_if = null;
+    		if (show_if == null) show_if = !!(/*_team*/ ctx[5].toLowerCase().replace(/ /g, "-") == /*team*/ ctx[0]);
+    		if (show_if) return create_if_block$3;
+    		return create_else_block$3;
+    	}
+
+    	let current_block_type = select_block_type(ctx, -1);
+    	let if_block = current_block_type(ctx);
+
+    	return {
+    		key: key_1,
+    		first: null,
+    		c() {
+    			first = empty();
+    			if_block.c();
+    			if_block_anchor = empty();
+    			this.h();
+    		},
+    		l(nodes) {
+    			first = empty();
+    			if_block.l(nodes);
+    			if_block_anchor = empty();
+    			this.h();
+    		},
+    		h() {
+    			this.first = first;
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, first, anchor);
+    			if_block.m(target, anchor);
+    			insert_hydration(target, if_block_anchor, anchor);
+    		},
+    		p(new_ctx, dirty) {
+    			ctx = new_ctx;
+
+    			if (current_block_type === (current_block_type = select_block_type(ctx, dirty)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(first);
+    			if_block.d(detaching);
+    			if (detaching) detach(if_block_anchor);
+    		}
+    	};
+    }
+
+    function create_fragment$5(ctx) {
+    	let nav;
+    	let div0;
+    	let p;
+    	let span;
+    	let t0;
+    	let t1;
+    	let t2;
+    	let div1;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
+    	let t3;
+    	let div2;
+    	let button;
+    	let img;
+    	let img_src_value;
+    	let mounted;
+    	let dispose;
+    	let each_value = /*teams*/ ctx[1];
+    	const get_key = ctx => /*_team*/ ctx[5];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context$2(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$2(key, child_ctx));
+    	}
+
+    	return {
+    		c() {
+    			nav = element("nav");
+    			div0 = element("div");
+    			p = element("p");
+    			span = element("span");
+    			t0 = text("pl");
+    			t1 = text("dashboard");
+    			t2 = space();
+    			div1 = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t3 = space();
+    			div2 = element("div");
+    			button = element("button");
+    			img = element("img");
+    			this.h();
+    		},
+    		l(nodes) {
+    			nav = claim_element(nodes, "NAV", { class: true });
+    			var nav_nodes = children(nav);
+    			div0 = claim_element(nav_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			p = claim_element(div0_nodes, "P", {});
+    			var p_nodes = children(p);
+    			span = claim_element(p_nodes, "SPAN", { style: true });
+    			var span_nodes = children(span);
+    			t0 = claim_text(span_nodes, "pl");
+    			span_nodes.forEach(detach);
+    			t1 = claim_text(p_nodes, "dashboard");
+    			p_nodes.forEach(detach);
+    			div0_nodes.forEach(detach);
+    			t2 = claim_space(nav_nodes);
+    			div1 = claim_element(nav_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(div1_nodes);
+    			}
+
+    			div1_nodes.forEach(detach);
+    			t3 = claim_space(nav_nodes);
+    			div2 = claim_element(nav_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			button = claim_element(div2_nodes, "BUTTON", { class: true });
+    			var button_nodes = children(button);
+    			img = claim_element(button_nodes, "IMG", { src: true, alt: true });
+    			button_nodes.forEach(detach);
+    			div2_nodes.forEach(detach);
+    			nav_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			set_style(span, "color", "#00fe87");
+    			attr(div0, "class", "title no-selection svelte-1q37vn5");
+    			attr(div1, "class", "team-links svelte-1q37vn5");
+    			if (!src_url_equal(img.src, img_src_value = "img/arrow-bar-left.svg")) attr(img, "src", img_src_value);
+    			attr(img, "alt", "");
+    			attr(button, "class", "close-btn svelte-1q37vn5");
+    			attr(div2, "class", "close");
+    			attr(nav, "class", "svelte-1q37vn5");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, nav, anchor);
+    			append_hydration(nav, div0);
+    			append_hydration(div0, p);
+    			append_hydration(p, span);
+    			append_hydration(span, t0);
+    			append_hydration(p, t1);
+    			append_hydration(nav, t2);
+    			append_hydration(nav, div1);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div1, null);
+    			}
+
+    			append_hydration(nav, t3);
+    			append_hydration(nav, div2);
+    			append_hydration(div2, button);
+    			append_hydration(button, img);
+
+    			if (!mounted) {
+    				dispose = listen(button, "click", closeNavBar);
+    				mounted = true;
+    			}
+    		},
+    		p(ctx, [dirty]) {
+    			if (dirty & /*teams, getAlias, team, switchTeam*/ 15) {
+    				each_value = /*teams*/ ctx[1];
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div1, destroy_block, create_each_block$2, null, get_each_context$2);
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(nav);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d();
+    			}
+
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+    }
+
+    function closeNavBar() {
+    	document.getElementById("navBar").style.display = "none";
+    	document.getElementById("dashboard").style.marginLeft = 0;
+    	window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
+    }
+
+    function instance$4($$self, $$props, $$invalidate) {
+    	let { team, teams, getAlias, switchTeam } = $$props;
+
+    	const click_handler = _team => {
+    		switchTeam(_team.toLowerCase().replace(/ /g, "-"));
+    	};
+
+    	$$self.$$set = $$props => {
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    		if ('teams' in $$props) $$invalidate(1, teams = $$props.teams);
+    		if ('getAlias' in $$props) $$invalidate(2, getAlias = $$props.getAlias);
+    		if ('switchTeam' in $$props) $$invalidate(3, switchTeam = $$props.switchTeam);
+    	};
+
+    	return [team, teams, getAlias, switchTeam, click_handler];
+    }
+
+    class NavBar extends SvelteComponent {
+    	constructor(options) {
+    		super();
+
+    		init(this, options, instance$4, create_fragment$5, safe_not_equal, {
+    			team: 0,
+    			teams: 1,
+    			getAlias: 2,
+    			switchTeam: 3
+    		});
+    	}
+    }
+
+    /* src\components\MobileViewNav.svelte generated by Svelte v3.49.0 */
+
+    function get_each_context$1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[10] = list[i];
+    	child_ctx[12] = i;
+    	return child_ctx;
+    }
+
+    // (27:2) {#if _teams != undefined}
+    function create_if_block$2(ctx) {
+    	let div0;
+    	let t0;
+    	let t1;
+    	let div1;
+    	let each_value = /*_teams*/ ctx[2];
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    	}
+
+    	return {
+    		c() {
+    			div0 = element("div");
+    			t0 = text("Other Teams");
+    			t1 = space();
+    			div1 = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			this.h();
+    		},
+    		l(nodes) {
+    			div0 = claim_element(nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, "Other Teams");
+    			div0_nodes.forEach(detach);
+    			t1 = claim_space(nodes);
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(div1_nodes);
+    			}
+
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "nav-title svelte-1pbsqfs");
+    			attr(div1, "class", "team-links svelte-1pbsqfs");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div0, anchor);
+    			append_hydration(div0, t0);
+    			insert_hydration(target, t1, anchor);
+    			insert_hydration(target, div1, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div1, null);
+    			}
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*_teams, switchTeamToTop, getAlias, teams*/ 15) {
+    				each_value = /*_teams*/ ctx[2];
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$1(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div1, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div0);
+    			if (detaching) detach(t1);
+    			if (detaching) detach(div1);
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+    }
+
+    // (31:8) {#if _team != null}
+    function create_if_block_1$1(ctx) {
+    	let if_block_anchor;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*i*/ ctx[12] == 0 || /*i*/ ctx[12] == 1 && /*_teams*/ ctx[2][0] == null) return create_if_block_2$1;
+    		if (/*i*/ ctx[12] == /*_teams*/ ctx[2].length - 1 || /*i*/ ctx[12] == /*_teams*/ ctx[2].length - 2 && /*_teams*/ ctx[2][/*_teams*/ ctx[2].length - 1] == null) return create_if_block_3$1;
+    		return create_else_block$2;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	return {
+    		c() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l(nodes) {
+    			if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert_hydration(target, if_block_anchor, anchor);
+    		},
+    		p(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		d(detaching) {
+    			if_block.d(detaching);
+    			if (detaching) detach(if_block_anchor);
+    		}
+    	};
+    }
+
+    // (52:10) {:else}
+    function create_else_block$2(ctx) {
+    	let button;
+    	let t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "";
+    	let t;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler_2() {
+    		return /*click_handler_2*/ ctx[8](/*_team*/ ctx[10]);
+    	}
+
+    	return {
+    		c() {
+    			button = element("button");
+    			t = text(t_value);
+    			this.h();
+    		},
+    		l(nodes) {
+    			button = claim_element(nodes, "BUTTON", { style: true, class: true });
+    			var button_nodes = children(button);
+    			t = claim_text(button_nodes, t_value);
+    			button_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			set_style(button, "color", "var(--" + /*_team*/ ctx[10] + "-secondary)");
+    			set_style(button, "background-color", "var(--" + /*_team*/ ctx[10] + ")");
+    			attr(button, "class", "team-link svelte-1pbsqfs");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, button, anchor);
+    			append_hydration(button, t);
+
+    			if (!mounted) {
+    				dispose = listen(button, "click", click_handler_2);
+    				mounted = true;
+    			}
+    		},
+    		p(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*getAlias, teams*/ 3 && t_value !== (t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "")) set_data(t, t_value);
+
+    			if (dirty & /*_teams*/ 4) {
+    				set_style(button, "color", "var(--" + /*_team*/ ctx[10] + "-secondary)");
+    			}
+
+    			if (dirty & /*_teams*/ 4) {
+    				set_style(button, "background-color", "var(--" + /*_team*/ ctx[10] + ")");
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+    }
+
+    // (42:104) 
+    function create_if_block_3$1(ctx) {
+    	let button;
+    	let t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "";
+    	let t;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler_1() {
+    		return /*click_handler_1*/ ctx[7](/*i*/ ctx[12]);
+    	}
+
+    	return {
+    		c() {
+    			button = element("button");
+    			t = text(t_value);
+    			this.h();
+    		},
+    		l(nodes) {
+    			button = claim_element(nodes, "BUTTON", { style: true, class: true });
+    			var button_nodes = children(button);
+    			t = claim_text(button_nodes, t_value);
+    			button_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			set_style(button, "color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
+    			set_style(button, "background-color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + ")");
+    			attr(button, "class", "team-link last-team svelte-1pbsqfs");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, button, anchor);
+    			append_hydration(button, t);
+
+    			if (!mounted) {
+    				dispose = listen(button, "click", click_handler_1);
+    				mounted = true;
+    			}
+    		},
+    		p(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*getAlias, teams*/ 3 && t_value !== (t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "")) set_data(t, t_value);
+
+    			if (dirty & /*_teams*/ 4) {
+    				set_style(button, "color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
+    			}
+
+    			if (dirty & /*_teams*/ 4) {
+    				set_style(button, "background-color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + ")");
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+    }
+
+    // (32:10) {#if i == 0 || (i == 1 && _teams[0] == null)}
+    function create_if_block_2$1(ctx) {
+    	let button;
+    	let t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "";
+    	let t;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[6](/*i*/ ctx[12]);
+    	}
+
+    	return {
+    		c() {
+    			button = element("button");
+    			t = text(t_value);
+    			this.h();
+    		},
+    		l(nodes) {
+    			button = claim_element(nodes, "BUTTON", { style: true, class: true });
+    			var button_nodes = children(button);
+    			t = claim_text(button_nodes, t_value);
+    			button_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			set_style(button, "color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
+    			set_style(button, "background-color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + ")");
+    			attr(button, "class", "team-link first-team svelte-1pbsqfs");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, button, anchor);
+    			append_hydration(button, t);
+
+    			if (!mounted) {
+    				dispose = listen(button, "click", click_handler);
+    				mounted = true;
+    			}
+    		},
+    		p(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*getAlias, teams*/ 3 && t_value !== (t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "")) set_data(t, t_value);
+
+    			if (dirty & /*_teams*/ 4) {
+    				set_style(button, "color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
+    			}
+
+    			if (dirty & /*_teams*/ 4) {
+    				set_style(button, "background-color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + ")");
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+    }
+
+    // (30:6) {#each _teams as _team, i}
+    function create_each_block$1(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*_team*/ ctx[10] != null && create_if_block_1$1(ctx);
+
+    	return {
+    		c() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l(nodes) {
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration(target, if_block_anchor, anchor);
+    		},
+    		p(ctx, dirty) {
+    			if (/*_team*/ ctx[10] != null) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_1$1(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach(if_block_anchor);
+    		}
+    	};
+    }
+
+    function create_fragment$4(ctx) {
+    	let nav;
+    	let if_block = /*_teams*/ ctx[2] != undefined && create_if_block$2(ctx);
+
+    	return {
+    		c() {
+    			nav = element("nav");
+    			if (if_block) if_block.c();
+    			this.h();
+    		},
+    		l(nodes) {
+    			nav = claim_element(nodes, "NAV", { class: true });
+    			var nav_nodes = children(nav);
+    			if (if_block) if_block.l(nav_nodes);
+    			nav_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(nav, "class", "svelte-1pbsqfs");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, nav, anchor);
+    			if (if_block) if_block.m(nav, null);
+    		},
+    		p(ctx, [dirty]) {
+    			if (/*_teams*/ ctx[2] != undefined) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$2(ctx);
+    					if_block.c();
+    					if_block.m(nav, null);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(nav);
+    			if (if_block) if_block.d();
+    		}
+    	};
+    }
+
+    function instance$3($$self, $$props, $$invalidate) {
+    	function switchTeamToTop(team) {
+    		switchTeam(team);
+    		window.scrollTo(0, 0);
+    	}
+
+    	function getHyphenatedTeamNames(teams) {
+    		let hyphenatedTeamNames = [];
+
+    		for (let i = 0; i < teams.length; i++) {
+    			let teamLink = teams[i].toLowerCase().replace(/ /g, "-");
+
+    			if (teamLink != team) {
+    				hyphenatedTeamNames.push(teamLink);
+    			} else {
+    				hyphenatedTeamNames.push(null); // To keep teams and teamLinks list same length
+    			}
+    		}
+
+    		$$invalidate(2, _teams = hyphenatedTeamNames);
+    	}
+
+    	let _teams;
+    	let { team, teams, getAlias, switchTeam } = $$props;
+
+    	const click_handler = i => {
+    		switchTeamToTop(_teams[i]);
+    	};
+
+    	const click_handler_1 = i => {
+    		switchTeamToTop(_teams[i]);
+    	};
+
+    	const click_handler_2 = _team => {
+    		switchTeamToTop(_team);
+    	};
+
+    	$$self.$$set = $$props => {
+    		if ('team' in $$props) $$invalidate(4, team = $$props.team);
+    		if ('teams' in $$props) $$invalidate(0, teams = $$props.teams);
+    		if ('getAlias' in $$props) $$invalidate(1, getAlias = $$props.getAlias);
+    		if ('switchTeam' in $$props) $$invalidate(5, switchTeam = $$props.switchTeam);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team, teams*/ 17) {
+    			team & getHyphenatedTeamNames(teams);
+    		}
+    	};
+
+    	return [
+    		teams,
+    		getAlias,
+    		_teams,
+    		switchTeamToTop,
+    		team,
+    		switchTeam,
+    		click_handler,
+    		click_handler_1,
+    		click_handler_2
+    	];
+    }
+
+    class MobileViewNav extends SvelteComponent {
+    	constructor(options) {
+    		super();
+
+    		init(this, options, instance$3, create_fragment$4, safe_not_equal, {
+    			team: 4,
+    			teams: 0,
+    			getAlias: 1,
+    			switchTeam: 5
+    		});
+    	}
+    }
+
+    /* src\routes\Team.svelte generated by Svelte v3.49.0 */
+
+    const { document: document_1$1 } = globals;
+
+    function create_else_block_1$1(ctx) {
+    	let div1;
+    	let div0;
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			children(div0).forEach(detach);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "loading-spinner");
+    			attr(div1, "class", "loading-spinner-container");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    		}
+    	};
+    }
+
+    // (149:6) {#if data != undefined}
+    function create_if_block$1(ctx) {
+    	let div24;
+    	let div2;
+    	let t0;
+    	let div1;
+    	let h10;
+    	let t1;
+    	let t2;
+    	let div0;
+    	let fixtures;
+    	let t3;
+    	let div5;
+    	let div3;
+    	let currentform;
+    	let t4;
+    	let tablesnippet;
+    	let t5;
+    	let div4;
+    	let nextgame;
+    	let t6;
+    	let div8;
+    	let div7;
+    	let h11;
+    	let t7;
+    	let t8;
+    	let div6;
+    	let formovertime;
+    	let t9;
+    	let div11;
+    	let div10;
+    	let h12;
+    	let t10;
+    	let t11;
+    	let div9;
+    	let positionovertime;
+    	let t12;
+    	let div14;
+    	let div13;
+    	let h13;
+    	let t13;
+    	let t14;
+    	let div12;
+    	let goalsscoredandconceded;
+    	let t15;
+    	let div17;
+    	let div16;
+    	let div15;
+    	let cleansheets;
+    	let t16;
+    	let div18;
+    	let seasonstats;
+    	let t17;
+    	let div20;
+    	let div19;
+    	let h14;
+    	let t18;
+    	let t19;
+    	let goalfrequencies;
+    	let t20;
+    	let div23;
+    	let div22;
+    	let div21;
+    	let spider;
+    	let t21;
+    	let mobileviewnav;
+    	let t22;
+    	let teamsfooter;
+    	let current;
+
+    	function select_block_type_1(ctx, dirty) {
+    		return create_else_block$1;
+    	}
+
+    	let current_block_type = select_block_type_1();
+    	let if_block = current_block_type(ctx);
+
+    	fixtures = new Fixtures({
+    			props: {
+    				data: /*data*/ ctx[3],
+    				fullTeamName: /*fullTeamName*/ ctx[1]
+    			}
+    		});
+
+    	currentform = new CurrentForm({
+    			props: {
+    				data: /*data*/ ctx[3],
+    				currentMatchday: /*currentMatchday*/ ctx[2],
+    				fullTeamName: /*fullTeamName*/ ctx[1]
+    			}
+    		});
+
+    	tablesnippet = new TableSnippet({
+    			props: {
+    				data: /*data*/ ctx[3],
+    				team: /*team*/ ctx[0],
+    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				getAlias: /*getAlias*/ ctx[4],
+    				switchTeam: /*switchTeam*/ ctx[7]
+    			}
+    		});
+
+    	nextgame = new NextGame({
+    			props: {
+    				data: /*data*/ ctx[3],
+    				currentMatchday: /*currentMatchday*/ ctx[2],
+    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				showBadge,
+    				getAlias: /*getAlias*/ ctx[4],
+    				switchTeam: /*switchTeam*/ ctx[7]
+    			}
+    		});
+
+    	formovertime = new FormOverTime({
+    			props: {
+    				data: /*data*/ ctx[3],
+    				fullTeamName: /*fullTeamName*/ ctx[1]
+    			}
+    		});
+
+    	positionovertime = new PositionOverTime({
+    			props: {
+    				data: /*data*/ ctx[3],
+    				fullTeamName: /*fullTeamName*/ ctx[1]
+    			}
+    		});
+
+    	goalsscoredandconceded = new GoalsScoredAndConceded({
+    			props: {
+    				data: /*data*/ ctx[3],
+    				fullTeamName: /*fullTeamName*/ ctx[1]
+    			}
+    		});
+
+    	cleansheets = new CleanSheets({
+    			props: {
+    				data: /*data*/ ctx[3],
+    				fullTeamName: /*fullTeamName*/ ctx[1]
+    			}
+    		});
+
+    	seasonstats = new SeasonStats({
+    			props: {
+    				data: /*data*/ ctx[3],
+    				fullTeamName: /*fullTeamName*/ ctx[1]
+    			}
+    		});
+
+    	goalfrequencies = new GoalsPerGame({
+    			props: {
+    				data: /*data*/ ctx[3],
+    				fullTeamName: /*fullTeamName*/ ctx[1]
+    			}
+    		});
+
+    	spider = new Spider({
+    			props: {
+    				data: /*data*/ ctx[3],
+    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				getAlias: /*getAlias*/ ctx[4],
+    				getName: /*getName*/ ctx[5]
+    			}
+    		});
+
+    	mobileviewnav = new MobileViewNav({
+    			props: {
+    				team: /*team*/ ctx[0],
+    				teams: /*teams*/ ctx[6],
+    				getAlias: /*getAlias*/ ctx[4],
+    				switchTeam: /*switchTeam*/ ctx[7]
+    			}
+    		});
+
+    	teamsfooter = new TeamsFooter({
+    			props: { lastUpdated: /*data*/ ctx[3].lastUpdated }
+    		});
+
+    	return {
+    		c() {
+    			div24 = element("div");
+    			div2 = element("div");
+    			if_block.c();
+    			t0 = space();
+    			div1 = element("div");
+    			h10 = element("h1");
+    			t1 = text("Fixtures");
+    			t2 = space();
+    			div0 = element("div");
+    			create_component(fixtures.$$.fragment);
+    			t3 = space();
+    			div5 = element("div");
+    			div3 = element("div");
+    			create_component(currentform.$$.fragment);
+    			t4 = space();
+    			create_component(tablesnippet.$$.fragment);
+    			t5 = space();
+    			div4 = element("div");
+    			create_component(nextgame.$$.fragment);
+    			t6 = space();
+    			div8 = element("div");
+    			div7 = element("div");
+    			h11 = element("h1");
+    			t7 = text("Form Over Time");
+    			t8 = space();
+    			div6 = element("div");
+    			create_component(formovertime.$$.fragment);
+    			t9 = space();
+    			div11 = element("div");
+    			div10 = element("div");
+    			h12 = element("h1");
+    			t10 = text("Position Over Time");
+    			t11 = space();
+    			div9 = element("div");
+    			create_component(positionovertime.$$.fragment);
+    			t12 = space();
+    			div14 = element("div");
+    			div13 = element("div");
+    			h13 = element("h1");
+    			t13 = text("Goals Scored and Conceded");
+    			t14 = space();
+    			div12 = element("div");
+    			create_component(goalsscoredandconceded.$$.fragment);
+    			t15 = space();
+    			div17 = element("div");
+    			div16 = element("div");
+    			div15 = element("div");
+    			create_component(cleansheets.$$.fragment);
+    			t16 = space();
+    			div18 = element("div");
+    			create_component(seasonstats.$$.fragment);
+    			t17 = space();
+    			div20 = element("div");
+    			div19 = element("div");
+    			h14 = element("h1");
+    			t18 = text("Goals Per Game");
+    			t19 = space();
+    			create_component(goalfrequencies.$$.fragment);
+    			t20 = space();
+    			div23 = element("div");
+    			div22 = element("div");
+    			div21 = element("div");
+    			create_component(spider.$$.fragment);
+    			t21 = space();
+    			create_component(mobileviewnav.$$.fragment);
+    			t22 = space();
+    			create_component(teamsfooter.$$.fragment);
+    			this.h();
+    		},
+    		l(nodes) {
+    			div24 = claim_element(nodes, "DIV", { class: true });
+    			var div24_nodes = children(div24);
+    			div2 = claim_element(div24_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			if_block.l(div2_nodes);
+    			t0 = claim_space(div2_nodes);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			h10 = claim_element(div1_nodes, "H1", { class: true });
+    			var h10_nodes = children(h10);
+    			t1 = claim_text(h10_nodes, "Fixtures");
+    			h10_nodes.forEach(detach);
+    			t2 = claim_space(div1_nodes);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			claim_component(fixtures.$$.fragment, div0_nodes);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			div2_nodes.forEach(detach);
+    			t3 = claim_space(div24_nodes);
+    			div5 = claim_element(div24_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div3 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			claim_component(currentform.$$.fragment, div3_nodes);
+    			t4 = claim_space(div3_nodes);
+    			claim_component(tablesnippet.$$.fragment, div3_nodes);
+    			div3_nodes.forEach(detach);
+    			t5 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			claim_component(nextgame.$$.fragment, div4_nodes);
+    			div4_nodes.forEach(detach);
+    			div5_nodes.forEach(detach);
+    			t6 = claim_space(div24_nodes);
+    			div8 = claim_element(div24_nodes, "DIV", { class: true });
+    			var div8_nodes = children(div8);
+    			div7 = claim_element(div8_nodes, "DIV", { class: true });
+    			var div7_nodes = children(div7);
+    			h11 = claim_element(div7_nodes, "H1", { class: true });
+    			var h11_nodes = children(h11);
+    			t7 = claim_text(h11_nodes, "Form Over Time");
+    			h11_nodes.forEach(detach);
+    			t8 = claim_space(div7_nodes);
+    			div6 = claim_element(div7_nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			claim_component(formovertime.$$.fragment, div6_nodes);
+    			div6_nodes.forEach(detach);
+    			div7_nodes.forEach(detach);
+    			div8_nodes.forEach(detach);
+    			t9 = claim_space(div24_nodes);
+    			div11 = claim_element(div24_nodes, "DIV", { class: true });
+    			var div11_nodes = children(div11);
+    			div10 = claim_element(div11_nodes, "DIV", { class: true });
+    			var div10_nodes = children(div10);
+    			h12 = claim_element(div10_nodes, "H1", { class: true });
+    			var h12_nodes = children(h12);
+    			t10 = claim_text(h12_nodes, "Position Over Time");
+    			h12_nodes.forEach(detach);
+    			t11 = claim_space(div10_nodes);
+    			div9 = claim_element(div10_nodes, "DIV", { class: true });
+    			var div9_nodes = children(div9);
+    			claim_component(positionovertime.$$.fragment, div9_nodes);
+    			div9_nodes.forEach(detach);
+    			div10_nodes.forEach(detach);
+    			div11_nodes.forEach(detach);
+    			t12 = claim_space(div24_nodes);
+    			div14 = claim_element(div24_nodes, "DIV", { class: true });
+    			var div14_nodes = children(div14);
+    			div13 = claim_element(div14_nodes, "DIV", { class: true });
+    			var div13_nodes = children(div13);
+    			h13 = claim_element(div13_nodes, "H1", { class: true });
+    			var h13_nodes = children(h13);
+    			t13 = claim_text(h13_nodes, "Goals Scored and Conceded");
+    			h13_nodes.forEach(detach);
+    			t14 = claim_space(div13_nodes);
+    			div12 = claim_element(div13_nodes, "DIV", { class: true });
+    			var div12_nodes = children(div12);
+    			claim_component(goalsscoredandconceded.$$.fragment, div12_nodes);
+    			div12_nodes.forEach(detach);
+    			div13_nodes.forEach(detach);
+    			div14_nodes.forEach(detach);
+    			t15 = claim_space(div24_nodes);
+    			div17 = claim_element(div24_nodes, "DIV", { class: true });
+    			var div17_nodes = children(div17);
+    			div16 = claim_element(div17_nodes, "DIV", { class: true });
+    			var div16_nodes = children(div16);
+    			div15 = claim_element(div16_nodes, "DIV", { class: true });
+    			var div15_nodes = children(div15);
+    			claim_component(cleansheets.$$.fragment, div15_nodes);
+    			div15_nodes.forEach(detach);
+    			div16_nodes.forEach(detach);
+    			div17_nodes.forEach(detach);
+    			t16 = claim_space(div24_nodes);
+    			div18 = claim_element(div24_nodes, "DIV", { class: true });
+    			var div18_nodes = children(div18);
+    			claim_component(seasonstats.$$.fragment, div18_nodes);
+    			div18_nodes.forEach(detach);
+    			t17 = claim_space(div24_nodes);
+    			div20 = claim_element(div24_nodes, "DIV", { class: true });
+    			var div20_nodes = children(div20);
+    			div19 = claim_element(div20_nodes, "DIV", { class: true });
+    			var div19_nodes = children(div19);
+    			h14 = claim_element(div19_nodes, "H1", {});
+    			var h14_nodes = children(h14);
+    			t18 = claim_text(h14_nodes, "Goals Per Game");
+    			h14_nodes.forEach(detach);
+    			t19 = claim_space(div19_nodes);
+    			claim_component(goalfrequencies.$$.fragment, div19_nodes);
+    			div19_nodes.forEach(detach);
+    			div20_nodes.forEach(detach);
+    			t20 = claim_space(div24_nodes);
+    			div23 = claim_element(div24_nodes, "DIV", { class: true });
+    			var div23_nodes = children(div23);
+    			div22 = claim_element(div23_nodes, "DIV", { class: true });
+    			var div22_nodes = children(div22);
+    			div21 = claim_element(div22_nodes, "DIV", { class: true });
+    			var div21_nodes = children(div21);
+    			claim_component(spider.$$.fragment, div21_nodes);
+    			div21_nodes.forEach(detach);
+    			div22_nodes.forEach(detach);
+    			div23_nodes.forEach(detach);
+    			t21 = claim_space(div24_nodes);
+    			claim_component(mobileviewnav.$$.fragment, div24_nodes);
+    			t22 = claim_space(div24_nodes);
+    			claim_component(teamsfooter.$$.fragment, div24_nodes);
+    			div24_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(h10, "class", "lowered");
+    			attr(div0, "class", "graph mini-graph");
+    			attr(div1, "class", "row-right fixtures-graph row-graph svelte-1xx35mc");
+    			attr(div2, "class", "row multi-element-row small-bottom-margin svelte-1xx35mc");
+    			attr(div3, "class", "row-left form-details svelte-1xx35mc");
+    			attr(div4, "class", "row-right svelte-1xx35mc");
+    			attr(div5, "class", "row multi-element-row svelte-1xx35mc");
+    			attr(h11, "class", "lowered");
+    			attr(div6, "class", "graph full-row-graph");
+    			attr(div7, "class", "form-graph row-graph svelte-1xx35mc");
+    			attr(div8, "class", "row svelte-1xx35mc");
+    			attr(h12, "class", "lowered");
+    			attr(div9, "class", "graph full-row-graph");
+    			attr(div10, "class", "position-over-time-graph row-graph svelte-1xx35mc");
+    			attr(div11, "class", "row svelte-1xx35mc");
+    			attr(h13, "class", "lowered");
+    			attr(div12, "class", "graph full-row-graph");
+    			attr(div13, "class", "goals-scored-vs-conceded-graph row-graph svelte-1xx35mc");
+    			attr(div14, "class", "row no-bottom-margin svelte-1xx35mc");
+    			attr(div15, "class", "clean-sheets graph full-row-graph");
+    			attr(div16, "class", "row-graph svelte-1xx35mc");
+    			attr(div17, "class", "row svelte-1xx35mc");
+    			attr(div18, "class", "season-stats-row svelte-1xx35mc");
+    			attr(div19, "class", "goals-freq-row row-graph svelte-1xx35mc");
+    			attr(div20, "class", "row svelte-1xx35mc");
+    			attr(div21, "class", "spider-chart-container svelte-1xx35mc");
+    			attr(div22, "class", "spider-chart-row row-graph svelte-1xx35mc");
+    			attr(div23, "class", "row svelte-1xx35mc");
+    			attr(div24, "class", "page-content svelte-1xx35mc");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div24, anchor);
+    			append_hydration(div24, div2);
+    			if_block.m(div2, null);
+    			append_hydration(div2, t0);
+    			append_hydration(div2, div1);
+    			append_hydration(div1, h10);
+    			append_hydration(h10, t1);
+    			append_hydration(div1, t2);
+    			append_hydration(div1, div0);
+    			mount_component(fixtures, div0, null);
+    			append_hydration(div24, t3);
+    			append_hydration(div24, div5);
+    			append_hydration(div5, div3);
+    			mount_component(currentform, div3, null);
+    			append_hydration(div3, t4);
+    			mount_component(tablesnippet, div3, null);
+    			append_hydration(div5, t5);
+    			append_hydration(div5, div4);
+    			mount_component(nextgame, div4, null);
+    			append_hydration(div24, t6);
+    			append_hydration(div24, div8);
+    			append_hydration(div8, div7);
+    			append_hydration(div7, h11);
+    			append_hydration(h11, t7);
+    			append_hydration(div7, t8);
+    			append_hydration(div7, div6);
+    			mount_component(formovertime, div6, null);
+    			append_hydration(div24, t9);
+    			append_hydration(div24, div11);
+    			append_hydration(div11, div10);
+    			append_hydration(div10, h12);
+    			append_hydration(h12, t10);
+    			append_hydration(div10, t11);
+    			append_hydration(div10, div9);
+    			mount_component(positionovertime, div9, null);
+    			append_hydration(div24, t12);
+    			append_hydration(div24, div14);
+    			append_hydration(div14, div13);
+    			append_hydration(div13, h13);
+    			append_hydration(h13, t13);
+    			append_hydration(div13, t14);
+    			append_hydration(div13, div12);
+    			mount_component(goalsscoredandconceded, div12, null);
+    			append_hydration(div24, t15);
+    			append_hydration(div24, div17);
+    			append_hydration(div17, div16);
+    			append_hydration(div16, div15);
+    			mount_component(cleansheets, div15, null);
+    			append_hydration(div24, t16);
+    			append_hydration(div24, div18);
+    			mount_component(seasonstats, div18, null);
+    			append_hydration(div24, t17);
+    			append_hydration(div24, div20);
+    			append_hydration(div20, div19);
+    			append_hydration(div19, h14);
+    			append_hydration(h14, t18);
+    			append_hydration(div19, t19);
+    			mount_component(goalfrequencies, div19, null);
+    			append_hydration(div24, t20);
+    			append_hydration(div24, div23);
+    			append_hydration(div23, div22);
+    			append_hydration(div22, div21);
+    			mount_component(spider, div21, null);
+    			append_hydration(div24, t21);
+    			mount_component(mobileviewnav, div24, null);
+    			append_hydration(div24, t22);
+    			mount_component(teamsfooter, div24, null);
+    			current = true;
+    		},
+    		p(ctx, dirty) {
+    			if_block.p(ctx, dirty);
+    			const fixtures_changes = {};
+    			if (dirty & /*data*/ 8) fixtures_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*fullTeamName*/ 2) fixtures_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			fixtures.$set(fixtures_changes);
+    			const currentform_changes = {};
+    			if (dirty & /*data*/ 8) currentform_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*currentMatchday*/ 4) currentform_changes.currentMatchday = /*currentMatchday*/ ctx[2];
+    			if (dirty & /*fullTeamName*/ 2) currentform_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			currentform.$set(currentform_changes);
+    			const tablesnippet_changes = {};
+    			if (dirty & /*data*/ 8) tablesnippet_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*team*/ 1) tablesnippet_changes.team = /*team*/ ctx[0];
+    			if (dirty & /*fullTeamName*/ 2) tablesnippet_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			tablesnippet.$set(tablesnippet_changes);
+    			const nextgame_changes = {};
+    			if (dirty & /*data*/ 8) nextgame_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*currentMatchday*/ 4) nextgame_changes.currentMatchday = /*currentMatchday*/ ctx[2];
+    			if (dirty & /*fullTeamName*/ 2) nextgame_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			nextgame.$set(nextgame_changes);
+    			const formovertime_changes = {};
+    			if (dirty & /*data*/ 8) formovertime_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*fullTeamName*/ 2) formovertime_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			formovertime.$set(formovertime_changes);
+    			const positionovertime_changes = {};
+    			if (dirty & /*data*/ 8) positionovertime_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*fullTeamName*/ 2) positionovertime_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			positionovertime.$set(positionovertime_changes);
+    			const goalsscoredandconceded_changes = {};
+    			if (dirty & /*data*/ 8) goalsscoredandconceded_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*fullTeamName*/ 2) goalsscoredandconceded_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			goalsscoredandconceded.$set(goalsscoredandconceded_changes);
+    			const cleansheets_changes = {};
+    			if (dirty & /*data*/ 8) cleansheets_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*fullTeamName*/ 2) cleansheets_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			cleansheets.$set(cleansheets_changes);
+    			const seasonstats_changes = {};
+    			if (dirty & /*data*/ 8) seasonstats_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*fullTeamName*/ 2) seasonstats_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			seasonstats.$set(seasonstats_changes);
+    			const goalfrequencies_changes = {};
+    			if (dirty & /*data*/ 8) goalfrequencies_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*fullTeamName*/ 2) goalfrequencies_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			goalfrequencies.$set(goalfrequencies_changes);
+    			const spider_changes = {};
+    			if (dirty & /*data*/ 8) spider_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*fullTeamName*/ 2) spider_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			spider.$set(spider_changes);
+    			const mobileviewnav_changes = {};
+    			if (dirty & /*team*/ 1) mobileviewnav_changes.team = /*team*/ ctx[0];
+    			mobileviewnav.$set(mobileviewnav_changes);
+    			const teamsfooter_changes = {};
+    			if (dirty & /*data*/ 8) teamsfooter_changes.lastUpdated = /*data*/ ctx[3].lastUpdated;
+    			teamsfooter.$set(teamsfooter_changes);
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(fixtures.$$.fragment, local);
+    			transition_in(currentform.$$.fragment, local);
+    			transition_in(tablesnippet.$$.fragment, local);
+    			transition_in(nextgame.$$.fragment, local);
+    			transition_in(formovertime.$$.fragment, local);
+    			transition_in(positionovertime.$$.fragment, local);
+    			transition_in(goalsscoredandconceded.$$.fragment, local);
+    			transition_in(cleansheets.$$.fragment, local);
+    			transition_in(seasonstats.$$.fragment, local);
+    			transition_in(goalfrequencies.$$.fragment, local);
+    			transition_in(spider.$$.fragment, local);
+    			transition_in(mobileviewnav.$$.fragment, local);
+    			transition_in(teamsfooter.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(fixtures.$$.fragment, local);
+    			transition_out(currentform.$$.fragment, local);
+    			transition_out(tablesnippet.$$.fragment, local);
+    			transition_out(nextgame.$$.fragment, local);
+    			transition_out(formovertime.$$.fragment, local);
+    			transition_out(positionovertime.$$.fragment, local);
+    			transition_out(goalsscoredandconceded.$$.fragment, local);
+    			transition_out(cleansheets.$$.fragment, local);
+    			transition_out(seasonstats.$$.fragment, local);
+    			transition_out(goalfrequencies.$$.fragment, local);
+    			transition_out(spider.$$.fragment, local);
+    			transition_out(mobileviewnav.$$.fragment, local);
+    			transition_out(teamsfooter.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div24);
+    			if_block.d();
+    			destroy_component(fixtures);
+    			destroy_component(currentform);
+    			destroy_component(tablesnippet);
+    			destroy_component(nextgame);
+    			destroy_component(formovertime);
+    			destroy_component(positionovertime);
+    			destroy_component(goalsscoredandconceded);
+    			destroy_component(cleansheets);
+    			destroy_component(seasonstats);
+    			destroy_component(goalfrequencies);
+    			destroy_component(spider);
+    			destroy_component(mobileviewnav);
+    			destroy_component(teamsfooter);
+    		}
+    	};
+    }
+
+    // (161:12) {:else}
+    function create_else_block$1(ctx) {
+    	let div2;
+    	let div0;
+    	let svg;
+    	let circle0;
+    	let circle0_fill_value;
+    	let circle1;
+    	let circle1_fill_value;
+    	let circle2;
+    	let circle2_fill_value;
+    	let t0;
+    	let div1;
+    	let t1_value = /*data*/ ctx[3].standings[/*fullTeamName*/ ctx[1]][/*data*/ ctx[3]._id].position + "";
+    	let t1;
+
+    	return {
+    		c() {
+    			div2 = element("div");
+    			div0 = element("div");
+    			svg = svg_element("svg");
+    			circle0 = svg_element("circle");
+    			circle1 = svg_element("circle");
+    			circle2 = svg_element("circle");
+    			t0 = space();
+    			div1 = element("div");
+    			t1 = text(t1_value);
+    			this.h();
+    		},
+    		l(nodes) {
+    			div2 = claim_element(nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div0 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			svg = claim_svg_element(div0_nodes, "svg", { class: true });
+    			var svg_nodes = children(svg);
+
+    			circle0 = claim_svg_element(svg_nodes, "circle", {
+    				cx: true,
+    				cy: true,
+    				r: true,
+    				"stroke-width": true,
+    				fill: true
+    			});
+
+    			children(circle0).forEach(detach);
+
+    			circle1 = claim_svg_element(svg_nodes, "circle", {
+    				cx: true,
+    				cy: true,
+    				r: true,
+    				"stroke-width": true,
+    				fill: true
+    			});
+
+    			children(circle1).forEach(detach);
+
+    			circle2 = claim_svg_element(svg_nodes, "circle", {
+    				cx: true,
+    				cy: true,
+    				r: true,
+    				"stroke-width": true,
+    				fill: true
+    			});
+
+    			children(circle2).forEach(detach);
+    			svg_nodes.forEach(detach);
+    			div0_nodes.forEach(detach);
+    			t0 = claim_space(div2_nodes);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t1 = claim_text(div1_nodes, t1_value);
+    			div1_nodes.forEach(detach);
+    			div2_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(circle0, "cx", "300");
+    			attr(circle0, "cy", "150");
+    			attr(circle0, "r", "100");
+    			attr(circle0, "stroke-width", "0");
+    			attr(circle0, "fill", circle0_fill_value = "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			attr(circle1, "cx", "170");
+    			attr(circle1, "cy", "170");
+    			attr(circle1, "r", "140");
+    			attr(circle1, "stroke-width", "0");
+    			attr(circle1, "fill", circle1_fill_value = "var(--" + /*team*/ ctx[0] + ")");
+    			attr(circle2, "cx", "300");
+    			attr(circle2, "cy", "320");
+    			attr(circle2, "r", "170");
+    			attr(circle2, "stroke-width", "0");
+    			attr(circle2, "fill", circle2_fill_value = "var(--" + /*team*/ ctx[0] + ")");
+    			attr(svg, "class", "circles-background svelte-1xx35mc");
+    			attr(div0, "class", "circles-background-container svelte-1xx35mc");
+    			attr(div1, "class", "position-central svelte-1xx35mc");
+    			attr(div2, "class", "row-left position-no-badge svelte-1xx35mc");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div2, anchor);
+    			append_hydration(div2, div0);
+    			append_hydration(div0, svg);
+    			append_hydration(svg, circle0);
+    			append_hydration(svg, circle1);
+    			append_hydration(svg, circle2);
+    			append_hydration(div2, t0);
+    			append_hydration(div2, div1);
+    			append_hydration(div1, t1);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*team*/ 1 && circle0_fill_value !== (circle0_fill_value = "var(--" + /*team*/ ctx[0] + "-secondary)")) {
+    				attr(circle0, "fill", circle0_fill_value);
+    			}
+
+    			if (dirty & /*team*/ 1 && circle1_fill_value !== (circle1_fill_value = "var(--" + /*team*/ ctx[0] + ")")) {
+    				attr(circle1, "fill", circle1_fill_value);
+    			}
+
+    			if (dirty & /*team*/ 1 && circle2_fill_value !== (circle2_fill_value = "var(--" + /*team*/ ctx[0] + ")")) {
+    				attr(circle2, "fill", circle2_fill_value);
+    			}
+
+    			if (dirty & /*data, fullTeamName*/ 10 && t1_value !== (t1_value = /*data*/ ctx[3].standings[/*fullTeamName*/ ctx[1]][/*data*/ ctx[3]._id].position + "")) set_data(t1, t1_value);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div2);
+    		}
+    	};
+    }
+
+    // (135:0) <Router>
+    function create_default_slot$3(ctx) {
+    	let div4;
+    	let div0;
+    	let navbar;
+    	let t0;
+    	let div3;
+    	let div2;
+    	let a;
+    	let div1;
+    	let t1_value = /*getAlias*/ ctx[4](/*fullTeamName*/ ctx[1]) + "";
+    	let t1;
+    	let a_href_value;
+    	let t2;
+    	let current_block_type_index;
+    	let if_block;
+    	let current;
+
+    	navbar = new NavBar({
+    			props: {
+    				team: /*team*/ ctx[0],
+    				teams: /*teams*/ ctx[6],
+    				getAlias: /*getAlias*/ ctx[4],
+    				switchTeam: /*switchTeam*/ ctx[7]
+    			}
+    		});
+
+    	const if_block_creators = [create_if_block$1, create_else_block_1$1];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*data*/ ctx[3] != undefined) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	return {
+    		c() {
+    			div4 = element("div");
+    			div0 = element("div");
+    			create_component(navbar.$$.fragment);
+    			t0 = space();
+    			div3 = element("div");
+    			div2 = element("div");
+    			a = element("a");
+    			div1 = element("div");
+    			t1 = text(t1_value);
+    			t2 = space();
+    			if_block.c();
+    			this.h();
+    		},
+    		l(nodes) {
+    			div4 = claim_element(nodes, "DIV", { id: true, class: true });
+    			var div4_nodes = children(div4);
+    			div0 = claim_element(div4_nodes, "DIV", { id: true, class: true });
+    			var div0_nodes = children(div0);
+    			claim_component(navbar.$$.fragment, div0_nodes);
+    			div0_nodes.forEach(detach);
+    			t0 = claim_space(div4_nodes);
+    			div3 = claim_element(div4_nodes, "DIV", { id: true, class: true });
+    			var div3_nodes = children(div3);
+    			div2 = claim_element(div3_nodes, "DIV", { class: true, style: true });
+    			var div2_nodes = children(div2);
+    			a = claim_element(div2_nodes, "A", { class: true, href: true });
+    			var a_nodes = children(a);
+    			div1 = claim_element(a_nodes, "DIV", { class: true, style: true });
+    			var div1_nodes = children(div1);
+    			t1 = claim_text(div1_nodes, t1_value);
+    			div1_nodes.forEach(detach);
+    			a_nodes.forEach(detach);
+    			div2_nodes.forEach(detach);
+    			t2 = claim_space(div3_nodes);
+    			if_block.l(div3_nodes);
+    			div3_nodes.forEach(detach);
+    			div4_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "id", "navBar");
+    			attr(div0, "class", "svelte-1xx35mc");
+    			attr(div1, "class", "title svelte-1xx35mc");
+    			set_style(div1, "color", "var(--" + (/*team*/ ctx[0] + '-secondary') + ")");
+    			attr(a, "class", "main-link no-decoration svelte-1xx35mc");
+    			attr(a, "href", a_href_value = "/" + /*team*/ ctx[0]);
+    			attr(div2, "class", "header svelte-1xx35mc");
+    			set_style(div2, "background-color", "var(--" + /*team*/ ctx[0] + ")");
+    			attr(div3, "id", "dashboard");
+    			attr(div3, "class", "svelte-1xx35mc");
+    			attr(div4, "id", "team");
+    			attr(div4, "class", "svelte-1xx35mc");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div4, anchor);
+    			append_hydration(div4, div0);
+    			mount_component(navbar, div0, null);
+    			append_hydration(div4, t0);
+    			append_hydration(div4, div3);
+    			append_hydration(div3, div2);
+    			append_hydration(div2, a);
+    			append_hydration(a, div1);
+    			append_hydration(div1, t1);
+    			append_hydration(div3, t2);
+    			if_blocks[current_block_type_index].m(div3, null);
+    			current = true;
+    		},
+    		p(ctx, dirty) {
+    			const navbar_changes = {};
+    			if (dirty & /*team*/ 1) navbar_changes.team = /*team*/ ctx[0];
+    			navbar.$set(navbar_changes);
+    			if ((!current || dirty & /*fullTeamName*/ 2) && t1_value !== (t1_value = /*getAlias*/ ctx[4](/*fullTeamName*/ ctx[1]) + "")) set_data(t1, t1_value);
+
+    			if (!current || dirty & /*team*/ 1) {
+    				set_style(div1, "color", "var(--" + (/*team*/ ctx[0] + '-secondary') + ")");
+    			}
+
+    			if (!current || dirty & /*team*/ 1 && a_href_value !== (a_href_value = "/" + /*team*/ ctx[0])) {
+    				attr(a, "href", a_href_value);
+    			}
+
+    			if (!current || dirty & /*team*/ 1) {
+    				set_style(div2, "background-color", "var(--" + /*team*/ ctx[0] + ")");
+    			}
+
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(div3, null);
+    			}
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(navbar.$$.fragment, local);
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(navbar.$$.fragment, local);
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div4);
+    			destroy_component(navbar);
+    			if_blocks[current_block_type_index].d();
+    		}
+    	};
+    }
+
+    function create_fragment$3(ctx) {
+    	let title_value;
+    	let meta;
+    	let t;
+    	let router;
+    	let current;
+    	document_1$1.title = title_value = /*fullTeamName*/ ctx[1];
+
+    	router = new Router({
+    			props: {
+    				$$slots: { default: [create_default_slot$3] },
+    				$$scope: { ctx }
+    			}
+    		});
+
+    	return {
+    		c() {
+    			meta = element("meta");
+    			t = space();
+    			create_component(router.$$.fragment);
+    			this.h();
+    		},
+    		l(nodes) {
+    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1qp08hs\"]', document_1$1.head);
+    			meta = claim_element(head_nodes, "META", { name: true, content: true });
+    			head_nodes.forEach(detach);
+    			t = claim_space(nodes);
+    			claim_component(router.$$.fragment, nodes);
+    			this.h();
+    		},
+    		h() {
+    			attr(meta, "name", "description");
+    			attr(meta, "content", "Premier League Statistics Dashboard");
+    		},
+    		m(target, anchor) {
+    			append_hydration(document_1$1.head, meta);
+    			insert_hydration(target, t, anchor);
+    			mount_component(router, target, anchor);
+    			current = true;
+    		},
+    		p(ctx, [dirty]) {
+    			if ((!current || dirty & /*fullTeamName*/ 2) && title_value !== (title_value = /*fullTeamName*/ ctx[1])) {
+    				document_1$1.title = title_value;
+    			}
+
+    			const router_changes = {};
+
+    			if (dirty & /*$$scope, data, team, fullTeamName, currentMatchday*/ 1039) {
+    				router_changes.$$scope = { dirty, ctx };
+    			}
+
+    			router.$set(router_changes);
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(router.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(router.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			detach(meta);
+    			if (detaching) detach(t);
+    			destroy_component(router, detaching);
+    		}
+    	};
+    }
+
+    const showBadge = false;
+
+    function toTitleCase(str) {
+    	return str.toLowerCase().split(" ").map(function (word) {
+    		return word.charAt(0).toUpperCase() + word.slice(1);
+    	}).join(" ").replace("And", "and");
+    }
+
+    function getCurrentMatchday(data, fullTeamName) {
+    	if (Object.keys(data.form[data._id][fullTeamName]).length == 0) {
+    		return null; // Season has not started yet
+    	}
+
+    	return Object.keys(data.form[data._id][fullTeamName]).reduce((a, b) => data.form[data._id][fullTeamName][a] > data.form[data._id][fullTeamName][b]
+    	? a
+    	: b);
+    }
+
+    async function fetchData$1(address) {
+    	const response = await fetch(address);
+    	let json = await response.json();
+    	return json;
+    }
+
+    function instance$2($$self, $$props, $$invalidate) {
+    	let alias = {
+    		"Wolverhampton Wanderers": "Wolves",
+    		"Tottenham Hotspur": "Spurs",
+    		"Leeds United": "Leeds",
+    		"West Ham United": "West Ham",
+    		"Brighton and Hove Albion": "Brighton"
+    	};
+
+    	function getAlias(team) {
+    		if (team in alias) {
+    			return alias[team];
+    		}
+
+    		return team;
+    	}
+
+    	function getName(teamAlias) {
+    		if (!Object.values(alias).includes(teamAlias)) {
+    			return teamAlias;
+    		}
+
+    		return Object.keys(alias).find(key => alias[key] === teamAlias);
+    	}
+
+    	let teams = [
+    		"Manchester City",
+    		"Liverpool",
+    		"Chelsea",
+    		"Tottenham Hotspur",
+    		"Arsenal",
+    		"Manchester United",
+    		"West Ham United",
+    		"Leicester City",
+    		"Brighton and Hove Albion",
+    		"Wolverhampton Wanderers",
+    		"Newcastle United",
+    		"Crystal Palace",
+    		"Brentford",
+    		"Aston Villa",
+    		"Southampton",
+    		"Everton",
+    		"Leeds United",
+    		"Fulham",
+    		"Bournemouth",
+    		"Nottingham Forest"
+    	];
+
+    	function initDashboard() {
+    		$$invalidate(1, fullTeamName = toTitleCase(team.replace(/\-/g, " ")));
+
+    		// fetchData("http://127.0.0.1:5000/api/teams")
+    		fetchData$1("https://pldashboard.herokuapp.com/api/teams").then(json => {
+    			// Build teamData package from json data
+    			$$invalidate(2, currentMatchday = getCurrentMatchday(json, fullTeamName));
+
+    			$$invalidate(3, data = json);
+    			console.log(data);
+    		}).then(() => {
+    			window.dispatchEvent(new Event("resize"));
+    		});
+    	}
+
+    	function switchTeam(newTeam) {
+    		$$invalidate(0, team = newTeam);
+    		$$invalidate(1, fullTeamName = toTitleCase(team.replace(/\-/g, " ")));
+    		$$invalidate(2, currentMatchday = getCurrentMatchday(data, fullTeamName));
+    		window.history.pushState(null, null, team); // Change current url without reloading
+    	}
+
+    	let fullTeamName = "";
+    	let currentMatchday;
+    	let data;
+
+    	onMount(() => {
+    		initDashboard();
+    	});
+
+    	let { team } = $$props;
+
+    	$$self.$$set = $$props => {
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    	};
+
+    	return [
+    		team,
+    		fullTeamName,
+    		currentMatchday,
+    		data,
+    		getAlias,
+    		getName,
+    		teams,
+    		switchTeam
+    	];
+    }
+
+    class Team extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$2, create_fragment$3, safe_not_equal, { team: 0 });
+    	}
+    }
+
+    /* src\routes\Home.svelte generated by Svelte v3.49.0 */
+
+    function create_default_slot$2(ctx) {
+    	let div4;
+    	let div3;
+    	let img;
+    	let img_src_value;
+    	let t0;
+    	let div2;
+    	let div0;
+    	let a0;
+    	let t1;
+    	let t2;
+    	let div1;
+    	let a1;
+    	let t3;
+
+    	return {
+    		c() {
+    			div4 = element("div");
+    			div3 = element("div");
+    			img = element("img");
+    			t0 = space();
+    			div2 = element("div");
+    			div0 = element("div");
+    			a0 = element("a");
+    			t1 = text("Dashboard");
+    			t2 = space();
+    			div1 = element("div");
+    			a1 = element("a");
+    			t3 = text("FPL");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div4 = claim_element(nodes, "DIV", { id: true, class: true });
+    			var div4_nodes = children(div4);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			img = claim_element(div3_nodes, "IMG", { src: true, alt: true, class: true });
+    			t0 = claim_space(div3_nodes);
+    			div2 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div0 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			a0 = claim_element(div0_nodes, "A", { class: true, href: true });
+    			var a0_nodes = children(a0);
+    			t1 = claim_text(a0_nodes, "Dashboard");
+    			a0_nodes.forEach(detach);
+    			div0_nodes.forEach(detach);
+    			t2 = claim_space(div2_nodes);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			a1 = claim_element(div1_nodes, "A", { class: true, href: true });
+    			var a1_nodes = children(a1);
+    			t3 = claim_text(a1_nodes, "FPL");
+    			a1_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			div2_nodes.forEach(detach);
+    			div3_nodes.forEach(detach);
+    			div4_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			if (!src_url_equal(img.src, img_src_value = "img/pldashboard4.png")) attr(img, "src", img_src_value);
+    			attr(img, "alt", "pldashboard");
+    			attr(img, "class", "svelte-1cyripm");
+    			attr(a0, "class", "dashboard-link svelte-1cyripm");
+    			attr(a0, "href", "/");
+    			attr(div0, "class", "dashboard-link-container svelte-1cyripm");
+    			attr(a1, "class", "fantasy-link svelte-1cyripm");
+    			attr(a1, "href", "/");
+    			attr(div1, "class", "fantasy-link-container svelte-1cyripm");
+    			attr(div2, "class", "links svelte-1cyripm");
+    			attr(div3, "class", "content svelte-1cyripm");
+    			attr(div4, "id", "home");
+    			attr(div4, "class", "svelte-1cyripm");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div4, anchor);
+    			append_hydration(div4, div3);
+    			append_hydration(div3, img);
+    			append_hydration(div3, t0);
+    			append_hydration(div3, div2);
+    			append_hydration(div2, div0);
+    			append_hydration(div0, a0);
+    			append_hydration(a0, t1);
+    			append_hydration(div2, t2);
+    			append_hydration(div2, div1);
+    			append_hydration(div1, a1);
+    			append_hydration(a1, t3);
+    		},
+    		p: noop,
+    		d(detaching) {
+    			if (detaching) detach(div4);
+    		}
+    	};
+    }
+
+    function create_fragment$2(ctx) {
+    	let meta;
+    	let t;
+    	let router;
+    	let current;
+
+    	router = new Router({
+    			props: {
+    				$$slots: { default: [create_default_slot$2] },
+    				$$scope: { ctx }
+    			}
+    		});
+
+    	return {
+    		c() {
+    			meta = element("meta");
+    			t = space();
+    			create_component(router.$$.fragment);
+    			this.h();
+    		},
+    		l(nodes) {
+    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1rqatx0\"]', document.head);
+    			meta = claim_element(head_nodes, "META", { name: true, content: true });
+    			head_nodes.forEach(detach);
+    			t = claim_space(nodes);
+    			claim_component(router.$$.fragment, nodes);
+    			this.h();
+    		},
+    		h() {
+    			document.title = "Premier League";
+    			attr(meta, "name", "description");
+    			attr(meta, "content", "Premier League Statistics Dashboard");
+    		},
+    		m(target, anchor) {
+    			append_hydration(document.head, meta);
+    			insert_hydration(target, t, anchor);
+    			mount_component(router, target, anchor);
+    			current = true;
+    		},
+    		p(ctx, [dirty]) {
+    			const router_changes = {};
+
+    			if (dirty & /*$$scope*/ 1) {
+    				router_changes.$$scope = { dirty, ctx };
+    			}
+
+    			router.$set(router_changes);
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(router.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(router.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			detach(meta);
+    			if (detaching) detach(t);
+    			destroy_component(router, detaching);
+    		}
+    	};
+    }
+
+    class Home extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, null, create_fragment$2, safe_not_equal, {});
+    	}
+    }
+
+    /* src\routes\Predictions.svelte generated by Svelte v3.49.0 */
+
+    const { document: document_1 } = globals;
+
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[2] = list[i]._id;
+    	child_ctx[3] = list[i].predictions;
+    	return child_ctx;
+    }
+
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[6] = list[i];
+    	return child_ctx;
+    }
+
+    // (187:2) {:else}
+    function create_else_block_1(ctx) {
+    	let div1;
+    	let div0;
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			children(div0).forEach(detach);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "loading-spinner");
+    			attr(div1, "class", "loading-spinner-container");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    		},
+    		p: noop,
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    		}
+    	};
+    }
+
+    // (100:2) {#if data != undefined}
+    function create_if_block(ctx) {
+    	let div5;
+    	let div2;
+    	let div1;
+    	let span;
+    	let t0;
+    	let b0;
+    	let t1_value = (/*data*/ ctx[0].accuracy.scoreAccuracy * 100).toFixed(2) + "";
+    	let t1;
+    	let t2;
+    	let br;
+    	let t3;
+    	let div0;
+    	let t4;
+    	let b1;
+    	let t5_value = (/*data*/ ctx[0].accuracy.resultAccuracy * 100).toFixed(2) + "";
+    	let t5;
+    	let t6;
+    	let t7;
+    	let div4;
+    	let div3;
+    	let t8;
+    	let div7;
+    	let div6;
+    	let t9;
+    	let if_block = /*data*/ ctx[0].predictions != null && create_if_block_1(ctx);
+
+    	return {
+    		c() {
+    			div5 = element("div");
+    			div2 = element("div");
+    			div1 = element("div");
+    			span = element("span");
+    			t0 = text("Predicting with accuracy: ");
+    			b0 = element("b");
+    			t1 = text(t1_value);
+    			t2 = text("%");
+    			br = element("br");
+    			t3 = space();
+    			div0 = element("div");
+    			t4 = text("General results accuracy: ");
+    			b1 = element("b");
+    			t5 = text(t5_value);
+    			t6 = text("%");
+    			t7 = space();
+    			div4 = element("div");
+    			div3 = element("div");
+    			if (if_block) if_block.c();
+    			t8 = space();
+    			div7 = element("div");
+    			div6 = element("div");
+    			t9 = text("Predictions are calculated using previous results and then adjusting by\r\n        recent form and home advantage.");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div5 = claim_element(nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div2 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			span = claim_element(div1_nodes, "SPAN", { class: true });
+    			var span_nodes = children(span);
+    			t0 = claim_text(span_nodes, "Predicting with accuracy: ");
+    			b0 = claim_element(span_nodes, "B", {});
+    			var b0_nodes = children(b0);
+    			t1 = claim_text(b0_nodes, t1_value);
+    			t2 = claim_text(b0_nodes, "%");
+    			b0_nodes.forEach(detach);
+    			span_nodes.forEach(detach);
+    			br = claim_element(div1_nodes, "BR", {});
+    			t3 = claim_space(div1_nodes);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t4 = claim_text(div0_nodes, "General results accuracy: ");
+    			b1 = claim_element(div0_nodes, "B", {});
+    			var b1_nodes = children(b1);
+    			t5 = claim_text(b1_nodes, t5_value);
+    			t6 = claim_text(b1_nodes, "%");
+    			b1_nodes.forEach(detach);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			div2_nodes.forEach(detach);
+    			t7 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			if (if_block) if_block.l(div3_nodes);
+    			div3_nodes.forEach(detach);
+    			div4_nodes.forEach(detach);
+    			div5_nodes.forEach(detach);
+    			t8 = claim_space(nodes);
+    			div7 = claim_element(nodes, "DIV", { class: true });
+    			var div7_nodes = children(div7);
+    			div6 = claim_element(div7_nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			t9 = claim_text(div6_nodes, "Predictions are calculated using previous results and then adjusting by\r\n        recent form and home advantage.");
+    			div6_nodes.forEach(detach);
+    			div7_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(span, "class", "accuracy-item svelte-l0s73l");
+    			attr(div0, "class", "accuracy-item svelte-l0s73l");
+    			attr(div1, "class", "accuracy svelte-l0s73l");
+    			attr(div2, "class", "accuracy-display svelte-l0s73l");
+    			attr(div3, "class", "predictions svelte-l0s73l");
+    			attr(div4, "class", "predictions-container svelte-l0s73l");
+    			attr(div5, "class", "page-content svelte-l0s73l");
+    			attr(div6, "class", "method-description svelte-l0s73l");
+    			attr(div7, "class", "predictions-footer footer-text-colour svelte-l0s73l");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div5, anchor);
+    			append_hydration(div5, div2);
+    			append_hydration(div2, div1);
+    			append_hydration(div1, span);
+    			append_hydration(span, t0);
+    			append_hydration(span, b0);
+    			append_hydration(b0, t1);
+    			append_hydration(b0, t2);
+    			append_hydration(div1, br);
+    			append_hydration(div1, t3);
+    			append_hydration(div1, div0);
+    			append_hydration(div0, t4);
+    			append_hydration(div0, b1);
+    			append_hydration(b1, t5);
+    			append_hydration(b1, t6);
+    			append_hydration(div5, t7);
+    			append_hydration(div5, div4);
+    			append_hydration(div4, div3);
+    			if (if_block) if_block.m(div3, null);
+    			insert_hydration(target, t8, anchor);
+    			insert_hydration(target, div7, anchor);
+    			append_hydration(div7, div6);
+    			append_hydration(div6, t9);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*data*/ 1 && t1_value !== (t1_value = (/*data*/ ctx[0].accuracy.scoreAccuracy * 100).toFixed(2) + "")) set_data(t1, t1_value);
+    			if (dirty & /*data*/ 1 && t5_value !== (t5_value = (/*data*/ ctx[0].accuracy.resultAccuracy * 100).toFixed(2) + "")) set_data(t5, t5_value);
+
+    			if (/*data*/ ctx[0].predictions != null) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_1(ctx);
+    					if_block.c();
+    					if_block.m(div3, null);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div5);
+    			if (if_block) if_block.d();
+    			if (detaching) detach(t8);
+    			if (detaching) detach(div7);
+    		}
+    	};
+    }
+
+    // (119:10) {#if data.predictions != null}
+    function create_if_block_1(ctx) {
+    	let each_1_anchor;
+    	let each_value = /*data*/ ctx[0].predictions;
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	return {
+    		c() {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		l(nodes) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(nodes);
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m(target, anchor) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_hydration(target, each_1_anchor, anchor);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*data, toggleDetailsDisplay, datetimeToTime, Math*/ 1) {
+    				each_value = /*data*/ ctx[0].predictions;
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		d(detaching) {
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach(each_1_anchor);
+    		}
+    	};
+    }
+
+    // (154:18) {:else}
+    function create_else_block(ctx) {
+    	let div;
+    	let t_value = datetimeToTime(/*pred*/ ctx[6].datetime) + "";
+    	let t;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			t = text(t_value);
+    			this.h();
+    		},
+    		l(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t = claim_text(div_nodes, t_value);
+    			div_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div, "class", "prediction-time svelte-l0s73l");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div, anchor);
+    			append_hydration(div, t);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*data*/ 1 && t_value !== (t_value = datetimeToTime(/*pred*/ ctx[6].datetime) + "")) set_data(t, t_value);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div);
+    		}
+    	};
+    }
+
+    // (143:18) {#if pred.actual != null}
+    function create_if_block_3(ctx) {
+    	let div5;
+    	let div0;
+    	let t0;
+    	let t1;
+    	let div4;
+    	let div1;
+    	let t2_value = /*pred*/ ctx[6].home + "";
+    	let t2;
+    	let t3;
+    	let div2;
+    	let t4_value = /*pred*/ ctx[6].actual.homeGoals + "";
+    	let t4;
+    	let t5;
+    	let t6_value = /*pred*/ ctx[6].actual.awayGoals + "";
+    	let t6;
+    	let t7;
+    	let div3;
+    	let t8_value = /*pred*/ ctx[6].away + "";
+    	let t8;
+
+    	return {
+    		c() {
+    			div5 = element("div");
+    			div0 = element("div");
+    			t0 = text("Actual:");
+    			t1 = space();
+    			div4 = element("div");
+    			div1 = element("div");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			div2 = element("div");
+    			t4 = text(t4_value);
+    			t5 = text(" - ");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div3 = element("div");
+    			t8 = text(t8_value);
+    			this.h();
+    		},
+    		l(nodes) {
+    			div5 = claim_element(nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div0 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, "Actual:");
+    			div0_nodes.forEach(detach);
+    			t1 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			div1 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t2 = claim_text(div1_nodes, t2_value);
+    			div1_nodes.forEach(detach);
+    			t3 = claim_space(div4_nodes);
+    			div2 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t4 = claim_text(div2_nodes, t4_value);
+    			t5 = claim_text(div2_nodes, " - ");
+    			t6 = claim_text(div2_nodes, t6_value);
+    			div2_nodes.forEach(detach);
+    			t7 = claim_space(div4_nodes);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			t8 = claim_text(div3_nodes, t8_value);
+    			div3_nodes.forEach(detach);
+    			div4_nodes.forEach(detach);
+    			div5_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "prediction-label svelte-l0s73l");
+    			attr(div1, "class", "prediction-initials svelte-l0s73l");
+    			attr(div2, "class", "prediction-score svelte-l0s73l");
+    			attr(div3, "class", "prediction-initials svelte-l0s73l");
+    			attr(div4, "class", "prediction-value svelte-l0s73l");
+    			attr(div5, "class", "actual prediction-item svelte-l0s73l");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div5, anchor);
+    			append_hydration(div5, div0);
+    			append_hydration(div0, t0);
+    			append_hydration(div5, t1);
+    			append_hydration(div5, div4);
+    			append_hydration(div4, div1);
+    			append_hydration(div1, t2);
+    			append_hydration(div4, t3);
+    			append_hydration(div4, div2);
+    			append_hydration(div2, t4);
+    			append_hydration(div2, t5);
+    			append_hydration(div2, t6);
+    			append_hydration(div4, t7);
+    			append_hydration(div4, div3);
+    			append_hydration(div3, t8);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*data*/ 1 && t2_value !== (t2_value = /*pred*/ ctx[6].home + "")) set_data(t2, t2_value);
+    			if (dirty & /*data*/ 1 && t4_value !== (t4_value = /*pred*/ ctx[6].actual.homeGoals + "")) set_data(t4, t4_value);
+    			if (dirty & /*data*/ 1 && t6_value !== (t6_value = /*pred*/ ctx[6].actual.awayGoals + "")) set_data(t6, t6_value);
+    			if (dirty & /*data*/ 1 && t8_value !== (t8_value = /*pred*/ ctx[6].away + "")) set_data(t8, t8_value);
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div5);
+    		}
+    	};
+    }
+
+    // (161:18) {#if pred.prediction != null}
+    function create_if_block_2(ctx) {
+    	let div1;
+    	let div0;
+    	let b;
+    	let t0_value = /*pred*/ ctx[6].prediction.homeGoals + "";
+    	let t0;
+    	let t1;
+    	let t2_value = /*pred*/ ctx[6].prediction.awayGoals + "";
+    	let t2;
+    	let div1_id_value;
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			b = element("b");
+    			t0 = text(t0_value);
+    			t1 = text(" - ");
+    			t2 = text(t2_value);
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { class: true, id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			b = claim_element(div0_nodes, "B", {});
+    			var b_nodes = children(b);
+    			t0 = claim_text(b_nodes, t0_value);
+    			t1 = claim_text(b_nodes, " - ");
+    			t2 = claim_text(b_nodes, t2_value);
+    			b_nodes.forEach(detach);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "detailed-predicted-score svelte-l0s73l");
+    			attr(div1, "class", "prediction-details svelte-l0s73l");
+    			attr(div1, "id", div1_id_value = /*pred*/ ctx[6]._id);
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    			append_hydration(div0, b);
+    			append_hydration(b, t0);
+    			append_hydration(b, t1);
+    			append_hydration(b, t2);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*data*/ 1 && t0_value !== (t0_value = /*pred*/ ctx[6].prediction.homeGoals + "")) set_data(t0, t0_value);
+    			if (dirty & /*data*/ 1 && t2_value !== (t2_value = /*pred*/ ctx[6].prediction.awayGoals + "")) set_data(t2, t2_value);
+
+    			if (dirty & /*data*/ 1 && div1_id_value !== (div1_id_value = /*pred*/ ctx[6]._id)) {
+    				attr(div1, "id", div1_id_value);
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    		}
+    	};
+    }
+
+    // (126:14) {#each predictions as pred}
+    function create_each_block_1(ctx) {
+    	let button;
+    	let div5;
+    	let div0;
+    	let t0;
+    	let t1;
+    	let div4;
+    	let div1;
+    	let t2_value = /*pred*/ ctx[6].home + "";
+    	let t2;
+    	let t3;
+    	let div2;
+    	let t4_value = Math.round(/*pred*/ ctx[6].prediction.homeGoals) + "";
+    	let t4;
+    	let t5;
+    	let t6_value = Math.round(/*pred*/ ctx[6].prediction.awayGoals) + "";
+    	let t6;
+    	let t7;
+    	let div3;
+    	let t8_value = /*pred*/ ctx[6].away + "";
+    	let t8;
+    	let t9;
+    	let t10;
+    	let button_class_value;
+    	let mounted;
+    	let dispose;
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*pred*/ ctx[6].actual != null) return create_if_block_3;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type_1(ctx);
+    	let if_block0 = current_block_type(ctx);
+    	let if_block1 = /*pred*/ ctx[6].prediction != null && create_if_block_2(ctx);
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[1](/*pred*/ ctx[6]);
+    	}
+
+    	return {
+    		c() {
+    			button = element("button");
+    			div5 = element("div");
+    			div0 = element("div");
+    			t0 = text("Predicted:");
+    			t1 = space();
+    			div4 = element("div");
+    			div1 = element("div");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			div2 = element("div");
+    			t4 = text(t4_value);
+    			t5 = text(" - ");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div3 = element("div");
+    			t8 = text(t8_value);
+    			t9 = space();
+    			if_block0.c();
+    			t10 = space();
+    			if (if_block1) if_block1.c();
+    			this.h();
+    		},
+    		l(nodes) {
+    			button = claim_element(nodes, "BUTTON", { class: true });
+    			var button_nodes = children(button);
+    			div5 = claim_element(button_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div0 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, "Predicted:");
+    			div0_nodes.forEach(detach);
+    			t1 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			div1 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t2 = claim_text(div1_nodes, t2_value);
+    			div1_nodes.forEach(detach);
+    			t3 = claim_space(div4_nodes);
+    			div2 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t4 = claim_text(div2_nodes, t4_value);
+    			t5 = claim_text(div2_nodes, " - ");
+    			t6 = claim_text(div2_nodes, t6_value);
+    			div2_nodes.forEach(detach);
+    			t7 = claim_space(div4_nodes);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			t8 = claim_text(div3_nodes, t8_value);
+    			div3_nodes.forEach(detach);
+    			div4_nodes.forEach(detach);
+    			div5_nodes.forEach(detach);
+    			t9 = claim_space(button_nodes);
+    			if_block0.l(button_nodes);
+    			t10 = claim_space(button_nodes);
+    			if (if_block1) if_block1.l(button_nodes);
+    			button_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "prediction-label svelte-l0s73l");
+    			attr(div1, "class", "prediction-initials svelte-l0s73l");
+    			attr(div2, "class", "prediction-score svelte-l0s73l");
+    			attr(div3, "class", "prediction-initials svelte-l0s73l");
+    			attr(div4, "class", "prediction-value svelte-l0s73l");
+    			attr(div5, "class", "prediction prediction-item svelte-l0s73l");
+    			attr(button, "class", button_class_value = "prediction-container " + /*pred*/ ctx[6].colour + " svelte-l0s73l");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, button, anchor);
+    			append_hydration(button, div5);
+    			append_hydration(div5, div0);
+    			append_hydration(div0, t0);
+    			append_hydration(div5, t1);
+    			append_hydration(div5, div4);
+    			append_hydration(div4, div1);
+    			append_hydration(div1, t2);
+    			append_hydration(div4, t3);
+    			append_hydration(div4, div2);
+    			append_hydration(div2, t4);
+    			append_hydration(div2, t5);
+    			append_hydration(div2, t6);
+    			append_hydration(div4, t7);
+    			append_hydration(div4, div3);
+    			append_hydration(div3, t8);
+    			append_hydration(button, t9);
+    			if_block0.m(button, null);
+    			append_hydration(button, t10);
+    			if (if_block1) if_block1.m(button, null);
+
+    			if (!mounted) {
+    				dispose = listen(button, "click", click_handler);
+    				mounted = true;
+    			}
+    		},
+    		p(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*data*/ 1 && t2_value !== (t2_value = /*pred*/ ctx[6].home + "")) set_data(t2, t2_value);
+    			if (dirty & /*data*/ 1 && t4_value !== (t4_value = Math.round(/*pred*/ ctx[6].prediction.homeGoals) + "")) set_data(t4, t4_value);
+    			if (dirty & /*data*/ 1 && t6_value !== (t6_value = Math.round(/*pred*/ ctx[6].prediction.awayGoals) + "")) set_data(t6, t6_value);
+    			if (dirty & /*data*/ 1 && t8_value !== (t8_value = /*pred*/ ctx[6].away + "")) set_data(t8, t8_value);
+
+    			if (current_block_type === (current_block_type = select_block_type_1(ctx)) && if_block0) {
+    				if_block0.p(ctx, dirty);
+    			} else {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(button, t10);
+    				}
+    			}
+
+    			if (/*pred*/ ctx[6].prediction != null) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block_2(ctx);
+    					if_block1.c();
+    					if_block1.m(button, null);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
+
+    			if (dirty & /*data*/ 1 && button_class_value !== (button_class_value = "prediction-container " + /*pred*/ ctx[6].colour + " svelte-l0s73l")) {
+    				attr(button, "class", button_class_value);
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(button);
+    			if_block0.d();
+    			if (if_block1) if_block1.d();
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+    }
+
+    // (120:12) {#each data.predictions as { _id, predictions }}
+    function create_each_block(ctx) {
+    	let div0;
+    	let t0_value = /*_id*/ ctx[2] + "";
+    	let t0;
+    	let t1;
+    	let div1;
+    	let t2;
+    	let t3;
+    	let div2;
+    	let each_value_1 = /*predictions*/ ctx[3];
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	return {
+    		c() {
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			div1 = element("div");
+    			t2 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t3 = space();
+    			div2 = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div0 = claim_element(nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, t0_value);
+    			div0_nodes.forEach(detach);
+    			t1 = claim_space(nodes);
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			children(div1).forEach(detach);
+    			t2 = claim_space(nodes);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(nodes);
+    			}
+
+    			t3 = claim_space(nodes);
+    			div2 = claim_element(nodes, "DIV", { class: true });
+    			children(div2).forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "class", "date svelte-l0s73l");
+    			attr(div1, "class", "medium-predictions-divider svelte-l0s73l");
+    			attr(div2, "class", "predictions-gap svelte-l0s73l");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div0, anchor);
+    			append_hydration(div0, t0);
+    			insert_hydration(target, t1, anchor);
+    			insert_hydration(target, div1, anchor);
+    			insert_hydration(target, t2, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_hydration(target, t3, anchor);
+    			insert_hydration(target, div2, anchor);
+    		},
+    		p(ctx, dirty) {
+    			if (dirty & /*data*/ 1 && t0_value !== (t0_value = /*_id*/ ctx[2] + "")) set_data(t0, t0_value);
+
+    			if (dirty & /*data, toggleDetailsDisplay, datetimeToTime, Math*/ 1) {
+    				each_value_1 = /*predictions*/ ctx[3];
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block_1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(t3.parentNode, t3);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value_1.length;
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div0);
+    			if (detaching) detach(t1);
+    			if (detaching) detach(div1);
+    			if (detaching) detach(t2);
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach(t3);
+    			if (detaching) detach(div2);
+    		}
+    	};
+    }
+
+    // (90:0) <Router>
+    function create_default_slot$1(ctx) {
+    	let div1;
+    	let div0;
+    	let a;
+    	let t0;
+    	let t1;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*data*/ ctx[0] != undefined) return create_if_block;
+    		return create_else_block_1;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			a = element("a");
+    			t0 = text("Predictions");
+    			t1 = space();
+    			if_block.c();
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true, class: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			a = claim_element(div0_nodes, "A", { class: true, href: true });
+    			var a_nodes = children(a);
+    			t0 = claim_text(a_nodes, "Predictions");
+    			a_nodes.forEach(detach);
+    			div0_nodes.forEach(detach);
+    			t1 = claim_space(div1_nodes);
+    			if_block.l(div1_nodes);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(a, "class", "predictions-title svelte-l0s73l");
+    			attr(a, "href", "/predictions");
+    			attr(div0, "class", "predictions-header svelte-l0s73l");
+    			attr(div1, "id", "predictions");
+    			attr(div1, "class", "svelte-l0s73l");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    			append_hydration(div0, a);
+    			append_hydration(a, t0);
+    			append_hydration(div1, t1);
+    			if_block.m(div1, null);
+    		},
+    		p(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(div1, null);
+    				}
+    			}
+    		},
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    			if_block.d();
+    		}
+    	};
+    }
+
+    function create_fragment$1(ctx) {
+    	let meta;
+    	let t;
+    	let router;
+    	let current;
+
+    	router = new Router({
+    			props: {
+    				$$slots: { default: [create_default_slot$1] },
+    				$$scope: { ctx }
+    			}
+    		});
+
+    	return {
+    		c() {
+    			meta = element("meta");
+    			t = space();
+    			create_component(router.$$.fragment);
+    			this.h();
+    		},
+    		l(nodes) {
+    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1w56yuh\"]', document_1.head);
+    			meta = claim_element(head_nodes, "META", { name: true, content: true });
+    			head_nodes.forEach(detach);
+    			t = claim_space(nodes);
+    			claim_component(router.$$.fragment, nodes);
+    			this.h();
+    		},
+    		h() {
+    			document_1.title = "Predictions";
+    			attr(meta, "name", "description");
+    			attr(meta, "content", "Premier League Statistics Dashboard");
+    		},
+    		m(target, anchor) {
+    			append_hydration(document_1.head, meta);
+    			insert_hydration(target, t, anchor);
+    			mount_component(router, target, anchor);
+    			current = true;
+    		},
+    		p(ctx, [dirty]) {
+    			const router_changes = {};
+
+    			if (dirty & /*$$scope, data*/ 513) {
+    				router_changes.$$scope = { dirty, ctx };
+    			}
+
+    			router.$set(router_changes);
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(router.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(router.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			detach(meta);
+    			if (detaching) detach(t);
+    			destroy_component(router, detaching);
+    		}
+    	};
+    }
+
+    async function fetchData(address) {
+    	const response = await fetch(address);
+    	let json = await response.json();
+    	return json;
+    }
+
+    function toggleDetailsDisplay(id) {
+    	let prediction = document.getElementById(id);
+
+    	if (prediction != null) {
+    		prediction.classList.toggle("expanded");
+    	}
+    }
+
+    function identicalScore(prediction, actual) {
+    	return Math.round(prediction.homeGoals) == actual.homeGoals && Math.round(prediction.awayGoals) == actual.awayGoals;
+    }
+
+    function sameResult(prediction, actual) {
+    	return prediction.homeGoals > prediction.awayGoals && actual.homeGoals > actual.awayGoals || prediction.homeGoals == prediction.awayGoals && actual.homeGoals == actual.awayGoals || prediction.homeGoals < prediction.awayGoals && actual.homeGoals < actual.awayGoals;
+    }
+
+    function insertColours(json) {
+    	for (let i = 0; i < json.predictions.length; i++) {
+    		for (let j = 0; j < json.predictions[i].predictions.length; j++) {
+    			let prediction = json.predictions[i].predictions[j];
+
+    			if (prediction.actual != null) {
+    				if (identicalScore(prediction.prediction, prediction.actual)) {
+    					prediction.colour = "green";
+    				} else if (sameResult(prediction.prediction, prediction.actual)) {
+    					prediction.colour = "yellow";
+    				} else {
+    					prediction.colour = "red";
+    				}
+    			}
+    		}
+    	}
+    }
+
+    function datetimeToTime(datetime) {
+    	let date = new Date(datetime);
+    	date = date.toTimeString().slice(0, 5);
+    	return date;
+    }
+
+    function sortByDate(json) {
+    	json.predictions.sort((a, b) => {
+    		return new Date(b._id) - new Date(a._id);
+    	});
+
+    	// Sort each day of predictions by time
+    	for (let i = 0; i < json.predictions.length; i++) {
+    		json.predictions[i].predictions.sort((a, b) => {
+    			return new Date(a._id) - new Date(b._id);
+    		});
+    	}
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	let data;
+
+    	onMount(() => {
+    		// fetchData("http://127.0.0.1:5000/api/predictions").then((json) => {
+    		fetchData("https://pldashboard.herokuapp.com/api/predictions").then(json => {
+    			sortByDate(json);
+    			insertColours(json);
+    			$$invalidate(0, data = json);
+    			console.log(data.predictions);
+    		});
+    	});
+
+    	const click_handler = pred => toggleDetailsDisplay(pred._id);
+    	return [data, click_handler];
+    }
+
+    class Predictions extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
+    	}
+    }
+
+    /* src\App.svelte generated by Svelte v3.49.0 */
+
+    function create_default_slot_2(ctx) {
+    	let team;
+    	let current;
+    	team = new Team({ props: { team: "manchester-city" } });
+
+    	return {
+    		c() {
+    			create_component(team.$$.fragment);
+    		},
+    		l(nodes) {
+    			claim_component(team.$$.fragment, nodes);
+    		},
+    		m(target, anchor) {
+    			mount_component(team, target, anchor);
+    			current = true;
+    		},
+    		p: noop,
+    		i(local) {
+    			if (current) return;
+    			transition_in(team.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(team.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			destroy_component(team, detaching);
+    		}
+    	};
+    }
+
+    // (17:2) <Route path="/:team" let:params>
+    function create_default_slot_1(ctx) {
+    	let team;
+    	let current;
+    	team = new Team({ props: { team: /*params*/ ctx[1].team } });
+
+    	return {
+    		c() {
+    			create_component(team.$$.fragment);
+    		},
+    		l(nodes) {
+    			claim_component(team.$$.fragment, nodes);
+    		},
+    		m(target, anchor) {
+    			mount_component(team, target, anchor);
+    			current = true;
+    		},
+    		p(ctx, dirty) {
+    			const team_changes = {};
+    			if (dirty & /*params*/ 2) team_changes.team = /*params*/ ctx[1].team;
+    			team.$set(team_changes);
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(team.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(team.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			destroy_component(team, detaching);
+    		}
+    	};
+    }
+
+    // (12:0) <Router {url}>
+    function create_default_slot(ctx) {
+    	let route0;
+    	let t0;
+    	let route1;
+    	let t1;
+    	let route2;
+    	let t2;
+    	let route3;
+    	let t3;
+    	let route4;
+    	let current;
+
+    	route0 = new Route({
+    			props: {
+    				path: "/",
+    				$$slots: { default: [create_default_slot_2] },
+    				$$scope: { ctx }
+    			}
+    		});
+
+    	route1 = new Route({
+    			props: {
+    				path: "/predictions",
+    				component: Predictions
+    			}
+    		});
+
+    	route2 = new Route({
+    			props: {
+    				path: "/:team",
+    				$$slots: {
+    					default: [
+    						create_default_slot_1,
+    						({ params }) => ({ 1: params }),
+    						({ params }) => params ? 2 : 0
+    					]
+    				},
+    				$$scope: { ctx }
+    			}
+    		});
+
+    	route3 = new Route({
+    			props: { path: "/teams", component: Teams }
+    		});
+
+    	route4 = new Route({
+    			props: { path: "/home", component: Home }
+    		});
+
+    	return {
+    		c() {
+    			create_component(route0.$$.fragment);
+    			t0 = space();
+    			create_component(route1.$$.fragment);
+    			t1 = space();
+    			create_component(route2.$$.fragment);
+    			t2 = space();
+    			create_component(route3.$$.fragment);
+    			t3 = space();
+    			create_component(route4.$$.fragment);
+    		},
+    		l(nodes) {
+    			claim_component(route0.$$.fragment, nodes);
+    			t0 = claim_space(nodes);
+    			claim_component(route1.$$.fragment, nodes);
+    			t1 = claim_space(nodes);
+    			claim_component(route2.$$.fragment, nodes);
+    			t2 = claim_space(nodes);
+    			claim_component(route3.$$.fragment, nodes);
+    			t3 = claim_space(nodes);
+    			claim_component(route4.$$.fragment, nodes);
+    		},
+    		m(target, anchor) {
+    			mount_component(route0, target, anchor);
+    			insert_hydration(target, t0, anchor);
+    			mount_component(route1, target, anchor);
+    			insert_hydration(target, t1, anchor);
+    			mount_component(route2, target, anchor);
+    			insert_hydration(target, t2, anchor);
+    			mount_component(route3, target, anchor);
+    			insert_hydration(target, t3, anchor);
+    			mount_component(route4, target, anchor);
+    			current = true;
+    		},
+    		p(ctx, dirty) {
+    			const route0_changes = {};
+
+    			if (dirty & /*$$scope*/ 4) {
+    				route0_changes.$$scope = { dirty, ctx };
+    			}
+
+    			route0.$set(route0_changes);
+    			const route2_changes = {};
+
+    			if (dirty & /*$$scope, params*/ 6) {
+    				route2_changes.$$scope = { dirty, ctx };
+    			}
+
+    			route2.$set(route2_changes);
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(route0.$$.fragment, local);
+    			transition_in(route1.$$.fragment, local);
+    			transition_in(route2.$$.fragment, local);
+    			transition_in(route3.$$.fragment, local);
+    			transition_in(route4.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(route0.$$.fragment, local);
+    			transition_out(route1.$$.fragment, local);
+    			transition_out(route2.$$.fragment, local);
+    			transition_out(route3.$$.fragment, local);
+    			transition_out(route4.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			destroy_component(route0, detaching);
+    			if (detaching) detach(t0);
+    			destroy_component(route1, detaching);
+    			if (detaching) detach(t1);
+    			destroy_component(route2, detaching);
+    			if (detaching) detach(t2);
+    			destroy_component(route3, detaching);
+    			if (detaching) detach(t3);
+    			destroy_component(route4, detaching);
+    		}
+    	};
+    }
+
+    function create_fragment(ctx) {
+    	let router;
+    	let current;
+
+    	router = new Router({
+    			props: {
+    				url: /*url*/ ctx[0],
+    				$$slots: { default: [create_default_slot] },
+    				$$scope: { ctx }
+    			}
+    		});
+
+    	return {
+    		c() {
+    			create_component(router.$$.fragment);
+    		},
+    		l(nodes) {
+    			claim_component(router.$$.fragment, nodes);
+    		},
+    		m(target, anchor) {
+    			mount_component(router, target, anchor);
+    			current = true;
+    		},
+    		p(ctx, [dirty]) {
+    			const router_changes = {};
+    			if (dirty & /*url*/ 1) router_changes.url = /*url*/ ctx[0];
+
+    			if (dirty & /*$$scope*/ 4) {
+    				router_changes.$$scope = { dirty, ctx };
+    			}
+
+    			router.$set(router_changes);
+    		},
+    		i(local) {
+    			if (current) return;
+    			transition_in(router.$$.fragment, local);
+    			current = true;
+    		},
+    		o(local) {
+    			transition_out(router.$$.fragment, local);
+    			current = false;
+    		},
+    		d(detaching) {
+    			destroy_component(router, detaching);
+    		}
+    	};
+    }
+
+    function instance($$self, $$props, $$invalidate) {
+    	let { url = "" } = $$props;
+
+    	$$self.$$set = $$props => {
+    		if ('url' in $$props) $$invalidate(0, url = $$props.url);
+    	};
+
+    	return [url];
+    }
+
+    class App extends SvelteComponent {
+    	constructor(options) {
+    		super();
+    		init(this, options, instance, create_fragment, safe_not_equal, { url: 0 });
+    	}
+    }
+
+    new App({
+      target: document.getElementById("app"),
+      hydrate: true
+    });
+
+})();
 //# sourceMappingURL=bundle.js.map
