@@ -53,16 +53,16 @@
   .fantasy-link {
     color: #37003c;
     background: #00ff87;
-    padding: 20px 72.4px
+    padding: 18px 58.5px
   }
   .dashboard-link {
     color: #00fe87;
     background: #38003d;
-    padding: 20px 30px;
+    padding: 18px 25px;
   }
   .dashboard-link,
   .fantasy-link {
-    font-size: 1.5em;
+    font-size: 1.2em;
     border-radius: 9px;
     font-weight: bold;
     letter-spacing: 0.02em;

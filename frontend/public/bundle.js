@@ -10512,17 +10512,17 @@
     		h() {
     			if (!src_url_equal(img.src, img_src_value = "img/pldashboard4.png")) attr(img, "src", img_src_value);
     			attr(img, "alt", "pldashboard");
-    			attr(img, "class", "svelte-1cyripm");
-    			attr(a0, "class", "dashboard-link svelte-1cyripm");
+    			attr(img, "class", "svelte-nyqhdk");
+    			attr(a0, "class", "dashboard-link svelte-nyqhdk");
     			attr(a0, "href", "/");
-    			attr(div0, "class", "dashboard-link-container svelte-1cyripm");
-    			attr(a1, "class", "fantasy-link svelte-1cyripm");
+    			attr(div0, "class", "dashboard-link-container svelte-nyqhdk");
+    			attr(a1, "class", "fantasy-link svelte-nyqhdk");
     			attr(a1, "href", "/");
-    			attr(div1, "class", "fantasy-link-container svelte-1cyripm");
-    			attr(div2, "class", "links svelte-1cyripm");
-    			attr(div3, "class", "content svelte-1cyripm");
+    			attr(div1, "class", "fantasy-link-container svelte-nyqhdk");
+    			attr(div2, "class", "links svelte-nyqhdk");
+    			attr(div3, "class", "content svelte-nyqhdk");
     			attr(div4, "id", "home");
-    			attr(div4, "class", "svelte-1cyripm");
+    			attr(div4, "class", "svelte-nyqhdk");
     		},
     		m(target, anchor) {
     			insert_hydration(target, div4, anchor);
