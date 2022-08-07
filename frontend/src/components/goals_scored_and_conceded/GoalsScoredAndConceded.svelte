@@ -50,31 +50,11 @@
     return [scored, conceded];
   }
 
-  function getMatchdayDates(data) {
-    // Find median matchday date across all teams for each matchday
-    let x = [];
-    for (let i = 1; i <= 38; i++) {
-      let matchdayDates = [];
-      for (let team of data.teamNames) {
-        matchdayDates.push(data.fixtures[team][i].date);
-      }
-      matchdayDates = matchdayDates.map((val) => {
-        return new Date(val);
-      });
-      matchdayDates = matchdayDates.sort();
-      x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
-    }
-    x.sort(function (a, b) {
-      return a - b;
-    });
-    return x;
-  }
-
-  function avgLine(x, avgGoals, matchdays) {
+  function avgLine(playedMatchdays, avgGoals, matchdays) {
     return {
       name: "Avg",
       type: "line",
-      x: x,
+      x: playedMatchdays,
       y: Object.values(avgGoals),
       text: matchdays,
       hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",
@@ -82,11 +62,11 @@
     };
   }
 
-  function teamScoredBar(x, teamScored, matchdays) {
+  function teamScoredBar(playedMatchdays, teamScored, matchdays) {
     return {
       name: "Scored",
       type: "bar",
-      x: x,
+      x: playedMatchdays,
       y: Object.values(teamScored),
       text: matchdays,
       marker: { color: "#77DD77" },
@@ -95,11 +75,11 @@
     };
   }
 
-  function teamConcededBar(x, teamConceded, matchdays) {
+  function teamConcededBar(playedMatchdays, teamConceded, matchdays) {
     return {
       name: "Conceded",
       type: "bar",
-      x: x,
+      x: playedMatchdays,
       y: Object.values(teamConceded),
       text: matchdays,
       marker: { color: "C23B22" },
@@ -109,14 +89,14 @@
   }
 
   function buildPlotData(data, fullTeamName) {
-    let x = getMatchdayDates(data);
+    // let x = getMatchdayDates(data, fullTeamName);
     let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
     let avgGoals = getAvgGoalsPerGame(data);
     let matchdays = Object.keys(avgGoals);
 
-    let scoredBar = teamScoredBar(x, teamScored, matchdays);
-    let concededBar = teamConcededBar(x, teamConceded, matchdays);
-    let line = avgLine(x, avgGoals, matchdays);
+    let scoredBar = teamScoredBar(playedMatchdays, teamScored, matchdays);
+    let concededBar = teamConcededBar(playedMatchdays, teamConceded, matchdays);
+    let line = avgLine(playedMatchdays, avgGoals, matchdays);
 
     let plotData = {
       data: [scoredBar, concededBar, line],
@@ -181,13 +161,12 @@
 
   function refreshPlot() {
     if (setup) {
-      let x = getMatchdayDates(data);
       let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
       let avgGoals = getAvgGoalsPerGame(data);
       let matchdays = Object.keys(avgGoals);
 
-      let scoredBar = teamScoredBar(x, teamScored, matchdays);
-      let concededBar = teamConcededBar(x, teamConceded, matchdays);
+      let scoredBar = teamScoredBar(playedMatchdays, teamScored, matchdays);
+      let concededBar = teamConcededBar(playedMatchdays, teamConceded, matchdays);
       
       plotData.data[0] = scoredBar;
       plotData.data[1] = concededBar;
@@ -197,7 +176,7 @@
 
   $: fullTeamName && refreshPlot();
 
-  export let data, fullTeamName;
+  export let data, fullTeamName, playedMatchdays;
 </script>
 
 <div id="plotly">

@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
 
-  function getFormLine(data, x, teamName, isMainTeam) {
+  function getFormLine(data, playedMatchdays, teamName, isMainTeam) {
     let matchdays = Object.keys(data.form[data._id][teamName]); // Played matchdays
 
     let y = [];
@@ -24,7 +24,7 @@
     }
 
     let line = {
-      x: x,
+      x: playedMatchdays,
       y: y,
       name: teamName,
       mode: "lines",
@@ -36,55 +36,26 @@
     return line;
   }
 
-  function getMatchdayDates(data, teamName) {
-    let matchdays = Object.keys(data.form[data._id][teamName]); // Played matchdasy
-
-    // If played one or no games, take x-axis from whole season dates
-    if (matchdays.length <= 1) {
-      matchdays = Object.keys(data.fixtures[teamName]);
-    }
-
-    let x = [];
-    // Find median matchday date across all teams for each matchday
-    for (let matchday of matchdays) {
-      let matchdayDates = [];
-      for (let team of data.teamNames) {
-        matchdayDates.push(data.fixtures[team][matchday].date);
-      }
-      matchdayDates = matchdayDates.map((val) => {
-        return new Date(val);
-      });
-      matchdayDates = matchdayDates.sort();
-      x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
-    }
-    x.sort(function (a, b) {
-      return a - b;
-    });
-    return x;
-  }
-
-  function lines(x) {
+  function lines(data, fullTeamName, playedMatchdays) {
     let lines = [];
     for (let i = 0; i < data.teamNames.length; i++) {
       if (data.teamNames[i] != fullTeamName) {
-        let line = getFormLine(data, x, data.teamNames[i], false);
+        let line = getFormLine(data, playedMatchdays, data.teamNames[i], false);
         lines.push(line);
       }
     }
   
     // Add this team last to ensure it overlaps all other lines
-    let line = getFormLine(data, x, fullTeamName, true);
+    let line = getFormLine(data, playedMatchdays, fullTeamName, true);
     lines.push(line);
     return lines;
   }
 
   function buildPlotData(data, fullTeamName) {
-    let x = getMatchdayDates(data, fullTeamName); // All lines use the same x
-
     let yLabels = Array.from(Array(11), (_, i) => i * 10);
 
-    let graphData = {
-      data: lines(x),
+    let plotData = {
+      data: lines(data, fullTeamName, playedMatchdays),
       layout: {
         title: false,
         autosize: true,
@@ -108,7 +79,7 @@
           showgrid: false,
           showline: false,
           fixedrange: true,
-          range: [x[0], x[x.length - 1]],
+          range: [playedMatchdays[0], playedMatchdays[playedMatchdays.length - 1]],
         },
       },
       config: {
@@ -117,7 +88,7 @@
         displayModeBar: false,
       },
     };
-    return graphData;
+    return plotData;
   }
 
   let plotDiv, plotData;
@@ -152,7 +123,7 @@
 
   $: fullTeamName && refreshPlot();
 
-  export let data, fullTeamName;
+  export let data, fullTeamName, playedMatchdays;
 </script>
 
 <div id="plotly">

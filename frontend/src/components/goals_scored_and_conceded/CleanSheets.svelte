@@ -33,27 +33,7 @@
     return [cleanSheets, notCleanSheets];
   }
 
-  function getMatchdayDates(data) {
-    // Find median matchday date across all teams for each matchday
-    let x = [];
-    for (let i = 1; i <= 38; i++) {
-      let matchdayDates = [];
-      for (let team of data.teamNames) {
-        matchdayDates.push(data.fixtures[team][i].date);
-      }
-      matchdayDates = matchdayDates.map((val) => {
-        return new Date(val);
-      });
-      matchdayDates = matchdayDates.sort();
-      x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
-    }
-    x.sort(function (a, b) {
-      return a - b;
-    });
-    return x;
-  }
-
-  function bars(data, fullTeamName, x) {
+  function bars(data, fullTeamName, playedMatchdays) {
     let matchdays = Object.keys(data.form[data._id][fullTeamName]);
 
     let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, fullTeamName);
@@ -61,7 +41,7 @@
       {
         name: "Clean sheets",
         type: "bar",
-        x: x,
+        x: playedMatchdays,
         y: cleanSheets,
         text: matchdays,
         marker: { color: "#77DD77" },
@@ -71,7 +51,7 @@
       {
         name: "Conceded",
         type: "bar",
-        x: x,
+        x: playedMatchdays,
         y: notCleanSheets,
         text: matchdays,
         marker: { color: "C23B22" },
@@ -82,9 +62,7 @@
   }
 
   function buildPlotData(data, fullTeamName) {
-    let x = getMatchdayDates(data);
-
-    let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, x);
+    let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, playedMatchdays);
 
     let plotData = {
       data: [cleanSheetsBar, concededBar],
@@ -115,9 +93,9 @@
         shapes: [
           {
             type: "line",
-            x0: x[0],
+            x0: playedMatchdays[0],
             y0: 0.5,
-            x1: x[x.length - 1],
+            x1: playedMatchdays[playedMatchdays.length - 1],
             y1: 0.5,
             layer: "below",
             line: {
@@ -155,8 +133,7 @@
 
   function refreshPlot() {
     if (setup) {
-      let x = getMatchdayDates(data);
-      let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, x);
+      let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, playedMatchdays);
       plotData.data[0] = cleanSheetsBar;
       plotData.data[1] = concededBar;
       Plotly.redraw(plotDiv);
@@ -165,7 +142,7 @@
 
   $: fullTeamName && refreshPlot();
 
-  export let data, fullTeamName;
+  export let data, fullTeamName, playedMatchdays;
 </script>
 
 <div id="plotly">

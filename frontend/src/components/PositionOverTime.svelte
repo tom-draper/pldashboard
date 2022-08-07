@@ -1,16 +1,8 @@
 <script>
   import { onMount } from "svelte";
 
-  function getLine(data, x, teamName, isMainTeam) {
-    let matchdays = Object.keys(data.form[data._id][teamName]);
-
-    let y = [];
-    for (let matchday of matchdays) {
-      let position = data.form[data._id][teamName][matchday].position;
-      y.push(position);
-    }
-
-    let lineVal;
+  function getLineConfig(teamName, isMainTeam) {
+    let lineConfig;
     if (isMainTeam) {
       // Get team primary colour from css variable
       let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
@@ -18,17 +10,35 @@
       let lineColor = getComputedStyle(
         document.documentElement
       ).getPropertyValue(`--${teamKey}`);
-      lineVal = { color: lineColor, width: 4 };
+      lineConfig = { color: lineColor, width: 4 };
     } else {
-      lineVal = { color: "#d3d3d3" };
+      lineConfig = { color: "#d3d3d3" };
     }
+    return lineConfig
+  }
+
+  function getLineY(data, matchdays) {
+    let y = [];
+    for (let matchday of matchdays) {
+      let position = data.form[data._id][teamName][matchday].position;
+      y.push(position);
+    }
+    return y
+  }
+
+  function getLine(data, x, teamName, isMainTeam) {
+    let matchdays = Object.keys(data.form[data._id][teamName]);
+
+    let y = getLineY(data, matchdays)
+
+    let lineConfig = getLineConfig(teamName, isMainTeam);
 
     let line = {
       x: x,
       y: y,
       name: teamName,
       mode: "lines",
-      line: lineVal,
+      line: lineConfig,
       text: matchdays,
       hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
       showlegend: false,
@@ -36,55 +46,26 @@
     return line;
   }
 
-  function getMatchdayDates(data, teamName) {
-    let matchdays = Object.keys(data.form[data._id][teamName]);
-
-    // If played one or no games, take x-axis from whole season dates
-    if (matchdays.length <= 1) {
-      matchdays = Object.keys(data.fixtures[teamName]);
-    }
-
-    // Find median matchday date across all teams for each matchday
-    let x = [];
-    for (let matchday of matchdays) {
-      let matchdayDates = [];
-      data.teamNames.forEach((team) => {
-        matchdayDates.push(data.fixtures[team][matchday].date);
-      });
-      matchdayDates = matchdayDates.map((val) => {
-        return new Date(val);
-      });
-      matchdayDates = matchdayDates.sort();
-      x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
-    }
-    x.sort(function (a, b) {
-      return a - b;
-    });
-    return x;
-  }
-
-  function lines(x) {
+  function lines(data, fullTeamName, playedMatchdays) {
     let lines = [];
     for (let i = 0; i < data.teamNames.length; i++) {
       if (data.teamNames[i] != fullTeamName) {
-        let line = getLine(data, x, data.teamNames[i], false);
+        let line = getLine(data, playedMatchdays, data.teamNames[i], false);
         lines.push(line);
       }
     }
   
     // Add this team last to ensure it overlaps all other lines
-    let line = getLine(data, x, fullTeamName, true);
+    let line = getLine(data, playedMatchdays, fullTeamName, true);
     lines.push(line);
     return lines;
   }
 
   function buildPlotData(data, fullTeamName) {
-    let x = getMatchdayDates(data, fullTeamName); // All lines use the same x
-
     let yLabels = Array.from(Array(20), (_, i) => i + 1);
 
     let graphData = {
-      data: lines(x),
+      data: lines(data, fullTeamName, playedMatchdays),
       layout: {
         title: false,
         autosize: true,
@@ -112,9 +93,9 @@
         shapes: [
           {
             type: "rect",
-            x0: x[0],
+            x0: playedMatchdays[0],
             y0: 4.5,
-            x1: x[x.length - 1],
+            x1: playedMatchdays[playedMatchdays.length - 1],
             y1: 0.5,
             line: {
               width: 0,
@@ -125,9 +106,9 @@
           },
           {
             type: "rect",
-            x0: x[0],
+            x0: playedMatchdays[0],
             y0: 6.5,
-            x1: x[x.length - 1],
+            x1: playedMatchdays[playedMatchdays.length - 1],
             y1: 4.5,
             line: {
               width: 0,
@@ -138,9 +119,9 @@
           },
           {
             type: "rect",
-            x0: x[0],
+            x0: playedMatchdays[0],
             y0: 20.5,
-            x1: x[x.length - 1],
+            x1: playedMatchdays[playedMatchdays.length - 1],
             y1: 17.5,
             line: {
               width: 0,
@@ -160,8 +141,7 @@
     return graphData;
   }
 
-  let plotDiv;
-  let plotData;
+  let plotDiv, plotData;
   let setup = false;
   onMount(() => {
     genPlot();
@@ -193,7 +173,7 @@
 
   $: fullTeamName && refreshPlot();
 
-  export let data, fullTeamName;
+  export let data, fullTeamName, playedMatchdays;
 </script>
 
 <div id="plotly">

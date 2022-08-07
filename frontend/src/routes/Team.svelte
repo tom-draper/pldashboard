@@ -71,6 +71,33 @@
       .replace("And", "and");
   }
 
+  function getPlayedMatchdays(data, teamName) {
+    let matchdays = Object.keys(data.form[data._id][teamName]);
+
+    // If played one or no games, take x-axis from whole season dates
+    if (matchdays.length == 0) {
+      matchdays = Object.keys(data.fixtures[teamName]);
+    }
+
+    // Find median matchday date across all teams for each matchday
+    let x = [];
+    for (let matchday of matchdays) {
+      let matchdayDates = [];
+      data.teamNames.forEach((team) => {
+        matchdayDates.push(data.fixtures[team][matchday].date);
+      });
+      matchdayDates = matchdayDates.map((val) => {
+        return new Date(val);
+      });
+      matchdayDates = matchdayDates.sort();
+      x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
+    }
+    x.sort(function (a, b) {
+      return a - b;
+    });
+    return x;
+  }
+
   function getCurrentMatchday(data, fullTeamName) {
     if (Object.keys(data.form[data._id][fullTeamName]).length == 0) {
       return null; // Season has not started yet
@@ -102,6 +129,7 @@
         // Build teamData package from json data
         json.teamNames = Object.keys(json.fixtures)
         currentMatchday = getCurrentMatchday(json, fullTeamName);
+        playedMatchdays = getPlayedMatchdays(json, fullTeamName);
         data = json;
         console.log(data);
       })
@@ -114,12 +142,13 @@
     team = newTeam;
     fullTeamName = toTitleCase(team.replace(/\-/g, " "));
     currentMatchday = getCurrentMatchday(data, fullTeamName);
+    playedMatchdays = getPlayedMatchdays(data, fullTeamName);
     window.history.pushState(null,null,team); // Change current url without reloading
   }
 
   const showBadge = false;
   let fullTeamName = "";
-  let currentMatchday;
+  let currentMatchday, playedMatchdays;
   let data;
   onMount(() => {
     initDashboard();
@@ -213,7 +242,7 @@
             <div class="form-graph row-graph">
               <h1 class="lowered">Form Over Time</h1>
               <div class="graph full-row-graph">
-                <FormOverTime {data} {fullTeamName} />
+                <FormOverTime {data} {fullTeamName} {playedMatchdays} />
               </div>
             </div>
           </div>
@@ -222,7 +251,7 @@
             <div class="position-over-time-graph row-graph">
               <h1 class="lowered">Position Over Time</h1>
               <div class="graph full-row-graph">
-                <PositionOverTime {data} {fullTeamName} />
+                <PositionOverTime {data} {fullTeamName} {playedMatchdays} />
               </div>
             </div>
           </div>
@@ -231,7 +260,7 @@
             <div class="goals-scored-vs-conceded-graph row-graph">
               <h1 class="lowered">Goals Scored and Conceded</h1>
               <div class="graph full-row-graph">
-                <GoalsScoredAndConceded {data} {fullTeamName} />
+                <GoalsScoredAndConceded {data} {fullTeamName} {playedMatchdays} />
               </div>
             </div>
           </div>
@@ -239,7 +268,7 @@
           <div class="row">
             <div class="row-graph">
               <div class="clean-sheets graph full-row-graph">
-                <CleanSheets {data} {fullTeamName} />
+                <CleanSheets {data} {fullTeamName} {playedMatchdays} />
               </div>
             </div>
           </div>

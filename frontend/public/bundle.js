@@ -5915,19 +5915,19 @@
     		m(target, anchor) {
     			insert_hydration(target, div1, anchor);
     			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[3](div0);
+    			/*div0_binding*/ ctx[4](div0);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div1);
-    			/*div0_binding*/ ctx[3](null);
+    			/*div0_binding*/ ctx[4](null);
     		}
     	};
     }
 
-    function getFormLine(data, x, teamName, isMainTeam) {
+    function getFormLine(data, playedMatchdays, teamName, isMainTeam) {
     	let matchdays = Object.keys(data.form[data._id][teamName]); // Played matchdays
     	let y = [];
 
@@ -5950,7 +5950,7 @@
     	}
 
     	let line = {
-    		x,
+    		x: playedMatchdays,
     		y,
     		name: teamName,
     		mode: "lines",
@@ -5963,63 +5963,29 @@
     	return line;
     }
 
-    function getMatchdayDates$3(data, teamName) {
-    	let matchdays = Object.keys(data.form[data._id][teamName]); // Played matchdasy
+    function lines$1(data, fullTeamName, playedMatchdays) {
+    	let lines = [];
 
-    	// If played one or no games, take x-axis from whole season dates
-    	if (matchdays.length <= 1) {
-    		matchdays = Object.keys(data.fixtures[teamName]);
-    	}
-
-    	let x = [];
-
-    	// Find median matchday date across all teams for each matchday
-    	for (let matchday of matchdays) {
-    		let matchdayDates = [];
-
-    		for (let team of data.teamNames) {
-    			matchdayDates.push(data.fixtures[team][matchday].date);
+    	for (let i = 0; i < data.teamNames.length; i++) {
+    		if (data.teamNames[i] != fullTeamName) {
+    			let line = getFormLine(data, playedMatchdays, data.teamNames[i], false);
+    			lines.push(line);
     		}
-
-    		matchdayDates = matchdayDates.map(val => {
-    			return new Date(val);
-    		});
-
-    		matchdayDates = matchdayDates.sort();
-    		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
     	}
 
-    	x.sort(function (a, b) {
-    		return a - b;
-    	});
+    	// Add this team last to ensure it overlaps all other lines
+    	let line = getFormLine(data, playedMatchdays, fullTeamName, true);
 
-    	return x;
+    	lines.push(line);
+    	return lines;
     }
 
     function instance$c($$self, $$props, $$invalidate) {
-    	function lines(x) {
-    		let lines = [];
-
-    		for (let i = 0; i < data.teamNames.length; i++) {
-    			if (data.teamNames[i] != fullTeamName) {
-    				let line = getFormLine(data, x, data.teamNames[i], false);
-    				lines.push(line);
-    			}
-    		}
-
-    		// Add this team last to ensure it overlaps all other lines
-    		let line = getFormLine(data, x, fullTeamName, true);
-
-    		lines.push(line);
-    		return lines;
-    	}
-
     	function buildPlotData(data, fullTeamName) {
-    		let x = getMatchdayDates$3(data, fullTeamName); // All lines use the same x
     		let yLabels = Array.from(Array(11), (_, i) => i * 10);
 
-    		let graphData = {
-    			data: lines(x),
+    		let plotData = {
+    			data: lines$1(data, fullTeamName, playedMatchdays),
     			layout: {
     				title: false,
     				autosize: true,
@@ -6043,8 +6009,253 @@
     					showgrid: false,
     					showline: false,
     					fixedrange: true,
-    					range: [x[0], x[x.length - 1]]
+    					range: [playedMatchdays[0], playedMatchdays[playedMatchdays.length - 1]]
     				}
+    			},
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		setup = true;
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData(data, fullTeamName);
+
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let newPlotData = buildPlotData(data, fullTeamName);
+
+    			for (let i = 0; i < 20; i++) {
+    				plotData.data[i] = newPlotData.data[i];
+    			}
+
+    			Plotly.redraw(plotDiv);
+    		}
+    	}
+
+    	let { data, fullTeamName, playedMatchdays } = $$props;
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
+    			fullTeamName && refreshPlot();
+    		}
+    	};
+
+    	return [plotDiv, data, fullTeamName, playedMatchdays, div0_binding];
+    }
+
+    class FormOverTime extends SvelteComponent {
+    	constructor(options) {
+    		super();
+
+    		init(this, options, instance$c, create_fragment$d, safe_not_equal, {
+    			data: 1,
+    			fullTeamName: 2,
+    			playedMatchdays: 3
+    		});
+    	}
+    }
+
+    /* src\components\PositionOverTime.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$c(ctx) {
+    	let div1;
+    	let div0;
+
+    	return {
+    		c() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach);
+    			div1_nodes.forEach(detach);
+    			this.h();
+    		},
+    		h() {
+    			attr(div0, "id", "plotDiv");
+    			attr(div1, "id", "plotly");
+    		},
+    		m(target, anchor) {
+    			insert_hydration(target, div1, anchor);
+    			append_hydration(div1, div0);
+    			/*div0_binding*/ ctx[4](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d(detaching) {
+    			if (detaching) detach(div1);
+    			/*div0_binding*/ ctx[4](null);
+    		}
+    	};
+    }
+
+    function getLineConfig(teamName, isMainTeam) {
+    	let lineConfig;
+
+    	if (isMainTeam) {
+    		// Get team primary colour from css variable
+    		let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
+
+    		teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
+    		let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
+    		lineConfig = { color: lineColor, width: 4 };
+    	} else {
+    		lineConfig = { color: "#d3d3d3" };
+    	}
+
+    	return lineConfig;
+    }
+
+    function getLineY(data, matchdays) {
+    	let y = [];
+
+    	for (let matchday of matchdays) {
+    		let position = data.form[data._id][teamName][matchday].position;
+    		y.push(position);
+    	}
+
+    	return y;
+    }
+
+    function getLine(data, x, teamName, isMainTeam) {
+    	let matchdays = Object.keys(data.form[data._id][teamName]);
+    	let y = getLineY(data, matchdays);
+    	let lineConfig = getLineConfig(teamName, isMainTeam);
+
+    	let line = {
+    		x,
+    		y,
+    		name: teamName,
+    		mode: "lines",
+    		line: lineConfig,
+    		text: matchdays,
+    		hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
+    		showlegend: false
+    	};
+
+    	return line;
+    }
+
+    function lines(data, fullTeamName, playedMatchdays) {
+    	let lines = [];
+
+    	for (let i = 0; i < data.teamNames.length; i++) {
+    		if (data.teamNames[i] != fullTeamName) {
+    			let line = getLine(data, playedMatchdays, data.teamNames[i], false);
+    			lines.push(line);
+    		}
+    	}
+
+    	// Add this team last to ensure it overlaps all other lines
+    	let line = getLine(data, playedMatchdays, fullTeamName, true);
+
+    	lines.push(line);
+    	return lines;
+    }
+
+    function instance$b($$self, $$props, $$invalidate) {
+    	function buildPlotData(data, fullTeamName) {
+    		let yLabels = Array.from(Array(20), (_, i) => i + 1);
+
+    		let graphData = {
+    			data: lines(data, fullTeamName, playedMatchdays),
+    			layout: {
+    				title: false,
+    				autosize: true,
+    				margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
+    				hovermode: "closest",
+    				plot_bgcolor: "#fafafa",
+    				paper_bgcolor: "#fafafa",
+    				yaxis: {
+    					title: { text: "Position" },
+    					gridcolor: "gray",
+    					showgrid: false,
+    					showline: false,
+    					zeroline: false,
+    					autorange: "reversed",
+    					fixedrange: true,
+    					ticktext: yLabels,
+    					tickvals: yLabels
+    				},
+    				xaxis: {
+    					linecolor: "black",
+    					showgrid: false,
+    					showline: false,
+    					fixedrange: true
+    				},
+    				shapes: [
+    					{
+    						type: "rect",
+    						x0: playedMatchdays[0],
+    						y0: 4.5,
+    						x1: playedMatchdays[playedMatchdays.length - 1],
+    						y1: 0.5,
+    						line: { width: 0 },
+    						fillcolor: "#77DD77",
+    						opacity: 0.3,
+    						layer: "below"
+    					},
+    					{
+    						type: "rect",
+    						x0: playedMatchdays[0],
+    						y0: 6.5,
+    						x1: playedMatchdays[playedMatchdays.length - 1],
+    						y1: 4.5,
+    						line: { width: 0 },
+    						fillcolor: "#4CDEEE",
+    						opacity: 0.3,
+    						layer: "below"
+    					},
+    					{
+    						type: "rect",
+    						x0: playedMatchdays[0],
+    						y0: 20.5,
+    						x1: playedMatchdays[playedMatchdays.length - 1],
+    						y1: 17.5,
+    						line: { width: 0 },
+    						fillcolor: "#C23B22",
+    						opacity: 0.3,
+    						layer: "below"
+    					}
+    				]
     			},
     			config: {
     				responsive: true,
@@ -6085,7 +6296,7 @@
     		}
     	}
 
-    	let { data, fullTeamName } = $$props;
+    	let { data, fullTeamName, playedMatchdays } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -6097,6 +6308,7 @@
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(1, data = $$props.data);
     		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
     	};
 
     	$$self.$$.update = () => {
@@ -6105,276 +6317,18 @@
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, div0_binding];
-    }
-
-    class FormOverTime extends SvelteComponent {
-    	constructor(options) {
-    		super();
-    		init(this, options, instance$c, create_fragment$d, safe_not_equal, { data: 1, fullTeamName: 2 });
-    	}
-    }
-
-    /* src\components\PositionOverTime.svelte generated by Svelte v3.49.0 */
-
-    function create_fragment$c(ctx) {
-    	let div1;
-    	let div0;
-
-    	return {
-    		c() {
-    			div1 = element("div");
-    			div0 = element("div");
-    			this.h();
-    		},
-    		l(nodes) {
-    			div1 = claim_element(nodes, "DIV", { id: true });
-    			var div1_nodes = children(div1);
-    			div0 = claim_element(div1_nodes, "DIV", { id: true });
-    			var div0_nodes = children(div0);
-    			div0_nodes.forEach(detach);
-    			div1_nodes.forEach(detach);
-    			this.h();
-    		},
-    		h() {
-    			attr(div0, "id", "plotDiv");
-    			attr(div1, "id", "plotly");
-    		},
-    		m(target, anchor) {
-    			insert_hydration(target, div1, anchor);
-    			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[3](div0);
-    		},
-    		p: noop,
-    		i: noop,
-    		o: noop,
-    		d(detaching) {
-    			if (detaching) detach(div1);
-    			/*div0_binding*/ ctx[3](null);
-    		}
-    	};
-    }
-
-    function getLine(data, x, teamName, isMainTeam) {
-    	let matchdays = Object.keys(data.form[data._id][teamName]);
-    	let y = [];
-
-    	for (let matchday of matchdays) {
-    		let position = data.form[data._id][teamName][matchday].position;
-    		y.push(position);
-    	}
-
-    	let lineVal;
-
-    	if (isMainTeam) {
-    		// Get team primary colour from css variable
-    		let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
-
-    		teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
-    		let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
-    		lineVal = { color: lineColor, width: 4 };
-    	} else {
-    		lineVal = { color: "#d3d3d3" };
-    	}
-
-    	let line = {
-    		x,
-    		y,
-    		name: teamName,
-    		mode: "lines",
-    		line: lineVal,
-    		text: matchdays,
-    		hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
-    		showlegend: false
-    	};
-
-    	return line;
-    }
-
-    function getMatchdayDates$2(data, teamName) {
-    	let matchdays = Object.keys(data.form[data._id][teamName]);
-
-    	// If played one or no games, take x-axis from whole season dates
-    	if (matchdays.length <= 1) {
-    		matchdays = Object.keys(data.fixtures[teamName]);
-    	}
-
-    	// Find median matchday date across all teams for each matchday
-    	let x = [];
-
-    	for (let matchday of matchdays) {
-    		let matchdayDates = [];
-
-    		data.teamNames.forEach(team => {
-    			matchdayDates.push(data.fixtures[team][matchday].date);
-    		});
-
-    		matchdayDates = matchdayDates.map(val => {
-    			return new Date(val);
-    		});
-
-    		matchdayDates = matchdayDates.sort();
-    		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
-    	}
-
-    	x.sort(function (a, b) {
-    		return a - b;
-    	});
-
-    	return x;
-    }
-
-    function instance$b($$self, $$props, $$invalidate) {
-    	function lines(x) {
-    		let lines = [];
-
-    		for (let i = 0; i < data.teamNames.length; i++) {
-    			if (data.teamNames[i] != fullTeamName) {
-    				let line = getLine(data, x, data.teamNames[i], false);
-    				lines.push(line);
-    			}
-    		}
-
-    		// Add this team last to ensure it overlaps all other lines
-    		let line = getLine(data, x, fullTeamName, true);
-
-    		lines.push(line);
-    		return lines;
-    	}
-
-    	function buildPlotData(data, fullTeamName) {
-    		let x = getMatchdayDates$2(data, fullTeamName); // All lines use the same x
-    		let yLabels = Array.from(Array(20), (_, i) => i + 1);
-
-    		let graphData = {
-    			data: lines(x),
-    			layout: {
-    				title: false,
-    				autosize: true,
-    				margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
-    				hovermode: "closest",
-    				plot_bgcolor: "#fafafa",
-    				paper_bgcolor: "#fafafa",
-    				yaxis: {
-    					title: { text: "Position" },
-    					gridcolor: "gray",
-    					showgrid: false,
-    					showline: false,
-    					zeroline: false,
-    					autorange: "reversed",
-    					fixedrange: true,
-    					ticktext: yLabels,
-    					tickvals: yLabels
-    				},
-    				xaxis: {
-    					linecolor: "black",
-    					showgrid: false,
-    					showline: false,
-    					fixedrange: true
-    				},
-    				shapes: [
-    					{
-    						type: "rect",
-    						x0: x[0],
-    						y0: 4.5,
-    						x1: x[x.length - 1],
-    						y1: 0.5,
-    						line: { width: 0 },
-    						fillcolor: "#77DD77",
-    						opacity: 0.3,
-    						layer: "below"
-    					},
-    					{
-    						type: "rect",
-    						x0: x[0],
-    						y0: 6.5,
-    						x1: x[x.length - 1],
-    						y1: 4.5,
-    						line: { width: 0 },
-    						fillcolor: "#4CDEEE",
-    						opacity: 0.3,
-    						layer: "below"
-    					},
-    					{
-    						type: "rect",
-    						x0: x[0],
-    						y0: 20.5,
-    						x1: x[x.length - 1],
-    						y1: 17.5,
-    						line: { width: 0 },
-    						fillcolor: "#C23B22",
-    						opacity: 0.3,
-    						layer: "below"
-    					}
-    				]
-    			},
-    			config: {
-    				responsive: true,
-    				showSendToCloud: false,
-    				displayModeBar: false
-    			}
-    		};
-
-    		return graphData;
-    	}
-
-    	let plotDiv;
-    	let plotData;
-    	let setup = false;
-
-    	onMount(() => {
-    		genPlot();
-    		setup = true;
-    	});
-
-    	function genPlot() {
-    		plotData = buildPlotData(data, fullTeamName);
-
-    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
-    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
-    			plot.children[0].children[0].classList.add("resizable-graph");
-    		});
-    	}
-
-    	function refreshPlot() {
-    		if (setup) {
-    			let newPlotData = buildPlotData(data, fullTeamName);
-
-    			for (let i = 0; i < 20; i++) {
-    				plotData.data[i] = newPlotData.data[i];
-    			}
-
-    			Plotly.redraw(plotDiv);
-    		}
-    	}
-
-    	let { data, fullTeamName } = $$props;
-
-    	function div0_binding($$value) {
-    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
-    			plotDiv = $$value;
-    			$$invalidate(0, plotDiv);
-    		});
-    	}
-
-    	$$self.$$set = $$props => {
-    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
-    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
-    	};
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
-    			fullTeamName && refreshPlot();
-    		}
-    	};
-
-    	return [plotDiv, data, fullTeamName, div0_binding];
+    	return [plotDiv, data, fullTeamName, playedMatchdays, div0_binding];
     }
 
     class PositionOverTime extends SvelteComponent {
     	constructor(options) {
     		super();
-    		init(this, options, instance$b, create_fragment$c, safe_not_equal, { data: 1, fullTeamName: 2 });
+
+    		init(this, options, instance$b, create_fragment$c, safe_not_equal, {
+    			data: 1,
+    			fullTeamName: 2,
+    			playedMatchdays: 3
+    		});
     	}
     }
 
@@ -6406,14 +6360,14 @@
     		m(target, anchor) {
     			insert_hydration(target, div1, anchor);
     			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[3](div0);
+    			/*div0_binding*/ ctx[4](div0);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div1);
-    			/*div0_binding*/ ctx[3](null);
+    			/*div0_binding*/ ctx[4](null);
     		}
     	};
     }
@@ -6472,37 +6426,11 @@
     	return [scored, conceded];
     }
 
-    function getMatchdayDates$1(data) {
-    	// Find median matchday date across all teams for each matchday
-    	let x = [];
-
-    	for (let i = 1; i <= 38; i++) {
-    		let matchdayDates = [];
-
-    		for (let team of data.teamNames) {
-    			matchdayDates.push(data.fixtures[team][i].date);
-    		}
-
-    		matchdayDates = matchdayDates.map(val => {
-    			return new Date(val);
-    		});
-
-    		matchdayDates = matchdayDates.sort();
-    		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
-    	}
-
-    	x.sort(function (a, b) {
-    		return a - b;
-    	});
-
-    	return x;
-    }
-
-    function avgLine(x, avgGoals, matchdays) {
+    function avgLine(playedMatchdays, avgGoals, matchdays) {
     	return {
     		name: "Avg",
     		type: "line",
-    		x,
+    		x: playedMatchdays,
     		y: Object.values(avgGoals),
     		text: matchdays,
     		hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",
@@ -6510,11 +6438,11 @@
     	};
     }
 
-    function teamScoredBar(x, teamScored, matchdays) {
+    function teamScoredBar(playedMatchdays, teamScored, matchdays) {
     	return {
     		name: "Scored",
     		type: "bar",
-    		x,
+    		x: playedMatchdays,
     		y: Object.values(teamScored),
     		text: matchdays,
     		marker: { color: "#77DD77" },
@@ -6522,11 +6450,11 @@
     	};
     }
 
-    function teamConcededBar(x, teamConceded, matchdays) {
+    function teamConcededBar(playedMatchdays, teamConceded, matchdays) {
     	return {
     		name: "Conceded",
     		type: "bar",
-    		x,
+    		x: playedMatchdays,
     		y: Object.values(teamConceded),
     		text: matchdays,
     		marker: { color: "C23B22" },
@@ -6534,54 +6462,55 @@
     	};
     }
 
-    function buildPlotData$1(data, fullTeamName) {
-    	let x = getMatchdayDates$1(data);
-    	let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
-    	let avgGoals = getAvgGoalsPerGame(data);
-    	let matchdays = Object.keys(avgGoals);
-    	let scoredBar = teamScoredBar(x, teamScored, matchdays);
-    	let concededBar = teamConcededBar(x, teamConceded, matchdays);
-    	let line = avgLine(x, avgGoals, matchdays);
-
-    	let plotData = {
-    		data: [scoredBar, concededBar, line],
-    		layout: {
-    			title: false,
-    			autosize: true,
-    			margin: { r: 20, l: 50, t: 15, b: 15, pad: 5 },
-    			barmode: "stack",
-    			hovermode: "closest",
-    			plot_bgcolor: "#fafafa",
-    			paper_bgcolor: "#fafafa",
-    			yaxis: {
-    				title: { text: "Goals Scored" },
-    				gridcolor: "gray",
-    				showgrid: false,
-    				showline: false,
-    				zeroline: false,
-    				fixedrange: true,
-    				rangemode: "nonnegative"
-    			},
-    			xaxis: {
-    				linecolor: "black",
-    				showgrid: false,
-    				showline: false,
-    				fixedrange: true,
-    				showticklabels: false
-    			},
-    			legend: { x: 1, xanchor: "right", y: 1 }
-    		},
-    		config: {
-    			responsive: true,
-    			showSendToCloud: false,
-    			displayModeBar: false
-    		}
-    	};
-
-    	return plotData;
-    }
-
     function instance$a($$self, $$props, $$invalidate) {
+    	function buildPlotData(data, fullTeamName) {
+    		// let x = getMatchdayDates(data, fullTeamName);
+    		let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
+
+    		let avgGoals = getAvgGoalsPerGame(data);
+    		let matchdays = Object.keys(avgGoals);
+    		let scoredBar = teamScoredBar(playedMatchdays, teamScored, matchdays);
+    		let concededBar = teamConcededBar(playedMatchdays, teamConceded, matchdays);
+    		let line = avgLine(playedMatchdays, avgGoals, matchdays);
+
+    		let plotData = {
+    			data: [scoredBar, concededBar, line],
+    			layout: {
+    				title: false,
+    				autosize: true,
+    				margin: { r: 20, l: 50, t: 15, b: 15, pad: 5 },
+    				barmode: "stack",
+    				hovermode: "closest",
+    				plot_bgcolor: "#fafafa",
+    				paper_bgcolor: "#fafafa",
+    				yaxis: {
+    					title: { text: "Goals Scored" },
+    					gridcolor: "gray",
+    					showgrid: false,
+    					showline: false,
+    					zeroline: false,
+    					fixedrange: true,
+    					rangemode: "nonnegative"
+    				},
+    				xaxis: {
+    					linecolor: "black",
+    					showgrid: false,
+    					showline: false,
+    					fixedrange: true,
+    					showticklabels: false
+    				},
+    				legend: { x: 1, xanchor: "right", y: 1 }
+    			},
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
     	let plotDiv, plotData;
     	let setup = false;
 
@@ -6591,7 +6520,7 @@
     	});
 
     	function genPlot() {
-    		plotData = buildPlotData$1(data, fullTeamName);
+    		plotData = buildPlotData(data, fullTeamName);
 
     		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
     			// Once plot generated, add resizable attribute to it to shorten height for mobile view
@@ -6601,19 +6530,18 @@
 
     	function refreshPlot() {
     		if (setup) {
-    			let x = getMatchdayDates$1(data);
     			let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
     			let avgGoals = getAvgGoalsPerGame(data);
     			let matchdays = Object.keys(avgGoals);
-    			let scoredBar = teamScoredBar(x, teamScored, matchdays);
-    			let concededBar = teamConcededBar(x, teamConceded, matchdays);
+    			let scoredBar = teamScoredBar(playedMatchdays, teamScored, matchdays);
+    			let concededBar = teamConcededBar(playedMatchdays, teamConceded, matchdays);
     			plotData.data[0] = scoredBar;
     			plotData.data[1] = concededBar;
     			Plotly.redraw(plotDiv);
     		}
     	}
 
-    	let { data, fullTeamName } = $$props;
+    	let { data, fullTeamName, playedMatchdays } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -6625,6 +6553,7 @@
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(1, data = $$props.data);
     		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
     	};
 
     	$$self.$$.update = () => {
@@ -6633,13 +6562,18 @@
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, div0_binding];
+    	return [plotDiv, data, fullTeamName, playedMatchdays, div0_binding];
     }
 
     class GoalsScoredAndConceded extends SvelteComponent {
     	constructor(options) {
     		super();
-    		init(this, options, instance$a, create_fragment$b, safe_not_equal, { data: 1, fullTeamName: 2 });
+
+    		init(this, options, instance$a, create_fragment$b, safe_not_equal, {
+    			data: 1,
+    			fullTeamName: 2,
+    			playedMatchdays: 3
+    		});
     	}
     }
 
@@ -6671,14 +6605,14 @@
     		m(target, anchor) {
     			insert_hydration(target, div1, anchor);
     			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[3](div0);
+    			/*div0_binding*/ ctx[4](div0);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div1);
-    			/*div0_binding*/ ctx[3](null);
+    			/*div0_binding*/ ctx[4](null);
     		}
     	};
     }
@@ -6718,33 +6652,7 @@
     	return [cleanSheets, notCleanSheets];
     }
 
-    function getMatchdayDates(data) {
-    	// Find median matchday date across all teams for each matchday
-    	let x = [];
-
-    	for (let i = 1; i <= 38; i++) {
-    		let matchdayDates = [];
-
-    		for (let team of data.teamNames) {
-    			matchdayDates.push(data.fixtures[team][i].date);
-    		}
-
-    		matchdayDates = matchdayDates.map(val => {
-    			return new Date(val);
-    		});
-
-    		matchdayDates = matchdayDates.sort();
-    		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
-    	}
-
-    	x.sort(function (a, b) {
-    		return a - b;
-    	});
-
-    	return x;
-    }
-
-    function bars(data, fullTeamName, x) {
+    function bars(data, fullTeamName, playedMatchdays) {
     	let matchdays = Object.keys(data.form[data._id][fullTeamName]);
     	let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, fullTeamName);
 
@@ -6752,7 +6660,7 @@
     		{
     			name: "Clean sheets",
     			type: "bar",
-    			x,
+    			x: playedMatchdays,
     			y: cleanSheets,
     			text: matchdays,
     			marker: { color: "#77DD77" },
@@ -6762,7 +6670,7 @@
     		{
     			name: "Conceded",
     			type: "bar",
-    			x,
+    			x: playedMatchdays,
     			y: notCleanSheets,
     			text: matchdays,
     			marker: { color: "C23B22" },
@@ -6772,59 +6680,58 @@
     	];
     }
 
-    function buildPlotData(data, fullTeamName) {
-    	let x = getMatchdayDates(data);
-    	let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, x);
-
-    	let plotData = {
-    		data: [cleanSheetsBar, concededBar],
-    		layout: {
-    			title: false,
-    			autosize: true,
-    			height: 60,
-    			margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
-    			barmode: "stack",
-    			hovermode: "closest",
-    			plot_bgcolor: "#fafafa",
-    			paper_bgcolor: "#fafafa",
-    			yaxis: {
-    				title: { text: "" },
-    				showticklabels: false,
-    				gridcolor: "gray",
-    				showgrid: false,
-    				showline: false,
-    				zeroline: false,
-    				fixedrange: true
-    			},
-    			xaxis: {
-    				linecolor: "black",
-    				showgrid: false,
-    				showline: false,
-    				fixedrange: true
-    			},
-    			shapes: [
-    				{
-    					type: "line",
-    					x0: x[0],
-    					y0: 0.5,
-    					x1: x[x.length - 1],
-    					y1: 0.5,
-    					layer: "below",
-    					line: { color: "#d3d3d3", width: 2 }
-    				}
-    			]
-    		},
-    		config: {
-    			responsive: true,
-    			showSendToCloud: false,
-    			displayModeBar: false
-    		}
-    	};
-
-    	return plotData;
-    }
-
     function instance$9($$self, $$props, $$invalidate) {
+    	function buildPlotData(data, fullTeamName) {
+    		let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, playedMatchdays);
+
+    		let plotData = {
+    			data: [cleanSheetsBar, concededBar],
+    			layout: {
+    				title: false,
+    				autosize: true,
+    				height: 60,
+    				margin: { r: 20, l: 50, t: 0, b: 40, pad: 5 },
+    				barmode: "stack",
+    				hovermode: "closest",
+    				plot_bgcolor: "#fafafa",
+    				paper_bgcolor: "#fafafa",
+    				yaxis: {
+    					title: { text: "" },
+    					showticklabels: false,
+    					gridcolor: "gray",
+    					showgrid: false,
+    					showline: false,
+    					zeroline: false,
+    					fixedrange: true
+    				},
+    				xaxis: {
+    					linecolor: "black",
+    					showgrid: false,
+    					showline: false,
+    					fixedrange: true
+    				},
+    				shapes: [
+    					{
+    						type: "line",
+    						x0: playedMatchdays[0],
+    						y0: 0.5,
+    						x1: playedMatchdays[playedMatchdays.length - 1],
+    						y1: 0.5,
+    						layer: "below",
+    						line: { color: "#d3d3d3", width: 2 }
+    					}
+    				]
+    			},
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
     	let plotDiv, plotData;
     	let setup = false;
 
@@ -6840,15 +6747,14 @@
 
     	function refreshPlot() {
     		if (setup) {
-    			let x = getMatchdayDates(data);
-    			let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, x);
+    			let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, playedMatchdays);
     			plotData.data[0] = cleanSheetsBar;
     			plotData.data[1] = concededBar;
     			Plotly.redraw(plotDiv);
     		}
     	}
 
-    	let { data, fullTeamName } = $$props;
+    	let { data, fullTeamName, playedMatchdays } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -6860,6 +6766,7 @@
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(1, data = $$props.data);
     		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
     	};
 
     	$$self.$$.update = () => {
@@ -6868,13 +6775,18 @@
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, div0_binding];
+    	return [plotDiv, data, fullTeamName, playedMatchdays, div0_binding];
     }
 
     class CleanSheets extends SvelteComponent {
     	constructor(options) {
     		super();
-    		init(this, options, instance$9, create_fragment$a, safe_not_equal, { data: 1, fullTeamName: 2 });
+
+    		init(this, options, instance$9, create_fragment$a, safe_not_equal, {
+    			data: 1,
+    			fullTeamName: 2,
+    			playedMatchdays: 3
+    		});
     	}
     }
 
@@ -9362,7 +9274,7 @@
     	};
     }
 
-    // (150:6) {#if data != undefined}
+    // (179:6) {#if data != undefined}
     function create_if_block$1(ctx) {
     	let div24;
     	let div2;
@@ -9441,14 +9353,14 @@
 
     	fixtures = new Fixtures({
     			props: {
-    				data: /*data*/ ctx[3],
+    				data: /*data*/ ctx[4],
     				fullTeamName: /*fullTeamName*/ ctx[1]
     			}
     		});
 
     	currentform = new CurrentForm({
     			props: {
-    				data: /*data*/ ctx[3],
+    				data: /*data*/ ctx[4],
     				currentMatchday: /*currentMatchday*/ ctx[2],
     				fullTeamName: /*fullTeamName*/ ctx[1]
     			}
@@ -9456,87 +9368,91 @@
 
     	tablesnippet = new TableSnippet({
     			props: {
-    				data: /*data*/ ctx[3],
+    				data: /*data*/ ctx[4],
     				team: /*team*/ ctx[0],
     				fullTeamName: /*fullTeamName*/ ctx[1],
-    				getAlias: /*getAlias*/ ctx[4],
-    				switchTeam: /*switchTeam*/ ctx[7]
+    				getAlias: /*getAlias*/ ctx[5],
+    				switchTeam: /*switchTeam*/ ctx[8]
     			}
     		});
 
     	nextgame = new NextGame({
     			props: {
-    				data: /*data*/ ctx[3],
+    				data: /*data*/ ctx[4],
     				currentMatchday: /*currentMatchday*/ ctx[2],
     				fullTeamName: /*fullTeamName*/ ctx[1],
     				showBadge,
-    				getAlias: /*getAlias*/ ctx[4],
-    				switchTeam: /*switchTeam*/ ctx[7]
+    				getAlias: /*getAlias*/ ctx[5],
+    				switchTeam: /*switchTeam*/ ctx[8]
     			}
     		});
 
     	formovertime = new FormOverTime({
     			props: {
-    				data: /*data*/ ctx[3],
-    				fullTeamName: /*fullTeamName*/ ctx[1]
+    				data: /*data*/ ctx[4],
+    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				playedMatchdays: /*playedMatchdays*/ ctx[3]
     			}
     		});
 
     	positionovertime = new PositionOverTime({
     			props: {
-    				data: /*data*/ ctx[3],
-    				fullTeamName: /*fullTeamName*/ ctx[1]
+    				data: /*data*/ ctx[4],
+    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				playedMatchdays: /*playedMatchdays*/ ctx[3]
     			}
     		});
 
     	goalsscoredandconceded = new GoalsScoredAndConceded({
     			props: {
-    				data: /*data*/ ctx[3],
-    				fullTeamName: /*fullTeamName*/ ctx[1]
+    				data: /*data*/ ctx[4],
+    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				playedMatchdays: /*playedMatchdays*/ ctx[3]
     			}
     		});
 
     	cleansheets = new CleanSheets({
     			props: {
-    				data: /*data*/ ctx[3],
-    				fullTeamName: /*fullTeamName*/ ctx[1]
+    				data: /*data*/ ctx[4],
+    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				playedMatchdays: /*playedMatchdays*/ ctx[3]
     			}
     		});
 
     	seasonstats = new SeasonStats({
     			props: {
-    				data: /*data*/ ctx[3],
+    				data: /*data*/ ctx[4],
     				fullTeamName: /*fullTeamName*/ ctx[1]
     			}
     		});
 
     	goalfrequencies = new GoalsPerGame({
     			props: {
-    				data: /*data*/ ctx[3],
+    				data: /*data*/ ctx[4],
     				fullTeamName: /*fullTeamName*/ ctx[1]
     			}
     		});
 
     	spider = new Spider({
     			props: {
-    				data: /*data*/ ctx[3],
+    				data: /*data*/ ctx[4],
     				fullTeamName: /*fullTeamName*/ ctx[1],
-    				getAlias: /*getAlias*/ ctx[4],
-    				getName: /*getName*/ ctx[5]
+    				getAlias: /*getAlias*/ ctx[5],
+    				getName: /*getName*/ ctx[6]
     			}
     		});
 
     	mobileviewnav = new MobileViewNav({
     			props: {
     				team: /*team*/ ctx[0],
-    				teams: /*teams*/ ctx[6],
-    				getAlias: /*getAlias*/ ctx[4],
-    				switchTeam: /*switchTeam*/ ctx[7]
+    				teams: /*teams*/ ctx[7],
+    				getAlias: /*getAlias*/ ctx[5],
+    				switchTeam: /*switchTeam*/ ctx[8]
     			}
     		});
 
     	teamsfooter = new TeamsFooter({
-    			props: { lastUpdated: /*data*/ ctx[3].lastUpdated }
+    			props: { lastUpdated: /*data*/ ctx[4].lastUpdated }
     		});
 
     	return {
@@ -9844,57 +9760,61 @@
     		p(ctx, dirty) {
     			if_block.p(ctx, dirty);
     			const fixtures_changes = {};
-    			if (dirty & /*data*/ 8) fixtures_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*data*/ 16) fixtures_changes.data = /*data*/ ctx[4];
     			if (dirty & /*fullTeamName*/ 2) fixtures_changes.fullTeamName = /*fullTeamName*/ ctx[1];
     			fixtures.$set(fixtures_changes);
     			const currentform_changes = {};
-    			if (dirty & /*data*/ 8) currentform_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*data*/ 16) currentform_changes.data = /*data*/ ctx[4];
     			if (dirty & /*currentMatchday*/ 4) currentform_changes.currentMatchday = /*currentMatchday*/ ctx[2];
     			if (dirty & /*fullTeamName*/ 2) currentform_changes.fullTeamName = /*fullTeamName*/ ctx[1];
     			currentform.$set(currentform_changes);
     			const tablesnippet_changes = {};
-    			if (dirty & /*data*/ 8) tablesnippet_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*data*/ 16) tablesnippet_changes.data = /*data*/ ctx[4];
     			if (dirty & /*team*/ 1) tablesnippet_changes.team = /*team*/ ctx[0];
     			if (dirty & /*fullTeamName*/ 2) tablesnippet_changes.fullTeamName = /*fullTeamName*/ ctx[1];
     			tablesnippet.$set(tablesnippet_changes);
     			const nextgame_changes = {};
-    			if (dirty & /*data*/ 8) nextgame_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*data*/ 16) nextgame_changes.data = /*data*/ ctx[4];
     			if (dirty & /*currentMatchday*/ 4) nextgame_changes.currentMatchday = /*currentMatchday*/ ctx[2];
     			if (dirty & /*fullTeamName*/ 2) nextgame_changes.fullTeamName = /*fullTeamName*/ ctx[1];
     			nextgame.$set(nextgame_changes);
     			const formovertime_changes = {};
-    			if (dirty & /*data*/ 8) formovertime_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*data*/ 16) formovertime_changes.data = /*data*/ ctx[4];
     			if (dirty & /*fullTeamName*/ 2) formovertime_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*playedMatchdays*/ 8) formovertime_changes.playedMatchdays = /*playedMatchdays*/ ctx[3];
     			formovertime.$set(formovertime_changes);
     			const positionovertime_changes = {};
-    			if (dirty & /*data*/ 8) positionovertime_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*data*/ 16) positionovertime_changes.data = /*data*/ ctx[4];
     			if (dirty & /*fullTeamName*/ 2) positionovertime_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*playedMatchdays*/ 8) positionovertime_changes.playedMatchdays = /*playedMatchdays*/ ctx[3];
     			positionovertime.$set(positionovertime_changes);
     			const goalsscoredandconceded_changes = {};
-    			if (dirty & /*data*/ 8) goalsscoredandconceded_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*data*/ 16) goalsscoredandconceded_changes.data = /*data*/ ctx[4];
     			if (dirty & /*fullTeamName*/ 2) goalsscoredandconceded_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*playedMatchdays*/ 8) goalsscoredandconceded_changes.playedMatchdays = /*playedMatchdays*/ ctx[3];
     			goalsscoredandconceded.$set(goalsscoredandconceded_changes);
     			const cleansheets_changes = {};
-    			if (dirty & /*data*/ 8) cleansheets_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*data*/ 16) cleansheets_changes.data = /*data*/ ctx[4];
     			if (dirty & /*fullTeamName*/ 2) cleansheets_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*playedMatchdays*/ 8) cleansheets_changes.playedMatchdays = /*playedMatchdays*/ ctx[3];
     			cleansheets.$set(cleansheets_changes);
     			const seasonstats_changes = {};
-    			if (dirty & /*data*/ 8) seasonstats_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*data*/ 16) seasonstats_changes.data = /*data*/ ctx[4];
     			if (dirty & /*fullTeamName*/ 2) seasonstats_changes.fullTeamName = /*fullTeamName*/ ctx[1];
     			seasonstats.$set(seasonstats_changes);
     			const goalfrequencies_changes = {};
-    			if (dirty & /*data*/ 8) goalfrequencies_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*data*/ 16) goalfrequencies_changes.data = /*data*/ ctx[4];
     			if (dirty & /*fullTeamName*/ 2) goalfrequencies_changes.fullTeamName = /*fullTeamName*/ ctx[1];
     			goalfrequencies.$set(goalfrequencies_changes);
     			const spider_changes = {};
-    			if (dirty & /*data*/ 8) spider_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*data*/ 16) spider_changes.data = /*data*/ ctx[4];
     			if (dirty & /*fullTeamName*/ 2) spider_changes.fullTeamName = /*fullTeamName*/ ctx[1];
     			spider.$set(spider_changes);
     			const mobileviewnav_changes = {};
     			if (dirty & /*team*/ 1) mobileviewnav_changes.team = /*team*/ ctx[0];
     			mobileviewnav.$set(mobileviewnav_changes);
     			const teamsfooter_changes = {};
-    			if (dirty & /*data*/ 8) teamsfooter_changes.lastUpdated = /*data*/ ctx[3].lastUpdated;
+    			if (dirty & /*data*/ 16) teamsfooter_changes.lastUpdated = /*data*/ ctx[4].lastUpdated;
     			teamsfooter.$set(teamsfooter_changes);
     		},
     		i(local) {
@@ -9950,7 +9870,7 @@
     	};
     }
 
-    // (162:12) {:else}
+    // (191:12) {:else}
     function create_else_block$1(ctx) {
     	let div2;
     	let div0;
@@ -9963,7 +9883,7 @@
     	let circle2_fill_value;
     	let t0;
     	let div1;
-    	let t1_value = /*data*/ ctx[3].standings[/*fullTeamName*/ ctx[1]][/*data*/ ctx[3]._id].position + "";
+    	let t1_value = /*data*/ ctx[4].standings[/*fullTeamName*/ ctx[1]][/*data*/ ctx[4]._id].position + "";
     	let t1;
 
     	return {
@@ -10071,7 +9991,7 @@
     				attr(circle2, "fill", circle2_fill_value);
     			}
 
-    			if (dirty & /*data, fullTeamName*/ 10 && t1_value !== (t1_value = /*data*/ ctx[3].standings[/*fullTeamName*/ ctx[1]][/*data*/ ctx[3]._id].position + "")) set_data(t1, t1_value);
+    			if (dirty & /*data, fullTeamName*/ 18 && t1_value !== (t1_value = /*data*/ ctx[4].standings[/*fullTeamName*/ ctx[1]][/*data*/ ctx[4]._id].position + "")) set_data(t1, t1_value);
     		},
     		d(detaching) {
     			if (detaching) detach(div2);
@@ -10079,7 +9999,7 @@
     	};
     }
 
-    // (136:0) <Router>
+    // (165:0) <Router>
     function create_default_slot$3(ctx) {
     	let div4;
     	let div0;
@@ -10089,7 +10009,7 @@
     	let div2;
     	let a;
     	let div1;
-    	let t1_value = /*getAlias*/ ctx[4](/*fullTeamName*/ ctx[1]) + "";
+    	let t1_value = /*getAlias*/ ctx[5](/*fullTeamName*/ ctx[1]) + "";
     	let t1;
     	let a_href_value;
     	let t2;
@@ -10100,9 +10020,9 @@
     	navbar = new NavBar({
     			props: {
     				team: /*team*/ ctx[0],
-    				teams: /*teams*/ ctx[6],
-    				getAlias: /*getAlias*/ ctx[4],
-    				switchTeam: /*switchTeam*/ ctx[7]
+    				teams: /*teams*/ ctx[7],
+    				getAlias: /*getAlias*/ ctx[5],
+    				switchTeam: /*switchTeam*/ ctx[8]
     			}
     		});
 
@@ -10110,7 +10030,7 @@
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
-    		if (/*data*/ ctx[3] != undefined) return 0;
+    		if (/*data*/ ctx[4] != undefined) return 0;
     		return 1;
     	}
 
@@ -10190,7 +10110,7 @@
     			const navbar_changes = {};
     			if (dirty & /*team*/ 1) navbar_changes.team = /*team*/ ctx[0];
     			navbar.$set(navbar_changes);
-    			if ((!current || dirty & /*fullTeamName*/ 2) && t1_value !== (t1_value = /*getAlias*/ ctx[4](/*fullTeamName*/ ctx[1]) + "")) set_data(t1, t1_value);
+    			if ((!current || dirty & /*fullTeamName*/ 2) && t1_value !== (t1_value = /*getAlias*/ ctx[5](/*fullTeamName*/ ctx[1]) + "")) set_data(t1, t1_value);
 
     			if (!current || dirty & /*team*/ 1) {
     				set_style(div1, "color", "var(--" + (/*team*/ ctx[0] + '-secondary') + ")");
@@ -10296,7 +10216,7 @@
 
     			const router_changes = {};
 
-    			if (dirty & /*$$scope, data, team, fullTeamName, currentMatchday*/ 1039) {
+    			if (dirty & /*$$scope, data, team, fullTeamName, playedMatchdays, currentMatchday*/ 2079) {
     				router_changes.$$scope = { dirty, ctx };
     			}
 
@@ -10325,6 +10245,39 @@
     	return str.toLowerCase().split(" ").map(function (word) {
     		return word.charAt(0).toUpperCase() + word.slice(1);
     	}).join(" ").replace("And", "and");
+    }
+
+    function getPlayedMatchdays(data, teamName) {
+    	let matchdays = Object.keys(data.form[data._id][teamName]);
+
+    	// If played one or no games, take x-axis from whole season dates
+    	if (matchdays.length == 0) {
+    		matchdays = Object.keys(data.fixtures[teamName]);
+    	}
+
+    	// Find median matchday date across all teams for each matchday
+    	let x = [];
+
+    	for (let matchday of matchdays) {
+    		let matchdayDates = [];
+
+    		data.teamNames.forEach(team => {
+    			matchdayDates.push(data.fixtures[team][matchday].date);
+    		});
+
+    		matchdayDates = matchdayDates.map(val => {
+    			return new Date(val);
+    		});
+
+    		matchdayDates = matchdayDates.sort();
+    		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
+    	}
+
+    	x.sort(function (a, b) {
+    		return a - b;
+    	});
+
+    	return x;
     }
 
     function getCurrentMatchday(data, fullTeamName) {
@@ -10400,7 +10353,8 @@
     			json.teamNames = Object.keys(json.fixtures);
 
     			$$invalidate(2, currentMatchday = getCurrentMatchday(json, fullTeamName));
-    			$$invalidate(3, data = json);
+    			$$invalidate(3, playedMatchdays = getPlayedMatchdays(json, fullTeamName));
+    			$$invalidate(4, data = json);
     			console.log(data);
     		}).then(() => {
     			window.dispatchEvent(new Event("resize"));
@@ -10411,11 +10365,12 @@
     		$$invalidate(0, team = newTeam);
     		$$invalidate(1, fullTeamName = toTitleCase(team.replace(/\-/g, " ")));
     		$$invalidate(2, currentMatchday = getCurrentMatchday(data, fullTeamName));
+    		$$invalidate(3, playedMatchdays = getPlayedMatchdays(data, fullTeamName));
     		window.history.pushState(null, null, team); // Change current url without reloading
     	}
 
     	let fullTeamName = "";
-    	let currentMatchday;
+    	let currentMatchday, playedMatchdays;
     	let data;
 
     	onMount(() => {
@@ -10432,6 +10387,7 @@
     		team,
     		fullTeamName,
     		currentMatchday,
+    		playedMatchdays,
     		data,
     		getAlias,
     		getName,
