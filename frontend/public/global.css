@@ -297,10 +297,10 @@ h1 {
     margin-top: 0;
   }
 
-  .mini-graph {
+  /* .mini-graph { */
     /* Reset margin to match other graphs as no longer on row with other items */
-    margin-left: 10px;
-  }
+    /* margin-left: 10px; */
+  /* } */
 
   .next-game-title {
     width: auto;
@@ -392,8 +392,7 @@ h1 {
     margin-bottom: 30px;
   }
 
-  .full-row-graph,
-  .mini-graph {
+  .full-row-graph {
     margin-left: 10px;
   }
 

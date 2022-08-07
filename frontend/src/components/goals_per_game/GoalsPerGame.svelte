@@ -31,7 +31,7 @@
       // marker: { color: color },
       line: { width: 0 },
       hoverinfo: "x+y",
-      opacity: 0.6,
+      opacity: 0.5,
     };
   }
 

@@ -13,6 +13,7 @@
   import CleanSheets from "../components/goals_scored_and_conceded/CleanSheets.svelte";
   import GoalsPerGame from "../components/goals_per_game/GoalsPerGame.svelte";
   import Spider from "../components/Spider.svelte";
+  import ScoreFreq from "../components/ScoreFreq.svelte";
   import NavBar from "../components/NavBar.svelte";
   import MobileViewNav from "../components/MobileViewNav.svelte";
 
@@ -115,6 +116,7 @@
     document.getElementById("navBar").style.display = "block";
     document.getElementById("dashboard").style.marginLeft = "200px";
   }
+
 
   async function fetchData(address) {
     const response = await fetch(address);
@@ -223,7 +225,7 @@
             {/if}
             <div class="row-right fixtures-graph row-graph">
               <h1 class="lowered">Fixtures</h1>
-              <div class="graph mini-graph">
+              <div class="graph mini-graph mobile-margin">
                 <Fixtures {data} {team} />
               </div>
             </div>
@@ -273,7 +275,7 @@
               </div>
             </div>
           </div>
-
+          
           <div class="season-stats-row">
             <SeasonStats {data} {team} />
           </div>
@@ -284,6 +286,14 @@
               <GoalsPerGame {data} {team} />
             </div>
           </div>
+
+              <div class="row">
+                <div class="row-graph">
+                  <div class="score-freq graph">
+                    <ScoreFreq {data} {team} />
+                  </div>
+                </div>
+              </div>
 
           <div class="row">
             <div class="spider-chart-row row-graph">
@@ -416,6 +426,9 @@
   .row-graph {
     width: 100%;
   }
+  .score-freq {
+    margin: 0 8% 0 8%;
+  }
   .row-left {
     display: flex;
     flex-direction: column;
@@ -506,8 +519,18 @@
     }
     .row-graph {
       width: auto;
+      /* margin: 0 20px 0 30px */
+    }
+    .score-freq {
+      margin: 0 0 10px;
     }
 
+    .multi-element-row {
+      margin: 0;
+    }
+    .mobile-margin {
+      margin-left: 10px;
+    }
     .row-left {
       margin-right: 0;
       align-self: center;
