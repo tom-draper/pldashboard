@@ -1,19 +1,19 @@
 <script>
   import { onMount } from "svelte";
 
-  function getFormLine(data, playedMatchdays, teamName, isMainTeam) {
-    let matchdays = Object.keys(data.form[data._id][teamName]); // Played matchdays
+  function getFormLine(data, playedMatchdays, team, isMainTeam) {
+    let matchdays = Object.keys(data.form[data._id][team]); // Played matchdays
 
     let y = [];
     for (let matchday of matchdays) {
-      let form = data.form[data._id][teamName][matchday].formRating5;
+      let form = data.form[data._id][team][matchday].formRating5;
       y.push(form * 100);
     }
 
     let lineVal;
     if (isMainTeam) {
       // Get team primary colour from css variable
-      let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
+      let teamKey = team[0].toLowerCase() + team.slice(1);
       teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
       let lineColor = getComputedStyle(
         document.documentElement
@@ -26,36 +26,36 @@
     let line = {
       x: playedMatchdays,
       y: y,
-      name: teamName,
+      name: team,
       mode: "lines",
       line: lineVal,
       text: matchdays,
-      hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
+      hovertemplate: `<b>${team}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
       showlegend: false,
     };
     return line;
   }
 
-  function lines(data, fullTeamName, playedMatchdays) {
+  function lines(data, team, playedMatchdays) {
     let lines = [];
     for (let i = 0; i < data.teamNames.length; i++) {
-      if (data.teamNames[i] != fullTeamName) {
+      if (data.teamNames[i] != team) {
         let line = getFormLine(data, playedMatchdays, data.teamNames[i], false);
         lines.push(line);
       }
     }
   
     // Add this team last to ensure it overlaps all other lines
-    let line = getFormLine(data, playedMatchdays, fullTeamName, true);
+    let line = getFormLine(data, playedMatchdays, team, true);
     lines.push(line);
     return lines;
   }
 
-  function buildPlotData(data, fullTeamName) {
+  function buildPlotData(data, team) {
     let yLabels = Array.from(Array(11), (_, i) => i * 10);
 
     let plotData = {
-      data: lines(data, fullTeamName, playedMatchdays),
+      data: lines(data, team, playedMatchdays),
       layout: {
         title: false,
         autosize: true,
@@ -99,7 +99,7 @@
   });
 
   function genPlot() {
-    plotData = buildPlotData(data, fullTeamName);
+    plotData = buildPlotData(data, team);
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -113,7 +113,7 @@
 
   function refreshPlot() {
     if (setup) {
-      let newPlotData = buildPlotData(data, fullTeamName);
+      let newPlotData = buildPlotData(data, team);
       for (let i = 0; i < 20; i++) {
         plotData.data[i] = newPlotData.data[i];
       }
@@ -121,9 +121,9 @@
     }
   }
 
-  $: fullTeamName && refreshPlot();
+  $: team && refreshPlot();
 
-  export let data, fullTeamName, playedMatchdays;
+  export let data, team, playedMatchdays;
 </script>
 
 <div id="plotly">

@@ -1,8 +1,8 @@
 <script>
   import { onMount } from "svelte";
 
-  function getTeamColor(teamName) {
-    let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
+  function getTeamColor(team) {
+    let teamKey = team[0].toLowerCase() + team.slice(1);
     teamKey = teamKey.replace(/ /g, "-").toLowerCase();
     let teamColor = getComputedStyle(document.documentElement).getPropertyValue(
       `--${teamKey}`
@@ -10,19 +10,19 @@
     return teamColor;
   }
 
-  function addTeamComparison(teamName) {
-    let teamColor = getTeamColor(teamName);
+  function addTeamComparison(team) {
+    let teamColor = getTeamColor(team);
 
     let teamData = {
-      name: teamName,
+      name: team,
       type: "scatterpolar",
       r: [
-        attack[teamName],
-        defence[teamName],
-        cleanSheets[teamName],
-        consistency[teamName],
-        winStreaks[teamName],
-        vsBig6[teamName],
+        attack[team],
+        defence[team],
+        cleanSheets[team],
+        consistency[team],
+        winStreaks[team],
+        vsBig6[team],
       ],
       theta: labels,
       fill: "toself",
@@ -37,10 +37,10 @@
     plotData.data.unshift(avg); // Add avg below the teamName spider plot
   }
 
-  function removeTeamComparison(teamName) {
+  function removeTeamComparison(team) {
     // Remove spider plot for this teamName
     for (let i = 0; i < plotData.data.length; i++) {
-      if (plotData.data[i].name == teamName) {
+      if (plotData.data[i].name == team) {
         plotData.data.splice(i, 1);
         break;
       }
@@ -86,9 +86,9 @@
   }
 
   function spiderBtnClick(btn) {
-    let teamName = getName(btn.innerHTML);
+    let team = getName(btn.innerHTML);
     if (btn.style.background == "") {
-      let teamKey = teamName.toLowerCase().replace(/ /g, "-");
+      let teamKey = team.toLowerCase().replace(/ /g, "-");
       btn.style.background = `var(--${teamKey})`;
       btn.style.color = `var(--${teamKey}-secondary)`;
     } else {
@@ -100,12 +100,12 @@
       plotData.data.splice(0, 1); // Remove avg
     }
 
-    if (comparisonTeams.includes(teamName)) {
-      removeTeamComparison(teamName); // Remove from spider chart
-      removeItem(comparisonTeams, teamName); // Remove from comparison teams
+    if (comparisonTeams.includes(team)) {
+      removeTeamComparison(team); // Remove from spider chart
+      removeItem(comparisonTeams, team); // Remove from comparison teams
     } else {
-      addTeamComparison(teamName); // Add teamName to spider chart
-      comparisonTeams.push(teamName); // Add to comparison teams
+      addTeamComparison(team); // Add teamName to spider chart
+      comparisonTeams.push(team); // Add to comparison teams
     }
   }
 
@@ -113,11 +113,11 @@
     let attack = {};
     let maxGoals = Number.NEGATIVE_INFINITY;
     let minGoals = Number.POSITIVE_INFINITY;
-    for (let teamName of data.teamNames) {
+    for (let team of data.teamNames) {
       let totalGoals = 0;
       let seasonsPlayed = 0;
-      for (let year in data.standings[teamName]) {
-        let goals = data.standings[teamName][year].gF;
+      for (let year in data.standings[team]) {
+        let goals = data.standings[team][year].gF;
         if (goals > 0) {
           totalGoals += goals;
           if (goals > maxGoals) {
@@ -134,18 +134,18 @@
         goalsPerSeason = totalGoals / seasonsPlayed;
       }
 
-      attack[teamName] = goalsPerSeason;
+      attack[team] = goalsPerSeason;
     }
     return [attack, [minGoals, maxGoals]];
   }
 
   function scaleAttack(attack, range) {
     let [lower, upper] = range;
-    for (let teamName in attack) {
-      if (attack[teamName] == null) {
-        attack[teamName] = 0;
+    for (let team in attack) {
+      if (attack[team] == null) {
+        attack[team] = 0;
       } else {
-        attack[teamName] = ((attack[teamName] - lower) / (upper - lower)) * 100;
+        attack[team] = ((attack[team] - lower) / (upper - lower)) * 100;
       }
     }
     return attack;
@@ -153,9 +153,9 @@
 
   function formMetricAvgScaled(formMetric, max) {
     let total = 0;
-    for (let teamName in formMetric) {
-      formMetric[teamName] = (formMetric[teamName] / max) * 100;
-      total += formMetric[teamName];
+    for (let team in formMetric) {
+      formMetric[team] = (formMetric[team] / max) * 100;
+      total += formMetric[team];
     }
     let avg = total / Object.keys(formMetric).length;
 
@@ -164,8 +164,8 @@
 
   function formMetricAvg(formMetric) {
     let total = 0;
-    for (let teamName in formMetric) {
-      total += formMetric[teamName];
+    for (let team in formMetric) {
+      total += formMetric[team];
     }
     let avg = total / Object.keys(formMetric).length;
 
@@ -184,11 +184,11 @@
     let defence = {};
     let maxConceded = Number.NEGATIVE_INFINITY;
     let minConceded = Number.POSITIVE_INFINITY;
-    for (let teamName of data.teamNames) {
+    for (let team of data.teamNames) {
       let totalConceded = 0;
       let seasonsPlayed = 0;
-      for (let year in data.standings[teamName]) {
-        let goals = data.standings[teamName][year].gA;
+      for (let year in data.standings[team]) {
+        let goals = data.standings[team][year].gA;
         if (goals > 0) {
           totalConceded += goals;
           if (goals > maxConceded) {
@@ -205,7 +205,7 @@
         goalsPerSeason = totalConceded / seasonsPlayed;
       }
 
-      defence[teamName] = goalsPerSeason;
+      defence[team] = goalsPerSeason;
     }
 
     return [defence, [minConceded, maxConceded]];
@@ -213,12 +213,12 @@
 
   function scaleDefence(defence, range) {
     let [lower, upper] = range;
-    for (let teamName in defence) {
-      if (defence[teamName] == null) {
-        defence[teamName] = 0;
+    for (let team in defence) {
+      if (defence[team] == null) {
+        defence[team] = 0;
       } else {
-        defence[teamName] =
-          100 - ((defence[teamName] - lower) / (upper - lower)) * 100;
+        defence[team] =
+          100 - ((defence[team] - lower) / (upper - lower)) * 100;
       }
     }
     return defence;
@@ -232,10 +232,10 @@
     return defence;
   }
 
-  function formCleanSheets(form, teamName) {
+  function formCleanSheets(form, team) {
     let nCleanSheets = 0;
-    for (let matchday of Object.keys(form[teamName])) {
-      let match = form[teamName][matchday];
+    for (let matchday of Object.keys(form[team])) {
+      let match = form[team][matchday];
       if (match.score != null) {
         let [h, _, a] = match.score.split(" ");
         if (match.atHome && a == 0) {
@@ -251,16 +251,16 @@
   function getCleanSheets(data) {
     let cleanSheets = {};
     let maxCleanSheets = Number.NEGATIVE_INFINITY;
-    for (let teamName of data.teamNames) {
-      let nCleanSheets = formCleanSheets(data.form[data._id], teamName);
-      if (teamName in data.form[data._id - 1]) {
-        nCleanSheets += formCleanSheets(data.form[data._id - 1], teamName);
+    for (let team of data.teamNames) {
+      let nCleanSheets = formCleanSheets(data.form[data._id], team);
+      if (team in data.form[data._id - 1]) {
+        nCleanSheets += formCleanSheets(data.form[data._id - 1], team);
       }
 
       if (nCleanSheets > maxCleanSheets) {
         maxCleanSheets = nCleanSheets;
       }
-      cleanSheets[teamName] = nCleanSheets;
+      cleanSheets[team] = nCleanSheets;
     }
 
     cleanSheets.avg = formMetricAvgScaled(cleanSheets, maxCleanSheets);
@@ -268,11 +268,11 @@
     return cleanSheets;
   }
 
-  function formConsistency(form, teamName) {
+  function formConsistency(form, team) {
     let backToBack = 0; // Counts pairs of back to back identical match results
     let prevResult = null;
-    for (let matchday in form[teamName]) {
-      let match = form[teamName][matchday];
+    for (let matchday in form[team]) {
+      let match = form[team][matchday];
       if (match.score != null) {
         let [h, _, a] = match.score.split(" ");
         let result;
@@ -295,17 +295,17 @@
   function getConsistency(data) {
     let consistency = {};
     let maxConsistency = Number.NEGATIVE_INFINITY;
-    for (let teamName of data.teamNames) {
-      let backToBack = formConsistency(data.form[data._id], teamName);
-      if (teamName in data.form[data._id - 1]) {
-        backToBack += formConsistency(data.form[data._id - 1], teamName);
+    for (let team of data.teamNames) {
+      let backToBack = formConsistency(data.form[data._id], team);
+      if (team in data.form[data._id - 1]) {
+        backToBack += formConsistency(data.form[data._id - 1], team);
       }
 
       if (backToBack > maxConsistency) {
         maxConsistency = backToBack;
       }
 
-      consistency[teamName] = backToBack;
+      consistency[team] = backToBack;
     }
 
     consistency.avg = formMetricAvgScaled(consistency, maxConsistency);
@@ -313,11 +313,11 @@
     return consistency;
   }
 
-  function formWinStreak(form, teamName) {
+  function formWinStreak(form, team) {
     let winStreak = 0;
     let tempWinStreak = 0;
-    for (let matchday in form[teamName]) {
-      let match = form[teamName][matchday];
+    for (let matchday in form[team]) {
+      let match = form[team][matchday];
       if (match.score != null) {
         let [h, _, a] = match.score.split(" ");
         if ((match.atHome && h > a) || (!match.atHome && h < a)) {
@@ -336,16 +336,16 @@
   function getWinStreak(data) {
     let winStreaks = {};
     let maxWinStreaks = Number.NEGATIVE_INFINITY;
-    for (let teamName of data.teamNames) {
-      let winStreak = formWinStreak(data.form[data._id], teamName);
-      if (teamName in data.form[data._id - 1]) {
-        winStreak += formWinStreak(data.form[data._id - 1], teamName);
+    for (let team of data.teamNames) {
+      let winStreak = formWinStreak(data.form[data._id], team);
+      if (team in data.form[data._id - 1]) {
+        winStreak += formWinStreak(data.form[data._id - 1], team);
       }
 
       if (winStreak > maxWinStreaks) {
         maxWinStreaks = winStreak;
       }
-      winStreaks[teamName] = winStreak;
+      winStreaks[team] = winStreak;
     }
 
     winStreaks.avg = formMetricAvgScaled(winStreaks, maxWinStreaks);
@@ -361,10 +361,10 @@
     return arr;
   }
 
-  function formWinsVsBig6(form, teamName, big6) {
+  function formWinsVsBig6(form, team, big6) {
     let winsVsBig6 = 0;
-    for (let matchday in form[teamName]) {
-      let match = form[teamName][matchday];
+    for (let matchday in form[team]) {
+      let match = form[team][matchday];
       if (match.score != null && big6.includes(match.team)) {
         let [h, _, a] = match.score.split(" ");
         if ((match.atHome && h > a) || (!match.atHome && h < a)) {
@@ -379,7 +379,7 @@
   function getVsBig6(data) {
     let vsBig6 = {};
     let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
-    for (let teamName of data.teamNames) {
+    for (let team of data.teamNames) {
       let big6 = [
         "Manchester United",
         "Liverpool",
@@ -388,18 +388,18 @@
         "Chelsea",
         "Tottenham Hotspur",
       ];
-      big6 = removeItem(big6, teamName);
+      big6 = removeItem(big6, team);
 
-      let winsVsBig6 = formWinsVsBig6(data.form[data._id], teamName, big6);
-      if (teamName in data.form[data._id - 1]) {
-        winsVsBig6 += formWinsVsBig6(data.form[data._id - 1], teamName, big6);
+      let winsVsBig6 = formWinsVsBig6(data.form[data._id], team, big6);
+      if (team in data.form[data._id - 1]) {
+        winsVsBig6 += formWinsVsBig6(data.form[data._id - 1], team, big6);
       }
 
       if (winsVsBig6 > maxWinsVsBig6) {
         maxWinsVsBig6 = winsVsBig6;
       }
 
-      vsBig6[teamName] = winsVsBig6;
+      vsBig6[team] = winsVsBig6;
     }
 
     vsBig6.avg = formMetricAvgScaled(vsBig6, maxWinsVsBig6);
@@ -435,26 +435,26 @@
     );
   }
 
-  function getTeamData(teamName) {
-    let teamColor = getTeamColor(teamName);
+  function getTeamData(team) {
+    let teamColor = getTeamColor(team);
     let teamData = scatterPlot(
-      teamName,
+      team,
       [
-        attack[teamName],
-        defence[teamName],
-        cleanSheets[teamName],
-        consistency[teamName],
-        winStreaks[teamName],
-        vsBig6[teamName],
+        attack[team],
+        defence[team],
+        cleanSheets[team],
+        consistency[team],
+        winStreaks[team],
+        vsBig6[team],
       ],
       teamColor
     );
     return teamData;
   }
 
-  function initSpiderPlots(teamName) {
+  function initSpiderPlots(team) {
     let avgData = avgScatterPlot();
-    let teamData = getTeamData(teamName);
+    let teamData = getTeamData(team);
 
     return [avgData, teamData];
   }
@@ -468,10 +468,10 @@
     vsBig6 = getVsBig6(data);
   }
 
-  function buildPlotData(data, teamName) {
+  function buildPlotData(data, team) {
     computePlotData(data);
 
-    let spiderPlots = initSpiderPlots(teamName);
+    let spiderPlots = initSpiderPlots(team);
 
     let plotData = {
       data: spiderPlots,
@@ -517,7 +517,7 @@
   });
   
   function genPlot() {
-    plotData = buildPlotData(data, fullTeamName);
+    plotData = buildPlotData(data, team);
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -546,7 +546,7 @@
 
   function refreshPlot() {
     if (setup) {
-      let spiderPlots = initSpiderPlots(fullTeamName);
+      let spiderPlots = initSpiderPlots(team);
       // Remove all but two plots
       emptyArray(plotData.data);
       // Replace final two plots with defaults
@@ -558,9 +558,9 @@
     }
   }
 
-  $: fullTeamName && refreshPlot();
+  $: team && refreshPlot();
 
-  export let data, fullTeamName, getAlias, getName;
+  export let data, team, getAlias, getName;
 </script>
 
 <div class="spider-chart">
@@ -572,13 +572,13 @@
 </div>
 <div class="spider-opp-team-selector">
   <div class="spider-opp-team-btns" id="spider-opp-teams">
-    {#each data.teamNames as teamName}
-      {#if teamName != fullTeamName}
+    {#each data.teamNames as _team}
+      {#if _team != team}
         <button
           class="spider-opp-team-btn"
           on:click={(e) => {
             spiderBtnClick(e.target);
-          }}>{getAlias(teamName)}</button
+          }}>{getAlias(_team)}</button
         >
       {/if}
     {/each}

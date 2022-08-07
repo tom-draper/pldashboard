@@ -49,12 +49,12 @@
     return sizes;
   }
 
-  function linePoints() {
+  function linePoints(data, team) {
     let x = [];
     let y = [];
     let details = [];
     for (let matchday = 1; matchday <= 38; matchday++) {
-      let match = data.fixtures[fullTeamName][matchday];
+      let match = data.fixtures[team][matchday];
       x.push(new Date(match.date));
   
       let oppTeamRating = data.teamRatings[match.team].totalRating;
@@ -70,8 +70,8 @@
     return [x, y, details];
   }
 
-  function line(now) {
-    let [x, y, details] = linePoints();
+  function line(data, team, now) {
+    let [x, y, details] = linePoints(data, team);
     
     sortByMatchDate(x, y, details);
     
@@ -146,11 +146,11 @@
     return [minX, maxX];
   }
 
-  function buildPlotData(data, fullTeamName) {
+  function buildPlotData(data, team) {
     // Build data to create a fixtures line graph displaying the date along the
     // x-axis and opponent strength along the y-axis
     let now = Date.now();
-    let l = line(now);
+    let l = line(data, team, now);
 
     let yLabels = Array.from(Array(11), (_, i) => i * 10);
 
@@ -193,7 +193,7 @@
   }
 
   function genPlot() {
-    plotData = buildPlotData(data, fullTeamName);
+    plotData = buildPlotData(data, team);
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -208,7 +208,7 @@
   function refreshPlot() {
     if (setup) {
       let now = Date.now();
-      let l = line(now);
+      let l = line(data, team, now);
       plotData.data[0] = l;  // Overwrite plot data
       Plotly.redraw(plotDiv)
     }
@@ -221,9 +221,9 @@
     setup = true;
   });
 
-  $: fullTeamName && refreshPlot()
+  $: team && refreshPlot()
 
-  export let data, fullTeamName;
+  export let data, team;
 </script>
 
 <div id="plotly">

@@ -96,23 +96,23 @@
 
   let formIcons, formStarTeams, formInitials;
   function setFormValues() {
-    let sortedMatchdays = getSortedMatchdays(data, fullTeamName);
+    let sortedMatchdays = getSortedMatchdays(data, team);
 
     let matchdays = latestNPlayedMatchdays(
       data,
-      fullTeamName,
+      team,
       sortedMatchdays,
       5
     );
 
-    formIcons = getFormIcons(data, fullTeamName);
-    formStarTeams = getFormStarTeams(data, fullTeamName, matchdays);
-    formInitials = getFormInitials(data, fullTeamName, matchdays);
+    formIcons = getFormIcons(data, team);
+    formStarTeams = getFormStarTeams(data, team, matchdays);
+    formInitials = getFormInitials(data, team, matchdays);
   }
 
-  $: fullTeamName && setFormValues();
+  $: team && setFormValues();
 
-  export let data, currentMatchday, fullTeamName;
+  export let data, currentMatchday, team;
 </script>
 
 {#if formInitials != undefined}
@@ -135,7 +135,7 @@
   Current form:
   {#if currentMatchday != null}
     {(
-      data.form[data._id][fullTeamName][currentMatchday].formRating5 * 100
+      data.form[data._id][team][currentMatchday].formRating5 * 100
     ).toFixed(1)}%
   {:else}
     None

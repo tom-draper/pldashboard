@@ -2790,7 +2790,7 @@
 
     // (136:2) {#if currentMatchday != null}
     function create_if_block$b(ctx) {
-    	let t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*fullTeamName*/ ctx[2]][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "";
+    	let t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*team*/ ctx[2]][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "";
     	let t0;
     	let t1;
 
@@ -2808,7 +2808,7 @@
     			insert_hydration(target, t1, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*data, fullTeamName, currentMatchday*/ 7 && t0_value !== (t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*fullTeamName*/ ctx[2]][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "")) set_data(t0, t0_value);
+    			if (dirty & /*data, team, currentMatchday*/ 7 && t0_value !== (t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*team*/ ctx[2]][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "")) set_data(t0, t0_value);
     		},
     		d(detaching) {
     			if (detaching) detach(t0);
@@ -2993,39 +2993,34 @@
     	let formIcons, formStarTeams, formInitials;
 
     	function setFormValues() {
-    		let sortedMatchdays = getSortedMatchdays(data, fullTeamName);
-    		let matchdays = latestNPlayedMatchdays(data, fullTeamName, sortedMatchdays, 5);
-    		$$invalidate(3, formIcons = getFormIcons(data, fullTeamName));
-    		$$invalidate(4, formStarTeams = getFormStarTeams(data, fullTeamName, matchdays));
-    		$$invalidate(5, formInitials = getFormInitials(data, fullTeamName, matchdays));
+    		let sortedMatchdays = getSortedMatchdays(data, team);
+    		let matchdays = latestNPlayedMatchdays(data, team, sortedMatchdays, 5);
+    		$$invalidate(3, formIcons = getFormIcons(data, team));
+    		$$invalidate(4, formStarTeams = getFormStarTeams(data, team, matchdays));
+    		$$invalidate(5, formInitials = getFormInitials(data, team, matchdays));
     	}
 
-    	let { data, currentMatchday, fullTeamName } = $$props;
+    	let { data, currentMatchday, team } = $$props;
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(0, data = $$props.data);
     		if ('currentMatchday' in $$props) $$invalidate(1, currentMatchday = $$props.currentMatchday);
-    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
-    			fullTeamName && setFormValues();
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && setFormValues();
     		}
     	};
 
-    	return [data, currentMatchday, fullTeamName, formIcons, formStarTeams, formInitials];
+    	return [data, currentMatchday, team, formIcons, formStarTeams, formInitials];
     }
 
     class CurrentForm extends SvelteComponent {
     	constructor(options) {
     		super();
-
-    		init(this, options, instance$k, create_fragment$l, safe_not_equal, {
-    			data: 0,
-    			currentMatchday: 1,
-    			fullTeamName: 2
-    		});
+    		init(this, options, instance$k, create_fragment$l, safe_not_equal, { data: 0, currentMatchday: 1, team: 2 });
     	}
     }
 
@@ -3159,7 +3154,7 @@
     			insert_hydration(target, if_block_anchor, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*team, tableSnippet, getAlias, switchTeam*/ 15) {
+    			if (dirty & /*hyphenatedTeam, tableSnippet, getAlias, switchTeam*/ 15) {
     				each_value = /*tableSnippet*/ ctx[3].rows;
     				let i;
 
@@ -3468,16 +3463,16 @@
     		},
     		h() {
     			attr(div0, "class", "table-element table-position this-team svelte-13u0ebo");
-    			set_style(div0, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
-    			attr(a, "href", a_href_value = "/" + /*team*/ ctx[0]);
+    			set_style(div0, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
+    			attr(a, "href", a_href_value = "/" + /*hyphenatedTeam*/ ctx[0]);
     			attr(a, "class", "table-element table-team-name this-team svelte-13u0ebo");
-    			set_style(a, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			set_style(a, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
     			attr(div1, "class", "table-element table-gd this-team svelte-13u0ebo");
-    			set_style(div1, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			set_style(div1, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
     			attr(div2, "class", "table-element table-points this-team svelte-13u0ebo");
-    			set_style(div2, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			set_style(div2, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
     			attr(div3, "class", "table-row this-team svelte-13u0ebo");
-    			set_style(div3, "background-color", "var(--" + /*team*/ ctx[0] + ")");
+    			set_style(div3, "background-color", "var(--" + /*hyphenatedTeam*/ ctx[0] + ")");
     		},
     		m(target, anchor) {
     			insert_hydration(target, div3, anchor);
@@ -3496,34 +3491,34 @@
     		p(ctx, dirty) {
     			if (dirty & /*tableSnippet*/ 8 && t0_value !== (t0_value = /*row*/ ctx[8].position + "")) set_data(t0, t0_value);
 
-    			if (dirty & /*team*/ 1) {
-    				set_style(div0, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			if (dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(div0, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
     			}
 
     			if (dirty & /*getAlias, tableSnippet*/ 10 && t2_value !== (t2_value = /*getAlias*/ ctx[1](/*row*/ ctx[8].name) + "")) set_data(t2, t2_value);
 
-    			if (dirty & /*team*/ 1 && a_href_value !== (a_href_value = "/" + /*team*/ ctx[0])) {
+    			if (dirty & /*hyphenatedTeam*/ 1 && a_href_value !== (a_href_value = "/" + /*hyphenatedTeam*/ ctx[0])) {
     				attr(a, "href", a_href_value);
     			}
 
-    			if (dirty & /*team*/ 1) {
-    				set_style(a, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			if (dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(a, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
     			}
 
     			if (dirty & /*tableSnippet*/ 8 && t4_value !== (t4_value = /*row*/ ctx[8].gd + "")) set_data(t4, t4_value);
 
-    			if (dirty & /*team*/ 1) {
-    				set_style(div1, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			if (dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(div1, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
     			}
 
     			if (dirty & /*tableSnippet*/ 8 && t6_value !== (t6_value = /*row*/ ctx[8].points + "")) set_data(t6, t6_value);
 
-    			if (dirty & /*team*/ 1) {
-    				set_style(div2, "color", "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			if (dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(div2, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
     			}
 
-    			if (dirty & /*team*/ 1) {
-    				set_style(div3, "background-color", "var(--" + /*team*/ ctx[0] + ")");
+    			if (dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(div3, "background-color", "var(--" + /*hyphenatedTeam*/ ctx[0] + ")");
     			}
     		},
     		d(detaching) {
@@ -3683,8 +3678,8 @@
     	};
     }
 
-    function tableSnippetRange(sortedTeams, fullTeamName) {
-    	let teamStandingsIdx = sortedTeams.indexOf(fullTeamName);
+    function tableSnippetRange(sortedTeams, team) {
+    	let teamStandingsIdx = sortedTeams.indexOf(team);
     	let low = teamStandingsIdx - 3;
     	let high = teamStandingsIdx + 4;
 
@@ -3709,12 +3704,12 @@
     			return data.standings[teamA][data._id].position - data.standings[teamB][data._id].position;
     		});
 
-    		let [low, high] = tableSnippetRange(sortedTeams, fullTeamName);
+    		let [low, high] = tableSnippetRange(sortedTeams, team);
     		let teamTableIdx;
     		let rows = [];
 
     		for (let i = low; i < high; i++) {
-    			if (sortedTeams[i] == fullTeamName) {
+    			if (sortedTeams[i] == team) {
     				teamTableIdx = i - low;
     			}
 
@@ -3730,7 +3725,7 @@
     	}
 
     	let tableSnippet;
-    	let { data, team, fullTeamName, getAlias, switchTeam } = $$props;
+    	let { data, hyphenatedTeam, team, getAlias, switchTeam } = $$props;
 
     	const click_handler = row => {
     		switchTeam(row.name.toLowerCase().replace(/ /g, '-'));
@@ -3738,19 +3733,19 @@
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(4, data = $$props.data);
-    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
-    		if ('fullTeamName' in $$props) $$invalidate(5, fullTeamName = $$props.fullTeamName);
+    		if ('hyphenatedTeam' in $$props) $$invalidate(0, hyphenatedTeam = $$props.hyphenatedTeam);
+    		if ('team' in $$props) $$invalidate(5, team = $$props.team);
     		if ('getAlias' in $$props) $$invalidate(1, getAlias = $$props.getAlias);
     		if ('switchTeam' in $$props) $$invalidate(2, switchTeam = $$props.switchTeam);
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 32) {
-    			fullTeamName && buildTableSnippet();
+    		if ($$self.$$.dirty & /*team*/ 32) {
+    			team && buildTableSnippet();
     		}
     	};
 
-    	return [team, getAlias, switchTeam, tableSnippet, data, fullTeamName, click_handler];
+    	return [hyphenatedTeam, getAlias, switchTeam, tableSnippet, data, team, click_handler];
     }
 
     class TableSnippet extends SvelteComponent {
@@ -3759,8 +3754,8 @@
 
     		init(this, options, instance$j, create_fragment$k, safe_not_equal, {
     			data: 4,
-    			team: 0,
-    			fullTeamName: 5,
+    			hyphenatedTeam: 0,
+    			team: 5,
     			getAlias: 1,
     			switchTeam: 2
     		});
@@ -3901,14 +3896,14 @@
     		},
     		h() {
     			attr(div, "class", "next-game-logo opposition-badge svelte-1tklhzf");
-    			set_style(div, "background-image", "url('" + /*data*/ ctx[0].logoURLs[/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam] + "')");
+    			set_style(div, "background-image", "url('" + /*data*/ ctx[0].logoURLs[/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam] + "')");
     		},
     		m(target, anchor) {
     			insert_hydration(target, div, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*data, fullTeamName*/ 3) {
-    				set_style(div, "background-image", "url('" + /*data*/ ctx[0].logoURLs[/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam] + "')");
+    			if (dirty & /*data, team*/ 3) {
+    				set_style(div, "background-image", "url('" + /*data*/ ctx[0].logoURLs[/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam] + "')");
     			}
     		},
     		d(detaching) {
@@ -3941,7 +3936,7 @@
     // (59:10) {#if currentMatchday != null}
     function create_if_block_1$3(ctx) {
     	let b;
-    	let t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam][/*currentMatchday*/ ctx[2]].formRating5 * 100).toFixed(1) + "";
+    	let t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam][/*currentMatchday*/ ctx[2]].formRating5 * 100).toFixed(1) + "";
     	let t0;
     	let t1;
 
@@ -3964,7 +3959,7 @@
     			append_hydration(b, t1);
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*data, fullTeamName, currentMatchday*/ 7 && t0_value !== (t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam][/*currentMatchday*/ ctx[2]].formRating5 * 100).toFixed(1) + "")) set_data(t0, t0_value);
+    			if (dirty & /*data, team, currentMatchday*/ 7 && t0_value !== (t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam][/*currentMatchday*/ ctx[2]].formRating5 * 100).toFixed(1) + "")) set_data(t0, t0_value);
     		},
     		d(detaching) {
     			if (detaching) detach(b);
@@ -4003,7 +3998,7 @@
     	};
     }
 
-    // (91:6) {#if data.upcoming[fullTeamName].prevMatches.length == 0}
+    // (91:6) {#if data.upcoming[team].prevMatches.length == 0}
     function create_if_block$9(ctx) {
     	let div;
     	let t;
@@ -4034,7 +4029,7 @@
     	};
     }
 
-    // (100:6) {#each data.upcoming[fullTeamName].prevMatches as prevMatch}
+    // (100:6) {#each data.upcoming[team].prevMatches as prevMatch}
     function create_each_block$4(ctx) {
     	let div6;
     	let div3;
@@ -4154,19 +4149,19 @@
     			append_hydration(div6, t10);
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*getAlias, data, fullTeamName*/ 19 && t0_value !== (t0_value = /*getAlias*/ ctx[4](/*prevMatch*/ ctx[9].homeTeam) + "")) set_data(t0, t0_value);
-    			if (dirty & /*data, fullTeamName*/ 3 && t2_value !== (t2_value = /*prevMatch*/ ctx[9].homeGoals + "")) set_data(t2, t2_value);
-    			if (dirty & /*data, fullTeamName*/ 3 && t4_value !== (t4_value = /*prevMatch*/ ctx[9].awayGoals + "")) set_data(t4, t4_value);
-    			if (dirty & /*getAlias, data, fullTeamName*/ 19 && t6_value !== (t6_value = /*getAlias*/ ctx[4](/*prevMatch*/ ctx[9].awayTeam) + "")) set_data(t6, t6_value);
+    			if (dirty & /*getAlias, data, team*/ 19 && t0_value !== (t0_value = /*getAlias*/ ctx[4](/*prevMatch*/ ctx[9].homeTeam) + "")) set_data(t0, t0_value);
+    			if (dirty & /*data, team*/ 3 && t2_value !== (t2_value = /*prevMatch*/ ctx[9].homeGoals + "")) set_data(t2, t2_value);
+    			if (dirty & /*data, team*/ 3 && t4_value !== (t4_value = /*prevMatch*/ ctx[9].awayGoals + "")) set_data(t4, t4_value);
+    			if (dirty & /*getAlias, data, team*/ 19 && t6_value !== (t6_value = /*getAlias*/ ctx[4](/*prevMatch*/ ctx[9].awayTeam) + "")) set_data(t6, t6_value);
 
-    			if (dirty & /*data, fullTeamName*/ 3 && t9_value !== (t9_value = new Date(/*prevMatch*/ ctx[9].date).toLocaleDateString("en-us", {
+    			if (dirty & /*data, team*/ 3 && t9_value !== (t9_value = new Date(/*prevMatch*/ ctx[9].date).toLocaleDateString("en-us", {
     				weekday: "long",
     				year: "numeric",
     				month: "short",
     				day: "numeric"
     			}) + "")) set_data(t9, t9_value);
 
-    			if (dirty & /*data, fullTeamName*/ 3 && div6_class_value !== (div6_class_value = "next-game-item " + /*prevMatch*/ ctx[9].result + " svelte-1tklhzf")) {
+    			if (dirty & /*data, team*/ 3 && div6_class_value !== (div6_class_value = "next-game-item " + /*prevMatch*/ ctx[9].result + " svelte-1tklhzf")) {
     				attr(div6, "class", div6_class_value);
     			}
     		},
@@ -4182,12 +4177,12 @@
     	let h1;
     	let t0;
     	let button;
-    	let t1_value = /*getAlias*/ ctx[4](/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam) + "";
+    	let t1_value = /*getAlias*/ ctx[4](/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam) + "";
     	let t1;
     	let t2;
     	let t3;
 
-    	let t4_value = (/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].atHome
+    	let t4_value = (/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].atHome
     	? "Home"
     	: "Away") + "";
 
@@ -4200,7 +4195,7 @@
     	let div5;
     	let div2;
     	let div1;
-    	let t8_value = ordinal$1(/*data*/ ctx[0].standings[/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam][/*data*/ ctx[0]._id].position) + "";
+    	let t8_value = ordinal$1(/*data*/ ctx[0].standings[/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam][/*data*/ ctx[0]._id].position) + "";
     	let t8;
     	let t9;
     	let div3;
@@ -4212,10 +4207,10 @@
     	let t13;
     	let a;
     	let b;
-    	let t14_value = Math.round(/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prediction.homeGoals) + "";
+    	let t14_value = Math.round(/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].prediction.homeGoals) + "";
     	let t14;
     	let t15;
-    	let t16_value = Math.round(/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prediction.awayGoals) + "";
+    	let t16_value = Math.round(/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].prediction.awayGoals) + "";
     	let t16;
     	let t17;
     	let br1;
@@ -4242,13 +4237,13 @@
     	let if_block1 = current_block_type_1(ctx);
 
     	function select_block_type_2(ctx, dirty) {
-    		if (/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prevMatches.length == 0) return create_if_block$9;
+    		if (/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].prevMatches.length == 0) return create_if_block$9;
     		return create_else_block$5;
     	}
 
     	let current_block_type_2 = select_block_type_2(ctx);
     	let if_block2 = current_block_type_2(ctx);
-    	let each_value = /*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prevMatches;
+    	let each_value = /*data*/ ctx[0].upcoming[/*team*/ ctx[1]].prevMatches;
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -4449,9 +4444,9 @@
     			}
     		},
     		p(ctx, [dirty]) {
-    			if (dirty & /*getAlias, data, fullTeamName*/ 19 && t1_value !== (t1_value = /*getAlias*/ ctx[4](/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam) + "")) set_data(t1, t1_value);
+    			if (dirty & /*getAlias, data, team*/ 19 && t1_value !== (t1_value = /*getAlias*/ ctx[4](/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam) + "")) set_data(t1, t1_value);
 
-    			if (dirty & /*data, fullTeamName*/ 3 && t4_value !== (t4_value = (/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].atHome
+    			if (dirty & /*data, team*/ 3 && t4_value !== (t4_value = (/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].atHome
     			? "Home"
     			: "Away") + "")) set_data(t4, t4_value);
 
@@ -4475,7 +4470,7 @@
     				}
     			}
 
-    			if (dirty & /*data, fullTeamName*/ 3 && t8_value !== (t8_value = ordinal$1(/*data*/ ctx[0].standings[/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].nextTeam][/*data*/ ctx[0]._id].position) + "")) set_data(t8, t8_value);
+    			if (dirty & /*data, team*/ 3 && t8_value !== (t8_value = ordinal$1(/*data*/ ctx[0].standings[/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam][/*data*/ ctx[0]._id].position) + "")) set_data(t8, t8_value);
 
     			if (current_block_type_1 === (current_block_type_1 = select_block_type_1(ctx)) && if_block1) {
     				if_block1.p(ctx, dirty);
@@ -4489,8 +4484,8 @@
     				}
     			}
 
-    			if (dirty & /*data, fullTeamName*/ 3 && t14_value !== (t14_value = Math.round(/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prediction.homeGoals) + "")) set_data(t14, t14_value);
-    			if (dirty & /*data, fullTeamName*/ 3 && t16_value !== (t16_value = Math.round(/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prediction.awayGoals) + "")) set_data(t16, t16_value);
+    			if (dirty & /*data, team*/ 3 && t14_value !== (t14_value = Math.round(/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].prediction.homeGoals) + "")) set_data(t14, t14_value);
+    			if (dirty & /*data, team*/ 3 && t16_value !== (t16_value = Math.round(/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].prediction.awayGoals) + "")) set_data(t16, t16_value);
 
     			if (current_block_type_2 !== (current_block_type_2 = select_block_type_2(ctx))) {
     				if_block2.d(1);
@@ -4502,8 +4497,8 @@
     				}
     			}
 
-    			if (dirty & /*data, fullTeamName, Date, getAlias*/ 19) {
-    				each_value = /*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[1]].prevMatches;
+    			if (dirty & /*data, team, Date, getAlias*/ 19) {
+    				each_value = /*data*/ ctx[0].upcoming[/*team*/ ctx[1]].prevMatches;
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
@@ -4551,21 +4546,21 @@
 
     function instance$h($$self, $$props, $$invalidate) {
     	function setOppTeam() {
-    		if (data.upcoming[fullTeamName].nextTeam != null) {
-    			$$invalidate(6, oppTeam = data.upcoming[fullTeamName].nextTeam.toLowerCase().replace(/ /g, "-"));
+    		if (data.upcoming[team].nextTeam != null) {
+    			$$invalidate(6, oppTeam = data.upcoming[team].nextTeam.toLowerCase().replace(/ /g, "-"));
     		}
     	}
 
     	let oppTeam;
-    	let { data, fullTeamName, currentMatchday, showBadge, getAlias, switchTeam } = $$props;
+    	let { data, team, currentMatchday, showBadge, getAlias, switchTeam } = $$props;
 
     	const click_handler = () => {
-    		switchTeam(data.upcoming[fullTeamName].nextTeam.toLowerCase().replace(/ /g, '-'));
+    		switchTeam(data.upcoming[team].nextTeam.toLowerCase().replace(/ /g, '-'));
     	};
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(0, data = $$props.data);
-    		if ('fullTeamName' in $$props) $$invalidate(1, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(1, team = $$props.team);
     		if ('currentMatchday' in $$props) $$invalidate(2, currentMatchday = $$props.currentMatchday);
     		if ('showBadge' in $$props) $$invalidate(3, showBadge = $$props.showBadge);
     		if ('getAlias' in $$props) $$invalidate(4, getAlias = $$props.getAlias);
@@ -4573,14 +4568,14 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 2) {
-    			fullTeamName && setOppTeam();
+    		if ($$self.$$.dirty & /*team*/ 2) {
+    			team && setOppTeam();
     		}
     	};
 
     	return [
     		data,
-    		fullTeamName,
+    		team,
     		currentMatchday,
     		showBadge,
     		getAlias,
@@ -4596,7 +4591,7 @@
 
     		init(this, options, instance$h, create_fragment$i, safe_not_equal, {
     			data: 0,
-    			fullTeamName: 1,
+    			team: 1,
     			currentMatchday: 2,
     			showBadge: 3,
     			getAlias: 4,
@@ -4616,7 +4611,7 @@
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
-    		if (/*data*/ ctx[0].upcoming[/*fullTeamName*/ ctx[2]].nextTeam == null) return 0;
+    		if (/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].nextTeam == null) return 0;
     		return 1;
     	}
 
@@ -4689,7 +4684,7 @@
     			props: {
     				data: /*data*/ ctx[0],
     				currentMatchday: /*currentMatchday*/ ctx[1],
-    				fullTeamName: /*fullTeamName*/ ctx[2],
+    				team: /*team*/ ctx[2],
     				showBadge: /*showBadge*/ ctx[3],
     				getAlias: /*getAlias*/ ctx[4],
     				switchTeam: /*switchTeam*/ ctx[5]
@@ -4711,7 +4706,7 @@
     			const nextgamestats_changes = {};
     			if (dirty & /*data*/ 1) nextgamestats_changes.data = /*data*/ ctx[0];
     			if (dirty & /*currentMatchday*/ 2) nextgamestats_changes.currentMatchday = /*currentMatchday*/ ctx[1];
-    			if (dirty & /*fullTeamName*/ 4) nextgamestats_changes.fullTeamName = /*fullTeamName*/ ctx[2];
+    			if (dirty & /*team*/ 4) nextgamestats_changes.team = /*team*/ ctx[2];
     			if (dirty & /*showBadge*/ 8) nextgamestats_changes.showBadge = /*showBadge*/ ctx[3];
     			if (dirty & /*getAlias*/ 16) nextgamestats_changes.getAlias = /*getAlias*/ ctx[4];
     			if (dirty & /*switchTeam*/ 32) nextgamestats_changes.switchTeam = /*switchTeam*/ ctx[5];
@@ -4732,7 +4727,7 @@
     	};
     }
 
-    // (9:2) {#if data.upcoming[fullTeamName].nextTeam == null}
+    // (9:2) {#if data.upcoming[team].nextTeam == null}
     function create_if_block_1$2(ctx) {
     	let seasoncomplete;
     	let current;
@@ -4829,18 +4824,18 @@
     }
 
     function instance$g($$self, $$props, $$invalidate) {
-    	let { data, currentMatchday, fullTeamName, showBadge, getAlias, switchTeam } = $$props;
+    	let { data, currentMatchday, team, showBadge, getAlias, switchTeam } = $$props;
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(0, data = $$props.data);
     		if ('currentMatchday' in $$props) $$invalidate(1, currentMatchday = $$props.currentMatchday);
-    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
     		if ('showBadge' in $$props) $$invalidate(3, showBadge = $$props.showBadge);
     		if ('getAlias' in $$props) $$invalidate(4, getAlias = $$props.getAlias);
     		if ('switchTeam' in $$props) $$invalidate(5, switchTeam = $$props.switchTeam);
     	};
 
-    	return [data, currentMatchday, fullTeamName, showBadge, getAlias, switchTeam];
+    	return [data, currentMatchday, team, showBadge, getAlias, switchTeam];
     }
 
     class NextGame extends SvelteComponent {
@@ -4850,7 +4845,7 @@
     		init(this, options, instance$g, create_fragment$h, safe_not_equal, {
     			data: 0,
     			currentMatchday: 1,
-    			fullTeamName: 2,
+    			team: 2,
     			showBadge: 3,
     			getAlias: 4,
     			switchTeam: 5
@@ -4864,7 +4859,7 @@
     	let div12;
     	let div3;
     	let div1;
-    	let t0_value = /*seasonStats*/ ctx[1][/*fullTeamName*/ ctx[0]].xG.toFixed(2) + "";
+    	let t0_value = /*seasonStats*/ ctx[1][/*team*/ ctx[0]].xG.toFixed(2) + "";
     	let t0;
     	let t1;
     	let div0;
@@ -4877,7 +4872,7 @@
     	let t5;
     	let div7;
     	let div5;
-    	let t6_value = /*seasonStats*/ ctx[1][/*fullTeamName*/ ctx[0]].xC.toFixed(2) + "";
+    	let t6_value = /*seasonStats*/ ctx[1][/*team*/ ctx[0]].xC.toFixed(2) + "";
     	let t6;
     	let t7;
     	let div4;
@@ -4890,7 +4885,7 @@
     	let t11;
     	let div11;
     	let div9;
-    	let t12_value = /*seasonStats*/ ctx[1][/*fullTeamName*/ ctx[0]].cleanSheetRatio.toFixed(2) + "";
+    	let t12_value = /*seasonStats*/ ctx[1][/*team*/ ctx[0]].cleanSheetRatio.toFixed(2) + "";
     	let t12;
     	let t13;
     	let div8;
@@ -5048,21 +5043,21 @@
     			append_hydration(div10, t16);
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*seasonStats, fullTeamName*/ 3 && t0_value !== (t0_value = /*seasonStats*/ ctx[1][/*fullTeamName*/ ctx[0]].xG.toFixed(2) + "")) set_data(t0, t0_value);
+    			if (dirty & /*seasonStats, team*/ 3 && t0_value !== (t0_value = /*seasonStats*/ ctx[1][/*team*/ ctx[0]].xG.toFixed(2) + "")) set_data(t0, t0_value);
     			if (dirty & /*rank*/ 32 && t2_value !== (t2_value = /*rank*/ ctx[5].xG + "")) set_data(t2, t2_value);
 
     			if (dirty & /*rank*/ 32 && div0_class_value !== (div0_class_value = "season-stat-position ssp-" + /*rank*/ ctx[5].xG + " svelte-jyia24")) {
     				attr(div0, "class", div0_class_value);
     			}
 
-    			if (dirty & /*seasonStats, fullTeamName*/ 3 && t6_value !== (t6_value = /*seasonStats*/ ctx[1][/*fullTeamName*/ ctx[0]].xC.toFixed(2) + "")) set_data(t6, t6_value);
+    			if (dirty & /*seasonStats, team*/ 3 && t6_value !== (t6_value = /*seasonStats*/ ctx[1][/*team*/ ctx[0]].xC.toFixed(2) + "")) set_data(t6, t6_value);
     			if (dirty & /*rank*/ 32 && t8_value !== (t8_value = /*rank*/ ctx[5].xC + "")) set_data(t8, t8_value);
 
     			if (dirty & /*rank*/ 32 && div4_class_value !== (div4_class_value = "season-stat-position ssp-" + /*rank*/ ctx[5].xC + " svelte-jyia24")) {
     				attr(div4, "class", div4_class_value);
     			}
 
-    			if (dirty & /*seasonStats, fullTeamName*/ 3 && t12_value !== (t12_value = /*seasonStats*/ ctx[1][/*fullTeamName*/ ctx[0]].cleanSheetRatio.toFixed(2) + "")) set_data(t12, t12_value);
+    			if (dirty & /*seasonStats, team*/ 3 && t12_value !== (t12_value = /*seasonStats*/ ctx[1][/*team*/ ctx[0]].cleanSheetRatio.toFixed(2) + "")) set_data(t12, t12_value);
     			if (dirty & /*rank*/ 32 && t14_value !== (t14_value = /*rank*/ ctx[5].cleanSheetRatio + "")) set_data(t14, t14_value);
 
     			if (dirty & /*rank*/ 32 && div8_class_value !== (div8_class_value = "season-stat-position ssp-" + /*rank*/ ctx[5].cleanSheetRatio + " svelte-jyia24")) {
@@ -5124,12 +5119,12 @@
     	return n + (ord[a > 20 ? a % 10 : a] || "th");
     }
 
-    function getStatsRank(seasonStats, attribute, fullTeamName, reverse) {
+    function getStatsRank(seasonStats, attribute, team, reverse) {
     	let sorted = Object.keys(seasonStats).sort(function (team1, team2) {
     		return seasonStats[team2][attribute] - seasonStats[team1][attribute];
     	});
 
-    	let rank = sorted.indexOf(fullTeamName) + 1;
+    	let rank = sorted.indexOf(team) + 1;
 
     	if (reverse) {
     		rank = 21 - rank;
@@ -5138,13 +5133,13 @@
     	return rank;
     }
 
-    function getStatsRankings(seasonStats, fullTeamName) {
-    	let xGRank = ordinal(getStatsRank(seasonStats, "xG", fullTeamName, false));
+    function getStatsRankings(seasonStats, team) {
+    	let xGRank = ordinal(getStatsRank(seasonStats, "xG", team, false));
 
     	// Reverse - lower rank the better
-    	let xCRank = ordinal(getStatsRank(seasonStats, "xC", fullTeamName, true));
+    	let xCRank = ordinal(getStatsRank(seasonStats, "xC", team, true));
 
-    	let cleanSheetRatioRank = ordinal(getStatsRank(seasonStats, "cleanSheetRatio", fullTeamName, false));
+    	let cleanSheetRatioRank = ordinal(getStatsRank(seasonStats, "cleanSheetRatio", team, false));
 
     	return {
     		xG: xGRank,
@@ -5240,8 +5235,8 @@
     		document.documentElement.style.setProperty("--ssp3-offset", -ssp3.clientWidth / 2 + "px");
     	}
 
-    	function setStatsValues(seasonStats, fullTeamName) {
-    		$$invalidate(5, rank = getStatsRankings(seasonStats, fullTeamName));
+    	function setStatsValues(seasonStats, team) {
+    		$$invalidate(5, rank = getStatsRankings(seasonStats, team));
 
     		// Keep ordinal values at the correct offset
     		// Once rank values have updated, init positional offset for ordinal values
@@ -5252,7 +5247,7 @@
     	function refreshStatsValues() {
     		if (setup) {
     			// seasonStats = buildSeasonStats(data)
-    			setStatsValues(seasonStats, fullTeamName);
+    			setStatsValues(seasonStats, team);
     		}
     	}
 
@@ -5263,11 +5258,11 @@
 
     	onMount(() => {
     		$$invalidate(1, seasonStats = buildSeasonStats(data));
-    		setStatsValues(seasonStats, fullTeamName);
+    		setStatsValues(seasonStats, team);
     		setup = true;
     	});
 
-    	let { data, fullTeamName } = $$props;
+    	let { data, team } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -5292,17 +5287,17 @@
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(6, data = $$props.data);
-    		if ('fullTeamName' in $$props) $$invalidate(0, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 1) {
-    			fullTeamName && refreshStatsValues();
+    		if ($$self.$$.dirty & /*team*/ 1) {
+    			team && refreshStatsValues();
     		}
     	};
 
     	return [
-    		fullTeamName,
+    		team,
     		seasonStats,
     		ssp1,
     		ssp2,
@@ -5318,7 +5313,7 @@
     class SeasonStats extends SvelteComponent {
     	constructor(options) {
     		super();
-    		init(this, options, instance$f, create_fragment$g, safe_not_equal, { data: 6, fullTeamName: 0 });
+    		init(this, options, instance$f, create_fragment$g, safe_not_equal, { data: 6, team: 0 });
     	}
     }
 
@@ -5695,6 +5690,66 @@
     	return sizes;
     }
 
+    function linePoints(data, team) {
+    	let x = [];
+    	let y = [];
+    	let details = [];
+
+    	for (let matchday = 1; matchday <= 38; matchday++) {
+    		let match = data.fixtures[team][matchday];
+    		x.push(new Date(match.date));
+    		let oppTeamRating = data.teamRatings[match.team].totalRating;
+
+    		if (match.atHome) {
+    			// If team playing at home, decrease opposition rating by the amount of home advantage the team gains
+    			oppTeamRating *= 1 - data.homeAdvantages[match.team].totalHomeAdvantage;
+    		}
+
+    		y.push(oppTeamRating * 100);
+    		let matchDetail = getMatchDetail(match);
+    		details.push(matchDetail);
+    	}
+
+    	return [x, y, details];
+    }
+
+    function line(data, team, now) {
+    	let [x, y, details] = linePoints(data, team);
+    	sortByMatchDate(x, y, details);
+    	let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
+    	let sizes = Array(x.length).fill(13);
+    	sizes = increaseNextGameMarker(sizes, x, now, 26);
+
+    	return {
+    		x,
+    		y,
+    		type: "scatter",
+    		mode: "lines+markers",
+    		text: details,
+    		line: { color: "#737373" },
+    		marker: {
+    			size: sizes,
+    			// colorscale: [
+    			//   [0, "#01c626"],
+    			//   [0.1, "#08a825"],
+    			//   [0.2, "#0b7c20"],
+    			//   [0.3, "#0a661b"],
+    			//   [0.4, "#064411"],
+    			//   [0.5, "#000000"],
+    			//   [0.6, "#5b1d15"],
+    			//   [0.7, "#85160f"],
+    			//   [0.8, "#ad1a10"],
+    			//   [0.9, "#db1a0d"],
+    			//   [1, "#fc1303"],
+    			// ],
+    			colorscale: [[0, "#01c626"], [0.5, "#f3f3f3"], [1, "#fc1303"]],
+    			color: y
+    		},
+    		customdata: matchdays,
+    		hovertemplate: "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>"
+    	};
+    }
+
     function nowLine(now, maxX) {
     	let nowLine = [];
 
@@ -5724,115 +5779,55 @@
     	return [minX, maxX];
     }
 
-    function instance$d($$self, $$props, $$invalidate) {
-    	function linePoints() {
-    		let x = [];
-    		let y = [];
-    		let details = [];
+    function buildPlotData(data, team) {
+    	// Build data to create a fixtures line graph displaying the date along the
+    	// x-axis and opponent strength along the y-axis
+    	let now = Date.now();
 
-    		for (let matchday = 1; matchday <= 38; matchday++) {
-    			let match = data.fixtures[fullTeamName][matchday];
-    			x.push(new Date(match.date));
-    			let oppTeamRating = data.teamRatings[match.team].totalRating;
+    	let l = line(data, team, now);
+    	let yLabels = Array.from(Array(11), (_, i) => i * 10);
+    	let [minX, maxX] = xRange(l.x);
 
-    			if (match.atHome) {
-    				// If team playing at home, decrease opposition rating by the amount of home advantage the team gains
-    				oppTeamRating *= 1 - data.homeAdvantages[match.team].totalHomeAdvantage;
-    			}
-
-    			y.push(oppTeamRating * 100);
-    			let matchDetail = getMatchDetail(match);
-    			details.push(matchDetail);
+    	let plotData = {
+    		data: [l],
+    		layout: {
+    			title: false,
+    			autosize: true,
+    			margin: { r: 20, l: 50, t: 5, b: 40, pad: 5 },
+    			hovermode: "closest",
+    			plot_bgcolor: "#fafafa",
+    			paper_bgcolor: "#fafafa",
+    			yaxis: {
+    				title: { text: "Team Rating" },
+    				gridcolor: "gray",
+    				showline: false,
+    				zeroline: false,
+    				fixedrange: true,
+    				ticktext: yLabels,
+    				tickvals: yLabels
+    			},
+    			xaxis: {
+    				linecolor: "black",
+    				showgrid: false,
+    				showline: false,
+    				range: [minX, maxX],
+    				fixedrange: true
+    			},
+    			shapes: [nowLine(now, maxX)]
+    		},
+    		config: {
+    			responsive: true,
+    			showSendToCloud: false,
+    			displayModeBar: false
     		}
+    	};
 
-    		return [x, y, details];
-    	}
+    	return plotData;
+    }
 
-    	function line(now) {
-    		let [x, y, details] = linePoints();
-    		sortByMatchDate(x, y, details);
-    		let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
-    		let sizes = Array(x.length).fill(13);
-    		sizes = increaseNextGameMarker(sizes, x, now, 26);
-
-    		return {
-    			x,
-    			y,
-    			type: "scatter",
-    			mode: "lines+markers",
-    			text: details,
-    			line: { color: "#737373" },
-    			marker: {
-    				size: sizes,
-    				// colorscale: [
-    				//   [0, "#01c626"],
-    				//   [0.1, "#08a825"],
-    				//   [0.2, "#0b7c20"],
-    				//   [0.3, "#0a661b"],
-    				//   [0.4, "#064411"],
-    				//   [0.5, "#000000"],
-    				//   [0.6, "#5b1d15"],
-    				//   [0.7, "#85160f"],
-    				//   [0.8, "#ad1a10"],
-    				//   [0.9, "#db1a0d"],
-    				//   [1, "#fc1303"],
-    				// ],
-    				colorscale: [[0, "#01c626"], [0.5, "#f3f3f3"], [1, "#fc1303"]],
-    				color: y
-    			},
-    			customdata: matchdays,
-    			hovertemplate: "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>"
-    		};
-    	}
-
-    	function buildPlotData(data, fullTeamName) {
-    		// Build data to create a fixtures line graph displaying the date along the
-    		// x-axis and opponent strength along the y-axis
-    		let now = Date.now();
-
-    		let l = line(now);
-    		let yLabels = Array.from(Array(11), (_, i) => i * 10);
-    		let [minX, maxX] = xRange(l.x);
-
-    		let plotData = {
-    			data: [l],
-    			layout: {
-    				title: false,
-    				autosize: true,
-    				margin: { r: 20, l: 50, t: 5, b: 40, pad: 5 },
-    				hovermode: "closest",
-    				plot_bgcolor: "#fafafa",
-    				paper_bgcolor: "#fafafa",
-    				yaxis: {
-    					title: { text: "Team Rating" },
-    					gridcolor: "gray",
-    					showline: false,
-    					zeroline: false,
-    					fixedrange: true,
-    					ticktext: yLabels,
-    					tickvals: yLabels
-    				},
-    				xaxis: {
-    					linecolor: "black",
-    					showgrid: false,
-    					showline: false,
-    					range: [minX, maxX],
-    					fixedrange: true
-    				},
-    				shapes: [nowLine(now, maxX)]
-    			},
-    			config: {
-    				responsive: true,
-    				showSendToCloud: false,
-    				displayModeBar: false
-    			}
-    		};
-
-    		return plotData;
-    	}
-
+    function instance$d($$self, $$props, $$invalidate) {
     	function genPlot() {
-    		plotData = buildPlotData(data);
+    		plotData = buildPlotData(data, team);
 
     		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
     			// Once plot generated, add resizable attribute to it to shorten height for mobile view
@@ -5843,7 +5838,7 @@
     	function refreshPlot() {
     		if (setup) {
     			let now = Date.now();
-    			let l = line(now);
+    			let l = line(data, team, now);
     			plotData.data[0] = l; // Overwrite plot data
     			Plotly.redraw(plotDiv);
     		}
@@ -5857,7 +5852,7 @@
     		setup = true;
     	});
 
-    	let { data, fullTeamName } = $$props;
+    	let { data, team } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -5868,22 +5863,22 @@
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(1, data = $$props.data);
-    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
-    			fullTeamName && refreshPlot();
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && refreshPlot();
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, div0_binding];
+    	return [plotDiv, data, team, div0_binding];
     }
 
     class Fixtures extends SvelteComponent {
     	constructor(options) {
     		super();
-    		init(this, options, instance$d, create_fragment$e, safe_not_equal, { data: 1, fullTeamName: 2 });
+    		init(this, options, instance$d, create_fragment$e, safe_not_equal, { data: 1, team: 2 });
     	}
     }
 
@@ -5927,12 +5922,12 @@
     	};
     }
 
-    function getFormLine(data, playedMatchdays, teamName, isMainTeam) {
-    	let matchdays = Object.keys(data.form[data._id][teamName]); // Played matchdays
+    function getFormLine(data, playedMatchdays, team, isMainTeam) {
+    	let matchdays = Object.keys(data.form[data._id][team]); // Played matchdays
     	let y = [];
 
     	for (let matchday of matchdays) {
-    		let form = data.form[data._id][teamName][matchday].formRating5;
+    		let form = data.form[data._id][team][matchday].formRating5;
     		y.push(form * 100);
     	}
 
@@ -5940,7 +5935,7 @@
 
     	if (isMainTeam) {
     		// Get team primary colour from css variable
-    		let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
+    		let teamKey = team[0].toLowerCase() + team.slice(1);
 
     		teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
     		let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
@@ -5952,40 +5947,40 @@
     	let line = {
     		x: playedMatchdays,
     		y,
-    		name: teamName,
+    		name: team,
     		mode: "lines",
     		line: lineVal,
     		text: matchdays,
-    		hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
+    		hovertemplate: `<b>${team}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
     		showlegend: false
     	};
 
     	return line;
     }
 
-    function lines$1(data, fullTeamName, playedMatchdays) {
+    function lines$1(data, team, playedMatchdays) {
     	let lines = [];
 
     	for (let i = 0; i < data.teamNames.length; i++) {
-    		if (data.teamNames[i] != fullTeamName) {
+    		if (data.teamNames[i] != team) {
     			let line = getFormLine(data, playedMatchdays, data.teamNames[i], false);
     			lines.push(line);
     		}
     	}
 
     	// Add this team last to ensure it overlaps all other lines
-    	let line = getFormLine(data, playedMatchdays, fullTeamName, true);
+    	let line = getFormLine(data, playedMatchdays, team, true);
 
     	lines.push(line);
     	return lines;
     }
 
     function instance$c($$self, $$props, $$invalidate) {
-    	function buildPlotData(data, fullTeamName) {
+    	function buildPlotData(data, team) {
     		let yLabels = Array.from(Array(11), (_, i) => i * 10);
 
     		let plotData = {
-    			data: lines$1(data, fullTeamName, playedMatchdays),
+    			data: lines$1(data, team, playedMatchdays),
     			layout: {
     				title: false,
     				autosize: true,
@@ -6031,7 +6026,7 @@
     	});
 
     	function genPlot() {
-    		plotData = buildPlotData(data, fullTeamName);
+    		plotData = buildPlotData(data, team);
 
     		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
     			// Once plot generated, add resizable attribute to it to shorten height for mobile view
@@ -6041,7 +6036,7 @@
 
     	function refreshPlot() {
     		if (setup) {
-    			let newPlotData = buildPlotData(data, fullTeamName);
+    			let newPlotData = buildPlotData(data, team);
 
     			for (let i = 0; i < 20; i++) {
     				plotData.data[i] = newPlotData.data[i];
@@ -6051,7 +6046,7 @@
     		}
     	}
 
-    	let { data, fullTeamName, playedMatchdays } = $$props;
+    	let { data, team, playedMatchdays } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -6062,28 +6057,23 @@
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(1, data = $$props.data);
-    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
     		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
-    			fullTeamName && refreshPlot();
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && refreshPlot();
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, playedMatchdays, div0_binding];
+    	return [plotDiv, data, team, playedMatchdays, div0_binding];
     }
 
     class FormOverTime extends SvelteComponent {
     	constructor(options) {
     		super();
-
-    		init(this, options, instance$c, create_fragment$d, safe_not_equal, {
-    			data: 1,
-    			fullTeamName: 2,
-    			playedMatchdays: 3
-    		});
+    		init(this, options, instance$c, create_fragment$d, safe_not_equal, { data: 1, team: 2, playedMatchdays: 3 });
     	}
     }
 
@@ -6127,12 +6117,12 @@
     	};
     }
 
-    function getLineConfig(teamName, isMainTeam) {
+    function getLineConfig(team, isMainTeam) {
     	let lineConfig;
 
     	if (isMainTeam) {
     		// Get team primary colour from css variable
-    		let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
+    		let teamKey = team[0].toLowerCase() + team.slice(1);
 
     		teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
     		let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
@@ -6144,59 +6134,59 @@
     	return lineConfig;
     }
 
-    function getLineY(data, matchdays) {
+    function getLineY(data, team, matchdays) {
     	let y = [];
 
     	for (let matchday of matchdays) {
-    		let position = data.form[data._id][teamName][matchday].position;
+    		let position = data.form[data._id][team][matchday].position;
     		y.push(position);
     	}
 
     	return y;
     }
 
-    function getLine(data, x, teamName, isMainTeam) {
-    	let matchdays = Object.keys(data.form[data._id][teamName]);
-    	let y = getLineY(data, matchdays);
-    	let lineConfig = getLineConfig(teamName, isMainTeam);
+    function getLine(data, x, team, isMainTeam) {
+    	let matchdays = Object.keys(data.form[data._id][team]);
+    	let y = getLineY(data, team, matchdays);
+    	let lineConfig = getLineConfig(team, isMainTeam);
 
     	let line = {
     		x,
     		y,
-    		name: teamName,
+    		name: team,
     		mode: "lines",
     		line: lineConfig,
     		text: matchdays,
-    		hovertemplate: `<b>${teamName}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
+    		hovertemplate: `<b>${team}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
     		showlegend: false
     	};
 
     	return line;
     }
 
-    function lines(data, fullTeamName, playedMatchdays) {
+    function lines(data, team, playedMatchdays) {
     	let lines = [];
 
     	for (let i = 0; i < data.teamNames.length; i++) {
-    		if (data.teamNames[i] != fullTeamName) {
+    		if (data.teamNames[i] != team) {
     			let line = getLine(data, playedMatchdays, data.teamNames[i], false);
     			lines.push(line);
     		}
     	}
 
     	// Add this team last to ensure it overlaps all other lines
-    	let line = getLine(data, playedMatchdays, fullTeamName, true);
+    	let line = getLine(data, playedMatchdays, team, true);
 
     	lines.push(line);
     	return lines;
     }
 
     function instance$b($$self, $$props, $$invalidate) {
-    	function buildPlotData(data, fullTeamName) {
+    	function buildPlotData(data, team) {
     		let yLabels = Array.from(Array(20), (_, i) => i + 1);
 
-    		let graphData = {
-    			data: lines(data, fullTeamName, playedMatchdays),
+    		let plotData = {
+    			data: lines(data, team, playedMatchdays),
     			layout: {
     				title: false,
     				autosize: true,
@@ -6264,7 +6254,7 @@
     			}
     		};
 
-    		return graphData;
+    		return plotData;
     	}
 
     	let plotDiv, plotData;
@@ -6276,7 +6266,7 @@
     	});
 
     	function genPlot() {
-    		plotData = buildPlotData(data, fullTeamName);
+    		plotData = buildPlotData(data, team);
 
     		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
     			// Once plot generated, add resizable attribute to it to shorten height for mobile view
@@ -6286,7 +6276,7 @@
 
     	function refreshPlot() {
     		if (setup) {
-    			let newPlotData = buildPlotData(data, fullTeamName);
+    			let newPlotData = buildPlotData(data, team);
 
     			for (let i = 0; i < 20; i++) {
     				plotData.data[i] = newPlotData.data[i];
@@ -6296,7 +6286,7 @@
     		}
     	}
 
-    	let { data, fullTeamName, playedMatchdays } = $$props;
+    	let { data, team, playedMatchdays } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -6307,28 +6297,23 @@
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(1, data = $$props.data);
-    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
     		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
-    			fullTeamName && refreshPlot();
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && refreshPlot();
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, playedMatchdays, div0_binding];
+    	return [plotDiv, data, team, playedMatchdays, div0_binding];
     }
 
     class PositionOverTime extends SvelteComponent {
     	constructor(options) {
     		super();
-
-    		init(this, options, instance$b, create_fragment$c, safe_not_equal, {
-    			data: 1,
-    			fullTeamName: 2,
-    			playedMatchdays: 3
-    		});
+    		init(this, options, instance$b, create_fragment$c, safe_not_equal, { data: 1, team: 2, playedMatchdays: 3 });
     	}
     }
 
@@ -6463,9 +6448,9 @@
     }
 
     function instance$a($$self, $$props, $$invalidate) {
-    	function buildPlotData(data, fullTeamName) {
+    	function buildPlotData(data, team) {
     		// let x = getMatchdayDates(data, fullTeamName);
-    		let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
+    		let [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
 
     		let avgGoals = getAvgGoalsPerGame(data);
     		let matchdays = Object.keys(avgGoals);
@@ -6520,7 +6505,7 @@
     	});
 
     	function genPlot() {
-    		plotData = buildPlotData(data, fullTeamName);
+    		plotData = buildPlotData(data, team);
 
     		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
     			// Once plot generated, add resizable attribute to it to shorten height for mobile view
@@ -6530,7 +6515,7 @@
 
     	function refreshPlot() {
     		if (setup) {
-    			let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
+    			let [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
     			let avgGoals = getAvgGoalsPerGame(data);
     			let matchdays = Object.keys(avgGoals);
     			let scoredBar = teamScoredBar(playedMatchdays, teamScored, matchdays);
@@ -6541,7 +6526,7 @@
     		}
     	}
 
-    	let { data, fullTeamName, playedMatchdays } = $$props;
+    	let { data, team, playedMatchdays } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -6552,28 +6537,23 @@
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(1, data = $$props.data);
-    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
     		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
-    			fullTeamName && refreshPlot();
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && refreshPlot();
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, playedMatchdays, div0_binding];
+    	return [plotDiv, data, team, playedMatchdays, div0_binding];
     }
 
     class GoalsScoredAndConceded extends SvelteComponent {
     	constructor(options) {
     		super();
-
-    		init(this, options, instance$a, create_fragment$b, safe_not_equal, {
-    			data: 1,
-    			fullTeamName: 2,
-    			playedMatchdays: 3
-    		});
+    		init(this, options, instance$a, create_fragment$b, safe_not_equal, { data: 1, team: 2, playedMatchdays: 3 });
     	}
     }
 
@@ -6652,9 +6632,9 @@
     	return [cleanSheets, notCleanSheets];
     }
 
-    function bars(data, fullTeamName, playedMatchdays) {
-    	let matchdays = Object.keys(data.form[data._id][fullTeamName]);
-    	let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, fullTeamName);
+    function bars(data, team, playedMatchdays) {
+    	let matchdays = Object.keys(data.form[data._id][team]);
+    	let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, team);
 
     	return [
     		{
@@ -6681,8 +6661,8 @@
     }
 
     function instance$9($$self, $$props, $$invalidate) {
-    	function buildPlotData(data, fullTeamName) {
-    		let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, playedMatchdays);
+    	function buildPlotData(data, team) {
+    		let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
 
     		let plotData = {
     			data: [cleanSheetsBar, concededBar],
@@ -6741,20 +6721,20 @@
     	});
 
     	function genPlot() {
-    		plotData = buildPlotData(data, fullTeamName);
+    		plotData = buildPlotData(data, team);
     		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
     	}
 
     	function refreshPlot() {
     		if (setup) {
-    			let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, playedMatchdays);
+    			let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
     			plotData.data[0] = cleanSheetsBar;
     			plotData.data[1] = concededBar;
     			Plotly.redraw(plotDiv);
     		}
     	}
 
-    	let { data, fullTeamName, playedMatchdays } = $$props;
+    	let { data, team, playedMatchdays } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -6765,28 +6745,23 @@
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(1, data = $$props.data);
-    		if ('fullTeamName' in $$props) $$invalidate(2, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
     		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 4) {
-    			fullTeamName && refreshPlot();
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && refreshPlot();
     		}
     	};
 
-    	return [plotDiv, data, fullTeamName, playedMatchdays, div0_binding];
+    	return [plotDiv, data, team, playedMatchdays, div0_binding];
     }
 
     class CleanSheets extends SvelteComponent {
     	constructor(options) {
     		super();
-
-    		init(this, options, instance$9, create_fragment$a, safe_not_equal, {
-    			data: 1,
-    			fullTeamName: 2,
-    			playedMatchdays: 3
-    		});
+    		init(this, options, instance$9, create_fragment$a, safe_not_equal, { data: 1, team: 2, playedMatchdays: 3 });
     	}
     }
 
@@ -6867,14 +6842,6 @@
     		return plotData;
     	}
 
-    	let plotDiv, plotData;
-    	let setup = false;
-
-    	onMount(() => {
-    		genPlot();
-    		setup = true;
-    	});
-
     	function genPlot() {
     		plotData = buildPlotData();
 
@@ -6892,7 +6859,15 @@
     		}
     	}
 
-    	let { fullTeamName, getScoredBars, getScoredTeamBars, getXLabels, getYAxisLayout } = $$props;
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		setup = true;
+    	});
+
+    	let { team, getScoredBars, getScoredTeamBars, getXLabels, getYAxisLayout } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -6902,7 +6877,7 @@
     	}
 
     	$$self.$$set = $$props => {
-    		if ('fullTeamName' in $$props) $$invalidate(1, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(1, team = $$props.team);
     		if ('getScoredBars' in $$props) $$invalidate(2, getScoredBars = $$props.getScoredBars);
     		if ('getScoredTeamBars' in $$props) $$invalidate(3, getScoredTeamBars = $$props.getScoredTeamBars);
     		if ('getXLabels' in $$props) $$invalidate(4, getXLabels = $$props.getXLabels);
@@ -6910,14 +6885,14 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 2) {
-    			fullTeamName && refreshPlot();
+    		if ($$self.$$.dirty & /*team*/ 2) {
+    			team && refreshPlot();
     		}
     	};
 
     	return [
     		plotDiv,
-    		fullTeamName,
+    		team,
     		getScoredBars,
     		getScoredTeamBars,
     		getXLabels,
@@ -6931,7 +6906,7 @@
     		super();
 
     		init(this, options, instance$8, create_fragment$9, safe_not_equal, {
-    			fullTeamName: 1,
+    			team: 1,
     			getScoredBars: 2,
     			getScoredTeamBars: 3,
     			getXLabels: 4,
@@ -7017,14 +6992,6 @@
     		return graphData;
     	}
 
-    	let plotDiv, plotData;
-    	let setup = false;
-
-    	onMount(() => {
-    		genPlot();
-    		setup = true;
-    	});
-
     	function genPlot() {
     		plotData = buildPlotData();
 
@@ -7042,7 +7009,15 @@
     		}
     	}
 
-    	let { fullTeamName, getConcededBars, getConcededTeamBars, getXLabels, getYAxisLayout } = $$props;
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		setup = true;
+    	});
+
+    	let { team, getConcededBars, getConcededTeamBars, getXLabels, getYAxisLayout } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -7052,7 +7027,7 @@
     	}
 
     	$$self.$$set = $$props => {
-    		if ('fullTeamName' in $$props) $$invalidate(1, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(1, team = $$props.team);
     		if ('getConcededBars' in $$props) $$invalidate(2, getConcededBars = $$props.getConcededBars);
     		if ('getConcededTeamBars' in $$props) $$invalidate(3, getConcededTeamBars = $$props.getConcededTeamBars);
     		if ('getXLabels' in $$props) $$invalidate(4, getXLabels = $$props.getXLabels);
@@ -7060,14 +7035,14 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 2) {
-    			fullTeamName && refreshPlot();
+    		if ($$self.$$.dirty & /*team*/ 2) {
+    			team && refreshPlot();
     		}
     	};
 
     	return [
     		plotDiv,
-    		fullTeamName,
+    		team,
     		getConcededBars,
     		getConcededTeamBars,
     		getXLabels,
@@ -7081,7 +7056,7 @@
     		super();
 
     		init(this, options, instance$7, create_fragment$8, safe_not_equal, {
-    			fullTeamName: 1,
+    			team: 1,
     			getConcededBars: 2,
     			getConcededTeamBars: 3,
     			getXLabels: 4,
@@ -7102,7 +7077,7 @@
 
     	goalsscoredfreq = new GoalsScoredFreq({
     			props: {
-    				fullTeamName: /*fullTeamName*/ ctx[0],
+    				team: /*team*/ ctx[0],
     				getScoredBars: /*getScoredBars*/ ctx[2],
     				getScoredTeamBars: /*getScoredTeamBars*/ ctx[4],
     				getXLabels: /*getXLabels*/ ctx[6],
@@ -7112,7 +7087,7 @@
 
     	goalsconcededfreq = new GoalsConcededFreq({
     			props: {
-    				fullTeamName: /*fullTeamName*/ ctx[0],
+    				team: /*team*/ ctx[0],
     				getConcededBars: /*getConcededBars*/ ctx[3],
     				getConcededTeamBars: /*getConcededTeamBars*/ ctx[5],
     				getXLabels: /*getXLabels*/ ctx[6],
@@ -7155,10 +7130,10 @@
     		},
     		p(ctx, dirty) {
     			const goalsscoredfreq_changes = {};
-    			if (dirty & /*fullTeamName*/ 1) goalsscoredfreq_changes.fullTeamName = /*fullTeamName*/ ctx[0];
+    			if (dirty & /*team*/ 1) goalsscoredfreq_changes.team = /*team*/ ctx[0];
     			goalsscoredfreq.$set(goalsscoredfreq_changes);
     			const goalsconcededfreq_changes = {};
-    			if (dirty & /*fullTeamName*/ 1) goalsconcededfreq_changes.fullTeamName = /*fullTeamName*/ ctx[0];
+    			if (dirty & /*team*/ 1) goalsconcededfreq_changes.team = /*team*/ ctx[0];
     			goalsconcededfreq.$set(goalsconcededfreq_changes);
     		},
     		i(local) {
@@ -7480,8 +7455,8 @@
 
     	function refreshTeamData() {
     		if (setup) {
-    			teamScoredFreq = teamScoredFrequencies(data, fullTeamName);
-    			teamConcededFreq = teamConcededFrequencies(data, fullTeamName);
+    			teamScoredFreq = teamScoredFrequencies(data, team);
+    			teamConcededFreq = teamConcededFrequencies(data, team);
     			scaleTeamFreq(goalFreq, teamScoredFreq, teamConcededFreq);
     			convertToPercentage(teamScoredFreq);
     			convertToPercentage(teamConcededFreq);
@@ -7494,29 +7469,29 @@
 
     	onMount(() => {
     		goalFreq = avgGoalFrequencies(data);
-    		teamScoredFreq = teamScoredFrequencies(data, fullTeamName);
-    		teamConcededFreq = teamConcededFrequencies(data, fullTeamName);
+    		teamScoredFreq = teamScoredFrequencies(data, team);
+    		teamConcededFreq = teamConcededFrequencies(data, team);
     		scaleTeamFreq(goalFreq, teamScoredFreq, teamConcededFreq);
     		convertAllToPercentage(goalFreq, teamScoredFreq, teamConcededFreq);
     		maxY = maxValue(goalFreq, teamScoredFreq, teamConcededFreq);
     		$$invalidate(1, setup = true);
     	});
 
-    	let { data, fullTeamName } = $$props;
+    	let { data, team } = $$props;
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(8, data = $$props.data);
-    		if ('fullTeamName' in $$props) $$invalidate(0, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*fullTeamName*/ 1) {
-    			fullTeamName && refreshTeamData();
+    		if ($$self.$$.dirty & /*team*/ 1) {
+    			team && refreshTeamData();
     		}
     	};
 
     	return [
-    		fullTeamName,
+    		team,
     		setup,
     		getScoredBars,
     		getConcededBars,
@@ -7531,7 +7506,7 @@
     class GoalsPerGame extends SvelteComponent {
     	constructor(options) {
     		super();
-    		init(this, options, instance$6, create_fragment$7, safe_not_equal, { data: 8, fullTeamName: 0 });
+    		init(this, options, instance$6, create_fragment$7, safe_not_equal, { data: 8, team: 0 });
     	}
     }
 
@@ -7543,10 +7518,10 @@
     	return child_ctx;
     }
 
-    // (576:6) {#if teamName != fullTeamName}
+    // (576:6) {#if _team != team}
     function create_if_block$4(ctx) {
     	let button;
-    	let t_value = /*getAlias*/ ctx[2](/*teamName*/ ctx[30]) + "";
+    	let t_value = /*getAlias*/ ctx[2](/*_team*/ ctx[30]) + "";
     	let t;
     	let mounted;
     	let dispose;
@@ -7577,7 +7552,7 @@
     			}
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*getAlias, data*/ 5 && t_value !== (t_value = /*getAlias*/ ctx[2](/*teamName*/ ctx[30]) + "")) set_data(t, t_value);
+    			if (dirty[0] & /*getAlias, data*/ 5 && t_value !== (t_value = /*getAlias*/ ctx[2](/*_team*/ ctx[30]) + "")) set_data(t, t_value);
     		},
     		d(detaching) {
     			if (detaching) detach(button);
@@ -7587,10 +7562,10 @@
     	};
     }
 
-    // (575:4) {#each data.teamNames as teamName}
+    // (575:4) {#each data.teamNames as _team}
     function create_each_block$3(ctx) {
     	let if_block_anchor;
-    	let if_block = /*teamName*/ ctx[30] != /*fullTeamName*/ ctx[1] && create_if_block$4(ctx);
+    	let if_block = /*_team*/ ctx[30] != /*team*/ ctx[1] && create_if_block$4(ctx);
 
     	return {
     		c() {
@@ -7606,7 +7581,7 @@
     			insert_hydration(target, if_block_anchor, anchor);
     		},
     		p(ctx, dirty) {
-    			if (/*teamName*/ ctx[30] != /*fullTeamName*/ ctx[1]) {
+    			if (/*_team*/ ctx[30] != /*team*/ ctx[1]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
@@ -7701,7 +7676,7 @@
     			}
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*spiderBtnClick, getAlias, data, fullTeamName*/ 23) {
+    			if (dirty[0] & /*spiderBtnClick, getAlias, data, team*/ 23) {
     				each_value = /*data*/ ctx[0].teamNames;
     				let i;
 
@@ -7736,8 +7711,8 @@
     	};
     }
 
-    function getTeamColor(teamName) {
-    	let teamKey = teamName[0].toLowerCase() + teamName.slice(1);
+    function getTeamColor(team) {
+    	let teamKey = team[0].toLowerCase() + team.slice(1);
     	teamKey = teamKey.replace(/ /g, "-").toLowerCase();
     	let teamColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
     	return teamColor;
@@ -7761,12 +7736,12 @@
     	let maxGoals = Number.NEGATIVE_INFINITY;
     	let minGoals = Number.POSITIVE_INFINITY;
 
-    	for (let teamName of data.teamNames) {
+    	for (let team of data.teamNames) {
     		let totalGoals = 0;
     		let seasonsPlayed = 0;
 
-    		for (let year in data.standings[teamName]) {
-    			let goals = data.standings[teamName][year].gF;
+    		for (let year in data.standings[team]) {
+    			let goals = data.standings[team][year].gF;
 
     			if (goals > 0) {
     				totalGoals += goals;
@@ -7787,7 +7762,7 @@
     			goalsPerSeason = totalGoals / seasonsPlayed;
     		}
 
-    		attack[teamName] = goalsPerSeason;
+    		attack[team] = goalsPerSeason;
     	}
 
     	return [attack, [minGoals, maxGoals]];
@@ -7796,11 +7771,11 @@
     function scaleAttack(attack, range) {
     	let [lower, upper] = range;
 
-    	for (let teamName in attack) {
-    		if (attack[teamName] == null) {
-    			attack[teamName] = 0;
+    	for (let team in attack) {
+    		if (attack[team] == null) {
+    			attack[team] = 0;
     		} else {
-    			attack[teamName] = (attack[teamName] - lower) / (upper - lower) * 100;
+    			attack[team] = (attack[team] - lower) / (upper - lower) * 100;
     		}
     	}
 
@@ -7810,9 +7785,9 @@
     function formMetricAvgScaled(formMetric, max) {
     	let total = 0;
 
-    	for (let teamName in formMetric) {
-    		formMetric[teamName] = formMetric[teamName] / max * 100;
-    		total += formMetric[teamName];
+    	for (let team in formMetric) {
+    		formMetric[team] = formMetric[team] / max * 100;
+    		total += formMetric[team];
     	}
 
     	let avg = total / Object.keys(formMetric).length;
@@ -7822,8 +7797,8 @@
     function formMetricAvg(formMetric) {
     	let total = 0;
 
-    	for (let teamName in formMetric) {
-    		total += formMetric[teamName];
+    	for (let team in formMetric) {
+    		total += formMetric[team];
     	}
 
     	let avg = total / Object.keys(formMetric).length;
@@ -7842,12 +7817,12 @@
     	let maxConceded = Number.NEGATIVE_INFINITY;
     	let minConceded = Number.POSITIVE_INFINITY;
 
-    	for (let teamName of data.teamNames) {
+    	for (let team of data.teamNames) {
     		let totalConceded = 0;
     		let seasonsPlayed = 0;
 
-    		for (let year in data.standings[teamName]) {
-    			let goals = data.standings[teamName][year].gA;
+    		for (let year in data.standings[team]) {
+    			let goals = data.standings[team][year].gA;
 
     			if (goals > 0) {
     				totalConceded += goals;
@@ -7868,7 +7843,7 @@
     			goalsPerSeason = totalConceded / seasonsPlayed;
     		}
 
-    		defence[teamName] = goalsPerSeason;
+    		defence[team] = goalsPerSeason;
     	}
 
     	return [defence, [minConceded, maxConceded]];
@@ -7877,11 +7852,11 @@
     function scaleDefence(defence, range) {
     	let [lower, upper] = range;
 
-    	for (let teamName in defence) {
-    		if (defence[teamName] == null) {
-    			defence[teamName] = 0;
+    	for (let team in defence) {
+    		if (defence[team] == null) {
+    			defence[team] = 0;
     		} else {
-    			defence[teamName] = 100 - (defence[teamName] - lower) / (upper - lower) * 100;
+    			defence[team] = 100 - (defence[team] - lower) / (upper - lower) * 100;
     		}
     	}
 
@@ -7895,11 +7870,11 @@
     	return defence;
     }
 
-    function formCleanSheets(form, teamName) {
+    function formCleanSheets(form, team) {
     	let nCleanSheets = 0;
 
-    	for (let matchday of Object.keys(form[teamName])) {
-    		let match = form[teamName][matchday];
+    	for (let matchday of Object.keys(form[team])) {
+    		let match = form[team][matchday];
 
     		if (match.score != null) {
     			let [h, _, a] = match.score.split(" ");
@@ -7919,30 +7894,30 @@
     	let cleanSheets = {};
     	let maxCleanSheets = Number.NEGATIVE_INFINITY;
 
-    	for (let teamName of data.teamNames) {
-    		let nCleanSheets = formCleanSheets(data.form[data._id], teamName);
+    	for (let team of data.teamNames) {
+    		let nCleanSheets = formCleanSheets(data.form[data._id], team);
 
-    		if (teamName in data.form[data._id - 1]) {
-    			nCleanSheets += formCleanSheets(data.form[data._id - 1], teamName);
+    		if (team in data.form[data._id - 1]) {
+    			nCleanSheets += formCleanSheets(data.form[data._id - 1], team);
     		}
 
     		if (nCleanSheets > maxCleanSheets) {
     			maxCleanSheets = nCleanSheets;
     		}
 
-    		cleanSheets[teamName] = nCleanSheets;
+    		cleanSheets[team] = nCleanSheets;
     	}
 
     	cleanSheets.avg = formMetricAvgScaled(cleanSheets, maxCleanSheets);
     	return cleanSheets;
     }
 
-    function formConsistency(form, teamName) {
+    function formConsistency(form, team) {
     	let backToBack = 0; // Counts pairs of back to back identical match results
     	let prevResult = null;
 
-    	for (let matchday in form[teamName]) {
-    		let match = form[teamName][matchday];
+    	for (let matchday in form[team]) {
+    		let match = form[team][matchday];
 
     		if (match.score != null) {
     			let [h, _, a] = match.score.split(" ");
@@ -7971,30 +7946,30 @@
     	let consistency = {};
     	let maxConsistency = Number.NEGATIVE_INFINITY;
 
-    	for (let teamName of data.teamNames) {
-    		let backToBack = formConsistency(data.form[data._id], teamName);
+    	for (let team of data.teamNames) {
+    		let backToBack = formConsistency(data.form[data._id], team);
 
-    		if (teamName in data.form[data._id - 1]) {
-    			backToBack += formConsistency(data.form[data._id - 1], teamName);
+    		if (team in data.form[data._id - 1]) {
+    			backToBack += formConsistency(data.form[data._id - 1], team);
     		}
 
     		if (backToBack > maxConsistency) {
     			maxConsistency = backToBack;
     		}
 
-    		consistency[teamName] = backToBack;
+    		consistency[team] = backToBack;
     	}
 
     	consistency.avg = formMetricAvgScaled(consistency, maxConsistency);
     	return consistency;
     }
 
-    function formWinStreak(form, teamName) {
+    function formWinStreak(form, team) {
     	let winStreak = 0;
     	let tempWinStreak = 0;
 
-    	for (let matchday in form[teamName]) {
-    		let match = form[teamName][matchday];
+    	for (let matchday in form[team]) {
+    		let match = form[team][matchday];
 
     		if (match.score != null) {
     			let [h, _, a] = match.score.split(" ");
@@ -8018,18 +7993,18 @@
     	let winStreaks = {};
     	let maxWinStreaks = Number.NEGATIVE_INFINITY;
 
-    	for (let teamName of data.teamNames) {
-    		let winStreak = formWinStreak(data.form[data._id], teamName);
+    	for (let team of data.teamNames) {
+    		let winStreak = formWinStreak(data.form[data._id], team);
 
-    		if (teamName in data.form[data._id - 1]) {
-    			winStreak += formWinStreak(data.form[data._id - 1], teamName);
+    		if (team in data.form[data._id - 1]) {
+    			winStreak += formWinStreak(data.form[data._id - 1], team);
     		}
 
     		if (winStreak > maxWinStreaks) {
     			maxWinStreaks = winStreak;
     		}
 
-    		winStreaks[teamName] = winStreak;
+    		winStreaks[team] = winStreak;
     	}
 
     	winStreaks.avg = formMetricAvgScaled(winStreaks, maxWinStreaks);
@@ -8046,11 +8021,11 @@
     	return arr;
     }
 
-    function formWinsVsBig6(form, teamName, big6) {
+    function formWinsVsBig6(form, team, big6) {
     	let winsVsBig6 = 0;
 
-    	for (let matchday in form[teamName]) {
-    		let match = form[teamName][matchday];
+    	for (let matchday in form[team]) {
+    		let match = form[team][matchday];
 
     		if (match.score != null && big6.includes(match.team)) {
     			let [h, _, a] = match.score.split(" ");
@@ -8068,7 +8043,7 @@
     	let vsBig6 = {};
     	let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
 
-    	for (let teamName of data.teamNames) {
+    	for (let team of data.teamNames) {
     		let big6 = [
     			"Manchester United",
     			"Liverpool",
@@ -8078,18 +8053,18 @@
     			"Tottenham Hotspur"
     		];
 
-    		big6 = removeItem(big6, teamName);
-    		let winsVsBig6 = formWinsVsBig6(data.form[data._id], teamName, big6);
+    		big6 = removeItem(big6, team);
+    		let winsVsBig6 = formWinsVsBig6(data.form[data._id], team, big6);
 
-    		if (teamName in data.form[data._id - 1]) {
-    			winsVsBig6 += formWinsVsBig6(data.form[data._id - 1], teamName, big6);
+    		if (team in data.form[data._id - 1]) {
+    			winsVsBig6 += formWinsVsBig6(data.form[data._id - 1], team, big6);
     		}
 
     		if (winsVsBig6 > maxWinsVsBig6) {
     			maxWinsVsBig6 = winsVsBig6;
     		}
 
-    		vsBig6[teamName] = winsVsBig6;
+    		vsBig6[team] = winsVsBig6;
     	}
 
     	vsBig6.avg = formMetricAvgScaled(vsBig6, maxWinsVsBig6);
@@ -8105,19 +8080,19 @@
     }
 
     function instance$5($$self, $$props, $$invalidate) {
-    	function addTeamComparison(teamName) {
-    		let teamColor = getTeamColor(teamName);
+    	function addTeamComparison(team) {
+    		let teamColor = getTeamColor(team);
 
     		let teamData = {
-    			name: teamName,
+    			name: team,
     			type: "scatterpolar",
     			r: [
-    				attack[teamName],
-    				defence[teamName],
-    				cleanSheets[teamName],
-    				consistency[teamName],
-    				winStreaks[teamName],
-    				vsBig6[teamName]
+    				attack[team],
+    				defence[team],
+    				cleanSheets[team],
+    				consistency[team],
+    				winStreaks[team],
+    				vsBig6[team]
     			],
     			theta: labels,
     			fill: "toself",
@@ -8133,10 +8108,10 @@
     		plotData.data.unshift(avg); // Add avg below the teamName spider plot
     	}
 
-    	function removeTeamComparison(teamName) {
+    	function removeTeamComparison(team) {
     		// Remove spider plot for this teamName
     		for (let i = 0; i < plotData.data.length; i++) {
-    			if (plotData.data[i].name == teamName) {
+    			if (plotData.data[i].name == team) {
     				plotData.data.splice(i, 1);
     				break;
     			}
@@ -8172,10 +8147,10 @@
     	}
 
     	function spiderBtnClick(btn) {
-    		let teamName = getName(btn.innerHTML);
+    		let team = getName(btn.innerHTML);
 
     		if (btn.style.background == "") {
-    			let teamKey = teamName.toLowerCase().replace(/ /g, "-");
+    			let teamKey = team.toLowerCase().replace(/ /g, "-");
     			btn.style.background = `var(--${teamKey})`;
     			btn.style.color = `var(--${teamKey}-secondary)`;
     		} else {
@@ -8187,12 +8162,12 @@
     			plotData.data.splice(0, 1); // Remove avg
     		}
 
-    		if (comparisonTeams.includes(teamName)) {
-    			removeTeamComparison(teamName); // Remove from spider chart
-    			removeItem(comparisonTeams, teamName); // Remove from comparison teams
+    		if (comparisonTeams.includes(team)) {
+    			removeTeamComparison(team); // Remove from spider chart
+    			removeItem(comparisonTeams, team); // Remove from comparison teams
     		} else {
-    			addTeamComparison(teamName); // Add teamName to spider chart
-    			comparisonTeams.push(teamName); // Add to comparison teams
+    			addTeamComparison(team); // Add teamName to spider chart
+    			comparisonTeams.push(team); // Add to comparison teams
     		}
     	}
 
@@ -8224,18 +8199,18 @@
     		);
     	}
 
-    	function getTeamData(teamName) {
-    		let teamColor = getTeamColor(teamName);
+    	function getTeamData(team) {
+    		let teamColor = getTeamColor(team);
 
     		let teamData = scatterPlot(
-    			teamName,
+    			team,
     			[
-    				attack[teamName],
-    				defence[teamName],
-    				cleanSheets[teamName],
-    				consistency[teamName],
-    				winStreaks[teamName],
-    				vsBig6[teamName]
+    				attack[team],
+    				defence[team],
+    				cleanSheets[team],
+    				consistency[team],
+    				winStreaks[team],
+    				vsBig6[team]
     			],
     			teamColor
     		);
@@ -8243,9 +8218,9 @@
     		return teamData;
     	}
 
-    	function initSpiderPlots(teamName) {
+    	function initSpiderPlots(team) {
     		let avgData = avgScatterPlot();
-    		let teamData = getTeamData(teamName);
+    		let teamData = getTeamData(team);
     		return [avgData, teamData];
     	}
 
@@ -8258,9 +8233,9 @@
     		vsBig6 = getVsBig6(data);
     	}
 
-    	function buildPlotData(data, teamName) {
+    	function buildPlotData(data, team) {
     		computePlotData(data);
-    		let spiderPlots = initSpiderPlots(teamName);
+    		let spiderPlots = initSpiderPlots(team);
 
     		let plotData = {
     			data: spiderPlots,
@@ -8297,7 +8272,7 @@
     	});
 
     	function genPlot() {
-    		plotData = buildPlotData(data, fullTeamName);
+    		plotData = buildPlotData(data, team);
 
     		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
     			// Once plot generated, add resizable attribute to it to shorten height for mobile view
@@ -8312,7 +8287,7 @@
 
     	function refreshPlot() {
     		if (setup) {
-    			let spiderPlots = initSpiderPlots(fullTeamName);
+    			let spiderPlots = initSpiderPlots(team);
 
     			// Remove all but two plots
     			emptyArray(plotData.data);
@@ -8326,7 +8301,7 @@
     		}
     	}
 
-    	let { data, fullTeamName, getAlias, getName } = $$props;
+    	let { data, team, getAlias, getName } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -8341,20 +8316,20 @@
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(0, data = $$props.data);
-    		if ('fullTeamName' in $$props) $$invalidate(1, fullTeamName = $$props.fullTeamName);
+    		if ('team' in $$props) $$invalidate(1, team = $$props.team);
     		if ('getAlias' in $$props) $$invalidate(2, getAlias = $$props.getAlias);
     		if ('getName' in $$props) $$invalidate(5, getName = $$props.getName);
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[0] & /*fullTeamName*/ 2) {
-    			fullTeamName && refreshPlot();
+    		if ($$self.$$.dirty[0] & /*team*/ 2) {
+    			team && refreshPlot();
     		}
     	};
 
     	return [
     		data,
-    		fullTeamName,
+    		team,
     		getAlias,
     		plotDiv,
     		spiderBtnClick,
@@ -8376,7 +8351,7 @@
     			safe_not_equal,
     			{
     				data: 0,
-    				fullTeamName: 1,
+    				team: 1,
     				getAlias: 2,
     				getName: 5
     			},
@@ -8761,13 +8736,13 @@
     	return child_ctx;
     }
 
-    // (27:2) {#if _teams != undefined}
+    // (27:2) {#if hypenatedTeams != undefined}
     function create_if_block$2(ctx) {
     	let div0;
     	let t0;
     	let t1;
     	let div1;
-    	let each_value = /*_teams*/ ctx[2];
+    	let each_value = /*hypenatedTeams*/ ctx[2];
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -8818,8 +8793,8 @@
     			}
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*_teams, switchTeamToTop, getAlias, teams*/ 15) {
-    				each_value = /*_teams*/ ctx[2];
+    			if (dirty & /*hypenatedTeams, switchTeamToTop, getAlias, teams*/ 15) {
+    				each_value = /*hypenatedTeams*/ ctx[2];
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
@@ -8850,13 +8825,13 @@
     	};
     }
 
-    // (31:8) {#if _team != null}
+    // (31:8) {#if _hypenatedTeam != null}
     function create_if_block_1$1(ctx) {
     	let if_block_anchor;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*i*/ ctx[12] == 0 || /*i*/ ctx[12] == 1 && /*_teams*/ ctx[2][0] == null) return create_if_block_2$1;
-    		if (/*i*/ ctx[12] == /*_teams*/ ctx[2].length - 1 || /*i*/ ctx[12] == /*_teams*/ ctx[2].length - 2 && /*_teams*/ ctx[2][/*_teams*/ ctx[2].length - 1] == null) return create_if_block_3$1;
+    		if (/*i*/ ctx[12] == 0 || /*i*/ ctx[12] == 1 && /*hypenatedTeams*/ ctx[2][0] == null) return create_if_block_2$1;
+    		if (/*i*/ ctx[12] == /*hypenatedTeams*/ ctx[2].length - 1 || /*i*/ ctx[12] == /*hypenatedTeams*/ ctx[2].length - 2 && /*hypenatedTeams*/ ctx[2][/*hypenatedTeams*/ ctx[2].length - 1] == null) return create_if_block_3$1;
     		return create_else_block$2;
     	}
 
@@ -8905,7 +8880,7 @@
     	let dispose;
 
     	function click_handler_2() {
-    		return /*click_handler_2*/ ctx[8](/*_team*/ ctx[10]);
+    		return /*click_handler_2*/ ctx[8](/*_hypenatedTeam*/ ctx[10]);
     	}
 
     	return {
@@ -8922,8 +8897,8 @@
     			this.h();
     		},
     		h() {
-    			set_style(button, "color", "var(--" + /*_team*/ ctx[10] + "-secondary)");
-    			set_style(button, "background-color", "var(--" + /*_team*/ ctx[10] + ")");
+    			set_style(button, "color", "var(--" + /*_hypenatedTeam*/ ctx[10] + "-secondary)");
+    			set_style(button, "background-color", "var(--" + /*_hypenatedTeam*/ ctx[10] + ")");
     			attr(button, "class", "team-link svelte-1pbsqfs");
     		},
     		m(target, anchor) {
@@ -8939,12 +8914,12 @@
     			ctx = new_ctx;
     			if (dirty & /*getAlias, teams*/ 3 && t_value !== (t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "")) set_data(t, t_value);
 
-    			if (dirty & /*_teams*/ 4) {
-    				set_style(button, "color", "var(--" + /*_team*/ ctx[10] + "-secondary)");
+    			if (dirty & /*hypenatedTeams*/ 4) {
+    				set_style(button, "color", "var(--" + /*_hypenatedTeam*/ ctx[10] + "-secondary)");
     			}
 
-    			if (dirty & /*_teams*/ 4) {
-    				set_style(button, "background-color", "var(--" + /*_team*/ ctx[10] + ")");
+    			if (dirty & /*hypenatedTeams*/ 4) {
+    				set_style(button, "background-color", "var(--" + /*_hypenatedTeam*/ ctx[10] + ")");
     			}
     		},
     		d(detaching) {
@@ -8955,7 +8930,7 @@
     	};
     }
 
-    // (42:104) 
+    // (42:136) 
     function create_if_block_3$1(ctx) {
     	let button;
     	let t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "";
@@ -8981,8 +8956,8 @@
     			this.h();
     		},
     		h() {
-    			set_style(button, "color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
-    			set_style(button, "background-color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + ")");
+    			set_style(button, "color", "var(--" + /*hypenatedTeams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
+    			set_style(button, "background-color", "var(--" + /*hypenatedTeams*/ ctx[2][/*i*/ ctx[12]] + ")");
     			attr(button, "class", "team-link last-team svelte-1pbsqfs");
     		},
     		m(target, anchor) {
@@ -8998,12 +8973,12 @@
     			ctx = new_ctx;
     			if (dirty & /*getAlias, teams*/ 3 && t_value !== (t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "")) set_data(t, t_value);
 
-    			if (dirty & /*_teams*/ 4) {
-    				set_style(button, "color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
+    			if (dirty & /*hypenatedTeams*/ 4) {
+    				set_style(button, "color", "var(--" + /*hypenatedTeams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
     			}
 
-    			if (dirty & /*_teams*/ 4) {
-    				set_style(button, "background-color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + ")");
+    			if (dirty & /*hypenatedTeams*/ 4) {
+    				set_style(button, "background-color", "var(--" + /*hypenatedTeams*/ ctx[2][/*i*/ ctx[12]] + ")");
     			}
     		},
     		d(detaching) {
@@ -9014,7 +8989,7 @@
     	};
     }
 
-    // (32:10) {#if i == 0 || (i == 1 && _teams[0] == null)}
+    // (32:10) {#if i == 0 || (i == 1 && hypenatedTeams[0] == null)}
     function create_if_block_2$1(ctx) {
     	let button;
     	let t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "";
@@ -9040,8 +9015,8 @@
     			this.h();
     		},
     		h() {
-    			set_style(button, "color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
-    			set_style(button, "background-color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + ")");
+    			set_style(button, "color", "var(--" + /*hypenatedTeams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
+    			set_style(button, "background-color", "var(--" + /*hypenatedTeams*/ ctx[2][/*i*/ ctx[12]] + ")");
     			attr(button, "class", "team-link first-team svelte-1pbsqfs");
     		},
     		m(target, anchor) {
@@ -9057,12 +9032,12 @@
     			ctx = new_ctx;
     			if (dirty & /*getAlias, teams*/ 3 && t_value !== (t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "")) set_data(t, t_value);
 
-    			if (dirty & /*_teams*/ 4) {
-    				set_style(button, "color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
+    			if (dirty & /*hypenatedTeams*/ 4) {
+    				set_style(button, "color", "var(--" + /*hypenatedTeams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
     			}
 
-    			if (dirty & /*_teams*/ 4) {
-    				set_style(button, "background-color", "var(--" + /*_teams*/ ctx[2][/*i*/ ctx[12]] + ")");
+    			if (dirty & /*hypenatedTeams*/ 4) {
+    				set_style(button, "background-color", "var(--" + /*hypenatedTeams*/ ctx[2][/*i*/ ctx[12]] + ")");
     			}
     		},
     		d(detaching) {
@@ -9073,10 +9048,10 @@
     	};
     }
 
-    // (30:6) {#each _teams as _team, i}
+    // (30:6) {#each hypenatedTeams as _hypenatedTeam, i}
     function create_each_block$1(ctx) {
     	let if_block_anchor;
-    	let if_block = /*_team*/ ctx[10] != null && create_if_block_1$1(ctx);
+    	let if_block = /*_hypenatedTeam*/ ctx[10] != null && create_if_block_1$1(ctx);
 
     	return {
     		c() {
@@ -9092,7 +9067,7 @@
     			insert_hydration(target, if_block_anchor, anchor);
     		},
     		p(ctx, dirty) {
-    			if (/*_team*/ ctx[10] != null) {
+    			if (/*_hypenatedTeam*/ ctx[10] != null) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
@@ -9114,7 +9089,7 @@
 
     function create_fragment$4(ctx) {
     	let nav;
-    	let if_block = /*_teams*/ ctx[2] != undefined && create_if_block$2(ctx);
+    	let if_block = /*hypenatedTeams*/ ctx[2] != undefined && create_if_block$2(ctx);
 
     	return {
     		c() {
@@ -9137,7 +9112,7 @@
     			if (if_block) if_block.m(nav, null);
     		},
     		p(ctx, [dirty]) {
-    			if (/*_teams*/ ctx[2] != undefined) {
+    			if (/*hypenatedTeams*/ ctx[2] != undefined) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
@@ -9165,56 +9140,56 @@
     		window.scrollTo(0, 0);
     	}
 
-    	function getHyphenatedTeamNames(teams) {
+    	function getHyphenatedTeamNames() {
     		let hyphenatedTeamNames = [];
 
     		for (let i = 0; i < teams.length; i++) {
     			let teamLink = teams[i].toLowerCase().replace(/ /g, "-");
 
-    			if (teamLink != team) {
+    			if (teamLink != hypenatedTeam) {
     				hyphenatedTeamNames.push(teamLink);
     			} else {
     				hyphenatedTeamNames.push(null); // To keep teams and teamLinks list same length
     			}
     		}
 
-    		$$invalidate(2, _teams = hyphenatedTeamNames);
+    		$$invalidate(2, hypenatedTeams = hyphenatedTeamNames);
     	}
 
-    	let _teams;
-    	let { team, teams, getAlias, switchTeam } = $$props;
+    	let hypenatedTeams;
+    	let { hypenatedTeam, teams, getAlias, switchTeam } = $$props;
 
     	const click_handler = i => {
-    		switchTeamToTop(_teams[i]);
+    		switchTeamToTop(hypenatedTeams[i]);
     	};
 
     	const click_handler_1 = i => {
-    		switchTeamToTop(_teams[i]);
+    		switchTeamToTop(hypenatedTeams[i]);
     	};
 
-    	const click_handler_2 = _team => {
-    		switchTeamToTop(_team);
+    	const click_handler_2 = _hypenatedTeam => {
+    		switchTeamToTop(_hypenatedTeam);
     	};
 
     	$$self.$$set = $$props => {
-    		if ('team' in $$props) $$invalidate(4, team = $$props.team);
+    		if ('hypenatedTeam' in $$props) $$invalidate(4, hypenatedTeam = $$props.hypenatedTeam);
     		if ('teams' in $$props) $$invalidate(0, teams = $$props.teams);
     		if ('getAlias' in $$props) $$invalidate(1, getAlias = $$props.getAlias);
     		if ('switchTeam' in $$props) $$invalidate(5, switchTeam = $$props.switchTeam);
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*team, teams*/ 17) {
-    			team & getHyphenatedTeamNames(teams);
+    		if ($$self.$$.dirty & /*hypenatedTeam*/ 16) {
+    			hypenatedTeam & getHyphenatedTeamNames();
     		}
     	};
 
     	return [
     		teams,
     		getAlias,
-    		_teams,
+    		hypenatedTeams,
     		switchTeamToTop,
-    		team,
+    		hypenatedTeam,
     		switchTeam,
     		click_handler,
     		click_handler_1,
@@ -9227,7 +9202,7 @@
     		super();
 
     		init(this, options, instance$3, create_fragment$4, safe_not_equal, {
-    			team: 4,
+    			hypenatedTeam: 4,
     			teams: 0,
     			getAlias: 1,
     			switchTeam: 5
@@ -9274,7 +9249,7 @@
     	};
     }
 
-    // (179:6) {#if data != undefined}
+    // (180:6) {#if data != undefined}
     function create_if_block$1(ctx) {
     	let div24;
     	let div2;
@@ -9332,7 +9307,7 @@
     	let h14;
     	let t18;
     	let t19;
-    	let goalfrequencies;
+    	let goalspergame;
     	let t20;
     	let div23;
     	let div22;
@@ -9354,7 +9329,7 @@
     	fixtures = new Fixtures({
     			props: {
     				data: /*data*/ ctx[4],
-    				fullTeamName: /*fullTeamName*/ ctx[1]
+    				team: /*team*/ ctx[1]
     			}
     		});
 
@@ -9362,15 +9337,15 @@
     			props: {
     				data: /*data*/ ctx[4],
     				currentMatchday: /*currentMatchday*/ ctx[2],
-    				fullTeamName: /*fullTeamName*/ ctx[1]
+    				team: /*team*/ ctx[1]
     			}
     		});
 
     	tablesnippet = new TableSnippet({
     			props: {
     				data: /*data*/ ctx[4],
-    				team: /*team*/ ctx[0],
-    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				hyphenatedTeam: /*hyphenatedTeam*/ ctx[0],
+    				team: /*team*/ ctx[1],
     				getAlias: /*getAlias*/ ctx[5],
     				switchTeam: /*switchTeam*/ ctx[8]
     			}
@@ -9380,7 +9355,7 @@
     			props: {
     				data: /*data*/ ctx[4],
     				currentMatchday: /*currentMatchday*/ ctx[2],
-    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				team: /*team*/ ctx[1],
     				showBadge,
     				getAlias: /*getAlias*/ ctx[5],
     				switchTeam: /*switchTeam*/ ctx[8]
@@ -9390,7 +9365,7 @@
     	formovertime = new FormOverTime({
     			props: {
     				data: /*data*/ ctx[4],
-    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				team: /*team*/ ctx[1],
     				playedMatchdays: /*playedMatchdays*/ ctx[3]
     			}
     		});
@@ -9398,7 +9373,7 @@
     	positionovertime = new PositionOverTime({
     			props: {
     				data: /*data*/ ctx[4],
-    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				team: /*team*/ ctx[1],
     				playedMatchdays: /*playedMatchdays*/ ctx[3]
     			}
     		});
@@ -9406,7 +9381,7 @@
     	goalsscoredandconceded = new GoalsScoredAndConceded({
     			props: {
     				data: /*data*/ ctx[4],
-    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				team: /*team*/ ctx[1],
     				playedMatchdays: /*playedMatchdays*/ ctx[3]
     			}
     		});
@@ -9414,7 +9389,7 @@
     	cleansheets = new CleanSheets({
     			props: {
     				data: /*data*/ ctx[4],
-    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				team: /*team*/ ctx[1],
     				playedMatchdays: /*playedMatchdays*/ ctx[3]
     			}
     		});
@@ -9422,21 +9397,21 @@
     	seasonstats = new SeasonStats({
     			props: {
     				data: /*data*/ ctx[4],
-    				fullTeamName: /*fullTeamName*/ ctx[1]
+    				team: /*team*/ ctx[1]
     			}
     		});
 
-    	goalfrequencies = new GoalsPerGame({
+    	goalspergame = new GoalsPerGame({
     			props: {
     				data: /*data*/ ctx[4],
-    				fullTeamName: /*fullTeamName*/ ctx[1]
+    				team: /*team*/ ctx[1]
     			}
     		});
 
     	spider = new Spider({
     			props: {
     				data: /*data*/ ctx[4],
-    				fullTeamName: /*fullTeamName*/ ctx[1],
+    				team: /*team*/ ctx[1],
     				getAlias: /*getAlias*/ ctx[5],
     				getName: /*getName*/ ctx[6]
     			}
@@ -9444,7 +9419,7 @@
 
     	mobileviewnav = new MobileViewNav({
     			props: {
-    				team: /*team*/ ctx[0],
+    				hyphenatedTeam: /*hyphenatedTeam*/ ctx[0],
     				teams: /*teams*/ ctx[7],
     				getAlias: /*getAlias*/ ctx[5],
     				switchTeam: /*switchTeam*/ ctx[8]
@@ -9514,7 +9489,7 @@
     			h14 = element("h1");
     			t18 = text("Goals Per Game");
     			t19 = space();
-    			create_component(goalfrequencies.$$.fragment);
+    			create_component(goalspergame.$$.fragment);
     			t20 = space();
     			div23 = element("div");
     			div22 = element("div");
@@ -9635,7 +9610,7 @@
     			t18 = claim_text(h14_nodes, "Goals Per Game");
     			h14_nodes.forEach(detach);
     			t19 = claim_space(div19_nodes);
-    			claim_component(goalfrequencies.$$.fragment, div19_nodes);
+    			claim_component(goalspergame.$$.fragment, div19_nodes);
     			div19_nodes.forEach(detach);
     			div20_nodes.forEach(detach);
     			t20 = claim_space(div24_nodes);
@@ -9745,7 +9720,7 @@
     			append_hydration(div19, h14);
     			append_hydration(h14, t18);
     			append_hydration(div19, t19);
-    			mount_component(goalfrequencies, div19, null);
+    			mount_component(goalspergame, div19, null);
     			append_hydration(div24, t20);
     			append_hydration(div24, div23);
     			append_hydration(div23, div22);
@@ -9761,57 +9736,57 @@
     			if_block.p(ctx, dirty);
     			const fixtures_changes = {};
     			if (dirty & /*data*/ 16) fixtures_changes.data = /*data*/ ctx[4];
-    			if (dirty & /*fullTeamName*/ 2) fixtures_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*team*/ 2) fixtures_changes.team = /*team*/ ctx[1];
     			fixtures.$set(fixtures_changes);
     			const currentform_changes = {};
     			if (dirty & /*data*/ 16) currentform_changes.data = /*data*/ ctx[4];
     			if (dirty & /*currentMatchday*/ 4) currentform_changes.currentMatchday = /*currentMatchday*/ ctx[2];
-    			if (dirty & /*fullTeamName*/ 2) currentform_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*team*/ 2) currentform_changes.team = /*team*/ ctx[1];
     			currentform.$set(currentform_changes);
     			const tablesnippet_changes = {};
     			if (dirty & /*data*/ 16) tablesnippet_changes.data = /*data*/ ctx[4];
-    			if (dirty & /*team*/ 1) tablesnippet_changes.team = /*team*/ ctx[0];
-    			if (dirty & /*fullTeamName*/ 2) tablesnippet_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*hyphenatedTeam*/ 1) tablesnippet_changes.hyphenatedTeam = /*hyphenatedTeam*/ ctx[0];
+    			if (dirty & /*team*/ 2) tablesnippet_changes.team = /*team*/ ctx[1];
     			tablesnippet.$set(tablesnippet_changes);
     			const nextgame_changes = {};
     			if (dirty & /*data*/ 16) nextgame_changes.data = /*data*/ ctx[4];
     			if (dirty & /*currentMatchday*/ 4) nextgame_changes.currentMatchday = /*currentMatchday*/ ctx[2];
-    			if (dirty & /*fullTeamName*/ 2) nextgame_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*team*/ 2) nextgame_changes.team = /*team*/ ctx[1];
     			nextgame.$set(nextgame_changes);
     			const formovertime_changes = {};
     			if (dirty & /*data*/ 16) formovertime_changes.data = /*data*/ ctx[4];
-    			if (dirty & /*fullTeamName*/ 2) formovertime_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*team*/ 2) formovertime_changes.team = /*team*/ ctx[1];
     			if (dirty & /*playedMatchdays*/ 8) formovertime_changes.playedMatchdays = /*playedMatchdays*/ ctx[3];
     			formovertime.$set(formovertime_changes);
     			const positionovertime_changes = {};
     			if (dirty & /*data*/ 16) positionovertime_changes.data = /*data*/ ctx[4];
-    			if (dirty & /*fullTeamName*/ 2) positionovertime_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*team*/ 2) positionovertime_changes.team = /*team*/ ctx[1];
     			if (dirty & /*playedMatchdays*/ 8) positionovertime_changes.playedMatchdays = /*playedMatchdays*/ ctx[3];
     			positionovertime.$set(positionovertime_changes);
     			const goalsscoredandconceded_changes = {};
     			if (dirty & /*data*/ 16) goalsscoredandconceded_changes.data = /*data*/ ctx[4];
-    			if (dirty & /*fullTeamName*/ 2) goalsscoredandconceded_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*team*/ 2) goalsscoredandconceded_changes.team = /*team*/ ctx[1];
     			if (dirty & /*playedMatchdays*/ 8) goalsscoredandconceded_changes.playedMatchdays = /*playedMatchdays*/ ctx[3];
     			goalsscoredandconceded.$set(goalsscoredandconceded_changes);
     			const cleansheets_changes = {};
     			if (dirty & /*data*/ 16) cleansheets_changes.data = /*data*/ ctx[4];
-    			if (dirty & /*fullTeamName*/ 2) cleansheets_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*team*/ 2) cleansheets_changes.team = /*team*/ ctx[1];
     			if (dirty & /*playedMatchdays*/ 8) cleansheets_changes.playedMatchdays = /*playedMatchdays*/ ctx[3];
     			cleansheets.$set(cleansheets_changes);
     			const seasonstats_changes = {};
     			if (dirty & /*data*/ 16) seasonstats_changes.data = /*data*/ ctx[4];
-    			if (dirty & /*fullTeamName*/ 2) seasonstats_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*team*/ 2) seasonstats_changes.team = /*team*/ ctx[1];
     			seasonstats.$set(seasonstats_changes);
-    			const goalfrequencies_changes = {};
-    			if (dirty & /*data*/ 16) goalfrequencies_changes.data = /*data*/ ctx[4];
-    			if (dirty & /*fullTeamName*/ 2) goalfrequencies_changes.fullTeamName = /*fullTeamName*/ ctx[1];
-    			goalfrequencies.$set(goalfrequencies_changes);
+    			const goalspergame_changes = {};
+    			if (dirty & /*data*/ 16) goalspergame_changes.data = /*data*/ ctx[4];
+    			if (dirty & /*team*/ 2) goalspergame_changes.team = /*team*/ ctx[1];
+    			goalspergame.$set(goalspergame_changes);
     			const spider_changes = {};
     			if (dirty & /*data*/ 16) spider_changes.data = /*data*/ ctx[4];
-    			if (dirty & /*fullTeamName*/ 2) spider_changes.fullTeamName = /*fullTeamName*/ ctx[1];
+    			if (dirty & /*team*/ 2) spider_changes.team = /*team*/ ctx[1];
     			spider.$set(spider_changes);
     			const mobileviewnav_changes = {};
-    			if (dirty & /*team*/ 1) mobileviewnav_changes.team = /*team*/ ctx[0];
+    			if (dirty & /*hyphenatedTeam*/ 1) mobileviewnav_changes.hyphenatedTeam = /*hyphenatedTeam*/ ctx[0];
     			mobileviewnav.$set(mobileviewnav_changes);
     			const teamsfooter_changes = {};
     			if (dirty & /*data*/ 16) teamsfooter_changes.lastUpdated = /*data*/ ctx[4].lastUpdated;
@@ -9828,7 +9803,7 @@
     			transition_in(goalsscoredandconceded.$$.fragment, local);
     			transition_in(cleansheets.$$.fragment, local);
     			transition_in(seasonstats.$$.fragment, local);
-    			transition_in(goalfrequencies.$$.fragment, local);
+    			transition_in(goalspergame.$$.fragment, local);
     			transition_in(spider.$$.fragment, local);
     			transition_in(mobileviewnav.$$.fragment, local);
     			transition_in(teamsfooter.$$.fragment, local);
@@ -9844,7 +9819,7 @@
     			transition_out(goalsscoredandconceded.$$.fragment, local);
     			transition_out(cleansheets.$$.fragment, local);
     			transition_out(seasonstats.$$.fragment, local);
-    			transition_out(goalfrequencies.$$.fragment, local);
+    			transition_out(goalspergame.$$.fragment, local);
     			transition_out(spider.$$.fragment, local);
     			transition_out(mobileviewnav.$$.fragment, local);
     			transition_out(teamsfooter.$$.fragment, local);
@@ -9862,7 +9837,7 @@
     			destroy_component(goalsscoredandconceded);
     			destroy_component(cleansheets);
     			destroy_component(seasonstats);
-    			destroy_component(goalfrequencies);
+    			destroy_component(goalspergame);
     			destroy_component(spider);
     			destroy_component(mobileviewnav);
     			destroy_component(teamsfooter);
@@ -9870,7 +9845,7 @@
     	};
     }
 
-    // (191:12) {:else}
+    // (192:12) {:else}
     function create_else_block$1(ctx) {
     	let div2;
     	let div0;
@@ -9883,7 +9858,7 @@
     	let circle2_fill_value;
     	let t0;
     	let div1;
-    	let t1_value = /*data*/ ctx[4].standings[/*fullTeamName*/ ctx[1]][/*data*/ ctx[4]._id].position + "";
+    	let t1_value = /*data*/ ctx[4].standings[/*team*/ ctx[1]][/*data*/ ctx[4]._id].position + "";
     	let t1;
 
     	return {
@@ -9951,17 +9926,17 @@
     			attr(circle0, "cy", "150");
     			attr(circle0, "r", "100");
     			attr(circle0, "stroke-width", "0");
-    			attr(circle0, "fill", circle0_fill_value = "var(--" + /*team*/ ctx[0] + "-secondary)");
+    			attr(circle0, "fill", circle0_fill_value = "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
     			attr(circle1, "cx", "170");
     			attr(circle1, "cy", "170");
     			attr(circle1, "r", "140");
     			attr(circle1, "stroke-width", "0");
-    			attr(circle1, "fill", circle1_fill_value = "var(--" + /*team*/ ctx[0] + ")");
+    			attr(circle1, "fill", circle1_fill_value = "var(--" + /*hyphenatedTeam*/ ctx[0] + ")");
     			attr(circle2, "cx", "300");
     			attr(circle2, "cy", "320");
     			attr(circle2, "r", "170");
     			attr(circle2, "stroke-width", "0");
-    			attr(circle2, "fill", circle2_fill_value = "var(--" + /*team*/ ctx[0] + ")");
+    			attr(circle2, "fill", circle2_fill_value = "var(--" + /*hyphenatedTeam*/ ctx[0] + ")");
     			attr(svg, "class", "circles-background svelte-1xx35mc");
     			attr(div0, "class", "circles-background-container svelte-1xx35mc");
     			attr(div1, "class", "position-central svelte-1xx35mc");
@@ -9979,19 +9954,19 @@
     			append_hydration(div1, t1);
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*team*/ 1 && circle0_fill_value !== (circle0_fill_value = "var(--" + /*team*/ ctx[0] + "-secondary)")) {
+    			if (dirty & /*hyphenatedTeam*/ 1 && circle0_fill_value !== (circle0_fill_value = "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)")) {
     				attr(circle0, "fill", circle0_fill_value);
     			}
 
-    			if (dirty & /*team*/ 1 && circle1_fill_value !== (circle1_fill_value = "var(--" + /*team*/ ctx[0] + ")")) {
+    			if (dirty & /*hyphenatedTeam*/ 1 && circle1_fill_value !== (circle1_fill_value = "var(--" + /*hyphenatedTeam*/ ctx[0] + ")")) {
     				attr(circle1, "fill", circle1_fill_value);
     			}
 
-    			if (dirty & /*team*/ 1 && circle2_fill_value !== (circle2_fill_value = "var(--" + /*team*/ ctx[0] + ")")) {
+    			if (dirty & /*hyphenatedTeam*/ 1 && circle2_fill_value !== (circle2_fill_value = "var(--" + /*hyphenatedTeam*/ ctx[0] + ")")) {
     				attr(circle2, "fill", circle2_fill_value);
     			}
 
-    			if (dirty & /*data, fullTeamName*/ 18 && t1_value !== (t1_value = /*data*/ ctx[4].standings[/*fullTeamName*/ ctx[1]][/*data*/ ctx[4]._id].position + "")) set_data(t1, t1_value);
+    			if (dirty & /*data, team*/ 18 && t1_value !== (t1_value = /*data*/ ctx[4].standings[/*team*/ ctx[1]][/*data*/ ctx[4]._id].position + "")) set_data(t1, t1_value);
     		},
     		d(detaching) {
     			if (detaching) detach(div2);
@@ -9999,7 +9974,7 @@
     	};
     }
 
-    // (165:0) <Router>
+    // (166:0) <Router>
     function create_default_slot$3(ctx) {
     	let div4;
     	let div0;
@@ -10009,7 +9984,7 @@
     	let div2;
     	let a;
     	let div1;
-    	let t1_value = /*getAlias*/ ctx[5](/*fullTeamName*/ ctx[1]) + "";
+    	let t1_value = /*getAlias*/ ctx[5](/*team*/ ctx[1]) + "";
     	let t1;
     	let a_href_value;
     	let t2;
@@ -10019,7 +9994,7 @@
 
     	navbar = new NavBar({
     			props: {
-    				team: /*team*/ ctx[0],
+    				team: /*hyphenatedTeam*/ ctx[0],
     				teams: /*teams*/ ctx[7],
     				getAlias: /*getAlias*/ ctx[5],
     				switchTeam: /*switchTeam*/ ctx[8]
@@ -10082,11 +10057,11 @@
     			attr(div0, "id", "navBar");
     			attr(div0, "class", "svelte-1xx35mc");
     			attr(div1, "class", "title svelte-1xx35mc");
-    			set_style(div1, "color", "var(--" + (/*team*/ ctx[0] + '-secondary') + ")");
+    			set_style(div1, "color", "var(--" + (/*hyphenatedTeam*/ ctx[0] + '-secondary') + ")");
     			attr(a, "class", "main-link no-decoration svelte-1xx35mc");
-    			attr(a, "href", a_href_value = "/" + /*team*/ ctx[0]);
+    			attr(a, "href", a_href_value = "/" + /*hyphenatedTeam*/ ctx[0]);
     			attr(div2, "class", "header svelte-1xx35mc");
-    			set_style(div2, "background-color", "var(--" + /*team*/ ctx[0] + ")");
+    			set_style(div2, "background-color", "var(--" + /*hyphenatedTeam*/ ctx[0] + ")");
     			attr(div3, "id", "dashboard");
     			attr(div3, "class", "svelte-1xx35mc");
     			attr(div4, "id", "team");
@@ -10108,20 +10083,20 @@
     		},
     		p(ctx, dirty) {
     			const navbar_changes = {};
-    			if (dirty & /*team*/ 1) navbar_changes.team = /*team*/ ctx[0];
+    			if (dirty & /*hyphenatedTeam*/ 1) navbar_changes.team = /*hyphenatedTeam*/ ctx[0];
     			navbar.$set(navbar_changes);
-    			if ((!current || dirty & /*fullTeamName*/ 2) && t1_value !== (t1_value = /*getAlias*/ ctx[5](/*fullTeamName*/ ctx[1]) + "")) set_data(t1, t1_value);
+    			if ((!current || dirty & /*team*/ 2) && t1_value !== (t1_value = /*getAlias*/ ctx[5](/*team*/ ctx[1]) + "")) set_data(t1, t1_value);
 
-    			if (!current || dirty & /*team*/ 1) {
-    				set_style(div1, "color", "var(--" + (/*team*/ ctx[0] + '-secondary') + ")");
+    			if (!current || dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(div1, "color", "var(--" + (/*hyphenatedTeam*/ ctx[0] + '-secondary') + ")");
     			}
 
-    			if (!current || dirty & /*team*/ 1 && a_href_value !== (a_href_value = "/" + /*team*/ ctx[0])) {
+    			if (!current || dirty & /*hyphenatedTeam*/ 1 && a_href_value !== (a_href_value = "/" + /*hyphenatedTeam*/ ctx[0])) {
     				attr(a, "href", a_href_value);
     			}
 
-    			if (!current || dirty & /*team*/ 1) {
-    				set_style(div2, "background-color", "var(--" + /*team*/ ctx[0] + ")");
+    			if (!current || dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(div2, "background-color", "var(--" + /*hyphenatedTeam*/ ctx[0] + ")");
     			}
 
     			let previous_block_index = current_block_type_index;
@@ -10175,7 +10150,7 @@
     	let t;
     	let router;
     	let current;
-    	document_1$1.title = title_value = /*fullTeamName*/ ctx[1];
+    	document_1$1.title = title_value = /*team*/ ctx[1];
 
     	router = new Router({
     			props: {
@@ -10192,7 +10167,7 @@
     			this.h();
     		},
     		l(nodes) {
-    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1qp08hs\"]', document_1$1.head);
+    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1x6khl2\"]', document_1$1.head);
     			meta = claim_element(head_nodes, "META", { name: true, content: true });
     			head_nodes.forEach(detach);
     			t = claim_space(nodes);
@@ -10210,13 +10185,13 @@
     			current = true;
     		},
     		p(ctx, [dirty]) {
-    			if ((!current || dirty & /*fullTeamName*/ 2) && title_value !== (title_value = /*fullTeamName*/ ctx[1])) {
+    			if ((!current || dirty & /*team*/ 2) && title_value !== (title_value = /*team*/ ctx[1])) {
     				document_1$1.title = title_value;
     			}
 
     			const router_changes = {};
 
-    			if (dirty & /*$$scope, data, team, fullTeamName, playedMatchdays, currentMatchday*/ 2079) {
+    			if (dirty & /*$$scope, data, hyphenatedTeam, team, playedMatchdays, currentMatchday*/ 2079) {
     				router_changes.$$scope = { dirty, ctx };
     			}
 
@@ -10247,12 +10222,12 @@
     	}).join(" ").replace("And", "and");
     }
 
-    function getPlayedMatchdays(data, teamName) {
-    	let matchdays = Object.keys(data.form[data._id][teamName]);
+    function getPlayedMatchdays(data, team) {
+    	let matchdays = Object.keys(data.form[data._id][team]);
 
     	// If played one or no games, take x-axis from whole season dates
     	if (matchdays.length == 0) {
-    		matchdays = Object.keys(data.fixtures[teamName]);
+    		matchdays = Object.keys(data.fixtures[team]);
     	}
 
     	// Find median matchday date across all teams for each matchday
@@ -10280,14 +10255,14 @@
     	return x;
     }
 
-    function getCurrentMatchday(data, fullTeamName) {
-    	if (Object.keys(data.form[data._id][fullTeamName]).length == 0) {
+    function getCurrentMatchday(data, team) {
+    	if (Object.keys(data.form[data._id][team]).length == 0) {
     		return null; // Season has not started yet
     	}
 
-    	return Object.keys(data.form[data._id][fullTeamName]).reduce((a, b) => data.form[data._id][fullTeamName][a] > data.form[data._id][fullTeamName][b]
-    	? a
-    	: b);
+    	return Object.keys(data.form[data._id][team]).reduce((matchday1, matchday2) => data.form[data._id][team][matchday1] > data.form[data._id][team][matchday2]
+    	? matchday1
+    	: matchday2);
     }
 
     async function fetchData$1(address) {
@@ -10345,15 +10320,15 @@
     	];
 
     	function initDashboard() {
-    		$$invalidate(1, fullTeamName = toTitleCase(team.replace(/\-/g, " ")));
+    		$$invalidate(1, team = toTitleCase(hyphenatedTeam.replace(/\-/g, " ")));
 
     		// fetchData("http://127.0.0.1:5000/api/teams")
     		fetchData$1("https://pldashboard.herokuapp.com/api/teams").then(json => {
     			// Build teamData package from json data
     			json.teamNames = Object.keys(json.fixtures);
 
-    			$$invalidate(2, currentMatchday = getCurrentMatchday(json, fullTeamName));
-    			$$invalidate(3, playedMatchdays = getPlayedMatchdays(json, fullTeamName));
+    			$$invalidate(2, currentMatchday = getCurrentMatchday(json, team));
+    			$$invalidate(3, playedMatchdays = getPlayedMatchdays(json, team));
     			$$invalidate(4, data = json);
     			console.log(data);
     		}).then(() => {
@@ -10362,14 +10337,14 @@
     	}
 
     	function switchTeam(newTeam) {
-    		$$invalidate(0, team = newTeam);
-    		$$invalidate(1, fullTeamName = toTitleCase(team.replace(/\-/g, " ")));
-    		$$invalidate(2, currentMatchday = getCurrentMatchday(data, fullTeamName));
-    		$$invalidate(3, playedMatchdays = getPlayedMatchdays(data, fullTeamName));
-    		window.history.pushState(null, null, team); // Change current url without reloading
+    		$$invalidate(0, hyphenatedTeam = newTeam);
+    		$$invalidate(1, team = toTitleCase(hyphenatedTeam.replace(/\-/g, " ")));
+    		$$invalidate(2, currentMatchday = getCurrentMatchday(data, team));
+    		$$invalidate(3, playedMatchdays = getPlayedMatchdays(data, team));
+    		window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
     	}
 
-    	let fullTeamName = "";
+    	let team = "";
     	let currentMatchday, playedMatchdays;
     	let data;
 
@@ -10377,15 +10352,15 @@
     		initDashboard();
     	});
 
-    	let { team } = $$props;
+    	let { hyphenatedTeam } = $$props;
 
     	$$self.$$set = $$props => {
-    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    		if ('hyphenatedTeam' in $$props) $$invalidate(0, hyphenatedTeam = $$props.hyphenatedTeam);
     	};
 
     	return [
+    		hyphenatedTeam,
     		team,
-    		fullTeamName,
     		currentMatchday,
     		playedMatchdays,
     		data,
@@ -10399,7 +10374,7 @@
     class Team extends SvelteComponent {
     	constructor(options) {
     		super();
-    		init(this, options, instance$2, create_fragment$3, safe_not_equal, { team: 0 });
+    		init(this, options, instance$2, create_fragment$3, safe_not_equal, { hyphenatedTeam: 0 });
     	}
     }
 
@@ -11581,7 +11556,10 @@
     function create_default_slot_2(ctx) {
     	let team;
     	let current;
-    	team = new Team({ props: { team: "manchester-city" } });
+
+    	team = new Team({
+    			props: { hyphenatedTeam: "manchester-city" }
+    		});
 
     	return {
     		c() {
@@ -11614,7 +11592,10 @@
     function create_default_slot_1(ctx) {
     	let team;
     	let current;
-    	team = new Team({ props: { team: /*params*/ ctx[1].team } });
+
+    	team = new Team({
+    			props: { hyphenatedTeam: /*params*/ ctx[1].team }
+    		});
 
     	return {
     		c() {
@@ -11629,7 +11610,7 @@
     		},
     		p(ctx, dirty) {
     			const team_changes = {};
-    			if (dirty & /*params*/ 2) team_changes.team = /*params*/ ctx[1].team;
+    			if (dirty & /*params*/ 2) team_changes.hyphenatedTeam = /*params*/ ctx[1].team;
     			team.$set(team_changes);
     		},
     		i(local) {

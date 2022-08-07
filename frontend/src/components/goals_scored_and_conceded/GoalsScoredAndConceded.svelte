@@ -88,9 +88,9 @@
     };
   }
 
-  function buildPlotData(data, fullTeamName) {
+  function buildPlotData(data, team) {
     // let x = getMatchdayDates(data, fullTeamName);
-    let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
+    let [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
     let avgGoals = getAvgGoalsPerGame(data);
     let matchdays = Object.keys(avgGoals);
 
@@ -147,7 +147,7 @@
   });
 
   function genPlot() {
-    plotData = buildPlotData(data, fullTeamName);
+    plotData = buildPlotData(data, team);
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -161,7 +161,7 @@
 
   function refreshPlot() {
     if (setup) {
-      let [teamScored, teamConceded] = getTeamGoalsPerGame(data, fullTeamName);
+      let [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
       let avgGoals = getAvgGoalsPerGame(data);
       let matchdays = Object.keys(avgGoals);
 
@@ -174,9 +174,9 @@
     }
   }
 
-  $: fullTeamName && refreshPlot();
+  $: team && refreshPlot();
 
-  export let data, fullTeamName, playedMatchdays;
+  export let data, team, playedMatchdays;
 </script>
 
 <div id="plotly">

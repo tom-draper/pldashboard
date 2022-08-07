@@ -6,17 +6,17 @@
   }
 
   function setOppTeam() {
-    if (data.upcoming[fullTeamName].nextTeam != null) {
-      oppTeam = data.upcoming[fullTeamName].nextTeam
+    if (data.upcoming[team].nextTeam != null) {
+      oppTeam = data.upcoming[team].nextTeam
         .toLowerCase()
         .replace(/ /g, "-");
     }
   }
 
   let oppTeam;
-  $: fullTeamName && setOppTeam();
+  $: team && setOppTeam();
 
-  export let data, fullTeamName, currentMatchday, showBadge, getAlias, switchTeam;
+  export let data, team, currentMatchday, showBadge, getAlias, switchTeam;
 </script>
 
 <div class="next-game-prediction" style="border: 6px solid var(--{oppTeam});">
@@ -24,12 +24,12 @@
     <h1 class="next-game-title-text" style="color: var(--{oppTeam}-secondary);">
       Next Game:&nbsp
       <button
-        on:click="{() => {switchTeam(data.upcoming[fullTeamName].nextTeam
+        on:click="{() => {switchTeam(data.upcoming[team].nextTeam
           .toLowerCase()
           .replace(/ /g, '-'))}}"
-        style="color: inherit">{getAlias(data.upcoming[fullTeamName].nextTeam)}&nbsp</button
+        style="color: inherit">{getAlias(data.upcoming[team].nextTeam)}&nbsp</button
       >
-      ({data.upcoming[fullTeamName].atHome ? "Home" : "Away"})
+      ({data.upcoming[team].atHome ? "Home" : "Away"})
     </h1>
   </div>
 
@@ -39,7 +39,7 @@
         <div
           class="next-game-logo opposition-badge"
           style="background-image: url('{data.logoURLs[
-            data.upcoming[fullTeamName].nextTeam
+            data.upcoming[team].nextTeam
           ]}')"
         />
       {:else}
@@ -49,7 +49,7 @@
         <div class="next-game-item">
           <div class="next-game-position">
             {ordinal(
-              data.standings[data.upcoming[fullTeamName].nextTeam][data._id]
+              data.standings[data.upcoming[team].nextTeam][data._id]
                 .position
             )}
           </div>
@@ -58,7 +58,7 @@
           Current form:
           {#if currentMatchday != null}
             <b
-              >{(data.form[data._id][data.upcoming[fullTeamName].nextTeam][
+              >{(data.form[data._id][data.upcoming[team].nextTeam][
                 currentMatchday].formRating5 * 100).toFixed(1)}%</b
             >
           {:else}
@@ -70,8 +70,8 @@
           <br />
           <a class="predictions-link" href="/predictions">
             <b
-              >{Math.round(data.upcoming[fullTeamName].prediction.homeGoals)} - {Math.round(
-                data.upcoming[fullTeamName].prediction.awayGoals
+              >{Math.round(data.upcoming[team].prediction.homeGoals)} - {Math.round(
+                data.upcoming[team].prediction.awayGoals
               )}</b
             >
           </a>
@@ -88,7 +88,7 @@
       </div>
     </div>
     <div class="past-results">
-      {#if data.upcoming[fullTeamName].prevMatches.length == 0}
+      {#if data.upcoming[team].prevMatches.length == 0}
         <div class="next-game-item prev-results-title no-prev-results">
           No Previous Results
         </div>
@@ -97,7 +97,7 @@
       {/if}
 
       <!-- Display table of previous results against the next team this team is playing -->
-      {#each data.upcoming[fullTeamName].prevMatches as prevMatch}
+      {#each data.upcoming[team].prevMatches as prevMatch}
         <div class="next-game-item {prevMatch.result}">
           <div class="past-result">
             <div class="home-team">{getAlias(prevMatch.homeTeam)}</div>

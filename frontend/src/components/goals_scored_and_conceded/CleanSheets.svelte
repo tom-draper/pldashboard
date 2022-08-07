@@ -33,10 +33,10 @@
     return [cleanSheets, notCleanSheets];
   }
 
-  function bars(data, fullTeamName, playedMatchdays) {
-    let matchdays = Object.keys(data.form[data._id][fullTeamName]);
+  function bars(data, team, playedMatchdays) {
+    let matchdays = Object.keys(data.form[data._id][team]);
 
-    let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, fullTeamName);
+    let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, team);
     return [
       {
         name: "Clean sheets",
@@ -61,8 +61,8 @@
     ];
   }
 
-  function buildPlotData(data, fullTeamName) {
-    let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, playedMatchdays);
+  function buildPlotData(data, team) {
+    let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
 
     let plotData = {
       data: [cleanSheetsBar, concededBar],
@@ -122,7 +122,7 @@
   });
 
   function genPlot() {
-    plotData = buildPlotData(data, fullTeamName);
+    plotData = buildPlotData(data, team);
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -133,16 +133,16 @@
 
   function refreshPlot() {
     if (setup) {
-      let [cleanSheetsBar, concededBar] = bars(data, fullTeamName, playedMatchdays);
+      let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
       plotData.data[0] = cleanSheetsBar;
       plotData.data[1] = concededBar;
       Plotly.redraw(plotDiv);
     }
   }
 
-  $: fullTeamName && refreshPlot();
+  $: team && refreshPlot();
 
-  export let data, fullTeamName, playedMatchdays;
+  export let data, team, playedMatchdays;
 </script>
 
 <div id="plotly">

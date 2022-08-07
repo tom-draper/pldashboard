@@ -11,7 +11,7 @@
   import PositionOverTime from "../components/PositionOverTime.svelte";
   import GoalsScoredAndConceded from "../components/goals_scored_and_conceded/GoalsScoredAndConceded.svelte";
   import CleanSheets from "../components/goals_scored_and_conceded/CleanSheets.svelte";
-  import GoalFrequencies from "../components/goals_per_game/GoalsPerGame.svelte";
+  import GoalsPerGame from "../components/goals_per_game/GoalsPerGame.svelte";
   import Spider from "../components/Spider.svelte";
   import NavBar from "../components/NavBar.svelte";
   import MobileViewNav from "../components/MobileViewNav.svelte";
@@ -60,6 +60,7 @@
     "Bournemouth",
     "Nottingham Forest",
   ];
+
   function toTitleCase(str) {
     return str
       .toLowerCase()
@@ -71,12 +72,12 @@
       .replace("And", "and");
   }
 
-  function getPlayedMatchdays(data, teamName) {
-    let matchdays = Object.keys(data.form[data._id][teamName]);
+  function getPlayedMatchdays(data, team) {
+    let matchdays = Object.keys(data.form[data._id][team]);
 
     // If played one or no games, take x-axis from whole season dates
     if (matchdays.length == 0) {
-      matchdays = Object.keys(data.fixtures[teamName]);
+      matchdays = Object.keys(data.fixtures[team]);
     }
 
     // Find median matchday date across all teams for each matchday
@@ -98,15 +99,15 @@
     return x;
   }
 
-  function getCurrentMatchday(data, fullTeamName) {
-    if (Object.keys(data.form[data._id][fullTeamName]).length == 0) {
+  function getCurrentMatchday(data, team) {
+    if (Object.keys(data.form[data._id][team]).length == 0) {
       return null; // Season has not started yet
     }
-    return Object.keys(data.form[data._id][fullTeamName]).reduce((a, b) =>
-      data.form[data._id][fullTeamName][a] >
-      data.form[data._id][fullTeamName][b]
-        ? a
-        : b
+    return Object.keys(data.form[data._id][team]).reduce((matchday1, matchday2) =>
+      data.form[data._id][team][matchday1] >
+      data.form[data._id][team][matchday2]
+        ? matchday1
+        : matchday2
     );
   }
 
@@ -122,14 +123,14 @@
   }
 
   function initDashboard() {
-    fullTeamName = toTitleCase(team.replace(/\-/g, " "));
+    team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
     // fetchData("http://127.0.0.1:5000/api/teams")
     fetchData("https://pldashboard.herokuapp.com/api/teams")
       .then((json) => {
         // Build teamData package from json data
         json.teamNames = Object.keys(json.fixtures)
-        currentMatchday = getCurrentMatchday(json, fullTeamName);
-        playedMatchdays = getPlayedMatchdays(json, fullTeamName);
+        currentMatchday = getCurrentMatchday(json, team);
+        playedMatchdays = getPlayedMatchdays(json, team);
         data = json;
         console.log(data);
       })
@@ -139,39 +140,39 @@
   }
 
   function switchTeam(newTeam) {
-    team = newTeam;
-    fullTeamName = toTitleCase(team.replace(/\-/g, " "));
-    currentMatchday = getCurrentMatchday(data, fullTeamName);
-    playedMatchdays = getPlayedMatchdays(data, fullTeamName);
-    window.history.pushState(null,null,team); // Change current url without reloading
+    hyphenatedTeam = newTeam;
+    team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
+    currentMatchday = getCurrentMatchday(data, team);
+    playedMatchdays = getPlayedMatchdays(data, team);
+    window.history.pushState(null,null,hyphenatedTeam); // Change current url without reloading
   }
 
   const showBadge = false;
-  let fullTeamName = "";
+  let team = "";
   let currentMatchday, playedMatchdays;
   let data;
   onMount(() => {
     initDashboard();
   });
 
-  export let team;
+  export let hyphenatedTeam;
 </script>
 
 <svelte:head>
-  <title>{fullTeamName}</title>
+  <title>{team}</title>
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
 <Router>
   <div id="team">
     <div id="navBar">
-      <NavBar {team} {teams} {getAlias} {switchTeam} />
+      <NavBar team={hyphenatedTeam} {teams} {getAlias} {switchTeam} />
     </div>
     <div id="dashboard">
-      <div class="header" style="background-color: var(--{team});">
-        <a class="main-link no-decoration" href="/{team}">
-          <div class="title" style="color: var(--{team + '-secondary'});">
-            {getAlias(fullTeamName)}
+      <div class="header" style="background-color: var(--{hyphenatedTeam});">
+        <a class="main-link no-decoration" href="/{hyphenatedTeam}">
+          <div class="title" style="color: var(--{hyphenatedTeam + '-secondary'});">
+            {getAlias(team)}
           </div>
         </a>
       </div>
@@ -182,10 +183,10 @@
             {#if showBadge}
               <div
                 class="row-left position-and-badge"
-                style="background-image: url('{data.logoURLs[fullTeamName]}')"
+                style="background-image: url('{data.logoURLs[team]}')"
               >
                 <div class="position">
-                  {data.standings[fullTeamName][data._id].position}
+                  {data.standings[team][data._id].position}
                 </div>
               </div>
             {:else}
@@ -197,44 +198,44 @@
                       cy="150"
                       r="100"
                       stroke-width="0"
-                      fill="var(--{team}-secondary)"
+                      fill="var(--{hyphenatedTeam}-secondary)"
                     />
                     <circle
                       cx="170"
                       cy="170"
                       r="140"
                       stroke-width="0"
-                      fill="var(--{team})"
+                      fill="var(--{hyphenatedTeam})"
                     />
                     <circle
                       cx="300"
                       cy="320"
                       r="170"
                       stroke-width="0"
-                      fill="var(--{team})"
+                      fill="var(--{hyphenatedTeam})"
                     />
                   </svg>
                 </div>
                 <div class="position-central">
-                  {data.standings[fullTeamName][data._id].position}
+                  {data.standings[team][data._id].position}
                 </div>
               </div>
             {/if}
             <div class="row-right fixtures-graph row-graph">
               <h1 class="lowered">Fixtures</h1>
               <div class="graph mini-graph">
-                <Fixtures {data} {fullTeamName} />
+                <Fixtures {data} {team} />
               </div>
             </div>
           </div>
 
           <div class="row multi-element-row">
             <div class="row-left form-details">
-              <CurrentForm {data} {currentMatchday} {fullTeamName} />
-              <TableSnippet {data} {team} {fullTeamName} {getAlias} {switchTeam} />
+              <CurrentForm {data} {currentMatchday} {team} />
+              <TableSnippet {data} {hyphenatedTeam} {team} {getAlias} {switchTeam} />
             </div>
             <div class="row-right">
-              <NextGame {data} {currentMatchday} {fullTeamName} {showBadge} {getAlias} {switchTeam} />
+              <NextGame {data} {currentMatchday} {team} {showBadge} {getAlias} {switchTeam} />
             </div>
           </div>
 
@@ -242,7 +243,7 @@
             <div class="form-graph row-graph">
               <h1 class="lowered">Form Over Time</h1>
               <div class="graph full-row-graph">
-                <FormOverTime {data} {fullTeamName} {playedMatchdays} />
+                <FormOverTime {data} {team} {playedMatchdays} />
               </div>
             </div>
           </div>
@@ -251,7 +252,7 @@
             <div class="position-over-time-graph row-graph">
               <h1 class="lowered">Position Over Time</h1>
               <div class="graph full-row-graph">
-                <PositionOverTime {data} {fullTeamName} {playedMatchdays} />
+                <PositionOverTime {data} {team} {playedMatchdays} />
               </div>
             </div>
           </div>
@@ -260,7 +261,7 @@
             <div class="goals-scored-vs-conceded-graph row-graph">
               <h1 class="lowered">Goals Scored and Conceded</h1>
               <div class="graph full-row-graph">
-                <GoalsScoredAndConceded {data} {fullTeamName} {playedMatchdays} />
+                <GoalsScoredAndConceded {data} {team} {playedMatchdays} />
               </div>
             </div>
           </div>
@@ -268,31 +269,31 @@
           <div class="row">
             <div class="row-graph">
               <div class="clean-sheets graph full-row-graph">
-                <CleanSheets {data} {fullTeamName} {playedMatchdays} />
+                <CleanSheets {data} {team} {playedMatchdays} />
               </div>
             </div>
           </div>
 
           <div class="season-stats-row">
-            <SeasonStats {data} {fullTeamName} />
+            <SeasonStats {data} {team} />
           </div>
 
           <div class="row">
             <div class="goals-freq-row row-graph">
               <h1>Goals Per Game</h1>
-              <GoalFrequencies {data} {fullTeamName} />
+              <GoalsPerGame {data} {team} />
             </div>
           </div>
 
           <div class="row">
             <div class="spider-chart-row row-graph">
               <div class="spider-chart-container">
-                <Spider {data} {fullTeamName} {getAlias} {getName} />
+                <Spider {data} {team} {getAlias} {getName} />
               </div>
             </div>
           </div>
 
-          <MobileViewNav {team} {teams} {getAlias} {switchTeam} />
+          <MobileViewNav {hyphenatedTeam} {teams} {getAlias} {switchTeam} />
 
           <TeamsFooter lastUpdated={data.lastUpdated} />
         </div>

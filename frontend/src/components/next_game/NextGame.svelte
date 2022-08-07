@@ -2,13 +2,13 @@
   import SeasonComplete from "./SeasonComplete.svelte";
   import NextGameStats from "./NextGameStats.svelte";
 
-  export let data, currentMatchday, fullTeamName, showBadge, getAlias, switchTeam;
+  export let data, currentMatchday, team, showBadge, getAlias, switchTeam;
 </script>
 
 {#if data != undefined}
-  {#if data.upcoming[fullTeamName].nextTeam == null}
+  {#if data.upcoming[team].nextTeam == null}
     <SeasonComplete {data} />
   {:else}
-    <NextGameStats {data} {currentMatchday} {fullTeamName} {showBadge} {getAlias} {switchTeam}/>
+    <NextGameStats {data} {currentMatchday} {team} {showBadge} {getAlias} {switchTeam}/>
   {/if}
 {/if}

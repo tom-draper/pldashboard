@@ -39,14 +39,7 @@
     };
     return plotData;
   }
-
-  let plotDiv, plotData;
-  let setup = false;
-  onMount(() => {
-    genPlot();
-    setup = true;
-  });
-
+  
   function genPlot() {
     plotData = buildPlotData();
     new Plotly.newPlot(
@@ -70,9 +63,16 @@
     }
   }
 
-  $: fullTeamName && refreshPlot();
+  let plotDiv, plotData;
+  let setup = false;
+  onMount(() => {
+    genPlot();
+    setup = true;
+  });
 
-  export let fullTeamName,
+  $: team && refreshPlot();
+
+  export let team,
     getScoredBars,
     getScoredTeamBars,
     getXLabels,

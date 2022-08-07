@@ -231,8 +231,8 @@
 
   function refreshTeamData() {
     if (setup) {
-      teamScoredFreq = teamScoredFrequencies(data, fullTeamName);
-      teamConcededFreq = teamConcededFrequencies(data, fullTeamName);
+      teamScoredFreq = teamScoredFrequencies(data, team);
+      teamConcededFreq = teamConcededFrequencies(data, team);
       scaleTeamFreq(goalFreq, teamScoredFreq, teamConcededFreq);
       convertToPercentage(teamScoredFreq);
       convertToPercentage(teamConcededFreq);
@@ -244,24 +244,24 @@
   let setup = false;
   onMount(() => {
     goalFreq = avgGoalFrequencies(data);
-    teamScoredFreq = teamScoredFrequencies(data, fullTeamName);
-    teamConcededFreq = teamConcededFrequencies(data, fullTeamName);
+    teamScoredFreq = teamScoredFrequencies(data, team);
+    teamConcededFreq = teamConcededFrequencies(data, team);
     scaleTeamFreq(goalFreq, teamScoredFreq, teamConcededFreq);
     convertAllToPercentage(goalFreq, teamScoredFreq, teamConcededFreq);
     maxY = maxValue(goalFreq, teamScoredFreq, teamConcededFreq);
     setup = true;
   });
 
-  $: fullTeamName && refreshTeamData();
+  $: team && refreshTeamData();
 
-  export let data, fullTeamName;
+  export let data, team;
 </script>
 
 <div class="two-graphs">
   {#if setup}
     <div class="graph freq-graph mini-graph">
       <GoalsScoredFreq
-        {fullTeamName}
+        {team}
         {getScoredBars}
         {getScoredTeamBars}
         {getXLabels}
@@ -270,7 +270,7 @@
     </div>
     <div class="graph freq-graph mini-graphh">
       <GoalsConcededFreq
-        {fullTeamName}
+        {team}
         {getConcededBars}
         {getConcededTeamBars}
         {getXLabels}

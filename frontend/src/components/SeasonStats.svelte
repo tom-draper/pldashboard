@@ -7,23 +7,23 @@
     return n + (ord[a > 20 ? a % 10 : a] || "th");
   }
 
-  function getStatsRank(seasonStats, attribute, fullTeamName, reverse) {
+  function getStatsRank(seasonStats, attribute, team, reverse) {
     let sorted = Object.keys(seasonStats).sort(function (team1, team2) {
       return seasonStats[team2][attribute] - seasonStats[team1][attribute];
     });
-    let rank = sorted.indexOf(fullTeamName) + 1;
+    let rank = sorted.indexOf(team) + 1;
     if (reverse) {
       rank = 21 - rank;
     }
     return rank;
   }
 
-  function getStatsRankings(seasonStats, fullTeamName) {
-    let xGRank = ordinal(getStatsRank(seasonStats, "xG", fullTeamName, false));
+  function getStatsRankings(seasonStats, team) {
+    let xGRank = ordinal(getStatsRank(seasonStats, "xG", team, false));
     // Reverse - lower rank the better
-    let xCRank = ordinal(getStatsRank(seasonStats, "xC", fullTeamName, true));
+    let xCRank = ordinal(getStatsRank(seasonStats, "xC", team, true));
     let cleanSheetRatioRank = ordinal(
-      getStatsRank(seasonStats, "cleanSheetRatio", fullTeamName, false)
+      getStatsRank(seasonStats, "cleanSheetRatio", team, false)
     );
     return { xG: xGRank, xC: xCRank, cleanSheetRatio: cleanSheetRatioRank };
   }
@@ -43,8 +43,8 @@
     );
   }
 
-  function setStatsValues(seasonStats, fullTeamName) {
-    rank = getStatsRankings(seasonStats, fullTeamName);
+  function setStatsValues(seasonStats, team) {
+    rank = getStatsRankings(seasonStats, team);
 
     // Keep ordinal values at the correct offset
     // Once rank values have updated, init positional offset for ordinal values
@@ -125,7 +125,7 @@
   function refreshStatsValues() {
     if (setup) {
       // seasonStats = buildSeasonStats(data)
-      setStatsValues(seasonStats, fullTeamName);
+      setStatsValues(seasonStats, team);
     }
   }
 
@@ -139,20 +139,20 @@
   let setup = false;
   onMount(() => {
     seasonStats = buildSeasonStats(data);
-    setStatsValues(seasonStats, fullTeamName);
+    setStatsValues(seasonStats, team);
     setup = true;
   });
 
-  $: fullTeamName && refreshStatsValues();
+  $: team && refreshStatsValues();
 
-  export let data, fullTeamName;
+  export let data, team;
 </script>
 
 {#if seasonStats != undefined}
   <div class="season-stats">
     <div class="season-stat goals-per-game">
       <div class="season-stat-value">
-        {seasonStats[fullTeamName].xG.toFixed(2)}
+        {seasonStats[team].xG.toFixed(2)}
         <div
           class="season-stat-position ssp-{rank.xG}"
           id="ssp1"
@@ -165,7 +165,7 @@
     </div>
     <div class="season-stat conceded-per-game">
       <div class="season-stat-value">
-        {seasonStats[fullTeamName].xC.toFixed(2)}
+        {seasonStats[team].xC.toFixed(2)}
         <div
           class="season-stat-position ssp-{rank.xC}"
           id="ssp2"
@@ -178,7 +178,7 @@
     </div>
     <div class="season-stat clean-sheet-ratio">
       <div class="season-stat-value">
-        {seasonStats[fullTeamName].cleanSheetRatio.toFixed(2)}
+        {seasonStats[team].cleanSheetRatio.toFixed(2)}
         <div
           class="season-stat-position ssp-{rank.cleanSheetRatio}"
           id="ssp3"

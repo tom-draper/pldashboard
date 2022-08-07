@@ -1,6 +1,6 @@
 <script>
-  function tableSnippetRange(sortedTeams, fullTeamName) {
-    let teamStandingsIdx = sortedTeams.indexOf(fullTeamName);
+  function tableSnippetRange(sortedTeams, team) {
+    let teamStandingsIdx = sortedTeams.indexOf(team);
 
     let low = teamStandingsIdx - 3;
     let high = teamStandingsIdx + 4;
@@ -26,12 +26,12 @@
       );
     });
 
-    let [low, high] = tableSnippetRange(sortedTeams, fullTeamName);
+    let [low, high] = tableSnippetRange(sortedTeams, team);
 
     let teamTableIdx;
     let rows = [];
     for (let i = low; i < high; i++) {
-      if (sortedTeams[i] == fullTeamName) {
+      if (sortedTeams[i] == team) {
         teamTableIdx = i - low;
       }
       rows.push({
@@ -49,9 +49,9 @@
   }
 
   let tableSnippet;
-  $: fullTeamName && buildTableSnippet()
+  $: team && buildTableSnippet()
 
-  export let data, team, fullTeamName, getAlias, switchTeam;
+  export let data, hyphenatedTeam, team, getAlias, switchTeam;
 </script>
 
 <div class="table-snippet">
@@ -78,30 +78,30 @@
         <!-- Highlighted row for the team of the current page -->
         <div
           class="table-row this-team"
-          style="background-color: var(--{team});"
+          style="background-color: var(--{hyphenatedTeam});"
         >
           <div
             class="table-element table-position this-team"
-            style="color: var(--{team}-secondary);"
+            style="color: var(--{hyphenatedTeam}-secondary);"
           >
             {row.position}
           </div>
           <a
-            href="/{team}"
+            href="/{hyphenatedTeam}"
             class="table-element table-team-name this-team"
-            style="color: var(--{team}-secondary);"
+            style="color: var(--{hyphenatedTeam}-secondary);"
           >
             {getAlias(row.name)}
           </a>
           <div
             class="table-element table-gd this-team"
-            style="color: var(--{team}-secondary);"
+            style="color: var(--{hyphenatedTeam}-secondary);"
           >
             {row.gd}
           </div>
           <div
             class="table-element table-points this-team"
-            style="color: var(--{team}-secondary);"
+            style="color: var(--{hyphenatedTeam}-secondary);"
           >
             {row.points}
           </div>
