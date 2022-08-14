@@ -177,13 +177,12 @@
       </div>
     </div>
 
-    <div class="predictions-footer footer-text-colour">
+    <!-- <div class="predictions-footer footer-text-colour">
       <div class="method-description">
         Predictions are calculated using previous results and then adjusting by
         recent form and home advantage.
       </div>
-      <!-- <div class="last-updated">{data.lastUpdated} UTC</div> -->
-    </div>
+    </div> -->
   {:else}
     <div class="loading-spinner-container">
       <div class="loading-spinner" />
