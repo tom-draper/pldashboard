@@ -75,6 +75,13 @@
   }
 
   function resetTeamComparisonBtns() {
+    document
+      .getElementById("spider-opp-teams")
+      .children[0].classList.remove("top-spider-opp-team-btn");
+    document
+      .getElementById("spider-opp-teams")
+      .children[18].classList.remove("bottom-spider-opp-team-btn");
+
     let btns = document.getElementById("spider-opp-teams");
     for (let i = 0; i < btns.children.length; i++) {
       let btn = btns.children[i];
@@ -83,6 +90,13 @@
         btn.style.color = "black";
       }
     }
+    
+    document
+      .getElementById("spider-opp-teams")
+      .children[0].classList.add("top-spider-opp-team-btn");
+    document
+      .getElementById("spider-opp-teams")
+      .children[18].classList.add("bottom-spider-opp-team-btn");
   }
 
   function spiderBtnClick(btn) {
@@ -217,8 +231,7 @@
       if (defence[team] == null) {
         defence[team] = 0;
       } else {
-        defence[team] =
-          100 - ((defence[team] - lower) / (upper - lower)) * 100;
+        defence[team] = 100 - ((defence[team] - lower) / (upper - lower)) * 100;
       }
     }
     return defence;
@@ -515,7 +528,7 @@
     genPlot();
     setup = true;
   });
-  
+
   function genPlot() {
     plotData = buildPlotData(data, team);
     new Plotly.newPlot(
@@ -523,7 +536,7 @@
       plotData.data,
       plotData.layout,
       plotData.config
-    ).then(plot => {
+    ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-spider-chart");
     });
@@ -550,9 +563,9 @@
       // Remove all but two plots
       emptyArray(plotData.data);
       // Replace final two plots with defaults
-      plotData.data.push(spiderPlots[0])  // Reset to avg
-      plotData.data.push(spiderPlots[1])  // Reset to team data
-  
+      plotData.data.push(spiderPlots[0]); // Reset to avg
+      plotData.data.push(spiderPlots[1]); // Reset to team data
+
       removeAllTeamComparisons();
       resetTeamComparisonBtns();
     }
