@@ -83,13 +83,6 @@
         btn.style.color = "black";
       }
     }
-
-    document
-      .getElementById("spider-opp-teams")
-      .children[0].classList.add("top-spider-opp-team-btn");
-    document
-      .getElementById("spider-opp-teams")
-      .children[18].classList.add("bottom-spider-opp-team-btn");
   }
 
   function spiderBtnClick(btn) {
@@ -561,6 +554,14 @@
 
       removeAllTeamComparisons();
       resetTeamComparisonBtns();
+      setTimeout(() => {
+        document
+          .getElementById("spider-opp-teams")
+          .children[0].classList.add("top-spider-opp-team-btn");
+        document
+          .getElementById("spider-opp-teams")
+          .children[18].classList.add("bottom-spider-opp-team-btn");
+      }, 0)
     }
   }
 
