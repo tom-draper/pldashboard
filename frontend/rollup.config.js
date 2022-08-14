@@ -19,12 +19,10 @@ export default [
     },
     plugins: [
       svelte({
-        compilerOptions: {
-          hydratable: true,
+        hydratable: true,
           // css: (css) => {
           //   css.write("public/bundle.css");
           // },
-        },
       }),
       css({ output: 'bundle.css'}),
       resolve(),
@@ -51,9 +49,7 @@ export default [
     },
     plugins: [
       svelte({
-        compilerOptions: {
-          generate: "ssr",
-        },
+        generate: "ssr",
       }),
       resolve(),
       commonjs(),
