@@ -25,20 +25,42 @@
     "Brighton and Hove Albion": "Brighton",
   };
 
-  function getAlias(team) {
+  function toInitials(team) {
+    switch (team) {
+      case "Brighton and Hove Albion":
+        return "BHA";
+      case "Manchester City":
+        return "MCI";
+      case "Manchester United":
+        return "MUN";
+      case "Aston Villa":
+        return "AVL";
+      case "Sheffield United":
+        return "SHU";
+      case "West Bromwich Albion":
+        return "WBA";
+      case "West Ham United":
+        return "WHU";
+    }
+    return team.slice(0, 3).toUpperCase();
+  }
+
+  function toAlias(team) {
     if (team in alias) {
       return alias[team];
     }
     return team;
   }
 
-  function getName(teamAlias) {
+  function toName(teamAlias) {
     if (!Object.values(alias).includes(teamAlias)) {
       return teamAlias;
     }
     return Object.keys(alias).find(key => alias[key] === teamAlias);
   }
 
+  // Teams in the final position from last season (21/22), including championship teams
+  // Used for nav bar links order
   let teams = [
     "Manchester City",
     "Liverpool",
@@ -130,7 +152,7 @@
     fetchData("https://pldashboard.herokuapp.com/api/teams")
       .then((json) => {
         // Build teamData package from json data
-        json.teamNames = Object.keys(json.fixtures)
+        json.teamNames = Object.keys(json.standings)
         currentMatchday = getCurrentMatchday(json, team);
         playedMatchdays = getPlayedMatchdays(json, team);
         data = json;
@@ -168,13 +190,13 @@
 <Router>
   <div id="team">
     <div id="navBar">
-      <NavBar team={hyphenatedTeam} {teams} {getAlias} {switchTeam} />
+      <NavBar team={hyphenatedTeam} {teams} getAlias={toAlias} {switchTeam} />
     </div>
     <div id="dashboard">
       <div class="header" style="background-color: var(--{hyphenatedTeam});">
         <a class="main-link no-decoration" href="/{hyphenatedTeam}">
           <div class="title" style="color: var(--{hyphenatedTeam + '-secondary'});">
-            {getAlias(team)}
+            {toAlias(team)}
           </div>
         </a>
       </div>
@@ -233,11 +255,11 @@
 
           <div class="row multi-element-row">
             <div class="row-left form-details">
-              <CurrentForm {data} {currentMatchday} {team} />
-              <TableSnippet {data} {hyphenatedTeam} {team} {getAlias} {switchTeam} />
+              <CurrentForm {data} {currentMatchday} {team} {toInitials} />
+              <TableSnippet {data} {hyphenatedTeam} {team} {toAlias} {switchTeam} />
             </div>
             <div class="row-right">
-              <NextGame {data} {currentMatchday} {team} {showBadge} {getAlias} {switchTeam} />
+              <NextGame {data} {currentMatchday} {team} {showBadge} {toAlias} {switchTeam} />
             </div>
           </div>
 
@@ -298,12 +320,12 @@
           <div class="row">
             <div class="spider-chart-row row-graph">
               <div class="spider-chart-container">
-                <Spider {data} {team} {getAlias} {getName} />
+                <Spider {data} {team} {teams} {toAlias} {toName} />
               </div>
             </div>
           </div>
 
-          <MobileViewNav {hyphenatedTeam} {teams} {getAlias} {switchTeam} />
+          <MobileViewNav {hyphenatedTeam} {teams} {toAlias} {switchTeam} />
 
           <TeamsFooter lastUpdated={data.lastUpdated} />
         </div>

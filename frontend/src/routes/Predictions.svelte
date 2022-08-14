@@ -1,5 +1,5 @@
 <script>
-  import { Router, Link } from "svelte-routing";
+  import { Router } from "svelte-routing";
   import { onMount } from "svelte";
 
   async function fetchData(address) {
@@ -245,6 +245,7 @@
     align-self: center;
     text-align: center;
     margin-bottom: 2px;
+    font-size: 1.2rem;
   }
 
   .prediction-item {
@@ -277,7 +278,7 @@
     border-radius: var(--border-radius);
     color: inherit;
     border: none;
-    font-size: 0.8em;
+    font-size: 16px;
     cursor: pointer;
     outline: inherit;
     position: relative;
@@ -334,7 +335,7 @@
 
   .accuracy-display {
     text-align: center;
-    font-size: 0.85rem;
+    font-size: 13px;
   }
   .accuracy {
     margin: 1em 0 2.5em;

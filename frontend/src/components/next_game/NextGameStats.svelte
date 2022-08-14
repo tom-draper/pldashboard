@@ -16,7 +16,7 @@
   let oppTeam;
   $: team && setOppTeam();
 
-  export let data, team, currentMatchday, showBadge, getAlias, switchTeam;
+  export let data, team, currentMatchday, showBadge, toAlias, switchTeam;
 </script>
 
 <div class="next-game-prediction" style="border: 6px solid var(--{oppTeam});">
@@ -27,7 +27,7 @@
         on:click="{() => {switchTeam(data.upcoming[team].nextTeam
           .toLowerCase()
           .replace(/ /g, '-'))}}"
-        style="color: inherit">{getAlias(data.upcoming[team].nextTeam)}&nbsp</button
+        class="next-game-team-btn">{toAlias(data.upcoming[team].nextTeam)}&nbsp</button
       >
       ({data.upcoming[team].atHome ? "Home" : "Away"})
     </h1>
@@ -100,11 +100,11 @@
       {#each data.upcoming[team].prevMatches as prevMatch}
         <div class="next-game-item {prevMatch.result}">
           <div class="past-result">
-            <div class="home-team">{getAlias(prevMatch.homeTeam)}</div>
+            <div class="home-team">{toAlias(prevMatch.homeTeam)}</div>
             <div class="score">
               {prevMatch.homeGoals} - {prevMatch.awayGoals}
             </div>
-            <div class="away-team">{getAlias(prevMatch.awayTeam)}</div>
+            <div class="away-team">{toAlias(prevMatch.awayTeam)}</div>
           </div>
           <div style="clear: both" />
           <div class="past-result-date">
@@ -281,6 +281,11 @@
     font-size: 16px;
   }
 
+  .next-game-team-btn {
+    color: inherit;
+    text-align: left;
+  }
+
   @media only screen and (max-width: 1100px) {
     .next-game-prediction {
       margin: 50px 20px 0;
@@ -317,6 +322,10 @@
     .next-game-title-text {
       flex-direction: column;
       text-align: left;
+    }
+
+    .next-game-title {
+      padding: 6px 15px;
     }
   }
   @media only screen and (max-width: 700px) {

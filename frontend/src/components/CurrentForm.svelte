@@ -1,23 +1,5 @@
 <script>
-  function toInitials(team) {
-    switch (team) {
-      case "Brighton and Hove Albion":
-        return "BHA";
-      case "Manchester City":
-        return "MCI";
-      case "Manchester United":
-        return "MUN";
-      case "Aston Villa":
-        return "AVL";
-      case "Sheffield United":
-        return "SHU";
-      case "West Bromwich Albion":
-        return "WBA";
-      case "West Ham United":
-        return "WHU";
-    }
-    return team.slice(0, 3).toUpperCase();
-  }
+
 
   function getSortedMatchdays(data, team) {
     let matchdays = Object.keys(data.form[data._id][team]).sort(function (
@@ -112,7 +94,7 @@
 
   $: team && setFormValues();
 
-  export let data, currentMatchday, team;
+  export let data, currentMatchday, team, toInitials;
 </script>
 
 {#if formInitials != undefined}

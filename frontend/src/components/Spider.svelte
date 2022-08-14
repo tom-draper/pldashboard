@@ -86,7 +86,7 @@
   }
 
   function spiderBtnClick(btn) {
-    let team = getName(btn.innerHTML);
+    let team = toName(btn.innerHTML);
     if (btn.style.background == "") {
       let teamKey = team.toLowerCase().replace(/ /g, "-");
       btn.style.background = `var(--${teamKey})`;
@@ -560,7 +560,7 @@
 
   $: team && refreshPlot();
 
-  export let data, team, getAlias, getName;
+  export let data, team, teams, toAlias, toName;
 </script>
 
 <div class="spider-chart">
@@ -572,13 +572,13 @@
 </div>
 <div class="spider-opp-team-selector">
   <div class="spider-opp-team-btns" id="spider-opp-teams">
-    {#each data.teamNames as _team}
+    {#each teams as _team}
       {#if _team != team}
         <button
           class="spider-opp-team-btn"
           on:click={(e) => {
             spiderBtnClick(e.target);
-          }}>{getAlias(_team)}</button
+          }}>{toAlias(_team)}</button
         >
       {/if}
     {/each}

@@ -20,7 +20,7 @@
   let hypenatedTeams;
   $: hypenatedTeam & getHyphenatedTeamNames();
 
-  export let hypenatedTeam, teams, getAlias, switchTeam;
+  export let hypenatedTeam, teams, toAlias, switchTeam;
 </script>
 
 <nav>
@@ -37,7 +37,7 @@
               }}
               style="color: var(--{hypenatedTeams[i]}-secondary);
             background-color: var(--{hypenatedTeams[i]})"
-              class="team-link first-team">{getAlias(teams[i])}</button
+              class="team-link first-team">{toAlias(teams[i])}</button
             >
           {:else if i == hypenatedTeams.length - 1 || (i == hypenatedTeams.length-2 && hypenatedTeams[hypenatedTeams.length-1] == null)}
             <!-- Button with last-team class -->
@@ -47,7 +47,7 @@
               }}
               style="color: var(--{hypenatedTeams[i]}-secondary);
                 background-color: var(--{hypenatedTeams[i]})"
-              class="team-link last-team">{getAlias(teams[i])}</button
+              class="team-link last-team">{toAlias(teams[i])}</button
             >
           {:else}
             <button
@@ -56,7 +56,7 @@
               }}
               style="color: var(--{_hypenatedTeam}-secondary);
                   background-color: var(--{_hypenatedTeam})"
-              class="team-link">{getAlias(teams[i])}</button
+              class="team-link">{toAlias(teams[i])}</button
             >
           {/if}
         {/if}

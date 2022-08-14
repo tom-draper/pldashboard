@@ -264,7 +264,7 @@ class Predictor:
         ) -> dict[dict[str, Union[datetime, str, float]]]:
         predictions = {}  # type: dict[dict[str, Union[datetime, str, float]]]
         team_names = form.df.index.values.tolist()
-
+        
         # Check ALL teams as two teams can have different next games
         for team_name in team_names:
             prediction = None
@@ -275,6 +275,7 @@ class Predictor:
                 opp_team_name = upcoming.at[team_name, 'nextTeam']
                 at_home = upcoming.at[team_name, 'atHome']
                 prev_matches = upcoming.at[team_name, 'prevMatches']
+
                 
                 opp_form_rating = form.get_current_form_rating(opp_team_name)
                 opp_long_term_form_rating = form.get_long_term_form_rating(opp_team_name)

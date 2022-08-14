@@ -51,7 +51,7 @@
   let tableSnippet;
   $: team && buildTableSnippet()
 
-  export let data, hyphenatedTeam, team, getAlias, switchTeam;
+  export let data, hyphenatedTeam, team, toAlias, switchTeam;
 </script>
 
 <div class="table-snippet">
@@ -91,7 +91,7 @@
             class="table-element table-team-name this-team"
             style="color: var(--{hyphenatedTeam}-secondary);"
           >
-            {getAlias(row.name)}
+            {toAlias(row.name)}
           </a>
           <div
             class="table-element table-gd this-team"
@@ -116,7 +116,7 @@
             on:click="{() => {switchTeam(row.name.toLowerCase().replace(/ /g, '-'))}}"
             class="table-element table-team-name"
           >
-            {getAlias(row.name)}
+            {toAlias(row.name)}
           </button>
           <div class="table-element table-gd">
             {row.gd}

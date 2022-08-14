@@ -41,54 +41,6 @@
     let scoreFreq = {};
     return scoreFreq;
   }
-
-  // function getScoreBars(data, team) {
-  //   let scoreFreq = getScoreFreq(data, team);
-
-  //   let sorted = Object.entries(scoreFreq).sort((a, b) => b[1] - a[1]);
-
-  //   let x = [];
-  //   let y = [];
-  //   for (let i = 0; i < sorted.length; i++) {
-  //     x.push(sorted[i][0])
-  //     y.push(sorted[i][1])
-  //   }
-
-  //   return {
-  //     x: x,
-  //     y: y,
-  //     type: "bar",
-  //     name: `Goals`,
-  //     marker: { color: "#0000FF" },
-  //     hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
-  //     hoverinfo: "x+y",
-  //     opacity: 0.6,
-  //   };
-  // }
-  
-  // function getAvgScoreBars(data) {
-  //   let scoreFreq = getAvgScoreFreq(data);
-  //   let sorted = Object.entries(scoreFreq).sort((a, b) => b[1] - a[1]);
-  
-  //   let x = [];
-  //   let y = [];
-  //   for (let i = 0; i < sorted.length; i++) {
-  //     x.push(sorted[i][0])
-  //     y.push(sorted[i][1])
-  //   }
-    
-  //   return {
-  //     x: x,
-  //     y: y,
-  //     type: "bar",
-  //     name: `Goals`,
-  //     marker: { color: "#C6C6C6" },
-  //     hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
-  //     hoverinfo: "x+y",
-  //     opacity: 0.6,
-  //   };
-    
-  // }
   
   function insertTeamScoreBars(data, team, scoreFreq) {
     for (let score in scoreFreq) {
@@ -215,7 +167,7 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 10, l: 60, t: 15, b: 100, pad: 5 },
+        margin: { r: 10, l: 65, t: 15, b: 100, pad: 5 },
         hovermode: "closest",
         barmode: "overlay",
         bargap: 0,

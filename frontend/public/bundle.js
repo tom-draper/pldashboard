@@ -2767,7 +2767,7 @@
     	};
     }
 
-    // (140:2) {:else}
+    // (122:2) {:else}
     function create_else_block$7(ctx) {
     	let t;
 
@@ -2788,7 +2788,7 @@
     	};
     }
 
-    // (136:2) {#if currentMatchday != null}
+    // (118:2) {#if currentMatchday != null}
     function create_if_block$b(ctx) {
     	let t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0]._id][/*team*/ ctx[2]][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "";
     	let t0;
@@ -2897,27 +2897,6 @@
     	};
     }
 
-    function toInitials(team) {
-    	switch (team) {
-    		case "Brighton and Hove Albion":
-    			return "BHA";
-    		case "Manchester City":
-    			return "MCI";
-    		case "Manchester United":
-    			return "MUN";
-    		case "Aston Villa":
-    			return "AVL";
-    		case "Sheffield United":
-    			return "SHU";
-    		case "West Bromwich Albion":
-    			return "WBA";
-    		case "West Ham United":
-    			return "WHU";
-    	}
-
-    	return team.slice(0, 3).toUpperCase();
-    }
-
     function getSortedMatchdays(data, team) {
     	let matchdays = Object.keys(data.form[data._id][team]).sort(function (matchday1, matchday2) {
     		return new Date(data.form[data._id][team][matchday1].date) - new Date(data.form[data._id][team][matchday2].date);
@@ -2941,21 +2920,6 @@
     	}
 
     	return formStarTeams;
-    }
-
-    function getFormInitials(data, team, matchdays) {
-    	let formInitials = [];
-
-    	for (let matchday of matchdays) {
-    		formInitials.unshift(toInitials(data.form[data._id][team][matchday].team));
-    	}
-
-    	// Fill in blanks with None icons
-    	for (let i = formInitials.length; i < 5; i++) {
-    		formInitials.unshift("");
-    	}
-
-    	return formInitials;
     }
 
     function latestNPlayedMatchdays(data, team, matchdays, N) {
@@ -2990,6 +2954,21 @@
     		return formIcons;
     	}
 
+    	function getFormInitials(data, team, matchdays) {
+    		let formInitials = [];
+
+    		for (let matchday of matchdays) {
+    			formInitials.unshift(toInitials(data.form[data._id][team][matchday].team));
+    		}
+
+    		// Fill in blanks with None icons
+    		for (let i = formInitials.length; i < 5; i++) {
+    			formInitials.unshift("");
+    		}
+
+    		return formInitials;
+    	}
+
     	let formIcons, formStarTeams, formInitials;
 
     	function setFormValues() {
@@ -3000,12 +2979,13 @@
     		$$invalidate(5, formInitials = getFormInitials(data, team, matchdays));
     	}
 
-    	let { data, currentMatchday, team } = $$props;
+    	let { data, currentMatchday, team, toInitials } = $$props;
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(0, data = $$props.data);
     		if ('currentMatchday' in $$props) $$invalidate(1, currentMatchday = $$props.currentMatchday);
     		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('toInitials' in $$props) $$invalidate(6, toInitials = $$props.toInitials);
     	};
 
     	$$self.$$.update = () => {
@@ -3014,13 +2994,27 @@
     		}
     	};
 
-    	return [data, currentMatchday, team, formIcons, formStarTeams, formInitials];
+    	return [
+    		data,
+    		currentMatchday,
+    		team,
+    		formIcons,
+    		formStarTeams,
+    		formInitials,
+    		toInitials
+    	];
     }
 
     class CurrentForm extends SvelteComponent {
     	constructor(options) {
     		super();
-    		init(this, options, instance$l, create_fragment$m, safe_not_equal, { data: 0, currentMatchday: 1, team: 2 });
+
+    		init(this, options, instance$l, create_fragment$m, safe_not_equal, {
+    			data: 0,
+    			currentMatchday: 1,
+    			team: 2,
+    			toInitials: 6
+    		});
     	}
     }
 
@@ -3154,7 +3148,7 @@
     			insert_hydration(target, if_block_anchor, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*hyphenatedTeam, tableSnippet, getAlias, switchTeam*/ 15) {
+    			if (dirty & /*hyphenatedTeam, tableSnippet, toAlias, switchTeam*/ 15) {
     				each_value = /*tableSnippet*/ ctx[3].rows;
     				let i;
 
@@ -3301,7 +3295,7 @@
     	let t0;
     	let t1;
     	let button;
-    	let t2_value = /*getAlias*/ ctx[1](/*row*/ ctx[8].name) + "";
+    	let t2_value = /*toAlias*/ ctx[1](/*row*/ ctx[8].name) + "";
     	let t2;
     	let t3;
     	let div1;
@@ -3388,7 +3382,7 @@
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
     			if (dirty & /*tableSnippet*/ 8 && t0_value !== (t0_value = /*row*/ ctx[8].position + "")) set_data(t0, t0_value);
-    			if (dirty & /*getAlias, tableSnippet*/ 10 && t2_value !== (t2_value = /*getAlias*/ ctx[1](/*row*/ ctx[8].name) + "")) set_data(t2, t2_value);
+    			if (dirty & /*toAlias, tableSnippet*/ 10 && t2_value !== (t2_value = /*toAlias*/ ctx[1](/*row*/ ctx[8].name) + "")) set_data(t2, t2_value);
     			if (dirty & /*tableSnippet*/ 8 && t4_value !== (t4_value = /*row*/ ctx[8].gd + "")) set_data(t4, t4_value);
     			if (dirty & /*tableSnippet*/ 8 && t6_value !== (t6_value = /*row*/ ctx[8].points + "")) set_data(t6, t6_value);
     		},
@@ -3408,7 +3402,7 @@
     	let t0;
     	let t1;
     	let a;
-    	let t2_value = /*getAlias*/ ctx[1](/*row*/ ctx[8].name) + "";
+    	let t2_value = /*toAlias*/ ctx[1](/*row*/ ctx[8].name) + "";
     	let t2;
     	let a_href_value;
     	let t3;
@@ -3495,7 +3489,7 @@
     				set_style(div0, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
     			}
 
-    			if (dirty & /*getAlias, tableSnippet*/ 10 && t2_value !== (t2_value = /*getAlias*/ ctx[1](/*row*/ ctx[8].name) + "")) set_data(t2, t2_value);
+    			if (dirty & /*toAlias, tableSnippet*/ 10 && t2_value !== (t2_value = /*toAlias*/ ctx[1](/*row*/ ctx[8].name) + "")) set_data(t2, t2_value);
 
     			if (dirty & /*hyphenatedTeam*/ 1 && a_href_value !== (a_href_value = "/" + /*hyphenatedTeam*/ ctx[0])) {
     				attr(a, "href", a_href_value);
@@ -3725,7 +3719,7 @@
     	}
 
     	let tableSnippet;
-    	let { data, hyphenatedTeam, team, getAlias, switchTeam } = $$props;
+    	let { data, hyphenatedTeam, team, toAlias, switchTeam } = $$props;
 
     	const click_handler = row => {
     		switchTeam(row.name.toLowerCase().replace(/ /g, '-'));
@@ -3735,7 +3729,7 @@
     		if ('data' in $$props) $$invalidate(4, data = $$props.data);
     		if ('hyphenatedTeam' in $$props) $$invalidate(0, hyphenatedTeam = $$props.hyphenatedTeam);
     		if ('team' in $$props) $$invalidate(5, team = $$props.team);
-    		if ('getAlias' in $$props) $$invalidate(1, getAlias = $$props.getAlias);
+    		if ('toAlias' in $$props) $$invalidate(1, toAlias = $$props.toAlias);
     		if ('switchTeam' in $$props) $$invalidate(2, switchTeam = $$props.switchTeam);
     	};
 
@@ -3745,7 +3739,7 @@
     		}
     	};
 
-    	return [hyphenatedTeam, getAlias, switchTeam, tableSnippet, data, team, click_handler];
+    	return [hyphenatedTeam, toAlias, switchTeam, tableSnippet, data, team, click_handler];
     }
 
     class TableSnippet extends SvelteComponent {
@@ -3756,7 +3750,7 @@
     			data: 4,
     			hyphenatedTeam: 0,
     			team: 5,
-    			getAlias: 1,
+    			toAlias: 1,
     			switchTeam: 2
     		});
     	}
@@ -3868,7 +3862,7 @@
     			this.h();
     		},
     		h() {
-    			attr(div, "class", "next-game-position svelte-1tklhzf");
+    			attr(div, "class", "next-game-position svelte-1xjzojr");
     		},
     		m(target, anchor) {
     			insert_hydration(target, div, anchor);
@@ -3895,7 +3889,7 @@
     			this.h();
     		},
     		h() {
-    			attr(div, "class", "next-game-logo opposition-badge svelte-1tklhzf");
+    			attr(div, "class", "next-game-logo opposition-badge svelte-1xjzojr");
     			set_style(div, "background-image", "url('" + /*data*/ ctx[0].logoURLs[/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam] + "')");
     		},
     		m(target, anchor) {
@@ -3986,7 +3980,7 @@
     			this.h();
     		},
     		h() {
-    			attr(div, "class", "next-game-item prev-results-title svelte-1tklhzf");
+    			attr(div, "class", "next-game-item prev-results-title svelte-1xjzojr");
     		},
     		m(target, anchor) {
     			insert_hydration(target, div, anchor);
@@ -4017,7 +4011,7 @@
     			this.h();
     		},
     		h() {
-    			attr(div, "class", "next-game-item prev-results-title no-prev-results svelte-1tklhzf");
+    			attr(div, "class", "next-game-item prev-results-title no-prev-results svelte-1xjzojr");
     		},
     		m(target, anchor) {
     			insert_hydration(target, div, anchor);
@@ -4034,7 +4028,7 @@
     	let div6;
     	let div3;
     	let div0;
-    	let t0_value = /*getAlias*/ ctx[4](/*prevMatch*/ ctx[9].homeTeam) + "";
+    	let t0_value = /*toAlias*/ ctx[4](/*prevMatch*/ ctx[9].homeTeam) + "";
     	let t0;
     	let t1;
     	let div1;
@@ -4045,7 +4039,7 @@
     	let t4;
     	let t5;
     	let div2;
-    	let t6_value = /*getAlias*/ ctx[4](/*prevMatch*/ ctx[9].awayTeam) + "";
+    	let t6_value = /*toAlias*/ ctx[4](/*prevMatch*/ ctx[9].awayTeam) + "";
     	let t6;
     	let t7;
     	let div4;
@@ -4120,13 +4114,13 @@
     			this.h();
     		},
     		h() {
-    			attr(div0, "class", "home-team svelte-1tklhzf");
-    			attr(div1, "class", "score svelte-1tklhzf");
-    			attr(div2, "class", "away-team svelte-1tklhzf");
-    			attr(div3, "class", "past-result svelte-1tklhzf");
+    			attr(div0, "class", "home-team svelte-1xjzojr");
+    			attr(div1, "class", "score svelte-1xjzojr");
+    			attr(div2, "class", "away-team svelte-1xjzojr");
+    			attr(div3, "class", "past-result svelte-1xjzojr");
     			set_style(div4, "clear", "both");
-    			attr(div5, "class", "past-result-date svelte-1tklhzf");
-    			attr(div6, "class", div6_class_value = "next-game-item " + /*prevMatch*/ ctx[9].result + " svelte-1tklhzf");
+    			attr(div5, "class", "past-result-date svelte-1xjzojr");
+    			attr(div6, "class", div6_class_value = "next-game-item " + /*prevMatch*/ ctx[9].result + " svelte-1xjzojr");
     		},
     		m(target, anchor) {
     			insert_hydration(target, div6, anchor);
@@ -4149,10 +4143,10 @@
     			append_hydration(div6, t10);
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*getAlias, data, team*/ 19 && t0_value !== (t0_value = /*getAlias*/ ctx[4](/*prevMatch*/ ctx[9].homeTeam) + "")) set_data(t0, t0_value);
+    			if (dirty & /*toAlias, data, team*/ 19 && t0_value !== (t0_value = /*toAlias*/ ctx[4](/*prevMatch*/ ctx[9].homeTeam) + "")) set_data(t0, t0_value);
     			if (dirty & /*data, team*/ 3 && t2_value !== (t2_value = /*prevMatch*/ ctx[9].homeGoals + "")) set_data(t2, t2_value);
     			if (dirty & /*data, team*/ 3 && t4_value !== (t4_value = /*prevMatch*/ ctx[9].awayGoals + "")) set_data(t4, t4_value);
-    			if (dirty & /*getAlias, data, team*/ 19 && t6_value !== (t6_value = /*getAlias*/ ctx[4](/*prevMatch*/ ctx[9].awayTeam) + "")) set_data(t6, t6_value);
+    			if (dirty & /*toAlias, data, team*/ 19 && t6_value !== (t6_value = /*toAlias*/ ctx[4](/*prevMatch*/ ctx[9].awayTeam) + "")) set_data(t6, t6_value);
 
     			if (dirty & /*data, team*/ 3 && t9_value !== (t9_value = new Date(/*prevMatch*/ ctx[9].date).toLocaleDateString("en-us", {
     				weekday: "long",
@@ -4161,7 +4155,7 @@
     				day: "numeric"
     			}) + "")) set_data(t9, t9_value);
 
-    			if (dirty & /*data, team*/ 3 && div6_class_value !== (div6_class_value = "next-game-item " + /*prevMatch*/ ctx[9].result + " svelte-1tklhzf")) {
+    			if (dirty & /*data, team*/ 3 && div6_class_value !== (div6_class_value = "next-game-item " + /*prevMatch*/ ctx[9].result + " svelte-1xjzojr")) {
     				attr(div6, "class", div6_class_value);
     			}
     		},
@@ -4177,7 +4171,7 @@
     	let h1;
     	let t0;
     	let button;
-    	let t1_value = /*getAlias*/ ctx[4](/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam) + "";
+    	let t1_value = /*toAlias*/ ctx[4](/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam) + "";
     	let t1;
     	let t2;
     	let t3;
@@ -4306,7 +4300,7 @@
     			h1 = claim_element(div0_nodes, "H1", { class: true, style: true });
     			var h1_nodes = children(h1);
     			t0 = claim_text(h1_nodes, "Next Game: \r\n      ");
-    			button = claim_element(h1_nodes, "BUTTON", { style: true, class: true });
+    			button = claim_element(h1_nodes, "BUTTON", { class: true });
     			var button_nodes = children(button);
     			t1 = claim_text(button_nodes, t1_value);
     			t2 = claim_text(button_nodes, " ");
@@ -4374,23 +4368,22 @@
     			this.h();
     		},
     		h() {
-    			set_style(button, "color", "inherit");
-    			attr(button, "class", "svelte-1tklhzf");
-    			attr(h1, "class", "next-game-title-text svelte-1tklhzf");
+    			attr(button, "class", "next-game-team-btn svelte-1xjzojr");
+    			attr(h1, "class", "next-game-title-text svelte-1xjzojr");
     			set_style(h1, "color", "var(--" + /*oppTeam*/ ctx[6] + "-secondary)");
-    			attr(div0, "class", "next-game-title svelte-1tklhzf");
+    			attr(div0, "class", "next-game-title svelte-1xjzojr");
     			set_style(div0, "background-color", "var(--" + /*oppTeam*/ ctx[6] + ")");
-    			attr(div1, "class", "next-game-position svelte-1tklhzf");
-    			attr(div2, "class", "next-game-item svelte-1tklhzf");
-    			attr(div3, "class", "next-game-item svelte-1tklhzf");
-    			attr(a, "class", "predictions-link svelte-1tklhzf");
+    			attr(div1, "class", "next-game-position svelte-1xjzojr");
+    			attr(div2, "class", "next-game-item svelte-1xjzojr");
+    			attr(div3, "class", "next-game-item svelte-1xjzojr");
+    			attr(a, "class", "predictions-link svelte-1xjzojr");
     			attr(a, "href", "/predictions");
-    			attr(div4, "class", "next-game-item svelte-1tklhzf");
+    			attr(div4, "class", "next-game-item svelte-1xjzojr");
     			attr(div5, "class", "predictions");
-    			attr(div6, "class", "predictions-and-logo svelte-1tklhzf");
-    			attr(div7, "class", "past-results svelte-1tklhzf");
-    			attr(div8, "class", "next-game-values svelte-1tklhzf");
-    			attr(div9, "class", "next-game-prediction svelte-1tklhzf");
+    			attr(div6, "class", "predictions-and-logo svelte-1xjzojr");
+    			attr(div7, "class", "past-results svelte-1xjzojr");
+    			attr(div8, "class", "next-game-values svelte-1xjzojr");
+    			attr(div9, "class", "next-game-prediction svelte-1xjzojr");
     			set_style(div9, "border", "6px solid var(--" + /*oppTeam*/ ctx[6] + ")");
     		},
     		m(target, anchor) {
@@ -4444,7 +4437,7 @@
     			}
     		},
     		p(ctx, [dirty]) {
-    			if (dirty & /*getAlias, data, team*/ 19 && t1_value !== (t1_value = /*getAlias*/ ctx[4](/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam) + "")) set_data(t1, t1_value);
+    			if (dirty & /*toAlias, data, team*/ 19 && t1_value !== (t1_value = /*toAlias*/ ctx[4](/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].nextTeam) + "")) set_data(t1, t1_value);
 
     			if (dirty & /*data, team*/ 3 && t4_value !== (t4_value = (/*data*/ ctx[0].upcoming[/*team*/ ctx[1]].atHome
     			? "Home"
@@ -4497,7 +4490,7 @@
     				}
     			}
 
-    			if (dirty & /*data, team, Date, getAlias*/ 19) {
+    			if (dirty & /*data, team, Date, toAlias*/ 19) {
     				each_value = /*data*/ ctx[0].upcoming[/*team*/ ctx[1]].prevMatches;
     				let i;
 
@@ -4552,7 +4545,7 @@
     	}
 
     	let oppTeam;
-    	let { data, team, currentMatchday, showBadge, getAlias, switchTeam } = $$props;
+    	let { data, team, currentMatchday, showBadge, toAlias, switchTeam } = $$props;
 
     	const click_handler = () => {
     		switchTeam(data.upcoming[team].nextTeam.toLowerCase().replace(/ /g, '-'));
@@ -4563,7 +4556,7 @@
     		if ('team' in $$props) $$invalidate(1, team = $$props.team);
     		if ('currentMatchday' in $$props) $$invalidate(2, currentMatchday = $$props.currentMatchday);
     		if ('showBadge' in $$props) $$invalidate(3, showBadge = $$props.showBadge);
-    		if ('getAlias' in $$props) $$invalidate(4, getAlias = $$props.getAlias);
+    		if ('toAlias' in $$props) $$invalidate(4, toAlias = $$props.toAlias);
     		if ('switchTeam' in $$props) $$invalidate(5, switchTeam = $$props.switchTeam);
     	};
 
@@ -4578,7 +4571,7 @@
     		team,
     		currentMatchday,
     		showBadge,
-    		getAlias,
+    		toAlias,
     		switchTeam,
     		oppTeam,
     		click_handler
@@ -4594,7 +4587,7 @@
     			team: 1,
     			currentMatchday: 2,
     			showBadge: 3,
-    			getAlias: 4,
+    			toAlias: 4,
     			switchTeam: 5
     		});
     	}
@@ -4686,7 +4679,7 @@
     				currentMatchday: /*currentMatchday*/ ctx[1],
     				team: /*team*/ ctx[2],
     				showBadge: /*showBadge*/ ctx[3],
-    				getAlias: /*getAlias*/ ctx[4],
+    				toAlias: /*toAlias*/ ctx[4],
     				switchTeam: /*switchTeam*/ ctx[5]
     			}
     		});
@@ -4708,7 +4701,7 @@
     			if (dirty & /*currentMatchday*/ 2) nextgamestats_changes.currentMatchday = /*currentMatchday*/ ctx[1];
     			if (dirty & /*team*/ 4) nextgamestats_changes.team = /*team*/ ctx[2];
     			if (dirty & /*showBadge*/ 8) nextgamestats_changes.showBadge = /*showBadge*/ ctx[3];
-    			if (dirty & /*getAlias*/ 16) nextgamestats_changes.getAlias = /*getAlias*/ ctx[4];
+    			if (dirty & /*toAlias*/ 16) nextgamestats_changes.toAlias = /*toAlias*/ ctx[4];
     			if (dirty & /*switchTeam*/ 32) nextgamestats_changes.switchTeam = /*switchTeam*/ ctx[5];
     			nextgamestats.$set(nextgamestats_changes);
     		},
@@ -4824,18 +4817,18 @@
     }
 
     function instance$h($$self, $$props, $$invalidate) {
-    	let { data, currentMatchday, team, showBadge, getAlias, switchTeam } = $$props;
+    	let { data, currentMatchday, team, showBadge, toAlias, switchTeam } = $$props;
 
     	$$self.$$set = $$props => {
     		if ('data' in $$props) $$invalidate(0, data = $$props.data);
     		if ('currentMatchday' in $$props) $$invalidate(1, currentMatchday = $$props.currentMatchday);
     		if ('team' in $$props) $$invalidate(2, team = $$props.team);
     		if ('showBadge' in $$props) $$invalidate(3, showBadge = $$props.showBadge);
-    		if ('getAlias' in $$props) $$invalidate(4, getAlias = $$props.getAlias);
+    		if ('toAlias' in $$props) $$invalidate(4, toAlias = $$props.toAlias);
     		if ('switchTeam' in $$props) $$invalidate(5, switchTeam = $$props.switchTeam);
     	};
 
-    	return [data, currentMatchday, team, showBadge, getAlias, switchTeam];
+    	return [data, currentMatchday, team, showBadge, toAlias, switchTeam];
     }
 
     class NextGame extends SvelteComponent {
@@ -4847,7 +4840,7 @@
     			currentMatchday: 1,
     			team: 2,
     			showBadge: 3,
-    			getAlias: 4,
+    			toAlias: 4,
     			switchTeam: 5
     		});
     	}
@@ -7514,14 +7507,14 @@
 
     function get_each_context$3(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[30] = list[i];
+    	child_ctx[31] = list[i];
     	return child_ctx;
     }
 
     // (576:6) {#if _team != team}
     function create_if_block$4(ctx) {
     	let button;
-    	let t_value = /*getAlias*/ ctx[2](/*_team*/ ctx[30]) + "";
+    	let t_value = /*toAlias*/ ctx[2](/*_team*/ ctx[31]) + "";
     	let t;
     	let mounted;
     	let dispose;
@@ -7547,12 +7540,12 @@
     			append_hydration(button, t);
 
     			if (!mounted) {
-    				dispose = listen(button, "click", /*click_handler*/ ctx[7]);
+    				dispose = listen(button, "click", /*click_handler*/ ctx[8]);
     				mounted = true;
     			}
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*getAlias, data*/ 5 && t_value !== (t_value = /*getAlias*/ ctx[2](/*_team*/ ctx[30]) + "")) set_data(t, t_value);
+    			if (dirty[0] & /*toAlias, teams*/ 6 && t_value !== (t_value = /*toAlias*/ ctx[2](/*_team*/ ctx[31]) + "")) set_data(t, t_value);
     		},
     		d(detaching) {
     			if (detaching) detach(button);
@@ -7562,10 +7555,10 @@
     	};
     }
 
-    // (575:4) {#each data.teamNames as _team}
+    // (575:4) {#each teams as _team}
     function create_each_block$3(ctx) {
     	let if_block_anchor;
-    	let if_block = /*_team*/ ctx[30] != /*team*/ ctx[1] && create_if_block$4(ctx);
+    	let if_block = /*_team*/ ctx[31] != /*team*/ ctx[0] && create_if_block$4(ctx);
 
     	return {
     		c() {
@@ -7581,7 +7574,7 @@
     			insert_hydration(target, if_block_anchor, anchor);
     		},
     		p(ctx, dirty) {
-    			if (/*_team*/ ctx[30] != /*team*/ ctx[1]) {
+    			if (/*_team*/ ctx[31] != /*team*/ ctx[0]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
@@ -7608,7 +7601,7 @@
     	let t;
     	let div4;
     	let div3;
-    	let each_value = /*data*/ ctx[0].teamNames;
+    	let each_value = /*teams*/ ctx[1];
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -7666,7 +7659,7 @@
     			insert_hydration(target, div2, anchor);
     			append_hydration(div2, div1);
     			append_hydration(div1, div0);
-    			/*div0_binding*/ ctx[6](div0);
+    			/*div0_binding*/ ctx[7](div0);
     			insert_hydration(target, t, anchor);
     			insert_hydration(target, div4, anchor);
     			append_hydration(div4, div3);
@@ -7676,8 +7669,8 @@
     			}
     		},
     		p(ctx, dirty) {
-    			if (dirty[0] & /*spiderBtnClick, getAlias, data, team*/ 23) {
-    				each_value = /*data*/ ctx[0].teamNames;
+    			if (dirty[0] & /*spiderBtnClick, toAlias, teams, team*/ 23) {
+    				each_value = /*teams*/ ctx[1];
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
@@ -7703,7 +7696,7 @@
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(div2);
-    			/*div0_binding*/ ctx[6](null);
+    			/*div0_binding*/ ctx[7](null);
     			if (detaching) detach(t);
     			if (detaching) detach(div4);
     			destroy_each(each_blocks, detaching);
@@ -8147,7 +8140,7 @@
     	}
 
     	function spiderBtnClick(btn) {
-    		let team = getName(btn.innerHTML);
+    		let team = toName(btn.innerHTML);
 
     		if (btn.style.background == "") {
     			let teamKey = team.toLowerCase().replace(/ /g, "-");
@@ -8301,7 +8294,7 @@
     		}
     	}
 
-    	let { data, team, getAlias, getName } = $$props;
+    	let { data, team, teams, toAlias, toName } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -8315,25 +8308,27 @@
     	};
 
     	$$self.$$set = $$props => {
-    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
-    		if ('team' in $$props) $$invalidate(1, team = $$props.team);
-    		if ('getAlias' in $$props) $$invalidate(2, getAlias = $$props.getAlias);
-    		if ('getName' in $$props) $$invalidate(5, getName = $$props.getName);
+    		if ('data' in $$props) $$invalidate(5, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    		if ('teams' in $$props) $$invalidate(1, teams = $$props.teams);
+    		if ('toAlias' in $$props) $$invalidate(2, toAlias = $$props.toAlias);
+    		if ('toName' in $$props) $$invalidate(6, toName = $$props.toName);
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[0] & /*team*/ 2) {
+    		if ($$self.$$.dirty[0] & /*team*/ 1) {
     			team && refreshPlot();
     		}
     	};
 
     	return [
-    		data,
     		team,
-    		getAlias,
+    		teams,
+    		toAlias,
     		plotDiv,
     		spiderBtnClick,
-    		getName,
+    		data,
+    		toName,
     		div0_binding,
     		click_handler
     	];
@@ -8350,10 +8345,11 @@
     			create_fragment$7,
     			safe_not_equal,
     			{
-    				data: 0,
-    				team: 1,
-    				getAlias: 2,
-    				getName: 5
+    				data: 5,
+    				team: 0,
+    				teams: 1,
+    				toAlias: 2,
+    				toName: 6
     			},
     			null,
     			[-1, -1]
@@ -8447,46 +8443,6 @@
     	return scoreFreq;
     }
 
-    // function getScoreBars(data, team) {
-    //   let scoreFreq = getScoreFreq(data, team);
-    //   let sorted = Object.entries(scoreFreq).sort((a, b) => b[1] - a[1]);
-    //   let x = [];
-    //   let y = [];
-    //   for (let i = 0; i < sorted.length; i++) {
-    //     x.push(sorted[i][0])
-    //     y.push(sorted[i][1])
-    //   }
-    //   return {
-    //     x: x,
-    //     y: y,
-    //     type: "bar",
-    //     name: `Goals`,
-    //     marker: { color: "#0000FF" },
-    //     hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
-    //     hoverinfo: "x+y",
-    //     opacity: 0.6,
-    //   };
-    // }
-    // function getAvgScoreBars(data) {
-    //   let scoreFreq = getAvgScoreFreq(data);
-    //   let sorted = Object.entries(scoreFreq).sort((a, b) => b[1] - a[1]);
-    //   let x = [];
-    //   let y = [];
-    //   for (let i = 0; i < sorted.length; i++) {
-    //     x.push(sorted[i][0])
-    //     y.push(sorted[i][1])
-    //   }
-    //   return {
-    //     x: x,
-    //     y: y,
-    //     type: "bar",
-    //     name: `Goals`,
-    //     marker: { color: "#C6C6C6" },
-    //     hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
-    //     hoverinfo: "x+y",
-    //     opacity: 0.6,
-    //   };
-    // }
     function insertTeamScoreBars(data, team, scoreFreq) {
     	for (let score in scoreFreq) {
     		if (scoreFreq[score].length == 1) {
@@ -8633,7 +8589,7 @@
     			layout: {
     				title: false,
     				autosize: true,
-    				margin: { r: 10, l: 60, t: 15, b: 100, pad: 5 },
+    				margin: { r: 10, l: 65, t: 15, b: 100, pad: 5 },
     				hovermode: "closest",
     				barmode: "overlay",
     				bargap: 0,
@@ -9160,7 +9116,7 @@
     			}
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*hypenatedTeams, switchTeamToTop, getAlias, teams*/ 15) {
+    			if (dirty & /*hypenatedTeams, switchTeamToTop, toAlias, teams*/ 15) {
     				each_value = /*hypenatedTeams*/ ctx[2];
     				let i;
 
@@ -9241,7 +9197,7 @@
     // (52:10) {:else}
     function create_else_block$2(ctx) {
     	let button;
-    	let t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "";
+    	let t_value = /*toAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "";
     	let t;
     	let mounted;
     	let dispose;
@@ -9279,7 +9235,7 @@
     		},
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*getAlias, teams*/ 3 && t_value !== (t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "")) set_data(t, t_value);
+    			if (dirty & /*toAlias, teams*/ 3 && t_value !== (t_value = /*toAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "")) set_data(t, t_value);
 
     			if (dirty & /*hypenatedTeams*/ 4) {
     				set_style(button, "color", "var(--" + /*_hypenatedTeam*/ ctx[10] + "-secondary)");
@@ -9300,7 +9256,7 @@
     // (42:136) 
     function create_if_block_3$1(ctx) {
     	let button;
-    	let t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "";
+    	let t_value = /*toAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "";
     	let t;
     	let mounted;
     	let dispose;
@@ -9338,7 +9294,7 @@
     		},
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*getAlias, teams*/ 3 && t_value !== (t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "")) set_data(t, t_value);
+    			if (dirty & /*toAlias, teams*/ 3 && t_value !== (t_value = /*toAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "")) set_data(t, t_value);
 
     			if (dirty & /*hypenatedTeams*/ 4) {
     				set_style(button, "color", "var(--" + /*hypenatedTeams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
@@ -9359,7 +9315,7 @@
     // (32:10) {#if i == 0 || (i == 1 && hypenatedTeams[0] == null)}
     function create_if_block_2$1(ctx) {
     	let button;
-    	let t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "";
+    	let t_value = /*toAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "";
     	let t;
     	let mounted;
     	let dispose;
@@ -9397,7 +9353,7 @@
     		},
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*getAlias, teams*/ 3 && t_value !== (t_value = /*getAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "")) set_data(t, t_value);
+    			if (dirty & /*toAlias, teams*/ 3 && t_value !== (t_value = /*toAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[12]]) + "")) set_data(t, t_value);
 
     			if (dirty & /*hypenatedTeams*/ 4) {
     				set_style(button, "color", "var(--" + /*hypenatedTeams*/ ctx[2][/*i*/ ctx[12]] + "-secondary)");
@@ -9524,7 +9480,7 @@
     	}
 
     	let hypenatedTeams;
-    	let { hypenatedTeam, teams, getAlias, switchTeam } = $$props;
+    	let { hypenatedTeam, teams, toAlias, switchTeam } = $$props;
 
     	const click_handler = i => {
     		switchTeamToTop(hypenatedTeams[i]);
@@ -9541,7 +9497,7 @@
     	$$self.$$set = $$props => {
     		if ('hypenatedTeam' in $$props) $$invalidate(4, hypenatedTeam = $$props.hypenatedTeam);
     		if ('teams' in $$props) $$invalidate(0, teams = $$props.teams);
-    		if ('getAlias' in $$props) $$invalidate(1, getAlias = $$props.getAlias);
+    		if ('toAlias' in $$props) $$invalidate(1, toAlias = $$props.toAlias);
     		if ('switchTeam' in $$props) $$invalidate(5, switchTeam = $$props.switchTeam);
     	};
 
@@ -9553,7 +9509,7 @@
 
     	return [
     		teams,
-    		getAlias,
+    		toAlias,
     		hypenatedTeams,
     		switchTeamToTop,
     		hypenatedTeam,
@@ -9571,7 +9527,7 @@
     		init(this, options, instance$3, create_fragment$4, safe_not_equal, {
     			hypenatedTeam: 4,
     			teams: 0,
-    			getAlias: 1,
+    			toAlias: 1,
     			switchTeam: 5
     		});
     	}
@@ -9616,7 +9572,7 @@
     	};
     }
 
-    // (182:6) {#if data != undefined}
+    // (204:6) {#if data != undefined}
     function create_if_block$1(ctx) {
     	let div27;
     	let div2;
@@ -9709,7 +9665,8 @@
     			props: {
     				data: /*data*/ ctx[4],
     				currentMatchday: /*currentMatchday*/ ctx[2],
-    				team: /*team*/ ctx[1]
+    				team: /*team*/ ctx[1],
+    				toInitials
     			}
     		});
 
@@ -9718,7 +9675,7 @@
     				data: /*data*/ ctx[4],
     				hyphenatedTeam: /*hyphenatedTeam*/ ctx[0],
     				team: /*team*/ ctx[1],
-    				getAlias: /*getAlias*/ ctx[5],
+    				toAlias: /*toAlias*/ ctx[5],
     				switchTeam: /*switchTeam*/ ctx[8]
     			}
     		});
@@ -9729,7 +9686,7 @@
     				currentMatchday: /*currentMatchday*/ ctx[2],
     				team: /*team*/ ctx[1],
     				showBadge,
-    				getAlias: /*getAlias*/ ctx[5],
+    				toAlias: /*toAlias*/ ctx[5],
     				switchTeam: /*switchTeam*/ ctx[8]
     			}
     		});
@@ -9791,8 +9748,9 @@
     			props: {
     				data: /*data*/ ctx[4],
     				team: /*team*/ ctx[1],
-    				getAlias: /*getAlias*/ ctx[5],
-    				getName: /*getName*/ ctx[6]
+    				teams: /*teams*/ ctx[7],
+    				toAlias: /*toAlias*/ ctx[5],
+    				toName: /*toName*/ ctx[6]
     			}
     		});
 
@@ -9800,7 +9758,7 @@
     			props: {
     				hyphenatedTeam: /*hyphenatedTeam*/ ctx[0],
     				teams: /*teams*/ ctx[7],
-    				getAlias: /*getAlias*/ ctx[5],
+    				toAlias: /*toAlias*/ ctx[5],
     				switchTeam: /*switchTeam*/ ctx[8]
     			}
     		});
@@ -10255,7 +10213,7 @@
     	};
     }
 
-    // (194:12) {:else}
+    // (216:12) {:else}
     function create_else_block$1(ctx) {
     	let div2;
     	let div0;
@@ -10384,7 +10342,7 @@
     	};
     }
 
-    // (168:0) <Router>
+    // (190:0) <Router>
     function create_default_slot$3(ctx) {
     	let div4;
     	let div0;
@@ -10394,7 +10352,7 @@
     	let div2;
     	let a;
     	let div1;
-    	let t1_value = /*getAlias*/ ctx[5](/*team*/ ctx[1]) + "";
+    	let t1_value = /*toAlias*/ ctx[5](/*team*/ ctx[1]) + "";
     	let t1;
     	let a_href_value;
     	let t2;
@@ -10406,7 +10364,7 @@
     			props: {
     				team: /*hyphenatedTeam*/ ctx[0],
     				teams: /*teams*/ ctx[7],
-    				getAlias: /*getAlias*/ ctx[5],
+    				getAlias: /*toAlias*/ ctx[5],
     				switchTeam: /*switchTeam*/ ctx[8]
     			}
     		});
@@ -10495,7 +10453,7 @@
     			const navbar_changes = {};
     			if (dirty & /*hyphenatedTeam*/ 1) navbar_changes.team = /*hyphenatedTeam*/ ctx[0];
     			navbar.$set(navbar_changes);
-    			if ((!current || dirty & /*team*/ 2) && t1_value !== (t1_value = /*getAlias*/ ctx[5](/*team*/ ctx[1]) + "")) set_data(t1, t1_value);
+    			if ((!current || dirty & /*team*/ 2) && t1_value !== (t1_value = /*toAlias*/ ctx[5](/*team*/ ctx[1]) + "")) set_data(t1, t1_value);
 
     			if (!current || dirty & /*hyphenatedTeam*/ 1) {
     				set_style(div1, "color", "var(--" + (/*hyphenatedTeam*/ ctx[0] + '-secondary') + ")");
@@ -10626,6 +10584,27 @@
 
     const showBadge = false;
 
+    function toInitials(team) {
+    	switch (team) {
+    		case "Brighton and Hove Albion":
+    			return "BHA";
+    		case "Manchester City":
+    			return "MCI";
+    		case "Manchester United":
+    			return "MUN";
+    		case "Aston Villa":
+    			return "AVL";
+    		case "Sheffield United":
+    			return "SHU";
+    		case "West Bromwich Albion":
+    			return "WBA";
+    		case "West Ham United":
+    			return "WHU";
+    	}
+
+    	return team.slice(0, 3).toUpperCase();
+    }
+
     function toTitleCase(str) {
     	return str.toLowerCase().split(" ").map(function (word) {
     		return word.charAt(0).toUpperCase() + word.slice(1);
@@ -10690,7 +10669,7 @@
     		"Brighton and Hove Albion": "Brighton"
     	};
 
-    	function getAlias(team) {
+    	function toAlias(team) {
     		if (team in alias) {
     			return alias[team];
     		}
@@ -10698,7 +10677,7 @@
     		return team;
     	}
 
-    	function getName(teamAlias) {
+    	function toName(teamAlias) {
     		if (!Object.values(alias).includes(teamAlias)) {
     			return teamAlias;
     		}
@@ -10706,6 +10685,8 @@
     		return Object.keys(alias).find(key => alias[key] === teamAlias);
     	}
 
+    	// Teams in the final position from last season (21/22), including championship teams
+    	// Used for nav bar links order
     	let teams = [
     		"Manchester City",
     		"Liverpool",
@@ -10735,7 +10716,7 @@
     		// fetchData("http://127.0.0.1:5000/api/teams")
     		fetchData$1("https://pldashboard.herokuapp.com/api/teams").then(json => {
     			// Build teamData package from json data
-    			json.teamNames = Object.keys(json.fixtures);
+    			json.teamNames = Object.keys(json.standings);
 
     			$$invalidate(2, currentMatchday = getCurrentMatchday(json, team));
     			$$invalidate(3, playedMatchdays = getPlayedMatchdays(json, team));
@@ -10774,8 +10755,8 @@
     		currentMatchday,
     		playedMatchdays,
     		data,
-    		getAlias,
-    		getName,
+    		toAlias,
+    		toName,
     		teams,
     		switchTeam
     	];
@@ -11113,15 +11094,15 @@
     			this.h();
     		},
     		h() {
-    			attr(span, "class", "accuracy-item svelte-l0s73l");
-    			attr(div0, "class", "accuracy-item svelte-l0s73l");
-    			attr(div1, "class", "accuracy svelte-l0s73l");
-    			attr(div2, "class", "accuracy-display svelte-l0s73l");
-    			attr(div3, "class", "predictions svelte-l0s73l");
-    			attr(div4, "class", "predictions-container svelte-l0s73l");
-    			attr(div5, "class", "page-content svelte-l0s73l");
-    			attr(div6, "class", "method-description svelte-l0s73l");
-    			attr(div7, "class", "predictions-footer footer-text-colour svelte-l0s73l");
+    			attr(span, "class", "accuracy-item svelte-15srcxs");
+    			attr(div0, "class", "accuracy-item svelte-15srcxs");
+    			attr(div1, "class", "accuracy svelte-15srcxs");
+    			attr(div2, "class", "accuracy-display svelte-15srcxs");
+    			attr(div3, "class", "predictions svelte-15srcxs");
+    			attr(div4, "class", "predictions-container svelte-15srcxs");
+    			attr(div5, "class", "page-content svelte-15srcxs");
+    			attr(div6, "class", "method-description svelte-15srcxs");
+    			attr(div7, "class", "predictions-footer footer-text-colour svelte-15srcxs");
     		},
     		m(target, anchor) {
     			insert_hydration(target, div5, anchor);
@@ -11257,7 +11238,7 @@
     			this.h();
     		},
     		h() {
-    			attr(div, "class", "prediction-time svelte-l0s73l");
+    			attr(div, "class", "prediction-time svelte-15srcxs");
     		},
     		m(target, anchor) {
     			insert_hydration(target, div, anchor);
@@ -11344,12 +11325,12 @@
     			this.h();
     		},
     		h() {
-    			attr(div0, "class", "prediction-label svelte-l0s73l");
-    			attr(div1, "class", "prediction-initials svelte-l0s73l");
-    			attr(div2, "class", "prediction-score svelte-l0s73l");
-    			attr(div3, "class", "prediction-initials svelte-l0s73l");
-    			attr(div4, "class", "prediction-value svelte-l0s73l");
-    			attr(div5, "class", "actual prediction-item svelte-l0s73l");
+    			attr(div0, "class", "prediction-label svelte-15srcxs");
+    			attr(div1, "class", "prediction-initials svelte-15srcxs");
+    			attr(div2, "class", "prediction-score svelte-15srcxs");
+    			attr(div3, "class", "prediction-initials svelte-15srcxs");
+    			attr(div4, "class", "prediction-value svelte-15srcxs");
+    			attr(div5, "class", "actual prediction-item svelte-15srcxs");
     		},
     		m(target, anchor) {
     			insert_hydration(target, div5, anchor);
@@ -11418,8 +11399,8 @@
     			this.h();
     		},
     		h() {
-    			attr(div0, "class", "detailed-predicted-score svelte-l0s73l");
-    			attr(div1, "class", "prediction-details svelte-l0s73l");
+    			attr(div0, "class", "detailed-predicted-score svelte-15srcxs");
+    			attr(div1, "class", "prediction-details svelte-15srcxs");
     			attr(div1, "id", div1_id_value = /*pred*/ ctx[6]._id);
     		},
     		m(target, anchor) {
@@ -11547,13 +11528,13 @@
     			this.h();
     		},
     		h() {
-    			attr(div0, "class", "prediction-label svelte-l0s73l");
-    			attr(div1, "class", "prediction-initials svelte-l0s73l");
-    			attr(div2, "class", "prediction-score svelte-l0s73l");
-    			attr(div3, "class", "prediction-initials svelte-l0s73l");
-    			attr(div4, "class", "prediction-value svelte-l0s73l");
-    			attr(div5, "class", "prediction prediction-item svelte-l0s73l");
-    			attr(button, "class", button_class_value = "prediction-container " + /*pred*/ ctx[6].colour + " svelte-l0s73l");
+    			attr(div0, "class", "prediction-label svelte-15srcxs");
+    			attr(div1, "class", "prediction-initials svelte-15srcxs");
+    			attr(div2, "class", "prediction-score svelte-15srcxs");
+    			attr(div3, "class", "prediction-initials svelte-15srcxs");
+    			attr(div4, "class", "prediction-value svelte-15srcxs");
+    			attr(div5, "class", "prediction prediction-item svelte-15srcxs");
+    			attr(button, "class", button_class_value = "prediction-container " + /*pred*/ ctx[6].colour + " svelte-15srcxs");
     		},
     		m(target, anchor) {
     			insert_hydration(target, button, anchor);
@@ -11614,7 +11595,7 @@
     				if_block1 = null;
     			}
 
-    			if (dirty & /*data*/ 1 && button_class_value !== (button_class_value = "prediction-container " + /*pred*/ ctx[6].colour + " svelte-l0s73l")) {
+    			if (dirty & /*data*/ 1 && button_class_value !== (button_class_value = "prediction-container " + /*pred*/ ctx[6].colour + " svelte-15srcxs")) {
     				attr(button, "class", button_class_value);
     			}
     		},
@@ -11681,9 +11662,9 @@
     			this.h();
     		},
     		h() {
-    			attr(div0, "class", "date svelte-l0s73l");
-    			attr(div1, "class", "medium-predictions-divider svelte-l0s73l");
-    			attr(div2, "class", "predictions-gap svelte-l0s73l");
+    			attr(div0, "class", "date svelte-15srcxs");
+    			attr(div1, "class", "medium-predictions-divider svelte-15srcxs");
+    			attr(div2, "class", "predictions-gap svelte-15srcxs");
     		},
     		m(target, anchor) {
     			insert_hydration(target, div0, anchor);
@@ -11779,11 +11760,11 @@
     			this.h();
     		},
     		h() {
-    			attr(a, "class", "predictions-title svelte-l0s73l");
+    			attr(a, "class", "predictions-title svelte-15srcxs");
     			attr(a, "href", "/predictions");
-    			attr(div0, "class", "predictions-header svelte-l0s73l");
+    			attr(div0, "class", "predictions-header svelte-15srcxs");
     			attr(div1, "id", "predictions");
-    			attr(div1, "class", "svelte-l0s73l");
+    			attr(div1, "class", "svelte-15srcxs");
     		},
     		m(target, anchor) {
     			insert_hydration(target, div1, anchor);
