@@ -75,13 +75,6 @@
   }
 
   function resetTeamComparisonBtns() {
-    document
-      .getElementById("spider-opp-teams")
-      .children[0].classList.remove("top-spider-opp-team-btn");
-    document
-      .getElementById("spider-opp-teams")
-      .children[18].classList.remove("bottom-spider-opp-team-btn");
-
     let btns = document.getElementById("spider-opp-teams");
     for (let i = 0; i < btns.children.length; i++) {
       let btn = btns.children[i];
@@ -90,7 +83,7 @@
         btn.style.color = "black";
       }
     }
-    
+
     document
       .getElementById("spider-opp-teams")
       .children[0].classList.add("top-spider-opp-team-btn");
