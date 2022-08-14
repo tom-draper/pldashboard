@@ -1,6 +1,6 @@
 import svelte from "rollup-plugin-svelte";
 import commonjs from "@rollup/plugin-commonjs";
-import css from "rollup-plugin-css-only";
+// import css from "rollup-plugin-css-only";
 import resolve from "@rollup/plugin-node-resolve";
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
@@ -20,11 +20,11 @@ export default [
     plugins: [
       svelte({
         hydratable: true,
-          // css: (css) => {
-          //   css.write("public/bundle.css");
-          // },
+        css: (css) => {
+          css.write("bundle.css");
+        },
       }),
-      css({ output: 'bundle.css'}),
+      // css({ output: 'bundle.css'}),
       resolve(),
       commonjs(),
       // App.js will be built after bundle.js, so we only need to watch that.
