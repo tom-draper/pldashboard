@@ -166,7 +166,7 @@
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
         yaxis: {
-          title: { text: "Team Rating" },
+          title: { text: "Difficulty" },
           gridcolor: "gray",
           showline: false,
           zeroline: false,
