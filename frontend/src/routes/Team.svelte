@@ -4,18 +4,18 @@
   import CurrentForm from "../components/CurrentForm.svelte";
   import TableSnippet from "../components/TableSnippet.svelte";
   import NextGame from "../components/next_game/NextGame.svelte";
-  import SeasonStats from "../components/SeasonStats.svelte";
+  import StatsValues from "../components/StatsValues.svelte";
   import TeamsFooter from "../components/TeamsFooter.svelte";
-  import Fixtures from "../components/Fixtures.svelte";
-  import FormOverTime from "../components/FormOverTime.svelte";
-  import PositionOverTime from "../components/PositionOverTime.svelte";
-  import GoalsScoredAndConceded from "../components/goals_scored_and_conceded/GoalsScoredAndConceded.svelte";
-  import CleanSheets from "../components/goals_scored_and_conceded/CleanSheets.svelte";
+  import FixturesGraph from "../components/FixturesGraph.svelte";
+  import FormOverTimeGraph from "../components/FormOverTimeGraph.svelte";
+  import PositionOverTimeGraph from "../components/PositionOverTimeGraph.svelte";
+  import GoalsScoredAndConcededGraph from "../components/goals_scored_and_conceded/GoalsScoredAndConcededGraph.svelte";
+  import CleanSheetsGraph from "../components/goals_scored_and_conceded/CleanSheetsGraph.svelte";
   import GoalsPerGame from "../components/goals_per_game/GoalsPerGame.svelte";
-  import Spider from "../components/Spider.svelte";
-  import ScoreFreq from "../components/ScoreFreq.svelte";
-  import NavBar from "../components/NavBar.svelte";
-  import MobileViewNav from "../components/MobileViewNav.svelte";
+  import SpiderGraph from "../components/SpiderGraph.svelte";
+  import ScorelineFreqGraph from "../components/ScorelineFreqGraph.svelte";
+  import Nav from "../components/Nav.svelte";
+  import MobileNav from "../components/MobileNav.svelte";
 
   let alias = {
     "Wolverhampton Wanderers": "Wolves",
@@ -190,7 +190,7 @@
 <Router>
   <div id="team">
     <div id="navBar">
-      <NavBar team={hyphenatedTeam} {teams} getAlias={toAlias} {switchTeam} />
+      <Nav team={hyphenatedTeam} {teams} getAlias={toAlias} {switchTeam} />
     </div>
     <div id="dashboard">
       <div class="header" style="background-color: var(--{hyphenatedTeam});">
@@ -248,7 +248,7 @@
             <div class="row-right fixtures-graph row-graph">
               <h1 class="lowered">Fixtures</h1>
               <div class="graph mini-graph mobile-margin">
-                <Fixtures {data} {team} />
+                <FixturesGraph {data} {team} />
               </div>
             </div>
           </div>
@@ -267,7 +267,7 @@
             <div class="form-graph row-graph">
               <h1 class="lowered">Form Over Time</h1>
               <div class="graph full-row-graph">
-                <FormOverTime {data} {team} {playedMatchdays} />
+                <FormOverTimeGraph {data} {team} {playedMatchdays} />
               </div>
             </div>
           </div>
@@ -276,7 +276,7 @@
             <div class="position-over-time-graph row-graph">
               <h1 class="lowered">Position Over Time</h1>
               <div class="graph full-row-graph">
-                <PositionOverTime {data} {team} {playedMatchdays} />
+                <PositionOverTimeGraph {data} {team} {playedMatchdays} />
               </div>
             </div>
           </div>
@@ -285,7 +285,7 @@
             <div class="goals-scored-vs-conceded-graph row-graph">
               <h1 class="lowered">Goals Scored and Conceded</h1>
               <div class="graph full-row-graph">
-                <GoalsScoredAndConceded {data} {team} {playedMatchdays} />
+                <GoalsScoredAndConcededGraph {data} {team} {playedMatchdays} />
               </div>
             </div>
           </div>
@@ -293,13 +293,13 @@
           <div class="row">
             <div class="row-graph">
               <div class="clean-sheets graph full-row-graph">
-                <CleanSheets {data} {team} {playedMatchdays} />
+                <CleanSheetsGraph {data} {team} {playedMatchdays} />
               </div>
             </div>
           </div>
           
           <div class="season-stats-row">
-            <SeasonStats {data} {team} />
+            <StatsValues {data} {team} />
           </div>
 
           <div class="row">
@@ -312,7 +312,7 @@
               <div class="row">
                 <div class="row-graph">
                   <div class="score-freq graph">
-                    <ScoreFreq {data} {team} />
+                    <ScorelineFreqGraph {data} {team} />
                   </div>
                 </div>
               </div>
@@ -320,12 +320,12 @@
           <div class="row">
             <div class="spider-chart-row row-graph">
               <div class="spider-chart-container">
-                <Spider {data} {team} {teams} {toAlias} {toName} />
+                <SpiderGraph {data} {team} {teams} {toAlias} {toName} />
               </div>
             </div>
           </div>
 
-          <MobileViewNav {hyphenatedTeam} {teams} {toAlias} {switchTeam} />
+          <MobileNav {hyphenatedTeam} {teams} {toAlias} {switchTeam} />
 
           <TeamsFooter lastUpdated={data.lastUpdated} />
         </div>

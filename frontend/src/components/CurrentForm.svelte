@@ -1,6 +1,4 @@
 <script>
-
-
   function getSortedMatchdays(data, team) {
     let matchdays = Object.keys(data.form[data._id][team]).sort(function (
       matchday1,

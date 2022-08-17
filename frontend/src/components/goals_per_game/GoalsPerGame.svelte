@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
-  import GoalsScoredFreq from "./GoalsScoredFreq.svelte";
-  import GoalsConcededFreq from "./GoalsConcededFreq.svelte";
+  import GoalsScoredFreq from "./GoalsScoredFreqGraph.svelte";
+  import GoalsConcededFreq from "./GoalsConcededFreqGraph.svelte";
 
   function avgBars() {
     return {
