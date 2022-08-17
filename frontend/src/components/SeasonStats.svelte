@@ -29,7 +29,6 @@
   }
 
   function setPositionalOffset() {
-    console.log(ssp1.clientWidth, ssp2.clientWidth, ssp3.clientWidth)
     document.documentElement.style.setProperty(
       "--ssp1-offset",
       (-ssp1.clientWidth / 2) + "px"

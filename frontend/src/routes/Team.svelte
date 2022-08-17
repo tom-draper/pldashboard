@@ -256,10 +256,10 @@
           <div class="row multi-element-row">
             <div class="row-left form-details">
               <CurrentForm {data} {currentMatchday} {team} {toInitials} />
-              <TableSnippet {data} {hyphenatedTeam} {team} {toAlias} {switchTeam} />
+              <TableSnippet {data} {hyphenatedTeam} {team} {switchTeam} {toAlias} />
             </div>
             <div class="row-right">
-              <NextGame {data} {currentMatchday} {team} {showBadge} {toAlias} {switchTeam} />
+              <NextGame {data} {currentMatchday} {team} {showBadge} {toAlias} {toInitials} {switchTeam} />
             </div>
           </div>
 
