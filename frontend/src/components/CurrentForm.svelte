@@ -132,8 +132,7 @@
   .current-form-row {
     font-size: 0.9em;
     display: flex;
-    width: min(80%, 600px);
-    width: 100%;
+    width: min(100%, 500px);
   }
 
   .icon {

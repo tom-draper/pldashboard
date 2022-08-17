@@ -29,17 +29,18 @@
   }
 
   function setPositionalOffset() {
+    console.log(ssp1.clientWidth, ssp2.clientWidth, ssp3.clientWidth)
     document.documentElement.style.setProperty(
       "--ssp1-offset",
-      -ssp1.clientWidth / 2 + "px"
+      (-ssp1.clientWidth / 2) + "px"
     );
     document.documentElement.style.setProperty(
       "--ssp2-offset",
-      -ssp2.clientWidth / 2 + "px"
+      (-ssp2.clientWidth / 2) + "px"
     );
     document.documentElement.style.setProperty(
       "--ssp3-offset",
-      -ssp3.clientWidth / 2 + "px"
+      (-ssp3.clientWidth / 2) + "px"
     );
   }
 

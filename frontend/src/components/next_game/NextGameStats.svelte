@@ -2,7 +2,7 @@
   function ordinal(n) {
     let ord = [, "st", "nd", "rd"];
     let a = n % 100;
-    return n + (ord[a > 20 ? a % 10 : a] || "th");
+    return (ord[a > 20 ? a % 10 : a] || "th");
   }
 
   function setOppTeam() {
@@ -48,10 +48,10 @@
       <div class="predictions">
         <div class="next-game-item">
           <div class="next-game-position">
-            {ordinal(
+            {data.standings[data.upcoming[team].nextTeam][data._id]
+                .position}<span class="ordinal-position">{ordinal(
               data.standings[data.upcoming[team].nextTeam][data._id]
-                .position
-            )}
+                .position)}</span>
           </div>
         </div>
         <div class="next-game-item">
@@ -197,8 +197,11 @@
   }
 
   .next-game-position {
-    font-size: 3em;
+    font-size: 3.5em;
     font-weight: 700;
+  }
+  .ordinal-position {
+    font-size: 0.6em;
   }
 
   .past-result {

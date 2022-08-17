@@ -389,7 +389,7 @@
 
   .position-central {
     text-align: center;
-    margin-top: 0.04em;
+    margin-top: 0.2em;
     max-height: 500px;
     margin-left: 0.05em;
   }
@@ -408,7 +408,7 @@
   }
   .position-central {
     font-size: 20vw;
-    margin: auto;
+    /* margin: auto; */
   }
 
   #dashboard {
@@ -518,6 +518,9 @@
     .circles-background {
       transform: scale(0.75);
     }
+    .position-central {
+      margin-top: 0.25em;
+    }
   }
   @media only screen and (max-width: 1300px) {
     .circles-background {
@@ -533,7 +536,12 @@
       font-size: 24vw;
     }
   }
-
+  
+  @media only screen and (max-width: 1200px) {
+    .position-central {
+      margin-top: 0.3em;;
+    }
+  }
   @media only screen and (max-width: 1100px) {
     .row {
       flex-direction: column;
@@ -572,9 +580,12 @@
       height: 400px;
       width: 500px;
     }
+    .position-central {
+      margin: auto;
+    }
 
     .circles-background {
-      transform: scale(0.5);
+      transform: scale(0.48);
       margin-top: -100px;
     }
   }
