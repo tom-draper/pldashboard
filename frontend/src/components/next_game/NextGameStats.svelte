@@ -16,7 +16,7 @@
   let oppTeam;
   $: team && setOppTeam();
 
-  export let data, team, currentMatchday, showBadge, toAlias, switchTeam;
+  export let data, team, currentMatchday, showBadge, toAlias, toInitials, switchTeam;
 </script>
 
 <div class="next-game-prediction" style="border: 6px solid var(--{oppTeam});">
@@ -98,23 +98,26 @@
 
       <!-- Display table of previous results against the next team this team is playing -->
       {#each data.upcoming[team].prevMatches as prevMatch}
-        <div class="next-game-item {prevMatch.result}">
-          <div class="past-result">
-            <div class="home-team">{toAlias(prevMatch.homeTeam)}</div>
-            <div class="score">
-              {prevMatch.homeGoals} - {prevMatch.awayGoals}
-            </div>
-            <div class="away-team">{toAlias(prevMatch.awayTeam)}</div>
-          </div>
-          <div style="clear: both" />
+        <div class="next-game-item-container">
           <div class="past-result-date">
-            {new Date(prevMatch.date).toLocaleDateString("en-us", {
-              weekday: "long",
+            {new Date(prevMatch.date).toLocaleDateString("en-GB", {
+              weekday: "short",
               year: "numeric",
               month: "short",
               day: "numeric",
             })}
           </div>
+          <div class="next-game-item {prevMatch.result}">
+            <div class="past-result">
+              <div class="home-team" style="background: var(--{prevMatch.homeTeam.toLowerCase().replace(/ /g, '-')}); color: var(--{prevMatch.homeTeam.toLowerCase().replace(/ /g, '-')}-secondary)">{toInitials(prevMatch.homeTeam)}</div>
+              <div class="score">
+                {prevMatch.homeGoals} - {prevMatch.awayGoals}
+              </div>
+              <div class="away-team" style="background: var(--{prevMatch.awayTeam.toLowerCase().replace(/ /g, '-')}); color: var(--{prevMatch.awayTeam.toLowerCase().replace(/ /g, '-')}-secondary)">{toInitials(prevMatch.awayTeam)}</div>
+            </div>
+            <div style="clear: both" />
+          </div>
+          
         </div>
       {/each}
     </div>
@@ -122,6 +125,12 @@
 </div>
 
 <style scoped>
+  /* .next-game-item-container {
+    display: flex;
+  }
+  .next-game-item {
+    flex-grow: 1;
+  } */
   .next-game-title {
     width: max-content;
     padding: 6px 20px;
@@ -205,26 +214,17 @@
   }
 
   .past-result {
-    font-size: 17px;
+    font-size: 16px;
     display: flex;
-    margin: 0 5% 2px;
+    /* margin: 0 3% 2px; */
   }
 
-  .drew {
-    background-color: rgb(255, 207, 139);
-  }
 
-  .won {
-    background-color: rgb(169, 247, 169);
-  }
-
-  .lost {
-    background-color: #f77979;
-  }
 
   .past-result-date {
     font-size: 13px;
     color: #333;
+    margin: 5px 0 1px;
   }
 
   .prev-results-title {
@@ -244,9 +244,19 @@
     margin: 0 25px !important;
   }
   .next-game-item {
-    padding: 7px 0 4px;
+    /* padding: 4px 0 1px; */
     border-radius: var(--border-radius);
-    margin-top: 4px;
+    /* margin-top: 4px; */
+  }
+
+  .won {
+    background: rgb(169, 247, 169);
+  }
+  .drew {
+    background: rgb(255, 207, 138);
+  }
+  .lost {
+    background: #f77979;
   }
 
   .accuracy {
@@ -261,8 +271,8 @@
 
   .home-team {
     float: left;
-    width: calc(50% - 18px);
     text-align: left;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
   }
 
   .score {
@@ -271,17 +281,24 @@
     margin: 0 4px;
     text-align: center;
     font-weight: 800;
+    flex: 3;
+
+    align-self: center;
   }
 
   .away-team {
     float: left;
-    width: calc(50% - 18px);
     text-align: right;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
   }
-
+  
   .home-team,
   .away-team {
     font-size: 16px;
+    width: calc(50% - 18px);
+    padding: 3px 7px 2px;
+    flex: 1;
+    text-align: center
   }
 
   .next-game-team-btn {
