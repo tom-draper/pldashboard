@@ -389,9 +389,10 @@
 
   .position-central {
     text-align: center;
-    margin-top: 0.2em;
+    margin-top: 0.1em;
     max-height: 500px;
     margin-left: 0.05em;
+    font-size: 20vw;
   }
 
   .circles-background-container {
@@ -406,26 +407,11 @@
     width: 500px;
     transform: scale(0.95);
   }
-  .position-central {
-    font-size: 20vw;
-    /* margin: auto; */
-  }
 
   #dashboard {
     margin-left: 220px;
     width: 100%;
   }
-
-  /* .open-nav-bar-btn {
-    cursor: pointer;
-    position: absolute;
-    top: 0.9em;
-    left: 0.6em;
-    background: transparent;
-    border: none;
-    outline: none;
-    z-index: 50;
-  } */
 
   .no-bottom-margin {
     margin-bottom: 0 !important;
@@ -496,6 +482,7 @@
     }
     .position-central {
       font-size: 20vw;
+      margin-top: 0.2em;
     }
   }
   @media only screen and (max-width: 1600px) {
