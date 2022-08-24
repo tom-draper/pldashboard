@@ -497,15 +497,15 @@ h1 {
 }
 
 .loading-spinner {
-  height: 48px;
-  width: 48px;
-  color: rgba(90, 90, 90, 0.2);
+  height: 36px;
+  width: 36px;
+  color: rgba(56, 0, 61, 0.1);
   position: relative;
   display: inline-block;
   border: 5px solid;
   border-radius: 50%;
   border-right-color: #5a5a5a;
-  animation: rotate 1s linear infinite;
+  animation: rotate 0.5s linear infinite;
 }
 
 @keyframes rotate {
