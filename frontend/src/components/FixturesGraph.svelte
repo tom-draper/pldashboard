@@ -279,6 +279,9 @@
       let l = line(data, team, Date.now());
       plotData.data[0] = l; // Overwrite plot data
       Plotly.redraw(plotDiv);
+      if (mobileView) {
+        mobileLayout()
+      }
     }
   }
 

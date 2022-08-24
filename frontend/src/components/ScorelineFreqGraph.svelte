@@ -186,41 +186,6 @@
     }
   }
 
-  function getLayout() {
-    let layout = {
-      title: false,
-      autosize: true,
-      margin: { r: 20, l: 65, t: 15, b: 60, pad: 5 },
-      hovermode: "closest",
-      barmode: "overlay",
-      bargap: 0,
-      plot_bgcolor: "#fafafa",
-      paper_bgcolor: "#fafafa",
-      yaxis: {
-        title: { text: "Probability" },
-        gridcolor: "gray",
-        showgrid: false,
-        showline: false,
-        zeroline: false,
-        fixedrange: true,
-      },
-      xaxis: {
-        title: { text: "Scoreline" },
-        linecolor: "black",
-        showgrid: false,
-        showline: false,
-        fixedrange: true,
-      },
-      legend: {
-        x: 1,
-        xanchor: "right",
-        y: 0.95,
-      },
-      dragmode: false,
-    };
-    return layout;
-  }
-
   function buildPlotData(data, team) {
 
     scoreFreq = getAvgScoreFreq(data);
@@ -304,6 +269,9 @@
       let [_, teamBars] = separateBars(scoreFreq, team);
       plotData.data[1] = teamBars; // Update team bars
       Plotly.redraw(plotDiv);
+      if (mobileView) {
+        mobileLayout();
+      }
     }
   }
 

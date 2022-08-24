@@ -83,6 +83,9 @@
         yaxis: getYAxisLayout(),
       });
       Plotly.redraw(plotDiv);
+      if (mobileView) {
+        mobileLayout();
+      }
     }
   }
 

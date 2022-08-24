@@ -161,6 +161,9 @@
         plotData.data[i] = newPlotData.data[i];
       }
       Plotly.redraw(plotDiv);
+      if (mobileView) {
+        mobileLayout()
+      }
     }
   }
 

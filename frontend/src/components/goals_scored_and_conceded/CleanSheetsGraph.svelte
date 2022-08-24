@@ -175,6 +175,9 @@
       plotData.data[0] = cleanSheetsBar;
       plotData.data[1] = concededBar;
       Plotly.redraw(plotDiv);
+      if (mobileView) {
+        mobileLayout();
+      }
     }
   }
 

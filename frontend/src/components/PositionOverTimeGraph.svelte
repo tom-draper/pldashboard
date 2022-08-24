@@ -199,7 +199,6 @@
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-graph");
     });
-    mobileLayout();
   }
   
   function refreshPlot() {
@@ -209,6 +208,9 @@
         plotData.data[i] = newPlotData.data[i];
       }
       Plotly.redraw(plotDiv);
+      if (mobileView) {
+        mobileLayout()
+      }
     }
   }
 
