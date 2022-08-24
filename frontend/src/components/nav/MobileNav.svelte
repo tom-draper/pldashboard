@@ -24,7 +24,7 @@
   export let hypenatedTeam, teams, toAlias, switchTeam, toggleMobileNav;
 </script>
 
-<nav id="mobileNav" style="display: none">
+<nav id="mobileNav" style="width: 0px;">
   {#if hypenatedTeams != undefined}
     <div class="team-links">
       {#each hypenatedTeams as _hypenatedTeam, i}
@@ -66,11 +66,14 @@
 </nav>
 
 <style scoped>
+
+
   #mobileNav {
     position: fixed;
     z-index: 2;
+    overflow: hidden;
     height: 100vh;
-    width: 100%;
+    width: 0;
   }
   .team-links {
     display: flex;

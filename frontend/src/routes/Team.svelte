@@ -60,11 +60,13 @@
   }
 
   function toggleMobileNav() {
-    let mobileNav = document.getElementById("mobileNav");
-    if (mobileNav.style.display == "none") {
-      mobileNav.style.display = "block";
+    let mobileNav = document.getElementById('mobileNav');
+    if (mobileNav.style.width == "0px") {
+      mobileNav.style.animation = 'appear 0.1s ease-in 1';
+      mobileNav.style.width = "100%";
     } else {
-      mobileNav.style.display = "none";
+      mobileNav.style.animation = null;
+      mobileNav.style.width = "0px";
     }
   }
 

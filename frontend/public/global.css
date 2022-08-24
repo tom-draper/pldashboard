@@ -277,7 +277,10 @@ h1 {
   font-family: "Courier New", Courier, monospace !important;
 }
 
-
+  @keyframes appear {
+    from {width: 0px;}
+    to {width: 100%;}
+  }
 
 /* Mobile view */
 

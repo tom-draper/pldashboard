@@ -68,7 +68,7 @@
     border: 3px #333333 solid;
   }
   .result {
-    margin-top: 4%;
+    margin-top: 0.14em;
     font-size: 2vw;
   }
   
@@ -80,6 +80,7 @@
   @media only screen and (max-width: 600px) {
     .result {
       font-size: 7vw;
+      margin-top: 0.25em;
     }
   }
 </style>
