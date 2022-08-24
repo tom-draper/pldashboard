@@ -6,7 +6,7 @@
     if (isMainTeam) {
       // Get team primary colour from css variable
       let teamKey = team[0].toLowerCase() + team.slice(1);
-      teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
+      teamKey = teamKey.replace(/ /g, '-').toLowerCase();
       let lineColor = getComputedStyle(
         document.documentElement
       ).getPropertyValue(`--${teamKey}`);
@@ -61,6 +61,45 @@
     return lines;
   }
 
+  function defaultLayout() {
+    if (setup) {
+      let update = {
+          yaxis: {
+            title: { text: 'Position' },
+            gridcolor: "gray",
+            showgrid: false,
+            showline: false,
+            zeroline: false,
+            autorange: "reversed",
+            fixedrange: true,
+            tickvals: Array.from(Array(20), (_, i) => i + 1),
+          },
+          margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
+      }
+      Plotly.update(plotDiv, {}, update)
+    }
+  }
+
+  function mobileLayout() {
+    if (setup) {
+      let update = {
+          yaxis: {
+            title: null,
+            gridcolor: "gray",
+            showgrid: false,
+            showline: false,
+            zeroline: false,
+            fixedrange: true,
+            autorange: "reversed",
+            visible: false,
+            tickvals: Array.from(Array(10), (_, i) => i + 2),
+          },
+          margin: { r: 20, l: 20, t: 5, b: 40, pad: 5 },
+      }
+      Plotly.update(plotDiv, {}, update)
+    }
+  }
+
   function buildPlotData(data, team) {
     let yLabels = Array.from(Array(20), (_, i) => i + 1);
 
@@ -69,7 +108,7 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
+        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
         hovermode: "closest",
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
@@ -131,6 +170,7 @@
             layer: "below",
           },
         ],
+        dragmode: false
       },
       config: {
         responsive: true,
@@ -168,12 +208,17 @@
         plotData.data[i] = newPlotData.data[i];
       }
       Plotly.redraw(plotDiv);
+      if (mobileView) {
+        mobileLayout()
+      }
     }
   }
 
   $: team && refreshPlot();
+  $: !mobileView && defaultLayout();
+  $: setup && mobileView && mobileLayout();
 
-  export let data, team, playedMatchdays;
+  export let data, team, playedMatchdays, mobileView;
 </script>
 
 <div id="plotly">

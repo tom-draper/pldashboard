@@ -41,11 +41,11 @@
     let scoreFreq = {};
     return scoreFreq;
   }
-  
+
   function insertTeamScoreBars(data, team, scoreFreq) {
     for (let score in scoreFreq) {
       if (scoreFreq[score].length == 1) {
-        scoreFreq[score].push(0)
+        scoreFreq[score].push(0);
       }
     }
     for (let matchday in data.form[data._id][team]) {
@@ -71,78 +71,78 @@
   }
 
   function getColours(scores) {
-    let colours = []
+    let colours = [];
     for (let score of scores) {
-      let [h, _, a] = score.split(' ');
+      let [h, _, a] = score.split(" ");
       h = parseInt(h);
       a = parseInt(a);
       if (h > a) {
-        colours.push('#5df455')
+        colours.push("#5df455");
       } else if (h < a) {
-        colours.push('#f74d4d');
+        colours.push("#f74d4d");
       } else {
-        colours.push('#dfa700');
+        colours.push("#dfa700");
       }
     }
-    return colours
+    return colours;
   }
-  
-  function separateBars(scoreFreq) {  
+
+  function separateBars(scoreFreq) {
     let sorted = Object.entries(scoreFreq).sort((a, b) => b[1][0] - a[1][0]);
     let x = [];
     let avgY = [];
     let teamY = [];
     for (let i = 0; i < sorted.length; i++) {
-      x.push(sorted[i][0])
-      avgY.push(sorted[i][1][0])
-      teamY.push(sorted[i][1][1])
+      x.push(sorted[i][0]);
+      avgY.push(sorted[i][1][0]);
+      teamY.push(sorted[i][1][1]);
     }
 
     let colours = getColours(x);
-  
+
     return [
       {
-      x: x,
-      y: avgY,
-      type: "bar",
-      name: 'Avg',
-      marker: { color: "#C6C6C6" },
-      hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
-      hoverinfo: "x+y",
-      // opacity: 0.6,
-    },
+        x: x,
+        y: avgY,
+        type: "bar",
+        name: "Avg",
+        marker: { color: "#C6C6C6" },
+        hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
+        hoverinfo: "x+y",
+        // opacity: 0.6,
+      },
       {
-      x: x,
-      y: teamY,
-      type: "bar",
-      name: 'Scorelines',
-      marker: { color: colours },
-      hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
-      hoverinfo: "x+y",
-      opacity: 0.5,
-    },
+        x: x,
+        y: teamY,
+        type: "bar",
+        name: "Scorelines",
+        marker: { color: colours },
+        hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
+        hoverinfo: "x+y",
+        opacity: 0.5,
+      },
     ];
   }
 
   function scaleBars(scoreFreq) {
-    let avgTotal = 0
-    let teamTotal = 0
+    let avgTotal = 0;
+    let teamTotal = 0;
     for (let score in scoreFreq) {
-      avgTotal += scoreFreq[score][0]
-      teamTotal += scoreFreq[score][1]
+      avgTotal += scoreFreq[score][0];
+      teamTotal += scoreFreq[score][1];
     }
     // Scale team frequency values to match average
     for (let score in scoreFreq) {
-      scoreFreq[score][1] *= (avgTotal / teamTotal);
+      scoreFreq[score][1] *= avgTotal / teamTotal;
     }
   }
 
   function convertToPercentage(scoreFreq) {
-    let avgTotal = 0
-    let teamTotal = 0
+    let avgTotal = 0;
+    let teamTotal = 0;
     for (let score in scoreFreq) {
-      avgTotal += scoreFreq[score][0]
-      teamTotal += scoreFreq[score][1]
+      avgTotal += scoreFreq[score][0];
+      teamTotal += scoreFreq[score][1];
     }
     // Scale team frequency values to match average
     for (let score in scoreFreq) {
@@ -151,28 +151,26 @@
     }
   }
 
-  function buildPlotData(data, team) {
-    // let xLabels = getXLabels();
-    // let xLabels = scoreBars.
+  function defaultLayout() {
+    if (setup) {
+      let update = {
+        yaxis: {
+          title: null,
+          gridcolor: "gray",
+          showgrid: false,
+          showline: false,
+          zeroline: false,
+          fixedrange: true,
+        },
+        margin: { r: 20, l: 65, t: 15, b: 60, pad: 5 },
+      };
+      Plotly.update(plotDiv, {}, update);
+    }
+  }
 
-    scoreFreq = getAvgScoreFreq(data);
-
-    insertTeamScoreBars(data, team, scoreFreq);
-    scaleBars(scoreFreq, team);
-    convertToPercentage(scoreFreq);
-    let [avgBars, teamBars] = separateBars(scoreFreq)
-
-    let plotData = {
-      data: [avgBars, teamBars],
-      layout: {
-        title: false,
-        autosize: true,
-        margin: { r: 10, l: 65, t: 15, b: 100, pad: 5 },
-        hovermode: "closest",
-        barmode: "overlay",
-        bargap: 0,
-        plot_bgcolor: "#fafafa",
-        paper_bgcolor: "#fafafa",
+  function mobileLayout() {
+    if (setup) {
+      let update = {
         yaxis: {
           title: { text: "Probability" },
           gridcolor: "gray",
@@ -180,23 +178,59 @@
           showline: false,
           zeroline: false,
           fixedrange: true,
-          // autorange: false,
-          // range: [0, 10],
+          visible: false,
         },
-        xaxis: {
-          title: { text: "Scoreline" },
-          linecolor: "black",
-          showgrid: false,
-          showline: false,
-          fixedrange: true,
-          // ticktext: xLabels,
-          // tickvals: xLabels,
-        },
-        legend: {
-          x: 1,
-          xanchor: "right",
-          y: 0.95,
-        },
+        margin: { r: 20, l: 20, t: 15, b: 60, pad: 5 },
+      };
+      Plotly.update(plotDiv, {}, update);
+    }
+  }
+
+  function buildPlotData(data, team) {
+
+    scoreFreq = getAvgScoreFreq(data);
+
+    insertTeamScoreBars(data, team, scoreFreq);
+    scaleBars(scoreFreq, team);
+    convertToPercentage(scoreFreq);
+    let [avgBars, teamBars] = separateBars(scoreFreq);
+
+    let plotData = {
+      data: [avgBars, teamBars],
+      layout: {
+      title: false,
+      autosize: true,
+      margin: { r: 20, l: 65, t: 15, b: 60, pad: 5 },
+      hovermode: "closest",
+      barmode: "overlay",
+      bargap: 0,
+      plot_bgcolor: "#fafafa",
+      paper_bgcolor: "#fafafa",
+      yaxis: {
+        title: { text: "Probability" },
+        gridcolor: "gray",
+        showgrid: false,
+        showline: false,
+        zeroline: false,
+        fixedrange: true,
+        // autorange: false,
+        // range: [0, 10],
+      },
+      xaxis: {
+        title: { text: "Scoreline" },
+        linecolor: "black",
+        showgrid: false,
+        showline: false,
+        fixedrange: true,
+        // ticktext: xLabels,
+        // tickvals: xLabels,
+      },
+      legend: {
+        x: 1,
+        xanchor: "right",
+        y: 0.95,
+      },
+      dragmode: false,
       },
       config: {
         responsive: true,
@@ -232,9 +266,12 @@
       insertTeamScoreBars(data, team, scoreFreq);
       scaleBars(scoreFreq, team);
       convertToPercentage(scoreFreq);
-      let [_, teamBars] = separateBars(scoreFreq, team)
+      let [_, teamBars] = separateBars(scoreFreq, team);
       plotData.data[1] = teamBars; // Update team bars
       Plotly.redraw(plotDiv);
+      if (mobileView) {
+        mobileLayout();
+      }
     }
   }
 
@@ -247,8 +284,10 @@
   });
 
   $: team && refreshPlot();
+  $: !mobileView && defaultLayout();
+  $: setup && mobileView && mobileLayout();
 
-  export let data, team;
+  export let data, team, mobileView;
 </script>
 
 <div id="plotly">

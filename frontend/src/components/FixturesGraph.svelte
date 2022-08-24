@@ -56,14 +56,14 @@
     for (let matchday = 1; matchday <= 38; matchday++) {
       let match = data.fixtures[team][matchday];
       x.push(new Date(match.date));
-  
+
       let oppTeamRating = data.teamRatings[match.team].totalRating;
       if (match.atHome) {
         // If team playing at home, decrease opposition rating by the amount of home advantage the team gains
         oppTeamRating *= 1 - data.homeAdvantages[match.team].totalHomeAdvantage;
       }
       y.push(oppTeamRating * 100);
-      
+
       let matchDetail = getMatchDetail(match);
       details.push(matchDetail);
     }
@@ -72,9 +72,9 @@
 
   function line(data, team, now) {
     let [x, y, details] = linePoints(data, team);
-    
+
     sortByMatchDate(x, y, details);
-    
+
     let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
 
     let sizes = Array(x.length).fill(13);
@@ -110,11 +110,13 @@
           [1, "#fc1303"],
         ],
         color: y,
+        opacity: 1,
+        line: { width: 1 }
       },
       customdata: matchdays,
       hovertemplate:
         "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
-    }
+    };
   }
 
   function nowLine(now, maxX) {
@@ -139,11 +141,73 @@
 
   function xRange(x) {
     let minX = new Date(x[0]);
-    minX.setDate(minX.getDate() - 12);
+    minX.setDate(minX.getDate() - 7);
     // let maxX = new Date(Math.max(x[x.length - 1], now));
     let maxX = new Date(x[x.length - 1]);
-    maxX.setDate(maxX.getDate() + 12);
+    maxX.setDate(maxX.getDate() + 7);
     return [minX, maxX];
+  }
+
+  function defaultLayout() {
+    if (setup) {
+      let layoutUpdate = {
+        'yaxis.title': {text: 'Difficulty'},
+        'margin.l': 60,
+        'yaxis.color': 'black'
+      };
+
+      let sizes = plotData.data[0].marker.size;
+      for (let i = 0; i < sizes.length; i++) {
+        sizes[i] = Math.round(sizes[i] * 1.8);
+      }
+      let dataUpdate = {
+        marker: {
+          size: sizes,
+          colorscale: [
+            [0, "#01c626"],
+            [0.5, "#f3f3f3"],
+            [1, "#fc1303"],
+          ],
+          color: plotData.data[0].y,
+          opacity: 1,
+          line: { width: 1 }
+        },
+      }
+      plotData.data[0].marker.size = sizes
+
+      Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+    }
+  }
+
+  function mobileLayout() {
+    if (setup) {
+      let layoutUpdate = {
+        'yaxis.title': null,
+        'margin.l': 20,
+        'yaxis.color': '#fafafa',
+      };
+      
+      let sizes = plotData.data[0].marker.size;
+      for (let i = 0; i < sizes.length; i++) {
+        sizes[i] = Math.round(sizes[i] / 1.8);
+      }
+      let dataUpdate = {
+        marker: {
+          size: sizes,
+          colorscale: [
+            [0, "#01c626"],
+            [0.5, "#f3f3f3"],
+            [1, "#fc1303"],
+          ],
+          color: plotData.data[0].y,
+          opacity: 1,
+          line: { width: 1 },
+        },
+      }
+      plotData.data[0].marker.size = sizes
+      
+      Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+    }
   }
 
   function buildPlotData(data, team) {
@@ -161,13 +225,13 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 20, l: 50, t: 5, b: 40, pad: 5 },
+        margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
         hovermode: "closest",
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
         yaxis: {
           title: { text: "Difficulty" },
-          gridcolor: "gray",
+          gridcolor: "#d6d6d6",
           showline: false,
           zeroline: false,
           fixedrange: true,
@@ -182,12 +246,13 @@
           fixedrange: true,
         },
         shapes: [nowLine(now, maxX)],
+        dragmode: false,
       },
       config: {
         responsive: true,
         showSendToCloud: false,
         displayModeBar: false,
-      }
+      },
     };
     return plotData;
   }
@@ -199,21 +264,23 @@
       plotData.data,
       plotData.layout,
       plotData.config
-    ).then(plot => {
+    ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-graph");
     });
   }
-  
+
   function refreshPlot() {
     if (setup) {
-      let now = Date.now();
-      let l = line(data, team, now);
-      plotData.data[0] = l;  // Overwrite plot data
-      Plotly.redraw(plotDiv)
+      let l = line(data, team, Date.now());
+      plotData.data[0] = l; // Overwrite plot data
+      Plotly.redraw(plotDiv);
+      if (mobileView) {
+        mobileLayout()
+      }
     }
   }
-  
+
   let plotDiv, plotData;
   let setup = false;
   onMount(() => {
@@ -221,9 +288,11 @@
     setup = true;
   });
 
-  $: team && refreshPlot()
+  $: team && refreshPlot();
+  $: !mobileView && defaultLayout();
+  $: setup && mobileView && mobileLayout();
 
-  export let data, team;
+  export let data, team, mobileView;
 </script>
 
 <div id="plotly">

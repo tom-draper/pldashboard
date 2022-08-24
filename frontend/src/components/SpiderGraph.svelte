@@ -487,6 +487,7 @@
         showlegend: false,
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
+        dragmode: false
       },
       config: {
         responsive: true,

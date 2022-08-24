@@ -2,7 +2,6 @@
   function switchTeamToTop(team) {
     switchTeam(team);
     window.scrollTo(0, 0);
-    toggleMobileNav();
   }
 
   function getHyphenatedTeamNames() {
@@ -21,11 +20,12 @@
   let hypenatedTeams;
   $: hypenatedTeam & getHyphenatedTeamNames();
 
-  export let hypenatedTeam, teams, toAlias, switchTeam, toggleMobileNav;
+  export let hypenatedTeam, teams, toAlias, switchTeam;
 </script>
 
-<nav id="mobileNav" style="display: none">
+<nav>
   {#if hypenatedTeams != undefined}
+    <div class="nav-title">Other Teams</div>
     <div class="team-links">
       {#each hypenatedTeams as _hypenatedTeam, i}
         {#if _hypenatedTeam != null}
@@ -66,16 +66,17 @@
 </nav>
 
 <style scoped>
-  #mobileNav {
-    position: fixed;
-    z-index: 2;
-    height: 100vh;
-    width: 100%;
+  .nav-title {
+    font-size: 1.4em;
+    margin-bottom: 0.8em;
+    font-weight: bold;
+  }
+  nav {
+    display: none;
+    margin: 40px 8%;
   }
   .team-links {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    display: grid;
   }
   .team-link {
     color: inherit;
@@ -84,6 +85,50 @@
     border: none;
     font-size: 1em;
     padding: 0.4em;
-    flex: 1;
+  }
+
+  @media only screen and (max-width: 1300px) {
+    nav {
+      display: grid;
+    }
+    .team-links {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  @media only screen and (max-width: 1150px) {
+    .team-links {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  @media only screen and (max-width: 1000px) {
+    nav {
+      margin: 40px 5%;
+    }
+  }
+  @media only screen and (max-width: 950px) {
+    .team-links {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media only screen and (max-width: 750px) {
+    .team-links {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media only screen and (max-width: 550px) {
+    nav {
+      margin: 20px auto;
+      width: 80%;
+    }
+
+    .team-links {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    .first-team {
+      border-radius: 6px 6px 0 0;
+    }
+    .last-team {
+      border-radius: 0 0 6px 6px;
+    }
   }
 </style>

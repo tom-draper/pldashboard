@@ -56,7 +56,16 @@
     if (!Object.values(alias).includes(teamAlias)) {
       return teamAlias;
     }
-    return Object.keys(alias).find(key => alias[key] === teamAlias);
+    return Object.keys(alias).find((key) => alias[key] === teamAlias);
+  }
+
+  function toggleMobileNav() {
+    let mobileNav = document.getElementById("mobileNav");
+    if (mobileNav.style.display == "none") {
+      mobileNav.style.display = "block";
+    } else {
+      mobileNav.style.display = "none";
+    }
   }
 
   // Teams in the final position from last season (21/22), including championship teams
@@ -126,19 +135,14 @@
     if (Object.keys(data.form[data._id][team]).length == 0) {
       return null; // Season has not started yet
     }
-    return Object.keys(data.form[data._id][team]).reduce((matchday1, matchday2) =>
-      data.form[data._id][team][matchday1] >
-      data.form[data._id][team][matchday2]
-        ? matchday1
-        : matchday2
+    return Object.keys(data.form[data._id][team]).reduce(
+      (matchday1, matchday2) =>
+        data.form[data._id][team][matchday1] >
+        data.form[data._id][team][matchday2]
+          ? matchday1
+          : matchday2
     );
   }
-
-  function openNavBar() {
-    document.getElementById("navBar").style.display = "block";
-    document.getElementById("dashboard").style.marginLeft = "200px";
-  }
-
 
   async function fetchData(address) {
     const response = await fetch(address);
@@ -152,7 +156,7 @@
     fetchData("https://pldashboard.herokuapp.com/api/teams")
       .then((json) => {
         // Build teamData package from json data
-        json.teamNames = Object.keys(json.standings)
+        json.teamNames = Object.keys(json.standings);
         currentMatchday = getCurrentMatchday(json, team);
         playedMatchdays = getPlayedMatchdays(json, team);
         data = json;
@@ -168,9 +172,11 @@
     team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
     currentMatchday = getCurrentMatchday(data, team);
     playedMatchdays = getPlayedMatchdays(data, team);
-    window.history.pushState(null,null,hyphenatedTeam); // Change current url without reloading
+    window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
   }
 
+  let pageWidth;
+  $: mobileView = pageWidth <= 700;
   const showBadge = false;
   let team = "";
   let currentMatchday, playedMatchdays;
@@ -187,15 +193,21 @@
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
+<svelte:window bind:innerWidth={pageWidth}/>
+
 <Router>
   <div id="team">
-    <div id="navBar">
-      <Nav team={hyphenatedTeam} {teams} getAlias={toAlias} {switchTeam} />
-    </div>
+    <Nav team={hyphenatedTeam} {teams} {toAlias} {switchTeam} />
+    <MobileNav {hyphenatedTeam} {teams} {toAlias} {switchTeam} {toggleMobileNav} />
+    <button id="mobileNavBtn" on:click={toggleMobileNav}> Select Team </button>
+
     <div id="dashboard">
       <div class="header" style="background-color: var(--{hyphenatedTeam});">
         <a class="main-link no-decoration" href="/{hyphenatedTeam}">
-          <div class="title" style="color: var(--{hyphenatedTeam + '-secondary'});">
+          <div
+            class="title"
+            style="color: var(--{hyphenatedTeam + '-secondary'});"
+          >
             {toAlias(team)}
           </div>
         </a>
@@ -248,7 +260,7 @@
             <div class="row-right fixtures-graph row-graph">
               <h1 class="lowered">Fixtures</h1>
               <div class="graph mini-graph mobile-margin">
-                <FixturesGraph {data} {team} />
+                <FixturesGraph {data} {team} {mobileView} />
               </div>
             </div>
           </div>
@@ -256,10 +268,24 @@
           <div class="row multi-element-row">
             <div class="row-left form-details">
               <CurrentForm {data} {currentMatchday} {team} {toInitials} />
-              <TableSnippet {data} {hyphenatedTeam} {team} {switchTeam} {toAlias} />
+              <TableSnippet
+                {data}
+                {hyphenatedTeam}
+                {team}
+                {switchTeam}
+                {toAlias}
+              />
             </div>
             <div class="row-right">
-              <NextGame {data} {currentMatchday} {team} {showBadge} {toAlias} {toInitials} {switchTeam} />
+              <NextGame
+                {data}
+                {currentMatchday}
+                {team}
+                {showBadge}
+                {toAlias}
+                {toInitials}
+                {switchTeam}
+              />
             </div>
           </div>
 
@@ -267,7 +293,7 @@
             <div class="form-graph row-graph">
               <h1 class="lowered">Form Over Time</h1>
               <div class="graph full-row-graph">
-                <FormOverTimeGraph {data} {team} {playedMatchdays} />
+                <FormOverTimeGraph {data} {team} {playedMatchdays} {mobileView} />
               </div>
             </div>
           </div>
@@ -276,7 +302,7 @@
             <div class="position-over-time-graph row-graph">
               <h1 class="lowered">Position Over Time</h1>
               <div class="graph full-row-graph">
-                <PositionOverTimeGraph {data} {team} {playedMatchdays} />
+                <PositionOverTimeGraph {data} {team} {playedMatchdays} {mobileView} />
               </div>
             </div>
           </div>
@@ -285,7 +311,7 @@
             <div class="goals-scored-vs-conceded-graph row-graph">
               <h1 class="lowered">Goals Scored and Conceded</h1>
               <div class="graph full-row-graph">
-                <GoalsScoredAndConcededGraph {data} {team} {playedMatchdays} />
+                <GoalsScoredAndConcededGraph {data} {team} {playedMatchdays} {mobileView} />
               </div>
             </div>
           </div>
@@ -293,11 +319,11 @@
           <div class="row">
             <div class="row-graph">
               <div class="clean-sheets graph full-row-graph">
-                <CleanSheetsGraph {data} {team} {playedMatchdays} />
+                <CleanSheetsGraph {data} {team} {playedMatchdays} {mobileView} />
               </div>
             </div>
           </div>
-          
+
           <div class="season-stats-row">
             <StatsValues {data} {team} />
           </div>
@@ -305,27 +331,26 @@
           <div class="row">
             <div class="goals-freq-row row-graph">
               <h1>Goals Per Game</h1>
-              <GoalsPerGame {data} {team} />
+              <GoalsPerGame {data} {team} {mobileView} />
             </div>
           </div>
 
-              <div class="row">
-                <div class="row-graph">
-                  <div class="score-freq graph">
-                    <ScorelineFreqGraph {data} {team} />
-                  </div>
-                </div>
+          <div class="row">
+            <div class="row-graph">
+              <div class="score-freq graph">
+                <ScorelineFreqGraph {data} {team} {mobileView} />
               </div>
-
+            </div>
+          </div>
+          
           <div class="row">
             <div class="spider-chart-row row-graph">
+              <h1>Team Comparison</h1>
               <div class="spider-chart-container">
                 <SpiderGraph {data} {team} {teams} {toAlias} {toName} />
               </div>
             </div>
           </div>
-
-          <MobileNav {hyphenatedTeam} {teams} {toAlias} {switchTeam} />
 
           <TeamsFooter lastUpdated={data.lastUpdated} />
         </div>
@@ -357,6 +382,7 @@
   }
   #team {
     display: flex;
+    overflow-x: hidden;
   }
   .position-and-badge {
     height: 500px;
@@ -461,6 +487,19 @@
     display: flex;
   }
 
+  #mobileNavBtn {
+    position: fixed;
+    color: white;
+    background: #38003d;
+    padding: 0.8em 0;
+    cursor: pointer;
+    font-size: 1.1em;
+    z-index: 1;
+    width: 100%;
+    bottom: 0;
+    border: none;
+  }
+
   @media only screen and (min-width: 2400px) {
     .position-central {
       font-size: 16vw;
@@ -513,9 +552,6 @@
     .circles-background {
       transform: scale(0.7);
     }
-    #navBar {
-      display: none;
-    }
     #dashboard {
       margin-left: 0;
     }
@@ -523,10 +559,15 @@
       font-size: 24vw;
     }
   }
-  
+  @media only screen and (min-width: 1300px) {
+    #mobileNavBtn {
+      display: none;
+    }
+  }
+
   @media only screen and (max-width: 1200px) {
     .position-central {
-      margin-top: 0.3em;;
+      margin-top: 0.3em;
     }
   }
   @media only screen and (max-width: 1100px) {
@@ -545,9 +586,9 @@
     .multi-element-row {
       margin: 0;
     }
-    .mobile-margin {
+    /* .mobile-margin {
       margin-left: 10px;
-    }
+    } */
     .row-left {
       margin-right: 0;
       align-self: center;
@@ -596,7 +637,7 @@
       font-size: 13em;
     }
     .season-stats-row {
-      margin: 10px;
+      margin: 1em;
     }
   }
 

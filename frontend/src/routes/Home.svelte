@@ -10,18 +10,11 @@
 <Router>
   <div id="home">
     <div class="content">
-      <img src="img/pldashboard4.png" alt="pldashboard">
+      <img src="img/pldashboard4.png" alt="pldashboard" />
       <div class="links">
-        <div class="dashboard-link-container">
-          <a class="dashboard-link" href="/">Dashboard</a>
-        </div>
-        <div class="fantasy-link-container">
-          <a class="fantasy-link" href="/">FPL</a>
-        </div>
+        <a class="dashboard-link" href="/">Dashboard</a>
+        <a class="fantasy-link" href="/">Fantasy</a>
       </div>
-      <!-- <div class="donate">
-        <a class="donate-link" href="/">Support me</a>
-      </div> -->
     </div>
   </div>
 </Router>
@@ -46,36 +39,31 @@
     display: flex;
     margin-top: 20px;
   }
-  .dashboard-link-container,
-  .fantasy-link-container {
-    margin: 2em 0;
-  }
   .fantasy-link {
-    color: #37003c;
-    background: #00ff87;
-    padding: 18px 58.5px
+    color: #37003d;
+    background: linear-gradient(70deg, #00ff87, #02efff, #5e80ff);
+    padding: 18px 0;
   }
   .dashboard-link {
-    color: #00fe87;
-    background: #38003d;
-    padding: 18px 25px;
+    color: #37003d;
+    background: #00ff87;
+    padding: 18px 0;
   }
   .dashboard-link,
   .fantasy-link {
     font-size: 1.2em;
-    border-radius: 9px;
+    border-radius: 5px;
     font-weight: bold;
     letter-spacing: 0.02em;
-    margin: 0 10px;
+    margin: 0 20px;
+    width: 160px;
+    display: grid;
+    place-items: center;
+    box-shadow: 
+      0 0 30px 1px #00ff8825, 
+      0 0 60px 2px #02eeff23;
   }
 
-  .donate {
-    margin-top: 100px;
-  }
-  .donate-link {
-    text-decoration: underline;
-    color: rgb(90, 90, 90);
-  }
   @media only screen and (max-width: 800px) {
     img {
       width: 90%;

@@ -1,6 +1,28 @@
 <script>
   import { onMount } from "svelte";
 
+  function defaultLayout() {
+    if (setup) {
+      let update = {
+        yaxis: getYAxisLayout(),
+        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+      };
+      Plotly.update(plotDiv, {}, update);
+    }
+  }
+
+  function mobileLayout() {
+    if (setup) {
+      let update = {
+        yaxis: getYAxisLayout(),
+        margin: { r: 20, l: 20, t: 15, b: 40, pad: 5 },
+      };
+      update.yaxis.visible = false;
+      update.yaxis.title = null;
+      Plotly.update(plotDiv, {}, update);
+    }
+  }
+
   function buildPlotData() {
     let xLabels = getXLabels();
 
@@ -9,7 +31,7 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 10, l: 60, t: 15, b: 40, pad: 5 },
+        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
         hovermode: "closest",
         barmode: "overlay",
         bargap: 0,
@@ -17,7 +39,7 @@
         paper_bgcolor: "#fafafa",
         yaxis: getYAxisLayout(),
         xaxis: {
-          title: { text: "Goals Scored" },
+          title: { text: "Scored" },
           linecolor: "black",
           showgrid: false,
           showline: false,
@@ -30,6 +52,7 @@
           xanchor: "right",
           y: 0.95,
         },
+        dragmode: false,
       },
       config: {
         responsive: true,
@@ -39,7 +62,7 @@
     };
     return plotData;
   }
-  
+
   function genPlot() {
     plotData = buildPlotData();
     new Plotly.newPlot(
@@ -60,6 +83,9 @@
         yaxis: getYAxisLayout(),
       });
       Plotly.redraw(plotDiv);
+      if (mobileView) {
+        mobileLayout();
+      }
     }
   }
 
@@ -71,12 +97,10 @@
   });
 
   $: team && refreshPlot();
+  $: !mobileView && defaultLayout();
+  $: setup && mobileView && mobileLayout();
 
-  export let team,
-    getScoredBars,
-    getScoredTeamBars,
-    getXLabels,
-    getYAxisLayout;
+  export let team, getScoredBars, getScoredTeamBars, getXLabels, getYAxisLayout, mobileView;
 </script>
 
 <div id="plotly">

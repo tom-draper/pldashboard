@@ -4,11 +4,14 @@
     document.getElementById("dashboard").style.marginLeft = 0;
     window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
   }
-
-  export let team, teams, getAlias, switchTeam;
+  function openNavBar() {
+    document.getElementById("navBar").style.display = "block";
+    document.getElementById("dashboard").style.marginLeft = "200px";
+  }
+  export let team, teams, toAlias, switchTeam;
 </script>
 
-<nav>
+<nav id="navBar">
   <div class="title no-selection">
     <p>
       <span style="color: #00fe87">pl</span>dashboard
@@ -30,7 +33,7 @@
               .replace(/ /g, '-')}-secondary);
               background-color: var(--{_team.toLowerCase().replace(/ /g, '-')})"
           >
-            {getAlias(_team)}
+            {toAlias(_team)}
           </div>
         </a>
       {:else}
@@ -41,7 +44,7 @@
           }}
         >
           <div class="team-name">
-            {getAlias(_team)}
+            {toAlias(_team)}
           </div>
         </button>
       {/if}
@@ -58,7 +61,7 @@
   .title {
     color: white;
     font-size: 1.6em;
-    height: 102px;
+    height: 96px;
     display: grid;
     place-items: center;
   }
@@ -112,5 +115,11 @@
     outline: none;
     padding-top: 0.3em;
     cursor: pointer;
+  }
+
+  @media only screen and (max-width: 1300px) {
+    #navBar {
+      display: none;
+    }
   }
 </style>

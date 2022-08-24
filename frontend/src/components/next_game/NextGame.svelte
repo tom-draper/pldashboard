@@ -270,7 +270,7 @@
   .past-result-date {
     font-size: 13px;
     color: #333;
-    margin: 5px 0 1px;
+    margin: 6px 0 1px;
   }
 
   .prev-results-title {
@@ -328,6 +328,7 @@
     text-align: center;
     font-weight: 800;
     flex: 3;
+    margin-top: 3px;
 
     align-self: center;
   }
@@ -342,7 +343,7 @@
   .away-team {
     font-size: 16px;
     width: calc(50% - 18px);
-    padding: 3px 7px 2px;
+    padding: 5px 0 3px;
     flex: 1;
     text-align: center
   }
