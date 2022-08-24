@@ -20,9 +20,6 @@
       update.yaxis.visible = false;
       update.yaxis.title = null;
       Plotly.update(plotDiv, {}, update);
-      if (mobileView) {
-        mobileLayout();
-      }
     }
   }
 
@@ -85,6 +82,9 @@
         yaxis: getYAxisLayout(),
       });
       Plotly.redraw(plotDiv);
+      if (mobileView) {
+        mobileLayout();
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 <script>
   import { Router } from "svelte-routing";
   import { onMount } from "svelte";
-  import CurrentForm from "../components/CurrentForm.svelte";
+  import CurrentForm from "../components/current_form/CurrentForm.svelte";
   import TableSnippet from "../components/TableSnippet.svelte";
   import NextGame from "../components/next_game/NextGame.svelte";
   import StatsValues from "../components/StatsValues.svelte";
@@ -14,8 +14,8 @@
   import GoalsPerGame from "../components/goals_per_game/GoalsPerGame.svelte";
   import SpiderGraph from "../components/SpiderGraph.svelte";
   import ScorelineFreqGraph from "../components/ScorelineFreqGraph.svelte";
-  import Nav from "../components/Nav.svelte";
-  import MobileNav from "../components/MobileNav.svelte";
+  import Nav from "../components/nav/Nav.svelte";
+  import MobileNav from "../components/nav/MobileNav.svelte";
 
   let alias = {
     "Wolverhampton Wanderers": "Wolves",
@@ -467,7 +467,7 @@
     display: flex;
     flex-direction: column;
     padding-right: auto;
-    margin-right: 2vw;
+    margin-right: 1.5vw;
     text-justify: center;
     flex: 4;
   }
@@ -577,7 +577,6 @@
     }
     .row-graph {
       width: auto;
-      /* margin: 0 20px 0 30px */
     }
     .score-freq {
       margin: 0 0 10px;
@@ -586,9 +585,6 @@
     .multi-element-row {
       margin: 0;
     }
-    /* .mobile-margin {
-      margin-left: 10px;
-    } */
     .row-left {
       margin-right: 0;
       align-self: center;
