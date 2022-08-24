@@ -173,8 +173,6 @@
           line: { width: 1 }
         },
       }
-      console.log(plotData)
-      console.log(sizes)
       plotData.data[0].marker.size = sizes
 
       Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
@@ -206,8 +204,6 @@
           line: { width: 1 },
         },
       }
-      console.log(plotData)
-      console.log(sizes);
       plotData.data[0].marker.size = sizes
       
       Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);

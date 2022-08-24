@@ -14,7 +14,7 @@
     if (isMainTeam) {
       // Get team primary colour from css variable
       let teamKey = team[0].toLowerCase() + team.slice(1);
-      teamKey = teamKey.replace(/ ([A-Z])/g, "-$1").toLowerCase();
+      teamKey = teamKey.replace(/ /g, '-').toLowerCase();
       let lineColor = getComputedStyle(
         document.documentElement
       ).getPropertyValue(`--${teamKey}`);
@@ -22,6 +22,7 @@
     } else {
       lineVal = { color: "#d3d3d3" };
     }
+    console.log(lineVal);
 
     let line = {
       x: playedMatchdays,
