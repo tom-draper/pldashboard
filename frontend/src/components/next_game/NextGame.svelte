@@ -101,14 +101,6 @@
                 >
               </a>
               <br />
-              <!-- <span class="accuracy-item">
-              Predicting with accuracy:
-              <b>{data.upcoming[fullTeamName].prediction.accuracy}%</b></span
-            ><br />
-            <div class="accuracy-item">
-              General results accuracy:
-              <b>{data.upcoming[fullTeamName].prediction.resultsAccuracy}%</b>
-            </div> -->
             </div>
           </div>
         </div>
@@ -171,12 +163,6 @@
 {/if}
 
 <style scoped>
-  /* .next-game-item-container {
-    display: flex;
-  }
-  .next-game-item {
-    flex-grow: 1;
-  } */
   .next-game-title {
     width: max-content;
     padding: 6px 20px;
@@ -240,7 +226,6 @@
   }
 
   .next-game-prediction {
-    /* margin: 0 20px 0 0; */
     border-radius: var(--border-radius);
     min-height: 97.5%;
   }
@@ -262,7 +247,6 @@
   .past-result {
     font-size: 16px;
     display: flex;
-    /* margin: 0 3% 2px; */
   }
 
 
@@ -290,19 +274,20 @@
     margin: 0 25px !important;
   }
   .next-game-item {
-    /* padding: 4px 0 1px; */
     border-radius: var(--border-radius);
-    /* margin-top: 4px; */
   }
 
   .won {
     background: rgb(169, 247, 169);
+    background: #77dd77;
   }
   .drew {
     background: rgb(255, 207, 138);
+    background: #ffb347;
   }
   .lost {
     background: #f77979;
+    background: #c23b22;
   }
 
   .accuracy {
@@ -408,9 +393,5 @@
     .next-game-prediction {
       margin: 40px 15px;
     }
-    /* .score,
-    .home-team,
-    .away-team {
-    } */
   }
 </style>

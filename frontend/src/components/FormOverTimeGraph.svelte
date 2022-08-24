@@ -22,7 +22,6 @@
     } else {
       lineVal = { color: "#d3d3d3" };
     }
-    console.log(lineVal);
 
     let line = {
       x: playedMatchdays,

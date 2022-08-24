@@ -1,4 +1,6 @@
 <script>
+  import FormTile from './FormTile.svelte';
+
   function getSortedMatchdays(data, team) {
     let matchdays = Object.keys(data.form[data._id][team]).sort(function (
       matchday1,
@@ -97,11 +99,26 @@
 
 {#if formInitials != undefined}
   <div class="current-form-row">
-    <div class="icon pos-0 {formIcons[0]} {formStarTeams[0]}" />
-    <div class="icon pos-1 {formIcons[1]} {formStarTeams[1]}" />
-    <div class="icon pos-2 {formIcons[2]} {formStarTeams[2]}" />
-    <div class="icon pos-3 {formIcons[3]} {formStarTeams[3]}" />
-    <div class="icon pos-4 {formIcons[4]} {formStarTeams[4]}" />
+    <div class="icon">
+      <FormTile result={formIcons[0]} recency="0" starTeam={formStarTeams[0]}/>
+    </div>
+    <div class="icon">
+      <FormTile result={formIcons[1]} recency="1" starTeam={formStarTeams[1]}/>
+    </div>
+    <div class="icon">
+      <FormTile result={formIcons[2]} recency="2" starTeam={formStarTeams[2]}/>
+    </div>
+    <div class="icon">
+      <FormTile result={formIcons[3]} recency="3" starTeam={formStarTeams[3]}/>
+    </div>
+    <div class="icon">
+      <FormTile result={formIcons[4]} recency="4" starTeam={formStarTeams[4]}/>
+    </div>
+    <!-- <div class="icon pos-0 {formIcons[0]} {formStarTeams[0]}" /> -->
+    <!-- <div class="icon pos-1 {formIcons[1]} {formStarTeams[1]}" /> -->
+    <!-- <div class="icon pos-2 {formIcons[2]} {formStarTeams[2]}" /> -->
+    <!-- <div class="icon pos-3 {formIcons[3]} {formStarTeams[3]}" /> -->
+    <!-- <div class="icon pos-4 {formIcons[4]} {formStarTeams[4]}" /> -->
   </div>
   <div class="current-form-row">
     <div class="icon-name pos-0">{formInitials[0]}</div>
@@ -135,12 +152,10 @@
 
   .icon {
     position: relative;
-    width: 20%;
-    height: 0;
-    padding-bottom: 20%;
-    margin: 0 5px;
-    background-repeat: no-repeat;
-    background-size: contain;
+    width: calc(20% - 14px);
+    aspect-ratio: 1/1;
+    margin: 0 7px 7px;
+    /* margin: 0 5px; */
   }
 
   .icon-name {
