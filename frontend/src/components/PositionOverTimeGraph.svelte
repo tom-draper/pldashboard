@@ -131,6 +131,7 @@
             layer: "below",
           },
         ],
+        dragmode: false
       },
       config: {
         responsive: true,

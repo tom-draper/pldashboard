@@ -69,13 +69,6 @@
     margin: 0 10px;
   }
 
-  .donate {
-    margin-top: 100px;
-  }
-  .donate-link {
-    text-decoration: underline;
-    color: rgb(90, 90, 90);
-  }
   @media only screen and (max-width: 800px) {
     img {
       width: 90%;

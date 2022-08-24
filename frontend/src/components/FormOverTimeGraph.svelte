@@ -81,6 +81,7 @@
           fixedrange: true,
           range: [playedMatchdays[0], playedMatchdays[playedMatchdays.length - 1]],
         },
+        dragmode: false
       },
       config: {
         responsive: true,

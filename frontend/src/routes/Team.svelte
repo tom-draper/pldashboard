@@ -15,7 +15,7 @@
   import SpiderGraph from "../components/SpiderGraph.svelte";
   import ScorelineFreqGraph from "../components/ScorelineFreqGraph.svelte";
   import Nav from "../components/Nav.svelte";
-  import MobileNav from "../components/MobileNav.svelte";
+  import MobileNav2 from "../components/MobileNav2.svelte";
 
   let alias = {
     "Wolverhampton Wanderers": "Wolves",
@@ -56,8 +56,63 @@
     if (!Object.values(alias).includes(teamAlias)) {
       return teamAlias;
     }
-    return Object.keys(alias).find(key => alias[key] === teamAlias);
+    return Object.keys(alias).find((key) => alias[key] === teamAlias);
   }
+
+  function toggleMobileNav() {
+    let mobileNav = document.getElementById("mobileNav");
+    if (mobileNav.style.display == "none") {
+      mobileNav.style.display = "block";
+      // disableScroll();
+    } else {
+      mobileNav.style.display = "none";
+      // enableScroll();
+    }
+  }
+
+  // function preventDefault(e) {
+  //   e.preventDefault();
+  // }
+  // function preventDefaultForScrollKeys(e) {
+  //   if (this.keys[e.keyCode]) {
+  //     this.preventDefault(e);
+  //     return false;
+  //   }
+  // }
+
+  // let wheelOpt, wheelEvent;
+  // function setUpScrollDisable() {
+  //   let supportsPassive = false;
+  //   try {
+  //     window.addEventListener(
+  //       "test",
+  //       null,
+  //       Object.defineProperty({}, "passive", {
+  //         // eslint-disable-next-line getter-return
+  //         get: function () {
+  //           supportsPassive = true;
+  //         },
+  //       })
+  //     );
+  //     // eslint-disable-next-line no-empty
+  //   } catch (e) {}
+
+  //   wheelOpt = supportsPassive ? { passive: false } : false;
+  //   wheelEvent =
+  //     "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
+  // }
+  // function disableScroll() {
+  //   window.addEventListener("DOMMouseScroll", preventDefault, false); // older FF
+  //   window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
+  //   window.addEventListener("touchmove", preventDefault, wheelOpt); // mobile
+  //   window.addEventListener("keydown", preventDefaultForScrollKeys, false);
+  // }
+  // function enableScroll() {
+  //   window.removeEventListener("DOMMouseScroll", preventDefault, false);
+  //   window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
+  //   window.removeEventListener("touchmove", preventDefault, wheelOpt);
+  //   window.removeEventListener("keydown", preventDefaultForScrollKeys, false);
+  // }
 
   // Teams in the final position from last season (21/22), including championship teams
   // Used for nav bar links order
@@ -126,19 +181,14 @@
     if (Object.keys(data.form[data._id][team]).length == 0) {
       return null; // Season has not started yet
     }
-    return Object.keys(data.form[data._id][team]).reduce((matchday1, matchday2) =>
-      data.form[data._id][team][matchday1] >
-      data.form[data._id][team][matchday2]
-        ? matchday1
-        : matchday2
+    return Object.keys(data.form[data._id][team]).reduce(
+      (matchday1, matchday2) =>
+        data.form[data._id][team][matchday1] >
+        data.form[data._id][team][matchday2]
+          ? matchday1
+          : matchday2
     );
   }
-
-  function openNavBar() {
-    document.getElementById("navBar").style.display = "block";
-    document.getElementById("dashboard").style.marginLeft = "200px";
-  }
-
 
   async function fetchData(address) {
     const response = await fetch(address);
@@ -152,7 +202,7 @@
     fetchData("https://pldashboard.herokuapp.com/api/teams")
       .then((json) => {
         // Build teamData package from json data
-        json.teamNames = Object.keys(json.standings)
+        json.teamNames = Object.keys(json.standings);
         currentMatchday = getCurrentMatchday(json, team);
         playedMatchdays = getPlayedMatchdays(json, team);
         data = json;
@@ -168,7 +218,7 @@
     team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
     currentMatchday = getCurrentMatchday(data, team);
     playedMatchdays = getPlayedMatchdays(data, team);
-    window.history.pushState(null,null,hyphenatedTeam); // Change current url without reloading
+    window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
   }
 
   const showBadge = false;
@@ -177,6 +227,7 @@
   let data;
   onMount(() => {
     initDashboard();
+    setUpScrollDisable();
   });
 
   export let hyphenatedTeam;
@@ -189,13 +240,17 @@
 
 <Router>
   <div id="team">
-    <div id="navBar">
-      <Nav team={hyphenatedTeam} {teams} getAlias={toAlias} {switchTeam} />
-    </div>
+    <Nav team={hyphenatedTeam} {teams} getAlias={toAlias} {switchTeam} />
+    <MobileNav2 {hyphenatedTeam} {teams} {toAlias} {switchTeam} {toggleMobileNav} />
+    <button id="mobileNavBtn" on:click={toggleMobileNav}> Select Team </button>
+
     <div id="dashboard">
       <div class="header" style="background-color: var(--{hyphenatedTeam});">
         <a class="main-link no-decoration" href="/{hyphenatedTeam}">
-          <div class="title" style="color: var(--{hyphenatedTeam + '-secondary'});">
+          <div
+            class="title"
+            style="color: var(--{hyphenatedTeam + '-secondary'});"
+          >
             {toAlias(team)}
           </div>
         </a>
@@ -256,10 +311,24 @@
           <div class="row multi-element-row">
             <div class="row-left form-details">
               <CurrentForm {data} {currentMatchday} {team} {toInitials} />
-              <TableSnippet {data} {hyphenatedTeam} {team} {switchTeam} {toAlias} />
+              <TableSnippet
+                {data}
+                {hyphenatedTeam}
+                {team}
+                {switchTeam}
+                {toAlias}
+              />
             </div>
             <div class="row-right">
-              <NextGame {data} {currentMatchday} {team} {showBadge} {toAlias} {toInitials} {switchTeam} />
+              <NextGame
+                {data}
+                {currentMatchday}
+                {team}
+                {showBadge}
+                {toAlias}
+                {toInitials}
+                {switchTeam}
+              />
             </div>
           </div>
 
@@ -297,7 +366,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="season-stats-row">
             <StatsValues {data} {team} />
           </div>
@@ -309,23 +378,22 @@
             </div>
           </div>
 
-              <div class="row">
-                <div class="row-graph">
-                  <div class="score-freq graph">
-                    <ScorelineFreqGraph {data} {team} />
-                  </div>
-                </div>
+          <div class="row">
+            <div class="row-graph">
+              <div class="score-freq graph">
+                <ScorelineFreqGraph {data} {team} />
               </div>
-
+            </div>
+          </div>
+          
           <div class="row">
             <div class="spider-chart-row row-graph">
+              <h1>Team Comparison</h1>
               <div class="spider-chart-container">
                 <SpiderGraph {data} {team} {teams} {toAlias} {toName} />
               </div>
             </div>
           </div>
-
-          <MobileNav {hyphenatedTeam} {teams} {toAlias} {switchTeam} />
 
           <TeamsFooter lastUpdated={data.lastUpdated} />
         </div>
@@ -357,6 +425,7 @@
   }
   #team {
     display: flex;
+    overflow-x: hidden;
   }
   .position-and-badge {
     height: 500px;
@@ -461,6 +530,19 @@
     display: flex;
   }
 
+  #mobileNavBtn {
+    position: fixed;
+    color: white;
+    background: #38003d;
+    padding: 10px 0;
+    cursor: pointer;
+    font-size: 1.1em;
+    z-index: 1;
+    width: 100%;
+    bottom: 0;
+    border: none;
+  }
+
   @media only screen and (min-width: 2400px) {
     .position-central {
       font-size: 16vw;
@@ -513,9 +595,6 @@
     .circles-background {
       transform: scale(0.7);
     }
-    #navBar {
-      display: none;
-    }
     #dashboard {
       margin-left: 0;
     }
@@ -523,10 +602,15 @@
       font-size: 24vw;
     }
   }
-  
+  @media only screen and (min-width: 1300px) {
+    #mobileNavBtn {
+      display: none;
+    }
+  }
+
   @media only screen and (max-width: 1200px) {
     .position-central {
-      margin-top: 0.3em;;
+      margin-top: 0.3em;
     }
   }
   @media only screen and (max-width: 1100px) {

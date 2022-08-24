@@ -129,6 +129,7 @@
           xanchor: "right",
           y: 1,
         },
+        dragmode: false
       },
       config: {
         responsive: true,

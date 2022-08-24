@@ -161,12 +161,12 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 20, l: 50, t: 5, b: 40, pad: 5 },
+        margin: { r: 10, l: 0, t: 5, b: 40, pad: 5 },
         hovermode: "closest",
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
         yaxis: {
-          title: { text: "Difficulty" },
+          // title: { text: "Difficulty" },
           gridcolor: "gray",
           showline: false,
           zeroline: false,
@@ -182,6 +182,7 @@
           fixedrange: true,
         },
         shapes: [nowLine(now, maxX)],
+        dragmode: false
       },
       config: {
         responsive: true,

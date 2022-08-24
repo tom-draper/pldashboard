@@ -104,6 +104,7 @@
             },
           },
         ],
+        dragmode: false
       },
       config: {
         responsive: true,

@@ -4,11 +4,14 @@
     document.getElementById("dashboard").style.marginLeft = 0;
     window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
   }
-
+  function openNavBar() {
+    document.getElementById("navBar").style.display = "block";
+    document.getElementById("dashboard").style.marginLeft = "200px";
+  }
   export let team, teams, getAlias, switchTeam;
 </script>
 
-<nav>
+<nav id="navBar">
   <div class="title no-selection">
     <p>
       <span style="color: #00fe87">pl</span>dashboard
@@ -112,5 +115,11 @@
     outline: none;
     padding-top: 0.3em;
     cursor: pointer;
+  }
+
+  @media only screen and (max-width: 1300px) {
+    #navBar {
+      display: none;
+    }
   }
 </style>

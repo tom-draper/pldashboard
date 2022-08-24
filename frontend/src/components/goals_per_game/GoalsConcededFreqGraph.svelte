@@ -17,7 +17,7 @@
         paper_bgcolor: "#fafafa",
         yaxis: getYAxisLayout(),
         xaxis: {
-          title: { text: "Goals Conceded" },
+          title: { text: "Conceded" },
           linecolor: "black",
           showgrid: false,
           showline: false,
@@ -30,6 +30,7 @@
           xanchor: "right",
           y: 0.95,
         },
+        dragmode: false
       },
       config: {
         responsive: true,

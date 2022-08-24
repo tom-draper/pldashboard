@@ -167,7 +167,7 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 10, l: 65, t: 15, b: 100, pad: 5 },
+        margin: { r: 10, l: 65, t: 15, b: 60, pad: 5 },
         hovermode: "closest",
         barmode: "overlay",
         bargap: 0,
@@ -197,6 +197,7 @@
           xanchor: "right",
           y: 0.95,
         },
+        dragmode: false
       },
       config: {
         responsive: true,
