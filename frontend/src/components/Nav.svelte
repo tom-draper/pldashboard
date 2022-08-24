@@ -61,7 +61,7 @@
   .title {
     color: white;
     font-size: 1.6em;
-    height: 102px;
+    height: 96px;
     display: grid;
     place-items: center;
   }

@@ -110,6 +110,8 @@
           [1, "#fc1303"],
         ],
         color: y,
+        opacity: 1,
+        line: { width: 1 }
       },
       customdata: matchdays,
       hovertemplate:
@@ -148,36 +150,67 @@
 
   function defaultLayout() {
     if (setup) {
-      let update = {
-        yaxis: {
-          title: { text: "Difficulty" },
-          gridcolor: "#d6d6d6",
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          tickvals: Array.from(Array(11), (_, i) => i * 10),
-        },
-        margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
+      let layoutUpdate = {
+        'yaxis.title': {text: 'Difficulty'},
+        'margin.l': 60,
+        'yaxis.color': 'black'
       };
-      Plotly.update(plotDiv, {}, update);
+
+      let sizes = plotData.data[0].marker.size;
+      for (let i = 0; i < sizes.length; i++) {
+        sizes[i] = Math.round(sizes[i] * 1.8);
+      }
+      let dataUpdate = {
+        marker: {
+          size: sizes,
+          colorscale: [
+            [0, "#01c626"],
+            [0.5, "#f3f3f3"],
+            [1, "#fc1303"],
+          ],
+          color: plotData.data[0].y,
+          opacity: 1,
+          line: { width: 1 }
+        },
+      }
+      console.log(plotData)
+      console.log(sizes)
+      plotData.data[0].marker.size = sizes
+
+      Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
     }
   }
 
   function mobileLayout() {
     if (setup) {
-      let update = {
-        yaxis: {
-          title: null,
-          gridcolor: "#d6d6d6",
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          color: '#FAFAFA',
-          tickvals: Array.from(Array(11), (_, i) => i * 10),
-        },
-        margin: { r: 20, l: 20, t: 5, b: 40, pad: 5 },
+      let layoutUpdate = {
+        'yaxis.title': null,
+        'margin.l': 20,
+        'yaxis.color': '#fafafa',
       };
-      Plotly.update(plotDiv, {}, update);
+      
+      let sizes = plotData.data[0].marker.size;
+      for (let i = 0; i < sizes.length; i++) {
+        sizes[i] = Math.round(sizes[i] / 1.8);
+      }
+      let dataUpdate = {
+        marker: {
+          size: sizes,
+          colorscale: [
+            [0, "#01c626"],
+            [0.5, "#f3f3f3"],
+            [1, "#fc1303"],
+          ],
+          color: plotData.data[0].y,
+          opacity: 1,
+          line: { width: 1 },
+        },
+      }
+      console.log(plotData)
+      console.log(sizes);
+      plotData.data[0].marker.size = sizes
+      
+      Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
     }
   }
 

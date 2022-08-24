@@ -491,7 +491,7 @@
     position: fixed;
     color: white;
     background: #38003d;
-    padding: 10px 0;
+    padding: 0.8em 0;
     cursor: pointer;
     font-size: 1.1em;
     z-index: 1;
@@ -637,7 +637,7 @@
       font-size: 13em;
     }
     .season-stats-row {
-      margin: 10px;
+      margin: 1em;
     }
   }
 
