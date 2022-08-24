@@ -15,7 +15,7 @@
   import SpiderGraph from "../components/SpiderGraph.svelte";
   import ScorelineFreqGraph from "../components/ScorelineFreqGraph.svelte";
   import Nav from "../components/Nav.svelte";
-  import MobileNav2 from "../components/MobileNav2.svelte";
+  import MobileNav from "../components/MobileNav.svelte";
 
   let alias = {
     "Wolverhampton Wanderers": "Wolves",
@@ -63,56 +63,10 @@
     let mobileNav = document.getElementById("mobileNav");
     if (mobileNav.style.display == "none") {
       mobileNav.style.display = "block";
-      // disableScroll();
     } else {
       mobileNav.style.display = "none";
-      // enableScroll();
     }
   }
-
-  // function preventDefault(e) {
-  //   e.preventDefault();
-  // }
-  // function preventDefaultForScrollKeys(e) {
-  //   if (this.keys[e.keyCode]) {
-  //     this.preventDefault(e);
-  //     return false;
-  //   }
-  // }
-
-  // let wheelOpt, wheelEvent;
-  // function setUpScrollDisable() {
-  //   let supportsPassive = false;
-  //   try {
-  //     window.addEventListener(
-  //       "test",
-  //       null,
-  //       Object.defineProperty({}, "passive", {
-  //         // eslint-disable-next-line getter-return
-  //         get: function () {
-  //           supportsPassive = true;
-  //         },
-  //       })
-  //     );
-  //     // eslint-disable-next-line no-empty
-  //   } catch (e) {}
-
-  //   wheelOpt = supportsPassive ? { passive: false } : false;
-  //   wheelEvent =
-  //     "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
-  // }
-  // function disableScroll() {
-  //   window.addEventListener("DOMMouseScroll", preventDefault, false); // older FF
-  //   window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
-  //   window.addEventListener("touchmove", preventDefault, wheelOpt); // mobile
-  //   window.addEventListener("keydown", preventDefaultForScrollKeys, false);
-  // }
-  // function enableScroll() {
-  //   window.removeEventListener("DOMMouseScroll", preventDefault, false);
-  //   window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
-  //   window.removeEventListener("touchmove", preventDefault, wheelOpt);
-  //   window.removeEventListener("keydown", preventDefaultForScrollKeys, false);
-  // }
 
   // Teams in the final position from last season (21/22), including championship teams
   // Used for nav bar links order
@@ -221,13 +175,14 @@
     window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
   }
 
+  let pageWidth;
+  $: mobileView = pageWidth <= 700;
   const showBadge = false;
   let team = "";
   let currentMatchday, playedMatchdays;
   let data;
   onMount(() => {
     initDashboard();
-    setUpScrollDisable();
   });
 
   export let hyphenatedTeam;
@@ -238,10 +193,12 @@
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
+<svelte:window bind:innerWidth={pageWidth}/>
+
 <Router>
   <div id="team">
-    <Nav team={hyphenatedTeam} {teams} getAlias={toAlias} {switchTeam} />
-    <MobileNav2 {hyphenatedTeam} {teams} {toAlias} {switchTeam} {toggleMobileNav} />
+    <Nav team={hyphenatedTeam} {teams} {toAlias} {switchTeam} />
+    <MobileNav {hyphenatedTeam} {teams} {toAlias} {switchTeam} {toggleMobileNav} />
     <button id="mobileNavBtn" on:click={toggleMobileNav}> Select Team </button>
 
     <div id="dashboard">
@@ -303,7 +260,7 @@
             <div class="row-right fixtures-graph row-graph">
               <h1 class="lowered">Fixtures</h1>
               <div class="graph mini-graph mobile-margin">
-                <FixturesGraph {data} {team} />
+                <FixturesGraph {data} {team} {mobileView} />
               </div>
             </div>
           </div>
@@ -336,7 +293,7 @@
             <div class="form-graph row-graph">
               <h1 class="lowered">Form Over Time</h1>
               <div class="graph full-row-graph">
-                <FormOverTimeGraph {data} {team} {playedMatchdays} />
+                <FormOverTimeGraph {data} {team} {playedMatchdays} {mobileView} />
               </div>
             </div>
           </div>
@@ -345,7 +302,7 @@
             <div class="position-over-time-graph row-graph">
               <h1 class="lowered">Position Over Time</h1>
               <div class="graph full-row-graph">
-                <PositionOverTimeGraph {data} {team} {playedMatchdays} />
+                <PositionOverTimeGraph {data} {team} {playedMatchdays} {mobileView} />
               </div>
             </div>
           </div>
@@ -354,7 +311,7 @@
             <div class="goals-scored-vs-conceded-graph row-graph">
               <h1 class="lowered">Goals Scored and Conceded</h1>
               <div class="graph full-row-graph">
-                <GoalsScoredAndConcededGraph {data} {team} {playedMatchdays} />
+                <GoalsScoredAndConcededGraph {data} {team} {playedMatchdays} {mobileView} />
               </div>
             </div>
           </div>
@@ -362,7 +319,7 @@
           <div class="row">
             <div class="row-graph">
               <div class="clean-sheets graph full-row-graph">
-                <CleanSheetsGraph {data} {team} {playedMatchdays} />
+                <CleanSheetsGraph {data} {team} {playedMatchdays} {mobileView} />
               </div>
             </div>
           </div>
@@ -374,14 +331,14 @@
           <div class="row">
             <div class="goals-freq-row row-graph">
               <h1>Goals Per Game</h1>
-              <GoalsPerGame {data} {team} />
+              <GoalsPerGame {data} {team} {mobileView} />
             </div>
           </div>
 
           <div class="row">
             <div class="row-graph">
               <div class="score-freq graph">
-                <ScorelineFreqGraph {data} {team} />
+                <ScorelineFreqGraph {data} {team} {mobileView} />
               </div>
             </div>
           </div>
@@ -629,9 +586,9 @@
     .multi-element-row {
       margin: 0;
     }
-    .mobile-margin {
+    /* .mobile-margin {
       margin-left: 10px;
-    }
+    } */
     .row-left {
       margin-right: 0;
       align-self: center;

@@ -18,14 +18,14 @@
   
   function teamBars(data, type, color) {
     let opener = 'Score'
-    if (type == 'conceded') {
+    if (type == 'Conceded') {
       opener = 'Concede'
     }
     return {
       x: Object.keys(data),
       y: Object.values(data),
       type: "bar",
-      name: `Goals ${type}`,
+      name: type,
       marker: { color: color },
       hovertemplate: `${opener} %{x} with probability %{y:.2f}<extra></extra>`,
       // marker: { color: color },
@@ -62,19 +62,19 @@
 
   function getScoredBars() {
     // return bars(teamScoredFreq, "Goals scored", "#77DD77");
-    return bars(teamScoredFreq, "scored", scoredColourScale);
+    return bars(teamScoredFreq, "Scored", scoredColourScale);
   }
 
   function getConcededBars() {
-    return bars(teamConcededFreq, "conceded", concededColourScale);
+    return bars(teamConcededFreq, "Conceded", concededColourScale);
   }
 
   function getScoredTeamBars() {
-    return teamBars(teamScoredFreq, "scored", scoredColourScale);
+    return teamBars(teamScoredFreq, "Scored", scoredColourScale);
   }
 
   function getConcededTeamBars() {
-    return teamBars(teamConcededFreq, "conceded", concededColourScale);
+    return teamBars(teamConcededFreq, "Conceded", concededColourScale);
   }
 
   function getXLabels() {
@@ -254,7 +254,7 @@
 
   $: team && refreshTeamData();
 
-  export let data, team;
+  export let data, team, mobileView;
 </script>
 
 <div class="two-graphs">
@@ -266,6 +266,7 @@
         {getScoredTeamBars}
         {getXLabels}
         {getYAxisLayout}
+        {mobileView}
       />
     </div>
     <div class="graph freq-graph mini-graphh">
@@ -275,6 +276,7 @@
         {getConcededTeamBars}
         {getXLabels}
         {getYAxisLayout}
+        {mobileView}
       />
     </div>
   {/if}

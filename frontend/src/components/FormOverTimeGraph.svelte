@@ -44,11 +44,50 @@
         lines.push(line);
       }
     }
-  
+
     // Add this team last to ensure it overlaps all other lines
     let line = getFormLine(data, playedMatchdays, team, true);
     lines.push(line);
     return lines;
+  }
+
+  function defaultLayout() {
+    if (setup) {
+      let layout = {
+        yaxis: {
+          title: { text: "Form Rating" },
+          gridcolor: "gray",
+          showgrid: false,
+          showline: false,
+          zeroline: false,
+          fixedrange: true,
+          range: [0, 100],
+          tickvals: Array.from(Array(11), (_, i) => i * 10),
+        },
+        margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
+      };
+      Plotly.update(plotDiv, {}, layout);
+    }
+  }
+
+  function mobileLayout() {
+    if (setup) {
+      let layout = {
+        yaxis: {
+          title: null,
+          gridcolor: "gray",
+          showgrid: false,
+          showline: false,
+          zeroline: false,
+          fixedrange: true,
+          range: [0, 100],
+          visible: false,
+          tickvals: Array.from(Array(11), (_, i) => i * 10),
+        },
+        margin: { r: 20, l: 20, t: 5, b: 40, pad: 5 },
+      };
+      Plotly.update(plotDiv, {}, layout);
+    }
   }
 
   function buildPlotData(data, team) {
@@ -59,7 +98,7 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 20, l: 50, t: 15, b: 40, pad: 5 },
+        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
         hovermode: "closest",
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
@@ -79,9 +118,12 @@
           showgrid: false,
           showline: false,
           fixedrange: true,
-          range: [playedMatchdays[0], playedMatchdays[playedMatchdays.length - 1]],
+          range: [
+            playedMatchdays[0],
+            playedMatchdays[playedMatchdays.length - 1],
+          ],
         },
-        dragmode: false
+        dragmode: false,
       },
       config: {
         responsive: true,
@@ -123,8 +165,10 @@
   }
 
   $: team && refreshPlot();
+  $: !mobileView && defaultLayout();
+  $: setup && mobileView && mobileLayout();
 
-  export let data, team, playedMatchdays;
+  export let data, team, playedMatchdays, mobileView;
 </script>
 
 <div id="plotly">

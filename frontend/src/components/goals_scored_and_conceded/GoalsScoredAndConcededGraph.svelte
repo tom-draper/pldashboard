@@ -88,6 +88,43 @@
     };
   }
 
+  function defaultLayout() {
+    if (setup) {
+      let update = {
+          yaxis: {
+            title: { text: 'Goals' },
+            gridcolor: "gray",
+            showgrid: false,
+            showline: false,
+            zeroline: false,
+            fixedrange: true,
+            rangemode: "nonnegative",
+          },
+          margin: { r: 20, l: 60, t: 15, b: 15, pad: 5 },
+      }
+      Plotly.update(plotDiv, {}, update)
+    }
+  }
+
+  function mobileLayout() {
+    if (setup) {
+      let update = {
+          yaxis: {
+            title: null,
+            gridcolor: "gray",
+            showgrid: false,
+            showline: false,
+            zeroline: false,
+            fixedrange: true,
+            visible: false,
+            rangemode: "nonnegative",
+          },
+          margin: { r: 20, l: 20, t: 15, b: 15, pad: 5 },
+      }
+      Plotly.update(plotDiv, {}, update)
+    }
+  }
+
   function buildPlotData(data, team) {
     // let x = getMatchdayDates(data, fullTeamName);
     let [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
@@ -103,13 +140,13 @@
       layout: {
         title: false,
         autosize: true,
-        margin: { r: 20, l: 50, t: 15, b: 15, pad: 5 },
+        margin: { r: 20, l: 60, t: 15, b: 15, pad: 5 },
         barmode: "stack",
         hovermode: "closest",
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
         yaxis: {
-          title: { text: "Goals Scored" },
+          title: { text: "Goals" },
           gridcolor: "gray",
           showgrid: false,
           showline: false,
@@ -158,6 +195,7 @@
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-graph");
     });
+    // removeYAxisTitle()
   }
 
   function refreshPlot() {
@@ -176,8 +214,10 @@
   }
 
   $: team && refreshPlot();
+  $: !mobileView && defaultLayout();
+  $: setup && mobileView && mobileLayout();
 
-  export let data, team, playedMatchdays;
+  export let data, team, playedMatchdays, mobileView;
 </script>
 
 <div id="plotly">

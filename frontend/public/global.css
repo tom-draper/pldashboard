@@ -200,9 +200,9 @@ a {
   height: 550px !important;
 }
 
-.full-row-graph {
+/* .full-row-graph {
   margin-left: 10px;
-}
+} */
 
 .clean-sheets.body {
   margin: 0;
@@ -394,9 +394,9 @@ h1 {
     margin-bottom: 30px;
   }
 
-  .full-row-graph {
+  /* .full-row-graph {
     margin-left: 10px;
-  }
+  } */
 
   .form-details {
     width: 95%;

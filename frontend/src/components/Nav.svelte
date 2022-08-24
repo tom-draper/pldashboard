@@ -8,7 +8,7 @@
     document.getElementById("navBar").style.display = "block";
     document.getElementById("dashboard").style.marginLeft = "200px";
   }
-  export let team, teams, getAlias, switchTeam;
+  export let team, teams, toAlias, switchTeam;
 </script>
 
 <nav id="navBar">
@@ -33,7 +33,7 @@
               .replace(/ /g, '-')}-secondary);
               background-color: var(--{_team.toLowerCase().replace(/ /g, '-')})"
           >
-            {getAlias(_team)}
+            {toAlias(_team)}
           </div>
         </a>
       {:else}
@@ -44,7 +44,7 @@
           }}
         >
           <div class="team-name">
-            {getAlias(_team)}
+            {toAlias(_team)}
           </div>
         </button>
       {/if}
