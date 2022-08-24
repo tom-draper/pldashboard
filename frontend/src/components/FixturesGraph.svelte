@@ -141,10 +141,10 @@
 
   function xRange(x) {
     let minX = new Date(x[0]);
-    minX.setDate(minX.getDate() - 12);
+    minX.setDate(minX.getDate() - 7);
     // let maxX = new Date(Math.max(x[x.length - 1], now));
     let maxX = new Date(x[x.length - 1]);
-    maxX.setDate(maxX.getDate() + 12);
+    maxX.setDate(maxX.getDate() + 7);
     return [minX, maxX];
   }
 
