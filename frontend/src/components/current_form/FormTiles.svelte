@@ -1,18 +1,21 @@
 <script lang="ts">
   function background(result: string, starTeam: boolean): string {
-    if (starTeam) {
-      return "linear-gradient(red, blue, green)";
-    }
-
     switch (result) {
       case "W":
-        return "#77dd77";
+        if (starTeam) {
+          return "linear-gradient(30deg, #00ff87, #2bd2ff, #fa8bff)";
+        } else {
+          return "#00fe87";
+          return "#77dd77";
+        }
       case "D":
+        return "#f83027";
         return "#ffb347";
       case "L":
+        return "#f83027";
         return "#c23b22";
       default:
-        return "transparent";
+        return "#d6d6d6";
     }
   }
 
@@ -70,11 +73,12 @@
 <style>
   #formTile {
     width: 100%;
-    aspect-ratio: 1/1;
+    aspect-ratio: 1/0.9;
+    /* height: 58px; */
     color: #2b2d2f;
     display: grid;
     place-items: center;
-    border: 3px #333333 solid;
+    /* border: 3px #333333 solid; */
     border-radius: inherit;
   }
   .result {
@@ -87,13 +91,13 @@
     flex: 1;
   }
 
-  .pos-4,
+  /* .pos-4, */
   .pos-3,
   .pos-4,
   .pos-2,
   .pos-1 {
     border-left: none;
-    margin-left: 3px;
+    /* margin-left: 3px; */
   }
 
   .pos-4 {
@@ -118,7 +122,7 @@
     /* Least recent game */
     opacity: 60%;
     border-radius: 6px 0 0 6px;
-    margin-left: 3px;
+    /* margin-left: 3px; */
   }
 
   @media only screen and (max-width: 1100px) {

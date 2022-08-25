@@ -72,11 +72,11 @@
       h = parseInt(h) as any;
       a = parseInt(a) as any;
       if (h > a) {
-        colours.push("#5df455");
+        colours.push("#00fe87");
       } else if (h < a) {
-        colours.push("#f74d4d");
+        colours.push("#f83027");
       } else {
-        colours.push("#dfa700");
+        colours.push("#ffdd00");
       }
     }
     return colours;

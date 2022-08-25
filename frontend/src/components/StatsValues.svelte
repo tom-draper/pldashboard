@@ -232,64 +232,64 @@
     right: calc(var(--ssp3-offset) - 1.2em);
   }
   .ssp-1st {
-    color: #6cff68;
+    color: #00fe87;
   }
   .ssp-2nd {
-    color: #78f570;
+    color: #48f98f;
   }
   .ssp-3rd {
-    color: #81eb78;
+    color: #65f497;
   }
   .ssp-4th {
-    color: #89e07f;
+    color: #7aef9f;
   }
   .ssp-5th {
-    color: #8fd686;
+    color: #8ceaa7;
   }
   .ssp-6th {
-    color: #95cc8c;
+    color: #9be4af;
   }
   .ssp-7th {
-    color: #99c192;
+    color: #a9deb6;
   }
   .ssp-8th {
-    color: #9db797;
+    color: #b6d9bd;
   }
   .ssp-9th {
-    color: #a0ad9d;
+    color: #c1d2c5;
   }
   .ssp-10th {
-    color: #a2a2a2;
+    color: #cccccc;
   }
   .ssp-11th {
-    color: #a2a2a2;
+    color: #cccccc;
   }
   .ssp-12th {
-    color: #af9d9b;
+    color: #d7beb9;
   }
   .ssp-13th {
-    color: #bc9895;
+    color: #e0b0a6;
   }
   .ssp-14th {
-    color: #c7928e;
+    color: #e7a293;
   }
   .ssp-15th {
-    color: #d18d88;
+    color: #ed9380;
   }
   .ssp-16th {
-    color: #db8681;
+    color: #f1836e;
   }
   .ssp-17th {
-    color: #e5807b;
+    color: #f4735c;
   }
   .ssp-18th {
-    color: #ee7975;
+    color: #f6604b;
   }
   .ssp-19th {
-    color: #f7716e;
+    color: #f84c39;
   }
   .ssp-20th {
-    color: #ff6868;
+    color: #f83027;
   }
   .season-stats {
     display: flex;

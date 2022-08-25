@@ -152,8 +152,9 @@
             line: {
               width: 0,
             },
-            fillcolor: "#77DD77",
-            opacity: 0.3,
+            // fillcolor: "#77DD77",
+            fillcolor: "#00fe87",
+            opacity: 0.2,
             layer: "below",
           },
           {
@@ -165,8 +166,9 @@
             line: {
               width: 0,
             },
-            fillcolor: "#4CDEEE",
-            opacity: 0.3,
+            // fillcolor: "#4CDEEE",
+            fillcolor: "#02efff",
+            opacity: 0.2,
             layer: "below",
           },
           {
@@ -178,8 +180,9 @@
             line: {
               width: 0,
             },
-            fillcolor: "#C23B22",
-            opacity: 0.3,
+            fillcolor: "#f83027",
+            // fillcolor: "#C23B22",
+            opacity: 0.2,
             layer: "below",
           },
         ],
