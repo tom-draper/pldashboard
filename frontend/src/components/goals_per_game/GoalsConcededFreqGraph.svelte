@@ -1,4 +1,4 @@
-<script lang="ts">
+t<script lang="ts">
   import { onMount } from "svelte";
 
   function defaultLayout() {
@@ -38,7 +38,7 @@
         paper_bgcolor: "#fafafa",
         yaxis: getYAxisLayout(),
         xaxis: {
-          title: { text: "Scored" },
+          title: { text: "Conceded" },
           linecolor: "black",
           showgrid: false,
           showline: false,
