@@ -5,15 +5,17 @@ type Scoreline = {
     awayGoals: number,
 }
 
+type Match = {
+    team: string,
+    date: string,
+    score: string,  // X - Y
+    status: string,  // FINISHED, IN-PLAY or SCHEDULED
+    atHome: boolean,
+}
+
 type Fixtures = {
     string: {  // Team name
-        number: {  // Matchday number 1 to 38
-            team: string,
-            date: string,
-            score: string,  // X - Y
-            status: string,  // FINISHED, IN-PLAY or SCHEDULED
-            atHome: boolean,
-        }
+        number: Match  // Matchday number 1 to 38
     }
 }
 
@@ -114,4 +116,10 @@ type TeamData = {
     teamRatings: TeamRatings,
     upcoming: Upcoming,
     homeAdvantages: HomeAdvantages,
+}
+
+type PlotData = {
+    data: any[],
+    layout: any,
+    config: any,
 }

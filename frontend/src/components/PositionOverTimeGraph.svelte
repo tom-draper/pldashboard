@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  function getLineConfig(team, isMainTeam) {
+  function getLineConfig(team: string, isMainTeam: boolean): any {
     let lineConfig;
     if (isMainTeam) {
       // Get team primary colour from css variable
       let teamKey = team[0].toLowerCase() + team.slice(1);
-      teamKey = teamKey.replace(/ /g, '-').toLowerCase();
+      teamKey = teamKey.replace(/ /g, "-").toLowerCase();
       let lineColor = getComputedStyle(
         document.documentElement
       ).getPropertyValue(`--${teamKey}`);
@@ -14,22 +14,31 @@
     } else {
       lineConfig = { color: "#d3d3d3" };
     }
-    return lineConfig
+    return lineConfig;
   }
 
-  function getLineY(data, team, matchdays) {
+  function getLineY(
+    data: TeamData,
+    team: string,
+    matchdays: string[]
+  ): number[] {
     let y = [];
     for (let matchday of matchdays) {
       let position = data.form[data._id][team][matchday].position;
       y.push(position);
     }
-    return y
+    return y;
   }
 
-  function getLine(data, x, team, isMainTeam) {
+  function getLine(
+    data: TeamData,
+    x: string[],
+    team: string,
+    isMainTeam: boolean
+  ): any {
     let matchdays = Object.keys(data.form[data._id][team]);
 
-    let y = getLineY(data, team, matchdays)
+    let y = getLineY(data, team, matchdays);
 
     let lineConfig = getLineConfig(team, isMainTeam);
 
@@ -46,7 +55,11 @@
     return line;
   }
 
-  function lines(data, team, playedMatchdays) {
+  function lines(
+    data: TeamData,
+    team: string,
+    playedMatchdays: string[]
+  ): any[] {
     let lines = [];
     for (let i = 0; i < data.teamNames.length; i++) {
       if (data.teamNames[i] != team) {
@@ -54,7 +67,7 @@
         lines.push(line);
       }
     }
-  
+
     // Add this team last to ensure it overlaps all other lines
     let line = getLine(data, playedMatchdays, team, true);
     lines.push(line);
@@ -64,43 +77,43 @@
   function defaultLayout() {
     if (setup) {
       let update = {
-          yaxis: {
-            title: { text: 'Position' },
-            gridcolor: "gray",
-            showgrid: false,
-            showline: false,
-            zeroline: false,
-            autorange: "reversed",
-            fixedrange: true,
-            tickvals: Array.from(Array(20), (_, i) => i + 1),
-          },
-          margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
-      }
-      Plotly.update(plotDiv, {}, update)
+        yaxis: {
+          title: { text: "Position" },
+          gridcolor: "gray",
+          showgrid: false,
+          showline: false,
+          zeroline: false,
+          autorange: "reversed",
+          fixedrange: true,
+          tickvals: Array.from(Array(20), (_, i) => i + 1),
+        },
+        margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
+      };
+      Plotly.update(plotDiv, {}, update);
     }
   }
 
   function mobileLayout() {
     if (setup) {
       let update = {
-          yaxis: {
-            title: null,
-            gridcolor: "gray",
-            showgrid: false,
-            showline: false,
-            zeroline: false,
-            fixedrange: true,
-            autorange: "reversed",
-            visible: false,
-            tickvals: Array.from(Array(10), (_, i) => i + 2),
-          },
-          margin: { r: 20, l: 20, t: 5, b: 40, pad: 5 },
-      }
-      Plotly.update(plotDiv, {}, update)
+        yaxis: {
+          title: null,
+          gridcolor: "gray",
+          showgrid: false,
+          showline: false,
+          zeroline: false,
+          fixedrange: true,
+          autorange: "reversed",
+          visible: false,
+          tickvals: Array.from(Array(10), (_, i) => i + 2),
+        },
+        margin: { r: 20, l: 20, t: 5, b: 40, pad: 5 },
+      };
+      Plotly.update(plotDiv, {}, update);
     }
   }
 
-  function buildPlotData(data, team) {
+  function buildPlotData(data: TeamData, team: string): PlotData {
     let yLabels = Array.from(Array(20), (_, i) => i + 1);
 
     let plotData = {
@@ -170,7 +183,7 @@
             layer: "below",
           },
         ],
-        dragmode: false
+        dragmode: false,
       },
       config: {
         responsive: true,
@@ -181,13 +194,13 @@
     return plotData;
   }
 
-  let plotDiv, plotData;
+  let plotDiv: HTMLDivElement, plotData: PlotData;
   let setup = false;
   onMount(() => {
     genPlot();
     setup = true;
   });
-  
+
   function genPlot() {
     plotData = buildPlotData(data, team);
     new Plotly.newPlot(
@@ -195,12 +208,12 @@
       plotData.data,
       plotData.layout,
       plotData.config
-    ).then(plot => {
+    ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-graph");
     });
   }
-  
+
   function refreshPlot() {
     if (setup) {
       let newPlotData = buildPlotData(data, team);
@@ -209,7 +222,7 @@
       }
       Plotly.redraw(plotDiv);
       if (mobileView) {
-        mobileLayout()
+        mobileLayout();
       }
     }
   }
@@ -218,7 +231,10 @@
   $: !mobileView && defaultLayout();
   $: setup && mobileView && mobileLayout();
 
-  export let data, team, playedMatchdays, mobileView;
+  export let data: TeamData,
+    team: string,
+    playedMatchdays: string[],
+    mobileView: boolean;
 </script>
 
 <div id="plotly">

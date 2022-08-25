@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  function getTeamColor(team) {
+  function getTeamColor(team: string): string {
     let teamKey = team[0].toLowerCase() + team.slice(1);
     teamKey = teamKey.replace(/ /g, "-").toLowerCase();
     let teamColor = getComputedStyle(document.documentElement).getPropertyValue(
@@ -10,7 +10,7 @@
     return teamColor;
   }
 
-  function addTeamComparison(team) {
+  function addTeamComparison(team: string) {
     let teamColor = getTeamColor(team);
 
     let teamData = {
@@ -37,7 +37,7 @@
     plotData.data.unshift(avg); // Add avg below the teamName spider plot
   }
 
-  function removeTeamComparison(team) {
+  function removeTeamComparison(team: string) {
     // Remove spider plot for this teamName
     for (let i = 0; i < plotData.data.length; i++) {
       if (plotData.data[i].name == team) {
@@ -48,7 +48,7 @@
 
     // If removing only comparison teamName, re-insert the initial avg spider plot
     if (comparisonTeams.length == 1) {
-      addAvg(plotData.data);
+      addAvg();
     }
 
     Plotly.redraw(plotDiv); // Redraw with teamName removed
@@ -66,7 +66,7 @@
 
       // If removing only comparison teamName, re-insert the initial avg spider plot
       if (comparisonTeams.length == 1) {
-        addAvg(plotData.data);
+        addAvg();
       }
       removeItem(comparisonTeams, comparisonTeams[i]); // Remove from comparison teams
     }
@@ -77,7 +77,7 @@
   function resetTeamComparisonBtns() {
     let btns = document.getElementById("spider-opp-teams");
     for (let i = 0; i < btns.children.length; i++) {
-      let btn = btns.children[i];
+      let btn: HTMLButtonElement = btns.children[i];
       if (btn.style.background != "") {
         btn.style.background = "";
         btn.style.color = "black";
@@ -85,7 +85,7 @@
     }
   }
 
-  function spiderBtnClick(btn) {
+  function spiderBtnClick(btn: HTMLButtonElement) {
     let team = toName(btn.innerHTML);
     if (btn.style.background == "") {
       let teamKey = team.toLowerCase().replace(/ /g, "-");
@@ -109,7 +109,7 @@
     }
   }
 
-  function goalsPerSeason(data) {
+  function goalsPerSeason(data: TeamData): [Attribute, [number, number]] {
     let attack = {};
     let maxGoals = Number.NEGATIVE_INFINITY;
     let minGoals = Number.POSITIVE_INFINITY;
@@ -139,7 +139,7 @@
     return [attack, [minGoals, maxGoals]];
   }
 
-  function scaleAttack(attack, range) {
+  function scaleAttack(attack: Attribute, range: [number, number]): Attribute {
     let [lower, upper] = range;
     for (let team in attack) {
       if (attack[team] == null) {
@@ -151,36 +151,35 @@
     return attack;
   }
 
-  function formMetricAvgScaled(formMetric, max) {
+  function attributeAvgScaled(attribute: Attribute, max: number): number {
     let total = 0;
-    for (let team in formMetric) {
-      formMetric[team] = (formMetric[team] / max) * 100;
-      total += formMetric[team];
+    for (let team in attribute) {
+      attribute[team] = (attribute[team] / max) * 100;
+      total += attribute[team];
     }
-    let avg = total / Object.keys(formMetric).length;
+    let avg = total / Object.keys(attribute).length;
 
     return avg;
   }
 
-  function formMetricAvg(formMetric) {
+  function attributeAvg(attribute: Attribute): number {
     let total = 0;
-    for (let team in formMetric) {
-      total += formMetric[team];
+    for (let team in attribute) {
+      total += attribute[team];
     }
-    let avg = total / Object.keys(formMetric).length;
+    let avg = total / Object.keys(attribute).length;
 
     return avg;
   }
 
-  function getAttack(data) {
+  function getAttack(data: TeamData): Attribute {
     let [attack, maxGoals] = goalsPerSeason(data);
     attack = scaleAttack(attack, maxGoals);
-    attack.avg = formMetricAvg(attack);
-
+    attack.avg = attributeAvg(attack);
     return attack;
   }
 
-  function concededPerSeason(data) {
+  function concededPerSeason(data: TeamData): [Attribute, [number, number]] {
     let defence = {};
     let maxConceded = Number.NEGATIVE_INFINITY;
     let minConceded = Number.POSITIVE_INFINITY;
@@ -208,10 +207,10 @@
       defence[team] = goalsPerSeason;
     }
 
-    return [defence, [minConceded, maxConceded]];
+    return [defence as Attribute, [minConceded, maxConceded]];
   }
 
-  function scaleDefence(defence, range) {
+  function scaleDefence(defence: Attribute, range: [number, number]): Attribute {
     let [lower, upper] = range;
     for (let team in defence) {
       if (defence[team] == null) {
@@ -223,10 +222,11 @@
     return defence;
   }
 
-  function getDefence(data) {
+  function getDefence(data: TeamData) {
     let [defence, range] = concededPerSeason(data);
     defence = scaleDefence(defence, range);
-    defence.avg = formMetricAvg(defence);
+    defence.avg = attributeAvg(defence);
+    console.log(defence)
 
     return defence;
   }
@@ -247,8 +247,8 @@
     return nCleanSheets;
   }
 
-  function getCleanSheets(data) {
-    let cleanSheets = {};
+  function getCleanSheets(data: TeamData): Attribute {
+    let cleanSheets: Attribute = {};
     let maxCleanSheets = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
       let nCleanSheets = formCleanSheets(data.form[data._id], team);
@@ -262,12 +262,12 @@
       cleanSheets[team] = nCleanSheets;
     }
 
-    cleanSheets.avg = formMetricAvgScaled(cleanSheets, maxCleanSheets);
+    cleanSheets.avg = attributeAvgScaled(cleanSheets, maxCleanSheets);
 
     return cleanSheets;
   }
 
-  function formConsistency(form, team) {
+  function formConsistency(form: Attribute, team: string): number {
     let backToBack = 0; // Counts pairs of back to back identical match results
     let prevResult = null;
     for (let matchday in form[team]) {
@@ -291,8 +291,8 @@
     return backToBack;
   }
 
-  function getConsistency(data) {
-    let consistency = {};
+  function getConsistency(data: TeamData): Attribute {
+    let consistency: Attribute = {};
     let maxConsistency = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
       let backToBack = formConsistency(data.form[data._id], team);
@@ -307,12 +307,12 @@
       consistency[team] = backToBack;
     }
 
-    consistency.avg = formMetricAvgScaled(consistency, maxConsistency);
+    consistency.avg = attributeAvgScaled(consistency, maxConsistency);
 
     return consistency;
   }
 
-  function formWinStreak(form, team) {
+  function formWinStreak(form: Form, team: string): number {
     let winStreak = 0;
     let tempWinStreak = 0;
     for (let matchday in form[team]) {
@@ -332,8 +332,8 @@
     return winStreak;
   }
 
-  function getWinStreak(data) {
-    let winStreaks = {};
+  function getWinStreak(data: TeamData): Attribute {
+    let winStreaks: Attribute = {};
     let maxWinStreaks = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
       let winStreak = formWinStreak(data.form[data._id], team);
@@ -347,12 +347,12 @@
       winStreaks[team] = winStreak;
     }
 
-    winStreaks.avg = formMetricAvgScaled(winStreaks, maxWinStreaks);
+    winStreaks.avg = attributeAvgScaled(winStreaks, maxWinStreaks);
 
     return winStreaks;
   }
 
-  function removeItem(arr, value) {
+  function removeItem(arr: any[], value: any): any[] {
     let index = arr.indexOf(value);
     if (index > -1) {
       arr.splice(index, 1);
@@ -360,7 +360,7 @@
     return arr;
   }
 
-  function formWinsVsBig6(form, team, big6) {
+  function formWinsVsBig6(form: Form, team: string, big6: string[]): number {
     let winsVsBig6 = 0;
     for (let matchday in form[team]) {
       let match = form[team][matchday];
@@ -375,8 +375,8 @@
     return winsVsBig6;
   }
 
-  function getVsBig6(data) {
-    let vsBig6 = {};
+  function getVsBig6(data: TeamData): Attribute {
+    let vsBig6: Attribute = {};
     let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
       let big6 = [
@@ -401,12 +401,12 @@
       vsBig6[team] = winsVsBig6;
     }
 
-    vsBig6.avg = formMetricAvgScaled(vsBig6, maxWinsVsBig6);
+    vsBig6.avg = attributeAvgScaled(vsBig6, maxWinsVsBig6);
 
     return vsBig6;
-  }
+  } 
 
-  function scatterPlot(name, r, color) {
+  function scatterPlot(name: string, r: number[], color: string): any {
     return {
       name: name,
       type: "scatterpolar",
@@ -419,7 +419,7 @@
     };
   }
 
-  function avgScatterPlot() {
+  function avgScatterPlot(): any {
     return scatterPlot(
       "Avg",
       [
@@ -434,7 +434,7 @@
     );
   }
 
-  function getTeamData(team) {
+  function getTeamData(team: string): any {
     let teamColor = getTeamColor(team);
     let teamData = scatterPlot(
       team,
@@ -451,14 +451,14 @@
     return teamData;
   }
 
-  function initSpiderPlots(team) {
+  function initSpiderPlots(team: string): [Attribute, Attribute] {
     let avgData = avgScatterPlot();
     let teamData = getTeamData(team);
 
     return [avgData, teamData];
   }
 
-  function computePlotData(data) {
+  function computePlotData(data: TeamData) {
     attack = getAttack(data);
     defence = getDefence(data);
     cleanSheets = getCleanSheets(data);
@@ -467,7 +467,7 @@
     vsBig6 = getVsBig6(data);
   }
 
-  function buildPlotData(data, team) {
+  function buildPlotData(data: TeamData, team: string): PlotData {
     computePlotData(data);
 
     let spiderPlots = initSpiderPlots(team);
@@ -498,7 +498,12 @@
     return plotData;
   }
 
-  let attack, defence, cleanSheets, consistency, winStreaks, vsBig6;
+  type Attribute = {
+    _: number,
+    avg: number,
+  }
+
+  let attack: Attribute, defence: Attribute, cleanSheets: Attribute, consistency: Attribute, winStreaks: Attribute, vsBig6: Attribute;
   let labels = [
     "Attack",
     "Defence",
@@ -508,7 +513,7 @@
     "Vs Big 6",
   ];
 
-  let plotDiv, plotData;
+  let plotDiv: HTMLDivElement, plotData: PlotData;
   let comparisonTeams = [];
   let setup = false;
   onMount(() => {
@@ -537,7 +542,7 @@
       .children[18].classList.add("bottom-spider-opp-team-btn");
   }
 
-  function emptyArray(arr) {
+  function emptyArray(arr: any[]) {
     let length = arr.length;
     for (let i = 0; i < length; i++) {
       arr.pop();
@@ -568,7 +573,7 @@
 
   $: team && refreshPlot();
 
-  export let data, team, teams, toAlias, toName;
+  export let data: TeamData, team: string, teams: string[], toAlias: Function, toName: Function;
 </script>
 
 <div class="spider-chart">

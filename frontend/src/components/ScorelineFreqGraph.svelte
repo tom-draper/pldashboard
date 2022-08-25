@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  function getAvgScoreFreq(data) {
+  function getAvgScoreFreq(data: TeamData): ScoreFreq {
     let scoreFreq = {};
     for (let team in data.form[data._id]) {
       for (let matchday in data.form[data._id][team]) {
@@ -34,15 +34,10 @@
       }
     }
 
-    return scoreFreq;
+    return scoreFreq as ScoreFreq;
   }
 
-  function getScoreFreq(data, team) {
-    let scoreFreq = {};
-    return scoreFreq;
-  }
-
-  function insertTeamScoreBars(data, team, scoreFreq) {
+  function insertTeamScoreBars(data: TeamData, team: string, scoreFreq: ScoreFreq) {
     for (let score in scoreFreq) {
       if (scoreFreq[score].length == 1) {
         scoreFreq[score].push(0);
@@ -70,12 +65,12 @@
     }
   }
 
-  function getColours(scores) {
+  function getColours(scores: string[]): string[] {
     let colours = [];
     for (let score of scores) {
       let [h, _, a] = score.split(" ");
-      h = parseInt(h);
-      a = parseInt(a);
+      h = parseInt(h) as any;
+      a = parseInt(a) as any;
       if (h > a) {
         colours.push("#5df455");
       } else if (h < a) {
@@ -87,7 +82,7 @@
     return colours;
   }
 
-  function separateBars(scoreFreq) {
+  function separateBars(scoreFreq: ScoreFreq): any[] {
     let sorted = Object.entries(scoreFreq).sort((a, b) => b[1][0] - a[1][0]);
     let x = [];
     let avgY = [];
@@ -109,7 +104,6 @@
         marker: { color: "#C6C6C6" },
         hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
         hoverinfo: "x+y",
-        // opacity: 0.6,
       },
       {
         x: x,
@@ -124,7 +118,7 @@
     ];
   }
 
-  function scaleBars(scoreFreq) {
+  function scaleBars(scoreFreq: ScoreFreq) {
     let avgTotal = 0;
     let teamTotal = 0;
     for (let score in scoreFreq) {
@@ -137,7 +131,7 @@
     }
   }
 
-  function convertToPercentage(scoreFreq) {
+  function convertToPercentage(scoreFreq: ScoreFreq) {
     let avgTotal = 0;
     let teamTotal = 0;
     for (let score in scoreFreq) {
@@ -186,12 +180,11 @@
     }
   }
 
-  function buildPlotData(data, team) {
-
+  function buildPlotData(data: TeamData, team: string): PlotData {
     scoreFreq = getAvgScoreFreq(data);
 
     insertTeamScoreBars(data, team, scoreFreq);
-    scaleBars(scoreFreq, team);
+    scaleBars(scoreFreq);
     convertToPercentage(scoreFreq);
     let [avgBars, teamBars] = separateBars(scoreFreq);
 
@@ -213,8 +206,6 @@
         showline: false,
         zeroline: false,
         fixedrange: true,
-        // autorange: false,
-        // range: [0, 10],
       },
       xaxis: {
         title: { text: "Scoreline" },
@@ -222,8 +213,6 @@
         showgrid: false,
         showline: false,
         fixedrange: true,
-        // ticktext: xLabels,
-        // tickvals: xLabels,
       },
       legend: {
         x: 1,
@@ -264,9 +253,9 @@
     if (setup) {
       resetTeamBars(scoreFreq);
       insertTeamScoreBars(data, team, scoreFreq);
-      scaleBars(scoreFreq, team);
+      scaleBars(scoreFreq);
       convertToPercentage(scoreFreq);
-      let [_, teamBars] = separateBars(scoreFreq, team);
+      let [_, teamBars] = separateBars(scoreFreq);
       plotData.data[1] = teamBars; // Update team bars
       Plotly.redraw(plotDiv);
       if (mobileView) {
@@ -275,8 +264,12 @@
     }
   }
 
-  let plotDiv, plotData;
-  let scoreFreq;
+  type ScoreFreq = {
+    string: number[]
+  }
+
+  let plotDiv: HTMLDivElement, plotData: PlotData;
+  let scoreFreq: ScoreFreq;
   let setup = false;
   onMount(() => {
     genPlot();
@@ -287,7 +280,7 @@
   $: !mobileView && defaultLayout();
   $: setup && mobileView && mobileLayout();
 
-  export let data, team, mobileView;
+  export let data: TeamData, team: string, mobileView: boolean;
 </script>
 
 <div id="plotly">
