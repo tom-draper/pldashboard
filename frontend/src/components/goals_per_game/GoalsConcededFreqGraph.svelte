@@ -38,7 +38,7 @@
         paper_bgcolor: "#fafafa",
         yaxis: getYAxisLayout(),
         xaxis: {
-          title: { text: "Scored" },
+          title: { text: "Conceded" },
           linecolor: "black",
           showgrid: false,
           showline: false,
