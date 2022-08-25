@@ -160,7 +160,7 @@
   }
 
   .table-row.this-team {
-    padding: 13px 5%;
+    padding: 14px 5%;
     font-size: 20px;
   }
 

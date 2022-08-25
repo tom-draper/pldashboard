@@ -69,7 +69,7 @@
       x: playedMatchdays,
       y: Object.values(teamScored),
       text: matchdays,
-      marker: { color: "#77DD77" },
+      marker: { color: "#00fe87" },
       hovertemplate:
         "<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>",
     };
@@ -82,7 +82,7 @@
       x: playedMatchdays,
       y: Object.values(teamConceded),
       text: matchdays,
-      marker: { color: "C23B22" },
+      marker: { color: "#f83027" },
       hovertemplate:
         "<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>",
     };

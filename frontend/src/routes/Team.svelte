@@ -375,7 +375,7 @@
     place-items: center;
   }
   .title {
-    font-size: 2.5rem;
+    font-size: 2.3rem;
     width: fit-content;
   }
   .page-content {
@@ -384,6 +384,7 @@
   #team {
     display: flex;
     overflow-x: hidden;
+    font-size: 15px;
   }
   .position-and-badge {
     height: 500px;

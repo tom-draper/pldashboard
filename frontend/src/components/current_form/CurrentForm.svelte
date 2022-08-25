@@ -40,7 +40,7 @@
 
     // Fill in blanks with None icons
     for (let i = formIcons.length; i < 5; i++) {
-      formIcons.unshift("N");
+      formIcons.unshift("W");
     }
     return formIcons.join('');
   }
@@ -120,7 +120,7 @@
 <div class="current-form">
   Current form:
   {#if currentMatchday != null}
-    {(data.form[data._id][team][currentMatchday].formRating5 * 100).toFixed(1)}%
+    <span class="current-form-value">{(data.form[data._id][team][currentMatchday].formRating5 * 100).toFixed(1)}%</span>
   {:else}
     None
   {/if}
@@ -128,19 +128,26 @@
 
 <style scoped>
   .current-form {
-    font-size: 1.8rem;
-    margin: 20px 10px;
+    font-size: 1.7rem;
+    margin: 20px 0;
+    padding: 10px 25px 8px;
+    background: #38003d;
+    color: white;
+    border-radius: var(--border-radius);
   }
   .current-form-row {
-    font-size: 0.9em;
+    font-size: 13px;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    width: calc(100% - 5px);
+    width: 100%;
+  }
+  .current-form-value {
+    color: #00fe87;
   }
 
-  .name-row {
+  /* .name-row {
     margin: 0 12px 0 4px;
-  }
+  } */
 
   .icon-name {
     position: relative;
@@ -149,12 +156,12 @@
 
   @media only screen and (max-width: 1100px) {
     .current-form-row {
-      width: min(80%, 500px);
-      margin-right: 8px;
+      width: min(80%, 440px);
+      /* margin-right: 8px; */
     }
-    .name-row {
+    /* .name-row {
       margin: 0 0 8px
-    }
+    } */
   }
   
   @media only screen and (max-width: 700px) {

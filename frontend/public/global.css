@@ -113,7 +113,7 @@ a {
 }
 
 .title {
-  font-size: 2.5em;
+  font-size: 2.4em;
   font-weight: 600;
 }
 
@@ -375,7 +375,7 @@ h1 {
   }
 
   .resizable-spider-chart {
-    height: 220px !important;
+    height: 235px !important;
   }
 
   .plotly-graph-div {

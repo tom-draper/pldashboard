@@ -76,15 +76,14 @@
                 >
               </div>
             </div>
-            <div class="next-game-item">
+            <div class="next-game-item current-form">
               Current form:
               {#if currentMatchday != null}
-                <b
-                  >{(
+                  <span class="current-form-value">{(
                     data.form[data._id][data.upcoming[team].nextTeam][
                       currentMatchday
                     ].formRating5 * 100
-                  ).toFixed(1)}%</b
+                  ).toFixed(1)}%</span
                 >
               {:else}
                 None
@@ -118,7 +117,7 @@
           <!-- Display table of previous results against the next team this team is playing -->
           {#each data.upcoming[team].prevMatches as prevMatch}
             <div class="next-game-item-container">
-              <div class="past-result-date">
+              <div class="past-result-date {prevMatch.result}">
                 {new Date(prevMatch.date).toLocaleDateString("en-GB", {
                   weekday: "short",
                   year: "numeric",
@@ -193,7 +192,7 @@
   }
 
   .predictions-and-logo {
-    font-size: 22px;
+    font-size: 1.4em;
     width: 45%;
     margin: auto;
   }
@@ -222,8 +221,8 @@
     width: 55%;
     display: flex;
     flex-direction: column;
+    padding: 20px 0 40px;
     margin: auto 0;
-    margin-top: 20px;
   }
 
   .next-game-prediction {
@@ -234,7 +233,7 @@
   .next-game-values {
     display: flex;
     margin-right: 5%;
-    min-height: 370px;
+    min-height: 387px;
   }
 
   .next-game-position {
@@ -246,14 +245,17 @@
   }
 
   .past-result {
-    font-size: 16px;
+    font-size: 15px;
     display: flex;
   }
 
   .past-result-date {
     font-size: 13px;
     color: #333;
-    margin: 6px 0 1px;
+    width: 120px;
+    margin: 8px auto -5px;
+    padding-top: 3px;
+    border-radius: 4px 4px 0 0;
   }
 
   .prev-results-title {
@@ -263,14 +265,13 @@
   }
   .no-prev-results {
     background: grey;
-    padding: 60px 0 !important;
     display: grid;
     place-items: center;
     background: #f3f3f3;
     border: rgb(181, 181, 181) solid 5px;
     color: rgb(181, 181, 181);
     border-radius: var(--border-radius);
-    margin: 0 25px !important;
+    /* margin: 0 25px !important; */
   }
   .next-game-item {
     border-radius: var(--border-radius);
@@ -279,14 +280,23 @@
   .won {
     background: rgb(169, 247, 169);
     background: #77dd77;
+    background: #00fe87;
+    color: #368e36;
+    color: #00b762;
   }
   .drew {
     background: rgb(255, 207, 138);
     background: #ffb347;
+    background: #ffdd00;
+    color: #b77820;
+    color: #bb9900;
   }
   .lost {
     background: #f77979;
     background: #c23b22;
+    background: #f83027;
+    color: #752112;
+    color: #af1008;
   }
 
   .accuracy {
@@ -313,7 +323,7 @@
     font-weight: 800;
     flex: 3;
     margin-top: 3px;
-
+    color: #333 !important;
     align-self: center;
   }
 
@@ -325,7 +335,7 @@
 
   .home-team,
   .away-team {
-    font-size: 16px;
+    font-size: 15px;
     width: calc(50% - 18px);
     padding: 5px 0 3px;
     flex: 1;
@@ -337,18 +347,30 @@
     text-align: left;
   }
 
+  .current-form {
+    border-radius: 6px;
+    padding: 10px 15px;
+    color: white;
+    background: #38003d;
+    width: fit-content;
+    margin: auto auto 10px;
+  }
+  .current-form-value {
+    color: #00fe87;
+  }
+
   @media only screen and (max-width: 1100px) {
     .next-game-prediction {
-      margin: 50px 20px 0;
+      margin: 50px 20px 40px;
     }
     .next-game-values {
-      margin: 5% 8% 5% 0;
+      margin: 1% 8% 2% 0;
     }
   }
 
   @media only screen and (max-width: 800px) {
     .next-game-prediction {
-      margin: 50px 75px 0;
+      margin: 50px 75px 40px;
     }
 
     /* Change next game to column orientation */
@@ -365,6 +387,7 @@
     .past-results {
       margin: 30px auto 0;
       width: 100%;
+      padding: 0;
     }
 
     .next-game-prediction {
