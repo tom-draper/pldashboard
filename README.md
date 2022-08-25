@@ -4,7 +4,7 @@
 
 A Premier League statistics dashboard highlighting recent performance of each team. Includes interactive visualisations, carefully chosen metrics and score predictions for upcoming games.
 
-Built with Svelte, Flask, Plotly, Pandas MongoDB and the football-data.org API for the football data. 
+Built with Svelte, TypeScript, Flask, Plotly, Pandas, MongoDB and the football-data.org API for the football data. 
 
 Hosted at: https://pldashboard.com
 
