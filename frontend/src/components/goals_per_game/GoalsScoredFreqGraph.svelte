@@ -23,7 +23,7 @@
     }
   }
 
-  function buildPlotData() {
+  function buildPlotData(): PlotData {
     let xLabels = getXLabels();
 
     let plotData = {
@@ -89,7 +89,7 @@
     }
   }
 
-  let plotDiv, plotData;
+  let plotDiv: HTMLDivElement, plotData: PlotData;
   let setup = false;
   onMount(() => {
     genPlot();
@@ -100,7 +100,7 @@
   $: !mobileView && defaultLayout();
   $: setup && mobileView && mobileLayout();
 
-  export let team, getScoredBars, getScoredTeamBars, getXLabels, getYAxisLayout, mobileView;
+  export let team: string, getScoredBars: Function, getScoredTeamBars: Function, getXLabels: Function, getYAxisLayout: Function, mobileView: boolean;
 </script>
 
 <div id="plotly">

@@ -19,7 +19,7 @@
   }
 
   let hyphenatedTeams: string[];
-  $: hyphenatedTeam & getHyphenatedTeamNames();
+  $: (hyphenatedTeam as any) & getHyphenatedTeamNames();
 
   export let hyphenatedTeam: string,
     teams: string[],

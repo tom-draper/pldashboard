@@ -123,3 +123,7 @@ type PlotData = {
     layout: any,
     config: any,
 }
+
+type Counter = {
+  string: number
+}

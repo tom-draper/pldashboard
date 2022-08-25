@@ -226,7 +226,6 @@
     let [defence, range] = concededPerSeason(data);
     defence = scaleDefence(defence, range);
     defence.avg = attributeAvg(defence);
-    console.log(defence)
 
     return defence;
   }

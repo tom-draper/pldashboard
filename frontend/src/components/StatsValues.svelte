@@ -132,8 +132,6 @@
       }
     }
 
-    console.log(stats);
-
     return stats as Stats;
   }
 
