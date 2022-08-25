@@ -214,7 +214,7 @@
         </a>
       </div>
 
-      {#if data != undefined}
+      {#if data != undefined && false}
         <div class="page-content">
           <div class="row multi-element-row small-bottom-margin">
             {#if showBadge}

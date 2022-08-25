@@ -136,7 +136,6 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     width: calc(100% - 5px);
-    /* margin-right: 8px !important; */
   }
 
   .name-row {
@@ -145,7 +144,6 @@
 
   .icon-name {
     position: relative;
-    /* width: 20%; */
     margin-top: 0.6em;
   }
 
@@ -154,7 +152,9 @@
       width: min(80%, 500px);
       margin-right: 8px;
     }
-
+    .name-row {
+      margin: 0 0 8px
+    }
   }
   
   @media only screen and (max-width: 700px) {

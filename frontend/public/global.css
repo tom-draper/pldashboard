@@ -394,6 +394,7 @@ h1 {
   display: grid;
   place-items: center;
   margin-top: 30vh;
+  margin-bottom: 10px;
 }
 
 .loading-spinner {
