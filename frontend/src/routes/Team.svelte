@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { Router } from "svelte-routing";
   import { onMount } from "svelte";
   import CurrentForm from "../components/current_form/CurrentForm.svelte";
@@ -25,7 +25,7 @@
     "Brighton and Hove Albion": "Brighton",
   };
 
-  function toInitials(team) {
+  function toInitials(team: string): string {
     switch (team) {
       case "Brighton and Hove Albion":
         return "BHA";
@@ -45,14 +45,14 @@
     return team.slice(0, 3).toUpperCase();
   }
 
-  function toAlias(team) {
+  function toAlias(team: string): string {
     if (team in alias) {
       return alias[team];
     }
     return team;
   }
 
-  function toName(teamAlias) {
+  function toName(teamAlias: string): string {
     if (!Object.values(alias).includes(teamAlias)) {
       return teamAlias;
     }
@@ -95,7 +95,7 @@
     "Nottingham Forest",
   ];
 
-  function toTitleCase(str) {
+  function toTitleCase(str: string): string {
     return str
       .toLowerCase()
       .split(" ")
@@ -106,7 +106,7 @@
       .replace("And", "and");
   }
 
-  function getPlayedMatchdays(data, team) {
+  function getPlayedMatchdays(data, team: string) {
     let matchdays = Object.keys(data.form[data._id][team]);
 
     // If played one or no games, take x-axis from whole season dates

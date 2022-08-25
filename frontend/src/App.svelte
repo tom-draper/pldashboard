@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { Router, Route } from "svelte-routing";
   import Teams from "./routes/Teams.svelte";
   import Team from "./routes/Team.svelte";
