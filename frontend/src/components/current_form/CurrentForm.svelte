@@ -40,7 +40,7 @@
 
     // Fill in blanks with None icons
     for (let i = formIcons.length; i < 5; i++) {
-      formIcons.unshift("W");
+      formIcons.unshift("N");
     }
     return formIcons.join('');
   }
