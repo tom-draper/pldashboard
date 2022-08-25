@@ -1,0 +1,141 @@
+<script lang="ts">
+  function background(result: string, starTeam: boolean): string {
+    if (starTeam) {
+      return "linear-gradient(red, blue, green)";
+    }
+
+    switch (result) {
+      case "W":
+        return "#77dd77";
+      case "D":
+        return "#ffb347";
+      case "L":
+        return "#c23b22";
+      default:
+        return "transparent";
+    }
+  }
+
+  function formatResult(result: string): string {
+    console.log(form, starTeams)
+    switch (result) {
+      case "W":
+      case "D":
+      case "L":
+        return result;
+      default:
+        return "";
+    }
+  }
+
+  export let form: string, starTeams: boolean[];
+</script>
+
+<div class="icon pos-0">
+  <div id="formTile" style="background: {background(form[0], starTeams[0])}">
+    <div class="result">
+      {formatResult(form[0])}
+    </div>
+  </div>
+</div>
+<div class="icon pos-1">
+  <div id="formTile" style="background: {background(form[1], starTeams[1])}">
+    <div class="result">
+      {formatResult(form[1])}
+    </div>
+  </div>
+</div>
+<div class="icon pos-2">
+  <div id="formTile" style="background: {background(form[2], starTeams[2])}">
+    <div class="result">
+      {formatResult(form[2])}
+    </div>
+  </div>
+</div>
+<div class="icon pos-3">
+  <div id="formTile" style="background: {background(form[3], starTeams[3])}">
+    <div class="result">
+      {formatResult(form[3])}
+    </div>
+  </div>
+</div>
+<div class="icon pos-4">
+  <div id="formTile" style="background: {background(form[4], starTeams[4])}">
+    <div class="result">
+      {formatResult(form[4])}
+    </div>
+  </div>
+</div>
+
+<style>
+  #formTile {
+    width: 100%;
+    aspect-ratio: 1/1;
+    color: #2b2d2f;
+    display: grid;
+    place-items: center;
+    border: 3px #333333 solid;
+    border-radius: inherit;
+  }
+  .result {
+    margin-top: 0.14em;
+    font-size: 2vw;
+  }
+
+  .icon {
+    position: relative;
+    flex: 1;
+  }
+
+  .pos-4,
+  .pos-3,
+  .pos-4,
+  .pos-2,
+  .pos-1 {
+    border-left: none;
+    margin-left: 3px;
+  }
+
+  .pos-4 {
+    /* Most recent game */
+    opacity: 100%;
+    border-radius: 0 6px 6px 0;
+  }
+  
+  .pos-3 {
+    opacity: 90%;
+  }
+  
+  .pos-2 {
+    opacity: 80%;
+  }
+  
+  .pos-1 {
+    opacity: 70%;
+  }
+
+  .pos-0 {
+    /* Least recent game */
+    opacity: 60%;
+    border-radius: 6px 0 0 6px;
+    margin-left: 3px;
+  }
+
+  @media only screen and (max-width: 1100px) {
+    .result {
+      font-size: 3em;
+    }
+    /* .icon {
+      width: 20vw;
+    } */
+    /* .icon {
+      margin-left: 0; */
+    /* } */
+  }
+  @media only screen and (max-width: 600px) {
+    .result {
+      font-size: 7vw;
+      margin-top: 0.25em;
+    }
+  }
+</style>
