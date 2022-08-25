@@ -29,7 +29,7 @@
     let plotData = {
       data: getScoredBars(),
       layout: {
-        title: false,
+        title: null,
         autosize: true,
         margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
         hovermode: "closest",

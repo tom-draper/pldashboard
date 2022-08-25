@@ -1,4 +1,4 @@
-t<script lang="ts">
+<script lang="ts">
   import { onMount } from "svelte";
 
   function defaultLayout() {
@@ -25,10 +25,11 @@ t<script lang="ts">
 
   function buildPlotData(): PlotData {
     let xLabels = getXLabels();
+
     let plotData = {
       data: getConcededBars(),
       layout: {
-        title: false,
+        title: null,
         autosize: true,
         margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
         hovermode: "closest",
@@ -108,7 +109,5 @@ t<script lang="ts">
 </script>
 
 <div id="plotly">
-  <div id="plotDiv" bind:this={plotDiv}>
-    <!-- Plotly chart will be drawn inside this DIV -->
-  </div>
+  <div id="plotDiv" bind:this={plotDiv}></div>
 </div>

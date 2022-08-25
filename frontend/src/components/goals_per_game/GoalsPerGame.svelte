@@ -297,7 +297,7 @@
         {mobileView}
       />
     </div>
-    <div class="graph freq-graph mini-graphh">
+    <div class="graph freq-graph mini-graph">
       <GoalsConcededFreq
         {team}
         {getConcededBars}
@@ -310,7 +310,7 @@
   {/if}
 </div>
 
-<style>
+<style scoped>
   .two-graphs {
     display: flex;
     margin: 0 8%;
