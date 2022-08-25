@@ -477,7 +477,7 @@
     display: flex;
     flex-direction: column;
     padding-right: auto;
-    margin-right: 1.5vw;
+    margin-right: 1.4em;
     text-justify: center;
     flex: 4;
   }
@@ -485,7 +485,7 @@
     flex: 10;
   }
   .multi-element-row {
-    margin: 0 20px 3rem 20px;
+    margin: 0 1.4em 3rem;
   }
 
   .spider-chart-row {
