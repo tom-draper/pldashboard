@@ -1,4 +1,4 @@
-<script lang="ts">
+t<script lang="ts">
   import { onMount } from "svelte";
 
   function defaultLayout() {
