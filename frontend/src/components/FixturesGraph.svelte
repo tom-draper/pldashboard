@@ -158,7 +158,7 @@
 
       let sizes = plotData.data[0].marker.size;
       for (let i = 0; i < sizes.length; i++) {
-        sizes[i] = Math.round(sizes[i] * 1.8);
+        sizes[i] = Math.round(sizes[i] * 1.7);
       }
       let dataUpdate = {
         marker: {
@@ -189,7 +189,7 @@
       
       let sizes = plotData.data[0].marker.size;
       for (let i = 0; i < sizes.length; i++) {
-        sizes[i] = Math.round(sizes[i] / 1.8);
+        sizes[i] = Math.round(sizes[i] / 1.7);
       }
       let dataUpdate = {
         marker: {
