@@ -1,5 +1,5 @@
 <script lang="ts">
-  import FormTile from "./FormTile.svelte";
+  import FormTiles from "./FormTiles.svelte";
 
   function getSortedMatchdays(data: TeamData, team: string): string[] {
     let matchdays = Object.keys(data.form[data._id][team]).sort(function (
@@ -21,18 +21,18 @@
   ): boolean[] {
     let formStarTeams = [];
     for (let matchday of matchdays) {
-      formStarTeams.unshift(data.form[data._id][team][matchday].beatStarTeam);
+      formStarTeams.unshift(data.form[data._id][team][matchday].starTeam);
     }
 
     // Fill in blanks
     for (let i = formStarTeams.length; i < 5; i++) {
-      formStarTeams.unshift("");
+      formStarTeams.unshift(false);
     }
 
     return formStarTeams;
   }
 
-  function getFormIcons(data: TeamData, team: string): string[] {
+  function getFormIcons(data: TeamData, team: string): string {
     let formIcons = [];
     if (Object.keys(data.form[data._id][team][currentMatchday]).length > 0) {
       formIcons = data.form[data._id][team][currentMatchday].form5.split("");
@@ -42,8 +42,7 @@
     for (let i = formIcons.length; i < 5; i++) {
       formIcons.unshift("N");
     }
-
-    return formIcons;
+    return formIcons.join('');
   }
 
   function getFormInitials(
@@ -87,19 +86,19 @@
     return latestN;
   }
 
-  let formIcons: string[], formStarTeams: boolean[], formInitials: string[];
   function setFormValues() {
     let sortedMatchdays = getSortedMatchdays(data, team);
 
     let matchdays = latestNPlayedMatchdays(data, team, sortedMatchdays, 5);
-
+    
     formIcons = getFormIcons(data, team);
     formStarTeams = getFormStarTeams(data, team, matchdays);
     formInitials = getFormInitials(data, team, matchdays);
   }
-
+  
+  let formIcons: string, formStarTeams: boolean[], formInitials: string[];
   $: team && setFormValues();
-
+  
   export let data: TeamData,
     currentMatchday: string,
     team: string,
@@ -107,24 +106,10 @@
 </script>
 
 {#if formInitials != undefined}
-  <div class="current-form-row">
-    <div class="icon pos-0">
-      <FormTile result={formIcons[0]} starTeam={formStarTeams[0]} />
-    </div>
-    <div class="icon pos-1">
-      <FormTile result={formIcons[1]} starTeam={formStarTeams[1]} />
-    </div>
-    <div class="icon pos-2">
-      <FormTile result={formIcons[2]} starTeam={formStarTeams[2]} />
-    </div>
-    <div class="icon pos-3">
-      <FormTile result={formIcons[3]} starTeam={formStarTeams[3]} />
-    </div>
-    <div class="icon pos4">
-      <FormTile result={formIcons[4]} starTeam={formStarTeams[4]} />
-    </div>
+  <div class="current-form-row icon-row">
+    <FormTiles form={formIcons}, starTeams={formStarTeams} />
   </div>
-  <div class="current-form-row">
+  <div class="current-form-row name-row">
     <div class="icon-name pos-0">{formInitials[0]}</div>
     <div class="icon-name pos-1">{formInitials[1]}</div>
     <div class="icon-name pos-2">{formInitials[2]}</div>
@@ -148,57 +133,33 @@
   }
   .current-form-row {
     font-size: 0.9em;
-    display: flex;
-    width: min(100%, 500px);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: calc(100% - 5px);
+    /* margin-right: 8px !important; */
   }
 
-  .icon {
-    position: relative;
-    width: calc(20% - 14px);
-    aspect-ratio: 1/1;
-    margin: 0 7px 7px;
+  .name-row {
+    margin: 0 12px 0 4px;
   }
 
   .icon-name {
     position: relative;
-    width: 20%;
-    margin-left: 7px;
+    /* width: 20%; */
+    margin-top: 0.6em;
   }
 
-  .pos-4 {
-    /* Most recent game */
-    opacity: 100%;
-  }
+  @media only screen and (max-width: 1100px) {
+    .current-form-row {
+      width: min(80%, 500px);
+      margin-right: 8px;
+    }
 
-  .pos-3 {
-    opacity: 90%;
   }
-
-  .pos-2 {
-    opacity: 80%;
-  }
-
-  .pos-1 {
-    opacity: 70%;
-  }
-
-  .pos-0 {
-    /* Least recent game */
-    opacity: 60%;
-  }
-
+  
   @media only screen and (max-width: 700px) {
     .current-form-row {
-      width: 90%;
-    }
-  }
-  @media only screen and (max-width: 1100px) {
-    .icon {
-      width: 20vw;
-    }
-
-    .current-form-row {
-      width: min(80%, 600px);
+      width: 95%;
     }
   }
 </style>
