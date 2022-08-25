@@ -277,26 +277,26 @@
     border-radius: var(--border-radius);
   }
 
+  .won,
+  .drew,
+  .lost {
+    color: rgba(0, 0, 0, 0.45);
+  }
+
   .won {
     background: rgb(169, 247, 169);
     background: #77dd77;
     background: #00fe87;
-    color: #368e36;
-    color: #00b762;
   }
   .drew {
     background: rgb(255, 207, 138);
     background: #ffb347;
     background: #ffdd00;
-    color: #b77820;
-    color: #bb9900;
   }
   .lost {
     background: #f77979;
     background: #c23b22;
     background: #f83027;
-    color: #752112;
-    color: #af1008;
   }
 
   .accuracy {
