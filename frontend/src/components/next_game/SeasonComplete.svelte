@@ -1,5 +1,5 @@
-<script>
-  export let data;
+<script lang="ts">
+  export let data: TeamData;
 </script>
 
 <div class="next-game-prediction">

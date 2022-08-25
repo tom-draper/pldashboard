@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
 
-  function getMatchDetail(match) {
-    let matchDetail;
+  function getMatchDetail(match: Match): string {
+    let matchDetail: string;
     let homeAway = match.atHome ? "Home" : "Away";
     if (match.score != null) {
       matchDetail = `${match.team} (${homeAway}) ${match.score}`;
@@ -12,7 +12,7 @@
     return matchDetail;
   }
 
-  function sortByMatchDate(x, y, details) {
+  function sortByMatchDate(x: number[], y: number[], details: string[]) {
     let list = [];
     for (let i = 0; i < x.length; i++) {
       list.push({ x: x[i], y: y[i], details: details[i] });
@@ -29,9 +29,14 @@
     }
   }
 
-  function increaseNextGameMarker(sizes, x, now, bigMarkerSize) {
+  function increaseNextGameMarker(
+    sizes: number[],
+    x: number[],
+    now: number,
+    bigMarkerSize: number
+  ): number[] {
     // Get matchday date with smallest time difference to now
-    let nextGameIdx;
+    let nextGameIdx: number;
     let minDiff = Number.POSITIVE_INFINITY;
     for (let i = 0; i < x.length; i++) {
       let diff = x[i] - now;
@@ -49,7 +54,10 @@
     return sizes;
   }
 
-  function linePoints(data, team) {
+  function linePoints(
+    data: TeamData,
+    team: string
+  ): [number[], number[], string[]] {
     let x = [];
     let y = [];
     let details = [];
@@ -70,7 +78,7 @@
     return [x, y, details];
   }
 
-  function line(data, team, now) {
+  function line(data: TeamData, team: string, now: number): any {
     let [x, y, details] = linePoints(data, team);
 
     sortByMatchDate(x, y, details);
@@ -111,7 +119,7 @@
         ],
         color: y,
         opacity: 1,
-        line: { width: 1 }
+        line: { width: 1 },
       },
       customdata: matchdays,
       hovertemplate:
@@ -119,8 +127,8 @@
     };
   }
 
-  function nowLine(now, maxX) {
-    let nowLine = [];
+  function nowLine(now: number, maxX: number): any {
+    let nowLine = {};
     if (now <= maxX) {
       // Vertical line shapw marking current day
       nowLine = {
@@ -139,7 +147,7 @@
     return nowLine;
   }
 
-  function xRange(x) {
+  function xRange(x: number[]): [Date, Date] {
     let minX = new Date(x[0]);
     minX.setDate(minX.getDate() - 7);
     // let maxX = new Date(Math.max(x[x.length - 1], now));
@@ -151,45 +159,14 @@
   function defaultLayout() {
     if (setup) {
       let layoutUpdate = {
-        'yaxis.title': {text: 'Difficulty'},
-        'margin.l': 60,
-        'yaxis.color': 'black'
+        "yaxis.title": { text: "Difficulty" },
+        "margin.l": 60,
+        "yaxis.color": "black",
       };
 
       let sizes = plotData.data[0].marker.size;
       for (let i = 0; i < sizes.length; i++) {
-        sizes[i] = Math.round(sizes[i] * 1.8);
-      }
-      let dataUpdate = {
-        marker: {
-          size: sizes,
-          colorscale: [
-            [0, "#01c626"],
-            [0.5, "#f3f3f3"],
-            [1, "#fc1303"],
-          ],
-          color: plotData.data[0].y,
-          opacity: 1,
-          line: { width: 1 }
-        },
-      }
-      plotData.data[0].marker.size = sizes
-
-      Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
-    }
-  }
-
-  function mobileLayout() {
-    if (setup) {
-      let layoutUpdate = {
-        'yaxis.title': null,
-        'margin.l': 20,
-        'yaxis.color': '#fafafa',
-      };
-      
-      let sizes = plotData.data[0].marker.size;
-      for (let i = 0; i < sizes.length; i++) {
-        sizes[i] = Math.round(sizes[i] / 1.8);
+        sizes[i] = Math.round(sizes[i] * 1.7);
       }
       let dataUpdate = {
         marker: {
@@ -203,14 +180,45 @@
           opacity: 1,
           line: { width: 1 },
         },
-      }
-      plotData.data[0].marker.size = sizes
-      
+      };
+      plotData.data[0].marker.size = sizes;
+
       Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
     }
   }
 
-  function buildPlotData(data, team) {
+  function mobileLayout() {
+    if (setup) {
+      let layoutUpdate = {
+        "yaxis.title": null,
+        "margin.l": 20,
+        "yaxis.color": "#fafafa",
+      };
+
+      let sizes = plotData.data[0].marker.size;
+      for (let i = 0; i < sizes.length; i++) {
+        sizes[i] = Math.round(sizes[i] / 1.7);
+      }
+      let dataUpdate = {
+        marker: {
+          size: sizes,
+          colorscale: [
+            [0, "#01c626"],
+            [0.5, "#f3f3f3"],
+            [1, "#fc1303"],
+          ],
+          color: plotData.data[0].y,
+          opacity: 1,
+          line: { width: 1 },
+        },
+      };
+      plotData.data[0].marker.size = sizes;
+
+      Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+    }
+  }
+
+  function buildPlotData(data: TeamData, team: string): PlotData {
     // Build data to create a fixtures line graph displaying the date along the
     // x-axis and opponent strength along the y-axis
     let now = Date.now();
@@ -276,12 +284,12 @@
       plotData.data[0] = l; // Overwrite plot data
       Plotly.redraw(plotDiv);
       if (mobileView) {
-        mobileLayout()
+        mobileLayout();
       }
     }
   }
 
-  let plotDiv, plotData;
+  let plotDiv: HTMLDivElement, plotData: PlotData;
   let setup = false;
   onMount(() => {
     genPlot();
@@ -292,7 +300,7 @@
   $: !mobileView && defaultLayout();
   $: setup && mobileView && mobileLayout();
 
-  export let data, team, mobileView;
+  export let data: TeamData, team: string, mobileView: boolean;
 </script>
 
 <div id="plotly">

@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
 
-  function getAvgGoalsPerGame(data) {
-    let avgGoals = {};
+  function getAvgGoalsPerGame(data: TeamData): Counter {
+    let avgGoals: Counter = {};
 
     for (let team of data.teamNames) {
       for (let matchday of Object.keys(data.form[data._id][team])) {
@@ -28,9 +28,9 @@
     return avgGoals;
   }
 
-  function getTeamGoalsPerGame(data, team) {
-    let scored = {};
-    let conceded = {};
+  function getTeamGoalsPerGame(data: TeamData, team: string): [Counter, Counter] {
+    let scored: Counter = {};
+    let conceded: Counter = {};
     for (let matchday of Object.keys(data.form[data._id][team])) {
       let score = data.form[data._id][team][matchday].score;
       if (score != null) {
@@ -50,7 +50,7 @@
     return [scored, conceded];
   }
 
-  function avgLine(playedMatchdays, avgGoals, matchdays) {
+  function avgLine(playedMatchdays: string[], avgGoals, matchdays: string[]): any {
     return {
       name: "Avg",
       type: "line",
@@ -62,7 +62,7 @@
     };
   }
 
-  function teamScoredBar(playedMatchdays, teamScored, matchdays) {
+  function teamScoredBar(playedMatchdays: string[], teamScored, matchdays: string[]): any {
     return {
       name: "Scored",
       type: "bar",
@@ -75,7 +75,7 @@
     };
   }
 
-  function teamConcededBar(playedMatchdays, teamConceded, matchdays) {
+  function teamConcededBar(playedMatchdays: string[], teamConceded, matchdays: string[]): any {
     return {
       name: "Conceded",
       type: "bar",
@@ -125,7 +125,7 @@
     }
   }
 
-  function buildPlotData(data, team) {
+  function buildPlotData(data: TeamData, team: string): PlotData {
     // let x = getMatchdayDates(data, fullTeamName);
     let [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
     let avgGoals = getAvgGoalsPerGame(data);
@@ -177,7 +177,7 @@
     return plotData;
   }
 
-  let plotDiv, plotData;
+  let plotDiv: HTMLDivElement, plotData: PlotData;
   let setup = false;
   onMount(() => {
     genPlot();
@@ -219,7 +219,7 @@
   $: !mobileView && defaultLayout();
   $: setup && mobileView && mobileLayout();
 
-  export let data, team, playedMatchdays, mobileView;
+  export let data: TeamData, team: string, playedMatchdays: string[], mobileView: boolean;
 </script>
 
 <div id="plotly">

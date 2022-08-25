@@ -1,25 +1,27 @@
-<script>
-  import FormTile from './FormTile.svelte';
+<script lang="ts">
+  import FormTile from "./FormTile.svelte";
 
-  function getSortedMatchdays(data, team) {
+  function getSortedMatchdays(data: TeamData, team: string): string[] {
     let matchdays = Object.keys(data.form[data._id][team]).sort(function (
       matchday1,
       matchday2
     ) {
       return (
-        new Date(data.form[data._id][team][matchday1].date) -
-        new Date(data.form[data._id][team][matchday2].date)
+        (new Date(data.form[data._id][team][matchday1].date) as any) -
+        (new Date(data.form[data._id][team][matchday2].date) as any)
       );
     });
     return matchdays;
   }
 
-  function getFormStarTeams(data, team, matchdays) {
+  function getFormStarTeams(
+    data: TeamData,
+    team: string,
+    matchdays: string[]
+  ): boolean[] {
     let formStarTeams = [];
     for (let matchday of matchdays) {
-      formStarTeams.unshift(
-        data.form[data._id][team][matchday].beatStarTeam ? "star-team" : ""
-      );
+      formStarTeams.unshift(data.form[data._id][team][matchday].beatStarTeam);
     }
 
     // Fill in blanks
@@ -30,7 +32,7 @@
     return formStarTeams;
   }
 
-  function getFormIcons(data, team) {
+  function getFormIcons(data: TeamData, team: string): string[] {
     let formIcons = [];
     if (Object.keys(data.form[data._id][team][currentMatchday]).length > 0) {
       formIcons = data.form[data._id][team][currentMatchday].form5.split("");
@@ -44,7 +46,11 @@
     return formIcons;
   }
 
-  function getFormInitials(data, team, matchdays) {
+  function getFormInitials(
+    data: TeamData,
+    team: string,
+    matchdays: string[]
+  ): string[] {
     let formInitials = [];
 
     for (let matchday of matchdays) {
@@ -61,7 +67,12 @@
     return formInitials;
   }
 
-  function latestNPlayedMatchdays(data, team, matchdays, N) {
+  function latestNPlayedMatchdays(
+    data: TeamData,
+    team: string,
+    matchdays: string[],
+    N: number
+  ): string[] {
     let latestN = [];
 
     for (let i = matchdays.length - 1; i >= 0; i--) {
@@ -76,16 +87,11 @@
     return latestN;
   }
 
-  let formIcons, formStarTeams, formInitials;
+  let formIcons: string[], formStarTeams: boolean[], formInitials: string[];
   function setFormValues() {
     let sortedMatchdays = getSortedMatchdays(data, team);
 
-    let matchdays = latestNPlayedMatchdays(
-      data,
-      team,
-      sortedMatchdays,
-      5
-    );
+    let matchdays = latestNPlayedMatchdays(data, team, sortedMatchdays, 5);
 
     formIcons = getFormIcons(data, team);
     formStarTeams = getFormStarTeams(data, team, matchdays);
@@ -94,31 +100,29 @@
 
   $: team && setFormValues();
 
-  export let data, currentMatchday, team, toInitials;
+  export let data: TeamData,
+    currentMatchday: string,
+    team: string,
+    toInitials: Function;
 </script>
 
 {#if formInitials != undefined}
   <div class="current-form-row">
-    <div class="icon">
-      <FormTile result={formIcons[0]} recency="0" starTeam={formStarTeams[0]}/>
+    <div class="icon pos-0">
+      <FormTile result={formIcons[0]} starTeam={formStarTeams[0]} />
     </div>
-    <div class="icon">
-      <FormTile result={formIcons[1]} recency="1" starTeam={formStarTeams[1]}/>
+    <div class="icon pos-1">
+      <FormTile result={formIcons[1]} starTeam={formStarTeams[1]} />
     </div>
-    <div class="icon">
-      <FormTile result={formIcons[2]} recency="2" starTeam={formStarTeams[2]}/>
+    <div class="icon pos-2">
+      <FormTile result={formIcons[2]} starTeam={formStarTeams[2]} />
     </div>
-    <div class="icon">
-      <FormTile result={formIcons[3]} recency="3" starTeam={formStarTeams[3]}/>
+    <div class="icon pos-3">
+      <FormTile result={formIcons[3]} starTeam={formStarTeams[3]} />
     </div>
-    <div class="icon">
-      <FormTile result={formIcons[4]} recency="4" starTeam={formStarTeams[4]}/>
+    <div class="icon pos4">
+      <FormTile result={formIcons[4]} starTeam={formStarTeams[4]} />
     </div>
-    <!-- <div class="icon pos-0 {formIcons[0]} {formStarTeams[0]}" /> -->
-    <!-- <div class="icon pos-1 {formIcons[1]} {formStarTeams[1]}" /> -->
-    <!-- <div class="icon pos-2 {formIcons[2]} {formStarTeams[2]}" /> -->
-    <!-- <div class="icon pos-3 {formIcons[3]} {formStarTeams[3]}" /> -->
-    <!-- <div class="icon pos-4 {formIcons[4]} {formStarTeams[4]}" /> -->
   </div>
   <div class="current-form-row">
     <div class="icon-name pos-0">{formInitials[0]}</div>
@@ -131,9 +135,7 @@
 <div class="current-form">
   Current form:
   {#if currentMatchday != null}
-    {(
-      data.form[data._id][team][currentMatchday].formRating5 * 100
-    ).toFixed(1)}%
+    {(data.form[data._id][team][currentMatchday].formRating5 * 100).toFixed(1)}%
   {:else}
     None
   {/if}
@@ -155,7 +157,6 @@
     width: calc(20% - 14px);
     aspect-ratio: 1/1;
     margin: 0 7px 7px;
-    /* margin: 0 5px; */
   }
 
   .icon-name {
@@ -183,6 +184,21 @@
 
   .pos-0 {
     /* Least recent game */
-    opacity: 50%;
+    opacity: 60%;
+  }
+
+  @media only screen and (max-width: 700px) {
+    .current-form-row {
+      width: 90%;
+    }
+  }
+  @media only screen and (max-width: 1100px) {
+    .icon {
+      width: 20vw;
+    }
+
+    .current-form-row {
+      width: min(80%, 600px);
+    }
   }
 </style>

@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
   import SeasonComplete from "./SeasonComplete.svelte";
 
-  function ordinal(n) {
+  function ordinal(n: number): string {
     let ord = [, "st", "nd", "rd"];
     let a = n % 100;
     return ord[a > 20 ? a % 10 : a] || "th";
@@ -13,16 +13,16 @@
     }
   }
 
-  let oppTeam;
+  let oppTeam: string;
   $: team && setOppTeam();
 
-  export let data,
-    currentMatchday,
-    team,
-    showBadge,
-    toAlias,
-    toInitials,
-    switchTeam;
+  export let data: TeamData,
+    currentMatchday: string,
+    team: string,
+    showBadge: boolean,
+    toAlias: Function,
+    toInitials: Function,
+    switchTeam: Function;
 </script>
 
 {#if data != undefined}
@@ -223,6 +223,7 @@
     display: flex;
     flex-direction: column;
     margin: auto 0;
+    margin-top: 20px;
   }
 
   .next-game-prediction {
@@ -248,8 +249,6 @@
     font-size: 16px;
     display: flex;
   }
-
-
 
   .past-result-date {
     font-size: 13px;
@@ -323,14 +322,14 @@
     text-align: right;
     border-radius: 0 var(--border-radius) var(--border-radius) 0;
   }
-  
+
   .home-team,
   .away-team {
     font-size: 16px;
     width: calc(50% - 18px);
     padding: 5px 0 3px;
     flex: 1;
-    text-align: center
+    text-align: center;
   }
 
   .next-game-team-btn {

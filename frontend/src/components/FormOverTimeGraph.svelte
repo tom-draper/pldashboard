@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
 
-  function getFormLine(data, playedMatchdays, team, isMainTeam) {
+  function getFormLine(data: TeamData, playedMatchdays: string[], team: string, isMainTeam: boolean): any {
     let matchdays = Object.keys(data.form[data._id][team]); // Played matchdays
 
     let y = [];
@@ -36,7 +36,7 @@
     return line;
   }
 
-  function lines(data, team, playedMatchdays) {
+  function lines(data: TeamData, team: string, playedMatchdays: string[]): any[] {
     let lines = [];
     for (let i = 0; i < data.teamNames.length; i++) {
       if (data.teamNames[i] != team) {
@@ -90,7 +90,7 @@
     }
   }
 
-  function buildPlotData(data, team) {
+  function buildPlotData(data: TeamData, team: string): PlotData {
     let yLabels = Array.from(Array(11), (_, i) => i * 10);
 
     let plotData = {
@@ -134,7 +134,7 @@
     return plotData;
   }
 
-  let plotDiv, plotData;
+  let plotDiv: HTMLDivElement, plotData: PlotData;
   let setup = false;
   onMount(() => {
     genPlot();
@@ -171,7 +171,7 @@
   $: !mobileView && defaultLayout();
   $: setup && mobileView && mobileLayout();
 
-  export let data, team, playedMatchdays, mobileView;
+  export let data: TeamData, team: string, playedMatchdays: string[], mobileView: boolean;
 </script>
 
 <div id="plotly">

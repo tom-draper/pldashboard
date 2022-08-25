@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { Router } from "svelte-routing";
   import { onMount } from "svelte";
   import CurrentForm from "../components/current_form/CurrentForm.svelte";
@@ -25,7 +25,7 @@
     "Brighton and Hove Albion": "Brighton",
   };
 
-  function toInitials(team) {
+  function toInitials(team: string): string {
     switch (team) {
       case "Brighton and Hove Albion":
         return "BHA";
@@ -45,14 +45,14 @@
     return team.slice(0, 3).toUpperCase();
   }
 
-  function toAlias(team) {
+  function toAlias(team: string): string {
     if (team in alias) {
       return alias[team];
     }
     return team;
   }
 
-  function toName(teamAlias) {
+  function toName(teamAlias: string): string {
     if (!Object.values(alias).includes(teamAlias)) {
       return teamAlias;
     }
@@ -95,7 +95,7 @@
     "Nottingham Forest",
   ];
 
-  function toTitleCase(str) {
+  function toTitleCase(str: string): string {
     return str
       .toLowerCase()
       .split(" ")
@@ -106,7 +106,7 @@
       .replace("And", "and");
   }
 
-  function getPlayedMatchdays(data, team) {
+  function getPlayedMatchdays(data, team: string): string[] {
     let matchdays = Object.keys(data.form[data._id][team]);
 
     // If played one or no games, take x-axis from whole season dates
@@ -118,7 +118,7 @@
     let x = [];
     for (let matchday of matchdays) {
       let matchdayDates = [];
-      data.teamNames.forEach((team) => {
+      data.teamNames.forEach((team: string) => {
         matchdayDates.push(data.fixtures[team][matchday].date);
       });
       matchdayDates = matchdayDates.map((val) => {
@@ -133,7 +133,7 @@
     return x;
   }
 
-  function getCurrentMatchday(data, team) {
+  function getCurrentMatchday(data: TeamData, team: string): null|string {
     if (Object.keys(data.form[data._id][team]).length == 0) {
       return null; // Season has not started yet
     }
@@ -146,7 +146,7 @@
     );
   }
 
-  async function fetchData(address) {
+  async function fetchData(address: string): Promise<TeamData> {
     const response = await fetch(address);
     let json = await response.json();
     return json;
@@ -154,9 +154,8 @@
 
   function initDashboard() {
     team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
-    // fetchData("http://127.0.0.1:5000/api/teams")
     fetchData("https://pldashboard.herokuapp.com/api/teams")
-      .then((json) => {
+      .then((json: TeamData) => {
         // Build teamData package from json data
         json.teamNames = Object.keys(json.standings);
         currentMatchday = getCurrentMatchday(json, team);
@@ -169,7 +168,7 @@
       });
   }
 
-  function switchTeam(newTeam) {
+  function switchTeam(newTeam: string) {
     hyphenatedTeam = newTeam;
     team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
     currentMatchday = getCurrentMatchday(data, team);
@@ -177,17 +176,17 @@
     window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
   }
 
-  let pageWidth;
+  let pageWidth: number;
   $: mobileView = pageWidth <= 700;
   const showBadge = false;
   let team = "";
-  let currentMatchday, playedMatchdays;
-  let data;
+  let currentMatchday: string, playedMatchdays: string[];
+  let data: TeamData;
   onMount(() => {
     initDashboard();
   });
 
-  export let hyphenatedTeam;
+  export let hyphenatedTeam: string;
 </script>
 
 <svelte:head>
@@ -397,7 +396,6 @@
     padding-left: 0;
     margin: 0;
     height: 500px;
-    /* width: 860px; */
   }
 
   .position-central,
@@ -439,6 +437,15 @@
   #dashboard {
     margin-left: 220px;
     width: 100%;
+  }
+
+  .fixtures-graph {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .clean-sheets {
+    height: 60px;
   }
 
   .no-bottom-margin {
@@ -614,6 +621,18 @@
       transform: scale(0.48);
       margin-top: -100px;
     }
+
+    .position-central,
+    .circles-background-container {
+      align-self: center;
+    }
+  }
+
+  @media only screen and (max-width: 1000px) {
+    .spider-chart-container {
+      flex-direction: column;
+      width: 100%;
+    }
   }
 
   @media only screen and (max-width: 900px) {
@@ -623,6 +642,26 @@
     }
     .position-central {
       font-size: 25vw;
+    }
+  }
+
+  @media only screen and (max-width: 700px) {
+    .position-and-badge {
+      width: 70%;
+    }
+
+    .circles-background {
+      transform: scale(0.55);
+      margin-top: -85px;
+    }
+
+    .position-no-badge {
+      height: 330px;
+    }
+
+    .position-central {
+      font-size: 250px;
+      margin: 35px 0 0 0;
     }
   }
 
@@ -636,6 +675,9 @@
     }
     .season-stats-row {
       margin: 1em;
+    }
+    .row-graph {
+      margin: 0;
     }
   }
 

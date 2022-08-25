@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { Router, Link } from "svelte-routing";
   import { onMount } from "svelte";
 

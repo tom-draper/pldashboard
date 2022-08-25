@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
 
   function defaultLayout() {
@@ -23,7 +23,7 @@
     }
   }
 
-  function buildPlotData() {
+  function buildPlotData(): PlotData {
     let xLabels = getXLabels();
     let plotData = {
       data: getConcededBars(),
@@ -88,7 +88,7 @@
     }
   }
 
-  let plotDiv, plotData;
+  let plotDiv: HTMLDivElement, plotData: PlotData;
   let setup = false;
   onMount(() => {
     genPlot();
@@ -99,12 +99,12 @@
   $: !mobileView && defaultLayout();
   $: setup && mobileView && mobileLayout();
 
-  export let team,
-    getConcededBars,
-    getConcededTeamBars,
-    getXLabels,
-    getYAxisLayout,
-    mobileView;
+  export let team: string,
+    getConcededBars: Function,
+    getConcededTeamBars: Function,
+    getXLabels: Function,
+    getYAxisLayout: Function,
+    mobileView: boolean;
 </script>
 
 <div id="plotly">

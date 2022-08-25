@@ -1,16 +1,19 @@
 import svelte from "rollup-plugin-svelte";
 import commonjs from "@rollup/plugin-commonjs";
 // import css from "rollup-plugin-css-only";
+import typescript from "@rollup/plugin-typescript"
 import resolve from "@rollup/plugin-node-resolve";
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
+import sveltePreprocess from "svelte-preprocess";
 
-const isDev = Boolean(process.env.ROLLUP_WATCH);
+
+const production = !process.env.ROLLUP_WATCH;
 
 export default [
   // Browser bundle
   {
-    input: "src/main.js",
+    input: "src/main.ts",
     output: {
       sourcemap: true,
       format: "iife",
@@ -19,22 +22,27 @@ export default [
     },
     plugins: [
       svelte({
+        preprocess: sveltePreprocess({sourceMap: !production}),
+        dev: !production,
         hydratable: true,
         css: (css) => {
           css.write("bundle.css");
         },
       }),
-      // css({ output: 'bundle.css'}),
       resolve(),
       commonjs(),
+      typescript({
+        sourceMap: !production,
+        inlineSources: !production
+      }),
       // App.js will be built after bundle.js, so we only need to watch that.
       // By setting a small delay the Node server has a chance to restart before reloading.
-      isDev &&
+      !production &&
         livereload({
           watch: "public/App.js",
           delay: 200,
         }),
-      !isDev && terser(),
+      production && terser(),
     ],
   },
   // Server bundle
@@ -49,11 +57,12 @@ export default [
     },
     plugins: [
       svelte({
+        preprocess: sveltePreprocess({sourceMap: !production}),
         generate: "ssr",
       }),
       resolve(),
       commonjs(),
-      !isDev && terser(),
+      production && terser(),
     ],
   },
 ];

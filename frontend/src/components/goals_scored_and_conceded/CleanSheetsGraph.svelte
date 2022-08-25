@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
 
-  function getTeamCleanSheets(data, team) {
+  function getTeamCleanSheets(data: TeamData, team: string): [number[], number[]] {
     let notCleanSheets = [];
     let cleanSheets = [];
     for (let matchday of Object.keys(data.form[data._id][team])) {
@@ -33,7 +33,7 @@
     return [cleanSheets, notCleanSheets];
   }
 
-  function bars(data, team, playedMatchdays) {
+  function bars(data: TeamData, team: string, playedMatchdays: string[]): any[] {
     let matchdays = Object.keys(data.form[data._id][team]);
 
     let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, team);
@@ -98,7 +98,7 @@
     }
   }
 
-  function buildPlotData(data, team) {
+  function buildPlotData(data: TeamData, team: string): PlotData {
     let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
 
     let plotData = {
@@ -152,7 +152,7 @@
     return plotData;
   }
 
-  let plotDiv, plotData;
+  let plotDiv: HTMLDivElement, plotData: PlotData;
   let setup = false;
   onMount(() => {
     genPlot();
@@ -185,7 +185,7 @@
   $: !mobileView && defaultLayout();
   $: setup && mobileView && mobileLayout();
 
-  export let data, team, playedMatchdays, mobileView;
+  export let data: TeamData, team: string, playedMatchdays: string[], mobileView: boolean;
 </script>
 
 <div id="plotly">

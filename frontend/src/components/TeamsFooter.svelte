@@ -1,5 +1,5 @@
-<script>
-  export let lastUpdated;
+<script lang="ts">
+  export let lastUpdated: string;
 </script>
 
 <div class="teams-footer footer-text-colour">
