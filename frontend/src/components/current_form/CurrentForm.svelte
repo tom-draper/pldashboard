@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import FormTile from './FormTile.svelte';
 
   function getSortedMatchdays(data, team) {

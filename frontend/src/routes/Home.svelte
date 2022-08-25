@@ -1,5 +1,5 @@
-<script>
-  import { Router, Link } from "svelte-routing";
+<script lang="ts">
+  import { Router } from "svelte-routing";
 </script>
 
 <svelte:head>
@@ -29,7 +29,6 @@
   .content {
     display: grid;
     place-items: center;
-    /* margin-top: 50px; */
     margin-bottom: 100px;
   }
   img {

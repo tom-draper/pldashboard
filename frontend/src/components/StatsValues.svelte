@@ -1,13 +1,18 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
 
-  function ordinal(n) {
+  function ordinal(n: number): string {
     let ord = [, "st", "nd", "rd"];
     let a = n % 100;
     return n + (ord[a > 20 ? a % 10 : a] || "th");
   }
 
-  function getStatsRank(seasonStats, attribute, team, reverse) {
+  function getStatsRank(
+    seasonStats: Stats,
+    attribute: string,
+    team: string,
+    reverse: boolean
+  ): number {
     let sorted = Object.keys(seasonStats).sort(function (team1, team2) {
       return seasonStats[team2][attribute] - seasonStats[team1][attribute];
     });
@@ -18,7 +23,7 @@
     return rank;
   }
 
-  function getStatsRankings(seasonStats, team) {
+  function getStatsRankings(seasonStats: Stats, team: string): StatsRank {
     let xGRank = ordinal(getStatsRank(seasonStats, "xG", team, false));
     // Reverse - lower rank the better
     let xCRank = ordinal(getStatsRank(seasonStats, "xC", team, true));
@@ -31,128 +36,154 @@
   function setPositionalOffset() {
     document.documentElement.style.setProperty(
       "--ssp1-offset",
-      (-ssp1.clientWidth / 2) + "px"
+      -ssp1.clientWidth / 2 + "px"
     );
     document.documentElement.style.setProperty(
       "--ssp2-offset",
-      (-ssp2.clientWidth / 2) + "px"
+      -ssp2.clientWidth / 2 + "px"
     );
     document.documentElement.style.setProperty(
       "--ssp3-offset",
-      (-ssp3.clientWidth / 2) + "px"
+      -ssp3.clientWidth / 2 + "px"
     );
   }
 
-  function setStatsValues(seasonStats, team) {
+  function setStatsValues(seasonStats: Stats, team: string) {
     rank = getStatsRankings(seasonStats, team);
 
     // Keep ordinal values at the correct offset
     // Once rank values have updated, init positional offset for ordinal values
     window.addEventListener("resize", setPositionalOffset);
-    // setTimeout(function () {
-    //   setPositionalOffset();
-    // }, 0);
   }
 
-  function isCleanSheet(h, a, atHome) {
-    return (a == 0 && atHome) || (h == 0 && !atHome)
+  function isCleanSheet(h: number, a: number, atHome: boolean): boolean {
+    return (a == 0 && atHome) || (h == 0 && !atHome);
   }
 
-  function goalsScored(h, a, atHome) {
+  function goalsScored(h: number, a: number, atHome: boolean): number {
     if (atHome) {
-      return h
+      return h;
     } else {
-      return a
+      return a;
     }
   }
 
-  function goalsConceded(h, a, atHome) {
+  function goalsConceded(h: number, a: number, atHome: boolean): number {
     if (atHome) {
-      return a
+      return a;
     } else {
-      return h
+      return h;
     }
   }
 
-  function notScored(h, a, atHome) {
-    return (h == 0 && atHome) || (a == 0 && !atHome)
+  function notScored(h: number, a: number, atHome: boolean): boolean {
+    return (h == 0 && atHome) || (a == 0 && !atHome);
   }
 
-  function countOccurances(data, seasonStats, team, season) {
+  function countOccurances(
+    data: TeamData,
+    seasonStats: Stats,
+    team: string,
+    season: number
+  ) {
     if (!(team in data.form[season])) {
-      return
+      return;
     }
 
     for (let matchday of Object.keys(data.form[season][team])) {
       let score = data.form[season][team][matchday].score;
       if (score != null) {
-        let [h, _, a] = score.split(' ');
+        let [h, _, a] = score.split(" ");
         h = parseInt(h);
         a = parseInt(a);
         let atHome = data.form[season][team][matchday].atHome;
         if (isCleanSheet(h, a, atHome)) {
-          seasonStats[team].cleanSheetRatio += 1
+          seasonStats[team].cleanSheetRatio += 1;
         }
         if (notScored(h, a, atHome)) {
-          seasonStats[team].noGoalRatio += 1
+          seasonStats[team].noGoalRatio += 1;
         }
-        seasonStats[team].xG += goalsScored(h, a, atHome)
-        seasonStats[team].xC += goalsConceded(h, a, atHome)
-        seasonStats[team].played += 1
+        seasonStats[team].xG += goalsScored(h, a, atHome);
+        seasonStats[team].xC += goalsConceded(h, a, atHome);
+        seasonStats[team].played += 1;
       }
     }
   }
-  
-  function buildSeasonStats(data) {
-    let seasonStats = {}
+
+  function buildStats(data: TeamData): Stats {
+    let stats = {};
     for (let team of data.teamNames) {
-      seasonStats[team] = {cleanSheetRatio: 0, noGoalRatio: 0, xC: 0, xG: 0, played: 0}
+      stats[team] = {
+        cleanSheetRatio: 0,
+        noGoalRatio: 0,
+        xC: 0,
+        xG: 0,
+        played: 0,
+      };
 
-      countOccurances(data, seasonStats, team, data._id)
-      countOccurances(data, seasonStats, team, data._id-1)
+      countOccurances(data, stats as Stats, team, data._id);
+      countOccurances(data, stats as Stats, team, data._id - 1);
 
-      if (seasonStats[team].played > 0) {
-        seasonStats[team].xG /= seasonStats[team].played
-        seasonStats[team].xC /= seasonStats[team].played
-        seasonStats[team].cleanSheetRatio /= seasonStats[team].played
-        seasonStats[team].noGoalRatio /= seasonStats[team].played
+      if (stats[team].played > 0) {
+        stats[team].xG /= stats[team].played;
+        stats[team].xC /= stats[team].played;
+        stats[team].cleanSheetRatio /= stats[team].played;
+        stats[team].noGoalRatio /= stats[team].played;
       }
     }
 
-    return seasonStats;
+    console.log(stats);
+
+    return stats as Stats;
   }
 
   function refreshStatsValues() {
     if (setup) {
-      // seasonStats = buildSeasonStats(data)
-      setStatsValues(seasonStats, team);
+      setStatsValues(stats, team);
     }
   }
 
-  let seasonStats;
-  let ssp1, ssp2, ssp3;
-  let rank = {
+  type Stats = {
+    string: {
+      // Team name
+      played: number;
+      xG: number;
+      xC: number;
+      cleanSheetsRatio: number;
+      noGoalRatio: number;
+    };
+  };
+
+  type StatsRank = {
+    xG: string;
+    xC: string;
+    cleanSheetRatio: string;
+  };
+
+  let stats: Stats;
+  let ssp1: any, ssp2: any, ssp3: any;
+  let rank: StatsRank = {
     xG: "",
     xC: "",
     cleanSheetRatio: "",
   };
   let setup = false;
   onMount(() => {
-    seasonStats = buildSeasonStats(data);
-    setStatsValues(seasonStats, team);
+    stats = buildStats(data);
+    setStatsValues(stats, team);
     setup = true;
   });
 
   $: team && refreshStatsValues();
 
-  export let data, team;
+  export let data: TeamData, team: string;
 </script>
 
-{#if seasonStats != undefined}
+{#if stats != undefined}
   <div class="season-stats">
     <div class="season-stat goals-per-game">
       <div class="season-stat-value">
-        {seasonStats[team].xG.toFixed(2)}
+        {stats[team].xG.toFixed(2)}
         <div
           class="season-stat-position ssp-{rank.xG}"
           id="ssp1"
@@ -165,7 +196,7 @@
     </div>
     <div class="season-stat conceded-per-game">
       <div class="season-stat-value">
-        {seasonStats[team].xC.toFixed(2)}
+        {stats[team].xC.toFixed(2)}
         <div
           class="season-stat-position ssp-{rank.xC}"
           id="ssp2"
@@ -178,7 +209,7 @@
     </div>
     <div class="season-stat clean-sheet-ratio">
       <div class="season-stat-value">
-        {seasonStats[team].cleanSheetRatio.toFixed(2)}
+        {stats[team].cleanSheetRatio.toFixed(2)}
         <div
           class="season-stat-position ssp-{rank.cleanSheetRatio}"
           id="ssp3"

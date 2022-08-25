@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import SeasonComplete from "./SeasonComplete.svelte";
 
   function ordinal(n) {

@@ -1,5 +1,5 @@
-<script>
-  function tableSnippetRange(sortedTeams, team) {
+<script lang="ts">
+  function tableSnippetRange(sortedTeams: string[], team: string): [number, number] {
     let teamStandingsIdx = sortedTeams.indexOf(team);
 
     let low = teamStandingsIdx - 3;
@@ -28,7 +28,7 @@
 
     let [low, high] = tableSnippetRange(sortedTeams, team);
 
-    let teamTableIdx;
+    let teamTableIdx: number;
     let rows = [];
     for (let i = low; i < high; i++) {
       if (sortedTeams[i] == team) {
@@ -48,10 +48,20 @@
     };
   }
 
-  let tableSnippet;
+  type TableSnippet = {
+    teamTableIdx: number,
+    rows: {
+      name: string,
+      position: number,
+      points: number,
+      gd: number,
+    }[]
+  }
+
+  let tableSnippet: TableSnippet;
   $: team && buildTableSnippet()
 
-  export let data, hyphenatedTeam, team, toAlias, switchTeam;
+  export let data: TeamData, hyphenatedTeam: string, team: string, toAlias: Function, switchTeam: Function;
 </script>
 
 <div class="table-snippet">

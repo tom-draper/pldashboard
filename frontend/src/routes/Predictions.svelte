@@ -1,28 +1,28 @@
-<script>
+<script lang="ts">
   import { Router } from "svelte-routing";
   import { onMount } from "svelte";
 
-  async function fetchData(address) {
+  async function fetchData(address: string): Promise<Object> {
     const response = await fetch(address);
     let json = await response.json();
     return json;
   }
 
-  function toggleDetailsDisplay(id) {
+  function toggleDetailsDisplay(id: string) {
     let prediction = document.getElementById(id);
     if (prediction != null) {
       prediction.classList.toggle("expanded");
     }
   }
 
-  function identicalScore(prediction, actual) {
+  function identicalScore(prediction: Scoreline, actual: Scoreline): boolean {
     return (
       Math.round(prediction.homeGoals) == actual.homeGoals &&
       Math.round(prediction.awayGoals) == actual.awayGoals
     );
   }
 
-  function sameResult(prediction, actual) {
+  function sameResult(prediction: Scoreline, actual: Scoreline): boolean {
     return (
       (prediction.homeGoals > prediction.awayGoals &&
         actual.homeGoals > actual.awayGoals) ||
@@ -33,7 +33,7 @@
     );
   }
 
-  function insertColours(json) {
+  function insertColours(json: PredictionData) {
     for (let i = 0; i < json.predictions.length; i++) {
       for (let j = 0; j < json.predictions[i].predictions.length; j++) {
         let prediction = json.predictions[i].predictions[j];
@@ -50,33 +50,59 @@
     }
   }
 
-  function datetimeToTime(datetime) {
+  function datetimeToTime(datetime: string): string {
     let date = new Date(datetime);
-    date = date.toTimeString().slice(0, 5);
-    return date;
+    return date.toTimeString().slice(0, 5);
   }
 
-  function sortByDate(json) {
-    json.predictions.sort((a, b) => {
-      return new Date(b._id) - new Date(a._id);
+  function sortByDate(json: PredictionData) {
+    json.predictions.sort((a: MatchdayPredictions, b: MatchdayPredictions) => {
+      return (new Date(b._id) as any) - (new Date(a._id) as any);
     });
     // Sort each day of predictions by time
     for (let i = 0; i < json.predictions.length; i++) {
-      json.predictions[i].predictions.sort((a, b) => {
-        return new Date(a._id) - new Date(b._id);
+      json.predictions[i].predictions.sort((a: Prediction, b: Prediction) => {
+        return (new Date(a.datetime) as any) - (new Date(b.datetime) as any);
       });
     }
   }
 
-  let data;
+  type Prediction = {
+    _id: string; // HOME_INITIALS vs AWAY_INITIALS
+    home: string;
+    away: string;
+    prediction: Scoreline;
+    actual: null | Scoreline;
+    datetime: string;
+    colour?: string;
+  };
+
+  type MatchdayPredictions = {
+    _id: string; // YYYY-MM-DD
+    predictions: Prediction[];
+  };
+
+  type AccuracyData = {
+    _id: number; // Year of season start
+    resultAccuracy: number;
+    scoreAccuracy: number;
+    homeGoalsAvgDiff: number;
+    awayGoalsAvgDiff: number;
+  };
+
+  type PredictionData = {
+    accuracy: AccuracyData;
+    predictions: MatchdayPredictions[];
+  };
+
+  let data: PredictionData;
   onMount(() => {
-    // fetchData("http://127.0.0.1:5000/api/predictions").then((json) => {
     fetchData("https://pldashboard.herokuapp.com/api/predictions").then(
-      (json) => {
+      (json: PredictionData) => {
         sortByDate(json);
         insertColours(json);
-        data = json;
-        console.log(data.predictions);
+        data = json as PredictionData;
+        console.log(data);
       }
     );
   });
@@ -89,105 +115,101 @@
 
 <Router>
   <div id="predictions">
+    <div class="predictions-header">
+      <a class="predictions-title" href="/predictions">Predictions</a>
+    </div>
 
-  <div class="predictions-header">
-    <a
-      class="predictions-title"
-      href="/predictions">Predictions</a
-    >
-  </div>
-
-  {#if data != undefined}
-    <div class="page-content">
-      <div class="accuracy-display">
-        <div class="accuracy">
-          <span class="accuracy-item">
-            Predicting with accuracy: <b
-              >{(data.accuracy.scoreAccuracy * 100).toFixed(2)}%</b
-            ></span
-          ><br />
-          <div class="accuracy-item">
-            General results accuracy: <b
-              >{(data.accuracy.resultAccuracy * 100).toFixed(2)}%</b
-            >
+    {#if data != undefined}
+      <div class="page-content">
+        <div class="accuracy-display">
+          <div class="accuracy">
+            <span class="accuracy-item">
+              Predicting with accuracy: <b
+                >{(data.accuracy.scoreAccuracy * 100).toFixed(2)}%</b
+              ></span
+            ><br />
+            <div class="accuracy-item">
+              General results accuracy: <b
+                >{(data.accuracy.resultAccuracy * 100).toFixed(2)}%</b
+              >
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="predictions-container">
-        <div class="predictions">
-          {#if data.predictions != null}
-            {#each data.predictions as { _id, predictions }}
-              <div class="date">
-                {_id}
-              </div>
-              <div class="medium-predictions-divider" />
-              <!-- Each prediction on this day -->
-              {#each predictions as pred}
-                <button
-                  class="prediction-container {pred.colour}"
-                  on:click={() => toggleDetailsDisplay(pred._id)}
-                >
-                  <div class="prediction prediction-item">
-                    <div class="prediction-label">Predicted:</div>
-                    <div class="prediction-value">
-                      <div class="prediction-initials">{pred.home}</div>
-                      <div class="prediction-score">
-                        {Math.round(pred.prediction.homeGoals)} - {Math.round(
-                          pred.prediction.awayGoals
-                        )}
-                      </div>
-                      <div class="prediction-initials">{pred.away}</div>
-                    </div>
-                  </div>
-                  {#if pred.actual != null}
-                    <div class="actual prediction-item">
-                      <div class="prediction-label">Actual:</div>
+        <div class="predictions-container">
+          <div class="predictions">
+            {#if data.predictions != null}
+              {#each data.predictions as { _id, predictions }}
+                <div class="date">
+                  {_id}
+                </div>
+                <div class="medium-predictions-divider" />
+                <!-- Each prediction on this day -->
+                {#each predictions as pred}
+                  <button
+                    class="prediction-container {pred.colour}"
+                    on:click={() => toggleDetailsDisplay(pred._id)}
+                  >
+                    <div class="prediction prediction-item">
+                      <div class="prediction-label">Predicted:</div>
                       <div class="prediction-value">
                         <div class="prediction-initials">{pred.home}</div>
                         <div class="prediction-score">
-                          {pred.actual.homeGoals} - {pred.actual.awayGoals}
+                          {Math.round(pred.prediction.homeGoals)} - {Math.round(
+                            pred.prediction.awayGoals
+                          )}
                         </div>
                         <div class="prediction-initials">{pred.away}</div>
                       </div>
                     </div>
-                  {:else}
-                    <div class="prediction-time">
-                      {datetimeToTime(pred.datetime)}
-                    </div>
-                  {/if}
-
-                  <!-- Toggle to see detialed score -->
-                  {#if pred.prediction != null}
-                    <div class="prediction-details" id={pred._id}>
-                      <div class="detailed-predicted-score">
-                        <b
-                          >{pred.prediction.homeGoals} - {pred.prediction
-                            .awayGoals}</b
-                        >
+                    {#if pred.actual != null}
+                      <div class="actual prediction-item">
+                        <div class="prediction-label">Actual:</div>
+                        <div class="prediction-value">
+                          <div class="prediction-initials">{pred.home}</div>
+                          <div class="prediction-score">
+                            {pred.actual.homeGoals} - {pred.actual.awayGoals}
+                          </div>
+                          <div class="prediction-initials">{pred.away}</div>
+                        </div>
                       </div>
-                    </div>
-                  {/if}
-                </button>
+                    {:else}
+                      <div class="prediction-time">
+                        {datetimeToTime(pred.datetime)}
+                      </div>
+                    {/if}
+
+                    <!-- Toggle to see detialed score -->
+                    {#if pred.prediction != null}
+                      <div class="prediction-details" id={pred._id}>
+                        <div class="detailed-predicted-score">
+                          <b
+                            >{pred.prediction.homeGoals} - {pred.prediction
+                              .awayGoals}</b
+                          >
+                        </div>
+                      </div>
+                    {/if}
+                  </button>
+                {/each}
+                <div class="predictions-gap" />
               {/each}
-              <div class="predictions-gap" />
-            {/each}
-          {/if}
+            {/if}
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- <div class="predictions-footer footer-text-colour">
+      <!-- <div class="predictions-footer footer-text-colour">
       <div class="method-description">
         Predictions are calculated using previous results and then adjusting by
         recent form and home advantage.
       </div>
     </div> -->
-  {:else}
-    <div class="loading-spinner-container">
-      <div class="loading-spinner" />
-    </div>
-  {/if}
+    {:else}
+      <div class="loading-spinner-container">
+        <div class="loading-spinner" />
+      </div>
+    {/if}
   </div>
 </Router>
 
@@ -207,7 +229,6 @@
     margin: 10px;
     text-decoration: none;
   }
-
 
   .predictions {
     display: flex;
@@ -348,30 +369,30 @@
     margin: 20px auto 15px;
     width: 80%;
   }
-@media only screen and (max-width: 800px) {
-  .predictions-container {
-    width: 80%;
+  @media only screen and (max-width: 800px) {
+    .predictions-container {
+      width: 80%;
+    }
+
+    .prediction-container {
+      width: min(80%, 300px);
+    }
+
+    .prediction-time {
+      right: -28px;
+      top: calc(50% - 6px);
+    }
+
+    .prediction-value {
+      flex: 4;
+    }
   }
 
-  .prediction-container {
-    width: min(80%, 300px);
-  }
-
-  .prediction-time {
-    right: -28px;
-    top: calc(50% - 6px);
-  }
-
-  .prediction-value {
-    flex: 4;
-  }
-}
-
-@media only screen and (max-width: 550px) {
-  #predictions {
-    font-size: 0.9em;
-  }
-  .predictions-title {
+  @media only screen and (max-width: 550px) {
+    #predictions {
+      font-size: 0.9em;
+    }
+    .predictions-title {
       font-size: 2em !important;
     }
     .predictions-container {
@@ -388,22 +409,22 @@
     font-size: 0.9em;
   } */
 
-  /* .prev-results-title {
+    /* .prev-results-title {
     font-size: 18px;
   } */
-  .prediction-item {
-    margin: 0 6%;
+    .prediction-item {
+      margin: 0 6%;
+    }
   }
-}
-@media only screen and (max-width: 500px) {
-  .prediction-value {
-    flex: 4.5;
+  @media only screen and (max-width: 500px) {
+    .prediction-value {
+      flex: 4.5;
+    }
   }
-}
 
-@media only screen and (max-width: 400px) {
-  .prediction-value {
-    flex: 6;
+  @media only screen and (max-width: 400px) {
+    .prediction-value {
+      flex: 6;
+    }
   }
-}
 </style>

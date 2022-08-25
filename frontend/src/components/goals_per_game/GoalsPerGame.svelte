@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
   import GoalsScoredFreq from "./GoalsScoredFreqGraph.svelte";
   import GoalsConcededFreq from "./GoalsConcededFreqGraph.svelte";

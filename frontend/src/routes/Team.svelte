@@ -106,7 +106,7 @@
       .replace("And", "and");
   }
 
-  function getPlayedMatchdays(data, team: string) {
+  function getPlayedMatchdays(data, team: string): string[] {
     let matchdays = Object.keys(data.form[data._id][team]);
 
     // If played one or no games, take x-axis from whole season dates
@@ -118,7 +118,7 @@
     let x = [];
     for (let matchday of matchdays) {
       let matchdayDates = [];
-      data.teamNames.forEach((team) => {
+      data.teamNames.forEach((team: string) => {
         matchdayDates.push(data.fixtures[team][matchday].date);
       });
       matchdayDates = matchdayDates.map((val) => {
@@ -133,7 +133,7 @@
     return x;
   }
 
-  function getCurrentMatchday(data, team) {
+  function getCurrentMatchday(data: TeamData, team: string): null|string {
     if (Object.keys(data.form[data._id][team]).length == 0) {
       return null; // Season has not started yet
     }
@@ -146,7 +146,7 @@
     );
   }
 
-  async function fetchData(address) {
+  async function fetchData(address: string): Promise<TeamData> {
     const response = await fetch(address);
     let json = await response.json();
     return json;
@@ -154,9 +154,8 @@
 
   function initDashboard() {
     team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
-    // fetchData("http://127.0.0.1:5000/api/teams")
     fetchData("https://pldashboard.herokuapp.com/api/teams")
-      .then((json) => {
+      .then((json: TeamData) => {
         // Build teamData package from json data
         json.teamNames = Object.keys(json.standings);
         currentMatchday = getCurrentMatchday(json, team);
@@ -169,7 +168,7 @@
       });
   }
 
-  function switchTeam(newTeam) {
+  function switchTeam(newTeam: string) {
     hyphenatedTeam = newTeam;
     team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
     currentMatchday = getCurrentMatchday(data, team);
@@ -177,17 +176,17 @@
     window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
   }
 
-  let pageWidth;
+  let pageWidth: number;
   $: mobileView = pageWidth <= 700;
   const showBadge = false;
   let team = "";
-  let currentMatchday, playedMatchdays;
-  let data;
+  let currentMatchday: string, playedMatchdays: string[];
+  let data: TeamData;
   onMount(() => {
     initDashboard();
   });
 
-  export let hyphenatedTeam;
+  export let hyphenatedTeam: string;
 </script>
 
 <svelte:head>
@@ -397,7 +396,6 @@
     padding-left: 0;
     margin: 0;
     height: 500px;
-    /* width: 860px; */
   }
 
   .position-central,

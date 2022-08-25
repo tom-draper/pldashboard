@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   function background(result, starTeam) {
     if (starTeam) {
       return "linear-gradient(red, blue, green)";

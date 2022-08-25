@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   function switchTeamToTop(team) {
     switchTeam(team);
     window.scrollTo(0, 0);
