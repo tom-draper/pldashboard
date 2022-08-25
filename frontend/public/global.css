@@ -177,19 +177,6 @@ a {
   background-image: url("img/form_img/none.png");
 }
 
-
-
-.clean-sheets-row {
-  position: relative;
-  display: flex;
-  margin-bottom: 25px;
-  height: 30%;
-}
-
-.clean-sheets {
-  height: 60px;
-}
-
 .resizable-graph {
   width: 100% !important;
   height: 450px !important;
@@ -200,20 +187,6 @@ a {
   height: 550px !important;
 }
 
-/* .full-row-graph {
-  margin-left: 10px;
-} */
-
-.clean-sheets.body {
-  margin: 0;
-}
-
-.fixtures-graph {
-  display: flex;
-  flex-direction: column;
-}
-
-
 .top-spider-opp-team-btn {
   border-radius: 3px 3px 0 0;
 }
@@ -222,18 +195,11 @@ a {
   border-radius: 0 0 3px 3px;
 }
 
-
-.two-graphs {
-  display: flex;
-  margin: 0 8%;
-}
-
 .freq-graph {
   width: 50%;
 }
 
 /* Teams page footer */
-
 
 .footer-gap {
   height: 40px;
@@ -245,11 +211,6 @@ a {
 
 .footer-item-gap {
   margin: 8px 10px;
-}
-
-.footer-bottom {
-  margin: 15px 0 5px auto;
-  display: flex;
 }
 
 .footer-text-colour {
@@ -277,35 +238,27 @@ h1 {
   font-family: "Courier New", Courier, monospace !important;
 }
 
-  @keyframes appear {
-    from {width: 0px;}
-    to {width: 100%;}
+@keyframes appear {
+  from {
+    width: 0px;
   }
+
+  to {
+    width: 100%;
+  }
+}
 
 /* Mobile view */
 
 @media only screen and (max-width: 1100px) {
-  .icon {
-    width: 20vw;
-  }
-
   .form-details {
     width: 80%;
     align-items: center;
   }
 
-  .current-form-row {
-    width: min(80%, 600px);
-  }
-
   .table-snippet {
     margin-top: 0;
   }
-
-  /* .mini-graph { */
-    /* Reset margin to match other graphs as no longer on row with other items */
-    /* margin-left: 10px; */
-  /* } */
 
   .next-game-title {
     width: auto;
@@ -325,23 +278,10 @@ h1 {
     width: 650px !important;
   }
 
-  .two-graphs {
-    display: flex;
-    margin: 0;
-  }
 
-  .position-central,
-  .circles-background-container {
-    align-self: center;
-  }
 }
 
 @media only screen and (max-width: 1000px) {
-  .spider-chart-container {
-    flex-direction: column;
-    width: 100%;
-  }
-
   .spider-chart {
     margin-bottom: 1em;
   }
@@ -352,37 +292,8 @@ h1 {
 }
 
 
-@media only screen and (max-width: 800px) {
-  .row-graph {
-    margin: 0;
-  }
-}
 
 @media only screen and (max-width: 700px) {
-  .position-and-badge {
-    width: 70%;
-  }
-
-  .circles-background {
-    transform: scale(0.55);
-    margin-top: -85px;
-  }
-
-  .position-no-badge {
-    height: 330px;
-  }
-
-  .position-central {
-    font-size: 250px;
-    margin: 35px 0 0 0;
-  }
-}
-
-@media only screen and (max-width: 700px) {
-  .current-form-row {
-    width: 90%;
-  }
-
   .resizable-graph {
     height: 300px !important;
   }
@@ -396,10 +307,6 @@ h1 {
   .row {
     margin-bottom: 30px;
   }
-
-  /* .full-row-graph {
-    margin-left: 10px;
-  } */
 
   .form-details {
     width: 95%;
@@ -453,17 +360,11 @@ h1 {
     margin-top: 5px;
   }
 
-  .past-results,
   .season-stats-row {
     margin-top: 20px;
   }
 
 
-
-
-  .past-result-date {
-    font-size: 11px;
-  }
 
   .page-content {
     overflow-x: hidden;
@@ -486,7 +387,6 @@ h1 {
     background-color: rgba(0, 0, 0, 0);
   }
 }
-
 
 /* Spinner */
 

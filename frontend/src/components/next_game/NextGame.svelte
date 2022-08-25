@@ -223,6 +223,7 @@
     display: flex;
     flex-direction: column;
     margin: auto 0;
+    margin-top: 20px;
   }
 
   .next-game-prediction {

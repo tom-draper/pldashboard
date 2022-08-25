@@ -1,5 +1,5 @@
 <script lang="ts">
-  function background(result, starTeam) {
+  function background(result: string, starTeam: boolean): string {
     if (starTeam) {
       return "linear-gradient(red, blue, green)";
     }
@@ -16,7 +16,7 @@
     }
   }
 
-  function formatResult(result) {
+  function formatResult(result: string): string {
     switch (result) {
       case "W":
       case "D":
@@ -27,29 +27,12 @@
     }
   }
 
-  function opacity(recency) {
-    switch (recency) {
-      case 0:
-        return 1;
-      case 1:
-        return 0.8;
-      case 2:
-        return 0.6;
-      case 3:
-        return 0.4;
-      case 4:
-        return 0.2;
-    }
-  }
-
-  export let result, recency, starTeam;
+  export let result: string, starTeam: boolean;
 </script>
 
 <div
   id="formTile"
-  style="background: {background(result, starTeam)}; opacity: {opacity(
-    recency
-  )}"
+  style="background: {background(result, starTeam)}"
 >
   <div class="result">
     {formatResult(result)}

@@ -15,11 +15,15 @@
       hoverinfo: "x+y",
     };
   }
-  
-  function teamBars(data: Counter, type: string, color: string|string[]): any {
-    let opener = 'Score'
-    if (type == 'Conceded') {
-      opener = 'Concede'
+
+  function teamBars(
+    data: Counter,
+    type: string,
+    color: string | string[]
+  ): any {
+    let opener = "Score";
+    if (type == "Conceded") {
+      opener = "Concede";
     }
     return {
       x: Object.keys(data),
@@ -35,7 +39,11 @@
     };
   }
 
-  function bars(data: Counter, name: string, color: string|string[]): [any, any] {
+  function bars(
+    data: Counter,
+    name: string,
+    color: string | string[]
+  ): [any, any] {
     return [avgBars(), teamBars(data, name, color)];
   }
 
@@ -143,7 +151,12 @@
     return goalFreq;
   }
 
-  function countConceded(data: TeamData, goalFreq: Counter, season: number, team: string) {
+  function countConceded(
+    data: TeamData,
+    goalFreq: Counter,
+    season: number,
+    team: string
+  ) {
     if (!(team in data.form[season])) {
       return;
     }
@@ -186,7 +199,11 @@
     return max;
   }
 
-  function maxValue(goalFreq: Counter, teamScoredFreq: Counter, teamConcededFreq: Counter): number {
+  function maxValue(
+    goalFreq: Counter,
+    teamScoredFreq: Counter,
+    teamConcededFreq: Counter
+  ): number {
     let max = 0;
     max = checkForMax(goalFreq, max);
     max = checkForMax(teamScoredFreq, max);
@@ -202,7 +219,11 @@
     return total;
   }
 
-  function scaleTeamFreq(goalFreq: Counter, teamScoredFreq: Counter, teamConcededFreq: Counter) {
+  function scaleTeamFreq(
+    goalFreq: Counter,
+    teamScoredFreq: Counter,
+    teamConcededFreq: Counter
+  ) {
     let totalGoalFreq = valueSum(goalFreq);
 
     let totalTeamScoredFreq = valueSum(teamScoredFreq);
@@ -223,7 +244,11 @@
     }
   }
 
-  function convertAllToPercentage(goalFreq: Counter, teamScoredFreq: Counter, teamConcededFreq: Counter) {
+  function convertAllToPercentage(
+    goalFreq: Counter,
+    teamScoredFreq: Counter,
+    teamConcededFreq: Counter
+  ) {
     convertToPercentage(goalFreq);
     convertToPercentage(teamScoredFreq);
     convertToPercentage(teamConcededFreq);
@@ -240,8 +265,10 @@
     }
   }
 
-
-  let goalFreq: Counter, teamScoredFreq: Counter, teamConcededFreq: Counter, maxY: number;
+  let goalFreq: Counter,
+    teamScoredFreq: Counter,
+    teamConcededFreq: Counter,
+    maxY: number;
   let setup = false;
   onMount(() => {
     goalFreq = avgGoalFrequencies(data);
@@ -282,3 +309,17 @@
     </div>
   {/if}
 </div>
+
+<style>
+  .two-graphs {
+    display: flex;
+    margin: 0 8%;
+  }
+
+  @media only screen and (max-width: 1100px) {
+    .two-graphs {
+      display: flex;
+      margin: 0;
+    }
+  }
+</style>
