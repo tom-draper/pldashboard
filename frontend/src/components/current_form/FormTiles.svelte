@@ -6,21 +6,17 @@
           return "linear-gradient(30deg, #00ff87, #2bd2ff, #fa8bff)";
         } else {
           return "#00fe87";
-          return "#77dd77";
         }
       case "D":
         return "#f83027";
-        return "#ffb347";
       case "L":
         return "#f83027";
-        return "#c23b22";
       default:
         return "#d6d6d6";
     }
   }
 
   function formatResult(result: string): string {
-    console.log(form, starTeams)
     switch (result) {
       case "W":
       case "D":
@@ -74,11 +70,9 @@
   #formTile {
     width: 100%;
     aspect-ratio: 1/0.9;
-    /* height: 58px; */
     color: #2b2d2f;
     display: grid;
     place-items: center;
-    /* border: 3px #333333 solid; */
     border-radius: inherit;
   }
   .result {
@@ -97,7 +91,6 @@
   .pos-2,
   .pos-1 {
     border-left: none;
-    /* margin-left: 3px; */
   }
 
   .pos-4 {
@@ -122,19 +115,13 @@
     /* Least recent game */
     opacity: 60%;
     border-radius: 6px 0 0 6px;
-    /* margin-left: 3px; */
   }
 
   @media only screen and (max-width: 1100px) {
     .result {
       font-size: 3em;
     }
-    /* .icon {
-      width: 20vw;
-    } */
-    /* .icon {
-      margin-left: 0; */
-    /* } */
+
 
   }
   @media only screen and (max-width: 600px) {
