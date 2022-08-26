@@ -154,7 +154,7 @@
 
   function initDashboard() {
     team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
-    fetchData("https://pldashboard.herokuapp.com/api/teams")
+    fetchData("https://pldashboard-backend.vercel.app/api/teams")
       .then((json: TeamData) => {
         // Build teamData package from json data
         json.teamNames = Object.keys(json.standings);

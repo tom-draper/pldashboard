@@ -97,7 +97,7 @@
 
   let data: PredictionData;
   onMount(() => {
-    fetchData("https://pldashboard.herokuapp.com/api/predictions").then(
+    fetchData("https://pldashboard-backend.vercel.app/api/predictions").then(
       (json: PredictionData) => {
         sortByDate(json);
         insertColours(json);
