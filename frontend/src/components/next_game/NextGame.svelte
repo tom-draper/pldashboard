@@ -260,7 +260,7 @@
 
   .prev-results-title {
     font-weight: 700;
-    padding-top: 0 !important;
+    padding-top: 0;
     margin: 0 !important;
   }
   .no-prev-results {
@@ -271,6 +271,7 @@
     border: rgb(181, 181, 181) solid 5px;
     color: rgb(181, 181, 181);
     border-radius: var(--border-radius);
+    padding: 100px 0;
     /* margin: 0 25px !important; */
   }
   .next-game-item {
