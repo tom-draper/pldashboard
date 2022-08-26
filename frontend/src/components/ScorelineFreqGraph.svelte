@@ -149,7 +149,7 @@
     if (setup) {
       let update = {
         yaxis: {
-          title: null,
+          title: { text: "Probability"},
           gridcolor: "gray",
           showgrid: false,
           showline: false,
@@ -166,7 +166,7 @@
     if (setup) {
       let update = {
         yaxis: {
-          title: { text: "Probability" },
+          title: null,
           gridcolor: "gray",
           showgrid: false,
           showline: false,
