@@ -710,7 +710,7 @@
 
     .circles-background {
       transform: scale(0.35);
-      margin-top: -125px;
+      margin-top: -135px;
     }
   }
 </style>
