@@ -22,15 +22,13 @@
     let formStarTeams = [];
     for (let matchday of matchdays) {
       let oppTeam = data.form[data._id][team][matchday].team;
-      formStarTeams.push(data.teamRatings[oppTeam].totalRating > 0.75);
+      formStarTeams.unshift(data.teamRatings[oppTeam].totalRating > 0.75);
     }
 
     // Fill in blanks
     for (let i = formStarTeams.length; i < 5; i++) {
-      formStarTeams.push(false);
+      formStarTeams.unshift(false);
     }
-
-    console.log(formStarTeams)
 
     return formStarTeams;
   }
