@@ -21,13 +21,16 @@
   ): boolean[] {
     let formStarTeams = [];
     for (let matchday of matchdays) {
-      formStarTeams.push(data.form[data._id][team][matchday].starTeam);
+      let oppTeam = data.form[data._id][team][matchday].team;
+      formStarTeams.push(data.teamRatings[oppTeam].totalRating > 0.75);
     }
 
     // Fill in blanks
     for (let i = formStarTeams.length; i < 5; i++) {
-      formStarTeams.unshift(false);
+      formStarTeams.push(false);
     }
+
+    console.log(formStarTeams)
 
     return formStarTeams;
   }
