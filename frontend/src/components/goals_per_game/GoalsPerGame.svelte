@@ -17,7 +17,7 @@
   }
 
   function teamBars(
-    data: Counter,
+    data: Object,
     type: string,
     color: string | string[]
   ): any {
@@ -40,7 +40,7 @@
   }
 
   function bars(
-    data: Counter,
+    data: Object,
     name: string,
     color: string | string[]
   ): [any, any] {
@@ -103,7 +103,7 @@
     };
   }
 
-  function countScored(data: TeamData, goalFreq, season: number, team: string) {
+  function countScored(data: TeamData, goalFreq: Object, season: number, team: string) {
     if (!(team in data.form[season])) {
       return;
     }
@@ -112,6 +112,8 @@
       let score = data.form[season][team][matchday].score;
       if (score != null) {
         let [h, _, a] = score.split(" ");
+        h = parseInt(h);
+        a = parseInt(a);
         if (data.form[season][team][matchday].atHome) {
           if (h in goalFreq) {
             goalFreq[h] += 1;
@@ -129,13 +131,35 @@
     }
   }
 
-  function avgGoalFrequencies(data: TeamData): Counter {
-    let goalFreq: Counter = {};
+  function maxObjKey(obj: Object): number {
+    let max = 0;
+    for (let goals in obj) {
+      let g = parseInt(goals);
+      if (g > max) {
+        max = g;
+      }
+    }
+    return max
+  }
+
+  function fillGoalFreqBlanks(goalFreq: Object) {
+    let max = maxObjKey(goalFreq);
+    for (let i = 1; i < max; i++) {
+      if (!(i in goalFreq)) {
+        goalFreq[i] = 0
+      }
+    }
+  }
+
+  function avgGoalFrequencies(data: TeamData): Object {
+    let goalFreq: Object = {};
     for (let team of data.teamNames) {
       countScored(data, goalFreq, data._id, team);
       countScored(data, goalFreq, data._id - 1, team);
     }
 
+    fillGoalFreqBlanks(goalFreq)
+    
     // Divide by number of teams to get avg
     for (let goals of Object.keys(goalFreq)) {
       goalFreq[goals] /= 20;
@@ -144,17 +168,18 @@
     return goalFreq;
   }
 
-  function teamScoredFrequencies(data: TeamData, team: string): Counter {
-    let goalFreq: Counter = {};
+  function teamScoredFrequencies(data: TeamData, team: string): Object {
+    let goalFreq: Object = {};
     countScored(data, goalFreq, data._id, team);
     countScored(data, goalFreq, data._id - 1, team);
-
+    fillGoalFreqBlanks(goalFreq)
+    
     return goalFreq;
   }
 
   function countConceded(
     data: TeamData,
-    goalFreq: Counter,
+    goalFreq: Object,
     season: number,
     team: string
   ) {
@@ -166,6 +191,8 @@
       let score = data.form[season][team][matchday].score;
       if (score != null) {
         let [h, _, a] = score.split(" ");
+        h = parseInt(h);
+        a = parseInt(a);
         if (data.form[season][team][matchday].atHome) {
           if (a in goalFreq) {
             goalFreq[a] += 1;
@@ -182,16 +209,17 @@
       }
     }
   }
-
-  function teamConcededFrequencies(data: TeamData, team: string): Counter {
-    let goalFreq: Counter = {};
+  
+  function teamConcededFrequencies(data: TeamData, team: string): Object {
+    let goalFreq: Object = {};
     countConceded(data, goalFreq, data._id, team);
     countConceded(data, goalFreq, data._id - 1, team);
+    fillGoalFreqBlanks(goalFreq)
 
     return goalFreq;
   }
 
-  function checkForMax(freq: Counter, max: number): number {
+  function checkForMax(freq: Object, max: number): number {
     for (let goals of Object.values(freq)) {
       if (goals > max) {
         max = goals;
@@ -201,9 +229,9 @@
   }
 
   function maxValue(
-    goalFreq: Counter,
-    teamScoredFreq: Counter,
-    teamConcededFreq: Counter
+    goalFreq: Object,
+    teamScoredFreq: Object,
+    teamConcededFreq: Object
   ): number {
     let max = 0;
     max = checkForMax(goalFreq, max);
@@ -221,9 +249,9 @@
   }
 
   function scaleTeamFreq(
-    goalFreq: Counter,
-    teamScoredFreq: Counter,
-    teamConcededFreq: Counter
+    goalFreq: Object,
+    teamScoredFreq: Object,
+    teamConcededFreq: Object
   ) {
     let totalGoalFreq = valueSum(goalFreq);
 
@@ -238,7 +266,7 @@
     }
   }
 
-  function convertToPercentage(freq: Counter) {
+  function convertToPercentage(freq: Object) {
     let totalFreq = valueSum(freq);
     for (let goals in freq) {
       freq[goals] /= totalFreq;
@@ -246,9 +274,9 @@
   }
 
   function convertAllToPercentage(
-    goalFreq: Counter,
-    teamScoredFreq: Counter,
-    teamConcededFreq: Counter
+    goalFreq: Object,
+    teamScoredFreq: Object,
+    teamConcededFreq: Object
   ) {
     convertToPercentage(goalFreq);
     convertToPercentage(teamScoredFreq);
@@ -266,9 +294,9 @@
     }
   }
 
-  let goalFreq: Counter,
-    teamScoredFreq: Counter,
-    teamConcededFreq: Counter,
+  let goalFreq: Object,
+    teamScoredFreq: Object,
+    teamConcededFreq: Object,
     maxY: number;
   let setup = false;
   onMount(() => {
