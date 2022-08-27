@@ -1,37 +1,42 @@
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from flask import Flask, jsonify
-from flask_cors import CORS, cross_origin
+import uvicorn
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from lib.database.database import Database
 
 season = 2022
 
-app = Flask(__name__)
-cors = CORS(app)
-app.config['CORS_HEADER'] = 'Content-Type'
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
 
 database = Database(season)
 
-@app.route('/api/teams')
-@cross_origin()
-def team() -> str:
-    teams_data = database.get_teams_data()
-    return jsonify(teams_data)
+@app.get('/api/teams')
+async def team() -> str:
+    teams_data = await database.get_teams_data()
+    return teams_data
 
-@app.route('/api/predictions')
-@cross_origin()
-def predictions() -> str:
-    predictions = database.get_predictions()
-    accuracy = database.get_prediction_accuracy()
+@app.get('/api/predictions')
+async def predictions() -> str:
+    predictions = await database.get_predictions()
+    accuracy = await database.get_prediction_accuracy()
     
     predictions_data = {
         'predictions': predictions,
         'accuracy': accuracy
     }
     
-    return jsonify(predictions_data)
+    return predictions_data
 
-if __name__ == '__main__':
-    app.run(debug=False)
-    # app.run(host='0.0.0.0', debug=False)
+if __name__ == "__main__":
+  uvicorn.run("server.fast_app:app", reload=True)
