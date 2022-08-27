@@ -30,14 +30,10 @@
     <SeasonComplete {data} />
   {:else}
     <div
-      class="next-game-prediction"
-      style="border: 6px solid var(--{oppTeam});"
-    >
-      <div class="next-game-title" style="background-color: var(--{oppTeam});">
+      class="next-game-prediction">
+      <div class="next-game-title">
         <h1
-          class="next-game-title-text"
-          style="color: var(--{oppTeam}-secondary);"
-        >
+          class="next-game-title-text">
           Next Game:&nbsp
           <button
             on:click={() => {
@@ -138,7 +134,9 @@
                     {toInitials(prevMatch.homeTeam)}
                   </div>
                   <div class="score">
-                    {prevMatch.homeGoals} - {prevMatch.awayGoals}
+                    <div class="scor">
+                      {prevMatch.homeGoals} - {prevMatch.awayGoals}
+                    </div>
                   </div>
                   <div
                     class="away-team"
@@ -166,6 +164,7 @@
     width: max-content;
     padding: 6px 20px;
     border-radius: 0 0 var(--border-radius) 0;
+    background: #38003d;
   }
 
   .next-game-season-complete {
@@ -179,10 +178,12 @@
 
   .next-game-title-text {
     margin: 0;
-    color: rgb(181, 181, 181);
+    color: white;
     display: flex;
   }
-
+  .next-game-team-btn {
+    color: #00fe87 !important;
+  }
   .next-game-logo {
     height: 225px;
     margin: 10px;
@@ -221,18 +222,22 @@
     width: 55%;
     display: flex;
     flex-direction: column;
-    padding: 20px 0 40px;
+    padding: 15px 20px 20px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.6);
     margin: auto 0;
   }
 
   .next-game-prediction {
     border-radius: var(--border-radius);
     min-height: 97.5%;
+    border: 6px solid #38003d;
+    background: linear-gradient(45deg, #00fe87, #03efff)
   }
 
   .next-game-values {
     display: flex;
-    margin-right: 5%;
+    margin-right: 2vw;
     min-height: 387px;
   }
 
@@ -247,15 +252,17 @@
   .past-result {
     font-size: 15px;
     display: flex;
+    /* background: white; */
   }
 
   .past-result-date {
     font-size: 13px;
     color: #333;
     width: 120px;
-    margin: 8px auto -5px;
+    margin: 8px auto -2px;
     padding-top: 3px;
     border-radius: 4px 4px 0 0;
+    /* background: white; */
   }
 
   .prev-results-title {
@@ -264,15 +271,12 @@
     margin: 0 !important;
   }
   .no-prev-results {
-    background: grey;
     display: grid;
     place-items: center;
-    background: #f3f3f3;
-    border: rgb(181, 181, 181) solid 5px;
     color: rgb(181, 181, 181);
+    color: rgba(0, 0, 0, 0.35);
     border-radius: var(--border-radius);
     padding: 100px 0;
-    /* margin: 0 25px !important; */
   }
   .next-game-item {
     border-radius: var(--border-radius);
@@ -327,6 +331,13 @@
     color: #333;
     align-self: center;
   }
+  /* .scor {
+    width: 45px;
+    padding: 3px 0;
+    margin: auto;
+    background: #00fe87;
+    border-radius: 3px;
+  } */
 
   .away-team {
     float: left;
@@ -365,7 +376,7 @@
       margin: 50px 20px 40px;
     }
     .next-game-values {
-      margin: 1% 8% 2% 0;
+      margin: 2% 3vw 2% 0;
       min-height: auto;
     }
   }
@@ -378,7 +389,7 @@
     /* Change next game to column orientation */
     .next-game-values {
       flex-direction: column;
-      margin: 20px;
+      margin: 20px 15px 15px;
     }
 
     .predictions-and-logo {
@@ -388,8 +399,8 @@
 
     .past-results {
       margin: 30px auto 0;
-      width: 100%;
-      padding: 0;
+      width: 94%;
+      padding: 10px;
     }
 
     .next-game-prediction {
