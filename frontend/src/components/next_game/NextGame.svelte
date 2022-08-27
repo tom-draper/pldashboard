@@ -410,7 +410,7 @@
   }
   @media only screen and (max-width: 550px) {
     .next-game-values {
-      margin: 20px 10px;
+      margin: 25px 10px 10px;
       font-size: 0.85em;
     }
     .next-game-prediction {

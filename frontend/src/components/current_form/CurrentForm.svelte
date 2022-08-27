@@ -21,7 +21,7 @@
   ): boolean[] {
     let formStarTeams = [];
     for (let matchday of matchdays) {
-      formStarTeams.unshift(data.form[data._id][team][matchday].starTeam);
+      formStarTeams.push(data.form[data._id][team][matchday].starTeam);
     }
 
     // Fill in blanks
@@ -33,9 +33,9 @@
   }
 
   function getFormIcons(data: TeamData, team: string): string {
-    let formIcons = [];
+    let formIcons: string[] = [];
     if (Object.keys(data.form[data._id][team][currentMatchday]).length > 0) {
-      formIcons = data.form[data._id][team][currentMatchday].form5.split("");
+      formIcons = data.form[data._id][team][currentMatchday].form5.split("").reverse();
     }
 
     // Fill in blanks with None icons
@@ -76,7 +76,7 @@
 
     for (let i = matchdays.length - 1; i >= 0; i--) {
       if (data.form[data._id][team][matchdays[i]].score != null) {
-        latestN.unshift(matchdays[i]);
+        latestN.push(matchdays[i]);
       }
       if (latestN.length >= N) {
         break;
