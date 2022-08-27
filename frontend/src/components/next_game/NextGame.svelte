@@ -366,6 +366,7 @@
     }
     .next-game-values {
       margin: 1% 8% 2% 0;
+      min-height: auto;
     }
   }
 
