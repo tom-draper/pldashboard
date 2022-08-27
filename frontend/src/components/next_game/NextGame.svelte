@@ -281,7 +281,7 @@
   .won,
   .drew,
   .lost {
-    color: rgba(0, 0, 0, 0.45);
+    color: #333
   }
 
   .won {
@@ -324,7 +324,7 @@
     font-weight: 800;
     flex: 3;
     margin-top: 3px;
-    color: #333 !important;
+    color: #333;
     align-self: center;
   }
 
