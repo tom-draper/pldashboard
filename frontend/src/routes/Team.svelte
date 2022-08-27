@@ -646,6 +646,7 @@
     }
   }
 
+  
   @media only screen and (max-width: 700px) {
     .position-and-badge {
       width: 70%;
@@ -653,7 +654,7 @@
 
     .circles-background {
       transform: scale(0.55);
-      margin-top: -85px;
+      margin-top: -5em;
     }
 
     .position-no-badge {
@@ -665,11 +666,11 @@
       margin: 35px 0 0 0;
     }
   }
-
+  
   @media only screen and (max-width: 800px) {
     .circles-background {
       transform: scale(0.4);
-      margin-top: -120px;
+      margin-top: -9em;
     }
     .position-central {
       font-size: 13em;
@@ -710,7 +711,7 @@
 
     .circles-background {
       transform: scale(0.35);
-      margin-top: -125px;
+      margin-top: -10em;
     }
   }
 </style>
