@@ -133,7 +133,7 @@
   .current-form {
     font-size: 1.7rem;
     margin: 20px 0;
-    padding: 10px 25px 8px;
+    padding: 9px 25px;
     background: #38003d;
     color: white;
     border-radius: var(--border-radius);
@@ -171,5 +171,11 @@
     .current-form-row {
       width: 95%;
     }
+  }
+  @media only screen and (max-width: 550px) {
+
+  .current-form {
+    font-size: 1.5rem !important;
+  }
   }
 </style>

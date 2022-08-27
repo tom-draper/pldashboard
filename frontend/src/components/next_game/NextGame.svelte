@@ -237,7 +237,7 @@
   }
 
   .next-game-position {
-    font-size: 3.5em;
+    font-size: 3.3em;
     font-weight: 700;
   }
   .ordinal-position {
