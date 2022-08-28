@@ -57,9 +57,13 @@
     "#00fe87",
     "#00fe87",
     "#00fe87",
+    "#00fe87",
+    "#00fe87",
   ]);
   // Concatenate bright reds
   let concededColourScale = colourScale.concat([
+    "#f83027",
+    "#f83027",
     "#f83027",
     "#f83027",
     "#f83027",
