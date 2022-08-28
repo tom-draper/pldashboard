@@ -113,15 +113,14 @@
           <!-- Display table of previous results against the next team this team is playing -->
           {#each data.upcoming[team].prevMatches as prevMatch}
             <div class="next-game-item-container">
-              <div class="past-result-date {prevMatch.result}">
+              <div class="past-result-date result-details">
                 {new Date(prevMatch.date).toLocaleDateString("en-GB", {
-                  weekday: "short",
                   year: "numeric",
                   month: "short",
                   day: "numeric",
                 })}
               </div>
-              <div class="next-game-item {prevMatch.result}">
+              <div class="next-game-item result-details">
                 <div class="past-result">
                   <div
                     class="home-team"
@@ -133,10 +132,12 @@
                   >
                     {toInitials(prevMatch.homeTeam)}
                   </div>
-                  <div class="score">
-                    <div class="scor">
+                  <div class="score-container">
+                    <!-- <div class="left-color"></div> -->
+                    <div class="score {prevMatch.result}">
                       {prevMatch.homeGoals} - {prevMatch.awayGoals}
                     </div>
+                    <!-- <div class="right-color"></div> -->
                   </div>
                   <div
                     class="away-team"
@@ -237,6 +238,7 @@
 
   .next-game-values {
     display: flex;
+    margin-top: 1em;
     margin-right: 2vw;
     min-height: 387px;
   }
@@ -258,7 +260,7 @@
   .past-result-date {
     font-size: 13px;
     color: #333;
-    width: 120px;
+    width: 90px;
     margin: 8px auto -2px;
     padding-top: 3px;
     border-radius: 4px 4px 0 0;
@@ -282,26 +284,27 @@
     border-radius: var(--border-radius);
   }
 
-  .won,
-  .drew,
-  .lost {
-    color: #333
+  .result-details {
+    background: rgba(255, 255, 255, 0.85);
   }
 
   .won {
-    background: rgb(169, 247, 169);
-    background: #77dd77;
-    background: #00fe87;
+    /* background: rgb(169, 247, 169); */
+    /* background: #77dd77; */
+    /* background: #00fe87; */
+    border-bottom: 6px #00fe87 solid;
   }
   .drew {
-    background: rgb(255, 207, 138);
-    background: #ffb347;
-    background: #ffdd00;
+    /* background: rgb(255, 207, 138); */
+    /* background: #ffb347; */
+    /* background: #ffdd00; */
+    border-bottom: 6px #ffdd00 solid;
   }
   .lost {
-    background: #f77979;
-    background: #c23b22;
-    background: #f83027;
+    /* background: #f77979; */
+    /* background: #c23b22; */
+    /* background: #f83027; */
+    border-bottom: 6px #f83027 solid;
   }
 
   .accuracy {
@@ -320,24 +323,37 @@
     border-radius: var(--border-radius) 0 0 var(--border-radius);
   }
 
-  .score {
+  .score-container {
     float: left;
     min-width: 44px;
-    margin: 0 4px;
+    margin: 0 8px;
     text-align: center;
     font-weight: 800;
     flex: 3;
-    margin-top: 3px;
+    /* margin-top: 3px; */
     color: #333;
     align-self: center;
+    display: flex;
   }
-  /* .scor {
-    width: 45px;
-    padding: 3px 0;
+  .left-color {
+    background: red;
+  }
+  .right-color {
+    background: red;
+  }
+  .left-color,
+  .right-color {
+    flex-grow: 1;
+    height: 8px;
     margin: auto;
-    background: #00fe87;
-    border-radius: 3px;
-  } */
+  }
+  .score {
+    width: 100%;
+    padding: 3px 0 0;
+    margin: auto;
+    /* background: #00fe87; */
+    border-radius: 2px;
+  }
 
   .away-team {
     float: left;
