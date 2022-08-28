@@ -115,7 +115,6 @@
             <div class="next-game-item-container">
               <div class="past-result-date result-details">
                 {new Date(prevMatch.date).toLocaleDateString("en-GB", {
-                  weekday: "short",
                   year: "numeric",
                   month: "short",
                   day: "numeric",
@@ -133,10 +132,12 @@
                   >
                     {toInitials(prevMatch.homeTeam)}
                   </div>
-                  <div class="score {prevMatch.result}">
-                    <div class="scor">
+                  <div class="score-container">
+                    <!-- <div class="left-color"></div> -->
+                    <div class="score {prevMatch.result}">
                       {prevMatch.homeGoals} - {prevMatch.awayGoals}
                     </div>
+                    <!-- <div class="right-color"></div> -->
                   </div>
                   <div
                     class="away-team"
@@ -259,7 +260,7 @@
   .past-result-date {
     font-size: 13px;
     color: #333;
-    width: 120px;
+    width: 90px;
     margin: 8px auto -2px;
     padding-top: 3px;
     border-radius: 4px 4px 0 0;
@@ -322,24 +323,37 @@
     border-radius: var(--border-radius) 0 0 var(--border-radius);
   }
 
-  .score {
+  .score-container {
     float: left;
     min-width: 44px;
     margin: 0 8px;
     text-align: center;
     font-weight: 800;
     flex: 3;
-    margin-top: 3px;
+    /* margin-top: 3px; */
     color: #333;
     align-self: center;
+    display: flex;
   }
-  /* .scor {
-    width: 45px;
-    padding: 3px 0;
+  .left-color {
+    background: red;
+  }
+  .right-color {
+    background: red;
+  }
+  .left-color,
+  .right-color {
+    flex-grow: 1;
+    height: 8px;
     margin: auto;
-    background: #00fe87;
-    border-radius: 3px;
-  } */
+  }
+  .score {
+    width: 100%;
+    padding: 3px 0 0;
+    margin: auto;
+    /* background: #00fe87; */
+    border-radius: 2px;
+  }
 
   .away-team {
     float: left;
