@@ -113,7 +113,7 @@
           <!-- Display table of previous results against the next team this team is playing -->
           {#each data.upcoming[team].prevMatches as prevMatch}
             <div class="next-game-item-container">
-              <div class="past-result-date {prevMatch.result}">
+              <div class="past-result-date result-details">
                 {new Date(prevMatch.date).toLocaleDateString("en-GB", {
                   weekday: "short",
                   year: "numeric",
@@ -121,7 +121,7 @@
                   day: "numeric",
                 })}
               </div>
-              <div class="next-game-item {prevMatch.result}">
+              <div class="next-game-item result-details">
                 <div class="past-result">
                   <div
                     class="home-team"
@@ -133,7 +133,7 @@
                   >
                     {toInitials(prevMatch.homeTeam)}
                   </div>
-                  <div class="score">
+                  <div class="score {prevMatch.result}">
                     <div class="scor">
                       {prevMatch.homeGoals} - {prevMatch.awayGoals}
                     </div>
@@ -237,6 +237,7 @@
 
   .next-game-values {
     display: flex;
+    margin-top: 1em;
     margin-right: 2vw;
     min-height: 387px;
   }
@@ -282,26 +283,27 @@
     border-radius: var(--border-radius);
   }
 
-  .won,
-  .drew,
-  .lost {
-    color: #333
+  .result-details {
+    background: rgba(255, 255, 255, 0.85);
   }
 
   .won {
-    background: rgb(169, 247, 169);
-    background: #77dd77;
-    background: #00fe87;
+    /* background: rgb(169, 247, 169); */
+    /* background: #77dd77; */
+    /* background: #00fe87; */
+    border-bottom: 6px #00fe87 solid;
   }
   .drew {
-    background: rgb(255, 207, 138);
-    background: #ffb347;
-    background: #ffdd00;
+    /* background: rgb(255, 207, 138); */
+    /* background: #ffb347; */
+    /* background: #ffdd00; */
+    border-bottom: 6px #ffdd00 solid;
   }
   .lost {
-    background: #f77979;
-    background: #c23b22;
-    background: #f83027;
+    /* background: #f77979; */
+    /* background: #c23b22; */
+    /* background: #f83027; */
+    border-bottom: 6px #f83027 solid;
   }
 
   .accuracy {
@@ -323,7 +325,7 @@
   .score {
     float: left;
     min-width: 44px;
-    margin: 0 4px;
+    margin: 0 8px;
     text-align: center;
     font-weight: 800;
     flex: 3;
