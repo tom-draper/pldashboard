@@ -97,9 +97,9 @@
   function setDefaultLayout() {
     if (setup) {
       let layoutUpdate = {
-        "layout.yaxis.title": { text: "Form Rating" },
-        "layout.margin.l": 60,
-        "layout.margin.t": 15,
+        "yaxis.title": { text: "Form Rating" },
+        "margin.l": 60,
+        "margin.t": 15,
       };
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
@@ -108,9 +108,10 @@
   function setMobileLayout() {
     if (setup) {
       let layoutUpdate = {
-        "layout.yaxis.title": null,
-        "layout.margin.l": 20,
-        "layout.margin.t": 5,
+        "yaxis.title": null,
+        "yaxis.visible": false,
+        "margin.l": 20,
+        "margin.t": 5,
       };
       Plotly.update(plotDiv, {}, layoutUpdate);
     }

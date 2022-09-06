@@ -688,7 +688,7 @@
     .position-central {
       font-size: 10em;
       text-align: center;
-      line-height: 1.6;
+      line-height: 1.55;
       padding-right: 20px;
       margin: 0;
       text-shadow: 7px 7px #000;
@@ -701,6 +701,9 @@
       background-size: auto 210px !important;
       background-position: center !important;
     }
+    .season-stats-row {
+      margin: 0 1em 1em;
+    }
 
     .position-no-badge,
     .position-and-badge {
@@ -711,7 +714,7 @@
 
     .circles-background {
       transform: scale(0.35);
-      margin-top: -10em;
+      margin-top: -9.5em;
     }
   }
 </style>

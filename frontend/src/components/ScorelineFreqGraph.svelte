@@ -188,6 +188,7 @@
       let layoutUpdate = {
         "yaxis.title": { text: "Probability" },
         "yaxis.visible": true,
+        "xaxis.tickfont.size": 12,
         "margin.l": 65,
       };
       Plotly.update(plotDiv, {}, layoutUpdate);
@@ -199,6 +200,7 @@
       let layoutUpdate = {
         "yaxis.title": null,
         "yaxis.visible": false,
+        "xaxis.tickfont.size": 5,
         "margin.l": 20,
       };
       Plotly.update(plotDiv, {}, layoutUpdate);
