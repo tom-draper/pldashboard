@@ -254,7 +254,6 @@
   .past-result {
     font-size: 15px;
     display: flex;
-    /* background: white; */
   }
 
   .past-result-date {
@@ -292,19 +291,19 @@
     /* background: rgb(169, 247, 169); */
     /* background: #77dd77; */
     /* background: #00fe87; */
-    border-bottom: 6px #00fe87 solid;
+    border-bottom: 6px var(--win) solid;
   }
   .drew {
     /* background: rgb(255, 207, 138); */
     /* background: #ffb347; */
     /* background: #ffdd00; */
-    border-bottom: 6px #ffdd00 solid;
+    border-bottom: 6px var(--draw) solid;
   }
   .lost {
     /* background: #f77979; */
     /* background: #c23b22; */
     /* background: #f83027; */
-    border-bottom: 6px #f83027 solid;
+    border-bottom: 6px var(--lose) solid;
   }
 
   .accuracy {

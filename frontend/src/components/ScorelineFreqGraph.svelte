@@ -37,7 +37,11 @@
     return scoreFreq as ScoreFreq;
   }
 
-  function insertTeamScoreBars(data: TeamData, team: string, scoreFreq: ScoreFreq) {
+  function insertTeamScoreBars(
+    data: TeamData,
+    team: string,
+    scoreFreq: ScoreFreq
+  ) {
     for (let score in scoreFreq) {
       if (scoreFreq[score].length == 1) {
         scoreFreq[score].push(0);
@@ -145,52 +149,8 @@
     }
   }
 
-  function defaultLayout() {
-    if (setup) {
-      let update = {
-        yaxis: {
-          title: { text: "Probability"},
-          gridcolor: "gray",
-          showgrid: false,
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-        },
-        margin: { r: 20, l: 65, t: 15, b: 60, pad: 5 },
-      };
-      Plotly.update(plotDiv, {}, update);
-    }
-  }
-
-  function mobileLayout() {
-    if (setup) {
-      let update = {
-        yaxis: {
-          title: null,
-          gridcolor: "gray",
-          showgrid: false,
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          visible: false,
-        },
-        margin: { r: 20, l: 20, t: 15, b: 60, pad: 5 },
-      };
-      Plotly.update(plotDiv, {}, update);
-    }
-  }
-
-  function buildPlotData(data: TeamData, team: string): PlotData {
-    scoreFreq = getAvgScoreFreq(data);
-
-    insertTeamScoreBars(data, team, scoreFreq);
-    scaleBars(scoreFreq);
-    convertToPercentage(scoreFreq);
-    let [avgBars, teamBars] = separateBars(scoreFreq);
-
-    let plotData = {
-      data: [avgBars, teamBars],
-      layout: {
+  function defaultLayout(): Object {
+    return {
       title: false,
       autosize: true,
       margin: { r: 20, l: 65, t: 15, b: 60, pad: 5 },
@@ -220,7 +180,42 @@
         y: 0.95,
       },
       dragmode: false,
-      },
+    };
+  }
+
+  function setDefaultLayout() {
+    if (setup) {
+      let layoutUpdate = {
+        "yaxis.title": { text: "Probability" },
+        "yaxis.visible": true,
+        "margin.l": 65,
+      };
+      Plotly.update(plotDiv, {}, layoutUpdate);
+    }
+  }
+
+  function setMobileLayout() {
+    if (setup) {
+      let layoutUpdate = {
+        "yaxis.title": null,
+        "yaxis.visible": false,
+        "margin.l": 20,
+      };
+      Plotly.update(plotDiv, {}, layoutUpdate);
+    }
+  }
+
+  function buildPlotData(data: TeamData, team: string): PlotData {
+    scoreFreq = getAvgScoreFreq(data);
+
+    insertTeamScoreBars(data, team, scoreFreq);
+    scaleBars(scoreFreq);
+    convertToPercentage(scoreFreq);
+    let [avgBars, teamBars] = separateBars(scoreFreq);
+
+    let plotData = {
+      data: [avgBars, teamBars],
+      layout: defaultLayout(),
       config: {
         responsive: true,
         showSendToCloud: false,
@@ -259,14 +254,14 @@
       plotData.data[1] = teamBars; // Update team bars
       Plotly.redraw(plotDiv);
       if (mobileView) {
-        mobileLayout();
+        setMobileLayout();
       }
     }
   }
 
   type ScoreFreq = {
-    string: number[]
-  }
+    string: number[];
+  };
 
   let plotDiv: HTMLDivElement, plotData: PlotData;
   let scoreFreq: ScoreFreq;
@@ -277,8 +272,8 @@
   });
 
   $: team && refreshPlot();
-  $: !mobileView && defaultLayout();
-  $: setup && mobileView && mobileLayout();
+  $: !mobileView && setDefaultLayout();
+  $: setup && mobileView && setMobileLayout();
 
   export let data: TeamData, team: string, mobileView: boolean;
 </script>

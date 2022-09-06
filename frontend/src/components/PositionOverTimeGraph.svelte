@@ -74,75 +74,8 @@
     return lines;
   }
 
-  function defaultLayout() {
-    if (setup) {
-      let update = {
-        yaxis: {
-          title: { text: "Position" },
-          gridcolor: "gray",
-          showgrid: false,
-          showline: false,
-          zeroline: false,
-          autorange: "reversed",
-          fixedrange: true,
-          tickvals: Array.from(Array(20), (_, i) => i + 1),
-        },
-        margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
-      };
-      Plotly.update(plotDiv, {}, update);
-    }
-  }
-
-  function mobileLayout() {
-    if (setup) {
-      let update = {
-        yaxis: {
-          title: null,
-          gridcolor: "gray",
-          showgrid: false,
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          autorange: "reversed",
-          visible: false,
-          tickvals: Array.from(Array(10), (_, i) => i + 2),
-        },
-        margin: { r: 20, l: 20, t: 5, b: 40, pad: 5 },
-      };
-      Plotly.update(plotDiv, {}, update);
-    }
-  }
-
-  function buildPlotData(data: TeamData, team: string): PlotData {
-    let yLabels = Array.from(Array(20), (_, i) => i + 1);
-
-    let plotData = {
-      data: lines(data, team, playedMatchdays),
-      layout: {
-        title: false,
-        autosize: true,
-        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
-        hovermode: "closest",
-        plot_bgcolor: "#fafafa",
-        paper_bgcolor: "#fafafa",
-        yaxis: {
-          title: { text: "Position" },
-          gridcolor: "gray",
-          showgrid: false,
-          showline: false,
-          zeroline: false,
-          autorange: "reversed",
-          fixedrange: true,
-          ticktext: yLabels,
-          tickvals: yLabels,
-        },
-        xaxis: {
-          linecolor: "black",
-          showgrid: false,
-          showline: false,
-          fixedrange: true,
-        },
-        shapes: [
+  function positionRangeShapes(): Object[] {
+    return [
           {
             type: "rect",
             x0: playedMatchdays[0],
@@ -185,9 +118,72 @@
             opacity: 0.2,
             layer: "below",
           },
-        ],
+        ]
+  }
+
+  function defaultLayout() {
+    let yLabels = Array.from(Array(20), (_, i) => i + 1);
+    return {
+        title: false,
+        autosize: true,
+        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+        hovermode: "closest",
+        plot_bgcolor: "#fafafa",
+        paper_bgcolor: "#fafafa",
+        yaxis: {
+          title: { text: "Position" },
+          gridcolor: "gray",
+          showgrid: false,
+          showline: false,
+          zeroline: false,
+          autorange: "reversed",
+          fixedrange: true,
+          ticktext: yLabels,
+          tickvals: yLabels,
+          visible: true
+        },
+        xaxis: {
+          linecolor: "black",
+          showgrid: false,
+          showline: false,
+          fixedrange: true,
+        },
+        shapes: positionRangeShapes(),
         dragmode: false,
-      },
+      }
+  }
+
+  function setDefaultLayout() {
+    if (setup) {
+      let layoutUpdate = {
+        'yaxis.title': { text: 'Position'},
+        'yaxis.visible': true,
+        'yaxis.tickvals': Array.from(Array(20), (_, i) => i + 1),
+        'margin.l': 60,
+        'margin.t': 15
+      }
+      Plotly.update(plotDiv, {}, layoutUpdate);
+    }
+  }
+
+  function setMobileLayout() {
+    if (setup) {
+      let layoutUpdate = {
+        'yaxis.title': null,
+        'yaxis.visible': false,
+        'yaxis.tickvals': Array.from(Array(10), (_, i) => i + 2),
+        'margin.l': 20,
+        'margin.t': 5
+      }
+      Plotly.update(plotDiv, {}, layoutUpdate);
+    }
+  }
+
+  function buildPlotData(data: TeamData, team: string): PlotData {
+
+    let plotData = {
+      data: lines(data, team, playedMatchdays),
+      layout: defaultLayout(), 
       config: {
         responsive: true,
         showSendToCloud: false,
@@ -225,14 +221,14 @@
       }
       Plotly.redraw(plotDiv);
       if (mobileView) {
-        mobileLayout();
+        setMobileLayout();
       }
     }
   }
 
   $: team && refreshPlot();
-  $: !mobileView && defaultLayout();
-  $: setup && mobileView && mobileLayout();
+  $: !mobileView && setDefaultLayout();
+  $: setup && mobileView && setMobileLayout();
 
   export let data: TeamData,
     team: string,

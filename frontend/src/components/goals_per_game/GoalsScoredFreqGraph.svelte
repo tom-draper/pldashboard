@@ -2,58 +2,61 @@
   import { onMount } from "svelte";
 
   function defaultLayout() {
+    let xLabels = getXLabels();
+    return {
+      title: false,
+      autosize: true,
+      margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+      hovermode: "closest",
+      barmode: "overlay",
+      bargap: 0,
+      plot_bgcolor: "#fafafa",
+      paper_bgcolor: "#fafafa",
+      yaxis: getYAxisLayout(),
+      xaxis: {
+        title: { text: "Scored" },
+        linecolor: "black",
+        showgrid: false,
+        showline: false,
+        fixedrange: true,
+        ticktext: xLabels,
+        tickvals: xLabels,
+      },
+      legend: {
+        x: 1,
+        xanchor: "right",
+        y: 0.95,
+      },
+      dragmode: false,
+    };
+  }
+  
+  function setDefaultLayout() {
     if (setup) {
-      let update = {
-        yaxis: getYAxisLayout(),
-        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+      let layoutUpdate = {
+        "yaxis.title": { text: "Scored" },
+        "yaxis.visible": true,
+        "margin.l": 60,
       };
-      Plotly.update(plotDiv, {}, update);
+      Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
 
-  function mobileLayout() {
+  function setMobileLayout() {
     if (setup) {
-      let update = {
-        yaxis: getYAxisLayout(),
-        margin: { r: 20, l: 20, t: 15, b: 40, pad: 5 },
+      let layoutUpdate = {
+        "yaxis.title": null,
+        "yaxis.visible": false,
+        "margin.l": 20,
       };
-      update.yaxis.visible = false;
-      update.yaxis.title = null;
-      Plotly.update(plotDiv, {}, update);
+      Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
 
   function buildPlotData(): PlotData {
-    let xLabels = getXLabels();
-
     let plotData = {
       data: getScoredBars(),
-      layout: {
-        title: false,
-        autosize: true,
-        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
-        hovermode: "closest",
-        barmode: "overlay",
-        bargap: 0,
-        plot_bgcolor: "#fafafa",
-        paper_bgcolor: "#fafafa",
-        yaxis: getYAxisLayout(),
-        xaxis: {
-          title: { text: "Scored" },
-          linecolor: "black",
-          showgrid: false,
-          showline: false,
-          fixedrange: true,
-          ticktext: xLabels,
-          tickvals: xLabels,
-        },
-        legend: {
-          x: 1,
-          xanchor: "right",
-          y: 0.95,
-        },
-        dragmode: false,
-      },
+      layout: defaultLayout(),
       config: {
         responsive: true,
         showSendToCloud: false,
@@ -84,7 +87,7 @@
       });
       Plotly.redraw(plotDiv);
       if (mobileView) {
-        mobileLayout();
+        setMobileLayout();
       }
     }
   }
@@ -97,10 +100,15 @@
   });
 
   $: team && refreshPlot();
-  $: !mobileView && defaultLayout();
-  $: setup && mobileView && mobileLayout();
+  $: !mobileView && setDefaultLayout();
+  $: setup && mobileView && setMobileLayout();
 
-  export let team: string, getScoredBars: Function, getScoredTeamBars: Function, getXLabels: Function, getYAxisLayout: Function, mobileView: boolean;
+  export let team: string,
+    getScoredBars: Function,
+    getScoredTeamBars: Function,
+    getXLabels: Function,
+    getYAxisLayout: Function,
+    mobileView: boolean;
 </script>
 
 <div id="plotly">

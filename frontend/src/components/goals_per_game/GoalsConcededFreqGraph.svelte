@@ -1,33 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  function defaultLayout() {
-    if (setup) {
-      let update = {
-        yaxis: getYAxisLayout(),
-        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
-      };
-      Plotly.update(plotDiv, {}, update);
-    }
-  }
-
-  function mobileLayout() {
-    if (setup) {
-      let update = {
-        yaxis: getYAxisLayout(),
-        margin: { r: 20, l: 20, t: 15, b: 40, pad: 5 },
-      };
-      update.yaxis.visible = false;
-      update.yaxis.title = null;
-      Plotly.update(plotDiv, {}, update);
-    }
-  }
-
-  function buildPlotData(): PlotData {
+  function defaultLayout(): Object {
     let xLabels = getXLabels();
-    let plotData = {
-      data: getConcededBars(),
-      layout: {
+    return {
         title: false,
         autosize: true,
         margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
@@ -52,7 +28,35 @@
           y: 0.95,
         },
         dragmode: false,
-      },
+      }
+  }
+
+  function setDefaultLayout() {
+    if (setup) {
+      let layoutUpdate = {
+        "yaxis.title": { text: "Conceded" },
+        "yaxis.visible": true,
+        "margin.l": 60,
+      };
+      Plotly.update(plotDiv, {}, layoutUpdate);
+    }
+  }
+
+  function setMobileLayout() {
+    if (setup) {
+      let layoutUpdate = {
+        "yaxis.title": null,
+        "yaxis.visible": false,
+        "margin.l": 20,
+      };
+      Plotly.update(plotDiv, {}, layoutUpdate);
+    }
+  }
+
+  function buildPlotData(): PlotData {
+    let plotData = {
+      data: getConcededBars(),
+      layout: defaultLayout(),
       config: {
         responsive: true,
         showSendToCloud: false,
@@ -83,7 +87,7 @@
       });
       Plotly.redraw(plotDiv);
       if (mobileView) {
-        mobileLayout();
+        setMobileLayout();
       }
     }
   }
@@ -96,8 +100,8 @@
   });
 
   $: team && refreshPlot();
-  $: !mobileView && defaultLayout();
-  $: setup && mobileView && mobileLayout();
+  $: !mobileView && setDefaultLayout();
+  $: setup && mobileView && setMobileLayout();
 
   export let team: string,
     getConcededBars: Function,

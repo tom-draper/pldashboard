@@ -24,13 +24,13 @@
 
   function sameResult(prediction: Scoreline, actual: Scoreline): boolean {
     return (
-      (prediction.homeGoals > prediction.awayGoals &&
-        actual.homeGoals > actual.awayGoals) ||
-      (prediction.homeGoals == prediction.awayGoals &&
-        actual.homeGoals == actual.awayGoals) ||
-      (prediction.homeGoals < prediction.awayGoals &&
-        actual.homeGoals < actual.awayGoals)
-    );
+      (Math.round(prediction.homeGoals) > Math.round(prediction.awayGoals) &&
+        Math.round(actual.homeGoals) > Math.round(actual.awayGoals)) ||
+      (Math.round(prediction.homeGoals) == Math.round(prediction.awayGoals) &&
+        Math.round(actual.homeGoals) == Math.round(actual.awayGoals)) ||
+      (Math.round(prediction.homeGoals) < Math.round(prediction.awayGoals) &&
+        Math.round(actual.homeGoals) < Math.round(actual.awayGoals))
+    )
   }
 
   function insertColours(json: PredictionData) {
@@ -244,15 +244,15 @@
   }
 
   .green {
-    background-color: #77dd77;
+    background-color: var(--win);
   }
 
   .yellow {
-    background-color: #ffb347;
+    background-color: var(--draw);
   }
 
   .red {
-    background-color: #c23b22;
+    background-color: var(--lose);
   }
 
   .predictions-container {
