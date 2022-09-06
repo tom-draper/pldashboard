@@ -275,7 +275,6 @@ class Predictor:
                 opp_team_name = upcoming.at[team_name, 'nextTeam']
                 at_home = upcoming.at[team_name, 'atHome']
                 prev_matches = upcoming.at[team_name, 'prevMatches']
-
                 
                 opp_form_rating = form.get_current_form_rating(opp_team_name)
                 opp_long_term_form_rating = form.get_long_term_form_rating(opp_team_name)
@@ -304,15 +303,63 @@ class Predictor:
             predictions[team_name] = prediction
 
         return predictions
+    
+    def gen_score_predictions_new(
+            self, 
+            fixtures: Fixtures, 
+            form: Form, 
+            upcoming: Upcoming, 
+            home_advantages: HomeAdvantages
+        ) -> dict[dict[str, Union[datetime, str, float]]]:
+        predictions = {}  # type: dict[dict[str, Union[datetime, str, float]]]
+        team_names = form.df.index.values.tolist()
+        
+        # Check ALL teams as two teams can have different next games
+        for team_name in team_names:
+            prediction = None
+            if upcoming is not None:
+                form_rating = form.get_current_form_rating(team_name)
+                long_term_form_rating = form.get_long_term_form_rating(team_name)
+                                
+                opp_team_name = upcoming.at[team_name, 'nextTeam']
+                at_home = upcoming.at[team_name, 'atHome']
+                prev_matches = upcoming.at[team_name, 'prevMatches']
+                
+                opp_form_rating = form.get_current_form_rating(opp_team_name)
+                opp_long_term_form_rating = form.get_long_term_form_rating(opp_team_name)
+
+                avg_result = fixtures.get_avg_result(team_name)
+                opp_avg_result = fixtures.get_avg_result(opp_team_name)
+                
+                home_advantage = home_advantages.df.loc[team_name, 'totalHomeAdvantage'][0]
+                opp_home_advantage = home_advantages.df.loc[opp_team_name, 'totalHomeAdvantage'][0]
+
+                pred_scored, pred_conceded = self._calc_score_prediction(
+                    team_name, avg_result, opp_avg_result, home_advantage,
+                    opp_home_advantage, at_home, form_rating, long_term_form_rating,
+                    opp_form_rating, opp_long_term_form_rating, prev_matches)
+            
+                if at_home:
+                    prediction = {
+                        'homeGoals': pred_scored,
+                        'awayGoals': pred_conceded
+                    }
+                else:
+                    prediction = {
+                        'homeGoals': pred_conceded,
+                        'awayGoals': pred_scored
+                    }
+            
+            predictions[team_name] = prediction
+
+        return predictions
 
 
 class Predictions:
     def __init__(self, current_season: int):
         self.predictor = Predictor()
         self.database = Database(current_season)
-        self.accuracy = None  # type: dict[str, float]
         self.prediction_file = f'data/predictions_{current_season}.json'
-
 
     @dataclass
     class PredictionsCount:
@@ -323,19 +370,6 @@ class Predictions:
         n_pred_away: int
         n_act_home: int
         n_act_away: int
-
-    def get_predictions(self) -> dict:
-        return self.database.get_predictions()
-
-    def get_accuracy(self) -> tuple[float, float]:
-        accuracy = round(self.accuracy['scoreAccuracy']*100, 2)
-        result_accuracy = round(self.accuracy['resultAccuracy']*100, 2)  # As percentage
-        return accuracy, result_accuracy
-
-    def _print_accuracy(self):
-        print(f'ℹ️ Predicting with accuracy: {round(self.accuracy["scoreAccuracy"]*100, 2)}%')
-        print(f'ℹ️ Predicting correct results with accuracy: {round(self.accuracy["resultAccuracy"]*100, 2)}%')
-        print(f'ℹ️ Net predictions: [{self._signed_float_str(self.accuracy["homeGoalsAvgDiff"])}] - [{self._signed_float_str(self.accuracy["awayGoalsAvgDiff"])}]')
 
     @staticmethod
     def _signed_float_str(value: float) -> str:
@@ -351,10 +385,9 @@ class Predictions:
 
         for matchday_no in range(1, 39):
             matchday = fixtures.df[matchday_no]
-            matchday_status = matchday['status'] 
 
             # If whole column is SCHEDULED, skip
-            if not all(matchday_status == 'SCHEDULED'):
+            if not all(matchday['status'] == 'SCHEDULED'):
                 for team_name, row in matchday.iterrows():
                     if row['status'] == 'FINISHED':
                         home_goals, away_goals = util.extract_int_score(row['score'])
@@ -379,16 +412,13 @@ class Predictions:
             home_advantages: HomeAdvantages,
             update_db: bool = True
         ) -> DataFrame:
-        predictions = self.predictor.gen_score_predictions(
-            fixtures, form, upcoming, home_advantages)
+        predictions = self.predictor.gen_score_predictions(fixtures, form, upcoming, home_advantages)
         actual_scores = self._get_actual_scores(fixtures)
         
         if update_db:
             self.database.update_predictions(predictions, actual_scores)
-            self.accuracy = self.database.update_accuracy()
             self.database.update_actual_scores(actual_scores)
-            self._print_accuracy()
-
+        
         upcoming_predictions = pd.DataFrame.from_dict(
             predictions, 
             orient='index'

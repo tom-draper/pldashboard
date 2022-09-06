@@ -94,7 +94,7 @@ class Updater:
         self.load_previous_fixtures(n_seasons)
 
         if request_new:
-            self.last_updated = datetime.now()
+            self.data.last_updated = datetime.now()
 
     def save_data_to_json(self):
         """ Save current season fixtures and standings data in self.json_data to 
@@ -105,9 +105,7 @@ class Updater:
 
 
     def build_dataframes(self, n_seasons: int, display_tables: bool = False, 
-                          update_db: bool = True):
-        self.data.last_updated = self.last_updated
-        
+                          update_db: bool = True):        
         # Standings for the last [n_seasons] seasons
         self.data.standings.build(
             self.json_data, 
@@ -145,11 +143,6 @@ class Updater:
             self.star_team_threshold, 
             display=display_tables
         )
-        # Season metrics
-        # self.data.season_stats.build(
-        #     self.data.form, 
-        #     display=display_tables
-        # )
         # Data about the opponent in each team's next game
         self.data.upcoming.build(
             self.json_data, 
@@ -162,9 +155,14 @@ class Updater:
             update_db=update_db
         )
     
-    def save_team_data_to_database(self):
+    def save_team_data_to_db(self):
         team_data = self.data.to_dict()
         self.database.update_team_data(team_data)
+    
+    def save_predictions_to_db(self):
+        # predictions = self.upcoming.get_predictions()
+        # self.database.update_predictions(predictions)
+        pass
         
     def get_logo_urls(self) -> dict[str, str]:
         data = self.json_data['standings'][self.current_season]
@@ -189,24 +187,22 @@ class Updater:
             self.fetch_json_data(n_seasons, request_new)
         except ValueError as e:
             print(e)
-            print('🔁 Retrying with saved data...')
+            print('🔁 Retrying with local backup data...')
             request_new = False
             self.fetch_json_data(n_seasons, request_new)
             
         self.build_dataframes(n_seasons, display_tables, update_db)
 
         if request_new:
-            print('💾 Saving new data as JSON files...')
+            print('💾 Saving new data to local backup...')
             self.save_data_to_json()
             if update_db:
                 print('💾 Saving new data to database...')
-                self.save_team_data_to_database()
-                # TODO: Save predictions to database...
-                #self.database.update_predictions(predictions)
+                self.save_team_data_to_db()
+                #self.save_predictions_to_db()
 
 
 if __name__ == "__main__":
-    # Build all dataframes and save to database
     updater = Updater(2022)
     updater.build_all(
         request_new=True, 

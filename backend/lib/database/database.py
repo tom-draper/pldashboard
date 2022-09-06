@@ -61,74 +61,74 @@ class Database:
         
         return prev_form
 
-    @staticmethod
-    def _accuracy_counts(played: list[dict]) -> tuple[int, int, float, float]:
-        score_correct = 0
-        result_correct = 0
-        home_goals_diff = 0
-        away_goals_diff = 0
-        for p in played:
-            ph = round(p['prediction']['homeGoals'])
-            pa = round(p['prediction']['awayGoals'])
-            ah = p['actual']['homeGoals']
-            aa = p['actual']['awayGoals']
-            if ph == ah and pa == aa:
-                score_correct += 1
-            if util.identical_result(ph, pa, ah, aa):
-                result_correct += 1
-            home_goals_diff += (ph - ah)
-            away_goals_diff += (pa - aa)
+    # @staticmethod
+    # def _accuracy_counts(played: list[dict]) -> tuple[int, int, float, float]:
+    #     score_correct = 0
+    #     result_correct = 0
+    #     home_goals_diff = 0
+    #     away_goals_diff = 0
+    #     for p in played:
+    #         ph = round(p['prediction']['homeGoals'])
+    #         pa = round(p['prediction']['awayGoals'])
+    #         ah = p['actual']['homeGoals']
+    #         aa = p['actual']['awayGoals']
+    #         if ph == ah and pa == aa:
+    #             score_correct += 1
+    #         if util.identical_result(ph, pa, ah, aa):
+    #             result_correct += 1
+    #         home_goals_diff += (ph - ah)
+    #         away_goals_diff += (pa - aa)
 
-        return score_correct, result_correct, home_goals_diff, away_goals_diff
+    #     return score_correct, result_correct, home_goals_diff, away_goals_diff
 
-    @staticmethod
-    def _avg_accuracy(
-        n_played: float,
-        correct: float,
-        result_correct: float,
-        home_goals_diff: float,
-        away_goals_diff: float,
-    ) -> tuple[float, float, float, float]:
-        score_accuracy = 0
-        results_accuracy = 0
-        home_goals_avg_diff = 0
-        away_goals_avg_diff = 0
-        if n_played > 0:
-            score_accuracy = correct / n_played
-            results_accuracy = result_correct / n_played
-            home_goals_avg_diff = home_goals_diff / n_played
-            away_goals_avg_diff = away_goals_diff / n_played
+    # @staticmethod
+    # def _avg_accuracy(
+    #     n_played: float,
+    #     correct: float,
+    #     result_correct: float,
+    #     home_goals_diff: float,
+    #     away_goals_diff: float,
+    # ) -> tuple[float, float, float, float]:
+    #     score_accuracy = 0
+    #     results_accuracy = 0
+    #     home_goals_avg_diff = 0
+    #     away_goals_avg_diff = 0
+    #     if n_played > 0:
+    #         score_accuracy = correct / n_played
+    #         results_accuracy = result_correct / n_played
+    #         home_goals_avg_diff = home_goals_diff / n_played
+    #         away_goals_avg_diff = away_goals_diff / n_played
             
-        return score_accuracy, results_accuracy, home_goals_avg_diff, away_goals_avg_diff
+    #     return score_accuracy, results_accuracy, home_goals_avg_diff, away_goals_avg_diff
 
-    def _calc_accuracy(self, client: pymongo.MongoClient) -> dict[str, float]:
-        collection = client.PremierLeague.Predictions2022
-        played = collection.find({'actual': {'$ne': None}}, {
-                                 '_id': 0, 'prediction': 1, 'actual': 1})
+    # def _calc_accuracy(self, client: pymongo.MongoClient) -> dict[str, float]:
+    #     collection = client.PremierLeague.Predictions2022
+    #     played = collection.find({'actual': {'$ne': None}}, {
+    #                              '_id': 0, 'prediction': 1, 'actual': 1})
 
-        score_correct, result_correct, home_goals_diff, away_goals_diff = self._accuracy_counts(
-            played)
+    #     score_correct, result_correct, home_goals_diff, away_goals_diff = self._accuracy_counts(
+    #         played)
 
-        score_accuracy, results_accuracy, home_goals_avg_diff, away_goals_avg_diff = self._avg_accuracy(
-            played.retrieved, score_correct, result_correct, home_goals_diff, away_goals_diff)
+    #     score_accuracy, results_accuracy, home_goals_avg_diff, away_goals_avg_diff = self._avg_accuracy(
+    #         played.retrieved, score_correct, result_correct, home_goals_diff, away_goals_diff)
 
-        accuracy = {'scoreAccuracy': score_accuracy,
-                    'resultAccuracy': results_accuracy,
-                    'homeGoalsAvgDiff': home_goals_avg_diff,
-                    'awayGoalsAvgDiff': away_goals_avg_diff}
+    #     accuracy = {'scoreAccuracy': score_accuracy,
+    #                 'resultAccuracy': results_accuracy,
+    #                 'homeGoalsAvgDiff': home_goals_avg_diff,
+    #                 'awayGoalsAvgDiff': away_goals_avg_diff}
         
-        return accuracy
+    #     return accuracy
 
-    def _save_accuracy(self, client: pymongo.MongoClient, accuracy: float):
-        collection = client.PremierLeague.Accuracy
-        collection.replace_one({'_id': self.current_season}, accuracy)
+    # def _save_accuracy(self, client: pymongo.MongoClient, accuracy: float):
+    #     collection = client.PremierLeague.Accuracy
+    #     collection.replace_one({'_id': self.current_season}, accuracy)
 
-    def update_accuracy(self):
-        with pymongo.MongoClient(self.connection_string) as client:
-            accuracy = self._calc_accuracy(client)
-            self._save_accuracy(client, accuracy)
+    # def update_accuracy(self):
+    #     with pymongo.MongoClient(self.connection_string) as client:
+    #         accuracy = self._calc_accuracy(client)
+    #         self._save_accuracy(client, accuracy)
         
-        return accuracy
+    #     return accuracy
 
     @staticmethod
     def _get_actual_score(
@@ -186,30 +186,30 @@ class Database:
         predictions = self._build_predictions(preds, actual_scores)
         self._save_predictions(predictions)
 
-    def _read_json_predictions(self, season=2022):
-        with open(f'data/predictions_{season}.json', 'r') as f:
-            data = json.loads(f.read())
+    # def _read_json_predictions(self, season=2022):
+    #     with open(f'data/predictions_{season}.json', 'r') as f:
+    #         data = json.loads(f.read())
 
-        predictions = []
-        for date, preds in data['predictions'].items():
-            for p in preds:
-                dt = datetime.strptime(
-                    date + ' ' + p['time'], "%Y-%m-%d %H:%M")
+    #     predictions = []
+    #     for date, preds in data['predictions'].items():
+    #         for p in preds:
+    #             dt = datetime.strptime(
+    #                 date + ' ' + p['time'], "%Y-%m-%d %H:%M")
 
-                detailed_prediction = p['details']['score'] if p['details'] else None
+    #             detailed_prediction = p['details']['score'] if p['details'] else None
 
-                prediction = {
-                    '_id': f"{p['homeInitials']} vs {p['awayInitials']}",
-                    'datetime': dt,
-                    'home': p['homeInitials'],
-                    'away': p['awayInitials'],
-                    'prediction': p['prediction'],
-                    'actual': p['actual'],
-                    'detailedPrediction': detailed_prediction
-                }
-                predictions.append(prediction)
+    #             prediction = {
+    #                 '_id': f"{p['homeInitials']} vs {p['awayInitials']}",
+    #                 'datetime': dt,
+    #                 'home': p['homeInitials'],
+    #                 'away': p['awayInitials'],
+    #                 'prediction': p['prediction'],
+    #                 'actual': p['actual'],
+    #                 'detailedPrediction': detailed_prediction
+    #             }
+    #             predictions.append(prediction)
                 
-        return predictions
+    #     return predictions
 
     def update_with_json_data(self):
         predictions = self._read_json_predictions()

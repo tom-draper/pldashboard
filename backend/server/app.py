@@ -29,14 +29,7 @@ async def team() -> str:
 @app.get('/api/predictions')
 async def predictions() -> str:
     predictions = await database.get_predictions()
-    accuracy = await database.get_prediction_accuracy()
-    
-    predictions_data = {
-        'predictions': predictions,
-        'accuracy': accuracy
-    }
-    
-    return predictions_data
+    return predictions
 
 if __name__ == "__main__":
-  uvicorn.run("server.fast_app:app", reload=True)
+  uvicorn.run("server.app:app", reload=True)

@@ -4,8 +4,6 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import math
-from collections import defaultdict
-from dataclasses import field
 
 import pandas as pd
 from pandas.core.frame import DataFrame
@@ -17,31 +15,34 @@ from dataframes.standings import Standings
 from dataframes.home_advantages import HomeAdvantages
 from dataframes.team_ratings import TeamRatings
 from dataframes.upcoming import Upcoming
-from dataframes.season_stats import SeasonStats
 
 utils = Utilities()
 
 class Data:
     def __init__(self, current_season: int):
-        # self.current_season = current_season
-        # self.team_names: list[str] = field(default_factory=list)
-        # self.logo_urls: dict = defaultdict
-
         self.fixtures: Fixtures = Fixtures()
         self.standings: Standings = Standings()
         self.team_ratings: TeamRatings = TeamRatings()
         self.home_advantages: HomeAdvantages = HomeAdvantages()
         self.form: Form = Form()
         self.upcoming: Upcoming = Upcoming(current_season)
-        # self.season_stats: SeasonStats = SeasonStats()
     
     def built_all_dataframes(self) -> bool:
-        return (self.fixtures.df is not None and self.standings.df is not None 
-                and self.team_ratings.df is not None and self.home_advantages.df is not None 
-                and self.form.df is not None and self.upcoming is not None)
+        return (self.fixtures.df is not None
+                and self.standings.df is not None
+                and self.team_ratings.df is not None
+                and self.home_advantages.df is not None 
+                and self.form.df is not None 
+                and self.upcoming.df is not None)
     
     def to_dataframe(self) -> DataFrame:
-        return pd.concat((self.fixtures.df, self.standings.df, self.team_ratings.df, self.home_advantages.df, self.form.df, self.upcoming.df), 1)
+        return pd.concat((self.fixtures.df, 
+                          self.standings.df, 
+                          self.team_ratings.df, 
+                          self.home_advantages.df, 
+                          self.form.df, 
+                          self.upcoming.df), 
+                         1)
 
     def collapse_tuple_keys(self, d):
         if type(d) is not dict:
@@ -79,15 +80,12 @@ class Data:
         # Build one dict containing all dataframes
         d = {
             'lastUpdated': self.last_updated,
-            # 'teamNames': self.team_names,
-            # 'logoURLs': self.logo_urls,
             'fixtures': self.fixtures.df.to_dict(orient='index'),
             'standings': self.standings.df.to_dict(orient='index'),
             'teamRatings': self.team_ratings.df.to_dict(orient='index'),
             'homeAdvantages': self.home_advantages.df.to_dict(orient='index'),
             'form': self.form.df.to_dict(orient='index'),
             'upcoming': self.upcoming.df.to_dict(orient='index'),
-            # 'seasonStats': self.season_stats.df.to_dict(orient='index'),
         }
         # Collapse tuple keys, convert int key to str and remove NaN values
         d = self.collapse_tuple_keys(d)
