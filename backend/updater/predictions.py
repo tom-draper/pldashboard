@@ -372,7 +372,6 @@ class Predictor:
             prediction = None
             if upcoming is not None:
                 at_home = upcoming.at[team_name, 'atHome']
-                prev_matches = upcoming.at[team_name, 'prevMatches']
                 if at_home:
                     home_team_name = team_name
                     away_team_name = upcoming.at[home_team_name, 'nextTeam']
@@ -389,6 +388,7 @@ class Predictor:
                 away_avg_result = fixtures.get_avg_result(away_team_name)
 
                 home_advantage = home_advantages.df.loc[home_team_name, 'totalHomeAdvantage'][0]
+                prev_matches = upcoming.at[team_name, 'prevMatches']
                 
                 home_goals, away_goals = self._calc_score_prediction_new(
                     team_name, 
@@ -457,6 +457,17 @@ class Predictions:
                         }
 
         return actual_scores
+    
+    def _predictions_to_df(self, predictions: dict[str, dict[str, float]]) -> DataFrame:
+        d = {}
+        for team, prediction in predictions.items():
+            p = {}
+            for goals_type, goals in prediction.items():
+                p[('prediction', goals_type)] = goals
+            d[team] = p
+        
+        df = pd.DataFrame.from_dict(d, orient='index')
+        return df
 
     def build(
             self, 
@@ -467,21 +478,15 @@ class Predictions:
             update_db: bool = True
         ) -> DataFrame:
         predictions = self.predictor.gen_score_predictions(fixtures, form, upcoming, home_advantages)
-        for k, v in predictions.items():
-            print(k, v)
-        print()
         predictions2 = self.predictor.gen_score_predictions_new(fixtures, form, upcoming, home_advantages)
-        for k, v in predictions2.items():
-            print(k, v)
         actual_scores = self._get_actual_scores(fixtures)
         
-        if update_db and False:
+        if update_db:
             self.database.update_predictions(predictions, actual_scores)
             self.database.update_actual_scores(actual_scores)
         
-        upcoming_predictions = pd.DataFrame.from_dict(
-            predictions, 
-            orient='index'
-        )[['prediction']]
+        upcoming_predictions = self._predictions_to_df(predictions2)
+        
+        print(upcoming_predictions)
         
         return upcoming_predictions
