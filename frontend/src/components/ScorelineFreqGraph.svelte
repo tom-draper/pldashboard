@@ -4,11 +4,11 @@
   function getAvgScoreFreq(data: TeamData): ScoreFreq {
     let scoreFreq = {};
     for (let team in data.form[data._id]) {
-      for (let matchday in data.form[data._id][team]) {
-        let score = data.form[data._id][team][matchday].score;
+      for (let matchday in data.form[team][data._id]) {
+        let score = data.form[team][data._id][matchday].score;
         if (score != null) {
           let [h, _, a] = score.split(" ");
-          if (!data.form[data._id][team][matchday].atHome) {
+          if (!data.form[team][data._id][matchday].atHome) {
             score = a + " - " + h;
           }
           if (!(score in scoreFreq)) {
@@ -47,11 +47,11 @@
         scoreFreq[score].push(0);
       }
     }
-    for (let matchday in data.form[data._id][team]) {
-      let score = data.form[data._id][team][matchday].score;
+    for (let matchday in data.form[team][data._id]) {
+      let score = data.form[team][data._id][matchday].score;
       if (score != null) {
         let [h, _, a] = score.split(" ");
-        if (!data.form[data._id][team][matchday].atHome) {
+        if (!data.form[team][data._id][matchday].atHome) {
           score = a + " - " + h;
         }
         scoreFreq[score][1] += 1;

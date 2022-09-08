@@ -57,7 +57,7 @@ class Data:
             if type(k) is tuple:
                 k = [x for x in k if x != '']  # Remove blank multi-index levels
                 if len(k) == 1:
-                    k = k[0]  # If only one level remains, take single heading
+                    k = k[0]  # If only one level remains, take the single heading
             
             if type(k) is list:
                 # Separate multi-index into a nested dict
@@ -71,6 +71,84 @@ class Data:
                 new_d[str(k)] = self.collapse_tuple_keys(v)
             else:
                 new_d[k] = self.collapse_tuple_keys(v)
+        
+        return new_d
+
+    def collapse_tuple_keys2(self, d):
+        if type(d) is not dict:
+            if type(d) is float and math.isnan(d):
+                # Remove NaN values
+                return None
+            return d
+        
+        new_d = {}
+        for k, v in d.items():
+            if type(k) is tuple:
+                k = [x for x in k if x != '']  # Remove blank multi-index levels
+                if len(k) == 1:
+                    k = k[0]  # If only one level remains, take the single heading
+            
+            if type(k) is list:
+                # Separate multi-index into a nested dict
+                k1 = str(k[0]) if type(k[0]) is int else k[0]
+                k2 = str(k[1]) if type(k[1]) is int else k[1]
+                k3 = None
+                if len(k) > 2:
+                    k3 = str(k[2]) if type(k[2]) is int else k[2]
+                    
+                if k1 in new_d:
+                    if k3 is None:
+                        new_d[k1][k2] = self.collapse_tuple_keys2(v)
+                    else:
+                        if k2 in new_d[k1]:
+                            new_d[k1][k2] = {k3: self.collapse_tuple_keys2(v)}
+                        else:
+                            new_d[k1] = {}
+                            new_d[k1][k2] = {k3: self.collapse_tuple_keys2(v)}
+                else:
+                    if k3 is None:
+                        new_d[k1] = {k2: self.collapse_tuple_keys2(v)}
+                    else:
+                        new_d[k1] = {}
+                        new_d[k1][k2] = {k3: self.collapse_tuple_keys2(v)}
+                        
+            elif type(k) is int:
+                new_d[str(k)] = self.collapse_tuple_keys2(v)
+            else:
+                new_d[k] = self.collapse_tuple_keys2(v)
+        
+        return new_d
+
+    def collapse_tuple_keys3(self, d):
+        if type(d) is not dict:
+            if type(d) is float and math.isnan(d):
+                # Remove NaN values
+                return None
+            return d
+        
+        new_d = {}
+        for k, v in d.items():
+            if type(k) is tuple:
+                k = [x for x in k if x != '']  # Remove blank multi-index levels
+                if len(k) == 1:
+                    k = k[0]  # If only one level remains, take the single heading
+            
+            if type(k) is list:
+                # Separate multi-index into a nested dict
+                temp_d = new_d
+                for i, _k in enumerate(k):
+                    if type(_k) is int or type(_k) is float:
+                        _k = str(_k)
+                    if _k not in temp_d:
+                        temp_d[_k] = {}
+                    if i == len(k)-1:
+                        temp_d[_k] = self.collapse_tuple_keys3(v)
+                    else:
+                        temp_d = temp_d[_k]
+            elif type(k) is int:
+                new_d[str(k)] = self.collapse_tuple_keys3(v)
+            else:
+                new_d[k] = self.collapse_tuple_keys3(v)
         
         return new_d
     
@@ -88,6 +166,9 @@ class Data:
             'form': self.form.df.to_dict(orient='index'),
             'upcoming': self.upcoming.df.to_dict(orient='index'),
         }
+                
+        # import pprint
         # Collapse tuple keys, convert int key to str and remove NaN values
-        d = self.collapse_tuple_keys(d)
+        d = self.collapse_tuple_keys3(d)
+        # pprint.pprint(d)
         return d

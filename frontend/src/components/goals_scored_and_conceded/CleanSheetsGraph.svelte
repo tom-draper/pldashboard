@@ -7,13 +7,13 @@
   ): [number[], number[]] {
     let notCleanSheets = [];
     let cleanSheets = [];
-    for (let matchday of Object.keys(data.form[data._id][team])) {
-      let score = data.form[data._id][team][matchday].score;
+    for (let matchday of Object.keys(data.form[team][data._id])) {
+      let score = data.form[team][data._id][matchday].score;
       if (score != null) {
         let [h, _, a] = score.split(" ");
         h = parseInt(h);
         a = parseInt(a);
-        if (data.form[data._id][team][matchday].atHome) {
+        if (data.form[team][data._id][matchday].atHome) {
           if (a > 0) {
             notCleanSheets.push(1);
             cleanSheets.push(0);
@@ -41,7 +41,7 @@
     team: string,
     playedMatchdays: string[]
   ): [Object, Object] {
-    let matchdays = Object.keys(data.form[data._id][team]);
+    let matchdays = Object.keys(data.form[team][data._id]);
     
     let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, team);
     return [

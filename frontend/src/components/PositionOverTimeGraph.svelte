@@ -24,7 +24,7 @@
   ): number[] {
     let y = [];
     for (let matchday of matchdays) {
-      let position = data.form[data._id][team][matchday].position;
+      let position = data.form[team][data._id][matchday].position;
       y.push(position);
     }
     return y;
@@ -36,7 +36,7 @@
     team: string,
     isMainTeam: boolean
   ): any {
-    let matchdays = Object.keys(data.form[data._id][team]);
+    let matchdays = Object.keys(data.form[team][data._id]);
 
     let y = getLineY(data, team, matchdays);
 

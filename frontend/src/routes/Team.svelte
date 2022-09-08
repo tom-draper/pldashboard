@@ -107,8 +107,7 @@
   }
 
   function getPlayedMatchdays(data: TeamData, team: string): string[] {
-    console.log(data);
-    let matchdays = Object.keys(data.form[data._id][team]);
+    let matchdays = Object.keys(data.form[team][data._id]);
 
     // If played one or no games, take x-axis from whole season dates
     if (matchdays.length == 0) {
@@ -135,13 +134,13 @@
   }
 
   function getCurrentMatchday(data: TeamData, team: string): null|string {
-    if (Object.keys(data.form[data._id][team]).length == 0) {
+    if (Object.keys(data.form[team][data._id]).length == 0) {
       return null; // Season has not started yet
     }
-    return Object.keys(data.form[data._id][team]).reduce(
+    return Object.keys(data.form[team][data._id]).reduce(
       (matchday1, matchday2) =>
-        data.form[data._id][team][matchday1] >
-        data.form[data._id][team][matchday2]
+        data.form[team][data._id][matchday1] >
+        data.form[team][data._id][matchday2]
           ? matchday1
           : matchday2
     );
