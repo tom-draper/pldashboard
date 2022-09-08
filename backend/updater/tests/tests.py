@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import sys
 
@@ -108,11 +109,11 @@ def test_home_advantages_df_not_alphabetical(updater):
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
 def test_form_df(updater):
-    # 20 teams with upto 38(x13) matchday columns
+    # 20 teams with upto 38(x12) matchday columns
     assert updater.data.form.df.shape[0] == 20
-    # Maximum of [38 matchday x 13] columns
-    assert 0 <= updater.data.form.df.shape[1] <= (38*13)
-    assert updater.data.form.df.shape[1] % 13 == 0
+    # Maximum of [38 matchday x 12] columns
+    assert 0 <= updater.data.form.df.shape[1] <= (38*12)
+    assert updater.data.form.df.shape[1] % 12 == 0
 
 
 @pytest.mark.parametrize("matchday_no", [1, 2, 3, 4, 5])
@@ -133,15 +134,9 @@ def test_form_df_early_matchdays_(matchday_no):
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
 def test_upcoming_df(updater):
     # 20 teams with 6 columns
-    assert updater.data.upcoming.df.shape == (20, 4)
-
-
-# @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
-# def test_season_stats_df(updater):
-#     # 20 teams with 4 columns
-#     assert updater.data.season_stats.df.shape == (20, 4)
+    assert updater.data.upcoming.df.shape == (20, 6)
 
 
 def test_last_updated():
-    assert type(updater_old.last_updated) == type(None)
-    assert type(updater_new.last_updated) == str
+    assert type(updater_old.data.last_updated) == type(None)
+    assert type(updater_new.data.last_updated) == datetime

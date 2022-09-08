@@ -20,6 +20,7 @@ utils = Utilities()
 
 class Data:
     def __init__(self, current_season: int):
+        self.last_updated = None
         self.fixtures: Fixtures = Fixtures()
         self.standings: Standings = Standings()
         self.team_ratings: TeamRatings = TeamRatings()
