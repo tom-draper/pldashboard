@@ -12,7 +12,7 @@ from data import Fixtures, Form, HomeAdvantages, Upcoming
 from lib.database.database import Database
 from lib.utils.utilities import Utilities
 
-util = Utilities()
+utils = Utilities()
 
 
 class Predictor:
@@ -32,7 +32,7 @@ class Predictor:
                 predicted_score = prediction['prediction']
                 actual_score = prediction['actual']
                 if predicted_score is not None:
-                    if util.identical_fixtures(predicted_score, new_prediction):
+                    if utils.identical_fixtures(predicted_score, new_prediction):
                         # If fixture match perfectly but predicted scoreline different (outdated)
                         if (predicted_score != new_prediction) and (actual_score is None):
                             already_made = True
@@ -293,8 +293,8 @@ class Predictor:
             pred_conceded: float,
             at_home: bool
         ) -> tuple[str, str, dict[str, int], dict[str, float]]:
-        team_name_initials = util.convert_team_name_or_initials(team_name)
-        opp_team_name_initials = util.convert_team_name_or_initials(opp_team_name)
+        team_name_initials = utils.convert_team_name_or_initials(team_name)
+        opp_team_name_initials = utils.convert_team_name_or_initials(opp_team_name)
         
         # Construct prediction string for display
         if at_home:
@@ -431,32 +431,6 @@ class Predictions:
         if value >= 0:
             return f'+{value}'
         return str(value)
-
-    @staticmethod
-    def _get_actual_scores(fixtures: Fixtures) -> dict[tuple[str, str], dict[str, int]]:
-        # To contain a tuple for all actual scores so far this season
-        actual_scores = {}
-
-        for matchday_no in range(1, 39):
-            matchday = fixtures.df[matchday_no]
-
-            # If whole column is SCHEDULED, skip
-            if not all(matchday['status'] == 'SCHEDULED'):
-                for team_name, row in matchday.iterrows():
-                    if row['status'] == 'FINISHED':
-                        home_goals, away_goals = util.extract_int_score(row['score'])
-
-                        home_initials = util.convert_team_name_or_initials(team_name)
-                        away_initials = util.convert_team_name_or_initials(row['team'])
-                        if not row['atHome']:
-                            home_initials, away_initials = away_initials, home_initials
-
-                        actual_scores[(home_initials, away_initials)] = {
-                            'homeGoals': home_goals, 
-                            'awayGoals': away_goals
-                        }
-
-        return actual_scores
     
     def _predictions_to_df(self, predictions: dict[str, dict[str, float]]) -> DataFrame:
         d = {}
@@ -475,18 +449,18 @@ class Predictions:
             form: Form, 
             upcoming: Upcoming, 
             home_advantages: HomeAdvantages,
-            update_db: bool = True
         ) -> DataFrame:
-        predictions = self.predictor.gen_score_predictions(fixtures, form, upcoming, home_advantages)
-        predictions2 = self.predictor.gen_score_predictions_new(fixtures, form, upcoming, home_advantages)
-        actual_scores = self._get_actual_scores(fixtures)
+        # predictions = self.predictor.gen_score_predictions(fixtures, form, upcoming, home_advantages)
+        predictions = self.predictor.gen_score_predictions_new(fixtures, form, upcoming, home_advantages)
+        # actual_scores = fixtures.get_actual_scores()
         
-        if update_db:
-            self.database.update_predictions(predictions, actual_scores)
-            self.database.update_actual_scores(actual_scores)
+        # if update_db:
+        #     print('old')
+        #     print(predictions)
+        #     print(actual_scores)
+        #     self.database.update_predictions(predictions, actual_scores)
+        #     self.database.update_actual_scores(actual_scores)
         
-        upcoming_predictions = self._predictions_to_df(predictions2)
-        
-        print(upcoming_predictions)
+        upcoming_predictions = self._predictions_to_df(predictions)
         
         return upcoming_predictions

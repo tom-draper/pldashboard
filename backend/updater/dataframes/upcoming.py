@@ -42,6 +42,43 @@ class Upcoming(DF):
 
         return opp_team_name, at_home, prev_matches
 
+    def get_predictions(self) -> dict[str, dict]:
+        """ Extracts a predictions dictionary from the dataframe including 
+            prediction details for each team about their upcoming game.
+            
+            predictions = {
+                team_name: {
+                    'date': date (datetime)
+                    'homeInitials': three letter capital initials (str),
+                    'awayInitials': three letter capital initials (str),
+                    'prediction': {
+                        'homeGoals': expected goals (float)
+                        'awayGoals': expected goals (float)
+                    }
+                }
+            }
+        """
+        predictions = {}
+        for team, row in self.df.iterrows():
+            if row[('atHome', '')]:
+                home_initials = team
+                away_initials = row[('nextTeam', '')]
+            else:
+                home_initials = row[('nextTeam', '')]
+                away_initials = team
+                
+            predictions[team] = {
+                'date': row[('date', '')].to_pydatetime(),
+                'homeInitials': utils.convert_team_name_or_initials(home_initials),
+                'awayInitials': utils.convert_team_name_or_initials(away_initials),
+                'prediction': {
+                    'homeGoals': row[('prediction', 'homeGoals')],
+                    'awayGoals': row[('prediction', 'awayGoals')]
+                }
+            }
+        
+        return predictions
+        
     @staticmethod
     def _get_next_game(
         team_name: str,
@@ -59,6 +96,7 @@ class Upcoming(DF):
                 break
 
         return date, next_team, at_home
+    
 
     def _get_next_game_prediction(
         self,
@@ -184,6 +222,14 @@ class Upcoming(DF):
                         date,
                         result
                     )
+                    
+    def _merge_predictions_into_upcoming(self, upcoming: DataFrame, 
+                                        predictions: DataFrame) -> DataFrame:
+        upcoming = upcoming.rename(columns={column: (column, '') 
+                                            for column in upcoming.columns.tolist()})
+        upcoming.columns = pd.MultiIndex.from_tuples(upcoming.columns)
+        upcoming = pd.concat([upcoming, predictions], axis=1)
+        return upcoming
 
     @timebudget
     def build(
@@ -195,7 +241,6 @@ class Upcoming(DF):
         season: int,
         n_seasons: int = 3,
         display: bool = False,
-        update_db: bool = True
     ):
         """ Assigns self.df a dataframe for details about the next game each team 
             has to play.
@@ -257,11 +302,11 @@ class Upcoming(DF):
             self.finished_season = True
         else:
             # Generate and insert new predictions for upcoming games
-            predictions = self.predictions.build(fixtures, form, upcoming, home_advantages, update_db)
-            upcoming = pd.concat([upcoming, predictions], axis=1)
+            predictions = self.predictions.build(fixtures, form, upcoming, home_advantages)
+            upcoming = self._merge_predictions_into_upcoming(upcoming, predictions)
 
         upcoming.index.name = 'team'
-
+        
         if display:
             print(upcoming)
 

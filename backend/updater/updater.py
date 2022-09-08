@@ -104,8 +104,7 @@ class Updater:
                 json.dump(self.json_data[type][self.current_season], f)
 
 
-    def build_dataframes(self, n_seasons: int, display_tables: bool = False, 
-                          update_db: bool = True):        
+    def build_dataframes(self, n_seasons: int, display_tables: bool = False):        
         # Standings for the last [n_seasons] seasons
         self.data.standings.build(
             self.json_data, 
@@ -151,8 +150,7 @@ class Updater:
             self.data.home_advantages, 
             self.current_season, 
             n_seasons, 
-            display=display_tables,
-            update_db=update_db
+            display=display_tables
         )
     
     def save_team_data_to_db(self):
@@ -160,9 +158,10 @@ class Updater:
         self.database.update_team_data(team_data)
     
     def save_predictions_to_db(self):
-        # predictions = self.upcoming.get_predictions()
-        # self.database.update_predictions(predictions)
-        pass
+        predictions = self.data.upcoming.get_predictions()
+        actual_scores = self.data.fixtures.get_actual_scores_new()
+        self.database.update_predictions_new(predictions, actual_scores)
+        self.database.update_actual_scores(actual_scores)
         
     def get_logo_urls(self) -> dict[str, str]:
         data = self.json_data['standings'][self.current_season]
@@ -191,15 +190,16 @@ class Updater:
             request_new = False
             self.fetch_json_data(n_seasons, request_new)
             
-        self.build_dataframes(n_seasons, display_tables, update_db)
+        self.build_dataframes(n_seasons, display_tables)
 
         if request_new:
-            print('💾 Saving new data to local backup...')
+            print('💾 Saving new team data to local backup...')
             self.save_data_to_json()
             if update_db:
-                print('💾 Saving new data to database...')
+                print('💾 Saving new team data to database...')
                 self.save_team_data_to_db()
-                #self.save_predictions_to_db()
+                print('💾 Saving predictions to database...')
+                self.save_predictions_to_db()
 
 
 if __name__ == "__main__":

@@ -143,11 +143,7 @@ class Standings(DF):
 
     def get_team_names(self, json_data: dict, season: int):
         data = json_data['standings'][season]
-        team_names = []
-        for row in data:
-            team_names.append(utils.clean_full_team_name(row['team']['name']))
-            
-        print(team_names)
+        team_names = [utils.clean_full_team_name(row['team']['name']) for row in data]
         return team_names
 
     @staticmethod

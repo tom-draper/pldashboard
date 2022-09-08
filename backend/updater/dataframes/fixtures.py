@@ -53,6 +53,60 @@ class Fixtures(DF):
 
         return avg_scored, avg_conceded
 
+    def get_actual_scores(self) -> dict[tuple[str, str], dict[str, int]]:
+        # To contain a tuple for all actual scores so far this season
+        actual_scores = {}
+
+        for matchday_no in range(1, 39):
+            matchday = self.df[matchday_no]
+
+            # If whole column is SCHEDULED, skip
+            if not all(matchday['status'] == 'SCHEDULED'):
+                for team_name, row in matchday.iterrows():
+                    if row['status'] == 'FINISHED':
+                        home_goals, away_goals = utils.extract_int_score(row['score'])
+
+                        home_initials = utils.convert_team_name_or_initials(team_name)
+                        away_initials = utils.convert_team_name_or_initials(row['team'])
+                        if not row['atHome']:
+                            home_initials, away_initials = away_initials, home_initials
+
+                        actual_scores[(home_initials, away_initials)] = {
+                            'homeGoals': home_goals, 
+                            'awayGoals': away_goals
+                        }
+
+        return actual_scores
+    
+    def get_actual_scores_new(self) -> dict[tuple[str, str], dict[str, int]]:
+        # To contain a tuple for all actual scores so far this season
+        actual_scores = {}
+
+        for matchday_no in range(1, 39):
+            matchday = self.df[matchday_no]
+
+            # If whole column is SCHEDULED, skip
+            if not all(matchday['status'] == 'SCHEDULED'):
+                for team_name, row in matchday.iterrows():
+                    if row['status'] == 'FINISHED':
+                        home_goals, away_goals = utils.extract_int_score(row['score'])
+
+                        if row['atHome']:
+                            home_name = team_name
+                            away_name = row['team']
+                        else:
+                            home_name = row['team']
+                            away_name = team_name
+                        home_initials = utils.convert_team_name_or_initials(home_name)
+                        away_initials = utils.convert_team_name_or_initials(away_name)
+
+                        actual_scores[f'{home_initials} vs {away_initials}'] = {
+                            'homeGoals': home_goals, 
+                            'awayGoals': away_goals
+                        }
+
+        return actual_scores
+    
     @staticmethod
     def _insert_home_team_row(matchday: dict, match: dict, team_names: list[str]):
         score = None
