@@ -1,13 +1,14 @@
 from collections import defaultdict
 
 import pandas as pd
+from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-from lib.utils.utilities import Utilities
 
 from dataframes.df import DF
 
 utils = Utilities()
+
 
 class HomeAdvantages(DF):
     def __init__(self, d: DataFrame = DataFrame()):
@@ -89,7 +90,7 @@ class HomeAdvantages(DF):
             1) == 'homeAdvantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
         if (home_advantages[season]['home']['played'] <= threshold).all():
-            print(f"Current season excluded from home advantages calculation -> all teams must have played {threshold} home games.")
+            print(f"[NOTICE]: Current season excluded from home advantages calculation, all teams have not played >= {threshold} home games.")
             # Drop this current seasons column (start from previous season)
             home_advantages_cols = home_advantages_cols.drop(
                 season, level=0, axis=1)
@@ -132,7 +133,7 @@ class HomeAdvantages(DF):
         return home_advantages
 
     @staticmethod
-    def get_season_teams(season_fixtures_data):
+    def get_season_teams(season_fixtures_data: dict) -> list[str]:
         current_season_teams = set()
         for match in season_fixtures_data:
             home_team = utils.clean_full_team_name(match['homeTeam']['name'])

@@ -123,4 +123,5 @@ class Utilities:
         return scoreline
     
     def clean_full_team_name(self, full_team_name: str) -> str:
+        """Remove FC, AFC postfixes and replace ampersand for 'and'."""
         return full_team_name.replace(' FC', '').replace('AFC ', '').replace('&', 'and')

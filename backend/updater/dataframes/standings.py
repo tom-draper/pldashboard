@@ -1,7 +1,7 @@
 import pandas as pd
+from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-from lib.utils.utilities import Utilities
 
 from dataframes.df import DF
 
@@ -12,142 +12,9 @@ class Standings(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'standings')
 
-    def get_position(self, team_name: str, season: int) -> DataFrame:
-        return self.df.at[team_name, (season, 'Position')]
-
-    def get_table_snippet(
-        self,
-        team_name: str,
-        season: int
-    ) -> tuple[list[tuple[int, str, int, int]], int]:
-        team_df_idx = self.df.index.get_loc(team_name)
-
-        # Get range of table the snippet should cover
-        # Typically 3 teams below + 3 teams above, unless near either end of the table
-        low_idx = team_df_idx - 3
-        high_idx = team_df_idx + 4
-        if low_idx < 0:
-            # Add overflow amount to the high_idx to ensure 7 teams
-            overflow = low_idx
-            high_idx -= low_idx  # Subtracting a negative
-            low_idx = 0
-        if high_idx > self.df.shape[0] - 1:
-            # Subtract overflow amount from the low_idx to ensure 7 teams
-            overflow = high_idx - (self.df.shape[0])
-            low_idx -= overflow
-            high_idx = self.df.shape[0]
-
-        rows = self.df.iloc[low_idx:high_idx]
-        team_names = rows.index.values.tolist()
-        # Remove 'FC' from end of each team name (nicer to display)
-        team_names = list(map(lambda name: ' '.join(
-            name.split(' ')[:-1]), team_names))
-        # Get new index of this team, relative to section of rows dataframe
-        team_idx = rows.index.get_loc(team_name)
-
-        # Only keep relevant columns
-        rows = rows[season][['Position', 'GD', 'Points']]
-
-        # List of table rows: [ [pos, name, gd, points] ... ]
-        table_snippet = rows.values.tolist()
-        # Add the team names into position 1 of each table row
-        for row_list, team_name in zip(table_snippet, team_names):
-            row_list.insert(1, team_name)
-
-        return table_snippet, team_idx
-
-    @staticmethod
-    def _fill_rows_from_data(data: dict) -> dict[str, dict[str, int]]:
-        df_rows = {}  # type: dict[str, dict[str, int]]
-        for match in data:
-            home_team = match['homeTeam']['name'].replace('&', 'and')
-            away_team = match['awayTeam']['name'].replace('&', 'and')
-            # Init teams if doesn't already exits
-            for team in [home_team, away_team]:
-                if team not in df_rows:
-                    df_rows[team] = {'Position': None, 'Played': 0, 'Won': 0, 
-                                     'Drawn': 0, 'Lost': 0, 'GF': 0, 'GA': 0,
-                                     'GD': 0, 'Points': 0}
-
-            if match['status'] == 'FINISHED':
-                home_goals = match['score']['fullTime']['homeTeam']
-                away_goals = match['score']['fullTime']['awayTeam']
-
-                # Increment Played
-                df_rows[home_team]['Played'] += 1
-                df_rows[away_team]['Played'] += 1
-                # Add GF
-                df_rows[home_team]['GF'] += home_goals
-                df_rows[away_team]['GF'] += away_goals
-                # Add GA
-                df_rows[home_team]['GA'] += away_goals
-                df_rows[away_team]['GA'] += home_goals
-
-                # Record result and points
-                if home_goals > away_goals:  # Home team win
-                    df_rows[home_team]['Won'] += 1
-                    df_rows[away_team]['Lost'] += 1
-                    # Points
-                    df_rows[home_team]['Points'] += 3
-                elif home_goals < away_goals:
-                    df_rows[home_team]['Lost'] += 1
-                    df_rows[away_team]['Won'] += 1
-                    # Points
-                    df_rows[away_team]['Points'] += 3
-                else:  # Draw
-                    df_rows[home_team]['Drawn'] += 1
-                    df_rows[away_team]['Drawn'] += 1
-                    # Points
-                    df_rows[home_team]['Points'] += 1
-                    df_rows[away_team]['Points'] += 1
-
-        return df_rows
-
-    @staticmethod
-    def _add_gd_col(df_rows: dict):
-        for team in df_rows.keys():
-            df_rows[team]['GD'] = df_rows[team]['GF'] - df_rows[team]['GA']
-
-    @staticmethod
-    def _add_position_col(df_rows: dict):
-        for idx, team in enumerate(df_rows.keys()):
-            # Position is index as they have been sorted by points
-            df_rows[team]['Position'] = idx + 1
-
-    def _season_standings_from_fixtures(
-        self,
-        json_data: dict,
-        team_names: list[str],
-        season: int
-    ) -> DataFrame:
-        """Slower alternative to _season_standings"""
-        data = json_data['fixtures'][season]
-
-        df_rows = self._fill_rows_from_data(data)
-        self._add_gd_col(df_rows)
-
-        # Sort rows by Points, then GD, then GF
-        df_rows = dict(sorted(df_rows.items(), key=lambda v: [
-                       v[1]['Points'], v[1]['GD'], v[1]['GF']], reverse=True))
-        # Use df sorted by points to insert table position
-        self._add_position_col(df_rows)
-
-        df = pd.DataFrame.from_dict(df_rows, orient='index')
-        col_headings = ['Position', 'Played', 'Won',
-                        'Drawn', 'Lost', 'GF', 'GA', 'GD', 'Points']
-        df.columns = pd.MultiIndex.from_product([[season], col_headings])
-
-        # Drop any rows with columns not in the current season
-        df = df.drop(df[~df.index.isin(team_names)].index)
-        return df
-
     def get_team_names(self, json_data: dict, season: int):
         data = json_data['standings'][season]
-        team_names = []
-        for row in data:
-            team_names.append(utils.clean_full_team_name(row['team']['name']))
-            
-        print(team_names)
+        team_names = [utils.clean_full_team_name(row['team']['name']) for row in data]
         return team_names
 
     @staticmethod
@@ -174,7 +41,14 @@ class Standings(DF):
         df = df.drop(index=df.index.difference(current_teams))
         
         return df
-
+    
+    @staticmethod
+    def clean_dataframe(standings: DataFrame) -> DataFrame:
+        standings = standings.fillna(0).astype(int)
+        standings.index.name = 'team'
+        standings.columns.names = ('Season', None)
+        return standings
+        
     @timebudget
     def build(
         self,
@@ -227,9 +101,7 @@ class Standings(DF):
                 json_data, team_names, season - n)
             standings = pd.concat((standings, season_standings), axis=1)
 
-        standings = standings.fillna(0).astype(int)
-        standings.index.name = 'team'
-        standings.columns.names = ('Season', None)
+        standings = self.clean_dataframe(standings)
 
         if display:
             print(standings)

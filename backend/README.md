@@ -1,6 +1,6 @@
 # Backend
 
-## Data API
+## Backend Server
 
 ```bash
 py server/app.py
@@ -12,8 +12,8 @@ py server/app.py
 py updater/updater.py
 ```
 
-### Running Tests
+### Tests
 
 ```bash
-py updater/tests/updater.py
+py -m pytest updater/tests/tests.py
 ```

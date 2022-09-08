@@ -28,7 +28,10 @@
     return avgGoals;
   }
 
-  function getTeamGoalsPerGame(data: TeamData, team: string): [Counter, Counter] {
+  function getTeamGoalsPerGame(
+    data: TeamData,
+    team: string
+  ): [Counter, Counter] {
     let scored: Counter = {};
     let conceded: Counter = {};
     for (let matchday of Object.keys(data.form[data._id][team])) {
@@ -50,7 +53,11 @@
     return [scored, conceded];
   }
 
-  function avgLine(playedMatchdays: string[], avgGoals, matchdays: string[]): any {
+  function avgLine(
+    playedMatchdays: string[],
+    avgGoals,
+    matchdays: string[]
+  ): any {
     return {
       name: "Avg",
       type: "line",
@@ -62,7 +69,11 @@
     };
   }
 
-  function teamScoredBar(playedMatchdays: string[], teamScored, matchdays: string[]): any {
+  function teamScoredBar(
+    playedMatchdays: string[],
+    teamScored,
+    matchdays: string[]
+  ): any {
     return {
       name: "Scored",
       type: "bar",
@@ -75,7 +86,11 @@
     };
   }
 
-  function teamConcededBar(playedMatchdays: string[], teamConceded, matchdays: string[]): any {
+  function teamConcededBar(
+    playedMatchdays: string[],
+    teamConceded,
+    matchdays: string[]
+  ): any {
     return {
       name: "Conceded",
       type: "bar",
@@ -88,40 +103,60 @@
     };
   }
 
-  function defaultLayout() {
+  function defaultLayout(): Object {
+    return {
+      title: false,
+      autosize: true,
+      margin: { r: 20, l: 60, t: 15, b: 15, pad: 5 },
+      barmode: "stack",
+      hovermode: "closest",
+      plot_bgcolor: "#fafafa",
+      paper_bgcolor: "#fafafa",
+      yaxis: {
+        title: { text: "Goals" },
+        gridcolor: "gray",
+        showgrid: false,
+        showline: false,
+        zeroline: false,
+        fixedrange: true,
+        rangemode: "nonnegative",
+        visible: true,
+      },
+      xaxis: {
+        linecolor: "black",
+        showgrid: false,
+        showline: false,
+        fixedrange: true,
+        showticklabels: false,
+      },
+      legend: {
+        x: 1,
+        xanchor: "right",
+        y: 1,
+      },
+      dragmode: false,
+    };
+  }
+
+  function setDefaultLayout() {
     if (setup) {
-      let update = {
-          yaxis: {
-            title: { text: 'Goals' },
-            gridcolor: "gray",
-            showgrid: false,
-            showline: false,
-            zeroline: false,
-            fixedrange: true,
-            rangemode: "nonnegative",
-          },
-          margin: { r: 20, l: 60, t: 15, b: 15, pad: 5 },
-      }
-      Plotly.update(plotDiv, {}, update)
+      let layoutUpdate = {
+        "yaxis.title": { text: "Goals" },
+        "yaxis.visible": true,
+        "margin.l": 60,
+      };
+      Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
 
-  function mobileLayout() {
+  function setMobileLayout() {
     if (setup) {
-      let update = {
-          yaxis: {
-            title: null,
-            gridcolor: "gray",
-            showgrid: false,
-            showline: false,
-            zeroline: false,
-            fixedrange: true,
-            visible: false,
-            rangemode: "nonnegative",
-          },
-          margin: { r: 20, l: 20, t: 15, b: 15, pad: 5 },
-      }
-      Plotly.update(plotDiv, {}, update)
+      let layoutUpdate = {
+        "yaxis.title": null,
+        "yaxis.visible": false,
+        "margin.l": 20,
+      };
+      Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
 
@@ -137,37 +172,7 @@
 
     let plotData = {
       data: [scoredBar, concededBar, line],
-      layout: {
-        title: false,
-        autosize: true,
-        margin: { r: 20, l: 60, t: 15, b: 15, pad: 5 },
-        barmode: "stack",
-        hovermode: "closest",
-        plot_bgcolor: "#fafafa",
-        paper_bgcolor: "#fafafa",
-        yaxis: {
-          title: { text: "Goals" },
-          gridcolor: "gray",
-          showgrid: false,
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          rangemode: "nonnegative",
-        },
-        xaxis: {
-          linecolor: "black",
-          showgrid: false,
-          showline: false,
-          fixedrange: true,
-          showticklabels: false,
-        },
-        legend: {
-          x: 1,
-          xanchor: "right",
-          y: 1,
-        },
-        dragmode: false
-      },
+      layout: defaultLayout(),
       config: {
         responsive: true,
         showSendToCloud: false,
@@ -204,22 +209,29 @@
       let matchdays = Object.keys(avgGoals);
 
       let scoredBar = teamScoredBar(playedMatchdays, teamScored, matchdays);
-      let concededBar = teamConcededBar(playedMatchdays, teamConceded, matchdays);
-      
+      let concededBar = teamConcededBar(
+        playedMatchdays,
+        teamConceded,
+        matchdays
+      );
+
       plotData.data[0] = scoredBar;
       plotData.data[1] = concededBar;
       Plotly.redraw(plotDiv);
       if (mobileView) {
-        mobileLayout();
+        setMobileLayout();
       }
     }
   }
 
   $: team && refreshPlot();
-  $: !mobileView && defaultLayout();
-  $: setup && mobileView && mobileLayout();
+  $: !mobileView && setDefaultLayout();
+  $: setup && mobileView && setMobileLayout();
 
-  export let data: TeamData, team: string, playedMatchdays: string[], mobileView: boolean;
+  export let data: TeamData,
+    team: string,
+    playedMatchdays: string[],
+    mobileView: boolean;
 </script>
 
 <div id="plotly">

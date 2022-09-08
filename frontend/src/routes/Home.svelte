@@ -41,8 +41,8 @@
   .fantasy-link {
     color: #37003d;
     background: linear-gradient(70deg, #00ff87, #02efff, #5e80ff);
-    background: #00ff87;
     background: linear-gradient(90deg, #00fbd6, #02efff);
+    background: #00ff87;
     padding: 18px 0;
   }
   .dashboard-link {
@@ -53,6 +53,7 @@
     background: linear-gradient(70deg, #00ff87, #2bd2ff, #5e80ff);
     background: #fc014e;
     background: linear-gradient(90deg, #00ff87, #00fbd6);
+    background: rgb(5, 235, 235);
     padding: 18px 0;
   }
   .dashboard-link,
@@ -92,9 +93,6 @@
     }
   }
   @media only screen and (max-width: 500px) {
-    /* .fantasy-link {
-      padding: 20px 66.7px;
-    } */
     .dashboard-link,
     .fantasy-link {
       font-size: 1em;

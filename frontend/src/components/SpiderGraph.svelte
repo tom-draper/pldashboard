@@ -210,7 +210,10 @@
     return [defence as Attribute, [minConceded, maxConceded]];
   }
 
-  function scaleDefence(defence: Attribute, range: [number, number]): Attribute {
+  function scaleDefence(
+    defence: Attribute,
+    range: [number, number]
+  ): Attribute {
     let [lower, upper] = range;
     for (let team in defence) {
       if (defence[team] == null) {
@@ -403,7 +406,7 @@
     vsBig6.avg = attributeAvgScaled(vsBig6, maxWinsVsBig6);
 
     return vsBig6;
-  } 
+  }
 
   function scatterPlot(name: string, r: number[], color: string): any {
     return {
@@ -466,6 +469,24 @@
     vsBig6 = getVsBig6(data);
   }
 
+  function defaultLayout(): Object {
+    return {
+      height: 550,
+      polar: {
+        radialaxis: {
+          visible: true,
+          range: [0, 100],
+        },
+      },
+      hover: "closest",
+      margin: { t: 25, b: 25, l: 75, r: 75 },
+      showlegend: false,
+      plot_bgcolor: "#fafafa",
+      paper_bgcolor: "#fafafa",
+      dragmode: false,
+    };
+  }
+
   function buildPlotData(data: TeamData, team: string): PlotData {
     computePlotData(data);
 
@@ -473,21 +494,7 @@
 
     let plotData = {
       data: spiderPlots,
-      layout: {
-        height: 550,
-        polar: {
-          radialaxis: {
-            visible: true,
-            range: [0, 100],
-          },
-        },
-        hover: "closest",
-        margin: { t: 25, b: 25, l: 75, r: 75 },
-        showlegend: false,
-        plot_bgcolor: "#fafafa",
-        paper_bgcolor: "#fafafa",
-        dragmode: false
-      },
+      layout: defaultLayout(),
       config: {
         responsive: true,
         showSendToCloud: false,
@@ -498,11 +505,16 @@
   }
 
   type Attribute = {
-    _: number,
-    avg: number,
-  }
+    _: number;
+    avg: number;
+  };
 
-  let attack: Attribute, defence: Attribute, cleanSheets: Attribute, consistency: Attribute, winStreaks: Attribute, vsBig6: Attribute;
+  let attack: Attribute,
+    defence: Attribute,
+    cleanSheets: Attribute,
+    consistency: Attribute,
+    winStreaks: Attribute,
+    vsBig6: Attribute;
   let labels = [
     "Attack",
     "Defence",
@@ -566,13 +578,17 @@
         document
           .getElementById("spider-opp-teams")
           .children[18].classList.add("bottom-spider-opp-team-btn");
-      }, 0)
+      }, 0);
     }
   }
 
   $: team && refreshPlot();
 
-  export let data: TeamData, team: string, teams: string[], toAlias: Function, toName: Function;
+  export let data: TeamData,
+    team: string,
+    teams: string[],
+    toAlias: Function,
+    toName: Function;
 </script>
 
 <div class="spider-chart">

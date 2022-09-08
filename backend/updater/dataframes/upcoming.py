@@ -2,9 +2,9 @@ from datetime import datetime
 from typing import Optional
 
 import pandas as pd
+from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-from lib.utils.utilities import Utilities
 
 from dataframes.df import DF
 from dataframes.fixtures import Fixtures
@@ -21,27 +21,43 @@ class Upcoming(DF):
         self.predictions = Predictions(current_season)
         self.finished_season = False
 
-    def _get_opposition(self, team_name: str) -> str:
-        return self.df.at[team_name, 'nextTeam']
-
-    def _get_prev_matches(self, team_name: str) -> list:
-        return self.df.at[team_name, 'prevMatches']
-
-    def _get_at_home(self, team_name: str) -> str:
-        return self.df.at[team_name, 'atHome']
-
-    def get_details(self, team_name: str) -> tuple[str, str, list]:
-        opp_team_name = ''
-        at_home = ''
-        prev_matches = []
-        if not self.df.empty:
-            # If season not finished
-            opp_team_name = self._get_opposition(team_name)
-            at_home = self._get_at_home(team_name)
-            prev_matches = self._get_prev_matches(team_name)
-
-        return opp_team_name, at_home, prev_matches
-
+    def get_predictions(self) -> dict[str, dict]:
+        """ Extracts a predictions dictionary from the dataframe including 
+            prediction details for each team about their upcoming game.
+            
+            predictions = {
+                team_name: {
+                    'date': date (datetime)
+                    'homeInitials': three letter capital initials (str),
+                    'awayInitials': three letter capital initials (str),
+                    'prediction': {
+                        'homeGoals': expected goals (float)
+                        'awayGoals': expected goals (float)
+                    }
+                }
+            }
+        """
+        predictions = {}
+        for team, row in self.df.iterrows():
+            if row[('atHome', '')]:
+                home_initials = team
+                away_initials = row[('nextTeam', '')]
+            else:
+                home_initials = row[('nextTeam', '')]
+                away_initials = team
+                
+            predictions[team] = {
+                'date': row[('date', '')].to_pydatetime(),
+                'homeInitials': utils.convert_team_name_or_initials(home_initials),
+                'awayInitials': utils.convert_team_name_or_initials(away_initials),
+                'prediction': {
+                    'homeGoals': row[('prediction', 'homeGoals')],
+                    'awayGoals': row[('prediction', 'awayGoals')]
+                }
+            }
+        
+        return predictions
+        
     @staticmethod
     def _get_next_game(
         team_name: str,
@@ -59,30 +75,6 @@ class Upcoming(DF):
                 break
 
         return date, next_team, at_home
-
-    def _get_next_game_prediction(
-        self,
-        team_name: str
-    ) -> tuple[str, int, str, int]:
-        at_home = self.df.at[team_name, 'atHome']
-
-        if at_home:
-            home_initials = utils.convert_team_name_or_initials(team_name)
-            away_initials = utils.convert_team_name_or_initials(self.df.at[team_name, 'nextTeam'])
-        else:
-            home_initials = utils.convert_team_name_or_initials(self.df.at[team_name, 'nextTeam'])
-            away_initials = utils.convert_team_name_or_initials(team_name)
-
-        prediction = self.df.at[team_name, 'prediction']
-        xg_home = prediction['homeGoals']
-        xg_away = prediction['awayGoals']
-
-        return home_initials, xg_home, away_initials, xg_away
-
-    def _get_next_game_prediction_scoreline(self, team_name: str) -> str:
-        home_initials, xg_home, away_initials, xg_away = self._get_next_game_prediction(
-            team_name)
-        return f'{home_initials} {round(xg_home)} - {round(xg_away)} {away_initials}'
 
     @staticmethod
     def _game_result_tuple(match: dict) -> tuple[str, str]:
@@ -184,6 +176,14 @@ class Upcoming(DF):
                         date,
                         result
                     )
+                    
+    def _merge_predictions_into_upcoming(self, upcoming: DataFrame, 
+                                        predictions: DataFrame) -> DataFrame:
+        upcoming = upcoming.rename(columns={column: (column, '') 
+                                            for column in upcoming.columns.tolist()})
+        upcoming.columns = pd.MultiIndex.from_tuples(upcoming.columns)
+        upcoming = pd.concat([upcoming, predictions], axis=1)
+        return upcoming
 
     @timebudget
     def build(
@@ -195,7 +195,6 @@ class Upcoming(DF):
         season: int,
         n_seasons: int = 3,
         display: bool = False,
-        update_db: bool = True
     ):
         """ Assigns self.df a dataframe for details about the next game each team 
             has to play.
@@ -252,16 +251,16 @@ class Upcoming(DF):
         self._sort_prev_matches_by_date(d)
 
         upcoming = pd.DataFrame.from_dict(d, orient='index')
-
+        
         if form.get_current_matchday() == 38:   
             self.finished_season = True
         else:
             # Generate and insert new predictions for upcoming games
-            predictions = self.predictions.build(fixtures, form, upcoming, home_advantages, update_db)
-            upcoming = pd.concat([upcoming, predictions], axis=1)
+            predictions = self.predictions.build(fixtures, form, upcoming, home_advantages)
+            upcoming = self._merge_predictions_into_upcoming(upcoming, predictions)
 
         upcoming.index.name = 'team'
-
+        
         if display:
             print(upcoming)
 

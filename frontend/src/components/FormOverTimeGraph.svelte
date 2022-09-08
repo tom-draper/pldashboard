@@ -1,7 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  function getFormLine(data: TeamData, playedMatchdays: string[], team: string, isMainTeam: boolean): any {
+  function getFormLine(
+    data: TeamData,
+    playedMatchdays: string[],
+    team: string,
+    isMainTeam: boolean
+  ): any {
     let matchdays = Object.keys(data.form[data._id][team]); // Played matchdays
 
     let y = [];
@@ -10,11 +15,11 @@
       y.push(form * 100);
     }
 
-    let lineVal;
+    let lineVal: { color: string; width?: number };
     if (isMainTeam) {
       // Get team primary colour from css variable
       let teamKey = team[0].toLowerCase() + team.slice(1);
-      teamKey = teamKey.replace(/ /g, '-').toLowerCase();
+      teamKey = teamKey.replace(/ /g, "-").toLowerCase();
       let lineColor = getComputedStyle(
         document.documentElement
       ).getPropertyValue(`--${teamKey}`);
@@ -36,7 +41,11 @@
     return line;
   }
 
-  function lines(data: TeamData, team: string, playedMatchdays: string[]): any[] {
+  function lines(
+    data: TeamData,
+    team: string,
+    playedMatchdays: string[]
+  ): any[] {
     let lines = [];
     for (let i = 0; i < data.teamNames.length; i++) {
       if (data.teamNames[i] != team) {
@@ -52,79 +61,66 @@
   }
 
   function defaultLayout() {
+    let yLabels = Array.from(Array(11), (_, i) => i * 10);
+    return {
+      title: false,
+      autosize: true,
+      margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+      hovermode: "closest",
+      plot_bgcolor: "#fafafa",
+      paper_bgcolor: "#fafafa",
+      yaxis: {
+        title: { text: "Form Rating" },
+        gridcolor: "gray",
+        showgrid: false,
+        showline: false,
+        zeroline: false,
+        fixedrange: true,
+        ticktext: yLabels,
+        tickvals: yLabels,
+        range: [-1, 101],
+      },
+      xaxis: {
+        linecolor: "black",
+        showgrid: false,
+        showline: false,
+        fixedrange: true,
+        range: [
+          playedMatchdays[0],
+          playedMatchdays[playedMatchdays.length - 1],
+        ],
+      },
+      dragmode: false,
+    };
+  }
+
+  function setDefaultLayout() {
     if (setup) {
-      let layout = {
-        yaxis: {
-          title: { text: "Form Rating" },
-          gridcolor: "gray",
-          showgrid: false,
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          range: [0, 100],
-          tickvals: Array.from(Array(11), (_, i) => i * 10),
-        },
-        margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
+      let layoutUpdate = {
+        "yaxis.title": { text: "Form Rating" },
+        "margin.l": 60,
+        "margin.t": 15,
       };
-      Plotly.update(plotDiv, {}, layout);
+      Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
 
-  function mobileLayout() {
+  function setMobileLayout() {
     if (setup) {
-      let layout = {
-        yaxis: {
-          title: null,
-          gridcolor: "gray",
-          showgrid: false,
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          range: [0, 100],
-          visible: false,
-          tickvals: Array.from(Array(11), (_, i) => i * 10),
-        },
-        margin: { r: 20, l: 20, t: 5, b: 40, pad: 5 },
+      let layoutUpdate = {
+        "yaxis.title": null,
+        "yaxis.visible": false,
+        "margin.l": 20,
+        "margin.t": 5,
       };
-      Plotly.update(plotDiv, {}, layout);
+      Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
 
   function buildPlotData(data: TeamData, team: string): PlotData {
-    let yLabels = Array.from(Array(11), (_, i) => i * 10);
-
     let plotData = {
       data: lines(data, team, playedMatchdays),
-      layout: {
-        title: false,
-        autosize: true,
-        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
-        hovermode: "closest",
-        plot_bgcolor: "#fafafa",
-        paper_bgcolor: "#fafafa",
-        yaxis: {
-          title: { text: "Form Rating" },
-          gridcolor: "gray",
-          showgrid: false,
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          ticktext: yLabels,
-          tickvals: yLabels,
-          range: [0, 100],
-        },
-        xaxis: {
-          linecolor: "black",
-          showgrid: false,
-          showline: false,
-          fixedrange: true,
-          range: [
-            playedMatchdays[0],
-            playedMatchdays[playedMatchdays.length - 1],
-          ],
-        },
-        dragmode: false,
-      },
+      layout: defaultLayout(),
       config: {
         responsive: true,
         showSendToCloud: false,
@@ -162,16 +158,19 @@
       }
       Plotly.redraw(plotDiv);
       if (mobileView) {
-        mobileLayout()
+        setMobileLayout();
       }
     }
   }
 
   $: team && refreshPlot();
-  $: !mobileView && defaultLayout();
-  $: setup && mobileView && mobileLayout();
+  $: !mobileView && setDefaultLayout();
+  $: setup && mobileView && setMobileLayout();
 
-  export let data: TeamData, team: string, playedMatchdays: string[], mobileView: boolean;
+  export let data: TeamData,
+    team: string,
+    playedMatchdays: string[],
+    mobileView: boolean;
 </script>
 
 <div id="plotly">

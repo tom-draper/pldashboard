@@ -1,10 +1,11 @@
-import os, sys
+import os
+import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from lib.database.database import Database
 
 season = 2022
@@ -29,14 +30,7 @@ async def team() -> str:
 @app.get('/api/predictions')
 async def predictions() -> str:
     predictions = await database.get_predictions()
-    accuracy = await database.get_prediction_accuracy()
-    
-    predictions_data = {
-        'predictions': predictions,
-        'accuracy': accuracy
-    }
-    
-    return predictions_data
+    return predictions
 
 if __name__ == "__main__":
-  uvicorn.run("server.fast_app:app", reload=True)
+  uvicorn.run("server.app:app", reload=True)

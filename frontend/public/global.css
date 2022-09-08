@@ -64,6 +64,10 @@
   --ssp1-offset: 0;
   --ssp2-offset: 0;
   --ssp3-offset: 0;
+
+  --win: #00fe87;
+  --draw: #ffdd00;
+  --lose: #f83027;
 }
 
 @font-face {

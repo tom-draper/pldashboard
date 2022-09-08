@@ -10,10 +10,6 @@
       case "D":
         return "#ffdd00";
       case "L":
-        // return "rgb(253, 1, 79)";
-        // return "#fd014f";
-        // return "#fe0051";
-        //return "#ff0143";
         return "#f83027";
       default:
         return "#d6d6d6";

@@ -143,7 +143,7 @@
     width: 100%;
   }
   .current-form-value {
-    color: #00fe87;
+    color: var(--win);
   }
 
   /* .name-row {

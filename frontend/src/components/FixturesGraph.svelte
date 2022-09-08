@@ -58,9 +58,9 @@
     data: TeamData,
     team: string
   ): [number[], number[], string[]] {
-    let x = [];
-    let y = [];
-    let details = [];
+    let x: Date[] = [];
+    let y: number[] = [];
+    let details: string[] = [];
     for (let matchday = 1; matchday <= 38; matchday++) {
       let match = data.fixtures[team][matchday];
       x.push(new Date(match.date));
@@ -99,23 +99,7 @@
       },
       marker: {
         size: sizes,
-        // colorscale: [
-        //   [0, "#01c626"],
-        //   [0.1, "#08a825"],
-        //   [0.2, "#0b7c20"],
-        //   [0.3, "#0a661b"],
-        //   [0.4, "#064411"],
-        //   [0.5, "#000000"],
-        //   [0.6, "#5b1d15"],
-        //   [0.7, "#85160f"],
-        //   [0.8, "#ad1a10"],
-        //   [0.9, "#db1a0d"],
-        //   [1, "#fc1303"],
-        // ],
         colorscale: [
-          // [0, "#01c626"],
-          // [0.5, "#f3f3f3"],
-          // [1, "#fc1303"],
           [0, "#00fe87"],
           [0.5, "#f3f3f3"],
           [1, "#f83027"],
@@ -130,7 +114,7 @@
     };
   }
 
-  function nowLine(now: number, maxX: number): any {
+  function nowLine(now: number, maxX: number): Object {
     let nowLine = {};
     if (now <= maxX) {
       // Vertical line shapw marking current day
@@ -150,7 +134,7 @@
     return nowLine;
   }
 
-  function xRange(x: number[]): [Date, Date] {
+  function xRange(x: number[]): [number, number] {
     let minX = new Date(x[0]);
     minX.setDate(minX.getDate() - 7);
     // let maxX = new Date(Math.max(x[x.length - 1], now));
@@ -159,7 +143,39 @@
     return [minX, maxX];
   }
 
-  function defaultLayout() {
+  function defaultLayout(x: number[], now: number): Object {
+    let yLabels = Array.from(Array(11), (_, i) => i * 10);
+
+    let [minX, maxX] = xRange(x);
+    return {
+        title: false,
+        autosize: true,
+        margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
+        hovermode: "closest",
+        plot_bgcolor: "#fafafa",
+        paper_bgcolor: "#fafafa",
+        yaxis: {
+          title: { text: "Difficulty" },
+          gridcolor: "#d6d6d6",
+          showline: false,
+          zeroline: false,
+          fixedrange: true,
+          ticktext: yLabels,
+          tickvals: yLabels,
+        },
+        xaxis: {
+          linecolor: "black",
+          showgrid: false,
+          showline: false,
+          range: [minX, maxX],
+          fixedrange: true,
+        },
+        shapes: [nowLine(now, maxX)],
+        dragmode: false,
+      }
+  }
+
+  function setDefaultLayout() {
     if (setup) {
       let layoutUpdate = {
         "yaxis.title": { text: "Difficulty" },
@@ -193,7 +209,7 @@
     }
   }
 
-  function mobileLayout() {
+  function setMobileLayout() {
     if (setup) {
       let layoutUpdate = {
         "yaxis.title": null,
@@ -233,38 +249,9 @@
     let now = Date.now();
     let l = line(data, team, now);
 
-    let yLabels = Array.from(Array(11), (_, i) => i * 10);
-
-    let [minX, maxX] = xRange(l.x);
-
     let plotData = {
       data: [l],
-      layout: {
-        title: false,
-        autosize: true,
-        margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
-        hovermode: "closest",
-        plot_bgcolor: "#fafafa",
-        paper_bgcolor: "#fafafa",
-        yaxis: {
-          title: { text: "Difficulty" },
-          gridcolor: "#d6d6d6",
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          ticktext: yLabels,
-          tickvals: yLabels,
-        },
-        xaxis: {
-          linecolor: "black",
-          showgrid: false,
-          showline: false,
-          range: [minX, maxX],
-          fixedrange: true,
-        },
-        shapes: [nowLine(now, maxX)],
-        dragmode: false,
-      },
+      layout: defaultLayout(l.x, now), 
       config: {
         responsive: true,
         showSendToCloud: false,
@@ -293,7 +280,7 @@
       plotData.data[0] = l; // Overwrite plot data
       Plotly.redraw(plotDiv);
       if (mobileView) {
-        mobileLayout();
+        setMobileLayout();
       }
     }
   }
@@ -306,8 +293,8 @@
   });
 
   $: team && refreshPlot();
-  $: !mobileView && defaultLayout();
-  $: setup && mobileView && mobileLayout();
+  $: !mobileView && setDefaultLayout();
+  $: setup && mobileView && setMobileLayout();
 
   export let data: TeamData, team: string, mobileView: boolean;
 </script>

@@ -132,9 +132,9 @@
                   >
                     {toInitials(prevMatch.homeTeam)}
                   </div>
-                  <div class="score-container">
+                  <div class="score-container {prevMatch.result}">
                     <!-- <div class="left-color"></div> -->
-                    <div class="score {prevMatch.result}">
+                    <div class="score">
                       {prevMatch.homeGoals} - {prevMatch.awayGoals}
                     </div>
                     <!-- <div class="right-color"></div> -->
@@ -254,7 +254,6 @@
   .past-result {
     font-size: 15px;
     display: flex;
-    /* background: white; */
   }
 
   .past-result-date {
@@ -285,26 +284,27 @@
   }
 
   .result-details {
-    background: rgba(255, 255, 255, 0.85);
+    /* background: rgba(255, 255, 255, 0.85); */
+    background: #f0fefd;
   }
 
   .won {
     /* background: rgb(169, 247, 169); */
     /* background: #77dd77; */
     /* background: #00fe87; */
-    border-bottom: 6px #00fe87 solid;
+    border-bottom: 6px var(--win) solid;
   }
   .drew {
     /* background: rgb(255, 207, 138); */
     /* background: #ffb347; */
     /* background: #ffdd00; */
-    border-bottom: 6px #ffdd00 solid;
+    border-bottom: 6px var(--draw) solid;
   }
   .lost {
     /* background: #f77979; */
     /* background: #c23b22; */
     /* background: #f83027; */
-    border-bottom: 6px #f83027 solid;
+    border-bottom: 6px var(--lose) solid;
   }
 
   .accuracy {
@@ -326,7 +326,7 @@
   .score-container {
     float: left;
     min-width: 44px;
-    margin: 0 8px;
+    /* margin: 0 8px; */
     text-align: center;
     font-weight: 800;
     flex: 3;
@@ -352,7 +352,7 @@
     padding: 3px 0 0;
     margin: auto;
     /* background: #00fe87; */
-    border-radius: 2px;
+    /* border-radius: 2px; */
   }
 
   .away-team {
@@ -437,12 +437,15 @@
     }
   }
   @media only screen and (max-width: 550px) {
+    .next-game-title {
+      padding: 6px 15px 7px 12px;
+    }
     .next-game-values {
       margin: 25px 10px 10px;
       font-size: 0.85em;
     }
     .next-game-prediction {
-      margin: 40px 15px;
+      margin: 40px 14px;
     }
   }
 </style>

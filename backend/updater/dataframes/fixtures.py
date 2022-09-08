@@ -2,9 +2,9 @@ from collections import defaultdict
 from datetime import datetime
 
 import pandas as pd
+from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-from lib.utils.utilities import Utilities
 
 from dataframes.df import DF
 
@@ -13,9 +13,6 @@ utils = Utilities()
 class Fixtures(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'fixtures')
-
-    def get_n_games_played(self, team_name: str) -> int:
-        return (self.df.loc[team_name, (slice(None), 'status')] == 'FINISHED').values.sum()
 
     @staticmethod
     def _inc_avg_scored_conceded(
@@ -53,35 +50,34 @@ class Fixtures(DF):
 
         return avg_scored, avg_conceded
 
-    @staticmethod
-    def _insert_home_team_row(matchday: dict, match: dict, team_names: list[str]):
-        score = None
-        if match['score']['fullTime']['homeTeam'] is not None:
-            score = f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}"
+    def get_actual_scores_new(self) -> dict[tuple[str, str], dict[str, int]]:
+        # To contain a tuple for all actual scores so far this season
+        actual_scores = {}
 
-        matchday[(match["matchday"], 'date')].append(
-            datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ"))
-        matchday[(match["matchday"], 'atHome')].append(True)
-        matchday[(match["matchday"], 'team')].append(
-            match['awayTeam']['name'].replace('&', 'and'))
-        matchday[(match["matchday"], 'status')].append(match['status'])
-        matchday[(match["matchday"], 'score')].append(score)
-        team_names.append(utils.clean_full_team_name(match['homeTeam']['name']))
+        for matchday_no in range(1, 39):
+            matchday = self.df[matchday_no]
 
-    @staticmethod
-    def _insert_away_team_row(matchday: dict, match: dict, team_names: list[str]):
-        score = None
-        if match['score']['fullTime']['homeTeam'] is not None:
-            score = f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}"
+            # If whole column is SCHEDULED, skip
+            if not all(matchday['status'] == 'SCHEDULED'):
+                for team_name, row in matchday.iterrows():
+                    if row['status'] == 'FINISHED':
+                        home_goals, away_goals = utils.extract_int_score(row['score'])
 
-        matchday[(match["matchday"], 'date')].append(
-            datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ"))
-        matchday[(match["matchday"], 'atHome')].append(False)
-        matchday[(match["matchday"], 'team')].append(
-            match['homeTeam']['name'].replace('&', 'and'))
-        matchday[(match["matchday"], 'status')].append(match['status'])
-        matchday[(match["matchday"], 'score')].append(score)
-        team_names.append(utils.clean_full_team_name(match['awayTeam']['name']))
+                        if row['atHome']:
+                            home_name = team_name
+                            away_name = row['team']
+                        else:
+                            home_name = row['team']
+                            away_name = team_name
+                        home_initials = utils.convert_team_name_or_initials(home_name)
+                        away_initials = utils.convert_team_name_or_initials(away_name)
+
+                        actual_scores[f'{home_initials} vs {away_initials}'] = {
+                            'homeGoals': home_goals, 
+                            'awayGoals': away_goals
+                        }
+
+        return actual_scores
 
     @staticmethod
     def _insert_team_row(

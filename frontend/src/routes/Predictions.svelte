@@ -24,29 +24,45 @@
 
   function sameResult(prediction: Scoreline, actual: Scoreline): boolean {
     return (
-      (prediction.homeGoals > prediction.awayGoals &&
-        actual.homeGoals > actual.awayGoals) ||
-      (prediction.homeGoals == prediction.awayGoals &&
-        actual.homeGoals == actual.awayGoals) ||
-      (prediction.homeGoals < prediction.awayGoals &&
-        actual.homeGoals < actual.awayGoals)
-    );
+      (Math.round(prediction.homeGoals) > Math.round(prediction.awayGoals) &&
+        Math.round(actual.homeGoals) > Math.round(actual.awayGoals)) ||
+      (Math.round(prediction.homeGoals) == Math.round(prediction.awayGoals) &&
+        Math.round(actual.homeGoals) == Math.round(actual.awayGoals)) ||
+      (Math.round(prediction.homeGoals) < Math.round(prediction.awayGoals) &&
+        Math.round(actual.homeGoals) < Math.round(actual.awayGoals))
+    )
   }
 
-  function insertColours(json: PredictionData) {
+  /**
+   * Insert green, yellow or red colour values representing the results of completed 
+   * games as well as overall prediction accuracy values for scores and general 
+   * match results.
+  */
+  function insertExtras(json: PredictionData) {
+    let scoreCorrect = 0;
+    let resultCorrect = 0;
+    let total = 0;
     for (let i = 0; i < json.predictions.length; i++) {
       for (let j = 0; j < json.predictions[i].predictions.length; j++) {
         let prediction = json.predictions[i].predictions[j];
         if (prediction.actual != null) {
           if (identicalScore(prediction.prediction, prediction.actual)) {
             prediction.colour = "green";
+            scoreCorrect += 1;
+            resultCorrect += 1;
           } else if (sameResult(prediction.prediction, prediction.actual)) {
             prediction.colour = "yellow";
+            resultCorrect += 1;
           } else {
             prediction.colour = "red";
           }
+          total += 1;
         }
       }
+    }
+    json.accuracy = {
+      scoreAccuracy: scoreCorrect / total,
+      resultAccuracy: resultCorrect / total,
     }
   }
 
@@ -83,11 +99,8 @@
   };
 
   type AccuracyData = {
-    _id: number; // Year of season start
-    resultAccuracy: number;
     scoreAccuracy: number;
-    homeGoalsAvgDiff: number;
-    awayGoalsAvgDiff: number;
+    resultAccuracy: number;
   };
 
   type PredictionData = {
@@ -100,7 +113,7 @@
     fetchData("https://pldashboard-backend.vercel.app/api/predictions").then(
       (json: PredictionData) => {
         sortByDate(json);
-        insertColours(json);
+        insertExtras(json);
         data = json as PredictionData;
         console.log(data);
       }
@@ -244,15 +257,15 @@
   }
 
   .green {
-    background-color: #77dd77;
+    background-color: var(--win);
   }
 
   .yellow {
-    background-color: #ffb347;
+    background-color: var(--draw);
   }
 
   .red {
-    background-color: #c23b22;
+    background-color: var(--lose);
   }
 
   .predictions-container {
