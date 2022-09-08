@@ -1,0 +1,22 @@
+{
+    "builds": [
+        {
+            "src": "/server/app.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "/lib/**",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/teams",
+            "dest": "/server/app.py"
+        },
+        {
+            "src": "/api/predictions",
+            "dest": "/server/app.py"
+        }
+    ]
+}
