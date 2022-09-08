@@ -1,40 +1,52 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  function getAvgScoreFreq(data: TeamData): ScoreFreq {
-    let scoreFreq = {};
-    for (let team in data.form) {
-      for (let matchday in data.form[team][data._id]) {
-        let score = data.form[team][data._id][matchday].score;
-        if (score != null) {
-          let [h, _, a] = score.split(" ");
-          if (!data.form[team][data._id][matchday].atHome) {
-            score = a + " - " + h;
-          }
-          if (!(score in scoreFreq)) {
-            scoreFreq[score] = [0];
-          }
-          scoreFreq[score][0] += 1;
+  function teamInSeason(form: Form, team: string, season: number): boolean {
+    return team in form && form[team][season]['1'] != null
+  }
+
+  function insertSeasonAvgScoreFreq(scoreFreq: ScoreFreq, form: Form, team: string, season: number) {
+    for (let matchday in form[team][season]) {
+      let score = data.form[team][season][matchday].score;
+      if (score != null) {
+        let [h, _, a] = score.split(" ");
+        if (!data.form[team][season][matchday].atHome) {
+          score = a + " - " + h;
         }
+        if (!(score in scoreFreq)) {
+          scoreFreq[score] = [0];
+        }
+        scoreFreq[score][0] += 1;
       }
-      if (team in data.form) {
-        for (let matchday in data.form[team][data._id - 1]) {
-          let score = data.form[team][data._id - 1][matchday].score;
-          if (score != null) {
-            let [h, _, a] = score.split(" ");
-            if (!data.form[team][data._id - 1][matchday].atHome) {
-              score = a + " - " + h;
-            }
-            if (!(score in scoreFreq)) {
-              scoreFreq[score] = [0];
-            }
-            scoreFreq[score][0] += 1;
-          }
-        }
+    }
+  }
+
+  function getAvgScoreFreq(data: TeamData): ScoreFreq {
+    let scoreFreq: ScoreFreq = {};
+    for (let team in data.form) {
+      insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id)
+      if (teamInSeason(data.form, team, data._id-1)) {
+        insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id-1)
+      }
+      if (teamInSeason(data.form, team, data._id-2)) {
+        insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id-2)
       }
     }
 
-    return scoreFreq as ScoreFreq;
+    return scoreFreq;
+  }
+
+  function insertSeasonTeamScoreBars(scoreFreq: ScoreFreq, form: Form, team: string, season: number) {
+    for (let matchday in form[team][season]) {
+      let score = form[team][season][matchday].score;
+      if (score != null) {
+        let [h, _, a] = score.split(" ");
+        if (!form[team][season][matchday].atHome) {
+          score = a + " - " + h;
+        }
+        scoreFreq[score][1] += 1;
+      }
+    }
   }
 
   function insertTeamScoreBars(
@@ -47,25 +59,12 @@
         scoreFreq[score].push(0);
       }
     }
-    for (let matchday in data.form[team][data._id]) {
-      let score = data.form[team][data._id][matchday].score;
-      if (score != null) {
-        let [h, _, a] = score.split(" ");
-        if (!data.form[team][data._id][matchday].atHome) {
-          score = a + " - " + h;
-        }
-        scoreFreq[score][1] += 1;
-      }
+    insertSeasonTeamScoreBars(scoreFreq, data.form, team, data._id)
+    if (teamInSeason(data.form, team, data._id-1)) {
+      insertSeasonTeamScoreBars(scoreFreq, data.form, team, data._id-1)
     }
-    for (let matchday in data.form[team][data._id - 1]) {
-      let score = data.form[team][data._id - 1][matchday].score;
-      if (score != null) {
-        let [h, _, a] = score.split(" ");
-        if (!data.form[team][data._id - 1][matchday].atHome) {
-          score = a + " - " + h;
-        }
-        scoreFreq[score][1] += 1;
-      }
+    if (teamInSeason(data.form, team, data._id-2)) {
+      insertSeasonTeamScoreBars(scoreFreq, data.form, team, data._id-2)
     }
   }
 

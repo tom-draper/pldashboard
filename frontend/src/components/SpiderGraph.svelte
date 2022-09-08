@@ -261,6 +261,9 @@
       if (teamInSeason(data.form, team, data._id-1)) {
         nCleanSheets += formCleanSheets(data.form, team, data._id-1);
       }
+      if (teamInSeason(data.form, team, data._id-2)) {
+        nCleanSheets += formCleanSheets(data.form, team, data._id-2);
+      }
 
       if (nCleanSheets > maxCleanSheets) {
         maxCleanSheets = nCleanSheets;
@@ -305,6 +308,9 @@
       if (teamInSeason(data.form, team, data._id-1)) {
         backToBack += formConsistency(data.form, team, data._id - 1);
       }
+      if (teamInSeason(data.form, team, data._id-2)) {
+        backToBack += formConsistency(data.form, team, data._id - 2);
+      }
 
       if (backToBack > maxConsistency) {
         maxConsistency = backToBack;
@@ -345,6 +351,9 @@
       let winStreak = formWinStreak(data.form, team, data._id);
       if (teamInSeason(data.form, team, data._id-1)) {
         winStreak += formWinStreak(data.form, team, data._id-1);
+      }
+      if (teamInSeason(data.form, team, data._id-2)) {
+        winStreak += formWinStreak(data.form, team, data._id-2);
       }
 
       if (winStreak > maxWinStreaks) {
@@ -398,6 +407,9 @@
       let winsVsBig6 = formWinsVsBig6(data.form, team, data._id, big6);
       if (teamInSeason(data.form, team, data._id-1)) {
         winsVsBig6 += formWinsVsBig6(data.form, team, data._id-1, big6);
+      }
+      if (teamInSeason(data.form, team, data._id-2)) {
+        winsVsBig6 += formWinsVsBig6(data.form, team, data._id-2, big6);
       }
 
       if (winsVsBig6 > maxWinsVsBig6) {
