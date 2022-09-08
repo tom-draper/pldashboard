@@ -9,11 +9,6 @@ class DF:
     def __str__(self):
         return str(self.df)
 
-    def _save_to_html(self):
-        html = self.df.to_html(justify='center')
-        with open(f'./templates/tables/{self.name}.html', 'w') as f:
-            f.write(html)
-
     def _check_dependencies(self, *args):
         for arg in args:
             if arg.df.empty:
