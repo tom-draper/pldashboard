@@ -140,6 +140,12 @@ class Updater:
             self.data.team_ratings,
             display=display_tables
         )
+        self.data.form.build_new(
+            self.json_data, 
+            self.data.team_ratings,
+            self.current_season,
+            display=display_tables
+        )
         # Data about the opponent in each team's next game
         self.data.upcoming.build(
             self.json_data, 
@@ -203,7 +209,7 @@ class Updater:
 if __name__ == "__main__":
     updater = Updater(2022)
     updater.build_all(
-        request_new=True, 
+        request_new=False, 
         display_tables=True, 
-        update_db=True,
+        update_db=False,
     )

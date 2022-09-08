@@ -38,11 +38,11 @@ class Form(DF):
         while matchday > 0 and self.df.at[team_name, (matchday, 'score')] is None:
             matchday -= 1
         return matchday
-    
+
     def _get_form_rating(self, team_name: str, matchday: int, n_games: int) -> float:
         if matchday < 1 or matchday > 38:
             return 0
-        
+
         rating = 50.0
         if matchday is not None:
             rating = (
@@ -123,19 +123,14 @@ class Form(DF):
     ) -> float:
         form_rating = 0.5  # Default percentage, moves up or down based on performance
         if form_str is not None:  # If games have been played this season
-            n_games = len(form_str)
-            for idx, result in enumerate(form_str):
+            for i, opp_team in enumerate(teams_played):
                 # Convert opposition team initials to their name
-                opp_team = teams_played[idx]
-                opp_team_rating = team_ratings.df.at[opp_team, 'totalRating']
-                # max_team_rating = team_ratings.df['TotalRating'].iloc[0]
-                gd = abs(gds[idx])
+                opp_team_rating = 0
+                if opp_team in team_ratings.df.index:
+                    opp_team_rating = team_ratings.df.at[opp_team, 'totalRating']
 
                 # Increment form score based on rating of the team they've won, drawn or lost against
-                if result == 'W':
-                    form_rating += (opp_team_rating / n_games) * gd
-                elif result == 'L':
-                    form_rating -= (opp_team_rating / n_games) * gd
+                form_rating += (opp_team_rating / len(form_str)) * gds[i]
 
         form_rating = min(max(0, form_rating), 1)  # Cap rating
 
@@ -191,6 +186,17 @@ class Form(DF):
                            inplace=True)
             df[matchday_no, 'position'] = list(range(1, 21))
 
+    def _insert_position_columns_new(self, df: DataFrame):
+        seasons = df.columns.unique(level=0).tolist()
+        for season in seasons:
+            played_matchdays = df[season].columns.unique(level=0).tolist()
+            for matchday in played_matchdays:
+                df.sort_values(by=[(season, matchday, 'cumPoints'),
+                                   (season, matchday, 'cumGD')],
+                               ascending=False,
+                               inplace=True)
+                df[(season, matchday, 'position')] = list(range(1, 21))
+
     def _insert_form(self, d, form, team_ratings, team, matchday_no, teams_matchdays, idx, N):
         # Get last idx of matchday that has been played
         while idx >= 0 and form.at[team, (teams_matchdays[idx], 'score')] is None:
@@ -205,8 +211,7 @@ class Form(DF):
         gds = [d[(md, 'gD')][-1] for md in last_n_matchday_nos]
         teams_played = self._get_form_matchday_range_values(
             form, team, 'team', last_n_matchday_nos)
-        form_rating = self._calc_form_rating(
-            team_ratings, teams_played, form_str, gds)
+        form_rating = self._calc_form_rating(team_ratings, teams_played, form_str, gds)
         d[(matchday_no, 'formRating' + str(N))].append(form_rating)
 
     def _form_columns(
@@ -220,7 +225,8 @@ class Form(DF):
 
         d = defaultdict(lambda: [])
         for team, row in form.iterrows():
-            teams_matchdays = row[(slice(None), 'date')][row[(slice(None), 'score')] != None]
+            teams_matchdays = row[(slice(None), 'date')
+                                  ][row[(slice(None), 'score')] != None]
             # Matchdays sorted by date played
             teams_matchdays = teams_matchdays.sort_values(
                 inplace=False).index.values
@@ -252,10 +258,124 @@ class Form(DF):
         form = form.sort_values(
             by=[(max(matchday_nos), 'formRating5')], ascending=False)
         return form
+
+    @staticmethod
+    def init_dict(d: dict, team: str):
+        if team not in d:
+            d[team] = {}
+
+    @staticmethod
+    def _get_form_char(gd: int):
+        if gd > 0:
+            return 'W'
+        elif gd < 0:
+            return 'L'
+        else:
+            return 'D'
     
-    def build_new(self, json_data: dict, season: int):
-        for match in json_data['fixtures'][season]:
-            print(match['status'], match['utcDate'], match['homeTeam']['name'], match['awayTeam']['name'], match['score']['fullTime']['homeTeam'], match['score']['fullTime']['awayTeam'])
+    def _last_n_played_matchdays(self, d: dict, team: str, current_season: int, 
+                                 N: int) -> list[int]:
+        played_matchdays = []
+        for matchday in range(38, 0, -1):
+            if (current_season, matchday, 'team') in d[team]:
+                played_matchdays.append(matchday)
+            if len(played_matchdays) >= N:
+                break
+                
+        played_matchdays.reverse()
+        
+        return played_matchdays
+    
+    def calc_form_rating(self, d: dict, team_ratings: TeamRatings, team: str, 
+                         current_season: int, length: int) -> float:
+        played_matchdays = self._last_n_played_matchdays(d, team, current_season, length)
+        teams_played = [d[team][(current_season, matchday, 'team')] for matchday in played_matchdays]
+        gds = [d[team][(current_season, matchday, 'gD')] for matchday in played_matchdays]
+        form_str = d[team][(current_season, played_matchdays[-1], f'form{length}')]
+        form_rating = self._calc_form_rating(team_ratings, teams_played, form_str, gds)
+        return form_rating
+
+    def insert_form_rating(self, d: dict, team_ratings: TeamRatings, team: str, 
+                           season: int, matchday: int, length: int):
+        form_rating = self.calc_form_rating(d, team_ratings, team, season, length)
+        d[team][(season, matchday, f'formRating{length}')] = form_rating
+            
+    def insert_form_string(self, d: dict, team: str, gd: int, season: int,
+                           matchday: int, length: int):
+        col_heading = f'form{length}'
+        form_char = self._get_form_char(gd)
+        if matchday > 1 and (season, matchday-1, col_heading) in d[team]:
+            form_str = d[team][(season, matchday-1, col_heading)] + form_char
+            if len(form_str) > length:
+                form_str = form_str[len(form_str)-length:]
+            d[team][(season, matchday, col_heading)] = form_str
+        else:
+            d[team][(season, matchday, col_heading)] = form_char
+
+    def insert_team_matchday(self, d: dict, match: dict, team_ratings: TeamRatings, season: int, home_team: bool):
+        if home_team:
+            team = utils.clean_full_team_name(match['homeTeam']['name'])
+            opp_team = utils.clean_full_team_name(match['awayTeam']['name'])
+        else:
+            team = utils.clean_full_team_name(match['awayTeam']['name'])
+            opp_team = utils.clean_full_team_name(match['homeTeam']['name'])
+
+        matchday = match['matchday']
+
+        self.init_dict(d, team)
+
+        d[team][(season, matchday, 'team')] = opp_team
+        d[team][(season, matchday, 'date')] = match['utcDate']
+        d[team][(season, matchday, 'atHome')] = home_team
+
+        score = f'{match["score"]["fullTime"]["homeTeam"]} - {match["score"]["fullTime"]["awayTeam"]}'
+        d[team][(season, matchday, 'score')] = score
+
+        gd = self._get_gd(score, home_team)
+        d[team][(season, matchday, 'gD')] = gd
+        d[team][(season, matchday, 'cumGD')] = gd
+        if matchday > 1 and (season, matchday-1, 'cumGD') in d[team]:
+            d[team][(season, matchday, 'cumGD')] += d[team][(season, matchday-1, 'cumGD')]
+
+        points = self._get_points(gd)
+        d[team][(season, matchday, 'cumPoints')] = points
+        if matchday > 1 and (season, matchday-1, 'cumPoints') in d[team]:
+            d[team][(season, matchday, 'cumPoints')
+                    ] += d[team][(season, matchday-1, 'cumPoints')]
+
+        self.insert_form_string(d, team, gd, season, matchday, 5)
+        self.insert_form_string(d, team, gd, season, matchday, 10)
+        
+        self.insert_form_rating(d, team_ratings, team, season, matchday, 5)
+        self.insert_form_rating(d, team_ratings, team, season, matchday, 10)
+        
+
+    @timebudget
+    def build_new(
+        self,
+        json_data: dict,
+        team_ratings: TeamRatings,
+        season: int,
+        n_seasons: int = 4,
+        display: bool = False
+    ):
+        d = {}
+        for i in range(n_seasons):
+            for match in json_data['fixtures'][season-i]:
+                if match['status'] == 'FINISHED':
+                    self.insert_team_matchday(d, match, team_ratings, season-i, True)
+                    self.insert_team_matchday(d, match, team_ratings, season-i, False)
+
+        form = pd.DataFrame.from_dict(d, orient='index')
+        
+        # Drop teams not in current season        
+        form = form.dropna(axis=0, subset=form.loc[[], [season]].columns)
+
+        self._insert_position_columns_new(form)
+        form = form.sort_index(axis=1)
+
+        if display:
+            print(form[2022])
 
     @timebudget
     def build(
@@ -310,9 +430,9 @@ class Form(DF):
         self._check_dependencies(fixtures, team_ratings)
 
         matchday_nos = self._get_played_matchdays(fixtures)
-        
+
         form = fixtures.df[matchday_nos].drop(columns=['status'], level=1)
-        
+
         if len(matchday_nos) > 0:
             form_rows = self._form_columns(form, team_ratings)
             form = pd.concat([form, form_rows], axis=1)
