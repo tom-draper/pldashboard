@@ -119,26 +119,26 @@
     let minGoals = Number.POSITIVE_INFINITY;
     for (let team of data.teamNames) {
       let totalGoals = 0;
-      let seasonsPlayed = 0;
-      for (let year in data.standings[team]) {
-        let goals = data.standings[team][year].gF;
+      let gamesPlayed = 0;
+      for (let season in data.standings[team]) {
+        let goals = data.standings[team][season].gF;
         if (goals > 0) {
           totalGoals += goals;
-          if (goals > maxGoals) {
-            maxGoals = goals;
-          } else if (goals < minGoals) {
-            minGoals = goals;
-          }
-          seasonsPlayed += 1;
+          gamesPlayed += data.standings[team][season].played;
         }
       }
-
-      let goalsPerSeason = null;
-      if (seasonsPlayed > 0) {
-        goalsPerSeason = totalGoals / seasonsPlayed;
+      
+      let goalsPerGame = null;
+      if (gamesPlayed > 0) {
+        goalsPerGame = totalGoals / gamesPlayed;
+      }
+      if (goalsPerGame > maxGoals) {
+        maxGoals = goalsPerGame;
+      } else if (goalsPerGame < minGoals) {
+        minGoals = goalsPerGame;
       }
 
-      attack[team] = goalsPerSeason;
+      attack[team] = goalsPerGame;
     }
     return [attack as Attribute, [minGoals, maxGoals]];
   }
@@ -177,8 +177,8 @@
   }
 
   function getAttack(data: TeamData): Attribute {
-    let [attack, maxGoals] = goalsPerSeason(data);
-    attack = scaleAttack(attack, maxGoals);
+    let [attack, extremes] = goalsPerSeason(data);
+    attack = scaleAttack(attack, extremes);
     attack.avg = attributeAvg(attack);
     return attack;
   }
@@ -189,26 +189,26 @@
     let minConceded = Number.POSITIVE_INFINITY;
     for (let team of data.teamNames) {
       let totalConceded = 0;
-      let seasonsPlayed = 0;
-      for (let year in data.standings[team]) {
-        let goals = data.standings[team][year].gA;
+      let gamesPlayed = 0;
+      for (let season in data.standings[team]) {
+        let goals = data.standings[team][season].gA;
         if (goals > 0) {
           totalConceded += goals;
-          if (goals > maxConceded) {
-            maxConceded = goals;
-          } else if (goals < minConceded) {
-            minConceded = goals;
-          }
-          seasonsPlayed += 1;
+          gamesPlayed += data.standings[team][season].played;
         }
       }
-
-      let goalsPerSeason = null;
-      if (seasonsPlayed > 0) {
-        goalsPerSeason = totalConceded / seasonsPlayed;
+      
+      let goalsPerGame = null;
+      if (gamesPlayed > 0) {
+        goalsPerGame = totalConceded / gamesPlayed;
+      }
+      if (goalsPerGame > maxConceded) {
+        maxConceded = goalsPerGame;
+      } else if (goalsPerGame < minConceded) {
+        minConceded = goalsPerGame;
       }
 
-      defence[team] = goalsPerSeason;
+      defence[team] = goalsPerGame;
     }
 
     return [defence as Attribute, [minConceded, maxConceded]];
@@ -261,6 +261,9 @@
       if (teamInSeason(data.form, team, data._id-1)) {
         nCleanSheets += formCleanSheets(data.form, team, data._id-1);
       }
+      if (teamInSeason(data.form, team, data._id-2)) {
+        nCleanSheets += formCleanSheets(data.form, team, data._id-2);
+      }
 
       if (nCleanSheets > maxCleanSheets) {
         maxCleanSheets = nCleanSheets;
@@ -305,6 +308,9 @@
       if (teamInSeason(data.form, team, data._id-1)) {
         backToBack += formConsistency(data.form, team, data._id - 1);
       }
+      if (teamInSeason(data.form, team, data._id-2)) {
+        backToBack += formConsistency(data.form, team, data._id - 2);
+      }
 
       if (backToBack > maxConsistency) {
         maxConsistency = backToBack;
@@ -345,6 +351,9 @@
       let winStreak = formWinStreak(data.form, team, data._id);
       if (teamInSeason(data.form, team, data._id-1)) {
         winStreak += formWinStreak(data.form, team, data._id-1);
+      }
+      if (teamInSeason(data.form, team, data._id-2)) {
+        winStreak += formWinStreak(data.form, team, data._id-2);
       }
 
       if (winStreak > maxWinStreaks) {
@@ -398,6 +407,9 @@
       let winsVsBig6 = formWinsVsBig6(data.form, team, data._id, big6);
       if (teamInSeason(data.form, team, data._id-1)) {
         winsVsBig6 += formWinsVsBig6(data.form, team, data._id-1, big6);
+      }
+      if (teamInSeason(data.form, team, data._id-2)) {
+        winsVsBig6 += formWinsVsBig6(data.form, team, data._id-2, big6);
       }
 
       if (winsVsBig6 > maxWinsVsBig6) {
