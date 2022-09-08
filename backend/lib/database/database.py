@@ -22,7 +22,7 @@ class Database:
         MONGODB_DATABASE = getenv('MONGODB_DATABASE')
         self.connection_string = f"mongodb+srv://{USERNAME}:{PASSWORD}@main.pvnry.mongodb.net/{MONGODB_DATABASE}?retryWrites=true&w=majority&authSource=admin"
 
-    def get_predictions(self) -> list[dict]:
+    async def get_predictions(self) -> list[dict]:
         predictions = None
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.Predictions2022
@@ -35,7 +35,7 @@ class Database:
             
         return predictions
 
-    def get_prediction_accuracy(self) -> dict:
+    async def get_prediction_accuracy(self) -> dict:
         accuracy = None
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.Accuracy
@@ -43,7 +43,7 @@ class Database:
             
         return accuracy
 
-    def get_teams_data(self) -> dict:
+    async def get_teams_data(self) -> dict:
         team_data = None
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData
