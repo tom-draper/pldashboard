@@ -135,12 +135,12 @@ class Updater:
             display=display_tables
         )
         # Calculated form values for each team for each matchday played so far
+        # self.data.form.build(
+        #     self.data.fixtures, 
+        #     self.data.team_ratings,
+        #     display=display_tables
+        # )
         self.data.form.build(
-            self.data.fixtures, 
-            self.data.team_ratings,
-            display=display_tables
-        )
-        self.data.form.build_new(
             self.json_data, 
             self.data.team_ratings,
             self.current_season,
@@ -209,7 +209,7 @@ class Updater:
 if __name__ == "__main__":
     updater = Updater(2022)
     updater.build_all(
-        request_new=False, 
+        request_new=True, 
         display_tables=True, 
-        update_db=False,
+        update_db=True,
     )

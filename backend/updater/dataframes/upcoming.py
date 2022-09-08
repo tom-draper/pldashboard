@@ -251,7 +251,7 @@ class Upcoming(DF):
         self._sort_prev_matches_by_date(d)
 
         upcoming = pd.DataFrame.from_dict(d, orient='index')
-
+        
         if form.get_current_matchday() == 38:   
             self.finished_season = True
         else:
