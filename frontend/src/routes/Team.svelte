@@ -106,7 +106,8 @@
       .replace("And", "and");
   }
 
-  function getPlayedMatchdays(data, team: string): string[] {
+  function getPlayedMatchdays(data: TeamData, team: string): string[] {
+    console.log(data);
     let matchdays = Object.keys(data.form[data._id][team]);
 
     // If played one or no games, take x-axis from whole season dates

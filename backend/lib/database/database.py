@@ -231,8 +231,8 @@ class Database:
         # and only one fixtures dataframe is created for the current season. 
         # Building form datafr4ame straight from raw api data in json_data variable 
         # will allow the form dataframe to be build for any of the last 4 seasons.
-        team_data['form'] = {'2022': team_data['form']}
-        self._insert_prev_season_form(team_data)
+        # team_data['form'] = {'2022': team_data['form']}
+        # self._insert_prev_season_form(team_data)
         
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData
