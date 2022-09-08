@@ -8,15 +8,15 @@ from datetime import datetime
 from os.path import dirname, join
 
 import requests
-from lib.database.database import Database
 from dotenv import load_dotenv
+from lib.database.database import Database
+from lib.utils.utilities import Utilities
 from timebudget import timebudget
 
 from data import Data
 
-from lib.utils.utilities import Utilities
-
 utils = Utilities()
+
 
 class Updater:
     def __init__(self, current_season: int):

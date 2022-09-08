@@ -1,13 +1,14 @@
 from collections import defaultdict
 
 import pandas as pd
+from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-from lib.utils.utilities import Utilities
 
 from dataframes.df import DF
 
 utils = Utilities()
+
 
 class HomeAdvantages(DF):
     def __init__(self, d: DataFrame = DataFrame()):

@@ -6,13 +6,13 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import math
 
 import pandas as pd
-from pandas.core.frame import DataFrame
 from lib.utils.utilities import Utilities
+from pandas.core.frame import DataFrame
 
-from dataframes.form import Form
 from dataframes.fixtures import Fixtures
-from dataframes.standings import Standings
+from dataframes.form import Form
 from dataframes.home_advantages import HomeAdvantages
+from dataframes.standings import Standings
 from dataframes.team_ratings import TeamRatings
 from dataframes.upcoming import Upcoming
 

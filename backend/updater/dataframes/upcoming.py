@@ -2,9 +2,9 @@ from datetime import datetime
 from typing import Optional
 
 import pandas as pd
+from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-from lib.utils.utilities import Utilities
 
 from dataframes.df import DF
 from dataframes.fixtures import Fixtures

@@ -1,4 +1,6 @@
-import os, sys
+import os
+import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from dataclasses import dataclass
@@ -6,11 +8,11 @@ from datetime import datetime
 from typing import Union
 
 import pandas as pd
+from lib.database.database import Database
+from lib.utils.utilities import Utilities
 from pandas.core.frame import DataFrame
 
 from data import Fixtures, Form, HomeAdvantages, Upcoming
-from lib.database.database import Database
-from lib.utils.utilities import Utilities
 
 utils = Utilities()
 
