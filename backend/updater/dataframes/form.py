@@ -351,7 +351,7 @@ class Form(DF):
         
 
     @timebudget
-    def build_new(
+    def build(
         self,
         json_data: dict,
         team_ratings: TeamRatings,
@@ -359,6 +359,48 @@ class Form(DF):
         n_seasons: int = 4,
         display: bool = False
     ):
+        """ Assigns self.df to a dataframe containing the form data for each team
+            for the matchdays played in the current season.
+
+            Rows: the 20 teams participating in the current season.
+            Columns (multi-index):
+            ------------------------------------------------------------------------------------------------------------------
+            |                                                  [MATCHDAY NUMBER]                                             |
+            |----------------------------------------------------------------------------------------------------------------|
+            | date | team | score | gD | points | position | form5 | form10 | formRating5 | formRating10 | cumGD | cumPoints |
+
+            [MATCHDAY NUMBER]: the matchdays numbers that have been played.
+            date: the datetime of the team's game played on that matchday.
+            team str: the initials of the opposition team played on that matchday.
+            score str: the score 'X - Y' of the game played on that matchday.
+            gD int: the positive or negative goal difference achieved on that 
+                matchday from the perspective of the team (row).
+            points int: the points achieved on that matchday from the perspective 
+                of the team (row).
+            position int: the league standings position held on that matchday
+            form5 str: the form string up to the last 5 games (e.g. WWLDW) with the
+                most recent result on the far left. String can take characters
+                W, L, D or N (none - game not played).
+            form10: the form string up to the last 10 games (e.g. WWLDDLWLLW) with 
+                the most recent result on the far left. String can take characters
+                W, L, D or N (none - game not played).
+            formRating5 float: the calculated form rating based on the results of
+                up to the last 5 games.
+            formRating10 float: the calculated form rating based on the results of
+                up to the last 5 games.
+            cumGD: the cumulative GD achieved across the current matchday
+                and all matchdays prior.
+            cumPoints: the cumulative points aquired across the current matchday
+                and all matchdays prior.
+
+        Args:
+            fixtures Fixtures: a completed dataframe containing past and future
+                fixtures for each team within the current season
+            team_ratings TeamRatings: a completed dataframe filled with long-term
+                ratings for each team
+            display (bool, optional): flag to print the dataframe to console after 
+                creation. Defaults to False.
+        """
         d = {}
         for i in range(n_seasons):
             for match in json_data['fixtures'][season-i]:
@@ -375,10 +417,12 @@ class Form(DF):
         form = form.sort_index(axis=1)
 
         if display:
-            print(form[2022])
+            print(form)
+        
+        self.form = form
 
     @timebudget
-    def build(
+    def build_old(
         self,
         fixtures: Fixtures,
         team_ratings: TeamRatings,
