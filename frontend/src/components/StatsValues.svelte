@@ -86,17 +86,17 @@
     team: string,
     season: number
   ) {
-    if (!(team in data.form[season])) {
+    if (!(team in data.form)) {
       return;
     }
 
-    for (let matchday of Object.keys(data.form[season][team])) {
-      let score = data.form[season][team][matchday].score;
+    for (let matchday of Object.keys(data.form[team][season])) {
+      let score = data.form[team][season][matchday].score;
       if (score != null) {
         let [h, _, a] = score.split(" ");
         h = parseInt(h);
         a = parseInt(a);
-        let atHome = data.form[season][team][matchday].atHome;
+        let atHome = data.form[team][season][matchday].atHome;
         if (isCleanSheet(h, a, atHome)) {
           seasonStats[team].cleanSheetRatio += 1;
         }

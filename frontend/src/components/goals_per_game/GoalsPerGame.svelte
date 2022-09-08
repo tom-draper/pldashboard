@@ -108,17 +108,17 @@
   }
 
   function countScored(data: TeamData, goalFreq: Object, season: number, team: string) {
-    if (!(team in data.form[season])) {
+    if (!(team in data.form)) {
       return;
     }
 
-    for (let matchday of Object.keys(data.form[season][team])) {
-      let score = data.form[season][team][matchday].score;
+    for (let matchday of Object.keys(data.form[team][season])) {
+      let score = data.form[team][season][matchday].score;
       if (score != null) {
         let [h, _, a] = score.split(" ");
         h = parseInt(h);
         a = parseInt(a);
-        if (data.form[season][team][matchday].atHome) {
+        if (data.form[team][season][matchday].atHome) {
           if (h in goalFreq) {
             goalFreq[h] += 1;
           } else {
@@ -187,17 +187,17 @@
     season: number,
     team: string
   ) {
-    if (!(team in data.form[season])) {
+    if (!(team in data.form)) {
       return;
     }
 
-    for (let matchday of Object.keys(data.form[season][team])) {
-      let score = data.form[season][team][matchday].score;
+    for (let matchday of Object.keys(data.form[team][season])) {
+      let score = data.form[team][season][matchday].score;
       if (score != null) {
         let [h, _, a] = score.split(" ");
         h = parseInt(h);
         a = parseInt(a);
-        if (data.form[season][team][matchday].atHome) {
+        if (data.form[team][season][matchday].atHome) {
           if (a in goalFreq) {
             goalFreq[a] += 1;
           } else {

@@ -10,6 +10,10 @@
     return teamColor;
   }
 
+  function teamInSeason(form: Form, team: string, season: number): boolean {
+    return team in form && form[team][season]['1'] != null
+  }
+
   function addTeamComparison(team: string) {
     let teamColor = getTeamColor(team);
 
@@ -136,7 +140,7 @@
 
       attack[team] = goalsPerSeason;
     }
-    return [attack, [minGoals, maxGoals]];
+    return [attack as Attribute, [minGoals, maxGoals]];
   }
 
   function scaleAttack(attack: Attribute, range: [number, number]): Attribute {
@@ -233,10 +237,10 @@
     return defence;
   }
 
-  function formCleanSheets(form, team) {
+  function formCleanSheets(form: Form, team: string, season: number): number {
     let nCleanSheets = 0;
-    for (let matchday of Object.keys(form[team])) {
-      let match = form[team][matchday];
+    for (let matchday in form[team][season]) {
+      let match = form[team][season][matchday];
       if (match.score != null) {
         let [h, _, a] = match.score.split(" ");
         if (match.atHome && a == 0) {
@@ -253,9 +257,9 @@
     let cleanSheets: Attribute = {};
     let maxCleanSheets = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
-      let nCleanSheets = formCleanSheets(data.form[data._id], team);
-      if (team in data.form[data._id - 1]) {
-        nCleanSheets += formCleanSheets(data.form[data._id - 1], team);
+      let nCleanSheets = formCleanSheets(data.form, team, data._id);
+      if (teamInSeason(data.form, team, data._id-1)) {
+        nCleanSheets += formCleanSheets(data.form, team, data._id-1);
       }
 
       if (nCleanSheets > maxCleanSheets) {
@@ -269,14 +273,14 @@
     return cleanSheets;
   }
 
-  function formConsistency(form: Attribute, team: string): number {
+  function formConsistency(form: Form, team: string, season: number): number {
     let backToBack = 0; // Counts pairs of back to back identical match results
     let prevResult = null;
-    for (let matchday in form[team]) {
-      let match = form[team][matchday];
+    for (let matchday in form[team][season]) {
+      let match = form[team][season][matchday];
       if (match.score != null) {
         let [h, _, a] = match.score.split(" ");
-        let result;
+        let result: string;
         if ((match.atHome && h > a) || (!match.atHome && h < a)) {
           result = "win";
         } else if ((match.atHome && h < a) || (!match.atHome && h > a)) {
@@ -297,9 +301,9 @@
     let consistency: Attribute = {};
     let maxConsistency = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
-      let backToBack = formConsistency(data.form[data._id], team);
-      if (team in data.form[data._id - 1]) {
-        backToBack += formConsistency(data.form[data._id - 1], team);
+      let backToBack = formConsistency(data.form, team, data._id);
+      if (teamInSeason(data.form, team, data._id-1)) {
+        backToBack += formConsistency(data.form, team, data._id - 1);
       }
 
       if (backToBack > maxConsistency) {
@@ -314,11 +318,11 @@
     return consistency;
   }
 
-  function formWinStreak(form: Form, team: string): number {
+  function formWinStreak(form: Form, team: string, season: number): number {
     let winStreak = 0;
     let tempWinStreak = 0;
-    for (let matchday in form[team]) {
-      let match = form[team][matchday];
+    for (let matchday in form[team][season]) {
+      let match = form[team][season][matchday];
       if (match.score != null) {
         let [h, _, a] = match.score.split(" ");
         if ((match.atHome && h > a) || (!match.atHome && h < a)) {
@@ -338,9 +342,9 @@
     let winStreaks: Attribute = {};
     let maxWinStreaks = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
-      let winStreak = formWinStreak(data.form[data._id], team);
-      if (team in data.form[data._id - 1]) {
-        winStreak += formWinStreak(data.form[data._id - 1], team);
+      let winStreak = formWinStreak(data.form, team, data._id);
+      if (teamInSeason(data.form, team, data._id-1)) {
+        winStreak += formWinStreak(data.form, team, data._id-1);
       }
 
       if (winStreak > maxWinStreaks) {
@@ -362,10 +366,10 @@
     return arr;
   }
 
-  function formWinsVsBig6(form: Form, team: string, big6: string[]): number {
+  function formWinsVsBig6(form: Form, team: string, season: number, big6: string[]): number {
     let winsVsBig6 = 0;
-    for (let matchday in form[team]) {
-      let match = form[team][matchday];
+    for (let matchday in form[team][season]) {
+      let match = form[team][season][matchday];
       if (match.score != null && big6.includes(match.team)) {
         let [h, _, a] = match.score.split(" ");
         if ((match.atHome && h > a) || (!match.atHome && h < a)) {
@@ -391,9 +395,9 @@
       ];
       big6 = removeItem(big6, team);
 
-      let winsVsBig6 = formWinsVsBig6(data.form[data._id], team, big6);
-      if (team in data.form[data._id - 1]) {
-        winsVsBig6 += formWinsVsBig6(data.form[data._id - 1], team, big6);
+      let winsVsBig6 = formWinsVsBig6(data.form, team, data._id, big6);
+      if (teamInSeason(data.form, team, data._id-1)) {
+        winsVsBig6 += formWinsVsBig6(data.form, team, data._id-1, big6);
       }
 
       if (winsVsBig6 > maxWinsVsBig6) {
