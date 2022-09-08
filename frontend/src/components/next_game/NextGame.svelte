@@ -76,7 +76,7 @@
               Current form:
               {#if currentMatchday != null}
                   <span class="current-form-value">{(
-                    data.form[data._id][data.upcoming[team].nextTeam][
+                    data.form[data.upcoming[team].nextTeam][data._id][
                       currentMatchday
                     ].formRating5 * 100
                   ).toFixed(1)}%</span
