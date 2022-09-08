@@ -21,27 +21,6 @@ class Upcoming(DF):
         self.predictions = Predictions(current_season)
         self.finished_season = False
 
-    def _get_opposition(self, team_name: str) -> str:
-        return self.df.at[team_name, 'nextTeam']
-
-    def _get_prev_matches(self, team_name: str) -> list:
-        return self.df.at[team_name, 'prevMatches']
-
-    def _get_at_home(self, team_name: str) -> str:
-        return self.df.at[team_name, 'atHome']
-
-    def get_details(self, team_name: str) -> tuple[str, str, list]:
-        opp_team_name = ''
-        at_home = ''
-        prev_matches = []
-        if not self.df.empty:
-            # If season not finished
-            opp_team_name = self._get_opposition(team_name)
-            at_home = self._get_at_home(team_name)
-            prev_matches = self._get_prev_matches(team_name)
-
-        return opp_team_name, at_home, prev_matches
-
     def get_predictions(self) -> dict[str, dict]:
         """ Extracts a predictions dictionary from the dataframe including 
             prediction details for each team about their upcoming game.
@@ -96,31 +75,6 @@ class Upcoming(DF):
                 break
 
         return date, next_team, at_home
-    
-
-    def _get_next_game_prediction(
-        self,
-        team_name: str
-    ) -> tuple[str, int, str, int]:
-        at_home = self.df.at[team_name, 'atHome']
-
-        if at_home:
-            home_initials = utils.convert_team_name_or_initials(team_name)
-            away_initials = utils.convert_team_name_or_initials(self.df.at[team_name, 'nextTeam'])
-        else:
-            home_initials = utils.convert_team_name_or_initials(self.df.at[team_name, 'nextTeam'])
-            away_initials = utils.convert_team_name_or_initials(team_name)
-
-        prediction = self.df.at[team_name, 'prediction']
-        xg_home = prediction['homeGoals']
-        xg_away = prediction['awayGoals']
-
-        return home_initials, xg_home, away_initials, xg_away
-
-    def _get_next_game_prediction_scoreline(self, team_name: str) -> str:
-        home_initials, xg_home, away_initials, xg_away = self._get_next_game_prediction(
-            team_name)
-        return f'{home_initials} {round(xg_home)} - {round(xg_away)} {away_initials}'
 
     @staticmethod
     def _game_result_tuple(match: dict) -> tuple[str, str]:

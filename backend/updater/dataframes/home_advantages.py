@@ -132,7 +132,7 @@ class HomeAdvantages(DF):
         return home_advantages
 
     @staticmethod
-    def get_season_teams(season_fixtures_data):
+    def get_season_teams(season_fixtures_data: dict) -> list[str]:
         current_season_teams = set()
         for match in season_fixtures_data:
             home_team = utils.clean_full_team_name(match['homeTeam']['name'])
