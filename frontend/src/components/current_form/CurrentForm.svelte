@@ -36,7 +36,7 @@
   function getFormIcons(data: TeamData, team: string): string {
     let formIcons: string[] = [];
     if (Object.keys(data.form[team][data._id][currentMatchday]).length > 0) {
-      formIcons = data.form[team][data._id][currentMatchday].form5.split("").reverse();
+      formIcons = data.form[team][data._id][currentMatchday].form5.split("");
     }
 
     // Fill in blanks with None icons
@@ -54,8 +54,7 @@
     let formInitials = [];
 
     for (let matchday of matchdays) {
-      formInitials.unshift(
-        toInitials(data.form[team][data._id][matchday].team)
+      formInitials.unshift(toInitials(data.form[team][data._id][matchday].team)
       );
     }
 
