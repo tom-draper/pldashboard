@@ -398,7 +398,7 @@ class Form(DF):
                 up to the last 5 games.
             cumGD: the cumulative GD achieved across the current matchday
                 and all matchdays prior.
-            cumPoints: the cumulative points aquired across the current matchday
+            cumPoints: the cumulative points acquired across the current matchday
                 and all matchdays prior.
 
         Args:
@@ -419,7 +419,7 @@ class Form(DF):
         form = pd.DataFrame.from_dict(d, orient='index')
         
         # Drop teams not in current season        
-        form = form.dropna(axis=0, subset=form.loc[[], [season]].columns)
+        form = form.dropna(axis=0, subset=form.loc[[], [(season, 1, 'team')]].columns)
 
         self._insert_position_columns_new(form)
         form = form.sort_index(axis=1)
@@ -467,7 +467,7 @@ class Form(DF):
                 up to the last 5 games.
             cumGD: the cumulative GD achieved across the current matchday
                 and all matchdays prior.
-            cumPoints: the cumulative points aquired across the current matchday
+            cumPoints: the cumulative points acquired across the current matchday
                 and all matchdays prior.
 
         Args:
