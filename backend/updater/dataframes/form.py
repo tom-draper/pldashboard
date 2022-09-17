@@ -307,18 +307,24 @@ class Form(DF):
                            season: int, matchday: int, length: int):
         form_rating = self.calc_form_rating(d, team_ratings, team, season, length)
         d[team][(season, matchday, f'formRating{length}')] = form_rating
-            
+    
     def insert_form_string(self, d: dict, team: str, gd: int, season: int,
                            matchday: int, length: int):
         col_heading = f'form{length}'
-        form_char = self._get_form_char(gd)
-        if matchday > 1 and (season, matchday-1, col_heading) in d[team]:
-            form_str = d[team][(season, matchday-1, col_heading)] + form_char
+        form_char = self._get_form_char(gd)  # W, L or D for matchday
+        
+        prev_matchday = matchday - 1
+        while prev_matchday > 0 and (season, prev_matchday, col_heading) not in d[team]:
+            prev_matchday -= 1
+        
+        if prev_matchday > 0:
+            form_str = d[team][(season, prev_matchday, col_heading)] + form_char
             if len(form_str) > length:
-                form_str = form_str[len(form_str)-length:]
-            d[team][(season, matchday, col_heading)] = form_str
+                form_str = form_str[len(form_str)-length:]  # Crop string to length
         else:
-            d[team][(season, matchday, col_heading)] = form_char
+            form_str = form_char
+            
+        d[team][(season, matchday, col_heading)] = form_str
 
     def insert_team_matchday(self, d: dict, match: dict, team_ratings: TeamRatings, season: int, home_team: bool):
         if home_team:
@@ -398,7 +404,7 @@ class Form(DF):
                 up to the last 5 games.
             cumGD: the cumulative GD achieved across the current matchday
                 and all matchdays prior.
-            cumPoints: the cumulative points aquired across the current matchday
+            cumPoints: the cumulative points acquired across the current matchday
                 and all matchdays prior.
 
         Args:
@@ -409,24 +415,30 @@ class Form(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
+        print('🛠️  Building form dataframe... ')
+        teams = set()
         d = {}
         for i in range(n_seasons):
             for match in json_data['fixtures'][season-i]:
+                if i == 0:
+                    teams.add(utils.clean_full_team_name(match['homeTeam']['name']))
+                    teams.add(utils.clean_full_team_name(match['awayTeam']['name']))
                 if match['status'] == 'FINISHED':
                     self.insert_team_matchday(d, match, team_ratings, season-i, True)
                     self.insert_team_matchday(d, match, team_ratings, season-i, False)
 
         form = pd.DataFrame.from_dict(d, orient='index')
         
-        # Drop teams not in current season        
-        form = form.dropna(axis=0, subset=form.loc[[], [season]].columns)
+        # Drop teams not in current season  
+        form = form.drop(index=form.index.difference(teams), axis=0)
+        # form = form.dropna(axis=0, subset=form.loc[[], [(season, 1, 'team')]].columns)
 
         self._insert_position_columns_new(form)
         form = form.sort_index(axis=1)
 
         if display:
             print(form)
-        
+                            
         self.df = form
 
     @timebudget
@@ -467,7 +479,7 @@ class Form(DF):
                 up to the last 5 games.
             cumGD: the cumulative GD achieved across the current matchday
                 and all matchdays prior.
-            cumPoints: the cumulative points aquired across the current matchday
+            cumPoints: the cumulative points acquired across the current matchday
                 and all matchdays prior.
 
         Args:

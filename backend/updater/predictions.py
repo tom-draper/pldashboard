@@ -100,7 +100,6 @@ class Predictor:
         else:
             # Opposition team in better form -> increase predicted coneded
             away_goals += away_goals * abs(form_diff/100) * self.form_diff_multiplier
-
         return home_goals, away_goals
 
     def _adjust_by_home_advantage(
@@ -284,7 +283,7 @@ class Predictor:
         # Decrese scores conceded if playing at home
         home_goals, away_goals = self._adjust_by_home_advantage_new(
             home_advantage, home_goals, away_goals)
-
+    
         return home_goals, away_goals
 
     @staticmethod
