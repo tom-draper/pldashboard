@@ -415,24 +415,30 @@ class Form(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
+        print('🛠️  Building form dataframe... ')
+        teams = set()
         d = {}
         for i in range(n_seasons):
             for match in json_data['fixtures'][season-i]:
+                if i == 0:
+                    teams.add(utils.clean_full_team_name(match['homeTeam']['name']))
+                    teams.add(utils.clean_full_team_name(match['awayTeam']['name']))
                 if match['status'] == 'FINISHED':
                     self.insert_team_matchday(d, match, team_ratings, season-i, True)
                     self.insert_team_matchday(d, match, team_ratings, season-i, False)
 
         form = pd.DataFrame.from_dict(d, orient='index')
         
-        # Drop teams not in current season        
-        form = form.dropna(axis=0, subset=form.loc[[], [(season, 1, 'team')]].columns)
+        # Drop teams not in current season  
+        form = form.drop(index=form.index.difference(teams), axis=0)
+        # form = form.dropna(axis=0, subset=form.loc[[], [(season, 1, 'team')]].columns)
 
         self._insert_position_columns_new(form)
         form = form.sort_index(axis=1)
 
         if display:
             print(form)
-                    
+                            
         self.df = form
 
     @timebudget
