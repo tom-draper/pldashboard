@@ -94,14 +94,12 @@
       plot_bgcolor: "#fafafa",
       paper_bgcolor: "#fafafa",
       yaxis: {
-        title: null,
         showticklabels: false,
         gridcolor: "gray",
         showgrid: false,
         showline: false,
         zeroline: false,
         fixedrange: true,
-        visible: true,
       },
       xaxis: {
         linecolor: "black",
@@ -111,6 +109,7 @@
       },
       shapes: [baseLine()],
       dragmode: false,
+      showlegend: false,
     };
   }
 
@@ -131,12 +130,27 @@
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
+  
+  function hiddenLine(x) {
+    return {
+      name: "Avg",
+      type: "line",
+        x: x,
+        y: Array(x.length).fill(1.1),
+        line: { color: "#FAFAFA", width: 1 },
+        marker: {
+          size: 1
+        }
+    }
+  }
 
   function buildPlotData(data: TeamData, team: string): PlotData {
     let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
-
+    // Line required on plot to make match goalsScoredAndConcededGraph
+    // TODO: Improve solution
+    let line = hiddenLine(cleanSheetsBar.x);
     let plotData = {
-      data: [cleanSheetsBar, concededBar],
+      data: [cleanSheetsBar, concededBar, line],
       layout: defaultLayout(),
       config: {
         responsive: true,

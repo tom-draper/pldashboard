@@ -121,6 +121,7 @@
         fixedrange: true,
         rangemode: "nonnegative",
         visible: true,
+        tickformat: 'd',
       },
       xaxis: {
         linecolor: "black",
@@ -171,7 +172,7 @@
     let line = avgLine(playedMatchdays, avgGoals, matchdays);
 
     let plotData = {
-      data: [scoredBar, concededBar, line],
+      data: [line, scoredBar, concededBar],
       layout: defaultLayout(),
       config: {
         responsive: true,
