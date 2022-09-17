@@ -307,18 +307,24 @@ class Form(DF):
                            season: int, matchday: int, length: int):
         form_rating = self.calc_form_rating(d, team_ratings, team, season, length)
         d[team][(season, matchday, f'formRating{length}')] = form_rating
-            
+    
     def insert_form_string(self, d: dict, team: str, gd: int, season: int,
                            matchday: int, length: int):
         col_heading = f'form{length}'
-        form_char = self._get_form_char(gd)
-        if matchday > 1 and (season, matchday-1, col_heading) in d[team]:
-            form_str = d[team][(season, matchday-1, col_heading)] + form_char
+        form_char = self._get_form_char(gd)  # W, L or D for matchday
+        
+        prev_matchday = matchday - 1
+        while prev_matchday > 0 and (season, prev_matchday, col_heading) not in d[team]:
+            prev_matchday -= 1
+        
+        if prev_matchday > 0:
+            form_str = d[team][(season, prev_matchday, col_heading)] + form_char
             if len(form_str) > length:
-                form_str = form_str[len(form_str)-length:]
-            d[team][(season, matchday, col_heading)] = form_str
+                form_str = form_str[len(form_str)-length:]  # Crop string to length
         else:
-            d[team][(season, matchday, col_heading)] = form_char
+            form_str = form_char
+            
+        d[team][(season, matchday, col_heading)] = form_str
 
     def insert_team_matchday(self, d: dict, match: dict, team_ratings: TeamRatings, season: int, home_team: bool):
         if home_team:
@@ -426,7 +432,7 @@ class Form(DF):
 
         if display:
             print(form)
-        
+                    
         self.df = form
 
     @timebudget

@@ -88,7 +88,7 @@
       title: false,
       autosize: true,
       height: 60,
-      margin: { r: 30, l: 70, t: 0, b: 40, pad: 5 },
+      margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
       barmode: "stack",
       hovermode: "closest",
       plot_bgcolor: "#fafafa",
@@ -117,7 +117,7 @@
   function setDefaultLayout() {
     if (setup) {
       let layoutUpdate = {
-        "margin.l": 70,
+        "margin.l": 60,
       };
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
@@ -126,7 +126,7 @@
   function setMobileLayout() {
     if (setup) {
       let layoutUpdate = {
-        "margin.l": 30,
+        "margin.l": 20,
       };
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
