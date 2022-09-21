@@ -1,20 +1,18 @@
 <script lang="ts">
-  import SeasonComplete from "./SeasonComplete.svelte";
-
   function ordinal(n: number): string {
     let ord = [, "st", "nd", "rd"];
     let a = n % 100;
     return ord[a > 20 ? a % 10 : a] || "th";
   }
 
-  function setOppTeam() {
-    if (data.upcoming[team].nextTeam != null) {
-      oppTeam = data.upcoming[team].nextTeam.toLowerCase().replace(/ /g, "-");
-    }
-  }
+  // function setOppTeam() {
+    // if (data.upcoming[team].nextTeam != null) {
+      // oppTeam = data.upcoming[team].nextTeam.toLowerCase().replace(/ /g, "-");
+    // }
+  // }
 
-  let oppTeam: string;
-  $: team && setOppTeam();
+  // let oppTeam: string;
+  // $: team && setOppTeam();
 
   export let data: TeamData,
     currentMatchday: string,
@@ -27,7 +25,13 @@
 
 {#if data != undefined}
   {#if data.upcoming[team].nextTeam == null}
-    <SeasonComplete {data} />
+    <div class="next-game-prediction">
+      <div class="next-game-season-complete">
+        <h1 class="next-game-title-text">
+          {data._id}/{data._id + 1} SEASON COMPLETE
+        </h1>
+      </div>
+    </div>
   {:else}
     <div
       class="next-game-prediction">
@@ -133,11 +137,9 @@
                     {toInitials(prevMatch.homeTeam)}
                   </div>
                   <div class="score-container {prevMatch.result}">
-                    <!-- <div class="left-color"></div> -->
                     <div class="score">
                       {prevMatch.homeGoals} - {prevMatch.awayGoals}
                     </div>
-                    <!-- <div class="right-color"></div> -->
                   </div>
                   <div
                     class="away-team"
@@ -166,6 +168,7 @@
     padding: 6px 20px;
     border-radius: 0 0 var(--border-radius) 0;
     background: #38003d;
+    margin: -1px 0 0 -1px;  /* To avoid top and left gap when zooming out */
   }
 
   .next-game-season-complete {
@@ -263,7 +266,6 @@
     margin: 8px auto -2px;
     padding-top: 3px;
     border-radius: 4px 4px 0 0;
-    /* background: white; */
   }
 
   .prev-results-title {
@@ -284,26 +286,16 @@
   }
 
   .result-details {
-    /* background: rgba(255, 255, 255, 0.85); */
     background: #f0fefd;
   }
 
   .won {
-    /* background: rgb(169, 247, 169); */
-    /* background: #77dd77; */
-    /* background: #00fe87; */
     border-bottom: 6px var(--win) solid;
   }
   .drew {
-    /* background: rgb(255, 207, 138); */
-    /* background: #ffb347; */
-    /* background: #ffdd00; */
     border-bottom: 6px var(--draw) solid;
   }
   .lost {
-    /* background: #f77979; */
-    /* background: #c23b22; */
-    /* background: #f83027; */
     border-bottom: 6px var(--lose) solid;
   }
 
@@ -326,11 +318,9 @@
   .score-container {
     float: left;
     min-width: 44px;
-    /* margin: 0 8px; */
     text-align: center;
     font-weight: 800;
     flex: 3;
-    /* margin-top: 3px; */
     color: #333;
     align-self: center;
     display: flex;
@@ -351,8 +341,6 @@
     width: 100%;
     padding: 3px 0 0;
     margin: auto;
-    /* background: #00fe87; */
-    /* border-radius: 2px; */
   }
 
   .away-team {

@@ -202,11 +202,8 @@
       if (gamesPlayed > 0) {
         goalsPerGame = totalConceded / gamesPlayed;
       }
-      if (goalsPerGame > maxConceded) {
-        maxConceded = goalsPerGame;
-      } else if (goalsPerGame < minConceded) {
-        minConceded = goalsPerGame;
-      }
+      maxConceded = Math.max(maxConceded, goalsPerGame)
+      minConceded = Math.min(minConceded, goalsPerGame)
 
       defence[team] = goalsPerGame;
     }
