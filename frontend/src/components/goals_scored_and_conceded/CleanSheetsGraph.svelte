@@ -7,13 +7,13 @@
   ): [number[], number[]] {
     let notCleanSheets = [];
     let cleanSheets = [];
-    for (let matchday of Object.keys(data.form[data._id][team])) {
-      let score = data.form[data._id][team][matchday].score;
+    for (let matchday of Object.keys(data.form[team][data._id])) {
+      let score = data.form[team][data._id][matchday].score;
       if (score != null) {
         let [h, _, a] = score.split(" ");
         h = parseInt(h);
         a = parseInt(a);
-        if (data.form[data._id][team][matchday].atHome) {
+        if (data.form[team][data._id][matchday].atHome) {
           if (a > 0) {
             notCleanSheets.push(1);
             cleanSheets.push(0);
@@ -41,7 +41,7 @@
     team: string,
     playedMatchdays: string[]
   ): [Object, Object] {
-    let matchdays = Object.keys(data.form[data._id][team]);
+    let matchdays = Object.keys(data.form[team][data._id]);
     
     let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, team);
     return [
@@ -88,20 +88,18 @@
       title: false,
       autosize: true,
       height: 60,
-      margin: { r: 30, l: 70, t: 0, b: 40, pad: 5 },
+      margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
       barmode: "stack",
       hovermode: "closest",
       plot_bgcolor: "#fafafa",
       paper_bgcolor: "#fafafa",
       yaxis: {
-        title: null,
         showticklabels: false,
         gridcolor: "gray",
         showgrid: false,
         showline: false,
         zeroline: false,
         fixedrange: true,
-        visible: true,
       },
       xaxis: {
         linecolor: "black",
@@ -111,13 +109,14 @@
       },
       shapes: [baseLine()],
       dragmode: false,
+      showlegend: false,
     };
   }
 
   function setDefaultLayout() {
     if (setup) {
       let layoutUpdate = {
-        "margin.l": 70,
+        "margin.l": 60,
       };
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
@@ -126,17 +125,32 @@
   function setMobileLayout() {
     if (setup) {
       let layoutUpdate = {
-        "margin.l": 30,
+        "margin.l": 20,
       };
       Plotly.update(plotDiv, {}, layoutUpdate);
+    }
+  }
+  
+  function hiddenLine(x) {
+    return {
+      name: "Avg",
+      type: "line",
+        x: x,
+        y: Array(x.length).fill(1.1),
+        line: { color: "#FAFAFA", width: 1 },
+        marker: {
+          size: 1
+        }
     }
   }
 
   function buildPlotData(data: TeamData, team: string): PlotData {
     let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
-
+    // Line required on plot to make match goalsScoredAndConcededGraph
+    // TODO: Improve solution
+    let line = hiddenLine(cleanSheetsBar.x);
     let plotData = {
-      data: [cleanSheetsBar, concededBar],
+      data: [cleanSheetsBar, concededBar, line],
       layout: defaultLayout(),
       config: {
         responsive: true,

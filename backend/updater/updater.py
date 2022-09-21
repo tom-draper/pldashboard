@@ -135,11 +135,6 @@ class Updater:
             display=display_tables
         )
         # Calculated form values for each team for each matchday played so far
-        # self.data.form.build(
-        #     self.data.fixtures, 
-        #     self.data.team_ratings,
-        #     display=display_tables
-        # )
         self.data.form.build(
             self.json_data, 
             self.data.team_ratings,

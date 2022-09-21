@@ -7,11 +7,11 @@
     team: string,
     isMainTeam: boolean
   ): any {
-    let matchdays = Object.keys(data.form[data._id][team]); // Played matchdays
+    let matchdays = Object.keys(data.form[team][data._id]); // Played matchdays
 
     let y = [];
     for (let matchday of matchdays) {
-      let form = data.form[data._id][team][matchday].formRating5;
+      let form = data.form[team][data._id][matchday].formRating5;
       y.push(form * 100);
     }
 

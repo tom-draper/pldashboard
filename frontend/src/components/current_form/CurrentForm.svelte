@@ -2,13 +2,13 @@
   import FormTiles from "./FormTiles.svelte";
 
   function getSortedMatchdays(data: TeamData, team: string): string[] {
-    let matchdays = Object.keys(data.form[data._id][team]).sort(function (
+    let matchdays = Object.keys(data.form[team][data._id]).sort(function (
       matchday1,
       matchday2
     ) {
       return (
-        (new Date(data.form[data._id][team][matchday1].date) as any) -
-        (new Date(data.form[data._id][team][matchday2].date) as any)
+        (new Date(data.form[team][data._id][matchday1].date) as any) -
+        (new Date(data.form[team][data._id][matchday2].date) as any)
       );
     });
     return matchdays;
@@ -21,7 +21,7 @@
   ): boolean[] {
     let formStarTeams = [];
     for (let matchday of matchdays) {
-      let oppTeam = data.form[data._id][team][matchday].team;
+      let oppTeam = data.form[team][data._id][matchday].team;
       formStarTeams.unshift(data.teamRatings[oppTeam].totalRating > 0.75);
     }
 
@@ -35,8 +35,8 @@
 
   function getFormIcons(data: TeamData, team: string): string {
     let formIcons: string[] = [];
-    if (Object.keys(data.form[data._id][team][currentMatchday]).length > 0) {
-      formIcons = data.form[data._id][team][currentMatchday].form5.split("").reverse();
+    if (Object.keys(data.form[team][data._id][currentMatchday]).length > 0) {
+      formIcons = data.form[team][data._id][currentMatchday].form5.split("");
     }
 
     // Fill in blanks with None icons
@@ -54,8 +54,7 @@
     let formInitials = [];
 
     for (let matchday of matchdays) {
-      formInitials.unshift(
-        toInitials(data.form[data._id][team][matchday].team)
+      formInitials.unshift(toInitials(data.form[team][data._id][matchday].team)
       );
     }
 
@@ -76,7 +75,7 @@
     let latestN = [];
 
     for (let i = matchdays.length - 1; i >= 0; i--) {
-      if (data.form[data._id][team][matchdays[i]].score != null) {
+      if (data.form[team][data._id][matchdays[i]].score != null) {
         latestN.push(matchdays[i]);
       }
       if (latestN.length >= N) {
@@ -121,7 +120,7 @@
 <div class="current-form">
   Current form:
   {#if currentMatchday != null}
-    <span class="current-form-value">{(data.form[data._id][team][currentMatchday].formRating5 * 100).toFixed(1)}%</span>
+    <span class="current-form-value">{(data.form[team][data._id][currentMatchday].formRating5 * 100).toFixed(1)}%</span>
   {:else}
     None
   {/if}

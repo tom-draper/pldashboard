@@ -5,8 +5,8 @@
     let avgGoals: Counter = {};
 
     for (let team of data.teamNames) {
-      for (let matchday of Object.keys(data.form[data._id][team])) {
-        let score = data.form[data._id][team][matchday].score;
+      for (let matchday of Object.keys(data.form[team][data._id])) {
+        let score = data.form[team][data._id][matchday].score;
         if (score != null) {
           let [h, _, a] = score.split(" ");
           h = parseInt(h);
@@ -34,13 +34,13 @@
   ): [Counter, Counter] {
     let scored: Counter = {};
     let conceded: Counter = {};
-    for (let matchday of Object.keys(data.form[data._id][team])) {
-      let score = data.form[data._id][team][matchday].score;
+    for (let matchday of Object.keys(data.form[team][data._id])) {
+      let score = data.form[team][data._id][matchday].score;
       if (score != null) {
         let [h, _, a] = score.split(" ");
         h = parseInt(h);
         a = parseInt(a);
-        if (data.form[data._id][team][matchday].atHome) {
+        if (data.form[team][data._id][matchday].atHome) {
           scored[matchday] = h;
           conceded[matchday] = a;
         } else {
@@ -121,6 +121,7 @@
         fixedrange: true,
         rangemode: "nonnegative",
         visible: true,
+        tickformat: 'd',
       },
       xaxis: {
         linecolor: "black",
@@ -171,7 +172,7 @@
     let line = avgLine(playedMatchdays, avgGoals, matchdays);
 
     let plotData = {
-      data: [scoredBar, concededBar, line],
+      data: [line, scoredBar, concededBar],
       layout: defaultLayout(),
       config: {
         responsive: true,
