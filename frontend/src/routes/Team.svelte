@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import CurrentForm from "../components/current_form/CurrentForm.svelte";
   import TableSnippet from "../components/TableSnippet.svelte";
-  import NextGame from "../components/next_game/NextGame.svelte";
+  import NextGame from "../components/NextGame.svelte";
   import StatsValues from "../components/StatsValues.svelte";
   import TeamsFooter from "../components/TeamsFooter.svelte";
   import FixturesGraph from "../components/FixturesGraph.svelte";
