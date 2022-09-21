@@ -106,14 +106,19 @@
       .replace("And", "and");
   }
 
-  function getPlayedMatchdays(data: TeamData, team: string): string[] {
-    let matchdays = Object.keys(data.form[team][data._id]);
-
+  function getPlayedMatchdayDates(data: TeamData, team: string): string[] {
+    let matchdays = [];
+    for (let matchday in data.form[team][data._id]) {
+      if (data.form[team][data._id][matchday].score != null) {
+        matchdays.push(matchday);
+      }
+    }
+    
     // If played one or no games, take x-axis from whole season dates
     if (matchdays.length == 0) {
       matchdays = Object.keys(data.fixtures[team]);
     }
-
+    
     // Find median matchday date across all teams for each matchday
     let x = [];
     for (let matchday of matchdays) {
@@ -132,18 +137,19 @@
     });
     return x;
   }
-
+  
   function getCurrentMatchday(data: TeamData, team: string): null|string {
-    if (Object.keys(data.form[team][data._id]).length == 0) {
-      return null; // Season has not started yet
+    let currentMatchday = null;
+    if (Object.keys(data.form[team][data._id]).length > 0) { 
+      // Largest matchday with score is current matchday
+      for (let matchday of Object.keys(data.form[team][data._id]).reverse()) {
+        if (data.form[team][data._id][matchday].score != null) {
+          currentMatchday = matchday
+          break
+        }
+      }
     }
-    return Object.keys(data.form[team][data._id]).reduce(
-      (matchday1, matchday2) =>
-        data.form[team][data._id][matchday1] >
-        data.form[team][data._id][matchday2]
-          ? matchday1
-          : matchday2
-    );
+    return currentMatchday
   }
 
   async function fetchData(address: string): Promise<TeamData> {
@@ -159,7 +165,8 @@
         // Build teamData package from json data
         json.teamNames = Object.keys(json.standings);
         currentMatchday = getCurrentMatchday(json, team);
-        playedMatchdays = getPlayedMatchdays(json, team);
+        console.log(currentMatchday)
+        playedMatchdays = getPlayedMatchdayDates(json, team);
         data = json;
         console.log(data);
       })
@@ -172,7 +179,7 @@
     hyphenatedTeam = newTeam;
     team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
     currentMatchday = getCurrentMatchday(data, team);
-    playedMatchdays = getPlayedMatchdays(data, team);
+    playedMatchdays = getPlayedMatchdayDates(data, team);
     window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
   }
 

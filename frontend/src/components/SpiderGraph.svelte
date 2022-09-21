@@ -208,8 +208,6 @@
       defence[team] = goalsPerGame;
     }
 
-    console.log(defence, minConceded, maxConceded)
-
     return [defence as Attribute, [minConceded, maxConceded]];
   }
 
