@@ -3,14 +3,14 @@
 </script>
 
 <div class="teams-footer footer-text-colour">
-  <a class="ko-fi" href="https://ko-fi.com/C0C069FOI" target="_blank">
+  <!-- <a class="ko-fi" href="https://ko-fi.com/C0C069FOI" target="_blank">
     <img class="ko-fi-img" src="img/kofi.png" alt="" />
     <div class="ko-fi-text">Support Me</div>
-  </a>
+  </a> -->
   <div class="teams-footer-bottom">
     <div class="version">pldashboard v2.0</div>
     {#if lastUpdated != null}
-      <div class="last-updated">Last updated: {lastUpdated} UTC</div>
+      <div class="last-updated">Last updated: {new Date(lastUpdated).toLocaleString()} UTC</div>
     {/if}
   </div>
 </div>
