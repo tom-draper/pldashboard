@@ -197,7 +197,7 @@
           gamesPlayed += data.standings[team][season].played;
         }
       }
-      
+
       let goalsPerGame = null;
       if (gamesPlayed > 0) {
         goalsPerGame = totalConceded / gamesPlayed;
