@@ -10,7 +10,7 @@
 <Router>
   <div id="home">
     <div class="content">
-      <div id="circle"></div>
+      <div id="circle" />
       <img src="img/pldashboard5.png" alt="pldashboard" />
       <div class="links">
         <a class="dashboard-link" href="/">Dashboard</a>
@@ -21,19 +21,19 @@
 </Router>
 
 <style scoped>
-
   #home {
     background: black;
     min-height: 100vh;
     display: grid;
     place-items: center;
-    background-image: linear-gradient(to right, #025e4c45 1px, transparent 1px), linear-gradient(to bottom, #025e4c45 1px, transparent 1px);
+    background-image: linear-gradient(to right, #025e4c45 1px, transparent 1px),
+      linear-gradient(to bottom, #025e4c45 1px, transparent 1px);
     background-size: 80px 80px;
   }
   #circle {
     border-radius: 50%;
     width: 60vw;
-    height: 55vh;
+    height: 28vw;
     /* margin-top: 100px; */
     z-index: 1;
     position: absolute;
@@ -55,9 +55,9 @@
   .links {
     z-index: 3;
     display: flex;
-    margin-top: 60px;
+    padding-top: 60px;
     background: black;
-    box-shadow: black 0px 0 61px 70px;
+    box-shadow: black 0 60px 30px 30px;
   }
   .fantasy-link {
     color: #37003d;
@@ -87,46 +87,39 @@
     width: 160px;
     display: grid;
     place-items: center;
-    box-shadow: 
-    0 0 30px 1px #00ff882c, 
-    0 0 60px 2px #02eeff2c;
+    box-shadow: 0 0 30px 1px #00ff882c, 0 0 60px 2px #02eeff2c;
   }
 
   @media only screen and (max-width: 800px) {
     img {
       width: 90%;
     }
-    .dashboard-link,
-    .fantasy-link {
-      font-size: 1.2em;
-      margin: 10px 0;
-      padding: 15px 0;
-      width: 140px;
-    }
-    .dashboard-link {
+    /* .dashboard-link {
       background: linear-gradiet(180deg, #00ff87, #00fbd6);
     }
     .fantasy-link {
       background: linear-gradient(180deg, #00fbd6, #02efff);
-    }
-    .links {
-      flex-direction: column;
-    }
+    } */
     #circle {
       display: none;
     }
   }
   @media only screen and (max-width: 500px) {
+    .links {
+      flex-direction: column;
+    }
     .dashboard-link,
     .fantasy-link {
-      font-size: 1em;
+      font-size: 14px;
+      margin: 12px 0;
+      padding: 18px 0;
+      width: 140px;
     }
     img {
-
-    box-shadow: black 0px 20px 30px 40px;
+      box-shadow: black 0px 20px 30px 40px;
     }
     .links {
-    box-shadow: black 0px 20px 30px 50px;
+      box-shadow: black 0px 40px 30px 40px;
     }
   }
 </style>
