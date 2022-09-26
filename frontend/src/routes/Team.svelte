@@ -201,10 +201,15 @@
       {switchTeam}
       {toggleMobileNav}
     />
-    <button id="mobileNavBtn" on:click={toggleMobileNav}> Select Team </button>
+    {#if teams.length == 0}
+      <!-- Navigation disabled while teams list are loading -->
+      <button id="mobileNavBtn" style="cursor: default"> Select Team </button>
+    {:else}
+      <button id="mobileNavBtn" on:click={toggleMobileNav}> Select Team </button>
+    {/if}
 
     <div id="dashboard">
-      {#if teams.length != 0}
+      <!-- {#if teams.length != 0} -->
         <div class="header" style="background-color: var(--{hyphenatedTeam});">
           <a class="main-link no-decoration" href="/{hyphenatedTeam}">
             <div
@@ -215,7 +220,7 @@
             </div>
           </a>
         </div>
-      {/if}
+      <!-- {/if} -->
 
       {#if data != undefined}
         <div class="page-content">

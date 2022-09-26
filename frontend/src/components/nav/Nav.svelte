@@ -128,7 +128,30 @@
     background: #c600d8;
     border-radius: 4px;
     opacity: 0.25;
+    position: relative;
+    overflow: hidden;
   }
+
+  .placeholder::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: -100px;
+    top: 0;
+    height: 100%;
+    width: 150px;
+    background: linear-gradient(to right, transparent 0%, #E8E8E8 50%, transparent 100%);
+    background: linear-gradient(to right, transparent 0%, #eea7f4 50%, transparent 100%);
+    animation: load 1s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
+}
+@keyframes load {
+    from {
+        left: -100px;
+    }
+    to   {
+        left: 100px;
+    }
+}
 
   @media only screen and (max-width: 1300px) {
     #navBar {

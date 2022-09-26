@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Team from "../../routes/Team.svelte";
+
   function switchTeamToTop(team: string) {
     switchTeam(team);
     window.scrollTo(0, 0);
@@ -19,7 +21,7 @@
   }
 
   let hyphenatedTeams: string[];
-  $: (hyphenatedTeam as any) & getHyphenatedTeamNames();
+  $: hyphenatedTeam & (teams.length > 0) & getHyphenatedTeamNames();
 
   export let hyphenatedTeam: string,
     teams: string[],
