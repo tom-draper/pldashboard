@@ -34,10 +34,8 @@
     border-radius: 50%;
     width: 60vw;
     height: 28vw;
-    /* margin-top: 100px; */
     z-index: 1;
     position: absolute;
-    /* background: red; */
     box-shadow: black 0 0 200px 100px;
   }
 
@@ -94,12 +92,6 @@
     img {
       width: 90%;
     }
-    /* .dashboard-link {
-      background: linear-gradiet(180deg, #00ff87, #00fbd6);
-    }
-    .fantasy-link {
-      background: linear-gradient(180deg, #00fbd6, #02efff);
-    } */
     #circle {
       display: none;
     }
