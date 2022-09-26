@@ -11,7 +11,7 @@
 
 <Router {url}>
   <Route path="/">
-    <Team hyphenatedTeam="manchester-city" />
+    <Team hyphenatedTeam={null} />
   </Route>
   <Route path="/predictions" component={Predictions} />
   <Route path="/:team" let:params>

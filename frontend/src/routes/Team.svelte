@@ -60,40 +60,15 @@
   }
 
   function toggleMobileNav() {
-    let mobileNav = document.getElementById('mobileNav');
+    let mobileNav = document.getElementById("mobileNav");
     if (mobileNav.style.width == "0px") {
-      mobileNav.style.animation = 'appear 0.1s ease-in 1';
+      mobileNav.style.animation = "appear 0.1s ease-in 1";
       mobileNav.style.width = "100%";
     } else {
       mobileNav.style.animation = null;
       mobileNav.style.width = "0px";
     }
   }
-
-  // Teams in the final position from last season (21/22), including championship teams
-  // Used for nav bar links order
-  let teams = [
-    "Manchester City",
-    "Liverpool",
-    "Chelsea",
-    "Tottenham Hotspur",
-    "Arsenal",
-    "Manchester United",
-    "West Ham United",
-    "Leicester City",
-    "Brighton and Hove Albion",
-    "Wolverhampton Wanderers",
-    "Newcastle United",
-    "Crystal Palace",
-    "Brentford",
-    "Aston Villa",
-    "Southampton",
-    "Everton",
-    "Leeds United",
-    "Fulham",
-    "Bournemouth",
-    "Nottingham Forest",
-  ];
 
   function toTitleCase(str: string): string {
     return str
@@ -113,12 +88,12 @@
         matchdays.push(matchday);
       }
     }
-    
+
     // If played one or no games, take x-axis from whole season dates
     if (matchdays.length == 0) {
       matchdays = Object.keys(data.fixtures[team]);
     }
-    
+
     // Find median matchday date across all teams for each matchday
     let x = [];
     for (let matchday of matchdays) {
@@ -137,19 +112,19 @@
     });
     return x;
   }
-  
-  function getCurrentMatchday(data: TeamData, team: string): null|string {
+
+  function getCurrentMatchday(data: TeamData, team: string): null | string {
     let currentMatchday = null;
-    if (Object.keys(data.form[team][data._id]).length > 0) { 
+    if (Object.keys(data.form[team][data._id]).length > 0) {
       // Largest matchday with score is current matchday
       for (let matchday of Object.keys(data.form[team][data._id]).reverse()) {
         if (data.form[team][data._id][matchday].score != null) {
-          currentMatchday = matchday
-          break
+          currentMatchday = matchday;
+          break;
         }
       }
     }
-    return currentMatchday
+    return currentMatchday;
   }
 
   async function fetchData(address: string): Promise<TeamData> {
@@ -159,13 +134,25 @@
   }
 
   function initDashboard() {
-    team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
+    // Set formatted team name so page header can display while fetching data
+    if (hyphenatedTeam != null) {
+      team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
+    }
     fetchData("https://pldashboard-backend.vercel.app/api/teams")
       .then((json: TeamData) => {
         // Build teamData package from json data
-        json.teamNames = Object.keys(json.standings);
+        json.teamNames = teams = Object.keys(json.standings);
+        if (hyphenatedTeam == null) {
+          team = teams[0];
+          hyphenatedTeam = team.toLowerCase().replace(/ /g, "-");
+          // Change url to /team-name without reloading page
+          history.pushState({}, null, window.location.href + hyphenatedTeam);
+        } else {
+          if (!teams.includes(team)) {
+            window.location.href = "/";
+          }
+        }
         currentMatchday = getCurrentMatchday(json, team);
-        console.log(currentMatchday)
         playedMatchdays = getPlayedMatchdayDates(json, team);
         data = json;
         console.log(data);
@@ -187,6 +174,7 @@
   $: mobileView = pageWidth <= 700;
   const showBadge = false;
   let team = "";
+  let teams: string[] = []; // Used for nav bar links
   let currentMatchday: string, playedMatchdays: string[];
   let data: TeamData;
   onMount(() => {
@@ -201,25 +189,33 @@
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
-<svelte:window bind:innerWidth={pageWidth}/>
+<svelte:window bind:innerWidth={pageWidth} />
 
 <Router>
   <div id="team">
     <Nav team={hyphenatedTeam} {teams} {toAlias} {switchTeam} />
-    <MobileNav {hyphenatedTeam} {teams} {toAlias} {switchTeam} {toggleMobileNav} />
+    <MobileNav
+      {hyphenatedTeam}
+      {teams}
+      {toAlias}
+      {switchTeam}
+      {toggleMobileNav}
+    />
     <button id="mobileNavBtn" on:click={toggleMobileNav}> Select Team </button>
 
     <div id="dashboard">
-      <div class="header" style="background-color: var(--{hyphenatedTeam});">
-        <a class="main-link no-decoration" href="/{hyphenatedTeam}">
-          <div
-            class="title"
-            style="color: var(--{hyphenatedTeam + '-secondary'});"
-          >
-            {toAlias(team)}
-          </div>
-        </a>
-      </div>
+      {#if teams.length != 0}
+        <div class="header" style="background-color: var(--{hyphenatedTeam});">
+          <a class="main-link no-decoration" href="/{hyphenatedTeam}">
+            <div
+              class="title"
+              style="color: var(--{hyphenatedTeam + '-secondary'});"
+            >
+              {toAlias(team)}
+            </div>
+          </a>
+        </div>
+      {/if}
 
       {#if data != undefined}
         <div class="page-content">
@@ -301,7 +297,12 @@
             <div class="form-graph row-graph">
               <h1 class="lowered">Form Over Time</h1>
               <div class="graph full-row-graph">
-                <FormOverTimeGraph {data} {team} {playedMatchdays} {mobileView} />
+                <FormOverTimeGraph
+                  {data}
+                  {team}
+                  {playedMatchdays}
+                  {mobileView}
+                />
               </div>
             </div>
           </div>
@@ -310,7 +311,12 @@
             <div class="position-over-time-graph row-graph">
               <h1 class="lowered">Position Over Time</h1>
               <div class="graph full-row-graph">
-                <PositionOverTimeGraph {data} {team} {playedMatchdays} {mobileView} />
+                <PositionOverTimeGraph
+                  {data}
+                  {team}
+                  {playedMatchdays}
+                  {mobileView}
+                />
               </div>
             </div>
           </div>
@@ -319,7 +325,12 @@
             <div class="goals-scored-vs-conceded-graph row-graph">
               <h1 class="lowered">Goals Scored and Conceded</h1>
               <div class="graph full-row-graph">
-                <GoalsScoredAndConcededGraph {data} {team} {playedMatchdays} {mobileView} />
+                <GoalsScoredAndConcededGraph
+                  {data}
+                  {team}
+                  {playedMatchdays}
+                  {mobileView}
+                />
               </div>
             </div>
           </div>
@@ -327,7 +338,12 @@
           <div class="row">
             <div class="row-graph">
               <div class="clean-sheets graph full-row-graph">
-                <CleanSheetsGraph {data} {team} {playedMatchdays} {mobileView} />
+                <CleanSheetsGraph
+                  {data}
+                  {team}
+                  {playedMatchdays}
+                  {mobileView}
+                />
               </div>
             </div>
           </div>
@@ -350,7 +366,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="row">
             <div class="spider-chart-row row-graph">
               <h1>Team Comparison</h1>
@@ -653,7 +669,6 @@
     }
   }
 
-  
   @media only screen and (max-width: 700px) {
     .position-and-badge {
       width: 70%;
@@ -673,7 +688,7 @@
       margin: 35px 0 0 0;
     }
   }
-  
+
   @media only screen and (max-width: 800px) {
     .circles-background {
       transform: scale(0.4);
