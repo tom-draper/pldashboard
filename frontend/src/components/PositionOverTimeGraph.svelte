@@ -162,6 +162,7 @@
         'margin.l': 60,
         'margin.t': 15
       }
+      //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
@@ -175,6 +176,7 @@
         'margin.l': 20,
         'margin.t': 5
       }
+      //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
@@ -202,6 +204,7 @@
 
   function genPlot() {
     plotData = buildPlotData(data, team);
+      //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -219,6 +222,7 @@
       for (let i = 0; i < 20; i++) {
         plotData.data[i] = newPlotData.data[i];
       }
+      //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {
         setMobileLayout();

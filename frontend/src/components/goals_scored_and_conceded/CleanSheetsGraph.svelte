@@ -40,7 +40,7 @@
     data: TeamData,
     team: string,
     playedMatchdays: string[]
-  ): [Object, Object] {
+  ): [any, any] {
     let matchdays = Object.keys(data.form[team][data._id]);
     
     let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, team);
@@ -118,6 +118,7 @@
       let layoutUpdate = {
         "margin.l": 60,
       };
+      //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
@@ -127,11 +128,12 @@
       let layoutUpdate = {
         "margin.l": 20,
       };
+      //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
   
-  function hiddenLine(x) {
+  function hiddenLine(x: Date[]) {
     return {
       name: "Avg",
       type: "line",
@@ -170,6 +172,7 @@
 
   function genPlot() {
     plotData = buildPlotData(data, team);
+      //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -183,6 +186,7 @@
       let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
       plotData.data[0] = cleanSheetsBar;
       plotData.data[1] = concededBar;
+      //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {
         setMobileLayout();

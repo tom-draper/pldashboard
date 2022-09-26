@@ -125,5 +125,5 @@ type PlotData = {
 }
 
 type Counter = {
-  string: number
+    [key: string]: number
 }

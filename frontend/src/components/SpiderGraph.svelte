@@ -33,6 +33,7 @@
       marker: { color: teamColor },
     };
     plotData.data.push(teamData);
+    //@ts-ignore
     Plotly.redraw(plotDiv); // Redraw with teamName added
   }
 
@@ -55,6 +56,7 @@
       addAvg();
     }
 
+    //@ts-ignore
     Plotly.redraw(plotDiv); // Redraw with teamName removed
   }
 
@@ -75,12 +77,14 @@
       removeItem(comparisonTeams, comparisonTeams[i]); // Remove from comparison teams
     }
 
+    //@ts-ignore
     Plotly.redraw(plotDiv); // Redraw with teamName removed
   }
 
   function resetTeamComparisonBtns() {
     let btns = document.getElementById("spider-opp-teams");
     for (let i = 0; i < btns.children.length; i++) {
+      //@ts-ignore
       let btn: HTMLButtonElement = btns.children[i];
       if (btn.style.background != "") {
         btn.style.background = "";
@@ -251,6 +255,7 @@
   }
 
   function getCleanSheets(data: TeamData): Attribute {
+    //@ts-ignore
     let cleanSheets: Attribute = {};
     let maxCleanSheets = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
@@ -298,6 +303,7 @@
   }
 
   function getConsistency(data: TeamData): Attribute {
+    //@ts-ignore
     let consistency: Attribute = {};
     let maxConsistency = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
@@ -342,6 +348,7 @@
   }
 
   function getWinStreak(data: TeamData): Attribute {
+    //@ts-ignore
     let winStreaks: Attribute = {};
     let maxWinStreaks = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
@@ -388,6 +395,7 @@
   }
 
   function getVsBig6(data: TeamData): Attribute {
+    //@ts-ignore
     let vsBig6: Attribute = {};
     let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
     for (let team of data.teamNames) {
@@ -518,7 +526,7 @@
   }
 
   type Attribute = {
-    _: number;
+    [team: string]: number;
     avg: number;
   };
 
@@ -547,6 +555,7 @@
 
   function genPlot() {
     plotData = buildPlotData(data, team);
+    //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -618,6 +627,7 @@
         <button
           class="spider-opp-team-btn"
           on:click={(e) => {
+            //@ts-ignore
             spiderBtnClick(e.target);
           }}>{toAlias(_team)}</button
         >
