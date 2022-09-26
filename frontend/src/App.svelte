@@ -4,6 +4,7 @@
   import Team from "./routes/Team.svelte";
   import Home from "./routes/Home.svelte";
   import Predictions from "./routes/Predictions.svelte";
+  import Error from "./routes/Error.svelte";
 
   // Used for SSR. A falsy value is ignored by the Router.
   export let url = "";
@@ -19,4 +20,5 @@
   </Route>
   <Route path="/teams" component={Teams} />
   <Route path="/home" component={Home} />
+  <Route path="/error" component={Error} />
 </Router>

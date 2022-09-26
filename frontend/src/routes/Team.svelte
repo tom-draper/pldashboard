@@ -148,8 +148,9 @@
           // Change url to /team-name without reloading page
           history.pushState({}, null, window.location.href + hyphenatedTeam);
         } else {
+          // If team from url not in current season teams, 404 redirect
           if (!teams.includes(team)) {
-            window.location.href = "/";
+            window.location.href = "/error";
           }
         }
         currentMatchday = getCurrentMatchday(json, team);
