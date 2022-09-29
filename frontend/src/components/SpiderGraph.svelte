@@ -551,7 +551,6 @@
   onMount(() => {
     genPlot();
     setup = true;
-    // window.dispatchEvent(new Event("resize"));
   });
 
   function genPlot() {
@@ -656,9 +655,15 @@
   }
   .spider-opp-team-btn {
     cursor: pointer;
+    color: #333333;
+    /* padding: 4px 10px; */
     border: none;
-    padding: 4px 10px;
     font-size: 13px;
+    padding: 4px 10px;
+  }
+  button {
+    margin: 0 !important;
+    padding: 4 10px !important;
   }
   .spider-opp-team-btn:hover {
     filter: brightness(0.95);
