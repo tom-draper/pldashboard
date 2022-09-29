@@ -4,7 +4,7 @@
   function getAvgGoalsPerGame(data: TeamData): Counter {
     let avgGoals: Counter = {};
 
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       for (let matchday of Object.keys(data.form[team][data._id])) {
         let score = data.form[team][data._id][matchday].score;
         if (score != null) {
@@ -103,7 +103,7 @@
     };
   }
 
-  function defaultLayout(): Object {
+  function defaultLayout(): any {
     return {
       title: false,
       autosize: true,

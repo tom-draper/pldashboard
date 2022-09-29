@@ -121,7 +121,7 @@
     let attack = {};
     let maxGoals = Number.NEGATIVE_INFINITY;
     let minGoals = Number.POSITIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       let totalGoals = 0;
       let gamesPlayed = 0;
       for (let season in data.standings[team]) {
@@ -191,7 +191,7 @@
     let defence = {};
     let maxConceded = Number.NEGATIVE_INFINITY;
     let minConceded = Number.POSITIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       let totalConceded = 0;
       let gamesPlayed = 0;
       for (let season in data.standings[team]) {
@@ -258,7 +258,7 @@
     //@ts-ignore
     let cleanSheets: Attribute = {};
     let maxCleanSheets = Number.NEGATIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       let nCleanSheets = formCleanSheets(data.form, team, data._id);
       if (teamInSeason(data.form, team, data._id-1)) {
         nCleanSheets += formCleanSheets(data.form, team, data._id-1);
@@ -306,7 +306,7 @@
     //@ts-ignore
     let consistency: Attribute = {};
     let maxConsistency = Number.NEGATIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       let backToBack = formConsistency(data.form, team, data._id);
       if (teamInSeason(data.form, team, data._id-1)) {
         backToBack += formConsistency(data.form, team, data._id - 1);
@@ -351,7 +351,7 @@
     //@ts-ignore
     let winStreaks: Attribute = {};
     let maxWinStreaks = Number.NEGATIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       let winStreak = formWinStreak(data.form, team, data._id);
       if (teamInSeason(data.form, team, data._id-1)) {
         winStreak += formWinStreak(data.form, team, data._id-1);
@@ -398,7 +398,7 @@
     //@ts-ignore
     let vsBig6: Attribute = {};
     let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       let big6 = [
         "Manchester United",
         "Liverpool",

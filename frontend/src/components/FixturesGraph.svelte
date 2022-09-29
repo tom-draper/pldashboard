@@ -111,7 +111,7 @@
       },
       customdata: matchdays,
       hovertemplate:
-        "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
+        "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
     };
   }
 
@@ -155,7 +155,7 @@
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
         yaxis: {
-          title: { text: "Difficulty" },
+          title: { text: "Team rating" },
           gridcolor: "#d6d6d6",
           showline: false,
           zeroline: false,
@@ -179,7 +179,7 @@
   function setDefaultLayout() {
     if (setup) {
       let layoutUpdate = {
-        "yaxis.title": { text: "Difficulty" },
+        "yaxis.title": { text: "Team rating" },
         "margin.l": 60,
         "yaxis.color": "black",
       };

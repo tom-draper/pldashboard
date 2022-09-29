@@ -112,7 +112,7 @@
 
   function buildStats(data: TeamData): Stats {
     let stats = {};
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       stats[team] = {
         cleanSheetRatio: 0,
         noGoalRatio: 0,

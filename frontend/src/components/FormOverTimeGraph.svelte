@@ -47,9 +47,10 @@
     playedMatchdays: string[]
   ): any[] {
     let lines = [];
-    for (let i = 0; i < data.teamNames.length; i++) {
-      if (data.teamNames[i] != team) {
-        let line = getFormLine(data, playedMatchdays, data.teamNames[i], false);
+    let teams = Object.keys(data.standings)
+    for (let i = 0; i < teams.length; i++) {
+      if (Object.keys(data.standings)[i] != team) {
+        let line = getFormLine(data, playedMatchdays, Object.keys(data.standings)[i], false);
         lines.push(line);
       }
     }
@@ -70,7 +71,7 @@
       plot_bgcolor: "#fafafa",
       paper_bgcolor: "#fafafa",
       yaxis: {
-        title: { text: "Form Rating" },
+        title: { text: "Form rating" },
         gridcolor: "gray",
         showgrid: false,
         showline: false,
@@ -97,7 +98,7 @@
   function setDefaultLayout() {
     if (setup) {
       let layoutUpdate = {
-        "yaxis.title": { text: "Form Rating" },
+        "yaxis.title": { text: "Form rating" },
         "margin.l": 60,
         "margin.t": 15,
       };

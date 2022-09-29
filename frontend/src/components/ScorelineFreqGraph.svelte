@@ -105,7 +105,7 @@
         type: "bar",
         name: "Avg",
         marker: { color: "#C6C6C6" },
-        hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
+        hovertemplate: `%{x} with probability <b>%{y:.2f}</b><extra></extra>`,
         hoverinfo: "x+y",
       },
       {
@@ -114,7 +114,7 @@
         type: "bar",
         name: "Scorelines",
         marker: { color: colours },
-        hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
+        hovertemplate: `%{x} with probability <b>%{y:.2f}</b><extra></extra>`,
         hoverinfo: "x+y",
         opacity: 0.5,
       },

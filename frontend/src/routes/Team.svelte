@@ -16,6 +16,7 @@
   import ScorelineFreqGraph from "../components/ScorelineFreqGraph.svelte";
   import Nav from "../components/nav/Nav.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
+  import ExpectedScoredConcededOverTimeGraph from "../components/ExpectedScoredConcededOverTimeGraph.svelte";
 
   let alias = {
     "Wolverhampton Wanderers": "Wolves",
@@ -98,7 +99,7 @@
     let x = [];
     for (let matchday of matchdays) {
       let matchdayDates = [];
-      data.teamNames.forEach((team: string) => {
+      Object.keys(data.standings).forEach((team: string) => {
         matchdayDates.push(data.fixtures[team][matchday].date);
       });
       matchdayDates = matchdayDates.map((val) => {
@@ -140,9 +141,9 @@
     }
     fetchData("https://pldashboard-backend.vercel.app/api/teams")
       .then((json: TeamData) => {
-        // Build teamData package from json data
-        json.teamNames = teams = Object.keys(json.standings);
+        teams = Object.keys(json.standings);
         if (hyphenatedTeam == null) {
+          // If '/' searched, set current team to
           team = teams[0];
           hyphenatedTeam = team.toLowerCase().replace(/ /g, "-");
           // Change url to /team-name without reloading page
@@ -171,12 +172,21 @@
     window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
   }
 
+  function lazyLoad() {
+    load = true;
+  }
+
+  let y: number;
+  let load = false;
+  $: y > 30 && lazyLoad();
+
   let pageWidth: number;
   $: mobileView = pageWidth <= 700;
   const showBadge = false;
   let team = "";
   let teams: string[] = []; // Used for nav bar links
   let currentMatchday: string, playedMatchdays: string[];
+
   let data: TeamData;
   onMount(() => {
     initDashboard();
@@ -190,7 +200,7 @@
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
-<svelte:window bind:innerWidth={pageWidth} />
+<svelte:window bind:innerWidth={pageWidth} bind:scrollY={y} />
 
 <Router>
   <div id="team">
@@ -206,21 +216,23 @@
       <!-- Navigation disabled while teams list are loading -->
       <button id="mobileNavBtn" style="cursor: default"> Select Team </button>
     {:else}
-      <button id="mobileNavBtn" on:click={toggleMobileNav}> Select Team </button>
+      <button id="mobileNavBtn" on:click={toggleMobileNav}>
+        Select Team
+      </button>
     {/if}
 
     <div id="dashboard">
       <!-- {#if teams.length != 0} -->
-        <div class="header" style="background-color: var(--{hyphenatedTeam});">
-          <a class="main-link no-decoration" href="/{hyphenatedTeam}">
-            <div
-              class="title"
-              style="color: var(--{hyphenatedTeam + '-secondary'});"
-            >
-              {toAlias(team)}
-            </div>
-          </a>
-        </div>
+      <div class="header" style="background-color: var(--{hyphenatedTeam});">
+        <a class="main-link no-decoration" href="/{hyphenatedTeam}">
+          <div
+            class="title"
+            style="color: var(--{hyphenatedTeam + '-secondary'});"
+          >
+            {toAlias(team)}
+          </div>
+        </a>
+      </div>
       <!-- {/if} -->
 
       {#if data != undefined}
@@ -313,76 +325,90 @@
             </div>
           </div>
 
-          <div class="row">
-            <div class="position-over-time-graph row-graph">
-              <h1 class="lowered">Position Over Time</h1>
-              <div class="graph full-row-graph">
-                <PositionOverTimeGraph
-                  {data}
-                  {team}
-                  {playedMatchdays}
-                  {mobileView}
-                />
+          {#if load}
+            <div class="row">
+              <div class="position-over-time-graph row-graph">
+                <h1 class="lowered">Position Over Time</h1>
+                <div class="graph full-row-graph">
+                  <PositionOverTimeGraph
+                    {data}
+                    {team}
+                    {playedMatchdays}
+                    {mobileView}
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="row no-bottom-margin">
-            <div class="goals-scored-vs-conceded-graph row-graph">
-              <h1 class="lowered">Goals Scored and Conceded</h1>
-              <div class="graph full-row-graph">
-                <GoalsScoredAndConcededGraph
-                  {data}
-                  {team}
-                  {playedMatchdays}
-                  {mobileView}
-                />
+            <div class="row no-bottom-margin">
+              <div class="goals-scored-vs-conceded-graph row-graph">
+                <h1 class="lowered">Goals Scored and Conceded</h1>
+                <div class="graph full-row-graph">
+                  <GoalsScoredAndConcededGraph
+                    {data}
+                    {team}
+                    {playedMatchdays}
+                    {mobileView}
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="row">
-            <div class="row-graph">
-              <div class="clean-sheets graph full-row-graph">
-                <CleanSheetsGraph
-                  {data}
-                  {team}
-                  {playedMatchdays}
-                  {mobileView}
-                />
+            <div class="row">
+              <div class="row-graph">
+                <div class="clean-sheets graph full-row-graph">
+                  <CleanSheetsGraph
+                    {data}
+                    {team}
+                    {playedMatchdays}
+                    {mobileView}
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="season-stats-row">
-            <StatsValues {data} {team} />
-          </div>
-
-          <div class="row">
-            <div class="goals-freq-row row-graph">
-              <h1>Goals Per Game</h1>
-              <GoalsPerGame {data} {team} {mobileView} />
+            <div class="season-stats-row">
+              <StatsValues {data} {team} />
             </div>
-          </div>
 
-          <div class="row">
-            <div class="row-graph">
-              <div class="score-freq graph">
-                <ScorelineFreqGraph {data} {team} {mobileView} />
+            <div class="row">
+              <div class="goals-freq-row row-graph">
+                <h1>Goals Per Game</h1>
+                <GoalsPerGame {data} {team} {mobileView} />
               </div>
             </div>
-          </div>
 
-          <div class="row">
-            <div class="spider-chart-row row-graph">
-              <h1>Team Comparison</h1>
-              <div class="spider-chart-container">
-                <SpiderGraph {data} {team} {teams} {toAlias} {toName} />
+            <div class="row">
+              <div class="row-graph">
+                <div class="score-freq graph">
+                  <ScorelineFreqGraph {data} {team} {mobileView} />
+                </div>
               </div>
             </div>
-          </div>
 
-          <TeamsFooter lastUpdated={data.lastUpdated} />
+            <div class="row">
+              <div class="row-graph">
+                <div class="graph full-row-graph">
+                  <ExpectedScoredConcededOverTimeGraph
+                    {data}
+                    {team}
+                    {mobileView}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="spider-chart-row row-graph">
+                <h1>Team Comparison</h1>
+                <div class="spider-chart-container">
+                  <SpiderGraph {data} {team} {teams} {toAlias} {toName} />
+                </div>
+              </div>
+            </div>
+
+            <TeamsFooter lastUpdated={data.lastUpdated} />
+          {/if}
         </div>
       {:else}
         <div class="loading-spinner-container">

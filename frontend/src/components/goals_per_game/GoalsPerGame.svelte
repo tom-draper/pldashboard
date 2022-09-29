@@ -11,7 +11,7 @@
       name: "Avg",
       marker: { color: "#C6C6C6" },
       line: { width: 0 },
-      hovertemplate: `Average %{x} with probability %{y:.2f}<extra></extra>`,
+      hovertemplate: `Average %{x} with probability <b>%{y:.2f}</b><extra></extra>`,
       hoverinfo: "x+y",
     };
   }
@@ -31,7 +31,7 @@
       type: "bar",
       name: type,
       marker: { color: color },
-      hovertemplate: `${opener} %{x} with probability %{y:.2f}<extra></extra>`,
+      hovertemplate: `${opener} %{x} with probability <b>%{y:.2f}</b><extra></extra>`,
       // marker: { color: color },
       line: { width: 0 },
       hoverinfo: "x+y",
@@ -157,7 +157,7 @@
 
   function avgGoalFrequencies(data: TeamData): Object {
     let goalFreq: Object = {};
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       countScored(data, goalFreq, data._id, team);
       countScored(data, goalFreq, data._id - 1, team);
     }
