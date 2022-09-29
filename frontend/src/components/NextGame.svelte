@@ -5,14 +5,21 @@
     return ord[a > 20 ? a % 10 : a] || "th";
   }
 
-  // function setOppTeam() {
-    // if (data.upcoming[team].nextTeam != null) {
-      // oppTeam = data.upcoming[team].nextTeam.toLowerCase().replace(/ /g, "-");
-    // }
-  // }
-
-  // let oppTeam: string;
-  // $: team && setOppTeam();
+  function resultColour(prevMatch: any, home: boolean): string {
+    if (home) {
+      if (prevMatch.homeGoals < prevMatch.awayGoals) {
+        return prevMatch.awayTeam
+      } else {
+        return prevMatch.homeTeam
+      }
+    } else {
+      if (prevMatch.homeGoals > prevMatch.awayGoals) {
+        return prevMatch.homeTeam
+      } else {
+        return prevMatch.awayTeam
+      }
+    }
+  }
 
   export let data: TeamData,
     currentMatchday: string,
@@ -33,11 +40,9 @@
       </div>
     </div>
   {:else}
-    <div
-      class="next-game-prediction">
+    <div class="next-game-prediction">
       <div class="next-game-title">
-        <h1
-          class="next-game-title-text">
+        <h1 class="next-game-title-text">
           Next Game:&nbsp
           <button
             on:click={() => {
@@ -79,7 +84,8 @@
             <div class="next-game-item current-form">
               Current form:
               {#if currentMatchday != null}
-                  <span class="current-form-value">{(
+                <span class="current-form-value"
+                  >{(
                     data.form[data.upcoming[team].nextTeam][data._id][
                       currentMatchday
                     ].formRating5 * 100
@@ -126,30 +132,51 @@
               </div>
               <div class="next-game-item result-details">
                 <div class="past-result">
-                  <div
-                    class="home-team"
-                    style="background: var(--{prevMatch.homeTeam
-                      .toLowerCase()
-                      .replace(/ /g, '-')}); color: var(--{prevMatch.homeTeam
-                      .toLowerCase()
-                      .replace(/ /g, '-')}-secondary)"
-                  >
-                    {toInitials(prevMatch.homeTeam)}
-                  </div>
-                  <div class="score-container {prevMatch.result}">
-                    <div class="score">
-                      {prevMatch.homeGoals} - {prevMatch.awayGoals}
+                  <div class="left-side">
+                    <div
+                      class="home-team"
+                      style="background: var(--{prevMatch.homeTeam
+                        .toLowerCase()
+                        .replace(/ /g, '-')}); color: var(--{prevMatch.homeTeam
+                        .toLowerCase()
+                        .replace(/ /g, '-')}-secondary)"
+                    >
+                      {toInitials(prevMatch.homeTeam)}
+                    </div>
+                    <div class="goals-container"
+                      style="background: var(--{
+                        resultColour(prevMatch, true)
+                        .toLowerCase()
+                        .replace(/ /g, '-')}); color: var(--{resultColour(prevMatch, true)
+                        .toLowerCase()
+                        .replace(/ /g, '-')}-secondary)">
+                      <div class="home-goals">
+                        {prevMatch.homeGoals}
+                      </div>
                     </div>
                   </div>
-                  <div
-                    class="away-team"
-                    style="background: var(--{prevMatch.awayTeam
-                      .toLowerCase()
-                      .replace(/ /g, '-')}); color: var(--{prevMatch.awayTeam
-                      .toLowerCase()
-                      .replace(/ /g, '-')}-secondary)"
-                  >
-                    {toInitials(prevMatch.awayTeam)}
+                  <div class="right-side">
+                    <div class="goals-container"
+                        style="background: var(--{
+                        resultColour(prevMatch, false)
+                        .toLowerCase()
+                        .replace(/ /g, '-')}); color: var(--{resultColour(prevMatch, false)
+                        .toLowerCase()
+                        .replace(/ /g, '-')}-secondary)">
+                      <div class="away-goals">
+                        {prevMatch.awayGoals}
+                      </div>
+                    </div>
+                    <div
+                      class="away-team"
+                      style="background: var(--{prevMatch.awayTeam
+                        .toLowerCase()
+                        .replace(/ /g, '-')}); color: var(--{prevMatch.awayTeam
+                        .toLowerCase()
+                        .replace(/ /g, '-')}-secondary)"
+                    >
+                      {toInitials(prevMatch.awayTeam)}
+                    </div>
                   </div>
                 </div>
                 <div style="clear: both" />
@@ -163,12 +190,37 @@
 {/if}
 
 <style scoped>
+  .left-side,
+  .right-side {
+    display: flex;
+    flex: 1;
+  }
+
+  .goals-container {
+    flex-grow: 1;
+  }
+
+  .away-goals,
+  .home-goals {
+    margin: 4px 0;
+  }
+  .home-goals {
+    text-align: right;
+    padding-right: 0.5em;
+    border-right: 1px solid black;
+  }
+  .away-goals {
+    text-align: left;
+    padding-left: 0.5em;
+    border-left: 1px solid black;
+  }
+
   .next-game-title {
     width: max-content;
     padding: 6px 20px;
     border-radius: 0 0 var(--border-radius) 0;
     background: #38003d;
-    margin: -1px 0 0 -1px;  /* To avoid top and left gap when zooming out */
+    margin: -1px 0 0 -1px; /* To avoid top and left gap when zooming out */
   }
 
   .next-game-season-complete {
@@ -226,22 +278,23 @@
     width: 55%;
     display: flex;
     flex-direction: column;
-    padding: 15px 20px 20px;
+    padding: 15px 20px 10px;
     border-radius: 6px;
-    background: rgba(255, 255, 255, 0.6);
+    /* background: rgba(255, 255, 255, 0.6); */
     margin: auto 0;
+    /* background: var(--purple); */
   }
 
   .next-game-prediction {
     border-radius: var(--border-radius);
     min-height: 97.5%;
     border: 6px solid #38003d;
-    background: linear-gradient(45deg, #00fe87, #03efff)
+    /* background: linear-gradient(45deg, #00fe87, #03efff) */
   }
 
   .next-game-values {
     display: flex;
-    margin-top: 1em;
+    /* margin-top: 1em; */
     margin-right: 2vw;
     min-height: 387px;
   }
@@ -261,9 +314,9 @@
 
   .past-result-date {
     font-size: 13px;
-    color: #333;
+    /* color: #333; */
     width: 90px;
-    margin: 8px auto -2px;
+    margin: 5px auto 2px;
     padding-top: 3px;
     border-radius: 4px 4px 0 0;
   }
@@ -272,6 +325,7 @@
     font-weight: 700;
     padding-top: 0;
     margin: 0 !important;
+    /* color: white; */
   }
   .no-prev-results {
     display: grid;
@@ -279,68 +333,22 @@
     color: rgb(181, 181, 181);
     color: rgba(0, 0, 0, 0.35);
     border-radius: var(--border-radius);
+    /* background: var(--purple); */
     padding: 100px 0;
+    color: white;
   }
   .next-game-item {
-    border-radius: var(--border-radius);
+    border-radius: 9px;
   }
 
-  .result-details {
+  /* .result-details {
     background: #f0fefd;
-  }
-
-  .won {
-    border-bottom: 6px var(--win) solid;
-  }
-  .drew {
-    border-bottom: 6px var(--draw) solid;
-  }
-  .lost {
-    border-bottom: 6px var(--lose) solid;
-  }
-
-  .accuracy {
-    margin-bottom: 30px;
-  }
-
-  .accuracy-item {
-    font-size: 14px;
-    color: rgb(120 120 120);
-    margin-bottom: 5px;
-  }
+  } */
 
   .home-team {
     float: left;
     text-align: left;
     border-radius: var(--border-radius) 0 0 var(--border-radius);
-  }
-
-  .score-container {
-    float: left;
-    min-width: 44px;
-    text-align: center;
-    font-weight: 800;
-    flex: 3;
-    color: #333;
-    align-self: center;
-    display: flex;
-  }
-  .left-color {
-    background: red;
-  }
-  .right-color {
-    background: red;
-  }
-  .left-color,
-  .right-color {
-    flex-grow: 1;
-    height: 8px;
-    margin: auto;
-  }
-  .score {
-    width: 100%;
-    padding: 3px 0 0;
-    margin: auto;
   }
 
   .away-team {
@@ -354,7 +362,6 @@
     font-size: 15px;
     width: calc(50% - 18px);
     padding: 5px 0 3px;
-    flex: 1;
     text-align: center;
   }
 

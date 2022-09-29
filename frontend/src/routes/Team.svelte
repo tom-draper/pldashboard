@@ -564,6 +564,7 @@
     width: 100%;
     bottom: 0;
     border: none;
+    margin-bottom: -1px;  /* For gap at bottom found in safari */
   }
   
   @media only screen and (min-width: 2400px) {
