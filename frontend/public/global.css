@@ -61,13 +61,12 @@
   --nottingham-forest-secondary: rgb(255 255 255);
 
   --border-radius: 6px;
-  --ssp1-offset: 0;
-  --ssp2-offset: 0;
-  --ssp3-offset: 0;
 
   --win: #00fe87;
   --draw: #ffdd00;
   --lose: #f83027;
+  --purple: #38003d;
+  --pink: #c600d8;
 }
 
 @font-face {

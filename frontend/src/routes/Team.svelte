@@ -564,7 +564,7 @@
     bottom: 0;
     border: none;
   }
-
+  
   @media only screen and (min-width: 2400px) {
     .position-central {
       font-size: 16vw;
@@ -633,6 +633,11 @@
   @media only screen and (max-width: 1200px) {
     .position-central {
       margin-top: 0.3em;
+    }
+  }
+  @media only screen and (min-width: 1100px) {
+    .full-row-graph {
+      margin: 0 1em;
     }
   }
   @media only screen and (max-width: 1100px) {

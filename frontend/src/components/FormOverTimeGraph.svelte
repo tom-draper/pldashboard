@@ -99,6 +99,7 @@
     if (setup) {
       let layoutUpdate = {
         "yaxis.title": { text: "Form rating" },
+        "yaxis.visible": true,
         "margin.l": 60,
         "margin.t": 15,
       };

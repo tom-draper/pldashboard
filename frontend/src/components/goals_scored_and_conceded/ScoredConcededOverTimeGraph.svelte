@@ -181,6 +181,7 @@
     if (setup) {
       let layoutUpdate = {
         "yaxis.title": { text: "Goals (5-game avg)" },
+        "yaxis.visible": true,
         "margin.l": 60,
         "margin.t": 15,
       };
