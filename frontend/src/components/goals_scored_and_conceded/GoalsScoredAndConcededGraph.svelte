@@ -4,7 +4,7 @@
   function getAvgGoalsPerGame(data: TeamData): Counter {
     let avgGoals: Counter = {};
 
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       for (let matchday of Object.keys(data.form[team][data._id])) {
         let score = data.form[team][data._id][matchday].score;
         if (score != null) {
@@ -55,7 +55,7 @@
 
   function avgLine(
     playedMatchdays: string[],
-    avgGoals,
+    avgGoals: Counter,
     matchdays: string[]
   ): any {
     return {
@@ -71,7 +71,7 @@
 
   function teamScoredBar(
     playedMatchdays: string[],
-    teamScored,
+    teamScored: Counter,
     matchdays: string[]
   ): any {
     return {
@@ -88,7 +88,7 @@
 
   function teamConcededBar(
     playedMatchdays: string[],
-    teamConceded,
+    teamConceded: Counter,
     matchdays: string[]
   ): any {
     return {
@@ -103,7 +103,7 @@
     };
   }
 
-  function defaultLayout(): Object {
+  function defaultLayout(): any {
     return {
       title: false,
       autosize: true,
@@ -146,6 +146,7 @@
         "yaxis.visible": true,
         "margin.l": 60,
       };
+      //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
@@ -157,6 +158,7 @@
         "yaxis.visible": false,
         "margin.l": 20,
       };
+      //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
@@ -172,7 +174,7 @@
     let line = avgLine(playedMatchdays, avgGoals, matchdays);
 
     let plotData = {
-      data: [line, scoredBar, concededBar],
+      data: [scoredBar, concededBar, line],
       layout: defaultLayout(),
       config: {
         responsive: true,
@@ -192,6 +194,7 @@
 
   function genPlot() {
     plotData = buildPlotData(data, team);
+    //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -218,6 +221,7 @@
 
       plotData.data[0] = scoredBar;
       plotData.data[1] = concededBar;
+      //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {
         setMobileLayout();

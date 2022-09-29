@@ -12,7 +12,7 @@
     return matchDetail;
   }
 
-  function sortByMatchDate(x: number[], y: number[], details: string[]) {
+  function sortByMatchDate(x: Date[], y: number[], details: string[]) {
     let list = [];
     for (let i = 0; i < x.length; i++) {
       list.push({ x: x[i], y: y[i], details: details[i] });
@@ -31,7 +31,7 @@
 
   function increaseNextGameMarker(
     sizes: number[],
-    x: number[],
+    x: Date[],
     now: number,
     bigMarkerSize: number
   ): number[] {
@@ -39,6 +39,7 @@
     let nextGameIdx: number;
     let minDiff = Number.POSITIVE_INFINITY;
     for (let i = 0; i < x.length; i++) {
+      //@ts-ignore
       let diff = x[i] - now;
       if (0 < diff && diff < minDiff) {
         minDiff = diff;
@@ -57,7 +58,7 @@
   function linePoints(
     data: TeamData,
     team: string
-  ): [number[], number[], string[]] {
+  ): [Date[], number[], string[]] {
     let x: Date[] = [];
     let y: number[] = [];
     let details: string[] = [];
@@ -110,7 +111,7 @@
       },
       customdata: matchdays,
       hovertemplate:
-        "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
+        "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
     };
   }
 
@@ -134,16 +135,15 @@
     return nowLine;
   }
 
-  function xRange(x: number[]): [number, number] {
+  function xRange(x: Date[]): [Date, Date] {
     let minX = new Date(x[0]);
     minX.setDate(minX.getDate() - 7);
-    // let maxX = new Date(Math.max(x[x.length - 1], now));
     let maxX = new Date(x[x.length - 1]);
     maxX.setDate(maxX.getDate() + 7);
     return [minX, maxX];
   }
 
-  function defaultLayout(x: number[], now: number): Object {
+  function defaultLayout(x: Date[], now: number): Object {
     let yLabels = Array.from(Array(11), (_, i) => i * 10);
 
     let [minX, maxX] = xRange(x);
@@ -155,7 +155,7 @@
         plot_bgcolor: "#fafafa",
         paper_bgcolor: "#fafafa",
         yaxis: {
-          title: { text: "Difficulty" },
+          title: { text: "Team rating" },
           gridcolor: "#d6d6d6",
           showline: false,
           zeroline: false,
@@ -170,6 +170,7 @@
           range: [minX, maxX],
           fixedrange: true,
         },
+        //@ts-ignore
         shapes: [nowLine(now, maxX)],
         dragmode: false,
       }
@@ -178,7 +179,7 @@
   function setDefaultLayout() {
     if (setup) {
       let layoutUpdate = {
-        "yaxis.title": { text: "Difficulty" },
+        "yaxis.title": { text: "Team rating" },
         "margin.l": 60,
         "yaxis.color": "black",
       };
@@ -191,9 +192,6 @@
         marker: {
           size: sizes,
           colorscale: [
-            // [0, "#01c626"],
-            // [0.5, "#f3f3f3"],
-            // [1, "#fc1303"],
             [0, "#00fe87"],
             [0.5, "#f3f3f3"],
             [1, "#f83027"],
@@ -205,6 +203,7 @@
       };
       plotData.data[0].marker.size = sizes;
 
+      //@ts-ignore
       Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
     }
   }
@@ -228,9 +227,6 @@
             [0, "#00fe87"],
             [0.5, "#f3f3f3"],
             [1, "#f83027"],
-            // [0, "#01c626"],
-            // [0.5, "#f3f3f3"],
-            // [1, "#fc1303"],
           ],
           color: plotData.data[0].y,
           opacity: 1,
@@ -239,6 +235,7 @@
       };
       plotData.data[0].marker.size = sizes;
 
+      //@ts-ignore
       Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
     }
   }
@@ -263,6 +260,7 @@
 
   function genPlot() {
     plotData = buildPlotData(data, team);
+    //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -278,6 +276,7 @@
     if (setup) {
       let l = line(data, team, Date.now());
       plotData.data[0] = l; // Overwrite plot data
+      //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {
         setMobileLayout();

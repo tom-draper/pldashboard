@@ -105,7 +105,7 @@
         type: "bar",
         name: "Avg",
         marker: { color: "#C6C6C6" },
-        hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
+        hovertemplate: `%{x} with probability <b>%{y:.2f}</b><extra></extra>`,
         hoverinfo: "x+y",
       },
       {
@@ -114,7 +114,7 @@
         type: "bar",
         name: "Scorelines",
         marker: { color: colours },
-        hovertemplate: `%{x} with probability %{y:.2f}<extra></extra>`,
+        hovertemplate: `%{x} with probability <b>%{y:.2f}</b><extra></extra>`,
         hoverinfo: "x+y",
         opacity: 0.5,
       },
@@ -190,6 +190,7 @@
         "xaxis.tickfont.size": 12,
         "margin.l": 65,
       };
+      //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
@@ -202,6 +203,7 @@
         "xaxis.tickfont.size": 5,
         "margin.l": 20,
       };
+      //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
@@ -228,6 +230,7 @@
 
   function genPlot() {
     plotData = buildPlotData(data, team);
+      //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -253,6 +256,7 @@
       convertToPercentage(scoreFreq);
       let [_, teamBars] = separateBars(scoreFreq);
       plotData.data[1] = teamBars; // Update team bars
+      //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {
         setMobileLayout();
@@ -261,7 +265,7 @@
   }
 
   type ScoreFreq = {
-    string: number[];
+    [score: string]: number[];
   };
 
   let plotDiv: HTMLDivElement, plotData: PlotData;

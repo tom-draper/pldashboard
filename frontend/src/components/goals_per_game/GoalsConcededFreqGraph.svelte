@@ -38,6 +38,7 @@
         "yaxis.visible": true,
         "margin.l": 60,
       };
+      //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
@@ -49,6 +50,7 @@
         "yaxis.visible": false,
         "margin.l": 20,
       };
+      //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
@@ -68,6 +70,7 @@
 
   function genPlot() {
     plotData = buildPlotData();
+      //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -82,9 +85,11 @@
   function refreshPlot() {
     if (setup) {
       plotData.data[1] = getConcededTeamBars();
+      //@ts-ignore
       Plotly.relayout(plotDiv, {
         yaxis: getYAxisLayout(),
       });
+      //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {
         setMobileLayout();

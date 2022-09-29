@@ -33,6 +33,7 @@
       marker: { color: teamColor },
     };
     plotData.data.push(teamData);
+    //@ts-ignore
     Plotly.redraw(plotDiv); // Redraw with teamName added
   }
 
@@ -55,6 +56,7 @@
       addAvg();
     }
 
+    //@ts-ignore
     Plotly.redraw(plotDiv); // Redraw with teamName removed
   }
 
@@ -75,12 +77,14 @@
       removeItem(comparisonTeams, comparisonTeams[i]); // Remove from comparison teams
     }
 
+    //@ts-ignore
     Plotly.redraw(plotDiv); // Redraw with teamName removed
   }
 
   function resetTeamComparisonBtns() {
     let btns = document.getElementById("spider-opp-teams");
     for (let i = 0; i < btns.children.length; i++) {
+      //@ts-ignore
       let btn: HTMLButtonElement = btns.children[i];
       if (btn.style.background != "") {
         btn.style.background = "";
@@ -117,7 +121,7 @@
     let attack = {};
     let maxGoals = Number.NEGATIVE_INFINITY;
     let minGoals = Number.POSITIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       let totalGoals = 0;
       let gamesPlayed = 0;
       for (let season in data.standings[team]) {
@@ -187,7 +191,7 @@
     let defence = {};
     let maxConceded = Number.NEGATIVE_INFINITY;
     let minConceded = Number.POSITIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       let totalConceded = 0;
       let gamesPlayed = 0;
       for (let season in data.standings[team]) {
@@ -251,9 +255,10 @@
   }
 
   function getCleanSheets(data: TeamData): Attribute {
+    //@ts-ignore
     let cleanSheets: Attribute = {};
     let maxCleanSheets = Number.NEGATIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       let nCleanSheets = formCleanSheets(data.form, team, data._id);
       if (teamInSeason(data.form, team, data._id-1)) {
         nCleanSheets += formCleanSheets(data.form, team, data._id-1);
@@ -298,9 +303,10 @@
   }
 
   function getConsistency(data: TeamData): Attribute {
+    //@ts-ignore
     let consistency: Attribute = {};
     let maxConsistency = Number.NEGATIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       let backToBack = formConsistency(data.form, team, data._id);
       if (teamInSeason(data.form, team, data._id-1)) {
         backToBack += formConsistency(data.form, team, data._id - 1);
@@ -342,9 +348,10 @@
   }
 
   function getWinStreak(data: TeamData): Attribute {
+    //@ts-ignore
     let winStreaks: Attribute = {};
     let maxWinStreaks = Number.NEGATIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       let winStreak = formWinStreak(data.form, team, data._id);
       if (teamInSeason(data.form, team, data._id-1)) {
         winStreak += formWinStreak(data.form, team, data._id-1);
@@ -388,9 +395,10 @@
   }
 
   function getVsBig6(data: TeamData): Attribute {
+    //@ts-ignore
     let vsBig6: Attribute = {};
     let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       let big6 = [
         "Manchester United",
         "Liverpool",
@@ -518,7 +526,7 @@
   }
 
   type Attribute = {
-    _: number;
+    [team: string]: number;
     avg: number;
   };
 
@@ -547,6 +555,7 @@
 
   function genPlot() {
     plotData = buildPlotData(data, team);
+    //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -618,6 +627,7 @@
         <button
           class="spider-opp-team-btn"
           on:click={(e) => {
+            //@ts-ignore
             spiderBtnClick(e.target);
           }}>{toAlias(_team)}</button
         >
