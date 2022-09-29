@@ -1,2 +1,17487 @@
-!function(){"use strict";function e(){}function t(e,t){for(const a in t)e[a]=t[a];return e}function a(e){return e()}function n(){return Object.create(null)}function r(e){e.forEach(a)}function o(e){return"function"==typeof e}function l(e,t){return e!=e?t==t:e!==t||e&&"object"==typeof e||"function"==typeof e}let s;function i(e,t){return s||(s=document.createElement("a")),s.href=t,e===s.href}function c(t,...a){if(null==t)return e;const n=t.subscribe(...a);return n.unsubscribe?()=>n.unsubscribe():n}function d(e,t,a){e.$$.on_destroy.push(c(t,a))}function u(e,t,a,n){if(e){const r=f(e,t,a,n);return e[0](r)}}function f(e,a,n,r){return e[1]&&r?t(n.ctx.slice(),e[1](r(a))):n.ctx}function h(e,t,a,n){if(e[2]&&n){const r=e[2](n(a));if(void 0===t.dirty)return r;if("object"==typeof r){const e=[],a=Math.max(t.dirty.length,r.length);for(let n=0;n<a;n+=1)e[n]=t.dirty[n]|r[n];return e}return t.dirty|r}return t.dirty}function m(e,t,a,n,r,o){if(r){const l=f(t,a,n,o);e.p(l,r)}}function p(e){if(e.ctx.length>32){const t=[],a=e.ctx.length/32;for(let e=0;e<a;e++)t[e]=-1;return t}return-1}function g(e){const t={};for(const a in e)"$"!==a[0]&&(t[a]=e[a]);return t}function v(e,t){const a={};t=new Set(t);for(const n in e)t.has(n)||"$"===n[0]||(a[n]=e[n]);return a}let y,$=!1;function b(e,t,a,n){for(;e<t;){const r=e+(t-e>>1);a(r)<=n?e=r+1:t=r}return e}function w(e,t){if($){for(!function(e){if(e.hydrate_init)return;e.hydrate_init=!0;let t=e.childNodes;if("HEAD"===e.nodeName){const e=[];for(let a=0;a<t.length;a++){const n=t[a];void 0!==n.claim_order&&e.push(n)}t=e}const a=new Int32Array(t.length+1),n=new Int32Array(t.length);a[0]=-1;let r=0;for(let e=0;e<t.length;e++){const o=t[e].claim_order,l=(r>0&&t[a[r]].claim_order<=o?r+1:b(1,r,(e=>t[a[e]].claim_order),o))-1;n[e]=a[l]+1;const s=l+1;a[s]=e,r=Math.max(s,r)}const o=[],l=[];let s=t.length-1;for(let e=a[r]+1;0!=e;e=n[e-1]){for(o.push(t[e-1]);s>=e;s--)l.push(t[s]);s--}for(;s>=0;s--)l.push(t[s]);o.reverse(),l.sort(((e,t)=>e.claim_order-t.claim_order));for(let t=0,a=0;t<l.length;t++){for(;a<o.length&&l[t].claim_order>=o[a].claim_order;)a++;const n=a<o.length?o[a]:null;e.insertBefore(l[t],n)}}(e),(void 0===e.actual_end_child||null!==e.actual_end_child&&e.actual_end_child.parentElement!==e)&&(e.actual_end_child=e.firstChild);null!==e.actual_end_child&&void 0===e.actual_end_child.claim_order;)e.actual_end_child=e.actual_end_child.nextSibling;t!==e.actual_end_child?void 0===t.claim_order&&t.parentNode===e||e.insertBefore(t,e.actual_end_child):e.actual_end_child=t.nextSibling}else t.parentNode===e&&null===t.nextSibling||e.appendChild(t)}function x(e,t,a){$&&!a?w(e,t):t.parentNode===e&&t.nextSibling==a||e.insertBefore(t,a||null)}function E(e){e.parentNode.removeChild(e)}function I(e,t){for(let a=0;a<e.length;a+=1)e[a]&&e[a].d(t)}function V(e){return document.createElement(e)}function D(e){return document.createElementNS("http://www.w3.org/2000/svg",e)}function k(e){return document.createTextNode(e)}function _(){return k(" ")}function T(){return k("")}function A(e,t,a,n){return e.addEventListener(t,a,n),()=>e.removeEventListener(t,a,n)}function L(e,t,a){null==a?e.removeAttribute(t):e.getAttribute(t)!==a&&e.setAttribute(t,a)}function C(e,t){const a=Object.getOwnPropertyDescriptors(e.__proto__);for(const n in t)null==t[n]?e.removeAttribute(n):"style"===n?e.style.cssText=t[n]:"__value"===n?e.value=e[n]=t[n]:a[n]&&a[n].set?e[n]=t[n]:L(e,n,t[n])}function M(e){return Array.from(e.childNodes)}function P(e,t,a,n,r=!1){!function(e){void 0===e.claim_info&&(e.claim_info={last_index:0,total_claimed:0})}(e);const o=(()=>{for(let n=e.claim_info.last_index;n<e.length;n++){const o=e[n];if(t(o)){const t=a(o);return void 0===t?e.splice(n,1):e[n]=t,r||(e.claim_info.last_index=n),o}}for(let n=e.claim_info.last_index-1;n>=0;n--){const o=e[n];if(t(o)){const t=a(o);return void 0===t?e.splice(n,1):e[n]=t,r?void 0===t&&e.claim_info.last_index--:e.claim_info.last_index=n,o}}return n()})();return o.claim_order=e.claim_info.total_claimed,e.claim_info.total_claimed+=1,o}function N(e,t,a,n){return P(e,(e=>e.nodeName===t),(e=>{const t=[];for(let n=0;n<e.attributes.length;n++){const r=e.attributes[n];a[r.name]||t.push(r.name)}t.forEach((t=>e.removeAttribute(t)))}),(()=>n(t)))}function B(e,t,a){return N(e,t,a,V)}function S(e,t,a){return N(e,t,a,D)}function G(e,t){return P(e,(e=>3===e.nodeType),(e=>{const a=""+t;if(e.data.startsWith(a)){if(e.data.length!==a.length)return e.splitText(a.length)}else e.data=a}),(()=>k(t)),!0)}function O(e){return G(e," ")}function j(e,t){t=""+t,e.wholeText!==t&&(e.data=t)}function q(e,t,a,n){null===a?e.style.removeProperty(t):e.style.setProperty(t,a,n?"important":"")}function z(e,t=document.body){return Array.from(t.querySelectorAll(e))}function H(e){y=e}function R(){if(!y)throw new Error("Function called outside component initialization");return y}function F(e){R().$$.on_mount.push(e)}function U(){const e=R();return(t,a,{cancelable:n=!1}={})=>{const r=e.$$.callbacks[t];if(r){const o=function(e,t,{bubbles:a=!1,cancelable:n=!1}={}){const r=document.createEvent("CustomEvent");return r.initCustomEvent(e,a,n,t),r}(t,a,{cancelable:n});return r.slice().forEach((t=>{t.call(e,o)})),!o.defaultPrevented}return!0}}function Y(e,t){return R().$$.context.set(e,t),t}function W(e){return R().$$.context.get(e)}const X=[],K=[],J=[],Q=[],Z=Promise.resolve();let ee=!1;function te(e){J.push(e)}const ae=new Set;let ne=0;function re(){const e=y;do{for(;ne<X.length;){const e=X[ne];ne++,H(e),oe(e.$$)}for(H(null),X.length=0,ne=0;K.length;)K.pop()();for(let e=0;e<J.length;e+=1){const t=J[e];ae.has(t)||(ae.add(t),t())}J.length=0}while(X.length);for(;Q.length;)Q.pop()();ee=!1,ae.clear(),H(e)}function oe(e){if(null!==e.fragment){e.update(),r(e.before_update);const t=e.dirty;e.dirty=[-1],e.fragment&&e.fragment.p(e.ctx,t),e.after_update.forEach(te)}}const le=new Set;let se;function ie(){se={r:0,c:[],p:se}}function ce(){se.r||r(se.c),se=se.p}function de(e,t){e&&e.i&&(le.delete(e),e.i(t))}function ue(e,t,a,n){if(e&&e.o){if(le.has(e))return;le.add(e),se.c.push((()=>{le.delete(e),n&&(a&&e.d(1),n())})),e.o(t)}else n&&n()}const fe="undefined"!=typeof window?window:"undefined"!=typeof globalThis?globalThis:global;function he(e,t){e.d(1),t.delete(e.key)}function me(e,t){ue(e,1,1,(()=>{t.delete(e.key)}))}function pe(e,t,a,n,r,o,l,s,i,c,d,u){let f=e.length,h=o.length,m=f;const p={};for(;m--;)p[e[m].key]=m;const g=[],v=new Map,y=new Map;for(m=h;m--;){const e=u(r,o,m),s=a(e);let i=l.get(s);i?n&&i.p(e,t):(i=c(s,e),i.c()),v.set(s,g[m]=i),s in p&&y.set(s,Math.abs(m-p[s]))}const $=new Set,b=new Set;function w(e){de(e,1),e.m(s,d),l.set(e.key,e),d=e.first,h--}for(;f&&h;){const t=g[h-1],a=e[f-1],n=t.key,r=a.key;t===a?(d=t.first,f--,h--):v.has(r)?!l.has(n)||$.has(n)?w(t):b.has(r)?f--:y.get(n)>y.get(r)?(b.add(n),w(t)):($.add(r),f--):(i(a,l),f--)}for(;f--;){const t=e[f];v.has(t.key)||i(t,l)}for(;h;)w(g[h-1]);return g}function ge(e,t){const a={},n={},r={$$scope:1};let o=e.length;for(;o--;){const l=e[o],s=t[o];if(s){for(const e in l)e in s||(n[e]=1);for(const e in s)r[e]||(a[e]=s[e],r[e]=1);e[o]=s}else for(const e in l)r[e]=1}for(const e in n)e in a||(a[e]=void 0);return a}function ve(e){return"object"==typeof e&&null!==e?e:{}}function ye(e){e&&e.c()}function $e(e,t){e&&e.l(t)}function be(e,t,n,l){const{fragment:s,on_mount:i,on_destroy:c,after_update:d}=e.$$;s&&s.m(t,n),l||te((()=>{const t=i.map(a).filter(o);c?c.push(...t):r(t),e.$$.on_mount=[]})),d.forEach(te)}function we(e,t){const a=e.$$;null!==a.fragment&&(r(a.on_destroy),a.fragment&&a.fragment.d(t),a.on_destroy=a.fragment=null,a.ctx=[])}function xe(e,t){-1===e.$$.dirty[0]&&(X.push(e),ee||(ee=!0,Z.then(re)),e.$$.dirty.fill(0)),e.$$.dirty[t/31|0]|=1<<t%31}function Ee(t,a,o,l,s,i,c,d=[-1]){const u=y;H(t);const f=t.$$={fragment:null,ctx:null,props:i,update:e,not_equal:s,bound:n(),on_mount:[],on_destroy:[],on_disconnect:[],before_update:[],after_update:[],context:new Map(a.context||(u?u.$$.context:[])),callbacks:n(),dirty:d,skip_bound:!1,root:a.target||u.$$.root};c&&c(f.root);let h=!1;if(f.ctx=o?o(t,a.props||{},((e,a,...n)=>{const r=n.length?n[0]:a;return f.ctx&&s(f.ctx[e],f.ctx[e]=r)&&(!f.skip_bound&&f.bound[e]&&f.bound[e](r),h&&xe(t,e)),a})):[],f.update(),h=!0,r(f.before_update),f.fragment=!!l&&l(f.ctx),a.target){if(a.hydrate){$=!0;const e=M(a.target);f.fragment&&f.fragment.l(e),e.forEach(E)}else f.fragment&&f.fragment.c();a.intro&&de(t.$$.fragment),be(t,a.target,a.anchor,a.customElement),$=!1,re()}H(u)}class Ie{$destroy(){we(this,1),this.$destroy=e}$on(e,t){const a=this.$$.callbacks[e]||(this.$$.callbacks[e]=[]);return a.push(t),()=>{const e=a.indexOf(t);-1!==e&&a.splice(e,1)}}$set(e){var t;this.$$set&&(t=e,0!==Object.keys(t).length)&&(this.$$.skip_bound=!0,this.$$set(e),this.$$.skip_bound=!1)}}const Ve=[];function De(t,a=e){let n;const r=new Set;function o(e){if(l(t,e)&&(t=e,n)){const e=!Ve.length;for(const e of r)e[1](),Ve.push(e,t);if(e){for(let e=0;e<Ve.length;e+=2)Ve[e][0](Ve[e+1]);Ve.length=0}}}return{set:o,update:function(e){o(e(t))},subscribe:function(l,s=e){const i=[l,s];return r.add(i),1===r.size&&(n=a(o)||e),l(t),()=>{r.delete(i),0===r.size&&(n(),n=null)}}}}function ke(t,a,n){const l=!Array.isArray(t),s=l?[t]:t,i=a.length<2;return d=t=>{let n=!1;const d=[];let u=0,f=e;const h=()=>{if(u)return;f();const n=a(l?d[0]:d,t);i?t(n):f=o(n)?n:e},m=s.map(((e,t)=>c(e,(e=>{d[t]=e,u&=~(1<<t),n&&h()}),(()=>{u|=1<<t}))));return n=!0,h(),function(){r(m),f()}},{subscribe:De(n,d).subscribe};var d}const _e={},Te={};function Ae(e){return{...e.location,state:e.history.state,key:e.history.state&&e.history.state.key||"initial"}}const Le=function(e,t){const a=[];let n=Ae(e);return{get location(){return n},listen(t){a.push(t);const r=()=>{n=Ae(e),t({location:n,action:"POP"})};return e.addEventListener("popstate",r),()=>{e.removeEventListener("popstate",r);const n=a.indexOf(t);a.splice(n,1)}},navigate(t,{state:r,replace:o=!1}={}){r={...r,key:Date.now()+""};try{o?e.history.replaceState(r,null,t):e.history.pushState(r,null,t)}catch(a){e.location[o?"replace":"assign"](t)}n=Ae(e),a.forEach((e=>e({location:n,action:"PUSH"})))}}}(Boolean("undefined"!=typeof window&&window.document&&window.document.createElement)?window:function(e="/"){let t=0;const a=[{pathname:e,search:""}],n=[];return{get location(){return a[t]},addEventListener(e,t){},removeEventListener(e,t){},history:{get entries(){return a},get index(){return t},get state(){return n[t]},pushState(e,r,o){const[l,s=""]=o.split("?");t++,a.push({pathname:l,search:s}),n.push(e)},replaceState(e,r,o){const[l,s=""]=o.split("?");a[t]={pathname:l,search:s},n[t]=e}}}}()),{navigate:Ce}=Le,Me=/^:(.+)/;function Pe(e,t){return e.substr(0,t.length)===t}function Ne(e){return"*"===e[0]}function Be(e){return e.replace(/(^\/+|\/+$)/g,"").split("/")}function Se(e){return e.replace(/(^\/+|\/+$)/g,"")}function Ge(e,t){return{route:e,score:e.default?0:Be(e.path).reduce(((e,t)=>(e+=4,!function(e){return""===e}(t)?!function(e){return Me.test(e)}(t)?Ne(t)?e-=5:e+=3:e+=2:e+=1,e)),0),index:t}}function Oe(e,t){let a,n;const[r]=t.split("?"),o=Be(r),l=""===o[0],s=function(e){return e.map(Ge).sort(((e,t)=>e.score<t.score?1:e.score>t.score?-1:e.index-t.index))}(e);for(let e=0,r=s.length;e<r;e++){const r=s[e].route;let i=!1;if(r.default){n={route:r,params:{},uri:t};continue}const c=Be(r.path),d={},u=Math.max(o.length,c.length);let f=0;for(;f<u;f++){const e=c[f],t=o[f];if(void 0!==e&&Ne(e)){d["*"===e?"*":e.slice(1)]=o.slice(f).map(decodeURIComponent).join("/");break}if(void 0===t){i=!0;break}let a=Me.exec(e);if(a&&!l){const e=decodeURIComponent(t);d[a[1]]=e}else if(e!==t){i=!0;break}}if(!i){a={route:r,params:d,uri:"/"+o.slice(0,f).join("/")};break}}return a||n||null}function je(e,t){return e+(t?`?${t}`:"")}function qe(e,t){return`${Se("/"===t?e:`${Se(e)}/${Se(t)}`)}/`}function ze(e){let t;const a=e[9].default,n=u(a,e,e[8],null);return{c(){n&&n.c()},l(e){n&&n.l(e)},m(e,a){n&&n.m(e,a),t=!0},p(e,[r]){n&&n.p&&(!t||256&r)&&m(n,a,e,e[8],t?h(a,e[8],r,null):p(e[8]),null)},i(e){t||(de(n,e),t=!0)},o(e){ue(n,e),t=!1},d(e){n&&n.d(e)}}}function He(e,t,a){let n,r,o,{$$slots:l={},$$scope:s}=t,{basepath:i="/"}=t,{url:c=null}=t;const u=W(_e),f=W(Te),h=De([]);d(e,h,(e=>a(6,r=e)));const m=De(null);let p=!1;const g=u||De(c?{pathname:c}:Le.location);d(e,g,(e=>a(5,n=e)));const v=f?f.routerBase:De({path:i,uri:i});d(e,v,(e=>a(7,o=e)));const y=ke([v,m],(([e,t])=>{if(null===t)return e;const{path:a}=e,{route:n,uri:r}=t;return{path:n.default?a:n.path.replace(/\*.*$/,""),uri:r}}));return u||(F((()=>Le.listen((e=>{g.set(e.location)})))),Y(_e,g)),Y(Te,{activeRoute:m,base:v,routerBase:y,registerRoute:function(e){const{path:t}=o;let{path:a}=e;if(e._path=a,e.path=qe(t,a),"undefined"==typeof window){if(p)return;const t=function(e,t){return Oe([e],t)}(e,n.pathname);t&&(m.set(t),p=!0)}else h.update((t=>(t.push(e),t)))},unregisterRoute:function(e){h.update((t=>{const a=t.indexOf(e);return t.splice(a,1),t}))}}),e.$$set=e=>{"basepath"in e&&a(3,i=e.basepath),"url"in e&&a(4,c=e.url),"$$scope"in e&&a(8,s=e.$$scope)},e.$$.update=()=>{if(128&e.$$.dirty){const{path:e}=o;h.update((t=>(t.forEach((t=>t.path=qe(e,t._path))),t)))}if(96&e.$$.dirty){const e=Oe(r,n.pathname);m.set(e)}},[h,g,v,i,c,n,r,o,s,l]}class Re extends Ie{constructor(e){super(),Ee(this,e,He,ze,l,{basepath:3,url:4})}}const Fe=e=>({params:4&e,location:16&e}),Ue=e=>({params:e[2],location:e[4]});function Ye(e){let t,a,n,r;const o=[Xe,We],l=[];function s(e,t){return null!==e[0]?0:1}return t=s(e),a=l[t]=o[t](e),{c(){a.c(),n=T()},l(e){a.l(e),n=T()},m(e,a){l[t].m(e,a),x(e,n,a),r=!0},p(e,r){let i=t;t=s(e),t===i?l[t].p(e,r):(ie(),ue(l[i],1,1,(()=>{l[i]=null})),ce(),a=l[t],a?a.p(e,r):(a=l[t]=o[t](e),a.c()),de(a,1),a.m(n.parentNode,n))},i(e){r||(de(a),r=!0)},o(e){ue(a),r=!1},d(e){l[t].d(e),e&&E(n)}}}function We(e){let t;const a=e[10].default,n=u(a,e,e[9],Ue);return{c(){n&&n.c()},l(e){n&&n.l(e)},m(e,a){n&&n.m(e,a),t=!0},p(e,r){n&&n.p&&(!t||532&r)&&m(n,a,e,e[9],t?h(a,e[9],r,Fe):p(e[9]),Ue)},i(e){t||(de(n,e),t=!0)},o(e){ue(n,e),t=!1},d(e){n&&n.d(e)}}}function Xe(e){let a,n,r;const o=[{location:e[4]},e[2],e[3]];var l=e[0];function s(e){let a={};for(let e=0;e<o.length;e+=1)a=t(a,o[e]);return{props:a}}return l&&(a=new l(s())),{c(){a&&ye(a.$$.fragment),n=T()},l(e){a&&$e(a.$$.fragment,e),n=T()},m(e,t){a&&be(a,e,t),x(e,n,t),r=!0},p(e,t){const r=28&t?ge(o,[16&t&&{location:e[4]},4&t&&ve(e[2]),8&t&&ve(e[3])]):{};if(l!==(l=e[0])){if(a){ie();const e=a;ue(e.$$.fragment,1,0,(()=>{we(e,1)})),ce()}l?(a=new l(s()),ye(a.$$.fragment),de(a.$$.fragment,1),be(a,n.parentNode,n)):a=null}else l&&a.$set(r)},i(e){r||(a&&de(a.$$.fragment,e),r=!0)},o(e){a&&ue(a.$$.fragment,e),r=!1},d(e){e&&E(n),a&&we(a,e)}}}function Ke(e){let t,a,n=null!==e[1]&&e[1].route===e[7]&&Ye(e);return{c(){n&&n.c(),t=T()},l(e){n&&n.l(e),t=T()},m(e,r){n&&n.m(e,r),x(e,t,r),a=!0},p(e,[a]){null!==e[1]&&e[1].route===e[7]?n?(n.p(e,a),2&a&&de(n,1)):(n=Ye(e),n.c(),de(n,1),n.m(t.parentNode,t)):n&&(ie(),ue(n,1,1,(()=>{n=null})),ce())},i(e){a||(de(n),a=!0)},o(e){ue(n),a=!1},d(e){n&&n.d(e),e&&E(t)}}}function Je(e,a,n){let r,o,{$$slots:l={},$$scope:s}=a,{path:i=""}=a,{component:c=null}=a;const{registerRoute:u,unregisterRoute:f,activeRoute:h}=W(Te);d(e,h,(e=>n(1,r=e)));const m=W(_e);d(e,m,(e=>n(4,o=e)));const p={path:i,default:""===i};let v={},y={};var $;return u(p),"undefined"!=typeof window&&($=()=>{f(p)},R().$$.on_destroy.push($)),e.$$set=e=>{n(13,a=t(t({},a),g(e))),"path"in e&&n(8,i=e.path),"component"in e&&n(0,c=e.component),"$$scope"in e&&n(9,s=e.$$scope)},e.$$.update=()=>{2&e.$$.dirty&&r&&r.route===p&&n(2,v=r.params);{const{path:e,component:t,...r}=a;n(3,y=r)}},a=g(a),[c,r,v,y,o,h,m,p,i,s,l]}class Qe extends Ie{constructor(e){super(),Ee(this,e,Je,Ke,l,{path:8,component:0})}}function Ze(e){let a,n,r,o;const l=e[16].default,s=u(l,e,e[15],null);let i=[{href:e[0]},{"aria-current":e[2]},e[1],e[6]],c={};for(let e=0;e<i.length;e+=1)c=t(c,i[e]);return{c(){a=V("a"),s&&s.c(),this.h()},l(e){a=B(e,"A",{href:!0,"aria-current":!0});var t=M(a);s&&s.l(t),t.forEach(E),this.h()},h(){C(a,c)},m(t,l){x(t,a,l),s&&s.m(a,null),n=!0,r||(o=A(a,"click",e[5]),r=!0)},p(e,[t]){s&&s.p&&(!n||32768&t)&&m(s,l,e,e[15],n?h(l,e[15],t,null):p(e[15]),null),C(a,c=ge(i,[(!n||1&t)&&{href:e[0]},(!n||4&t)&&{"aria-current":e[2]},2&t&&e[1],64&t&&e[6]]))},i(e){n||(de(s,e),n=!0)},o(e){ue(s,e),n=!1},d(e){e&&E(a),s&&s.d(e),r=!1,o()}}}function et(e,a,n){let r;const o=["to","replace","state","getProps"];let l,s,i=v(a,o),{$$slots:c={},$$scope:u}=a,{to:f="#"}=a,{replace:h=!1}=a,{state:m={}}=a,{getProps:p=(()=>({}))}=a;const{base:y}=W(Te);d(e,y,(e=>n(14,s=e)));const $=W(_e);d(e,$,(e=>n(13,l=e)));const b=U();let w,x,E,I;return e.$$set=e=>{a=t(t({},a),g(e)),n(6,i=v(a,o)),"to"in e&&n(7,f=e.to),"replace"in e&&n(8,h=e.replace),"state"in e&&n(9,m=e.state),"getProps"in e&&n(10,p=e.getProps),"$$scope"in e&&n(15,u=e.$$scope)},e.$$.update=()=>{16512&e.$$.dirty&&n(0,w="/"===f?s.uri:function(e,t){if(Pe(e,"/"))return e;const[a,n]=e.split("?"),[r]=t.split("?"),o=Be(a),l=Be(r);if(""===o[0])return je(r,n);if(!Pe(o[0],"."))return je(("/"===r?"":"/")+l.concat(o).join("/"),n);const s=l.concat(o),i=[];return s.forEach((e=>{".."===e?i.pop():"."!==e&&i.push(e)})),je("/"+i.join("/"),n)}(f,s.uri)),8193&e.$$.dirty&&n(11,x=Pe(l.pathname,w)),8193&e.$$.dirty&&n(12,E=w===l.pathname),4096&e.$$.dirty&&n(2,r=E?"page":void 0),15361&e.$$.dirty&&n(1,I=p({location:l,href:w,isPartiallyCurrent:x,isCurrent:E}))},[w,I,r,y,$,function(e){if(b("click",e),function(e){return!e.defaultPrevented&&0===e.button&&!(e.metaKey||e.altKey||e.ctrlKey||e.shiftKey)}(e)){e.preventDefault();const t=l.pathname===w||h;Ce(w,{state:m,replace:t})}},i,f,h,m,p,x,E,l,s,u,c]}class tt extends Ie{constructor(e){super(),Ee(this,e,et,Ze,l,{to:7,replace:8,state:9,getProps:10})}}const{document:at}=fe;function nt(e,t,a){const n=e.slice();return n[1]=t[a],n[3]=a,n}function rt(t){let a,n;return{c(){a=V("div"),n=k("Premier League"),this.h()},l(e){a=B(e,"DIV",{class:!0});var t=M(a);n=G(t,"Premier League"),t.forEach(E),this.h()},h(){L(a,"class","title main-link no-decoration")},m(e,t){x(e,a,t),w(a,n)},p:e,d(e){e&&E(a)}}}function ot(t){let a,n,r,o=t[1]+"";return{c(){a=V("div"),n=k(o),r=_(),this.h()},l(e){a=B(e,"DIV",{class:!0,style:!0});var t=M(a);n=G(t,o),t.forEach(E),r=O(e),this.h()},h(){L(a,"class","main-link"),q(a,"color","var(--"+t[1].toLowerCase().replace(/ /g,"-")+"-secondary)")},m(e,t){x(e,a,t),w(a,n),x(e,r,t)},p:e,d(e){e&&E(a),e&&E(r)}}}function lt(e,t){let a,n,r;return n=new tt({props:{to:"/"+t[1].toLowerCase().replace(/ /g,"-"),class:"team-button",id:"team-"+(t[3]+1),style:"background-color: var(--"+t[1].toLowerCase().replace(/ /g,"-")+");",$$slots:{default:[ot]},$$scope:{ctx:t}}}),{key:e,first:null,c(){a=T(),ye(n.$$.fragment),this.h()},l(e){a=T(),$e(n.$$.fragment,e),this.h()},h(){this.first=a},m(e,t){x(e,a,t),be(n,e,t),r=!0},p(e,a){t=e;const r={};16&a&&(r.$$scope={dirty:a,ctx:t}),n.$set(r)},i(e){r||(de(n.$$.fragment,e),r=!0)},o(e){ue(n.$$.fragment,e),r=!1},d(e){e&&E(a),we(n,e)}}}function st(e){let t,a,n,r,o,l,s=[],i=new Map;a=new tt({props:{to:"/",$$slots:{default:[rt]},$$scope:{ctx:e}}});let c=e[0];const d=e=>e[1];for(let t=0;t<c.length;t+=1){let a=nt(e,c,t),n=d(a);i.set(n,s[t]=lt(n,a))}return{c(){t=V("div"),ye(a.$$.fragment),n=_(),r=V("div"),o=V("div");for(let e=0;e<s.length;e+=1)s[e].c();this.h()},l(e){t=B(e,"DIV",{class:!0});var l=M(t);$e(a.$$.fragment,l),l.forEach(E),n=O(e),r=B(e,"DIV",{class:!0});var i=M(r);o=B(i,"DIV",{class:!0});var c=M(o);for(let e=0;e<s.length;e+=1)s[e].l(c);c.forEach(E),i.forEach(E),this.h()},h(){L(t,"class","header"),L(o,"class","teams svelte-i9b06i"),L(r,"class","page-content")},m(e,i){x(e,t,i),be(a,t,null),x(e,n,i),x(e,r,i),w(r,o);for(let e=0;e<s.length;e+=1)s[e].m(o,null);l=!0},p(e,t){const n={};16&t&&(n.$$scope={dirty:t,ctx:e}),a.$set(n),1&t&&(c=e[0],ie(),s=pe(s,t,d,1,e,c,i,o,me,lt,null,nt),ce())},i(e){if(!l){de(a.$$.fragment,e);for(let e=0;e<c.length;e+=1)de(s[e]);l=!0}},o(e){ue(a.$$.fragment,e);for(let e=0;e<s.length;e+=1)ue(s[e]);l=!1},d(e){e&&E(t),we(a),e&&E(n),e&&E(r);for(let e=0;e<s.length;e+=1)s[e].d()}}}function it(e){let t,a,n,r;return n=new Re({props:{$$slots:{default:[st]},$$scope:{ctx:e}}}),{c(){t=V("meta"),a=_(),ye(n.$$.fragment),this.h()},l(e){const r=z('[data-svelte="svelte-1rqatx0"]',at.head);t=B(r,"META",{name:!0,content:!0}),r.forEach(E),a=O(e),$e(n.$$.fragment,e),this.h()},h(){at.title="Premier League",L(t,"name","description"),L(t,"content","Premier League Statistics Dashboard")},m(e,o){w(at.head,t),x(e,a,o),be(n,e,o),r=!0},p(e,[t]){const a={};16&t&&(a.$$scope={dirty:t,ctx:e}),n.$set(a)},i(e){r||(de(n.$$.fragment,e),r=!0)},o(e){ue(n.$$.fragment,e),r=!1},d(e){E(t),e&&E(a),we(n,e)}}}function ct(){let e=window.innerWidth;document.getElementById("team-1").classList.remove("top-left"),document.getElementById("team-1").classList.remove("top-right"),document.getElementById("team-2").classList.remove("top-right"),document.getElementById("team-4").classList.remove("top-right"),document.getElementById("team-17").classList.remove("bottom-left"),document.getElementById("team-18").classList.remove("bottom-left"),document.getElementById("team-19").classList.remove("bottom-left"),document.getElementById("team-20").classList.remove("bottom-left"),document.getElementById("team-20").classList.remove("bottom-right"),e<500?(document.getElementById("team-1").classList.add("top-both"),document.getElementById("team-20").classList.add("bottom-both")):e<1100?(document.getElementById("team-1").classList.add("top-left"),document.getElementById("team-2").classList.add("top-right"),document.getElementById("team-19").classList.add("bottom-left"),document.getElementById("team-20").classList.add("bottom-right")):(document.getElementById("team-1").classList.add("top-left"),document.getElementById("team-4").classList.add("top-right"),document.getElementById("team-17").classList.add("bottom-left"),document.getElementById("team-20").classList.add("bottom-right"))}function dt(e){return F((()=>(window.addEventListener("resize",ct,!0),ct(),()=>{window.removeEventListener("resize",ct,!0)}))),[["Manchester City","Liverpool","Chelsea","Tottenham Hotspur","Arsenal","Manchester United","West Ham United","Leicester City","Brighton and Hove Albion","Wolverhampton Wanderers","Newcastle United","Crystal Palace","Brentford","Aston Villa","Southampton","Everton","Leeds United","Fulham","Bournemouth","Nottingham Forest"]]}class ut extends Ie{constructor(e){super(),Ee(this,e,dt,it,l,{})}}function ft(t){let a,n,r,o,l,s,i,c,d,u,f,h,m,p,g,v,y,$,b,I,D,T,A,C,P=mt(t[0][0])+"",N=mt(t[0][1])+"",S=mt(t[0][2])+"",z=mt(t[0][3])+"",H=mt(t[0][4])+"";return{c(){a=V("div"),n=V("div"),r=V("div"),o=k(P),l=_(),s=V("div"),i=V("div"),c=V("div"),d=k(N),u=_(),f=V("div"),h=V("div"),m=V("div"),p=k(S),g=_(),v=V("div"),y=V("div"),$=V("div"),b=k(z),I=_(),D=V("div"),T=V("div"),A=V("div"),C=k(H),this.h()},l(e){a=B(e,"DIV",{class:!0});var t=M(a);n=B(t,"DIV",{id:!0,style:!0,class:!0});var w=M(n);r=B(w,"DIV",{class:!0});var x=M(r);o=G(x,P),x.forEach(E),w.forEach(E),t.forEach(E),l=O(e),s=B(e,"DIV",{class:!0});var V=M(s);i=B(V,"DIV",{id:!0,style:!0,class:!0});var k=M(i);c=B(k,"DIV",{class:!0});var _=M(c);d=G(_,N),_.forEach(E),k.forEach(E),V.forEach(E),u=O(e),f=B(e,"DIV",{class:!0});var L=M(f);h=B(L,"DIV",{id:!0,style:!0,class:!0});var j=M(h);m=B(j,"DIV",{class:!0});var q=M(m);p=G(q,S),q.forEach(E),j.forEach(E),L.forEach(E),g=O(e),v=B(e,"DIV",{class:!0});var R=M(v);y=B(R,"DIV",{id:!0,style:!0,class:!0});var F=M(y);$=B(F,"DIV",{class:!0});var U=M($);b=G(U,z),U.forEach(E),F.forEach(E),R.forEach(E),I=O(e),D=B(e,"DIV",{class:!0});var Y=M(D);T=B(Y,"DIV",{id:!0,style:!0,class:!0});var W=M(T);A=B(W,"DIV",{class:!0});var X=M(A);C=G(X,H),X.forEach(E),W.forEach(E),Y.forEach(E),this.h()},h(){L(r,"class","result svelte-1duemg"),L(n,"id","formTile"),q(n,"background",ht(t[0][0],t[1][0])),L(n,"class","svelte-1duemg"),L(a,"class","icon pos-0 svelte-1duemg"),L(c,"class","result svelte-1duemg"),L(i,"id","formTile"),q(i,"background",ht(t[0][1],t[1][1])),L(i,"class","svelte-1duemg"),L(s,"class","icon pos-1 svelte-1duemg"),L(m,"class","result svelte-1duemg"),L(h,"id","formTile"),q(h,"background",ht(t[0][2],t[1][2])),L(h,"class","svelte-1duemg"),L(f,"class","icon pos-2 svelte-1duemg"),L($,"class","result svelte-1duemg"),L(y,"id","formTile"),q(y,"background",ht(t[0][3],t[1][3])),L(y,"class","svelte-1duemg"),L(v,"class","icon pos-3 svelte-1duemg"),L(A,"class","result svelte-1duemg"),L(T,"id","formTile"),q(T,"background",ht(t[0][4],t[1][4])),L(T,"class","svelte-1duemg"),L(D,"class","icon pos-4 svelte-1duemg")},m(e,t){x(e,a,t),w(a,n),w(n,r),w(r,o),x(e,l,t),x(e,s,t),w(s,i),w(i,c),w(c,d),x(e,u,t),x(e,f,t),w(f,h),w(h,m),w(m,p),x(e,g,t),x(e,v,t),w(v,y),w(y,$),w($,b),x(e,I,t),x(e,D,t),w(D,T),w(T,A),w(A,C)},p(e,[t]){1&t&&P!==(P=mt(e[0][0])+"")&&j(o,P),3&t&&q(n,"background",ht(e[0][0],e[1][0])),1&t&&N!==(N=mt(e[0][1])+"")&&j(d,N),3&t&&q(i,"background",ht(e[0][1],e[1][1])),1&t&&S!==(S=mt(e[0][2])+"")&&j(p,S),3&t&&q(h,"background",ht(e[0][2],e[1][2])),1&t&&z!==(z=mt(e[0][3])+"")&&j(b,z),3&t&&q(y,"background",ht(e[0][3],e[1][3])),1&t&&H!==(H=mt(e[0][4])+"")&&j(C,H),3&t&&q(T,"background",ht(e[0][4],e[1][4]))},i:e,o:e,d(e){e&&E(a),e&&E(l),e&&E(s),e&&E(u),e&&E(f),e&&E(g),e&&E(v),e&&E(I),e&&E(D)}}}function ht(e,t){switch(e){case"W":return t?"linear-gradient(30deg, #00ff87, #2bd2ff, #fa8bff)":"#00fe87";case"D":return"#ffdd00";case"L":return"#f83027";default:return"#d6d6d6"}}function mt(e){switch(e){case"W":case"D":case"L":return e;default:return""}}function pt(e,t,a){let{form:n,starTeams:r}=t;return e.$$set=e=>{"form"in e&&a(0,n=e.form),"starTeams"in e&&a(1,r=e.starTeams)},[n,r]}class gt extends Ie{constructor(e){super(),Ee(this,e,pt,ft,l,{form:0,starTeams:1})}}function vt(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m,p,g,v,y,$,b=e[5][0]+"",I=e[5][1]+"",D=e[5][2]+"",T=e[5][3]+"",A=e[5][4]+"";return a=new gt({props:{form:e[3]+",",starTeams:e[4]}}),{c(){t=V("div"),ye(a.$$.fragment),n=_(),r=V("div"),o=V("div"),l=k(b),s=_(),i=V("div"),c=k(I),d=_(),u=V("div"),f=k(D),h=_(),m=V("div"),p=k(T),g=_(),v=V("div"),y=k(A),this.h()},l(e){t=B(e,"DIV",{class:!0});var $=M(t);$e(a.$$.fragment,$),$.forEach(E),n=O(e),r=B(e,"DIV",{class:!0});var w=M(r);o=B(w,"DIV",{class:!0});var x=M(o);l=G(x,b),x.forEach(E),s=O(w),i=B(w,"DIV",{class:!0});var V=M(i);c=G(V,I),V.forEach(E),d=O(w),u=B(w,"DIV",{class:!0});var k=M(u);f=G(k,D),k.forEach(E),h=O(w),m=B(w,"DIV",{class:!0});var _=M(m);p=G(_,T),_.forEach(E),g=O(w),v=B(w,"DIV",{class:!0});var L=M(v);y=G(L,A),L.forEach(E),w.forEach(E),this.h()},h(){L(t,"class","current-form-row icon-row svelte-11hg8fr"),L(o,"class","icon-name pos-0 svelte-11hg8fr"),L(i,"class","icon-name pos-1 svelte-11hg8fr"),L(u,"class","icon-name pos-2 svelte-11hg8fr"),L(m,"class","icon-name pos-3 svelte-11hg8fr"),L(v,"class","icon-name pos-4 svelte-11hg8fr"),L(r,"class","current-form-row name-row svelte-11hg8fr")},m(e,b){x(e,t,b),be(a,t,null),x(e,n,b),x(e,r,b),w(r,o),w(o,l),w(r,s),w(r,i),w(i,c),w(r,d),w(r,u),w(u,f),w(r,h),w(r,m),w(m,p),w(r,g),w(r,v),w(v,y),$=!0},p(e,t){const n={};8&t&&(n.form=e[3]+","),16&t&&(n.starTeams=e[4]),a.$set(n),(!$||32&t)&&b!==(b=e[5][0]+"")&&j(l,b),(!$||32&t)&&I!==(I=e[5][1]+"")&&j(c,I),(!$||32&t)&&D!==(D=e[5][2]+"")&&j(f,D),(!$||32&t)&&T!==(T=e[5][3]+"")&&j(p,T),(!$||32&t)&&A!==(A=e[5][4]+"")&&j(y,A)},i(e){$||(de(a.$$.fragment,e),$=!0)},o(e){ue(a.$$.fragment,e),$=!1},d(e){e&&E(t),we(a),e&&E(n),e&&E(r)}}}function yt(t){let a;return{c(){a=k("None")},l(e){a=G(e,"None")},m(e,t){x(e,a,t)},p:e,d(e){e&&E(a)}}}function $t(e){let t,a,n,r=(100*e[0].form[e[2]][e[0]._id][e[1]].formRating5).toFixed(1)+"";return{c(){t=V("span"),a=k(r),n=k("%"),this.h()},l(e){t=B(e,"SPAN",{class:!0});var o=M(t);a=G(o,r),n=G(o,"%"),o.forEach(E),this.h()},h(){L(t,"class","current-form-value svelte-11hg8fr")},m(e,r){x(e,t,r),w(t,a),w(t,n)},p(e,t){7&t&&r!==(r=(100*e[0].form[e[2]][e[0]._id][e[1]].formRating5).toFixed(1)+"")&&j(a,r)},d(e){e&&E(t)}}}function bt(e){let t,a,n,r,o=null!=e[5]&&vt(e);function l(e,t){return null!=e[1]?$t:yt}let s=l(e),i=s(e);return{c(){o&&o.c(),t=_(),a=V("div"),n=k("Current form:\r\n  "),i.c(),this.h()},l(e){o&&o.l(e),t=O(e),a=B(e,"DIV",{class:!0});var r=M(a);n=G(r,"Current form:\r\n  "),i.l(r),r.forEach(E),this.h()},h(){L(a,"class","current-form svelte-11hg8fr")},m(e,l){o&&o.m(e,l),x(e,t,l),x(e,a,l),w(a,n),i.m(a,null),r=!0},p(e,[n]){null!=e[5]?o?(o.p(e,n),32&n&&de(o,1)):(o=vt(e),o.c(),de(o,1),o.m(t.parentNode,t)):o&&(ie(),ue(o,1,1,(()=>{o=null})),ce()),s===(s=l(e))&&i?i.p(e,n):(i.d(1),i=s(e),i&&(i.c(),i.m(a,null)))},i(e){r||(de(o),r=!0)},o(e){ue(o),r=!1},d(e){o&&o.d(e),e&&E(t),e&&E(a),i.d()}}}function wt(e,t,a){function n(){let e=function(e,t){return Object.keys(e.form[t][e._id]).sort((function(a,n){return new Date(e.form[t][e._id][a].date)-new Date(e.form[t][e._id][n].date)}))}(s,c),t=function(e,t,a,n){let r=[];for(let o=a.length-1;o>=0&&(null!=e.form[t][e._id][a[o]].score&&r.push(a[o]),!(r.length>=n));o--);return r}(s,c,e,5);a(3,r=function(e,t){let a=[];Object.keys(e.form[t][e._id][i]).length>0&&(a=e.form[t][e._id][i].form5.split(""));for(let e=a.length;e<5;e++)a.unshift("N");return a.join("")}(s,c)),a(4,o=function(e,t,a){let n=[];for(let r of a){let a=e.form[t][e._id][r].team;n.unshift(e.teamRatings[a].totalRating>.75)}for(let e=n.length;e<5;e++)n.unshift(!1);return n}(s,c,t)),a(5,l=function(e,t,a){let n=[];for(let r of a)n.unshift(d(e.form[t][e._id][r].team));for(let e=n.length;e<5;e++)n.unshift("");return n}(s,c,t))}let r,o,l,{data:s,currentMatchday:i,team:c,toInitials:d}=t;return e.$$set=e=>{"data"in e&&a(0,s=e.data),"currentMatchday"in e&&a(1,i=e.currentMatchday),"team"in e&&a(2,c=e.team),"toInitials"in e&&a(6,d=e.toInitials)},e.$$.update=()=>{4&e.$$.dirty&&c&&n()},[s,i,c,r,o,l,d]}class xt extends Ie{constructor(e){super(),Ee(this,e,wt,bt,l,{data:0,currentMatchday:1,team:2,toInitials:6})}}function Et(e,t,a){const n=e.slice();return n[8]=t[a],n[10]=a,n}function It(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m,p,g,v=e[3].rows,y=[];for(let t=0;t<v.length;t+=1)y[t]=At(Et(e,v,t));let $=6!=e[3].teamTableIdx&&Lt();return{c(){t=V("div"),a=_(),n=V("div"),r=V("div"),o=_(),l=V("div"),s=k("Team"),i=_(),c=V("div"),d=k("GD"),u=_(),f=V("div"),h=k("Points"),m=_();for(let e=0;e<y.length;e+=1)y[e].c();p=_(),$&&$.c(),g=T(),this.h()},l(e){t=B(e,"DIV",{class:!0}),M(t).forEach(E),a=O(e),n=B(e,"DIV",{class:!0});var v=M(n);r=B(v,"DIV",{class:!0}),M(r).forEach(E),o=O(v),l=B(v,"DIV",{class:!0});var b=M(l);s=G(b,"Team"),b.forEach(E),i=O(v),c=B(v,"DIV",{class:!0});var w=M(c);d=G(w,"GD"),w.forEach(E),u=O(v),f=B(v,"DIV",{class:!0});var x=M(f);h=G(x,"Points"),x.forEach(E),v.forEach(E),m=O(e);for(let t=0;t<y.length;t+=1)y[t].l(e);p=O(e),$&&$.l(e),g=T(),this.h()},h(){L(t,"class","divider"),L(r,"class","table-element table-position column-title svelte-1l9y3x9"),L(l,"class","table-element table-team-name column-title svelte-1l9y3x9"),L(c,"class","table-element table-gd column-title svelte-1l9y3x9"),L(f,"class","table-element table-points column-title svelte-1l9y3x9"),L(n,"class","table-row svelte-1l9y3x9")},m(e,v){x(e,t,v),x(e,a,v),x(e,n,v),w(n,r),w(n,o),w(n,l),w(l,s),w(n,i),w(n,c),w(c,d),w(n,u),w(n,f),w(f,h),x(e,m,v);for(let t=0;t<y.length;t+=1)y[t].m(e,v);x(e,p,v),$&&$.m(e,v),x(e,g,v)},p(e,t){if(15&t){let a;for(v=e[3].rows,a=0;a<v.length;a+=1){const n=Et(e,v,a);y[a]?y[a].p(n,t):(y[a]=At(n),y[a].c(),y[a].m(p.parentNode,p))}for(;a<y.length;a+=1)y[a].d(1);y.length=v.length}6!=e[3].teamTableIdx?$||($=Lt(),$.c(),$.m(g.parentNode,g)):$&&($.d(1),$=null)},d(e){e&&E(t),e&&E(a),e&&E(n),e&&E(m),I(y,e),e&&E(p),$&&$.d(e),e&&E(g)}}}function Vt(t){let a;return{c(){a=V("div"),this.h()},l(e){a=B(e,"DIV",{id:!0,class:!0}),M(a).forEach(E),this.h()},h(){L(a,"id","divider"),L(a,"class","svelte-1l9y3x9")},m(e,t){x(e,a,t)},p:e,d(e){e&&E(a)}}}function Dt(e){let t,a=e[10]!=e[3].teamTableIdx&&kt();return{c(){a&&a.c(),t=T()},l(e){a&&a.l(e),t=T()},m(e,n){a&&a.m(e,n),x(e,t,n)},p(e,n){e[10]!=e[3].teamTableIdx?a||(a=kt(),a.c(),a.m(t.parentNode,t)):a&&(a.d(1),a=null)},d(e){a&&a.d(e),e&&E(t)}}}function kt(e){let t;return{c(){t=V("div"),this.h()},l(e){t=B(e,"DIV",{id:!0,class:!0}),M(t).forEach(E),this.h()},h(){L(t,"id","divider"),L(t,"class","svelte-1l9y3x9")},m(e,a){x(e,t,a)},d(e){e&&E(t)}}}function _t(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m,p=e[8].position+"",g=e[1](e[8].name)+"",v=e[8].gd+"",y=e[8].points+"";function $(){return e[6](e[8])}return{c(){t=V("div"),a=V("div"),n=k(p),r=_(),o=V("button"),l=k(g),s=_(),i=V("div"),c=k(v),d=_(),u=V("div"),f=k(y),this.h()},l(e){t=B(e,"DIV",{class:!0});var h=M(t);a=B(h,"DIV",{class:!0});var m=M(a);n=G(m,p),m.forEach(E),r=O(h),o=B(h,"BUTTON",{class:!0});var $=M(o);l=G($,g),$.forEach(E),s=O(h),i=B(h,"DIV",{class:!0});var b=M(i);c=G(b,v),b.forEach(E),d=O(h),u=B(h,"DIV",{class:!0});var w=M(u);f=G(w,y),w.forEach(E),h.forEach(E),this.h()},h(){L(a,"class","table-element table-position svelte-1l9y3x9"),L(o,"class","table-element table-team-name svelte-1l9y3x9"),L(i,"class","table-element table-gd svelte-1l9y3x9"),L(u,"class","table-element table-points svelte-1l9y3x9"),L(t,"class","table-row svelte-1l9y3x9")},m(e,p){x(e,t,p),w(t,a),w(a,n),w(t,r),w(t,o),w(o,l),w(t,s),w(t,i),w(i,c),w(t,d),w(t,u),w(u,f),h||(m=A(o,"click",$),h=!0)},p(t,a){e=t,8&a&&p!==(p=e[8].position+"")&&j(n,p),10&a&&g!==(g=e[1](e[8].name)+"")&&j(l,g),8&a&&v!==(v=e[8].gd+"")&&j(c,v),8&a&&y!==(y=e[8].points+"")&&j(f,y)},d(e){e&&E(t),h=!1,m()}}}function Tt(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m=e[8].position+"",p=e[1](e[8].name)+"",g=e[8].gd+"",v=e[8].points+"";return{c(){t=V("div"),a=V("div"),n=k(m),r=_(),o=V("a"),l=k(p),i=_(),c=V("div"),d=k(g),u=_(),f=V("div"),h=k(v),this.h()},l(e){t=B(e,"DIV",{class:!0,style:!0});var s=M(t);a=B(s,"DIV",{class:!0,style:!0});var y=M(a);n=G(y,m),y.forEach(E),r=O(s),o=B(s,"A",{href:!0,class:!0,style:!0});var $=M(o);l=G($,p),$.forEach(E),i=O(s),c=B(s,"DIV",{class:!0,style:!0});var b=M(c);d=G(b,g),b.forEach(E),u=O(s),f=B(s,"DIV",{class:!0,style:!0});var w=M(f);h=G(w,v),w.forEach(E),s.forEach(E),this.h()},h(){L(a,"class","table-element table-position this-team svelte-1l9y3x9"),q(a,"color","var(--"+e[0]+"-secondary)"),L(o,"href",s="/"+e[0]),L(o,"class","table-element table-team-name this-team svelte-1l9y3x9"),q(o,"color","var(--"+e[0]+"-secondary)"),L(c,"class","table-element table-gd this-team svelte-1l9y3x9"),q(c,"color","var(--"+e[0]+"-secondary)"),L(f,"class","table-element table-points this-team svelte-1l9y3x9"),q(f,"color","var(--"+e[0]+"-secondary)"),L(t,"class","table-row this-team svelte-1l9y3x9"),q(t,"background-color","var(--"+e[0]+")")},m(e,s){x(e,t,s),w(t,a),w(a,n),w(t,r),w(t,o),w(o,l),w(t,i),w(t,c),w(c,d),w(t,u),w(t,f),w(f,h)},p(e,r){8&r&&m!==(m=e[8].position+"")&&j(n,m),1&r&&q(a,"color","var(--"+e[0]+"-secondary)"),10&r&&p!==(p=e[1](e[8].name)+"")&&j(l,p),1&r&&s!==(s="/"+e[0])&&L(o,"href",s),1&r&&q(o,"color","var(--"+e[0]+"-secondary)"),8&r&&g!==(g=e[8].gd+"")&&j(d,g),1&r&&q(c,"color","var(--"+e[0]+"-secondary)"),8&r&&v!==(v=e[8].points+"")&&j(h,v),1&r&&q(f,"color","var(--"+e[0]+"-secondary)"),1&r&&q(t,"background-color","var(--"+e[0]+")")},d(e){e&&E(t)}}}function At(e){let t,a;function n(e,t){return 0==e[10]?Dt:e[10]-1!=e[3].teamTableIdx&&e[10]!=e[3].teamTableIdx?Vt:void 0}let r=n(e),o=r&&r(e);function l(e,t){return e[10]==e[3].teamTableIdx?Tt:_t}let s=l(e),i=s(e);return{c(){o&&o.c(),t=_(),i.c(),a=T()},l(e){o&&o.l(e),t=O(e),i.l(e),a=T()},m(e,n){o&&o.m(e,n),x(e,t,n),i.m(e,n),x(e,a,n)},p(e,c){r===(r=n(e))&&o?o.p(e,c):(o&&o.d(1),o=r&&r(e),o&&(o.c(),o.m(t.parentNode,t))),s===(s=l(e))&&i?i.p(e,c):(i.d(1),i=s(e),i&&(i.c(),i.m(a.parentNode,a)))},d(e){o&&o.d(e),e&&E(t),i.d(e),e&&E(a)}}}function Lt(e){let t;return{c(){t=V("div"),this.h()},l(e){t=B(e,"DIV",{id:!0,class:!0}),M(t).forEach(E),this.h()},h(){L(t,"id","divider"),L(t,"class","svelte-1l9y3x9")},m(e,a){x(e,t,a)},d(e){e&&E(t)}}}function Ct(t){let a,n=null!=t[3]&&It(t);return{c(){a=V("div"),n&&n.c(),this.h()},l(e){a=B(e,"DIV",{class:!0});var t=M(a);n&&n.l(t),t.forEach(E),this.h()},h(){L(a,"class","table-snippet svelte-1l9y3x9")},m(e,t){x(e,a,t),n&&n.m(a,null)},p(e,[t]){null!=e[3]?n?n.p(e,t):(n=It(e),n.c(),n.m(a,null)):n&&(n.d(1),n=null)},i:e,o:e,d(e){e&&E(a),n&&n.d()}}}function Mt(e,t,a){let n,{data:r,hyphenatedTeam:o,team:l,toAlias:s,switchTeam:i}=t;return e.$$set=e=>{"data"in e&&a(4,r=e.data),"hyphenatedTeam"in e&&a(0,o=e.hyphenatedTeam),"team"in e&&a(5,l=e.team),"toAlias"in e&&a(1,s=e.toAlias),"switchTeam"in e&&a(2,i=e.switchTeam)},e.$$.update=()=>{32&e.$$.dirty&&l&&function(){let e,t=Object.keys(r.standings).sort((function(e,t){return r.standings[e][r._id].position-r.standings[t][r._id].position})),[o,s]=function(e,t){let a=e.indexOf(t),n=a-3,r=a+4;return n<0&&(r-=n,n=0),r>e.length-1&&(n-=r-e.length,r=e.length),[n,r]}(t,l),i=[];for(let a=o;a<s;a++)t[a]==l&&(e=a-o),i.push({name:t[a],position:r.standings[t[a]][r._id].position,points:r.standings[t[a]][r._id].points,gd:r.standings[t[a]][r._id].gD});a(3,n={teamTableIdx:e,rows:i})}()},[o,s,i,n,r,l,e=>{i(e.name.toLowerCase().replace(/ /g,"-"))}]}class Pt extends Ie{constructor(e){super(),Ee(this,e,Mt,Ct,l,{data:4,hyphenatedTeam:0,team:5,toAlias:1,switchTeam:2})}}function Nt(e,t,a){const n=e.slice();return n[8]=t[a],n}function Bt(e){let t;function a(e,t){return null==e[0].upcoming[e[2]].nextTeam?Gt:St}let n=a(e),r=n(e);return{c(){r.c(),t=T()},l(e){r.l(e),t=T()},m(e,a){r.m(e,a),x(e,t,a)},p(e,o){n===(n=a(e))&&r?r.p(e,o):(r.d(1),r=n(e),r&&(r.c(),r.m(t.parentNode,t)))},d(e){r.d(e),e&&E(t)}}}function St(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m,p,g,v,y,$,b,D,T,C,P,N,S,q,z,H,R,F,U,Y,W,X,K,J,Q,Z,ee,te=e[4](e[0].upcoming[e[2]].nextTeam)+"",ae=e[0].upcoming[e[2]].atHome?"Home":"Away",ne=e[0].standings[e[0].upcoming[e[2]].nextTeam][e[0]._id].position+"",re=Yt(e[0].standings[e[0].upcoming[e[2]].nextTeam][e[0]._id].position)+"",oe=Math.round(e[0].upcoming[e[2]].prediction.homeGoals)+"",le=Math.round(e[0].upcoming[e[2]].prediction.awayGoals)+"";function se(e,t){return e[3]?jt:Ot}let ie=se(e),ce=ie(e);function de(e,t){return null!=e[1]?zt:qt}let ue=de(e),fe=ue(e);function he(e,t){return 0==e[0].upcoming[e[2]].prevMatches.length?Rt:Ht}let me=he(e),pe=me(e),ge=e[0].upcoming[e[2]].prevMatches,ve=[];for(let t=0;t<ge.length;t+=1)ve[t]=Ft(Nt(e,ge,t));return{c(){t=V("div"),a=V("div"),n=V("h1"),r=k("Next Game: \r\n          "),o=V("button"),l=k(te),s=k(" "),i=k("\r\n          ("),c=k(ae),d=k(")"),u=_(),f=V("div"),h=V("div"),ce.c(),m=_(),p=V("div"),g=V("div"),v=V("div"),y=k(ne),$=V("span"),b=k(re),D=_(),T=V("div"),C=k("Current form:\r\n              "),fe.c(),P=_(),N=V("div"),S=k("Score prediction\r\n              "),q=V("br"),z=_(),H=V("a"),R=V("b"),F=k(oe),U=k(" - "),Y=k(le),W=_(),X=V("br"),K=_(),J=V("div"),pe.c(),Q=_();for(let e=0;e<ve.length;e+=1)ve[e].c();this.h()},l(e){t=B(e,"DIV",{class:!0});var w=M(t);a=B(w,"DIV",{class:!0});var x=M(a);n=B(x,"H1",{class:!0});var I=M(n);r=G(I,"Next Game: \r\n          "),o=B(I,"BUTTON",{class:!0});var V=M(o);l=G(V,te),s=G(V," "),V.forEach(E),i=G(I,"\r\n          ("),c=G(I,ae),d=G(I,")"),I.forEach(E),x.forEach(E),u=O(w),f=B(w,"DIV",{class:!0});var k=M(f);h=B(k,"DIV",{class:!0});var _=M(h);ce.l(_),m=O(_),p=B(_,"DIV",{class:!0});var A=M(p);g=B(A,"DIV",{class:!0});var L=M(g);v=B(L,"DIV",{class:!0});var j=M(v);y=G(j,ne),$=B(j,"SPAN",{class:!0});var Z=M($);b=G(Z,re),Z.forEach(E),j.forEach(E),L.forEach(E),D=O(A),T=B(A,"DIV",{class:!0});var ee=M(T);C=G(ee,"Current form:\r\n              "),fe.l(ee),ee.forEach(E),P=O(A),N=B(A,"DIV",{class:!0});var se=M(N);S=G(se,"Score prediction\r\n              "),q=B(se,"BR",{}),z=O(se),H=B(se,"A",{class:!0,href:!0});var ie=M(H);R=B(ie,"B",{});var de=M(R);F=G(de,oe),U=G(de," - "),Y=G(de,le),de.forEach(E),ie.forEach(E),W=O(se),X=B(se,"BR",{}),se.forEach(E),A.forEach(E),_.forEach(E),K=O(k),J=B(k,"DIV",{class:!0});var ue=M(J);pe.l(ue),Q=O(ue);for(let e=0;e<ve.length;e+=1)ve[e].l(ue);ue.forEach(E),k.forEach(E),w.forEach(E),this.h()},h(){L(o,"class","next-game-team-btn svelte-yed2u9"),L(n,"class","next-game-title-text svelte-yed2u9"),L(a,"class","next-game-title svelte-yed2u9"),L($,"class","ordinal-position svelte-yed2u9"),L(v,"class","next-game-position svelte-yed2u9"),L(g,"class","next-game-item svelte-yed2u9"),L(T,"class","next-game-item current-form svelte-yed2u9"),L(H,"class","predictions-link svelte-yed2u9"),L(H,"href","/predictions"),L(N,"class","next-game-item svelte-yed2u9"),L(p,"class","predictions"),L(h,"class","predictions-and-logo svelte-yed2u9"),L(J,"class","past-results svelte-yed2u9"),L(f,"class","next-game-values svelte-yed2u9"),L(t,"class","next-game-prediction svelte-yed2u9")},m(E,I){x(E,t,I),w(t,a),w(a,n),w(n,r),w(n,o),w(o,l),w(o,s),w(n,i),w(n,c),w(n,d),w(t,u),w(t,f),w(f,h),ce.m(h,null),w(h,m),w(h,p),w(p,g),w(g,v),w(v,y),w(v,$),w($,b),w(p,D),w(p,T),w(T,C),fe.m(T,null),w(p,P),w(p,N),w(N,S),w(N,q),w(N,z),w(N,H),w(H,R),w(R,F),w(R,U),w(R,Y),w(N,W),w(N,X),w(f,K),w(f,J),pe.m(J,null),w(J,Q);for(let e=0;e<ve.length;e+=1)ve[e].m(J,null);Z||(ee=A(o,"click",e[7]),Z=!0)},p(e,t){if(21&t&&te!==(te=e[4](e[0].upcoming[e[2]].nextTeam)+"")&&j(l,te),5&t&&ae!==(ae=e[0].upcoming[e[2]].atHome?"Home":"Away")&&j(c,ae),ie===(ie=se(e))&&ce?ce.p(e,t):(ce.d(1),ce=ie(e),ce&&(ce.c(),ce.m(h,m))),5&t&&ne!==(ne=e[0].standings[e[0].upcoming[e[2]].nextTeam][e[0]._id].position+"")&&j(y,ne),5&t&&re!==(re=Yt(e[0].standings[e[0].upcoming[e[2]].nextTeam][e[0]._id].position)+"")&&j(b,re),ue===(ue=de(e))&&fe?fe.p(e,t):(fe.d(1),fe=ue(e),fe&&(fe.c(),fe.m(T,null))),5&t&&oe!==(oe=Math.round(e[0].upcoming[e[2]].prediction.homeGoals)+"")&&j(F,oe),5&t&&le!==(le=Math.round(e[0].upcoming[e[2]].prediction.awayGoals)+"")&&j(Y,le),me!==(me=he(e))&&(pe.d(1),pe=me(e),pe&&(pe.c(),pe.m(J,Q))),37&t){let a;for(ge=e[0].upcoming[e[2]].prevMatches,a=0;a<ge.length;a+=1){const n=Nt(e,ge,a);ve[a]?ve[a].p(n,t):(ve[a]=Ft(n),ve[a].c(),ve[a].m(J,null))}for(;a<ve.length;a+=1)ve[a].d(1);ve.length=ge.length}},d(e){e&&E(t),ce.d(),fe.d(),pe.d(),I(ve,e),Z=!1,ee()}}}function Gt(e){let t,a,n,r,o,l,s,i=e[0]._id+"",c=e[0]._id+1+"";return{c(){t=V("div"),a=V("div"),n=V("h1"),r=k(i),o=k("/"),l=k(c),s=k(" SEASON COMPLETE"),this.h()},l(e){t=B(e,"DIV",{class:!0});var d=M(t);a=B(d,"DIV",{class:!0});var u=M(a);n=B(u,"H1",{class:!0});var f=M(n);r=G(f,i),o=G(f,"/"),l=G(f,c),s=G(f," SEASON COMPLETE"),f.forEach(E),u.forEach(E),d.forEach(E),this.h()},h(){L(n,"class","next-game-title-text svelte-yed2u9"),L(a,"class","next-game-season-complete svelte-yed2u9"),L(t,"class","next-game-prediction svelte-yed2u9")},m(e,i){x(e,t,i),w(t,a),w(a,n),w(n,r),w(n,o),w(n,l),w(n,s)},p(e,t){1&t&&i!==(i=e[0]._id+"")&&j(r,i),1&t&&c!==(c=e[0]._id+1+"")&&j(l,c)},d(e){e&&E(t)}}}function Ot(t){let a;return{c(){a=V("div"),this.h()},l(e){a=B(e,"DIV",{class:!0}),M(a).forEach(E),this.h()},h(){L(a,"class","next-game-position svelte-yed2u9")},m(e,t){x(e,a,t)},p:e,d(e){e&&E(a)}}}function jt(e){let t;return{c(){t=V("div"),this.h()},l(e){t=B(e,"DIV",{class:!0,style:!0}),M(t).forEach(E),this.h()},h(){L(t,"class","next-game-logo opposition-badge svelte-yed2u9"),q(t,"background-image","url('"+e[0].logoURLs[e[0].upcoming[e[2]].nextTeam]+"')")},m(e,a){x(e,t,a)},p(e,a){5&a&&q(t,"background-image","url('"+e[0].logoURLs[e[0].upcoming[e[2]].nextTeam]+"')")},d(e){e&&E(t)}}}function qt(t){let a;return{c(){a=k("None")},l(e){a=G(e,"None")},m(e,t){x(e,a,t)},p:e,d(e){e&&E(a)}}}function zt(e){let t,a,n,r=(100*e[0].form[e[0].upcoming[e[2]].nextTeam][e[0]._id][e[1]].formRating5).toFixed(1)+"";return{c(){t=V("span"),a=k(r),n=k("%"),this.h()},l(e){t=B(e,"SPAN",{class:!0});var o=M(t);a=G(o,r),n=G(o,"%"),o.forEach(E),this.h()},h(){L(t,"class","current-form-value svelte-yed2u9")},m(e,r){x(e,t,r),w(t,a),w(t,n)},p(e,t){7&t&&r!==(r=(100*e[0].form[e[0].upcoming[e[2]].nextTeam][e[0]._id][e[1]].formRating5).toFixed(1)+"")&&j(a,r)},d(e){e&&E(t)}}}function Ht(e){let t,a;return{c(){t=V("div"),a=k("Previous Results"),this.h()},l(e){t=B(e,"DIV",{class:!0});var n=M(t);a=G(n,"Previous Results"),n.forEach(E),this.h()},h(){L(t,"class","next-game-item prev-results-title svelte-yed2u9")},m(e,n){x(e,t,n),w(t,a)},d(e){e&&E(t)}}}function Rt(e){let t,a;return{c(){t=V("div"),a=k("No Previous Results"),this.h()},l(e){t=B(e,"DIV",{class:!0});var n=M(t);a=G(n,"No Previous Results"),n.forEach(E),this.h()},h(){L(t,"class","next-game-item prev-results-title no-prev-results svelte-yed2u9")},m(e,n){x(e,t,n),w(t,a)},d(e){e&&E(t)}}}function Ft(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m,p,g,v,y,$,b,I,D,T,A,C=new Date(e[8].date).toLocaleDateString("en-GB",{year:"numeric",month:"short",day:"numeric"})+"",P=e[5](e[8].homeTeam)+"",N=e[8].homeGoals+"",S=e[8].awayGoals+"",z=e[5](e[8].awayTeam)+"";return{c(){t=V("div"),a=V("div"),n=k(C),r=_(),o=V("div"),l=V("div"),s=V("div"),i=V("div"),c=k(P),d=_(),u=V("div"),f=V("div"),h=k(N),m=_(),p=V("div"),g=V("div"),v=V("div"),y=k(S),$=_(),b=V("div"),I=k(z),D=_(),T=V("div"),A=_(),this.h()},l(e){t=B(e,"DIV",{class:!0});var w=M(t);a=B(w,"DIV",{class:!0});var x=M(a);n=G(x,C),x.forEach(E),r=O(w),o=B(w,"DIV",{class:!0});var V=M(o);l=B(V,"DIV",{class:!0});var k=M(l);s=B(k,"DIV",{class:!0});var _=M(s);i=B(_,"DIV",{class:!0,style:!0});var L=M(i);c=G(L,P),L.forEach(E),d=O(_),u=B(_,"DIV",{class:!0,style:!0});var j=M(u);f=B(j,"DIV",{class:!0});var q=M(f);h=G(q,N),q.forEach(E),j.forEach(E),_.forEach(E),m=O(k),p=B(k,"DIV",{class:!0});var H=M(p);g=B(H,"DIV",{class:!0,style:!0});var R=M(g);v=B(R,"DIV",{class:!0});var F=M(v);y=G(F,S),F.forEach(E),R.forEach(E),$=O(H),b=B(H,"DIV",{class:!0,style:!0});var U=M(b);I=G(U,z),U.forEach(E),H.forEach(E),k.forEach(E),D=O(V),T=B(V,"DIV",{style:!0}),M(T).forEach(E),V.forEach(E),A=O(w),w.forEach(E),this.h()},h(){L(a,"class","past-result-date result-details svelte-yed2u9"),L(i,"class","home-team svelte-yed2u9"),q(i,"background","var(--"+e[8].homeTeam.toLowerCase().replace(/ /g,"-")+")"),q(i,"color","var(--"+e[8].homeTeam.toLowerCase().replace(/ /g,"-")+"-secondary)"),L(f,"class","home-goals svelte-yed2u9"),L(u,"class","goals-container svelte-yed2u9"),q(u,"background","var(--"+Wt(e[8],!0).toLowerCase().replace(/ /g,"-")+")"),q(u,"color","var(--"+Wt(e[8],!0).toLowerCase().replace(/ /g,"-")+"-secondary)"),L(s,"class","left-side svelte-yed2u9"),L(v,"class","away-goals svelte-yed2u9"),L(g,"class","goals-container svelte-yed2u9"),q(g,"background","var(--"+Wt(e[8],!1).toLowerCase().replace(/ /g,"-")+")"),q(g,"color","var(--"+Wt(e[8],!1).toLowerCase().replace(/ /g,"-")+"-secondary)"),L(b,"class","away-team svelte-yed2u9"),q(b,"background","var(--"+e[8].awayTeam.toLowerCase().replace(/ /g,"-")+")"),q(b,"color","var(--"+e[8].awayTeam.toLowerCase().replace(/ /g,"-")+"-secondary)"),L(p,"class","right-side svelte-yed2u9"),L(l,"class","past-result svelte-yed2u9"),q(T,"clear","both"),L(o,"class","next-game-item result-details svelte-yed2u9"),L(t,"class","next-game-item-container")},m(e,E){x(e,t,E),w(t,a),w(a,n),w(t,r),w(t,o),w(o,l),w(l,s),w(s,i),w(i,c),w(s,d),w(s,u),w(u,f),w(f,h),w(l,m),w(l,p),w(p,g),w(g,v),w(v,y),w(p,$),w(p,b),w(b,I),w(o,D),w(o,T),w(t,A)},p(e,t){5&t&&C!==(C=new Date(e[8].date).toLocaleDateString("en-GB",{year:"numeric",month:"short",day:"numeric"})+"")&&j(n,C),37&t&&P!==(P=e[5](e[8].homeTeam)+"")&&j(c,P),5&t&&q(i,"background","var(--"+e[8].homeTeam.toLowerCase().replace(/ /g,"-")+")"),5&t&&q(i,"color","var(--"+e[8].homeTeam.toLowerCase().replace(/ /g,"-")+"-secondary)"),5&t&&N!==(N=e[8].homeGoals+"")&&j(h,N),5&t&&q(u,"background","var(--"+Wt(e[8],!0).toLowerCase().replace(/ /g,"-")+")"),5&t&&q(u,"color","var(--"+Wt(e[8],!0).toLowerCase().replace(/ /g,"-")+"-secondary)"),5&t&&S!==(S=e[8].awayGoals+"")&&j(y,S),5&t&&q(g,"background","var(--"+Wt(e[8],!1).toLowerCase().replace(/ /g,"-")+")"),5&t&&q(g,"color","var(--"+Wt(e[8],!1).toLowerCase().replace(/ /g,"-")+"-secondary)"),37&t&&z!==(z=e[5](e[8].awayTeam)+"")&&j(I,z),5&t&&q(b,"background","var(--"+e[8].awayTeam.toLowerCase().replace(/ /g,"-")+")"),5&t&&q(b,"color","var(--"+e[8].awayTeam.toLowerCase().replace(/ /g,"-")+"-secondary)")},d(e){e&&E(t)}}}function Ut(t){let a,n=null!=t[0]&&Bt(t);return{c(){n&&n.c(),a=T()},l(e){n&&n.l(e),a=T()},m(e,t){n&&n.m(e,t),x(e,a,t)},p(e,[t]){null!=e[0]?n?n.p(e,t):(n=Bt(e),n.c(),n.m(a.parentNode,a)):n&&(n.d(1),n=null)},i:e,o:e,d(e){n&&n.d(e),e&&E(a)}}}function Yt(e){let t=e%100;return[,"st","nd","rd"][t>20?t%10:t]||"th"}function Wt(e,t){return t?e.homeGoals<e.awayGoals?e.awayTeam:e.homeTeam:e.homeGoals>e.awayGoals?e.homeTeam:e.awayTeam}function Xt(e,t,a){let{data:n,currentMatchday:r,team:o,showBadge:l,toAlias:s,toInitials:i,switchTeam:c}=t;return e.$$set=e=>{"data"in e&&a(0,n=e.data),"currentMatchday"in e&&a(1,r=e.currentMatchday),"team"in e&&a(2,o=e.team),"showBadge"in e&&a(3,l=e.showBadge),"toAlias"in e&&a(4,s=e.toAlias),"toInitials"in e&&a(5,i=e.toInitials),"switchTeam"in e&&a(6,c=e.switchTeam)},[n,r,o,l,s,i,c,()=>{c(n.upcoming[o].nextTeam.toLowerCase().replace(/ /g,"-"))}]}class Kt extends Ie{constructor(e){super(),Ee(this,e,Xt,Ut,l,{data:0,currentMatchday:1,team:2,showBadge:3,toAlias:4,toInitials:5,switchTeam:6})}}function Jt(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m,p,g,v,y,$,b,I,D,T,A,C,P,N,S,q,z,H,R,F,U,Y,W,X,K,J,Q,Z,ee,te,ae,ne,re=e[2].xG+"",oe=e[1][e[0]].xG.toFixed(2)+"",le=e[2].xG+"",se=e[2].xC+"",ie=e[1][e[0]].xC.toFixed(2)+"",ce=e[2].xC+"",de=e[2].cleanSheetRatio+"",ue=e[1][e[0]].cleanSheetRatio.toFixed(2)+"",fe=e[2].cleanSheetRatio+"";return{c(){t=V("div"),a=V("div"),n=V("div"),r=V("div"),o=k(re),l=_(),s=V("div"),i=k(oe),c=_(),d=V("div"),u=k(le),h=_(),m=V("div"),p=k("goals per game"),g=_(),v=V("div"),y=V("div"),$=V("div"),b=k(se),I=_(),D=V("div"),T=k(ie),A=_(),C=V("div"),P=k(ce),S=_(),q=V("div"),z=k("conceded per game"),H=_(),R=V("div"),F=V("div"),U=V("div"),Y=k(de),W=_(),X=V("div"),K=k(ue),J=_(),Q=V("div"),Z=k(fe),te=_(),ae=V("div"),ne=k("clean sheets"),this.h()},l(e){t=B(e,"DIV",{class:!0});var f=M(t);a=B(f,"DIV",{class:!0});var w=M(a);n=B(w,"DIV",{class:!0});var x=M(n);r=B(x,"DIV",{class:!0});var V=M(r);o=G(V,re),V.forEach(E),l=O(x),s=B(x,"DIV",{class:!0});var k=M(s);i=G(k,oe),k.forEach(E),c=O(x),d=B(x,"DIV",{class:!0});var _=M(d);u=G(_,le),_.forEach(E),x.forEach(E),h=O(w),m=B(w,"DIV",{class:!0});var L=M(m);p=G(L,"goals per game"),L.forEach(E),w.forEach(E),g=O(f),v=B(f,"DIV",{class:!0});var N=M(v);y=B(N,"DIV",{class:!0});var j=M(y);$=B(j,"DIV",{class:!0});var ee=M($);b=G(ee,se),ee.forEach(E),I=O(j),D=B(j,"DIV",{class:!0});var he=M(D);T=G(he,ie),he.forEach(E),A=O(j),C=B(j,"DIV",{class:!0});var me=M(C);P=G(me,ce),me.forEach(E),j.forEach(E),S=O(N),q=B(N,"DIV",{class:!0});var pe=M(q);z=G(pe,"conceded per game"),pe.forEach(E),N.forEach(E),H=O(f),R=B(f,"DIV",{class:!0});var ge=M(R);F=B(ge,"DIV",{class:!0});var ve=M(F);U=B(ve,"DIV",{class:!0});var ye=M(U);Y=G(ye,de),ye.forEach(E),W=O(ve),X=B(ve,"DIV",{class:!0});var $e=M(X);K=G($e,ue),$e.forEach(E),J=O(ve),Q=B(ve,"DIV",{class:!0});var be=M(Q);Z=G(be,fe),be.forEach(E),ve.forEach(E),te=O(ge),ae=B(ge,"DIV",{class:!0});var we=M(ae);ne=G(we,"clean sheets"),we.forEach(E),ge.forEach(E),f.forEach(E),this.h()},h(){L(r,"class","season-stat-position hidden svelte-1wquk6c"),L(s,"class","season-stat-number"),L(d,"class",f="season-stat-position ssp-"+e[2].xG+" svelte-1wquk6c"),L(n,"class","season-stat-value svelte-1wquk6c"),L(m,"class","season-stat-text svelte-1wquk6c"),L(a,"class","season-stat goals-per-game svelte-1wquk6c"),L($,"class","season-stat-position hidden svelte-1wquk6c"),L(D,"class","season-stat-number"),L(C,"class",N="season-stat-position ssp-"+e[2].xC+" svelte-1wquk6c"),L(y,"class","season-stat-value svelte-1wquk6c"),L(q,"class","season-stat-text svelte-1wquk6c"),L(v,"class","season-stat conceded-per-game svelte-1wquk6c"),L(U,"class","season-stat-position hidden svelte-1wquk6c"),L(X,"class","season-stat-number"),L(Q,"class",ee="season-stat-position ssp-"+e[2].cleanSheetRatio+" svelte-1wquk6c"),L(F,"class","season-stat-value svelte-1wquk6c"),L(ae,"class","season-stat-text svelte-1wquk6c"),L(R,"class","season-stat clean-sheet-ratio svelte-1wquk6c"),L(t,"class","season-stats svelte-1wquk6c")},m(e,f){x(e,t,f),w(t,a),w(a,n),w(n,r),w(r,o),w(n,l),w(n,s),w(s,i),w(n,c),w(n,d),w(d,u),w(a,h),w(a,m),w(m,p),w(t,g),w(t,v),w(v,y),w(y,$),w($,b),w(y,I),w(y,D),w(D,T),w(y,A),w(y,C),w(C,P),w(v,S),w(v,q),w(q,z),w(t,H),w(t,R),w(R,F),w(F,U),w(U,Y),w(F,W),w(F,X),w(X,K),w(F,J),w(F,Q),w(Q,Z),w(R,te),w(R,ae),w(ae,ne)},p(e,t){4&t&&re!==(re=e[2].xG+"")&&j(o,re),3&t&&oe!==(oe=e[1][e[0]].xG.toFixed(2)+"")&&j(i,oe),4&t&&le!==(le=e[2].xG+"")&&j(u,le),4&t&&f!==(f="season-stat-position ssp-"+e[2].xG+" svelte-1wquk6c")&&L(d,"class",f),4&t&&se!==(se=e[2].xC+"")&&j(b,se),3&t&&ie!==(ie=e[1][e[0]].xC.toFixed(2)+"")&&j(T,ie),4&t&&ce!==(ce=e[2].xC+"")&&j(P,ce),4&t&&N!==(N="season-stat-position ssp-"+e[2].xC+" svelte-1wquk6c")&&L(C,"class",N),4&t&&de!==(de=e[2].cleanSheetRatio+"")&&j(Y,de),3&t&&ue!==(ue=e[1][e[0]].cleanSheetRatio.toFixed(2)+"")&&j(K,ue),4&t&&fe!==(fe=e[2].cleanSheetRatio+"")&&j(Z,fe),4&t&&ee!==(ee="season-stat-position ssp-"+e[2].cleanSheetRatio+" svelte-1wquk6c")&&L(Q,"class",ee)},d(e){e&&E(t)}}}function Qt(t){let a,n=null!=t[1]&&Jt(t);return{c(){n&&n.c(),a=T()},l(e){n&&n.l(e),a=T()},m(e,t){n&&n.m(e,t),x(e,a,t)},p(e,[t]){null!=e[1]?n?n.p(e,t):(n=Jt(e),n.c(),n.m(a.parentNode,a)):n&&(n.d(1),n=null)},i:e,o:e,d(e){n&&n.d(e),e&&E(a)}}}function Zt(e){let t=e%100;return e+([,"st","nd","rd"][t>20?t%10:t]||"th")}function ea(e,t,a,n){let r=Object.keys(e).sort((function(a,n){return e[n][t]-e[a][t]})).indexOf(a)+1;return n&&(r=21-r),r}function ta(e,t,a){return 0==t&&a||0==e&&!a}function aa(e,t,a){return a?e:t}function na(e,t,a){return a?t:e}function ra(e,t,a){return 0==e&&a||0==t&&!a}function oa(e,t,a,n){if(a in e.form)for(let r of Object.keys(e.form[a][n])){let o=e.form[a][n][r].score;if(null!=o){let[l,s,i]=o.split(" ");l=parseInt(l),i=parseInt(i);let c=e.form[a][n][r].atHome;ta(l,i,c)&&(t[a].cleanSheetRatio+=1),ra(l,i,c)&&(t[a].noGoalRatio+=1),t[a].xG+=aa(l,i,c),t[a].xC+=na(l,i,c),t[a].played+=1}}}function la(e,t,a){function n(e,t){a(2,o=function(e,t){return{xG:Zt(ea(e,"xG",t,!1)),xC:Zt(ea(e,"xC",t,!0)),cleanSheetRatio:Zt(ea(e,"cleanSheetRatio",t,!1))}}(e,t))}let r,o={xG:"",xC:"",cleanSheetRatio:""},l=!1;F((()=>{a(1,r=function(e){let t={};for(let a of Object.keys(e.standings))t[a]={cleanSheetRatio:0,noGoalRatio:0,xC:0,xG:0,played:0},oa(e,t,a,e._id),oa(e,t,a,e._id-1),t[a].played>0&&(t[a].xG/=t[a].played,t[a].xC/=t[a].played,t[a].cleanSheetRatio/=t[a].played,t[a].noGoalRatio/=t[a].played);return t}(s)),n(r,i),l=!0}));let{data:s,team:i}=t;return e.$$set=e=>{"data"in e&&a(3,s=e.data),"team"in e&&a(0,i=e.team)},e.$$.update=()=>{1&e.$$.dirty&&i&&l&&n(r,i)},[i,r,o,s]}class sa extends Ie{constructor(e){super(),Ee(this,e,la,Qt,l,{data:3,team:0})}}function ia(e){let t,a,n,r,o=new Date(e[0]).toLocaleString()+"";return{c(){t=V("div"),a=k("Last updated: "),n=k(o),r=k(" UTC"),this.h()},l(e){t=B(e,"DIV",{class:!0});var l=M(t);a=G(l,"Last updated: "),n=G(l,o),r=G(l," UTC"),l.forEach(E),this.h()},h(){L(t,"class","last-updated svelte-1snjhax")},m(e,o){x(e,t,o),w(t,a),w(t,n),w(t,r)},p(e,t){1&t&&o!==(o=new Date(e[0]).toLocaleString()+"")&&j(n,o)},d(e){e&&E(t)}}}function ca(t){let a,n,r,o,l,s=null!=t[0]&&ia(t);return{c(){a=V("div"),n=V("div"),s&&s.c(),r=_(),o=V("div"),l=k("pldashboard v2.0"),this.h()},l(e){a=B(e,"DIV",{class:!0});var t=M(a);n=B(t,"DIV",{class:!0});var i=M(n);s&&s.l(i),r=O(i),o=B(i,"DIV",{class:!0});var c=M(o);l=G(c,"pldashboard v2.0"),c.forEach(E),i.forEach(E),t.forEach(E),this.h()},h(){L(o,"class","version svelte-1snjhax"),L(n,"class","teams-footer-bottom svelte-1snjhax"),L(a,"class","teams-footer footer-text-colour svelte-1snjhax")},m(e,t){x(e,a,t),w(a,n),s&&s.m(n,null),w(n,r),w(n,o),w(o,l)},p(e,[t]){null!=e[0]?s?s.p(e,t):(s=ia(e),s.c(),s.m(n,r)):s&&(s.d(1),s=null)},i:e,o:e,d(e){e&&E(a),s&&s.d()}}}function da(e,t,a){let{lastUpdated:n}=t;return e.$$set=e=>{"lastUpdated"in e&&a(0,n=e.lastUpdated)},[n]}class ua extends Ie{constructor(e){super(),Ee(this,e,da,ca,l,{lastUpdated:0})}}function fa(t){let a,n;return{c(){a=V("div"),n=V("div"),this.h()},l(e){a=B(e,"DIV",{id:!0});var t=M(a);n=B(t,"DIV",{id:!0}),M(n).forEach(E),t.forEach(E),this.h()},h(){L(n,"id","plotDiv"),L(a,"id","plotly")},m(e,r){x(e,a,r),w(a,n),t[5](n)},p:e,i:e,o:e,d(e){e&&E(a),t[5](null)}}}function ha(e){let t,a=e.atHome?"Home":"Away";return t=null!=e.score?`${e.team} (${a}) ${e.score}`:`${e.team} (${a})`,t}function ma(e,t,a){let[n,r,o]=function(e,t){let a=[],n=[],r=[];for(let o=1;o<=38;o++){let l=e.fixtures[t][o];a.push(new Date(l.date));let s=e.teamRatings[l.team].totalRating;l.atHome&&(s*=1-e.homeAdvantages[l.team].totalHomeAdvantage),n.push(100*s);let i=ha(l);r.push(i)}return[a,n,r]}(e,t);!function(e,t,a){let n=[];for(let r=0;r<e.length;r++)n.push({x:e[r],y:t[r],details:a[r]});n.sort((function(e,t){return e.x<t.x?-1:e.x==t.x?0:1}));for(let r=0;r<n.length;r++)e[r]=n[r].x,t[r]=n[r].y,a[r]=n[r].details}(n,r,o);let l=Array.from({length:38},((e,t)=>t+1)),s=Array(n.length).fill(13);return s=function(e,t,a,n){let r,o=Number.POSITIVE_INFINITY;for(let e=0;e<t.length;e++){let n=t[e]-a;0<n&&n<o&&(o=n,r=e)}return null!=r&&(e[r]=n),e}(s,n,a,26),{x:n,y:r,type:"scatter",mode:"lines+markers",text:o,line:{color:"#737373"},marker:{size:s,colorscale:[[0,"#00fe87"],[.5,"#f3f3f3"],[1,"#f83027"]],color:r,opacity:1,line:{width:1}},customdata:l,hovertemplate:"<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>"}}function pa(e,t){let a={};return e<=t&&(a={type:"line",x0:e,y0:-4,x1:e,y1:104,line:{color:"black",dash:"dot",width:1}}),a}function ga(e,t){let a=Array.from(Array(11),((e,t)=>10*t)),[n,r]=function(e){let t=new Date(e[0]);t.setDate(t.getDate()-7);let a=new Date(e[e.length-1]);return a.setDate(a.getDate()+7),[t,a]}(e);return{title:!1,autosize:!0,margin:{r:20,l:60,t:5,b:40,pad:5},hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Team rating"},gridcolor:"#d6d6d6",showline:!1,zeroline:!1,fixedrange:!0,ticktext:a,tickvals:a},xaxis:{linecolor:"black",showgrid:!1,showline:!1,range:[n,r],fixedrange:!0},shapes:[pa(t,r)],dragmode:!1}}function va(e,t,a){function n(){if(s){let e={"yaxis.title":null,"margin.l":20,"yaxis.color":"#fafafa"},t=l.data[0].marker.size;for(let e=0;e<t.length;e++)t[e]=Math.round(t[e]/1.7);let a={marker:{size:t,colorscale:[[0,"#00fe87"],[.5,"#f3f3f3"],[1,"#f83027"]],color:l.data[0].y,opacity:1,line:{width:1}}};l.data[0].marker.size=t,Plotly.update(o,a,e,0)}}function r(){l=function(e,t){let a=Date.now(),n=ma(e,t,a);return{data:[n],layout:ga(n.x,a),config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}(i,c),new Plotly.newPlot(o,l.data,l.layout,l.config).then((e=>{e.children[0].children[0].classList.add("resizable-graph")}))}let o,l,s=!1;F((()=>{r(),a(4,s=!0)}));let{data:i,team:c,mobileView:d}=t;return e.$$set=e=>{"data"in e&&a(1,i=e.data),"team"in e&&a(2,c=e.team),"mobileView"in e&&a(3,d=e.mobileView)},e.$$.update=()=>{4&e.$$.dirty&&c&&function(){if(s){let e=ma(i,c,Date.now());l.data[0]=e,Plotly.redraw(o),d&&n()}}(),8&e.$$.dirty&&!d&&function(){if(s){let e={"yaxis.title":{text:"Team rating"},"margin.l":60,"yaxis.color":"black"},t=l.data[0].marker.size;for(let e=0;e<t.length;e++)t[e]=Math.round(1.7*t[e]);let a={marker:{size:t,colorscale:[[0,"#00fe87"],[.5,"#f3f3f3"],[1,"#f83027"]],color:l.data[0].y,opacity:1,line:{width:1}}};l.data[0].marker.size=t,Plotly.update(o,a,e,0)}}(),24&e.$$.dirty&&s&&d&&n()},[o,i,c,d,s,function(e){K[e?"unshift":"push"]((()=>{o=e,a(0,o)}))}]}class ya extends Ie{constructor(e){super(),Ee(this,e,va,fa,l,{data:1,team:2,mobileView:3})}}function $a(t){let a,n;return{c(){a=V("div"),n=V("div"),this.h()},l(e){a=B(e,"DIV",{id:!0});var t=M(a);n=B(t,"DIV",{id:!0}),M(n).forEach(E),t.forEach(E),this.h()},h(){L(n,"id","plotDiv"),L(a,"id","plotly")},m(e,r){x(e,a,r),w(a,n),t[6](n)},p:e,i:e,o:e,d(e){e&&E(a),t[6](null)}}}function ba(e,t,a){let n=[],r=[];for(let a in e.form[t][e._id])null!=e.form[t][e._id][a].score&&(r.push(a),n.push(new Date(e.form[t][e._id][a].date)));let o,l=[];for(let a of r){let n=e.form[t][e._id][a].formRating5;l.push(100*n)}if(a){let e=t[0].toLowerCase()+t.slice(1);e=e.replace(/ /g,"-").toLowerCase(),o={color:getComputedStyle(document.documentElement).getPropertyValue(`--${e}`),width:4}}else o={color:"#d3d3d3"};return{x:n,y:l,name:t,mode:"lines",line:o,text:r,hovertemplate:`<b>${t}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,showlegend:!1}}function wa(e,t){let a=[],n=Object.keys(e.standings);for(let r=0;r<n.length;r++)if(n[r]!=t){let t=ba(e,n[r],!1);a.push(t)}let r=ba(e,t,!0);return a.push(r),a}function xa(e,t,a){function n(){let e=Array.from(Array(11),((e,t)=>10*t));return{title:!1,autosize:!0,margin:{r:20,l:60,t:15,b:40,pad:5},hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Form rating"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0,ticktext:e,tickvals:e,range:[-1,101]},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0,range:[u[0],u[u.length-1]]},dragmode:!1}}function r(){if(i){let e={"yaxis.title":null,"yaxis.visible":!1,"margin.l":20,"margin.t":5};Plotly.update(l,{},e)}}function o(e,t){return{data:wa(e,t),layout:n(),config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}let l,s,i=!1;F((()=>{s=o(c,d),new Plotly.newPlot(l,s.data,s.layout,s.config).then((e=>{e.children[0].children[0].classList.add("resizable-graph")})),a(5,i=!0)}));let{data:c,team:d,playedMatchdays:u,mobileView:f}=t;return e.$$set=e=>{"data"in e&&a(1,c=e.data),"team"in e&&a(2,d=e.team),"playedMatchdays"in e&&a(3,u=e.playedMatchdays),"mobileView"in e&&a(4,f=e.mobileView)},e.$$.update=()=>{4&e.$$.dirty&&d&&function(){if(i){let e=o(c,d);for(let t=0;t<20;t++)s.data[t]=e.data[t];s.layout.xaxis.range[0]=u[0],s.layout.xaxis.range[1]=u[u.length-1],Plotly.redraw(l),f&&r()}}(),16&e.$$.dirty&&!f&&function(){if(i){let e={"yaxis.title":{text:"Form rating"},"yaxis.visible":!0,"margin.l":60,"margin.t":15};Plotly.update(l,{},e)}}(),48&e.$$.dirty&&i&&f&&r()},[l,c,d,u,f,i,function(e){K[e?"unshift":"push"]((()=>{l=e,a(0,l)}))}]}class Ea extends Ie{constructor(e){super(),Ee(this,e,xa,$a,l,{data:1,team:2,playedMatchdays:3,mobileView:4})}}function Ia(t){let a,n;return{c(){a=V("div"),n=V("div"),this.h()},l(e){a=B(e,"DIV",{id:!0});var t=M(a);n=B(t,"DIV",{id:!0}),M(n).forEach(E),t.forEach(E),this.h()},h(){L(n,"id","plotDiv"),L(a,"id","plotly")},m(e,r){x(e,a,r),w(a,n),t[6](n)},p:e,i:e,o:e,d(e){e&&E(a),t[6](null)}}}function Va(e,t,a,n){let r=Object.keys(e.form[a][e._id]),o=function(e,t,a){let n=[];for(let r of a){let a=e.form[t][e._id][r].position;n.push(a)}return n}(e,a,r),l=function(e,t){let a;if(t){let t=e[0].toLowerCase()+e.slice(1);t=t.replace(/ /g,"-").toLowerCase(),a={color:getComputedStyle(document.documentElement).getPropertyValue(`--${t}`),width:4}}else a={color:"#d3d3d3"};return a}(a,n);return{x:t,y:o,name:a,mode:"lines",line:l,text:r,hovertemplate:`<b>${a}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,showlegend:!1}}function Da(e,t,a){let n=[],r=Object.keys(e.standings);for(let o=0;o<Object.keys(e.standings).length;o++)if(r[o]!=t){let t=Va(e,a,r[o],!1);n.push(t)}let o=Va(e,a,t,!0);return n.push(o),n}function ka(e,t,a){function n(){return[{type:"rect",x0:f[0],y0:4.5,x1:f[f.length-1],y1:.5,line:{width:0},fillcolor:"#00fe87",opacity:.2,layer:"below"},{type:"rect",x0:f[0],y0:6.5,x1:f[f.length-1],y1:4.5,line:{width:0},fillcolor:"#02efff",opacity:.2,layer:"below"},{type:"rect",x0:f[0],y0:20.5,x1:f[f.length-1],y1:17.5,line:{width:0},fillcolor:"#f83027",opacity:.2,layer:"below"}]}function r(){let e=Array.from(Array(20),((e,t)=>t+1));return{title:!1,autosize:!0,margin:{r:20,l:60,t:15,b:40,pad:5},hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Position"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,autorange:"reversed",fixedrange:!0,ticktext:e,tickvals:e,visible:!0},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0},shapes:n(),dragmode:!1}}function o(){if(c){let e={"yaxis.title":null,"yaxis.visible":!1,"yaxis.tickvals":Array.from(Array(10),((e,t)=>t+2)),"margin.l":20,"margin.t":5};Plotly.update(s,{},e)}}function l(e,t){return{data:Da(e,t,f),layout:r(),config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}let s,i,c=!1;F((()=>{i=l(d,u),new Plotly.newPlot(s,i.data,i.layout,i.config).then((e=>{e.children[0].children[0].classList.add("resizable-graph")})),a(5,c=!0)}));let{data:d,team:u,playedMatchdays:f,mobileView:h}=t;return e.$$set=e=>{"data"in e&&a(1,d=e.data),"team"in e&&a(2,u=e.team),"playedMatchdays"in e&&a(3,f=e.playedMatchdays),"mobileView"in e&&a(4,h=e.mobileView)},e.$$.update=()=>{4&e.$$.dirty&&u&&function(){if(c){let e=l(d,u);for(let t=0;t<20;t++)i.data[t]=e.data[t];i.layout.shapes=n(),Plotly.redraw(s),h&&o()}}(),16&e.$$.dirty&&!h&&function(){if(c){let e={"yaxis.title":{text:"Position"},"yaxis.visible":!0,"yaxis.tickvals":Array.from(Array(20),((e,t)=>t+1)),"margin.l":60,"margin.t":15};Plotly.update(s,{},e)}}(),48&e.$$.dirty&&c&&h&&o()},[s,d,u,f,h,c,function(e){K[e?"unshift":"push"]((()=>{s=e,a(0,s)}))}]}class _a extends Ie{constructor(e){super(),Ee(this,e,ka,Ia,l,{data:1,team:2,playedMatchdays:3,mobileView:4})}}function Ta(t){let a,n;return{c(){a=V("div"),n=V("div"),this.h()},l(e){a=B(e,"DIV",{id:!0});var t=M(a);n=B(t,"DIV",{id:!0}),M(n).forEach(E),t.forEach(E),this.h()},h(){L(n,"id","plotDiv"),L(a,"id","plotly")},m(e,r){x(e,a,r),w(a,n),t[6](n)},p:e,i:e,o:e,d(e){e&&E(a),t[6](null)}}}function Aa(e){let t={};for(let a of Object.keys(e.standings))for(let n of Object.keys(e.form[a][e._id])){let r=e.form[a][e._id][n].score;if(null!=r){let[e,a,o]=r.split(" ");e=parseInt(e),o=parseInt(o),n in t?t[n]+=e+o:t[n]=e+o}}for(let e of Object.keys(t))t[e]/=20;return t}function La(e,t){let a={},n={};for(let r of Object.keys(e.form[t][e._id])){let o=e.form[t][e._id][r].score;if(null!=o){let[l,s,i]=o.split(" ");l=parseInt(l),i=parseInt(i),e.form[t][e._id][r].atHome?(a[r]=l,n[r]=i):(a[r]=i,n[r]=l)}}return[a,n]}function Ca(e,t,a){return{name:"Avg",type:"line",x:e,y:Object.values(t),text:a,hovertemplate:"<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",line:{color:"#0080FF",width:2}}}function Ma(e,t,a){return{name:"Scored",type:"bar",x:e,y:Object.values(t),text:a,marker:{color:"#00fe87"},hovertemplate:"<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>"}}function Pa(e,t,a){return{name:"Conceded",type:"bar",x:e,y:Object.values(t),text:a,marker:{color:"#f83027"},hovertemplate:"<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>"}}function Na(e,t,a){function n(){if(l){let e={"yaxis.title":null,"yaxis.visible":!1,"margin.l":20};Plotly.update(r,{},e)}}let r,o,l=!1;F((()=>{o=function(e,t){let[a,n]=La(e,t),r=Aa(e),o=Object.keys(r);return{data:[Ma(c,a,o),Pa(c,n,o),Ca(c,r,o)],layout:{title:!1,autosize:!0,margin:{r:20,l:60,t:15,b:15,pad:5},barmode:"stack",hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Goals"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0,rangemode:"nonnegative",visible:!0,tickformat:"d"},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0,showticklabels:!1},legend:{x:1,xanchor:"right",y:1},dragmode:!1},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}(s,i),new Plotly.newPlot(r,o.data,o.layout,o.config).then((e=>{e.children[0].children[0].classList.add("resizable-graph")})),a(5,l=!0)}));let{data:s,team:i,playedMatchdays:c,mobileView:d}=t;return e.$$set=e=>{"data"in e&&a(1,s=e.data),"team"in e&&a(2,i=e.team),"playedMatchdays"in e&&a(3,c=e.playedMatchdays),"mobileView"in e&&a(4,d=e.mobileView)},e.$$.update=()=>{4&e.$$.dirty&&i&&function(){if(l){let[e,t]=La(s,i),a=Aa(s),l=Object.keys(a),u=Ma(c,e,l),f=Pa(c,t,l),h=Ca(c,a,l);o.data[0]=u,o.data[1]=f,o.data[2]=h,Plotly.redraw(r),d&&n()}}(),16&e.$$.dirty&&!d&&function(){if(l){let e={"yaxis.title":{text:"Goals"},"yaxis.visible":!0,"margin.l":60};Plotly.update(r,{},e)}}(),48&e.$$.dirty&&l&&d&&n()},[r,s,i,c,d,l,function(e){K[e?"unshift":"push"]((()=>{r=e,a(0,r)}))}]}class Ba extends Ie{constructor(e){super(),Ee(this,e,Na,Ta,l,{data:1,team:2,playedMatchdays:3,mobileView:4})}}function Sa(t){let a,n;return{c(){a=V("div"),n=V("div"),this.h()},l(e){a=B(e,"DIV",{id:!0});var t=M(a);n=B(t,"DIV",{id:!0}),M(n).forEach(E),t.forEach(E),this.h()},h(){L(n,"id","plotDiv"),L(a,"id","plotly")},m(e,r){x(e,a,r),w(a,n),t[6](n)},p:e,i:e,o:e,d(e){e&&E(a),t[6](null)}}}function Ga(e,t,a){let n=Object.keys(e.form[t][e._id]),[r,o]=function(e,t){let a=[],n=[];for(let r of Object.keys(e.form[t][e._id])){let o=e.form[t][e._id][r].score;if(null!=o){let[l,s,i]=o.split(" ");l=parseInt(l),i=parseInt(i),e.form[t][e._id][r].atHome?i>0?(a.push(1),n.push(0)):(n.push(1),a.push(0)):l>0?(a.push(1),n.push(0)):(n.push(1),a.push(0))}}return[n,a]}(e,t);return[{name:"Clean sheets",type:"bar",x:a,y:r,text:n,marker:{color:"#00fe87"},hovertemplate:"<b>Clean sheet<extra></extra>",showlegend:!1},{name:"Conceded",type:"bar",x:a,y:o,text:n,marker:{color:"#f83027"},hovertemplate:"<b>Goals conceded<extra></extra>",showlegend:!1}]}function Oa(e){return{name:"Avg",type:"line",x:e,y:Array(e.length).fill(1.1),line:{color:"#FAFAFA",width:1},marker:{size:1},hoverinfo:"skip"}}function ja(e,t,a){function n(){return{type:"line",x0:d[0],y0:.5,x1:d[d.length-1],y1:.5,layer:"below",line:{color:"#d3d3d3",width:2}}}function r(){if(s){let e={"margin.l":20};Plotly.update(o,{},e)}}let o,l,s=!1;F((()=>{l=function(e,t){let[a,r]=Ga(e,t,d);return{data:[a,r,Oa(a.x)],layout:{title:!1,autosize:!0,height:60,margin:{r:20,l:60,t:0,b:40,pad:5},barmode:"stack",hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{showticklabels:!1,gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0},shapes:[n()],dragmode:!1,showlegend:!1},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}(i,c),new Plotly.newPlot(o,l.data,l.layout,l.config),a(5,s=!0)}));let{data:i,team:c,playedMatchdays:d,mobileView:u}=t;return e.$$set=e=>{"data"in e&&a(1,i=e.data),"team"in e&&a(2,c=e.team),"playedMatchdays"in e&&a(3,d=e.playedMatchdays),"mobileView"in e&&a(4,u=e.mobileView)},e.$$.update=()=>{4&e.$$.dirty&&c&&function(){if(s){let[e,t]=Ga(i,c,d),a=Oa(e.x);l.data[0]=e,l.data[1]=t,l.data[2]=a,l.layout.shapes[0]=n(),Plotly.redraw(o),u&&r()}}(),16&e.$$.dirty&&!u&&function(){if(s){let e={"margin.l":60};Plotly.update(o,{},e)}}(),48&e.$$.dirty&&s&&u&&r()},[o,i,c,d,u,s,function(e){K[e?"unshift":"push"]((()=>{o=e,a(0,o)}))}]}class qa extends Ie{constructor(e){super(),Ee(this,e,ja,Sa,l,{data:1,team:2,playedMatchdays:3,mobileView:4})}}function za(t){let a,n;return{c(){a=V("div"),n=V("div"),this.h()},l(e){a=B(e,"DIV",{id:!0});var t=M(a);n=B(t,"DIV",{id:!0}),M(n).forEach(E),t.forEach(E),this.h()},h(){L(n,"id","plotDiv"),L(a,"id","plotly")},m(e,r){x(e,a,r),w(a,n),t[8](n)},p:e,i:e,o:e,d(e){e&&E(a),t[8](null)}}}function Ha(e,t,a){function n(){let e=f();return{title:!1,autosize:!0,margin:{r:20,l:60,t:15,b:40,pad:5},hovermode:"closest",barmode:"overlay",bargap:0,plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:h(),xaxis:{title:{text:"Scored"},linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0,ticktext:e,tickvals:e},legend:{x:1,xanchor:"right",y:.95},dragmode:!1}}function r(){if(i){let e={"yaxis.title":null,"yaxis.visible":!1,"margin.l":20};Plotly.update(l,{},e)}}function o(){s={data:d(),layout:n(),config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}},new Plotly.newPlot(l,s.data,s.layout,s.config).then((e=>{e.children[0].children[0].classList.add("resizable-graph")}))}let l,s,i=!1;F((()=>{o(),a(7,i=!0)}));let{team:c,getScoredBars:d,getScoredTeamBars:u,getXLabels:f,getYAxisLayout:h,mobileView:m}=t;return e.$$set=e=>{"team"in e&&a(1,c=e.team),"getScoredBars"in e&&a(2,d=e.getScoredBars),"getScoredTeamBars"in e&&a(3,u=e.getScoredTeamBars),"getXLabels"in e&&a(4,f=e.getXLabels),"getYAxisLayout"in e&&a(5,h=e.getYAxisLayout),"mobileView"in e&&a(6,m=e.mobileView)},e.$$.update=()=>{2&e.$$.dirty&&c&&i&&(s.data[1]=u(),Plotly.relayout(l,{yaxis:h()}),Plotly.redraw(l),m&&r()),64&e.$$.dirty&&!m&&function(){if(i){let e={"yaxis.title":{text:"Scored"},"yaxis.visible":!0,"margin.l":60};Plotly.update(l,{},e)}}(),192&e.$$.dirty&&i&&m&&r()},[l,c,d,u,f,h,m,i,function(e){K[e?"unshift":"push"]((()=>{l=e,a(0,l)}))}]}class Ra extends Ie{constructor(e){super(),Ee(this,e,Ha,za,l,{team:1,getScoredBars:2,getScoredTeamBars:3,getXLabels:4,getYAxisLayout:5,mobileView:6})}}function Fa(t){let a,n;return{c(){a=V("div"),n=V("div"),this.h()},l(e){a=B(e,"DIV",{id:!0});var t=M(a);n=B(t,"DIV",{id:!0}),M(n).forEach(E),t.forEach(E),this.h()},h(){L(n,"id","plotDiv"),L(a,"id","plotly")},m(e,r){x(e,a,r),w(a,n),t[8](n)},p:e,i:e,o:e,d(e){e&&E(a),t[8](null)}}}function Ua(e,t,a){function n(){let e=f();return{title:!1,autosize:!0,margin:{r:20,l:60,t:15,b:40,pad:5},hovermode:"closest",barmode:"overlay",bargap:0,plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:h(),xaxis:{title:{text:"Conceded"},linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0,ticktext:e,tickvals:e},legend:{x:1,xanchor:"right",y:.95},dragmode:!1}}function r(){if(i){let e={"yaxis.title":null,"yaxis.visible":!1,"margin.l":20};Plotly.update(l,{},e)}}function o(){s={data:d(),layout:n(),config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}},new Plotly.newPlot(l,s.data,s.layout,s.config).then((e=>{e.children[0].children[0].classList.add("resizable-graph")}))}let l,s,i=!1;F((()=>{o(),a(7,i=!0)}));let{team:c,getConcededBars:d,getConcededTeamBars:u,getXLabels:f,getYAxisLayout:h,mobileView:m}=t;return e.$$set=e=>{"team"in e&&a(1,c=e.team),"getConcededBars"in e&&a(2,d=e.getConcededBars),"getConcededTeamBars"in e&&a(3,u=e.getConcededTeamBars),"getXLabels"in e&&a(4,f=e.getXLabels),"getYAxisLayout"in e&&a(5,h=e.getYAxisLayout),"mobileView"in e&&a(6,m=e.mobileView)},e.$$.update=()=>{2&e.$$.dirty&&c&&i&&(s.data[1]=u(),Plotly.relayout(l,{yaxis:h()}),Plotly.redraw(l),m&&r()),64&e.$$.dirty&&!m&&function(){if(i){let e={"yaxis.title":{text:"Conceded"},"yaxis.visible":!0,"margin.l":60};Plotly.update(l,{},e)}}(),192&e.$$.dirty&&i&&m&&r()},[l,c,d,u,f,h,m,i,function(e){K[e?"unshift":"push"]((()=>{l=e,a(0,l)}))}]}class Ya extends Ie{constructor(e){super(),Ee(this,e,Ua,Fa,l,{team:1,getConcededBars:2,getConcededTeamBars:3,getXLabels:4,getYAxisLayout:5,mobileView:6})}}function Wa(e){let t,a,n,r,o,l;return a=new Ra({props:{team:e[0],getScoredBars:e[3],getScoredTeamBars:e[5],getXLabels:e[7],getYAxisLayout:e[8],mobileView:e[1]}}),o=new Ya({props:{team:e[0],getConcededBars:e[4],getConcededTeamBars:e[6],getXLabels:e[7],getYAxisLayout:e[8],mobileView:e[1]}}),{c(){t=V("div"),ye(a.$$.fragment),n=_(),r=V("div"),ye(o.$$.fragment),this.h()},l(e){t=B(e,"DIV",{class:!0});var l=M(t);$e(a.$$.fragment,l),l.forEach(E),n=O(e),r=B(e,"DIV",{class:!0});var s=M(r);$e(o.$$.fragment,s),s.forEach(E),this.h()},h(){L(t,"class","graph freq-graph mini-graph"),L(r,"class","graph freq-graph mini-graph")},m(e,s){x(e,t,s),be(a,t,null),x(e,n,s),x(e,r,s),be(o,r,null),l=!0},p(e,t){const n={};1&t&&(n.team=e[0]),2&t&&(n.mobileView=e[1]),a.$set(n);const r={};1&t&&(r.team=e[0]),2&t&&(r.mobileView=e[1]),o.$set(r)},i(e){l||(de(a.$$.fragment,e),de(o.$$.fragment,e),l=!0)},o(e){ue(a.$$.fragment,e),ue(o.$$.fragment,e),l=!1},d(e){e&&E(t),we(a),e&&E(n),e&&E(r),we(o)}}}function Xa(e){let t,a,n=e[2]&&Wa(e);return{c(){t=V("div"),n&&n.c(),this.h()},l(e){t=B(e,"DIV",{class:!0});var a=M(t);n&&n.l(a),a.forEach(E),this.h()},h(){L(t,"class","two-graphs svelte-1y33275")},m(e,r){x(e,t,r),n&&n.m(t,null),a=!0},p(e,[a]){e[2]?n?(n.p(e,a),4&a&&de(n,1)):(n=Wa(e),n.c(),de(n,1),n.m(t,null)):n&&(ie(),ue(n,1,1,(()=>{n=null})),ce())},i(e){a||(de(n),a=!0)},o(e){ue(n),a=!1},d(e){e&&E(t),n&&n.d()}}}function Ka(e,t,a){let n="Score";return"Conceded"==t&&(n="Concede"),{x:Object.keys(e),y:Object.values(e),type:"bar",name:t,marker:{color:a},hovertemplate:`${n} %{x} with probability <b>%{y:.2f}</b><extra></extra>`,line:{width:0},hoverinfo:"x+y",opacity:.5}}function Ja(e,t,a,n){if(n in e.form)for(let r of Object.keys(e.form[n][a])){let o=e.form[n][a][r].score;if(null!=o){let[l,s,i]=o.split(" ");l=parseInt(l),i=parseInt(i),e.form[n][a][r].atHome?l in t?t[l]+=1:t[l]=1:i in t?t[i]+=1:t[i]=1}}}function Qa(e){let t=function(e){let t=0;for(let a in e){let e=parseInt(a);e>t&&(t=e)}return t}(e);for(let a=1;a<t;a++)a in e||(e[a]=0)}function Za(e,t){let a={};return Ja(e,a,e._id,t),Ja(e,a,e._id-1,t),Qa(a),a}function en(e,t,a,n){if(n in e.form)for(let r of Object.keys(e.form[n][a])){let o=e.form[n][a][r].score;if(null!=o){let[l,s,i]=o.split(" ");l=parseInt(l),i=parseInt(i),e.form[n][a][r].atHome?i in t?t[i]+=1:t[i]=1:l in t?t[l]+=1:t[l]=1}}}function tn(e,t){let a={};return en(e,a,e._id,t),en(e,a,e._id-1,t),Qa(a),a}function an(e,t){for(let a of Object.values(e))a>t&&(t=a);return t}function nn(e,t,a){let n=0;return n=an(e,n),n=an(t,n),n=an(a,n),n}function rn(e){let t=0;for(let a in e)t+=e[a];return t}function on(e,t,a){let n=rn(e),r=rn(t);for(let e in t)t[e]*=n/r;let o=rn(a);for(let e in a)a[e]*=n/o}function ln(e){let t=rn(e);for(let a in e)e[a]/=t}function sn(e,t,a){function n(e,t,a){return[{x:Object.keys(s),y:Object.values(s),type:"bar",name:"Avg",marker:{color:"#C6C6C6"},line:{width:0},hovertemplate:"Average %{x} with probability <b>%{y:.2f}</b><extra></extra>",hoverinfo:"x+y"},Ka(e,t,a)]}let r=["#00fe87","#aef23e","#ffdd00","#ff9000","#f83027"],o=(l=r,l.slice().reverse()).concat(["#00fe87","#00fe87","#00fe87","#00fe87","#00fe87"]);var l;let s,i,c,d,u=r.concat(["#f83027","#f83027","#f83027","#f83027","#f83027"]);let f=!1;F((()=>{s=function(e){let t={};for(let a of Object.keys(e.standings))Ja(e,t,e._id,a),Ja(e,t,e._id-1,a);Qa(t);for(let e of Object.keys(t))t[e]/=20;return t}(h),i=Za(h,m),c=tn(h,m),on(s,i,c),function(e,t,a){ln(e),ln(t),ln(a)}(s,i,c),d=nn(s,i,c),a(2,f=!0)}));let{data:h,team:m,mobileView:p}=t;return e.$$set=e=>{"data"in e&&a(9,h=e.data),"team"in e&&a(0,m=e.team),"mobileView"in e&&a(1,p=e.mobileView)},e.$$.update=()=>{1&e.$$.dirty&&m&&f&&(i=Za(h,m),c=tn(h,m),on(s,i,c),ln(i),ln(c),d=nn(s,i,c))},[m,p,f,function(){return n(i,"Scored",o)},function(){return n(c,"Conceded",u)},function(){return Ka(i,"Scored",o)},function(){return Ka(c,"Conceded",u)},function(){return Object.keys(s)},function(){return{title:{text:"Probability"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0,autorange:!1,range:[0,d]}},h]}class cn extends Ie{constructor(e){super(),Ee(this,e,sn,Xa,l,{data:9,team:0,mobileView:1})}}function dn(e,t,a){const n=e.slice();return n[31]=t[a],n}function un(e){let t,a,n,r,o=e[2](e[31])+"";return{c(){t=V("button"),a=k(o),this.h()},l(e){t=B(e,"BUTTON",{class:!0});var n=M(t);a=G(n,o),n.forEach(E),this.h()},h(){L(t,"class","spider-opp-team-btn svelte-1cvzyov")},m(o,l){x(o,t,l),w(t,a),n||(r=A(t,"click",e[8]),n=!0)},p(e,t){6&t[0]&&o!==(o=e[2](e[31])+"")&&j(a,o)},d(e){e&&E(t),n=!1,r()}}}function fn(e){let t,a=e[31]!=e[0]&&un(e);return{c(){a&&a.c(),t=T()},l(e){a&&a.l(e),t=T()},m(e,n){a&&a.m(e,n),x(e,t,n)},p(e,n){e[31]!=e[0]?a?a.p(e,n):(a=un(e),a.c(),a.m(t.parentNode,t)):a&&(a.d(1),a=null)},d(e){a&&a.d(e),e&&E(t)}}}function hn(t){let a,n,r,o,l,s,i=t[1],c=[];for(let e=0;e<i.length;e+=1)c[e]=fn(dn(t,i,e));return{c(){a=V("div"),n=V("div"),r=V("div"),o=_(),l=V("div"),s=V("div");for(let e=0;e<c.length;e+=1)c[e].c();this.h()},l(e){a=B(e,"DIV",{class:!0});var t=M(a);n=B(t,"DIV",{id:!0});var i=M(n);r=B(i,"DIV",{id:!0}),M(r).forEach(E),i.forEach(E),t.forEach(E),o=O(e),l=B(e,"DIV",{class:!0});var d=M(l);s=B(d,"DIV",{class:!0,id:!0});var u=M(s);for(let e=0;e<c.length;e+=1)c[e].l(u);u.forEach(E),d.forEach(E),this.h()},h(){L(r,"id","plotDiv"),L(n,"id","plotly"),L(a,"class","spider-chart svelte-1cvzyov"),L(s,"class","spider-opp-team-btns svelte-1cvzyov"),L(s,"id","spider-opp-teams"),L(l,"class","spider-opp-team-selector svelte-1cvzyov")},m(e,i){x(e,a,i),w(a,n),w(n,r),t[7](r),x(e,o,i),x(e,l,i),w(l,s);for(let e=0;e<c.length;e+=1)c[e].m(s,null)},p(e,t){if(23&t[0]){let a;for(i=e[1],a=0;a<i.length;a+=1){const n=dn(e,i,a);c[a]?c[a].p(n,t):(c[a]=fn(n),c[a].c(),c[a].m(s,null))}for(;a<c.length;a+=1)c[a].d(1);c.length=i.length}},i:e,o:e,d(e){e&&E(a),t[7](null),e&&E(o),e&&E(l),I(c,e)}}}function mn(e){let t=e[0].toLowerCase()+e.slice(1);return t=t.replace(/ /g,"-").toLowerCase(),getComputedStyle(document.documentElement).getPropertyValue(`--${t}`)}function pn(e,t,a){return t in e&&null!=e[t][a][1]}function gn(e,t){let a=0;for(let n in e)e[n]=e[n]/t*100,a+=e[n];return a/Object.keys(e).length}function vn(e){let t=0;for(let a in e)t+=e[a];return t/Object.keys(e).length}function yn(e){let[t,a]=function(e){let t={},a=Number.NEGATIVE_INFINITY,n=Number.POSITIVE_INFINITY;for(let r of Object.keys(e.standings)){let o=0,l=0;for(let t in e.standings[r]){let a=e.standings[r][t].gF;a>0&&(o+=a,l+=e.standings[r][t].played)}let s=null;l>0&&(s=o/l),s>a?a=s:s<n&&(n=s),t[r]=s}return[t,[n,a]]}(e);return t=function(e,t){let[a,n]=t;for(let t in e)null==e[t]?e[t]=0:e[t]=(e[t]-a)/(n-a)*100;return e}(t,a),t.avg=vn(t),t}function $n(e){let[t,a]=function(e){let t={},a=Number.NEGATIVE_INFINITY,n=Number.POSITIVE_INFINITY;for(let r of Object.keys(e.standings)){let o=0,l=0;for(let t in e.standings[r]){let a=e.standings[r][t].gA;a>0&&(o+=a,l+=e.standings[r][t].played)}let s=null;l>0&&(s=o/l),a=Math.max(a,s),n=Math.min(n,s),t[r]=s}return[t,[n,a]]}(e);return t=function(e,t){let[a,n]=t;for(let t in e)null==e[t]?e[t]=0:e[t]=100-(e[t]-a)/(n-a)*100;return e}(t,a),t.avg=vn(t),t}function bn(e,t,a){let n=0;for(let r in e[t][a]){let o=e[t][a][r];if(null!=o.score){let[e,t,a]=o.score.split(" ");o.atHome&&0==a?n+=1:o.atHome||0!=e||(n+=1)}}return n}function wn(e,t,a){let n=0,r=null;for(let o in e[t][a]){let l=e[t][a][o];if(null!=l.score){let e,[t,a,o]=l.score.split(" ");e=l.atHome&&t>o||!l.atHome&&t<o?"win":l.atHome&&t<o||!l.atHome&&t>o?"lost":"draw",null!=r&&r==e&&(n+=1),r=e}}return n}function xn(e,t,a){let n=0,r=0;for(let o in e[t][a]){let l=e[t][a][o];if(null!=l.score){let[e,t,a]=l.score.split(" ");l.atHome&&e>a||!l.atHome&&e<a?(r+=1,r>n&&(n=r)):r=0}}return n}function En(e,t){let a=e.indexOf(t);return a>-1&&e.splice(a,1),e}function In(e,t,a,n){let r=0;for(let o in e[t][a]){let l=e[t][a][o];if(null!=l.score&&n.includes(l.team)){let[e,t,a]=l.score.split(" ");(l.atHome&&e>a||!l.atHome&&e<a)&&(r+=1)}}return r}function Vn(e,t,a){function n(){let e=l();g.data.unshift(e)}function r(e){let t=V(e.innerHTML);if(""==e.style.background){let a=t.toLowerCase().replace(/ /g,"-");e.style.background=`var(--${a})`,e.style.color=`var(--${a}-secondary)`}else e.style.background="",e.style.color="black";0==y.length&&g.data.splice(0,1),y.includes(t)?(!function(e){for(let t=0;t<g.data.length;t++)if(g.data[t].name==e){g.data.splice(t,1);break}1==y.length&&n(),Plotly.redraw(p)}(t),En(y,t)):(!function(e){let t=mn(e),a={name:e,type:"scatterpolar",r:[c[e],d[e],u[e],f[e],h[e],m[e]],theta:v,fill:"toself",marker:{color:t}};g.data.push(a),Plotly.redraw(p)}(t),y.push(t))}function o(e,t,a){return{name:e,type:"scatterpolar",r:t,theta:v,fill:"toself",marker:{color:a},hovertemplate:`<b>${e}</b><br>%{theta}: %{r}<extra></extra>`,hoveron:"points"}}function l(){return o("Avg",[c.avg,d.avg,u.avg,f.avg,h.avg,m.avg],"#ADADAD")}function s(e){let t=l(),a=function(e){let t=mn(e);return o(e,[c[e],d[e],u[e],f[e],h[e],m[e]],t)}(e);return[t,a]}function i(e){c=yn(e),d=$n(e),u=function(e){let t={},a=Number.NEGATIVE_INFINITY;for(let n of Object.keys(e.standings)){let r=bn(e.form,n,e._id);pn(e.form,n,e._id-1)&&(r+=bn(e.form,n,e._id-1)),pn(e.form,n,e._id-2)&&(r+=bn(e.form,n,e._id-2)),r>a&&(a=r),t[n]=r}return t.avg=gn(t,a),t}(e),f=function(e){let t={},a=Number.NEGATIVE_INFINITY;for(let n of Object.keys(e.standings)){let r=wn(e.form,n,e._id);pn(e.form,n,e._id-1)&&(r+=wn(e.form,n,e._id-1)),pn(e.form,n,e._id-2)&&(r+=wn(e.form,n,e._id-2)),r>a&&(a=r),t[n]=r}return t.avg=gn(t,a),t}(e),h=function(e){let t={},a=Number.NEGATIVE_INFINITY;for(let n of Object.keys(e.standings)){let r=xn(e.form,n,e._id);pn(e.form,n,e._id-1)&&(r+=xn(e.form,n,e._id-1)),pn(e.form,n,e._id-2)&&(r+=xn(e.form,n,e._id-2)),r>a&&(a=r),t[n]=r}return t.avg=gn(t,a),t}(e),m=function(e){let t={},a=Number.NEGATIVE_INFINITY;for(let n of Object.keys(e.standings)){let r=["Manchester United","Liverpool","Manchester City","Arsenal","Chelsea","Tottenham Hotspur"];r=En(r,n);let o=In(e.form,n,e._id,r);pn(e.form,n,e._id-1)&&(o+=In(e.form,n,e._id-1,r)),pn(e.form,n,e._id-2)&&(o+=In(e.form,n,e._id-2,r)),o>a&&(a=o),t[n]=o}return t.avg=gn(t,a),t}(e)}let c,d,u,f,h,m,p,g,v=["Attack","Defence","Clean Sheets","Consistency","Win Streak","Vs Big 6"],y=[],$=!1;function b(){if($){let e=s(x);!function(e){let t=e.length;for(let a=0;a<t;a++)e.pop()}(g.data),g.data.push(e[0]),g.data.push(e[1]),function(){for(let e=0;e<y.length;e++){for(let e=0;e<g.data.length;e++)if(g.data[e].name==y[e]){g.data.splice(e,1);break}1==y.length&&n(),En(y,y[e])}Plotly.redraw(p)}(),function(){let e=document.getElementById("spider-opp-teams");for(let t=0;t<e.children.length;t++){let a=e.children[t];""!=a.style.background&&(a.style.background="",a.style.color="black")}}(),setTimeout((()=>{document.getElementById("spider-opp-teams").children[0].classList.add("top-spider-opp-team-btn"),document.getElementById("spider-opp-teams").children[18].classList.add("bottom-spider-opp-team-btn")}),0)}}F((()=>{g=function(e,t){return i(e),{data:s(t),layout:{height:550,polar:{radialaxis:{visible:!0,range:[0,100]}},hover:"closest",margin:{t:25,b:25,l:75,r:75},showlegend:!1,plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",dragmode:!1},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}(w,x),new Plotly.newPlot(p,g.data,g.layout,g.config).then((e=>{e.children[0].children[0].classList.add("resizable-spider-chart")})),document.getElementById("spider-opp-teams").children[0].classList.add("top-spider-opp-team-btn"),document.getElementById("spider-opp-teams").children[18].classList.add("bottom-spider-opp-team-btn"),$=!0}));let{data:w,team:x,teams:E,toAlias:I,toName:V}=t;return e.$$set=e=>{"data"in e&&a(5,w=e.data),"team"in e&&a(0,x=e.team),"teams"in e&&a(1,E=e.teams),"toAlias"in e&&a(2,I=e.toAlias),"toName"in e&&a(6,V=e.toName)},e.$$.update=()=>{1&e.$$.dirty[0]&&x&&b()},[x,E,I,p,r,w,V,function(e){K[e?"unshift":"push"]((()=>{p=e,a(3,p)}))},e=>{r(e.target)}]}class Dn extends Ie{constructor(e){super(),Ee(this,e,Vn,hn,l,{data:5,team:0,teams:1,toAlias:2,toName:6},null,[-1,-1])}}function kn(t){let a,n;return{c(){a=V("div"),n=V("div"),this.h()},l(e){a=B(e,"DIV",{id:!0});var t=M(a);n=B(t,"DIV",{id:!0}),M(n).forEach(E),t.forEach(E),this.h()},h(){L(n,"id","plotDiv"),L(a,"id","plotly")},m(e,r){x(e,a,r),w(a,n),t[5](n)},p:e,i:e,o:e,d(e){e&&E(a),t[5](null)}}}function _n(e,t,a){return t in e&&null!=e[t][a][1]}function Tn(e,t,a,n){for(let r in t[a][n]){let o=t[a][n][r].score;if(null!=o){let[l,s,i]=o.split(" ");t[a][n][r].atHome||(o=i+" - "+l),e[o][1]+=1}}}function An(e,t,a){for(let e in a)1==a[e].length&&a[e].push(0);Tn(a,e.form,t,e._id),_n(e.form,t,e._id-1)&&Tn(a,e.form,t,e._id-1),_n(e.form,t,e._id-2)&&Tn(a,e.form,t,e._id-2)}function Ln(e){let t=Object.entries(e).sort(((e,t)=>t[1][0]-e[1][0])),a=[],n=[],r=[];for(let e=0;e<t.length;e++)a.push(t[e][0]),n.push(t[e][1][0]),r.push(t[e][1][1]);return[{x:a,y:n,type:"bar",name:"Avg",marker:{color:"#C6C6C6"},hovertemplate:"%{x} with probability <b>%{y:.2f}</b><extra></extra>",hoverinfo:"x+y"},{x:a,y:r,type:"bar",name:"Scorelines",marker:{color:function(e){let t=[];for(let a of e){let[e,n,r]=a.split(" ");e=parseInt(e),r=parseInt(r),e>r?t.push("#00fe87"):e<r?t.push("#f83027"):t.push("#ffdd00")}return t}(a)},hovertemplate:"%{x} with probability <b>%{y:.2f}</b><extra></extra>",hoverinfo:"x+y",opacity:.5}]}function Cn(e){let t=0,a=0;for(let n in e)t+=e[n][0],a+=e[n][1];for(let n in e)e[n][1]*=t/a}function Mn(e){let t=0,a=0;for(let n in e)t+=e[n][0],a+=e[n][1];for(let n in e)e[n][0]/=t,e[n][1]/=a}function Pn(e,t,a){function n(e,t,a,n){for(let r in t[a][n]){let t=d.form[a][n][r].score;if(null!=t){let[o,l,s]=t.split(" ");d.form[a][n][r].atHome||(t=s+" - "+o),t in e||(e[t]=[0]),e[t][0]+=1}}}function r(){if(c){let e={"yaxis.title":null,"yaxis.visible":!1,"xaxis.tickfont.size":5,"margin.l":20};Plotly.update(l,{},e)}}function o(e,t){i=function(e){let t={};for(let a in e.form)n(t,e.form,a,e._id),_n(e.form,a,e._id-1)&&n(t,e.form,a,e._id-1),_n(e.form,a,e._id-2)&&n(t,e.form,a,e._id-2);return t}(e),An(e,t,i),Cn(i),Mn(i);let[a,r]=Ln(i);return{data:[a,r],layout:{title:!1,autosize:!0,margin:{r:20,l:65,t:15,b:60,pad:5},hovermode:"closest",barmode:"overlay",bargap:0,plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Probability"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0},xaxis:{title:{text:"Scoreline"},linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0},legend:{x:1,xanchor:"right",y:.95},dragmode:!1},config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}let l,s,i,c=!1;F((()=>{s=o(d,u),new Plotly.newPlot(l,s.data,s.layout,s.config).then((e=>{e.children[0].children[0].classList.add("resizable-graph")})),a(4,c=!0)}));let{data:d,team:u,mobileView:f}=t;return e.$$set=e=>{"data"in e&&a(1,d=e.data),"team"in e&&a(2,u=e.team),"mobileView"in e&&a(3,f=e.mobileView)},e.$$.update=()=>{4&e.$$.dirty&&u&&function(){if(c){!function(e){for(let t in e)e[t][1]=0}(i),An(d,u,i),Cn(i),Mn(i);let[e,t]=Ln(i);s.data[1]=t,Plotly.redraw(l),f&&r()}}(),8&e.$$.dirty&&!f&&function(){if(c){let e={"yaxis.title":{text:"Probability"},"yaxis.visible":!0,"xaxis.tickfont.size":12,"margin.l":65};Plotly.update(l,{},e)}}(),24&e.$$.dirty&&c&&f&&r()},[l,d,u,f,c,function(e){K[e?"unshift":"push"]((()=>{l=e,a(0,l)}))}]}class Nn extends Ie{constructor(e){super(),Ee(this,e,Pn,kn,l,{data:1,team:2,mobileView:3})}}function Bn(e,t,a){const n=e.slice();return n[9]=t[a],n[8]=a,n}function Sn(e,t,a){const n=e.slice();return n[6]=t[a],n[8]=a,n}function Gn(e){let t,a=[],n=new Map,r=e[1];const o=e=>e[9];for(let t=0;t<r.length;t+=1){let l=Bn(e,r,t),s=o(l);n.set(s,a[t]=zn(s,l))}return{c(){for(let e=0;e<a.length;e+=1)a[e].c();t=T()},l(e){for(let t=0;t<a.length;t+=1)a[t].l(e);t=T()},m(e,n){for(let t=0;t<a.length;t+=1)a[t].m(e,n);x(e,t,n)},p(e,l){15&l&&(r=e[1],a=pe(a,l,o,1,e,r,n,t.parentNode,he,zn,t,Bn))},d(e){for(let t=0;t<a.length;t+=1)a[t].d(e);e&&E(t)}}}function On(e){let t,a=e[4],n=[];for(let t=0;t<a.length;t+=1)n[t]=Hn(Sn(e,a,t));return{c(){for(let e=0;e<n.length;e+=1)n[e].c();t=T()},l(e){for(let t=0;t<n.length;t+=1)n[t].l(e);t=T()},m(e,a){for(let t=0;t<n.length;t+=1)n[t].m(e,a);x(e,t,a)},p(e,r){if(16&r){let o;for(a=e[4],o=0;o<a.length;o+=1){const l=Sn(e,a,o);n[o]?n[o].p(l,r):(n[o]=Hn(l),n[o].c(),n[o].m(t.parentNode,t))}for(;o<n.length;o+=1)n[o].d(1);n.length=a.length}},d(e){I(n,e),e&&E(t)}}}function jn(e){let t,a,n,r,o,l,s=e[2](e[9])+"";function i(){return e[5](e[9])}return{c(){t=V("button"),a=V("div"),n=k(s),r=_(),this.h()},l(e){t=B(e,"BUTTON",{class:!0});var o=M(t);a=B(o,"DIV",{class:!0});var l=M(a);n=G(l,s),l.forEach(E),r=O(o),o.forEach(E),this.h()},h(){L(a,"class","team-name svelte-14nmjz0"),L(t,"class","team-link svelte-14nmjz0")},m(e,s){x(e,t,s),w(t,a),w(a,n),w(t,r),o||(l=A(t,"click",i),o=!0)},p(t,a){e=t,6&a&&s!==(s=e[2](e[9])+"")&&j(n,s)},d(e){e&&E(t),o=!1,l()}}}function qn(e){let t,a,n,r,o,l=e[2](e[9])+"";return{c(){t=V("a"),a=V("div"),n=k(l),r=_(),this.h()},l(e){t=B(e,"A",{href:!0,class:!0});var o=M(t);a=B(o,"DIV",{class:!0,style:!0});var s=M(a);n=G(s,l),s.forEach(E),r=O(o),o.forEach(E),this.h()},h(){L(a,"class","this-team-name svelte-14nmjz0"),q(a,"color","var(--"+e[9].toLowerCase().replace(/ /g,"-")+"-secondary)"),q(a,"background-color","var(--"+e[9].toLowerCase().replace(/ /g,"-")+")"),L(t,"href",o="/"+e[9].toLowerCase().replace(/ /g,"-")),L(t,"class","team-link")},m(e,o){x(e,t,o),w(t,a),w(a,n),w(t,r)},p(e,r){6&r&&l!==(l=e[2](e[9])+"")&&j(n,l),2&r&&q(a,"color","var(--"+e[9].toLowerCase().replace(/ /g,"-")+"-secondary)"),2&r&&q(a,"background-color","var(--"+e[9].toLowerCase().replace(/ /g,"-")+")"),2&r&&o!==(o="/"+e[9].toLowerCase().replace(/ /g,"-"))&&L(t,"href",o)},d(e){e&&E(t)}}}function zn(e,t){let a,n,r;function o(e,t){return 3&t&&(n=null),null==n&&(n=!(e[9].toLowerCase().replace(/ /g,"-")!=e[0])),n?qn:jn}let l=o(t,-1),s=l(t);return{key:e,first:null,c(){a=T(),s.c(),r=T(),this.h()},l(e){a=T(),s.l(e),r=T(),this.h()},h(){this.first=a},m(e,t){x(e,a,t),s.m(e,t),x(e,r,t)},p(e,a){l===(l=o(t=e,a))&&s?s.p(t,a):(s.d(1),s=l(t),s&&(s.c(),s.m(r.parentNode,r)))},d(e){e&&E(a),s.d(e),e&&E(r)}}}function Hn(t){let a;return{c(){a=V("div"),this.h()},l(e){a=B(e,"DIV",{class:!0,style:!0}),M(a).forEach(E),this.h()},h(){L(a,"class","placeholder svelte-14nmjz0"),q(a,"width",t[6]+"%")},m(e,t){x(e,a,t)},p:e,d(e){e&&E(a)}}}function Rn(t){let a,n,r,o,l,s,c,d,u,f,h,m,p,g,v;function y(e,t){return 0==e[1].length?On:Gn}let $=y(t),b=$(t);return{c(){a=V("nav"),n=V("div"),r=V("p"),o=V("span"),l=k("pl"),s=k("dashboard"),c=_(),d=V("div"),b.c(),u=_(),f=V("div"),h=V("button"),m=V("img"),this.h()},l(e){a=B(e,"NAV",{id:!0,class:!0});var t=M(a);n=B(t,"DIV",{class:!0});var i=M(n);r=B(i,"P",{});var p=M(r);o=B(p,"SPAN",{style:!0});var g=M(o);l=G(g,"pl"),g.forEach(E),s=G(p,"dashboard"),p.forEach(E),i.forEach(E),c=O(t),d=B(t,"DIV",{class:!0});var v=M(d);b.l(v),v.forEach(E),u=O(t),f=B(t,"DIV",{class:!0});var y=M(f);h=B(y,"BUTTON",{class:!0});var $=M(h);m=B($,"IMG",{src:!0,alt:!0}),$.forEach(E),y.forEach(E),t.forEach(E),this.h()},h(){q(o,"color","#00fe87"),L(n,"class","title no-selection svelte-14nmjz0"),L(d,"class","team-links svelte-14nmjz0"),i(m.src,p="img/arrow-bar-left.svg")||L(m,"src","img/arrow-bar-left.svg"),L(m,"alt",""),L(h,"class","close-btn svelte-14nmjz0"),L(f,"class","close"),L(a,"id","navBar"),L(a,"class","svelte-14nmjz0")},m(e,t){x(e,a,t),w(a,n),w(n,r),w(r,o),w(o,l),w(r,s),w(a,c),w(a,d),b.m(d,null),w(a,u),w(a,f),w(f,h),w(h,m),g||(v=A(h,"click",Fn),g=!0)},p(e,[t]){$===($=y(e))&&b?b.p(e,t):(b.d(1),b=$(e),b&&(b.c(),b.m(d,null)))},i:e,o:e,d(e){e&&E(a),b.d(),g=!1,v()}}}function Fn(){document.getElementById("navBar").style.display="none",document.getElementById("dashboard").style.marginLeft="0",window.dispatchEvent(new Event("resize"))}function Un(e,t,a){let n=[];for(let e=0;e<20;e++)n.push(35+5*Math.floor(8*Math.random()));let{team:r,teams:o,toAlias:l,switchTeam:s}=t;return e.$$set=e=>{"team"in e&&a(0,r=e.team),"teams"in e&&a(1,o=e.teams),"toAlias"in e&&a(2,l=e.toAlias),"switchTeam"in e&&a(3,s=e.switchTeam)},[r,o,l,s,n,e=>{s(e.toLowerCase().replace(/ /g,"-"))}]}class Yn extends Ie{constructor(e){super(),Ee(this,e,Un,Rn,l,{team:0,teams:1,toAlias:2,switchTeam:3})}}function Wn(e,t,a){const n=e.slice();return n[11]=t[a],n[13]=a,n}function Xn(e){let t,a=e[2],n=[];for(let t=0;t<a.length;t+=1)n[t]=er(Wn(e,a,t));return{c(){t=V("div");for(let e=0;e<n.length;e+=1)n[e].c();this.h()},l(e){t=B(e,"DIV",{class:!0});var a=M(t);for(let e=0;e<n.length;e+=1)n[e].l(a);a.forEach(E),this.h()},h(){L(t,"class","team-links svelte-1d401pl")},m(e,a){x(e,t,a);for(let e=0;e<n.length;e+=1)n[e].m(t,null)},p(e,r){if(15&r){let o;for(a=e[2],o=0;o<a.length;o+=1){const l=Wn(e,a,o);n[o]?n[o].p(l,r):(n[o]=er(l),n[o].c(),n[o].m(t,null))}for(;o<n.length;o+=1)n[o].d(1);n.length=a.length}},d(e){e&&E(t),I(n,e)}}}function Kn(e){let t;function a(e,t){return 0==e[13]||1==e[13]&&null==e[2][0]?Zn:e[13]==e[2].length-1||e[13]==e[2].length-2&&null==e[2][e[2].length-1]?Qn:Jn}let n=a(e),r=n(e);return{c(){r.c(),t=T()},l(e){r.l(e),t=T()},m(e,a){r.m(e,a),x(e,t,a)},p(e,o){n===(n=a(e))&&r?r.p(e,o):(r.d(1),r=n(e),r&&(r.c(),r.m(t.parentNode,t)))},d(e){r.d(e),e&&E(t)}}}function Jn(e){let t,a,n,r,o=e[1](e[0][e[13]])+"";function l(){return e[9](e[11])}return{c(){t=V("button"),a=k(o),this.h()},l(e){t=B(e,"BUTTON",{style:!0,class:!0});var n=M(t);a=G(n,o),n.forEach(E),this.h()},h(){q(t,"color","var(--"+e[11]+"-secondary)"),q(t,"background-color","var(--"+e[11]+")"),L(t,"class","team-link svelte-1d401pl")},m(e,o){x(e,t,o),w(t,a),n||(r=A(t,"click",l),n=!0)},p(n,r){e=n,3&r&&o!==(o=e[1](e[0][e[13]])+"")&&j(a,o),4&r&&q(t,"color","var(--"+e[11]+"-secondary)"),4&r&&q(t,"background-color","var(--"+e[11]+")")},d(e){e&&E(t),n=!1,r()}}}function Qn(e){let t,a,n,r,o=e[1](e[0][e[13]])+"";function l(){return e[8](e[13])}return{c(){t=V("button"),a=k(o),this.h()},l(e){t=B(e,"BUTTON",{style:!0,class:!0});var n=M(t);a=G(n,o),n.forEach(E),this.h()},h(){q(t,"color","var(--"+e[2][e[13]]+"-secondary)"),q(t,"background-color","var(--"+e[2][e[13]]+")"),L(t,"class","team-link last-team svelte-1d401pl")},m(e,o){x(e,t,o),w(t,a),n||(r=A(t,"click",l),n=!0)},p(n,r){e=n,3&r&&o!==(o=e[1](e[0][e[13]])+"")&&j(a,o),4&r&&q(t,"color","var(--"+e[2][e[13]]+"-secondary)"),4&r&&q(t,"background-color","var(--"+e[2][e[13]]+")")},d(e){e&&E(t),n=!1,r()}}}function Zn(e){let t,a,n,r,o=e[1](e[0][e[13]])+"";function l(){return e[7](e[13])}return{c(){t=V("button"),a=k(o),this.h()},l(e){t=B(e,"BUTTON",{style:!0,class:!0});var n=M(t);a=G(n,o),n.forEach(E),this.h()},h(){q(t,"color","var(--"+e[2][e[13]]+"-secondary)"),q(t,"background-color","var(--"+e[2][e[13]]+")"),L(t,"class","team-link first-team svelte-1d401pl")},m(e,o){x(e,t,o),w(t,a),n||(r=A(t,"click",l),n=!0)},p(n,r){e=n,3&r&&o!==(o=e[1](e[0][e[13]])+"")&&j(a,o),4&r&&q(t,"color","var(--"+e[2][e[13]]+"-secondary)"),4&r&&q(t,"background-color","var(--"+e[2][e[13]]+")")},d(e){e&&E(t),n=!1,r()}}}function er(e){let t,a=null!=e[11]&&Kn(e);return{c(){a&&a.c(),t=T()},l(e){a&&a.l(e),t=T()},m(e,n){a&&a.m(e,n),x(e,t,n)},p(e,n){null!=e[11]?a?a.p(e,n):(a=Kn(e),a.c(),a.m(t.parentNode,t)):a&&(a.d(1),a=null)},d(e){a&&a.d(e),e&&E(t)}}}function tr(t){let a,n=null!=t[2]&&Xn(t);return{c(){a=V("nav"),n&&n.c(),this.h()},l(e){a=B(e,"NAV",{id:!0,style:!0,class:!0});var t=M(a);n&&n.l(t),t.forEach(E),this.h()},h(){L(a,"id","mobileNav"),q(a,"width","0px"),L(a,"class","svelte-1d401pl")},m(e,t){x(e,a,t),n&&n.m(a,null)},p(e,[t]){null!=e[2]?n?n.p(e,t):(n=Xn(e),n.c(),n.m(a,null)):n&&(n.d(1),n=null)},i:e,o:e,d(e){e&&E(a),n&&n.d()}}}function ar(e,t,a){function n(e){i(e),window.scrollTo(0,0),c()}let r,{hyphenatedTeam:o,teams:l,toAlias:s,switchTeam:i,toggleMobileNav:c}=t;return e.$$set=e=>{"hyphenatedTeam"in e&&a(4,o=e.hyphenatedTeam),"teams"in e&&a(0,l=e.teams),"toAlias"in e&&a(1,s=e.toAlias),"switchTeam"in e&&a(5,i=e.switchTeam),"toggleMobileNav"in e&&a(6,c=e.toggleMobileNav)},e.$$.update=()=>{17&e.$$.dirty&&(l.length,function(){let e=[];for(let t=0;t<l.length;t++){let a=l[t].toLowerCase().replace(/ /g,"-");a!=o?e.push(a):e.push(null)}a(2,r=e)}())},[l,s,r,n,o,i,c,e=>{n(r[e])},e=>{n(r[e])},e=>{n(e)}]}class nr extends Ie{constructor(e){super(),Ee(this,e,ar,tr,l,{hyphenatedTeam:4,teams:0,toAlias:1,switchTeam:5,toggleMobileNav:6})}}function rr(t){let a,n;return{c(){a=V("div"),n=V("div"),this.h()},l(e){a=B(e,"DIV",{id:!0});var t=M(a);n=B(t,"DIV",{id:!0}),M(n).forEach(E),t.forEach(E),this.h()},h(){L(n,"id","plotDiv"),L(a,"id","plotly")},m(e,r){x(e,a,r),w(a,n),t[5](n)},p:e,i:e,o:e,d(e){e&&E(a),t[5](null)}}}function or(e,t){return{x:e,y:t,type:"scatter",fill:"tozeroy",mode:"lines",name:"Conceded",line:{color:"#f83027"},hovertemplate:"%{x|%d %b %Y}<br>Avg conceded: <b>%{y:.1f}</b><extra></extra>"}}function lr(e,t){let a=function(e,t,a){let n=[];for(let r=a-1;r>=0;r--){let a=e.form[t][e._id-r];for(let e of Object.keys(a)){let t=a[e];if(null!=t.score){let a,r,[o,l,s]=t.score.split(" ");o=parseInt(o),s=parseInt(s),t.atHome?(a=o,r=s):(a=s,r=o),n.push({date:t.date,matchday:parseInt(e),scored:a,conceded:r})}}}return n}(e,t,3);a.sort((function(e,t){return e.date<t.date?-1:e.date==t.date?0:1}));let n=[],r=[],o=[];for(let e=0;e<a.length;e++)n.push(a[e].date),r.push(a[e].scored),o.push(a[e].conceded);for(let e=0;e<n.length;e++){let t=e-1,a=1;for(;t>e-5&&t>=0;)r[e]+=r[t],o[e]+=o[t],a+=1,t-=1;a>1&&(r[e]/=a,o[e]/=a)}return[n,r,o]}function sr(e,t,a){return[(n=e,r=t,{x:n,y:r,type:"scatter",fill:"tozeroy",mode:"lines",name:"Scored",line:{color:"#00fe87"},hovertemplate:"%{x|%d %b %Y}<br>Avg scored: <b>%{y:.1f}</b><extra></extra>"}),or(e,a)];var n,r}function ir(e){return{title:!1,autosize:!0,margin:{r:20,l:60,t:15,b:40,pad:5},hovermode:"closest",plot_bgcolor:"#fafafa",paper_bgcolor:"#fafafa",yaxis:{title:{text:"Goals (5-game avg)"},gridcolor:"gray",showgrid:!1,showline:!1,zeroline:!1,fixedrange:!0},xaxis:{linecolor:"black",showgrid:!1,showline:!1,fixedrange:!0},dragmode:!1,shapes:[...e],legend:{x:1,xanchor:"right",y:.95}}}function cr(e,t){let[a,n,r]=lr(e,t),o=function(e,t){let a=[];for(let o=0;o<e.length-1;o++)n=new Date(e[o+1]),r=new Date(e[o]),Math.floor((n-r)/864e5)>60&&a.push({type:"line",x0:e[o],y0:0,x1:e[o],y1:t,line:{color:"black",dash:"dot",width:1}});var n,r;return a}(a,Math.max(Math.max(...n),Math.max(...r)));return{data:[...sr(a,n,r)],layout:ir(o),config:{responsive:!0,showSendToCloud:!1,displayModeBar:!1}}}function dr(e,t,a){function n(){if(l){let e={"yaxis.title":null,"yaxis.visible":!1,"margin.l":20,"margin.t":5};Plotly.update(r,{},e)}}let r,o,l=!1;F((()=>{o=cr(s,i),new Plotly.newPlot(r,o.data,o.layout,o.config).then((e=>{e.children[0].children[0].classList.add("resizable-graph")})),a(4,l=!0)}));let{data:s,team:i,mobileView:c}=t;return e.$$set=e=>{"data"in e&&a(1,s=e.data),"team"in e&&a(2,i=e.team),"mobileView"in e&&a(3,c=e.mobileView)},e.$$.update=()=>{4&e.$$.dirty&&i&&function(){if(l){let e=cr(s,i);o.data[0]=e.data[0],o.data[1]=e.data[1];for(let t=0;t<o.layout.shapes.length;t++)t<e.layout.shapes.length?o.layout.shapes[t]=e.layout.shapes[t]:o.layout.shapes[t]=null;Plotly.redraw(r),c&&n()}}(),8&e.$$.dirty&&!c&&function(){if(l){let e={"yaxis.title":{text:"Goals (5-game avg)"},"yaxis.visible":!0,"margin.l":60,"margin.t":15};Plotly.update(r,{},e)}}(),24&e.$$.dirty&&l&&c&&n()},[r,s,i,c,l,function(e){K[e?"unshift":"push"]((()=>{r=e,a(0,r)}))}]}class ur extends Ie{constructor(e){super(),Ee(this,e,dr,rr,l,{data:1,team:2,mobileView:3})}}const{document:fr,window:hr}=fe;function mr(t){let a,n,r,o;return{c(){a=V("button"),n=k("Select Team"),this.h()},l(e){a=B(e,"BUTTON",{id:!0,class:!0});var t=M(a);n=G(t,"Select Team"),t.forEach(E),this.h()},h(){L(a,"id","mobileNavBtn"),L(a,"class","svelte-1ao5tmf")},m(e,t){x(e,a,t),w(a,n),r||(o=A(a,"click",Ir),r=!0)},p:e,d(e){e&&E(a),r=!1,o()}}}function pr(t){let a,n;return{c(){a=V("button"),n=k("Select Team"),this.h()},l(e){a=B(e,"BUTTON",{id:!0,style:!0,class:!0});var t=M(a);n=G(t,"Select Team"),t.forEach(E),this.h()},h(){L(a,"id","mobileNavBtn"),q(a,"cursor","default"),L(a,"class","svelte-1ao5tmf")},m(e,t){x(e,a,t),w(a,n)},p:e,d(e){e&&E(a)}}}function gr(t){let a,n;return{c(){a=V("div"),n=V("div"),this.h()},l(e){a=B(e,"DIV",{class:!0});var t=M(a);n=B(t,"DIV",{class:!0}),M(n).forEach(E),t.forEach(E),this.h()},h(){L(n,"class","loading-spinner"),L(a,"class","loading-spinner-container")},m(e,t){x(e,a,t),w(a,n)},p:e,i:e,o:e,d(e){e&&E(a)}}}function vr(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m,p,g,v,y,$,b,I,D,T,A,C,P,N,S;let j=yr(e);c=new ya({props:{data:e[8],team:e[4],mobileView:e[9]}}),h=new xt({props:{data:e[8],currentMatchday:e[6],team:e[4],toInitials:Er}}),p=new Pt({props:{data:e[8],hyphenatedTeam:e[0],team:e[4],switchTeam:e[12],toAlias:e[10]}}),y=new Kt({props:{data:e[8],currentMatchday:e[6],team:e[4],showBadge:xr,toAlias:e[10],toInitials:Er,switchTeam:e[12]}}),P=new Ea({props:{data:e[8],team:e[4],playedMatchdays:e[7],mobileView:e[9]}});let q=e[3]&&$r(e);return{c(){t=V("div"),a=V("div"),j.c(),n=_(),r=V("div"),o=V("h1"),l=k("Fixtures"),s=_(),i=V("div"),ye(c.$$.fragment),d=_(),u=V("div"),f=V("div"),ye(h.$$.fragment),m=_(),ye(p.$$.fragment),g=_(),v=V("div"),ye(y.$$.fragment),$=_(),b=V("div"),I=V("div"),D=V("h1"),T=k("Form Over Time"),A=_(),C=V("div"),ye(P.$$.fragment),N=_(),q&&q.c(),this.h()},l(e){t=B(e,"DIV",{class:!0});var w=M(t);a=B(w,"DIV",{class:!0});var x=M(a);j.l(x),n=O(x),r=B(x,"DIV",{class:!0});var V=M(r);o=B(V,"H1",{class:!0});var k=M(o);l=G(k,"Fixtures"),k.forEach(E),s=O(V),i=B(V,"DIV",{class:!0});var _=M(i);$e(c.$$.fragment,_),_.forEach(E),V.forEach(E),x.forEach(E),d=O(w),u=B(w,"DIV",{class:!0});var L=M(u);f=B(L,"DIV",{class:!0});var S=M(f);$e(h.$$.fragment,S),m=O(S),$e(p.$$.fragment,S),S.forEach(E),g=O(L),v=B(L,"DIV",{class:!0});var z=M(v);$e(y.$$.fragment,z),z.forEach(E),L.forEach(E),$=O(w),b=B(w,"DIV",{class:!0});var H=M(b);I=B(H,"DIV",{class:!0});var R=M(I);D=B(R,"H1",{class:!0});var F=M(D);T=G(F,"Form Over Time"),F.forEach(E),A=O(R),C=B(R,"DIV",{class:!0});var U=M(C);$e(P.$$.fragment,U),U.forEach(E),R.forEach(E),H.forEach(E),N=O(w),q&&q.l(w),w.forEach(E),this.h()},h(){L(o,"class","lowered"),L(i,"class","graph mini-graph mobile-margin"),L(r,"class","row-right fixtures-graph row-graph svelte-1ao5tmf"),L(a,"class","row multi-element-row small-bottom-margin svelte-1ao5tmf"),L(f,"class","row-left form-details svelte-1ao5tmf"),L(v,"class","row-right svelte-1ao5tmf"),L(u,"class","row multi-element-row svelte-1ao5tmf"),L(D,"class","lowered"),L(C,"class","graph full-row-graph svelte-1ao5tmf"),L(I,"class","form-graph row-graph svelte-1ao5tmf"),L(b,"class","row svelte-1ao5tmf"),L(t,"class","page-content svelte-1ao5tmf")},m(e,E){x(e,t,E),w(t,a),j.m(a,null),w(a,n),w(a,r),w(r,o),w(o,l),w(r,s),w(r,i),be(c,i,null),w(t,d),w(t,u),w(u,f),be(h,f,null),w(f,m),be(p,f,null),w(u,g),w(u,v),be(y,v,null),w(t,$),w(t,b),w(b,I),w(I,D),w(D,T),w(I,A),w(I,C),be(P,C,null),w(t,N),q&&q.m(t,null),S=!0},p(e,a){j.p(e,a);const n={};256&a&&(n.data=e[8]),16&a&&(n.team=e[4]),512&a&&(n.mobileView=e[9]),c.$set(n);const r={};256&a&&(r.data=e[8]),64&a&&(r.currentMatchday=e[6]),16&a&&(r.team=e[4]),h.$set(r);const o={};256&a&&(o.data=e[8]),1&a&&(o.hyphenatedTeam=e[0]),16&a&&(o.team=e[4]),p.$set(o);const l={};256&a&&(l.data=e[8]),64&a&&(l.currentMatchday=e[6]),16&a&&(l.team=e[4]),y.$set(l);const s={};256&a&&(s.data=e[8]),16&a&&(s.team=e[4]),128&a&&(s.playedMatchdays=e[7]),512&a&&(s.mobileView=e[9]),P.$set(s),e[3]?q?(q.p(e,a),8&a&&de(q,1)):(q=$r(e),q.c(),de(q,1),q.m(t,null)):q&&(ie(),ue(q,1,1,(()=>{q=null})),ce())},i(e){S||(de(c.$$.fragment,e),de(h.$$.fragment,e),de(p.$$.fragment,e),de(y.$$.fragment,e),de(P.$$.fragment,e),de(q),S=!0)},o(e){ue(c.$$.fragment,e),ue(h.$$.fragment,e),ue(p.$$.fragment,e),ue(y.$$.fragment,e),ue(P.$$.fragment,e),ue(q),S=!1},d(e){e&&E(t),j.d(),we(c),we(h),we(p),we(y),we(P),q&&q.d()}}}function yr(e){let t,a,n,r,o,l,s,i,c,d,u,f,h=e[8].standings[e[4]][e[8]._id].position+"";return{c(){t=V("div"),a=V("div"),n=D("svg"),r=D("circle"),l=D("circle"),i=D("circle"),d=_(),u=V("div"),f=k(h),this.h()},l(e){t=B(e,"DIV",{class:!0});var o=M(t);a=B(o,"DIV",{class:!0});var s=M(a);n=S(s,"svg",{class:!0});var c=M(n);r=S(c,"circle",{cx:!0,cy:!0,r:!0,"stroke-width":!0,fill:!0}),M(r).forEach(E),l=S(c,"circle",{cx:!0,cy:!0,r:!0,"stroke-width":!0,fill:!0}),M(l).forEach(E),i=S(c,"circle",{cx:!0,cy:!0,r:!0,"stroke-width":!0,fill:!0}),M(i).forEach(E),c.forEach(E),s.forEach(E),d=O(o),u=B(o,"DIV",{class:!0});var m=M(u);f=G(m,h),m.forEach(E),o.forEach(E),this.h()},h(){L(r,"cx","300"),L(r,"cy","150"),L(r,"r","100"),L(r,"stroke-width","0"),L(r,"fill",o="var(--"+e[0]+"-secondary)"),L(l,"cx","170"),L(l,"cy","170"),L(l,"r","140"),L(l,"stroke-width","0"),L(l,"fill",s="var(--"+e[0]+")"),L(i,"cx","300"),L(i,"cy","320"),L(i,"r","170"),L(i,"stroke-width","0"),L(i,"fill",c="var(--"+e[0]+")"),L(n,"class","circles-background svelte-1ao5tmf"),L(a,"class","circles-background-container svelte-1ao5tmf"),L(u,"class","position-central svelte-1ao5tmf"),L(t,"class","row-left position-no-badge svelte-1ao5tmf")},m(e,o){x(e,t,o),w(t,a),w(a,n),w(n,r),w(n,l),w(n,i),w(t,d),w(t,u),w(u,f)},p(e,t){1&t&&o!==(o="var(--"+e[0]+"-secondary)")&&L(r,"fill",o),1&t&&s!==(s="var(--"+e[0]+")")&&L(l,"fill",s),1&t&&c!==(c="var(--"+e[0]+")")&&L(i,"fill",c),272&t&&h!==(h=e[8].standings[e[4]][e[8]._id].position+"")&&j(f,h)},d(e){e&&E(t)}}}function $r(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m,p,g,v,y,$,b,I,D,T,A,C,P,N,S,j,q,z,H,R,F,U,Y,W,X,K,J,Q,Z,ee,te,ae,ne,re,oe,le,se,ie;return s=new _a({props:{data:e[8],team:e[4],playedMatchdays:e[7],mobileView:e[9]}}),p=new Ba({props:{data:e[8],team:e[4],playedMatchdays:e[7],mobileView:e[9]}}),b=new qa({props:{data:e[8],team:e[4],playedMatchdays:e[7],mobileView:e[9]}}),T=new sa({props:{data:e[8],team:e[4]}}),S=new ur({props:{data:e[8],team:e[4],mobileView:e[9]}}),U=new cn({props:{data:e[8],team:e[4],mobileView:e[9]}}),J=new Nn({props:{data:e[8],team:e[4],mobileView:e[9]}}),oe=new Dn({props:{data:e[8],team:e[4],teams:e[5],toAlias:e[10],toName:e[11]}}),se=new ua({props:{lastUpdated:e[8].lastUpdated}}),{c(){t=V("div"),a=V("div"),n=V("h1"),r=k("Position Over Time"),o=_(),l=V("div"),ye(s.$$.fragment),i=_(),c=V("div"),d=V("div"),u=V("h1"),f=k("Goals Scored and Conceded"),h=_(),m=V("div"),ye(p.$$.fragment),g=_(),v=V("div"),y=V("div"),$=V("div"),ye(b.$$.fragment),I=_(),D=V("div"),ye(T.$$.fragment),A=_(),C=V("div"),P=V("div"),N=V("div"),ye(S.$$.fragment),j=_(),q=V("div"),z=V("div"),H=V("h1"),R=k("Goals Per Game"),F=_(),ye(U.$$.fragment),Y=_(),W=V("div"),X=V("div"),K=V("div"),ye(J.$$.fragment),Q=_(),Z=V("div"),ee=V("div"),te=V("h1"),ae=k("Team Comparison"),ne=_(),re=V("div"),ye(oe.$$.fragment),le=_(),ye(se.$$.fragment),this.h()},l(e){t=B(e,"DIV",{class:!0});var w=M(t);a=B(w,"DIV",{class:!0});var x=M(a);n=B(x,"H1",{class:!0});var V=M(n);r=G(V,"Position Over Time"),V.forEach(E),o=O(x),l=B(x,"DIV",{class:!0});var k=M(l);$e(s.$$.fragment,k),k.forEach(E),x.forEach(E),w.forEach(E),i=O(e),c=B(e,"DIV",{class:!0});var _=M(c);d=B(_,"DIV",{class:!0});var L=M(d);u=B(L,"H1",{class:!0});var ie=M(u);f=G(ie,"Goals Scored and Conceded"),ie.forEach(E),h=O(L),m=B(L,"DIV",{class:!0});var ce=M(m);$e(p.$$.fragment,ce),ce.forEach(E),L.forEach(E),_.forEach(E),g=O(e),v=B(e,"DIV",{class:!0});var de=M(v);y=B(de,"DIV",{class:!0});var ue=M(y);$=B(ue,"DIV",{class:!0});var fe=M($);$e(b.$$.fragment,fe),fe.forEach(E),ue.forEach(E),de.forEach(E),I=O(e),D=B(e,"DIV",{class:!0});var he=M(D);$e(T.$$.fragment,he),he.forEach(E),A=O(e),C=B(e,"DIV",{class:!0});var me=M(C);P=B(me,"DIV",{class:!0});var pe=M(P);N=B(pe,"DIV",{class:!0});var ge=M(N);$e(S.$$.fragment,ge),ge.forEach(E),pe.forEach(E),me.forEach(E),j=O(e),q=B(e,"DIV",{class:!0});var ve=M(q);z=B(ve,"DIV",{class:!0});var ye=M(z);H=B(ye,"H1",{});var be=M(H);R=G(be,"Goals Per Game"),be.forEach(E),F=O(ye),$e(U.$$.fragment,ye),ye.forEach(E),ve.forEach(E),Y=O(e),W=B(e,"DIV",{class:!0});var we=M(W);X=B(we,"DIV",{class:!0});var xe=M(X);K=B(xe,"DIV",{class:!0});var Ee=M(K);$e(J.$$.fragment,Ee),Ee.forEach(E),xe.forEach(E),we.forEach(E),Q=O(e),Z=B(e,"DIV",{class:!0});var Ie=M(Z);ee=B(Ie,"DIV",{class:!0});var Ve=M(ee);te=B(Ve,"H1",{});var De=M(te);ae=G(De,"Team Comparison"),De.forEach(E),ne=O(Ve),re=B(Ve,"DIV",{class:!0});var ke=M(re);$e(oe.$$.fragment,ke),ke.forEach(E),Ve.forEach(E),Ie.forEach(E),le=O(e),$e(se.$$.fragment,e),this.h()},h(){L(n,"class","lowered"),L(l,"class","graph full-row-graph svelte-1ao5tmf"),L(a,"class","position-over-time-graph row-graph svelte-1ao5tmf"),L(t,"class","row svelte-1ao5tmf"),L(u,"class","lowered"),L(m,"class","graph full-row-graph svelte-1ao5tmf"),L(d,"class","goals-scored-vs-conceded-graph row-graph svelte-1ao5tmf"),L(c,"class","row no-bottom-margin svelte-1ao5tmf"),L($,"class","clean-sheets graph full-row-graph svelte-1ao5tmf"),L(y,"class","row-graph svelte-1ao5tmf"),L(v,"class","row svelte-1ao5tmf"),L(D,"class","season-stats-row svelte-1ao5tmf"),L(N,"class","graph full-row-graph svelte-1ao5tmf"),L(P,"class","row-graph svelte-1ao5tmf"),L(C,"class","row svelte-1ao5tmf"),L(z,"class","goals-freq-row row-graph svelte-1ao5tmf"),L(q,"class","row svelte-1ao5tmf"),L(K,"class","score-freq graph svelte-1ao5tmf"),L(X,"class","row-graph svelte-1ao5tmf"),L(W,"class","row svelte-1ao5tmf"),L(re,"class","spider-chart-container svelte-1ao5tmf"),L(ee,"class","spider-chart-row row-graph svelte-1ao5tmf"),L(Z,"class","row svelte-1ao5tmf")},m(e,E){x(e,t,E),w(t,a),w(a,n),w(n,r),w(a,o),w(a,l),be(s,l,null),x(e,i,E),x(e,c,E),w(c,d),w(d,u),w(u,f),w(d,h),w(d,m),be(p,m,null),x(e,g,E),x(e,v,E),w(v,y),w(y,$),be(b,$,null),x(e,I,E),x(e,D,E),be(T,D,null),x(e,A,E),x(e,C,E),w(C,P),w(P,N),be(S,N,null),x(e,j,E),x(e,q,E),w(q,z),w(z,H),w(H,R),w(z,F),be(U,z,null),x(e,Y,E),x(e,W,E),w(W,X),w(X,K),be(J,K,null),x(e,Q,E),x(e,Z,E),w(Z,ee),w(ee,te),w(te,ae),w(ee,ne),w(ee,re),be(oe,re,null),x(e,le,E),be(se,e,E),ie=!0},p(e,t){const a={};256&t&&(a.data=e[8]),16&t&&(a.team=e[4]),128&t&&(a.playedMatchdays=e[7]),512&t&&(a.mobileView=e[9]),s.$set(a);const n={};256&t&&(n.data=e[8]),16&t&&(n.team=e[4]),128&t&&(n.playedMatchdays=e[7]),512&t&&(n.mobileView=e[9]),p.$set(n);const r={};256&t&&(r.data=e[8]),16&t&&(r.team=e[4]),128&t&&(r.playedMatchdays=e[7]),512&t&&(r.mobileView=e[9]),b.$set(r);const o={};256&t&&(o.data=e[8]),16&t&&(o.team=e[4]),T.$set(o);const l={};256&t&&(l.data=e[8]),16&t&&(l.team=e[4]),512&t&&(l.mobileView=e[9]),S.$set(l);const i={};256&t&&(i.data=e[8]),16&t&&(i.team=e[4]),512&t&&(i.mobileView=e[9]),U.$set(i);const c={};256&t&&(c.data=e[8]),16&t&&(c.team=e[4]),512&t&&(c.mobileView=e[9]),J.$set(c);const d={};256&t&&(d.data=e[8]),16&t&&(d.team=e[4]),32&t&&(d.teams=e[5]),oe.$set(d);const u={};256&t&&(u.lastUpdated=e[8].lastUpdated),se.$set(u)},i(e){ie||(de(s.$$.fragment,e),de(p.$$.fragment,e),de(b.$$.fragment,e),de(T.$$.fragment,e),de(S.$$.fragment,e),de(U.$$.fragment,e),de(J.$$.fragment,e),de(oe.$$.fragment,e),de(se.$$.fragment,e),ie=!0)},o(e){ue(s.$$.fragment,e),ue(p.$$.fragment,e),ue(b.$$.fragment,e),ue(T.$$.fragment,e),ue(S.$$.fragment,e),ue(U.$$.fragment,e),ue(J.$$.fragment,e),ue(oe.$$.fragment,e),ue(se.$$.fragment,e),ie=!1},d(e){e&&E(t),we(s),e&&E(i),e&&E(c),we(p),e&&E(g),e&&E(v),we(b),e&&E(I),e&&E(D),we(T),e&&E(A),e&&E(C),we(S),e&&E(j),e&&E(q),we(U),e&&E(Y),e&&E(W),we(J),e&&E(Q),e&&E(Z),we(oe),e&&E(le),we(se,e)}}}function br(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m,p,g,v=e[10](e[4])+"";function y(e,t){return 0==e[5].length?pr:mr}a=new Yn({props:{team:e[0],teams:e[5],toAlias:e[10],switchTeam:e[12]}}),r=new nr({props:{hyphenatedTeam:e[0],teams:e[5],toAlias:e[10],switchTeam:e[12],toggleMobileNav:Ir}});let $=y(e),b=$(e);const I=[vr,gr],D=[];function T(e,t){return null!=e[8]?0:1}return m=T(e),p=D[m]=I[m](e),{c(){t=V("div"),ye(a.$$.fragment),n=_(),ye(r.$$.fragment),o=_(),b.c(),l=_(),s=V("div"),i=V("div"),c=V("a"),d=V("div"),u=k(v),h=_(),p.c(),this.h()},l(e){t=B(e,"DIV",{id:!0,class:!0});var f=M(t);$e(a.$$.fragment,f),n=O(f),$e(r.$$.fragment,f),o=O(f),b.l(f),l=O(f),s=B(f,"DIV",{id:!0,class:!0});var m=M(s);i=B(m,"DIV",{class:!0,style:!0});var g=M(i);c=B(g,"A",{class:!0,href:!0});var y=M(c);d=B(y,"DIV",{class:!0,style:!0});var $=M(d);u=G($,v),$.forEach(E),y.forEach(E),g.forEach(E),h=O(m),p.l(m),m.forEach(E),f.forEach(E),this.h()},h(){L(d,"class","title svelte-1ao5tmf"),q(d,"color","var(--"+e[0]+"-secondary)"),L(c,"class","main-link no-decoration svelte-1ao5tmf"),L(c,"href",f="/"+e[0]),L(i,"class","header svelte-1ao5tmf"),q(i,"background-color","var(--"+e[0]+")"),L(s,"id","dashboard"),L(s,"class","svelte-1ao5tmf"),L(t,"id","team"),L(t,"class","svelte-1ao5tmf")},m(e,f){x(e,t,f),be(a,t,null),w(t,n),be(r,t,null),w(t,o),b.m(t,null),w(t,l),w(t,s),w(s,i),w(i,c),w(c,d),w(d,u),w(s,h),D[m].m(s,null),g=!0},p(e,n){const o={};1&n&&(o.team=e[0]),32&n&&(o.teams=e[5]),a.$set(o);const h={};1&n&&(h.hyphenatedTeam=e[0]),32&n&&(h.teams=e[5]),r.$set(h),$===($=y(e))&&b?b.p(e,n):(b.d(1),b=$(e),b&&(b.c(),b.m(t,l))),(!g||16&n)&&v!==(v=e[10](e[4])+"")&&j(u,v),(!g||1&n)&&q(d,"color","var(--"+e[0]+"-secondary)"),(!g||1&n&&f!==(f="/"+e[0]))&&L(c,"href",f),(!g||1&n)&&q(i,"background-color","var(--"+e[0]+")");let w=m;m=T(e),m===w?D[m].p(e,n):(ie(),ue(D[w],1,1,(()=>{D[w]=null})),ce(),p=D[m],p?p.p(e,n):(p=D[m]=I[m](e),p.c()),de(p,1),p.m(s,null))},i(e){g||(de(a.$$.fragment,e),de(r.$$.fragment,e),de(p),g=!0)},o(e){ue(a.$$.fragment,e),ue(r.$$.fragment,e),ue(p),g=!1},d(e){e&&E(t),we(a),we(r),b.d(),D[m].d()}}}function wr(e){let t,a,n,o,l,s,i,c,d=!1,u=()=>{d=!1};return te(e[13]),te(e[14]),fr.title=a=e[4],l=new Re({props:{$$slots:{default:[br]},$$scope:{ctx:e}}}),{c(){n=V("meta"),o=_(),ye(l.$$.fragment),this.h()},l(e){const t=z('[data-svelte="svelte-1x6khl2"]',fr.head);n=B(t,"META",{name:!0,content:!0}),t.forEach(E),o=O(e),$e(l.$$.fragment,e),this.h()},h(){L(n,"name","description"),L(n,"content","Premier League Statistics Dashboard")},m(a,r){w(fr.head,n),x(a,o,r),be(l,a,r),s=!0,i||(c=[A(hr,"resize",e[13]),A(hr,"scroll",(()=>{d=!0,clearTimeout(t),t=setTimeout(u,100),e[14]()}))],i=!0)},p(e,[n]){2&n&&!d&&(d=!0,clearTimeout(t),scrollTo(hr.pageXOffset,e[1]),t=setTimeout(u,100)),(!s||16&n)&&a!==(a=e[4])&&(fr.title=a);const r={};263161&n&&(r.$$scope={dirty:n,ctx:e}),l.$set(r)},i(e){s||(de(l.$$.fragment,e),s=!0)},o(e){ue(l.$$.fragment,e),s=!1},d(e){E(n),e&&E(o),we(l,e),i=!1,r(c)}}}const xr=!1;function Er(e){switch(e){case"Brighton and Hove Albion":return"BHA";case"Manchester City":return"MCI";case"Manchester United":return"MUN";case"Aston Villa":return"AVL";case"Sheffield United":return"SHU";case"West Bromwich Albion":return"WBA";case"West Ham United":return"WHU"}return e.slice(0,3).toUpperCase()}function Ir(){let e=document.getElementById("mobileNav");"0px"==e.style.width?(e.style.animation="appear 0.1s ease-in 1",e.style.width="100%"):(e.style.animation=null,e.style.width="0px")}function Vr(e){return e.toLowerCase().split(" ").map((function(e){return e.charAt(0).toUpperCase()+e.slice(1)})).join(" ").replace("And","and")}function Dr(e,t){let a=[];for(let n in e.form[t][e._id])null!=e.form[t][e._id][n].score&&a.push(n);0==a.length&&(a=Object.keys(e.fixtures[t]));let n=[];for(let t of a){let a=[];Object.keys(e.standings).forEach((n=>{a.push(e.fixtures[n][t].date)})),a=a.map((e=>new Date(e))),a=a.sort(),n.push(a[Math.floor(a.length/2)])}return n.sort((function(e,t){return e-t})),n}function kr(e,t){let a=null;if(Object.keys(e.form[t][e._id]).length>0)for(let n of Object.keys(e.form[t][e._id]).reverse())if(null!=e.form[t][e._id][n].score){a=n;break}return a}function _r(e,t,a){let n,r,o={"Wolverhampton Wanderers":"Wolves","Tottenham Hotspur":"Spurs","Leeds United":"Leeds","West Ham United":"West Ham","Brighton and Hove Albion":"Brighton"};function l(){null!=m&&a(4,f=Vr(m.replace(/\-/g," "))),async function(e){const t=await fetch(e);return await t.json()}("https://pldashboard-backend.vercel.app/api/teams").then((e=>{a(5,h=Object.keys(e.standings)),null==m?(a(4,f=h[0]),a(0,m=f.toLowerCase().replace(/ /g,"-")),history.pushState({},null,window.location.href+m)):h.includes(f)||(window.location.href="/error"),a(6,i=kr(e,f)),a(7,c=Dr(e,f)),a(8,d=e),console.log(d)})).then((()=>{window.dispatchEvent(new Event("resize"))}))}let s,i,c,d,u=!1,f="",h=[];F((()=>{l()}));let{hyphenatedTeam:m}=t;return e.$$set=e=>{"hyphenatedTeam"in e&&a(0,m=e.hyphenatedTeam)},e.$$.update=()=>{2&e.$$.dirty&&r>30&&(a(3,u=!0),window.dispatchEvent(new Event("resize"))),4&e.$$.dirty&&a(9,n=s<=700)},[m,r,s,u,f,h,i,c,d,n,function(e){return e in o?o[e]:e},function(e){return Object.values(o).includes(e)?Object.keys(o).find((t=>o[t]===e)):e},function(e){a(0,m=e),a(4,f=Vr(m.replace(/\-/g," "))),a(6,i=kr(d,f)),a(7,c=Dr(d,f)),window.history.pushState(null,null,m)},function(){a(2,s=hr.innerWidth)},function(){a(1,r=hr.pageYOffset)}]}class Tr extends Ie{constructor(e){super(),Ee(this,e,_r,wr,l,{hyphenatedTeam:0})}}function Ar(t){let a,n,r,o,l,s,c,d,u,f,h,m,p;return{c(){a=V("div"),n=V("div"),r=V("div"),o=_(),l=V("img"),c=_(),d=V("div"),u=V("a"),f=k("Dashboard"),h=_(),m=V("a"),p=k("Fantasy"),this.h()},l(e){a=B(e,"DIV",{id:!0,class:!0});var t=M(a);n=B(t,"DIV",{class:!0});var s=M(n);r=B(s,"DIV",{id:!0,class:!0}),M(r).forEach(E),o=O(s),l=B(s,"IMG",{src:!0,alt:!0,class:!0}),c=O(s),d=B(s,"DIV",{class:!0});var i=M(d);u=B(i,"A",{class:!0,href:!0});var g=M(u);f=G(g,"Dashboard"),g.forEach(E),h=O(i),m=B(i,"A",{class:!0,href:!0});var v=M(m);p=G(v,"Fantasy"),v.forEach(E),i.forEach(E),s.forEach(E),t.forEach(E),this.h()},h(){L(r,"id","circle"),L(r,"class","svelte-1wkac13"),i(l.src,s="img/pldashboard5.png")||L(l,"src","img/pldashboard5.png"),L(l,"alt","pldashboard"),L(l,"class","svelte-1wkac13"),L(u,"class","dashboard-link svelte-1wkac13"),L(u,"href","/"),L(m,"class","fantasy-link svelte-1wkac13"),L(m,"href","/"),L(d,"class","links svelte-1wkac13"),L(n,"class","content svelte-1wkac13"),L(a,"id","home"),L(a,"class","svelte-1wkac13")},m(e,t){x(e,a,t),w(a,n),w(n,r),w(n,o),w(n,l),w(n,c),w(n,d),w(d,u),w(u,f),w(d,h),w(d,m),w(m,p)},p:e,d(e){e&&E(a)}}}function Lr(e){let t,a,n,r;return n=new Re({props:{$$slots:{default:[Ar]},$$scope:{ctx:e}}}),{c(){t=V("meta"),a=_(),ye(n.$$.fragment),this.h()},l(e){const r=z('[data-svelte="svelte-1rqatx0"]',document.head);t=B(r,"META",{name:!0,content:!0}),r.forEach(E),a=O(e),$e(n.$$.fragment,e),this.h()},h(){document.title="Premier League",L(t,"name","description"),L(t,"content","Premier League Statistics Dashboard")},m(e,o){w(document.head,t),x(e,a,o),be(n,e,o),r=!0},p(e,[t]){const a={};1&t&&(a.$$scope={dirty:t,ctx:e}),n.$set(a)},i(e){r||(de(n.$$.fragment,e),r=!0)},o(e){ue(n.$$.fragment,e),r=!1},d(e){E(t),e&&E(a),we(n,e)}}}class Cr extends Ie{constructor(e){super(),Ee(this,e,null,Lr,l,{})}}const{document:Mr}=fe;function Pr(e,t,a){const n=e.slice();return n[2]=t[a]._id,n[3]=t[a].predictions,n}function Nr(e,t,a){const n=e.slice();return n[6]=t[a],n}function Br(t){let a,n;return{c(){a=V("div"),n=V("div"),this.h()},l(e){a=B(e,"DIV",{class:!0});var t=M(a);n=B(t,"DIV",{class:!0}),M(n).forEach(E),t.forEach(E),this.h()},h(){L(n,"class","loading-spinner"),L(a,"class","loading-spinner-container")},m(e,t){x(e,a,t),w(a,n)},p:e,d(e){e&&E(a)}}}function Sr(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m,p,g,v,y,$=(100*e[0].accuracy.scoreAccuracy).toFixed(2)+"",b=(100*e[0].accuracy.resultAccuracy).toFixed(2)+"",I=null!=e[0].predictions&&Gr(e);return{c(){t=V("div"),a=V("div"),n=V("div"),r=V("span"),o=k("Predicting with accuracy: "),l=V("b"),s=k($),i=k("%"),c=V("br"),d=_(),u=V("div"),f=k("General results accuracy: "),h=V("b"),m=k(b),p=k("%"),g=_(),v=V("div"),y=V("div"),I&&I.c(),this.h()},l(e){t=B(e,"DIV",{class:!0});var w=M(t);a=B(w,"DIV",{class:!0});var x=M(a);n=B(x,"DIV",{class:!0});var V=M(n);r=B(V,"SPAN",{class:!0});var D=M(r);o=G(D,"Predicting with accuracy: "),l=B(D,"B",{});var k=M(l);s=G(k,$),i=G(k,"%"),k.forEach(E),D.forEach(E),c=B(V,"BR",{}),d=O(V),u=B(V,"DIV",{class:!0});var _=M(u);f=G(_,"General results accuracy: "),h=B(_,"B",{});var T=M(h);m=G(T,b),p=G(T,"%"),T.forEach(E),_.forEach(E),V.forEach(E),x.forEach(E),g=O(w),v=B(w,"DIV",{class:!0});var A=M(v);y=B(A,"DIV",{class:!0});var L=M(y);I&&I.l(L),L.forEach(E),A.forEach(E),w.forEach(E),this.h()},h(){L(r,"class","accuracy-item svelte-1qm3m7y"),L(u,"class","accuracy-item svelte-1qm3m7y"),L(n,"class","accuracy svelte-1qm3m7y"),L(a,"class","accuracy-display svelte-1qm3m7y"),L(y,"class","predictions svelte-1qm3m7y"),L(v,"class","predictions-container svelte-1qm3m7y"),L(t,"class","page-content svelte-1qm3m7y")},m(e,$){x(e,t,$),w(t,a),w(a,n),w(n,r),w(r,o),w(r,l),w(l,s),w(l,i),w(n,c),w(n,d),w(n,u),w(u,f),w(u,h),w(h,m),w(h,p),w(t,g),w(t,v),w(v,y),I&&I.m(y,null)},p(e,t){1&t&&$!==($=(100*e[0].accuracy.scoreAccuracy).toFixed(2)+"")&&j(s,$),1&t&&b!==(b=(100*e[0].accuracy.resultAccuracy).toFixed(2)+"")&&j(m,b),null!=e[0].predictions?I?I.p(e,t):(I=Gr(e),I.c(),I.m(y,null)):I&&(I.d(1),I=null)},d(e){e&&E(t),I&&I.d()}}}function Gr(e){let t,a=e[0].predictions,n=[];for(let t=0;t<a.length;t+=1)n[t]=Hr(Pr(e,a,t));return{c(){for(let e=0;e<n.length;e+=1)n[e].c();t=T()},l(e){for(let t=0;t<n.length;t+=1)n[t].l(e);t=T()},m(e,a){for(let t=0;t<n.length;t+=1)n[t].m(e,a);x(e,t,a)},p(e,r){if(1&r){let o;for(a=e[0].predictions,o=0;o<a.length;o+=1){const l=Pr(e,a,o);n[o]?n[o].p(l,r):(n[o]=Hr(l),n[o].c(),n[o].m(t.parentNode,t))}for(;o<n.length;o+=1)n[o].d(1);n.length=a.length}},d(e){I(n,e),e&&E(t)}}}function Or(e){let t,a,n=Wr(e[6].datetime)+"";return{c(){t=V("div"),a=k(n),this.h()},l(e){t=B(e,"DIV",{class:!0});var r=M(t);a=G(r,n),r.forEach(E),this.h()},h(){L(t,"class","prediction-time svelte-1qm3m7y")},m(e,n){x(e,t,n),w(t,a)},p(e,t){1&t&&n!==(n=Wr(e[6].datetime)+"")&&j(a,n)},d(e){e&&E(t)}}}function jr(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m,p,g=e[6].home+"",v=e[6].actual.homeGoals+"",y=e[6].actual.awayGoals+"",$=e[6].away+"";return{c(){t=V("div"),a=V("div"),n=k("Actual:"),r=_(),o=V("div"),l=V("div"),s=k(g),i=_(),c=V("div"),d=k(v),u=k(" - "),f=k(y),h=_(),m=V("div"),p=k($),this.h()},l(e){t=B(e,"DIV",{class:!0});var b=M(t);a=B(b,"DIV",{class:!0});var w=M(a);n=G(w,"Actual:"),w.forEach(E),r=O(b),o=B(b,"DIV",{class:!0});var x=M(o);l=B(x,"DIV",{class:!0});var I=M(l);s=G(I,g),I.forEach(E),i=O(x),c=B(x,"DIV",{class:!0});var V=M(c);d=G(V,v),u=G(V," - "),f=G(V,y),V.forEach(E),h=O(x),m=B(x,"DIV",{class:!0});var D=M(m);p=G(D,$),D.forEach(E),x.forEach(E),b.forEach(E),this.h()},h(){L(a,"class","prediction-label svelte-1qm3m7y"),L(l,"class","prediction-initials svelte-1qm3m7y"),L(c,"class","prediction-score svelte-1qm3m7y"),L(m,"class","prediction-initials svelte-1qm3m7y"),L(o,"class","prediction-value svelte-1qm3m7y"),L(t,"class","actual prediction-item svelte-1qm3m7y")},m(e,g){x(e,t,g),w(t,a),w(a,n),w(t,r),w(t,o),w(o,l),w(l,s),w(o,i),w(o,c),w(c,d),w(c,u),w(c,f),w(o,h),w(o,m),w(m,p)},p(e,t){1&t&&g!==(g=e[6].home+"")&&j(s,g),1&t&&v!==(v=e[6].actual.homeGoals+"")&&j(d,v),1&t&&y!==(y=e[6].actual.awayGoals+"")&&j(f,y),1&t&&$!==($=e[6].away+"")&&j(p,$)},d(e){e&&E(t)}}}function qr(e){let t,a,n,r,o,l,s,i=e[6].prediction.homeGoals+"",c=e[6].prediction.awayGoals+"";return{c(){t=V("div"),a=V("div"),n=V("b"),r=k(i),o=k(" - "),l=k(c),this.h()},l(e){t=B(e,"DIV",{class:!0,id:!0});var s=M(t);a=B(s,"DIV",{class:!0});var d=M(a);n=B(d,"B",{});var u=M(n);r=G(u,i),o=G(u," - "),l=G(u,c),u.forEach(E),d.forEach(E),s.forEach(E),this.h()},h(){L(a,"class","detailed-predicted-score svelte-1qm3m7y"),L(t,"class","prediction-details svelte-1qm3m7y"),L(t,"id",s=e[6]._id)},m(e,s){x(e,t,s),w(t,a),w(a,n),w(n,r),w(n,o),w(n,l)},p(e,a){1&a&&i!==(i=e[6].prediction.homeGoals+"")&&j(r,i),1&a&&c!==(c=e[6].prediction.awayGoals+"")&&j(l,c),1&a&&s!==(s=e[6]._id)&&L(t,"id",s)},d(e){e&&E(t)}}}function zr(e){let t,a,n,r,o,l,s,i,c,d,u,f,h,m,p,g,v,y,$,b,I,D=e[6].home+"",T=Math.round(e[6].prediction.homeGoals)+"",C=Math.round(e[6].prediction.awayGoals)+"",P=e[6].away+"";function N(e,t){return null!=e[6].actual?jr:Or}let S=N(e),q=S(e),z=null!=e[6].prediction&&qr(e);function H(){return e[1](e[6])}return{c(){t=V("button"),a=V("div"),n=V("div"),r=k("Predicted:"),o=_(),l=V("div"),s=V("div"),i=k(D),c=_(),d=V("div"),u=k(T),f=k(" - "),h=k(C),m=_(),p=V("div"),g=k(P),v=_(),q.c(),y=_(),z&&z.c(),this.h()},l(e){t=B(e,"BUTTON",{class:!0});var $=M(t);a=B($,"DIV",{class:!0});var b=M(a);n=B(b,"DIV",{class:!0});var w=M(n);r=G(w,"Predicted:"),w.forEach(E),o=O(b),l=B(b,"DIV",{class:!0});var x=M(l);s=B(x,"DIV",{class:!0});var I=M(s);i=G(I,D),I.forEach(E),c=O(x),d=B(x,"DIV",{class:!0});var V=M(d);u=G(V,T),f=G(V," - "),h=G(V,C),V.forEach(E),m=O(x),p=B(x,"DIV",{class:!0});var k=M(p);g=G(k,P),k.forEach(E),x.forEach(E),b.forEach(E),v=O($),q.l($),y=O($),z&&z.l($),$.forEach(E),this.h()},h(){L(n,"class","prediction-label svelte-1qm3m7y"),L(s,"class","prediction-initials svelte-1qm3m7y"),L(d,"class","prediction-score svelte-1qm3m7y"),L(p,"class","prediction-initials svelte-1qm3m7y"),L(l,"class","prediction-value svelte-1qm3m7y"),L(a,"class","prediction prediction-item svelte-1qm3m7y"),L(t,"class",$="prediction-container "+e[6].colour+" svelte-1qm3m7y")},m(e,$){x(e,t,$),w(t,a),w(a,n),w(n,r),w(a,o),w(a,l),w(l,s),w(s,i),w(l,c),w(l,d),w(d,u),w(d,f),w(d,h),w(l,m),w(l,p),w(p,g),w(t,v),q.m(t,null),w(t,y),z&&z.m(t,null),b||(I=A(t,"click",H),b=!0)},p(a,n){e=a,1&n&&D!==(D=e[6].home+"")&&j(i,D),1&n&&T!==(T=Math.round(e[6].prediction.homeGoals)+"")&&j(u,T),1&n&&C!==(C=Math.round(e[6].prediction.awayGoals)+"")&&j(h,C),1&n&&P!==(P=e[6].away+"")&&j(g,P),S===(S=N(e))&&q?q.p(e,n):(q.d(1),q=S(e),q&&(q.c(),q.m(t,y))),null!=e[6].prediction?z?z.p(e,n):(z=qr(e),z.c(),z.m(t,null)):z&&(z.d(1),z=null),1&n&&$!==($="prediction-container "+e[6].colour+" svelte-1qm3m7y")&&L(t,"class",$)},d(e){e&&E(t),q.d(),z&&z.d(),b=!1,I()}}}function Hr(e){let t,a,n,r,o,l,s,i=e[2]+"",c=e[3],d=[];for(let t=0;t<c.length;t+=1)d[t]=zr(Nr(e,c,t));return{c(){t=V("div"),a=k(i),n=_(),r=V("div"),o=_();for(let e=0;e<d.length;e+=1)d[e].c();l=_(),s=V("div"),this.h()},l(e){t=B(e,"DIV",{class:!0});var c=M(t);a=G(c,i),c.forEach(E),n=O(e),r=B(e,"DIV",{class:!0}),M(r).forEach(E),o=O(e);for(let t=0;t<d.length;t+=1)d[t].l(e);l=O(e),s=B(e,"DIV",{class:!0}),M(s).forEach(E),this.h()},h(){L(t,"class","date svelte-1qm3m7y"),L(r,"class","medium-predictions-divider svelte-1qm3m7y"),L(s,"class","predictions-gap svelte-1qm3m7y")},m(e,i){x(e,t,i),w(t,a),x(e,n,i),x(e,r,i),x(e,o,i);for(let t=0;t<d.length;t+=1)d[t].m(e,i);x(e,l,i),x(e,s,i)},p(e,t){if(1&t&&i!==(i=e[2]+"")&&j(a,i),1&t){let a;for(c=e[3],a=0;a<c.length;a+=1){const n=Nr(e,c,a);d[a]?d[a].p(n,t):(d[a]=zr(n),d[a].c(),d[a].m(l.parentNode,l))}for(;a<d.length;a+=1)d[a].d(1);d.length=c.length}},d(e){e&&E(t),e&&E(n),e&&E(r),e&&E(o),I(d,e),e&&E(l),e&&E(s)}}}function Rr(e){let t,a,n,r,o;function l(e,t){return null!=e[0]?Sr:Br}let s=l(e),i=s(e);return{c(){t=V("div"),a=V("div"),n=V("a"),r=k("Predictions"),o=_(),i.c(),this.h()},l(e){t=B(e,"DIV",{id:!0,class:!0});var l=M(t);a=B(l,"DIV",{class:!0});var s=M(a);n=B(s,"A",{class:!0,href:!0});var c=M(n);r=G(c,"Predictions"),c.forEach(E),s.forEach(E),o=O(l),i.l(l),l.forEach(E),this.h()},h(){L(n,"class","predictions-title svelte-1qm3m7y"),L(n,"href","/predictions"),L(a,"class","predictions-header svelte-1qm3m7y"),L(t,"id","predictions"),L(t,"class","svelte-1qm3m7y")},m(e,l){x(e,t,l),w(t,a),w(a,n),w(n,r),w(t,o),i.m(t,null)},p(e,a){s===(s=l(e))&&i?i.p(e,a):(i.d(1),i=s(e),i&&(i.c(),i.m(t,null)))},d(e){e&&E(t),i.d()}}}function Fr(e){let t,a,n,r;return n=new Re({props:{$$slots:{default:[Rr]},$$scope:{ctx:e}}}),{c(){t=V("meta"),a=_(),ye(n.$$.fragment),this.h()},l(e){const r=z('[data-svelte="svelte-1w56yuh"]',Mr.head);t=B(r,"META",{name:!0,content:!0}),r.forEach(E),a=O(e),$e(n.$$.fragment,e),this.h()},h(){Mr.title="Predictions",L(t,"name","description"),L(t,"content","Premier League Statistics Dashboard")},m(e,o){w(Mr.head,t),x(e,a,o),be(n,e,o),r=!0},p(e,[t]){const a={};513&t&&(a.$$scope={dirty:t,ctx:e}),n.$set(a)},i(e){r||(de(n.$$.fragment,e),r=!0)},o(e){ue(n.$$.fragment,e),r=!1},d(e){E(t),e&&E(a),we(n,e)}}}function Ur(e,t){return Math.round(e.homeGoals)==t.homeGoals&&Math.round(e.awayGoals)==t.awayGoals}function Yr(e,t){return Math.round(e.homeGoals)>Math.round(e.awayGoals)&&Math.round(t.homeGoals)>Math.round(t.awayGoals)||Math.round(e.homeGoals)==Math.round(e.awayGoals)&&Math.round(t.homeGoals)==Math.round(t.awayGoals)||Math.round(e.homeGoals)<Math.round(e.awayGoals)&&Math.round(t.homeGoals)<Math.round(t.awayGoals)}function Wr(e){return new Date(e).toTimeString().slice(0,5)}function Xr(e,t,a){let n;F((()=>{(async function(e){const t=await fetch(e);return await t.json()})("https://pldashboard-backend.vercel.app/api/predictions").then((e=>{!function(e){e.predictions.sort(((e,t)=>new Date(t._id)-new Date(e._id)));for(let t=0;t<e.predictions.length;t++)e.predictions[t].predictions.sort(((e,t)=>new Date(e.datetime)-new Date(t.datetime)))}(e),function(e){let t=0,a=0,n=0;for(let r=0;r<e.predictions.length;r++)for(let o=0;o<e.predictions[r].predictions.length;o++){let l=e.predictions[r].predictions[o];null!=l.actual&&(Ur(l.prediction,l.actual)?(l.colour="green",t+=1,a+=1):Yr(l.prediction,l.actual)?(l.colour="yellow",a+=1):l.colour="red",n+=1)}e.accuracy={scoreAccuracy:t/n,resultAccuracy:a/n}}(e),a(0,n=e),console.log(n)}))}));return[n,e=>function(e){let t=document.getElementById(e);null!=t&&t.classList.toggle("expanded")}(e._id)]}class Kr extends Ie{constructor(e){super(),Ee(this,e,Xr,Fr,l,{})}}function Jr(t){let a,n,r;return{c(){a=V("div"),n=V("div"),r=k("Error: Page not found"),this.h()},l(e){a=B(e,"DIV",{id:!0,class:!0});var t=M(a);n=B(t,"DIV",{class:!0});var o=M(n);r=G(o,"Error: Page not found"),o.forEach(E),t.forEach(E),this.h()},h(){L(n,"class","msg-container svelte-17qhtmb"),L(a,"id","error"),L(a,"class","svelte-17qhtmb")},m(e,t){x(e,a,t),w(a,n),w(n,r)},p:e,d(e){e&&E(a)}}}function Qr(e){let t,a,n,r;return n=new Re({props:{$$slots:{default:[Jr]},$$scope:{ctx:e}}}),{c(){t=V("meta"),a=_(),ye(n.$$.fragment),this.h()},l(e){const r=z('[data-svelte="svelte-1rqatx0"]',document.head);t=B(r,"META",{name:!0,content:!0}),r.forEach(E),a=O(e),$e(n.$$.fragment,e),this.h()},h(){document.title="Premier League",L(t,"name","description"),L(t,"content","Premier League Statistics Dashboard")},m(e,o){w(document.head,t),x(e,a,o),be(n,e,o),r=!0},p(e,[t]){const a={};1&t&&(a.$$scope={dirty:t,ctx:e}),n.$set(a)},i(e){r||(de(n.$$.fragment,e),r=!0)},o(e){ue(n.$$.fragment,e),r=!1},d(e){E(t),e&&E(a),we(n,e)}}}class Zr extends Ie{constructor(e){super(),Ee(this,e,null,Qr,l,{})}}function eo(t){let a,n;return a=new Tr({props:{hyphenatedTeam:null}}),{c(){ye(a.$$.fragment)},l(e){$e(a.$$.fragment,e)},m(e,t){be(a,e,t),n=!0},p:e,i(e){n||(de(a.$$.fragment,e),n=!0)},o(e){ue(a.$$.fragment,e),n=!1},d(e){we(a,e)}}}function to(e){let t,a;return t=new Tr({props:{hyphenatedTeam:e[1].team}}),{c(){ye(t.$$.fragment)},l(e){$e(t.$$.fragment,e)},m(e,n){be(t,e,n),a=!0},p(e,a){const n={};2&a&&(n.hyphenatedTeam=e[1].team),t.$set(n)},i(e){a||(de(t.$$.fragment,e),a=!0)},o(e){ue(t.$$.fragment,e),a=!1},d(e){we(t,e)}}}function ao(e){let t,a,n,r,o,l,s,i,c,d,u,f;return t=new Qe({props:{path:"/",$$slots:{default:[eo]},$$scope:{ctx:e}}}),n=new Qe({props:{path:"/predictions",component:Kr}}),o=new Qe({props:{path:"/:team",$$slots:{default:[to,({params:e})=>({1:e}),({params:e})=>e?2:0]},$$scope:{ctx:e}}}),s=new Qe({props:{path:"/teams",component:ut}}),c=new Qe({props:{path:"/home",component:Cr}}),u=new Qe({props:{path:"/error",component:Zr}}),{c(){ye(t.$$.fragment),a=_(),ye(n.$$.fragment),r=_(),ye(o.$$.fragment),l=_(),ye(s.$$.fragment),i=_(),ye(c.$$.fragment),d=_(),ye(u.$$.fragment)},l(e){$e(t.$$.fragment,e),a=O(e),$e(n.$$.fragment,e),r=O(e),$e(o.$$.fragment,e),l=O(e),$e(s.$$.fragment,e),i=O(e),$e(c.$$.fragment,e),d=O(e),$e(u.$$.fragment,e)},m(e,h){be(t,e,h),x(e,a,h),be(n,e,h),x(e,r,h),be(o,e,h),x(e,l,h),be(s,e,h),x(e,i,h),be(c,e,h),x(e,d,h),be(u,e,h),f=!0},p(e,a){const n={};4&a&&(n.$$scope={dirty:a,ctx:e}),t.$set(n);const r={};6&a&&(r.$$scope={dirty:a,ctx:e}),o.$set(r)},i(e){f||(de(t.$$.fragment,e),de(n.$$.fragment,e),de(o.$$.fragment,e),de(s.$$.fragment,e),de(c.$$.fragment,e),de(u.$$.fragment,e),f=!0)},o(e){ue(t.$$.fragment,e),ue(n.$$.fragment,e),ue(o.$$.fragment,e),ue(s.$$.fragment,e),ue(c.$$.fragment,e),ue(u.$$.fragment,e),f=!1},d(e){we(t,e),e&&E(a),we(n,e),e&&E(r),we(o,e),e&&E(l),we(s,e),e&&E(i),we(c,e),e&&E(d),we(u,e)}}}function no(e){let t,a;return t=new Re({props:{url:e[0],$$slots:{default:[ao]},$$scope:{ctx:e}}}),{c(){ye(t.$$.fragment)},l(e){$e(t.$$.fragment,e)},m(e,n){be(t,e,n),a=!0},p(e,[a]){const n={};1&a&&(n.url=e[0]),4&a&&(n.$$scope={dirty:a,ctx:e}),t.$set(n)},i(e){a||(de(t.$$.fragment,e),a=!0)},o(e){ue(t.$$.fragment,e),a=!1},d(e){we(t,e)}}}function ro(e,t,a){let{url:n=""}=t;return e.$$set=e=>{"url"in e&&a(0,n=e.url)},[n]}new class extends Ie{constructor(e){super(),Ee(this,e,ro,no,l,{url:0})}}({target:document.getElementById("app"),hydrate:!0})}();
+
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+(function () {
+    'use strict';
+
+    function noop() { }
+    function assign(tar, src) {
+        // @ts-ignore
+        for (const k in src)
+            tar[k] = src[k];
+        return tar;
+    }
+    function add_location(element, file, line, column, char) {
+        element.__svelte_meta = {
+            loc: { file, line, column, char }
+        };
+    }
+    function run(fn) {
+        return fn();
+    }
+    function blank_object() {
+        return Object.create(null);
+    }
+    function run_all(fns) {
+        fns.forEach(run);
+    }
+    function is_function(thing) {
+        return typeof thing === 'function';
+    }
+    function safe_not_equal(a, b) {
+        return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+    }
+    let src_url_equal_anchor;
+    function src_url_equal(element_src, url) {
+        if (!src_url_equal_anchor) {
+            src_url_equal_anchor = document.createElement('a');
+        }
+        src_url_equal_anchor.href = url;
+        return element_src === src_url_equal_anchor.href;
+    }
+    function is_empty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+    function validate_store(store, name) {
+        if (store != null && typeof store.subscribe !== 'function') {
+            throw new Error(`'${name}' is not a store with a 'subscribe' method`);
+        }
+    }
+    function subscribe(store, ...callbacks) {
+        if (store == null) {
+            return noop;
+        }
+        const unsub = store.subscribe(...callbacks);
+        return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
+    }
+    function component_subscribe(component, store, callback) {
+        component.$$.on_destroy.push(subscribe(store, callback));
+    }
+    function create_slot(definition, ctx, $$scope, fn) {
+        if (definition) {
+            const slot_ctx = get_slot_context(definition, ctx, $$scope, fn);
+            return definition[0](slot_ctx);
+        }
+    }
+    function get_slot_context(definition, ctx, $$scope, fn) {
+        return definition[1] && fn
+            ? assign($$scope.ctx.slice(), definition[1](fn(ctx)))
+            : $$scope.ctx;
+    }
+    function get_slot_changes(definition, $$scope, dirty, fn) {
+        if (definition[2] && fn) {
+            const lets = definition[2](fn(dirty));
+            if ($$scope.dirty === undefined) {
+                return lets;
+            }
+            if (typeof lets === 'object') {
+                const merged = [];
+                const len = Math.max($$scope.dirty.length, lets.length);
+                for (let i = 0; i < len; i += 1) {
+                    merged[i] = $$scope.dirty[i] | lets[i];
+                }
+                return merged;
+            }
+            return $$scope.dirty | lets;
+        }
+        return $$scope.dirty;
+    }
+    function update_slot_base(slot, slot_definition, ctx, $$scope, slot_changes, get_slot_context_fn) {
+        if (slot_changes) {
+            const slot_context = get_slot_context(slot_definition, ctx, $$scope, get_slot_context_fn);
+            slot.p(slot_context, slot_changes);
+        }
+    }
+    function get_all_dirty_from_scope($$scope) {
+        if ($$scope.ctx.length > 32) {
+            const dirty = [];
+            const length = $$scope.ctx.length / 32;
+            for (let i = 0; i < length; i++) {
+                dirty[i] = -1;
+            }
+            return dirty;
+        }
+        return -1;
+    }
+    function exclude_internal_props(props) {
+        const result = {};
+        for (const k in props)
+            if (k[0] !== '$')
+                result[k] = props[k];
+        return result;
+    }
+    function compute_rest_props(props, keys) {
+        const rest = {};
+        keys = new Set(keys);
+        for (const k in props)
+            if (!keys.has(k) && k[0] !== '$')
+                rest[k] = props[k];
+        return rest;
+    }
+
+    // Track which nodes are claimed during hydration. Unclaimed nodes can then be removed from the DOM
+    // at the end of hydration without touching the remaining nodes.
+    let is_hydrating = false;
+    function start_hydrating() {
+        is_hydrating = true;
+    }
+    function end_hydrating() {
+        is_hydrating = false;
+    }
+    function upper_bound(low, high, key, value) {
+        // Return first index of value larger than input value in the range [low, high)
+        while (low < high) {
+            const mid = low + ((high - low) >> 1);
+            if (key(mid) <= value) {
+                low = mid + 1;
+            }
+            else {
+                high = mid;
+            }
+        }
+        return low;
+    }
+    function init_hydrate(target) {
+        if (target.hydrate_init)
+            return;
+        target.hydrate_init = true;
+        // We know that all children have claim_order values since the unclaimed have been detached if target is not <head>
+        let children = target.childNodes;
+        // If target is <head>, there may be children without claim_order
+        if (target.nodeName === 'HEAD') {
+            const myChildren = [];
+            for (let i = 0; i < children.length; i++) {
+                const node = children[i];
+                if (node.claim_order !== undefined) {
+                    myChildren.push(node);
+                }
+            }
+            children = myChildren;
+        }
+        /*
+        * Reorder claimed children optimally.
+        * We can reorder claimed children optimally by finding the longest subsequence of
+        * nodes that are already claimed in order and only moving the rest. The longest
+        * subsequence subsequence of nodes that are claimed in order can be found by
+        * computing the longest increasing subsequence of .claim_order values.
+        *
+        * This algorithm is optimal in generating the least amount of reorder operations
+        * possible.
+        *
+        * Proof:
+        * We know that, given a set of reordering operations, the nodes that do not move
+        * always form an increasing subsequence, since they do not move among each other
+        * meaning that they must be already ordered among each other. Thus, the maximal
+        * set of nodes that do not move form a longest increasing subsequence.
+        */
+        // Compute longest increasing subsequence
+        // m: subsequence length j => index k of smallest value that ends an increasing subsequence of length j
+        const m = new Int32Array(children.length + 1);
+        // Predecessor indices + 1
+        const p = new Int32Array(children.length);
+        m[0] = -1;
+        let longest = 0;
+        for (let i = 0; i < children.length; i++) {
+            const current = children[i].claim_order;
+            // Find the largest subsequence length such that it ends in a value less than our current value
+            // upper_bound returns first greater value, so we subtract one
+            // with fast path for when we are on the current longest subsequence
+            const seqLen = ((longest > 0 && children[m[longest]].claim_order <= current) ? longest + 1 : upper_bound(1, longest, idx => children[m[idx]].claim_order, current)) - 1;
+            p[i] = m[seqLen] + 1;
+            const newLen = seqLen + 1;
+            // We can guarantee that current is the smallest value. Otherwise, we would have generated a longer sequence.
+            m[newLen] = i;
+            longest = Math.max(newLen, longest);
+        }
+        // The longest increasing subsequence of nodes (initially reversed)
+        const lis = [];
+        // The rest of the nodes, nodes that will be moved
+        const toMove = [];
+        let last = children.length - 1;
+        for (let cur = m[longest] + 1; cur != 0; cur = p[cur - 1]) {
+            lis.push(children[cur - 1]);
+            for (; last >= cur; last--) {
+                toMove.push(children[last]);
+            }
+            last--;
+        }
+        for (; last >= 0; last--) {
+            toMove.push(children[last]);
+        }
+        lis.reverse();
+        // We sort the nodes being moved to guarantee that their insertion order matches the claim order
+        toMove.sort((a, b) => a.claim_order - b.claim_order);
+        // Finally, we move the nodes
+        for (let i = 0, j = 0; i < toMove.length; i++) {
+            while (j < lis.length && toMove[i].claim_order >= lis[j].claim_order) {
+                j++;
+            }
+            const anchor = j < lis.length ? lis[j] : null;
+            target.insertBefore(toMove[i], anchor);
+        }
+    }
+    function append_hydration(target, node) {
+        if (is_hydrating) {
+            init_hydrate(target);
+            if ((target.actual_end_child === undefined) || ((target.actual_end_child !== null) && (target.actual_end_child.parentElement !== target))) {
+                target.actual_end_child = target.firstChild;
+            }
+            // Skip nodes of undefined ordering
+            while ((target.actual_end_child !== null) && (target.actual_end_child.claim_order === undefined)) {
+                target.actual_end_child = target.actual_end_child.nextSibling;
+            }
+            if (node !== target.actual_end_child) {
+                // We only insert if the ordering of this node should be modified or the parent node is not target
+                if (node.claim_order !== undefined || node.parentNode !== target) {
+                    target.insertBefore(node, target.actual_end_child);
+                }
+            }
+            else {
+                target.actual_end_child = node.nextSibling;
+            }
+        }
+        else if (node.parentNode !== target || node.nextSibling !== null) {
+            target.appendChild(node);
+        }
+    }
+    function insert_hydration(target, node, anchor) {
+        if (is_hydrating && !anchor) {
+            append_hydration(target, node);
+        }
+        else if (node.parentNode !== target || node.nextSibling != anchor) {
+            target.insertBefore(node, anchor || null);
+        }
+    }
+    function detach(node) {
+        node.parentNode.removeChild(node);
+    }
+    function destroy_each(iterations, detaching) {
+        for (let i = 0; i < iterations.length; i += 1) {
+            if (iterations[i])
+                iterations[i].d(detaching);
+        }
+    }
+    function element(name) {
+        return document.createElement(name);
+    }
+    function svg_element(name) {
+        return document.createElementNS('http://www.w3.org/2000/svg', name);
+    }
+    function text(data) {
+        return document.createTextNode(data);
+    }
+    function space() {
+        return text(' ');
+    }
+    function empty() {
+        return text('');
+    }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
+    function attr(node, attribute, value) {
+        if (value == null)
+            node.removeAttribute(attribute);
+        else if (node.getAttribute(attribute) !== value)
+            node.setAttribute(attribute, value);
+    }
+    function set_attributes(node, attributes) {
+        // @ts-ignore
+        const descriptors = Object.getOwnPropertyDescriptors(node.__proto__);
+        for (const key in attributes) {
+            if (attributes[key] == null) {
+                node.removeAttribute(key);
+            }
+            else if (key === 'style') {
+                node.style.cssText = attributes[key];
+            }
+            else if (key === '__value') {
+                node.value = node[key] = attributes[key];
+            }
+            else if (descriptors[key] && descriptors[key].set) {
+                node[key] = attributes[key];
+            }
+            else {
+                attr(node, key, attributes[key]);
+            }
+        }
+    }
+    function children(element) {
+        return Array.from(element.childNodes);
+    }
+    function init_claim_info(nodes) {
+        if (nodes.claim_info === undefined) {
+            nodes.claim_info = { last_index: 0, total_claimed: 0 };
+        }
+    }
+    function claim_node(nodes, predicate, processNode, createNode, dontUpdateLastIndex = false) {
+        // Try to find nodes in an order such that we lengthen the longest increasing subsequence
+        init_claim_info(nodes);
+        const resultNode = (() => {
+            // We first try to find an element after the previous one
+            for (let i = nodes.claim_info.last_index; i < nodes.length; i++) {
+                const node = nodes[i];
+                if (predicate(node)) {
+                    const replacement = processNode(node);
+                    if (replacement === undefined) {
+                        nodes.splice(i, 1);
+                    }
+                    else {
+                        nodes[i] = replacement;
+                    }
+                    if (!dontUpdateLastIndex) {
+                        nodes.claim_info.last_index = i;
+                    }
+                    return node;
+                }
+            }
+            // Otherwise, we try to find one before
+            // We iterate in reverse so that we don't go too far back
+            for (let i = nodes.claim_info.last_index - 1; i >= 0; i--) {
+                const node = nodes[i];
+                if (predicate(node)) {
+                    const replacement = processNode(node);
+                    if (replacement === undefined) {
+                        nodes.splice(i, 1);
+                    }
+                    else {
+                        nodes[i] = replacement;
+                    }
+                    if (!dontUpdateLastIndex) {
+                        nodes.claim_info.last_index = i;
+                    }
+                    else if (replacement === undefined) {
+                        // Since we spliced before the last_index, we decrease it
+                        nodes.claim_info.last_index--;
+                    }
+                    return node;
+                }
+            }
+            // If we can't find any matching node, we create a new one
+            return createNode();
+        })();
+        resultNode.claim_order = nodes.claim_info.total_claimed;
+        nodes.claim_info.total_claimed += 1;
+        return resultNode;
+    }
+    function claim_element_base(nodes, name, attributes, create_element) {
+        return claim_node(nodes, (node) => node.nodeName === name, (node) => {
+            const remove = [];
+            for (let j = 0; j < node.attributes.length; j++) {
+                const attribute = node.attributes[j];
+                if (!attributes[attribute.name]) {
+                    remove.push(attribute.name);
+                }
+            }
+            remove.forEach(v => node.removeAttribute(v));
+            return undefined;
+        }, () => create_element(name));
+    }
+    function claim_element(nodes, name, attributes) {
+        return claim_element_base(nodes, name, attributes, element);
+    }
+    function claim_svg_element(nodes, name, attributes) {
+        return claim_element_base(nodes, name, attributes, svg_element);
+    }
+    function claim_text(nodes, data) {
+        return claim_node(nodes, (node) => node.nodeType === 3, (node) => {
+            const dataStr = '' + data;
+            if (node.data.startsWith(dataStr)) {
+                if (node.data.length !== dataStr.length) {
+                    return node.splitText(dataStr.length);
+                }
+            }
+            else {
+                node.data = dataStr;
+            }
+        }, () => text(data), true // Text nodes should not update last index since it is likely not worth it to eliminate an increasing subsequence of actual elements
+        );
+    }
+    function claim_space(nodes) {
+        return claim_text(nodes, ' ');
+    }
+    function set_style(node, key, value, important) {
+        if (value === null) {
+            node.style.removeProperty(key);
+        }
+        else {
+            node.style.setProperty(key, value, important ? 'important' : '');
+        }
+    }
+    function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
+        const e = document.createEvent('CustomEvent');
+        e.initCustomEvent(type, bubbles, cancelable, detail);
+        return e;
+    }
+    function query_selector_all(selector, parent = document.body) {
+        return Array.from(parent.querySelectorAll(selector));
+    }
+
+    let current_component;
+    function set_current_component(component) {
+        current_component = component;
+    }
+    function get_current_component() {
+        if (!current_component)
+            throw new Error('Function called outside component initialization');
+        return current_component;
+    }
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
+    }
+    function onDestroy(fn) {
+        get_current_component().$$.on_destroy.push(fn);
+    }
+    function createEventDispatcher() {
+        const component = get_current_component();
+        return (type, detail, { cancelable = false } = {}) => {
+            const callbacks = component.$$.callbacks[type];
+            if (callbacks) {
+                // TODO are there situations where events could be dispatched
+                // in a server (non-DOM) environment?
+                const event = custom_event(type, detail, { cancelable });
+                callbacks.slice().forEach(fn => {
+                    fn.call(component, event);
+                });
+                return !event.defaultPrevented;
+            }
+            return true;
+        };
+    }
+    function setContext(key, context) {
+        get_current_component().$$.context.set(key, context);
+        return context;
+    }
+    function getContext(key) {
+        return get_current_component().$$.context.get(key);
+    }
+
+    const dirty_components = [];
+    const binding_callbacks = [];
+    const render_callbacks = [];
+    const flush_callbacks = [];
+    const resolved_promise = Promise.resolve();
+    let update_scheduled = false;
+    function schedule_update() {
+        if (!update_scheduled) {
+            update_scheduled = true;
+            resolved_promise.then(flush);
+        }
+    }
+    function add_render_callback(fn) {
+        render_callbacks.push(fn);
+    }
+    // flush() calls callbacks in this order:
+    // 1. All beforeUpdate callbacks, in order: parents before children
+    // 2. All bind:this callbacks, in reverse order: children before parents.
+    // 3. All afterUpdate callbacks, in order: parents before children. EXCEPT
+    //    for afterUpdates called during the initial onMount, which are called in
+    //    reverse order: children before parents.
+    // Since callbacks might update component values, which could trigger another
+    // call to flush(), the following steps guard against this:
+    // 1. During beforeUpdate, any updated components will be added to the
+    //    dirty_components array and will cause a reentrant call to flush(). Because
+    //    the flush index is kept outside the function, the reentrant call will pick
+    //    up where the earlier call left off and go through all dirty components. The
+    //    current_component value is saved and restored so that the reentrant call will
+    //    not interfere with the "parent" flush() call.
+    // 2. bind:this callbacks cannot trigger new flush() calls.
+    // 3. During afterUpdate, any updated components will NOT have their afterUpdate
+    //    callback called a second time; the seen_callbacks set, outside the flush()
+    //    function, guarantees this behavior.
+    const seen_callbacks = new Set();
+    let flushidx = 0; // Do *not* move this inside the flush() function
+    function flush() {
+        const saved_component = current_component;
+        do {
+            // first, call beforeUpdate functions
+            // and update components
+            while (flushidx < dirty_components.length) {
+                const component = dirty_components[flushidx];
+                flushidx++;
+                set_current_component(component);
+                update(component.$$);
+            }
+            set_current_component(null);
+            dirty_components.length = 0;
+            flushidx = 0;
+            while (binding_callbacks.length)
+                binding_callbacks.pop()();
+            // then, once components are updated, call
+            // afterUpdate functions. This may cause
+            // subsequent updates...
+            for (let i = 0; i < render_callbacks.length; i += 1) {
+                const callback = render_callbacks[i];
+                if (!seen_callbacks.has(callback)) {
+                    // ...so guard against infinite loops
+                    seen_callbacks.add(callback);
+                    callback();
+                }
+            }
+            render_callbacks.length = 0;
+        } while (dirty_components.length);
+        while (flush_callbacks.length) {
+            flush_callbacks.pop()();
+        }
+        update_scheduled = false;
+        seen_callbacks.clear();
+        set_current_component(saved_component);
+    }
+    function update($$) {
+        if ($$.fragment !== null) {
+            $$.update();
+            run_all($$.before_update);
+            const dirty = $$.dirty;
+            $$.dirty = [-1];
+            $$.fragment && $$.fragment.p($$.ctx, dirty);
+            $$.after_update.forEach(add_render_callback);
+        }
+    }
+    const outroing = new Set();
+    let outros;
+    function group_outros() {
+        outros = {
+            r: 0,
+            c: [],
+            p: outros // parent group
+        };
+    }
+    function check_outros() {
+        if (!outros.r) {
+            run_all(outros.c);
+        }
+        outros = outros.p;
+    }
+    function transition_in(block, local) {
+        if (block && block.i) {
+            outroing.delete(block);
+            block.i(local);
+        }
+    }
+    function transition_out(block, local, detach, callback) {
+        if (block && block.o) {
+            if (outroing.has(block))
+                return;
+            outroing.add(block);
+            outros.c.push(() => {
+                outroing.delete(block);
+                if (callback) {
+                    if (detach)
+                        block.d(1);
+                    callback();
+                }
+            });
+            block.o(local);
+        }
+        else if (callback) {
+            callback();
+        }
+    }
+
+    const globals = (typeof window !== 'undefined'
+        ? window
+        : typeof globalThis !== 'undefined'
+            ? globalThis
+            : global);
+
+    function destroy_block(block, lookup) {
+        block.d(1);
+        lookup.delete(block.key);
+    }
+    function outro_and_destroy_block(block, lookup) {
+        transition_out(block, 1, 1, () => {
+            lookup.delete(block.key);
+        });
+    }
+    function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
+        let o = old_blocks.length;
+        let n = list.length;
+        let i = o;
+        const old_indexes = {};
+        while (i--)
+            old_indexes[old_blocks[i].key] = i;
+        const new_blocks = [];
+        const new_lookup = new Map();
+        const deltas = new Map();
+        i = n;
+        while (i--) {
+            const child_ctx = get_context(ctx, list, i);
+            const key = get_key(child_ctx);
+            let block = lookup.get(key);
+            if (!block) {
+                block = create_each_block(key, child_ctx);
+                block.c();
+            }
+            else if (dynamic) {
+                block.p(child_ctx, dirty);
+            }
+            new_lookup.set(key, new_blocks[i] = block);
+            if (key in old_indexes)
+                deltas.set(key, Math.abs(i - old_indexes[key]));
+        }
+        const will_move = new Set();
+        const did_move = new Set();
+        function insert(block) {
+            transition_in(block, 1);
+            block.m(node, next);
+            lookup.set(block.key, block);
+            next = block.first;
+            n--;
+        }
+        while (o && n) {
+            const new_block = new_blocks[n - 1];
+            const old_block = old_blocks[o - 1];
+            const new_key = new_block.key;
+            const old_key = old_block.key;
+            if (new_block === old_block) {
+                // do nothing
+                next = new_block.first;
+                o--;
+                n--;
+            }
+            else if (!new_lookup.has(old_key)) {
+                // remove old block
+                destroy(old_block, lookup);
+                o--;
+            }
+            else if (!lookup.has(new_key) || will_move.has(new_key)) {
+                insert(new_block);
+            }
+            else if (did_move.has(old_key)) {
+                o--;
+            }
+            else if (deltas.get(new_key) > deltas.get(old_key)) {
+                did_move.add(new_key);
+                insert(new_block);
+            }
+            else {
+                will_move.add(old_key);
+                o--;
+            }
+        }
+        while (o--) {
+            const old_block = old_blocks[o];
+            if (!new_lookup.has(old_block.key))
+                destroy(old_block, lookup);
+        }
+        while (n)
+            insert(new_blocks[n - 1]);
+        return new_blocks;
+    }
+    function validate_each_keys(ctx, list, get_context, get_key) {
+        const keys = new Set();
+        for (let i = 0; i < list.length; i++) {
+            const key = get_key(get_context(ctx, list, i));
+            if (keys.has(key)) {
+                throw new Error('Cannot have duplicate keys in a keyed each');
+            }
+            keys.add(key);
+        }
+    }
+
+    function get_spread_update(levels, updates) {
+        const update = {};
+        const to_null_out = {};
+        const accounted_for = { $$scope: 1 };
+        let i = levels.length;
+        while (i--) {
+            const o = levels[i];
+            const n = updates[i];
+            if (n) {
+                for (const key in o) {
+                    if (!(key in n))
+                        to_null_out[key] = 1;
+                }
+                for (const key in n) {
+                    if (!accounted_for[key]) {
+                        update[key] = n[key];
+                        accounted_for[key] = 1;
+                    }
+                }
+                levels[i] = n;
+            }
+            else {
+                for (const key in o) {
+                    accounted_for[key] = 1;
+                }
+            }
+        }
+        for (const key in to_null_out) {
+            if (!(key in update))
+                update[key] = undefined;
+        }
+        return update;
+    }
+    function get_spread_object(spread_props) {
+        return typeof spread_props === 'object' && spread_props !== null ? spread_props : {};
+    }
+    function create_component(block) {
+        block && block.c();
+    }
+    function claim_component(block, parent_nodes) {
+        block && block.l(parent_nodes);
+    }
+    function mount_component(component, target, anchor, customElement) {
+        const { fragment, on_mount, on_destroy, after_update } = component.$$;
+        fragment && fragment.m(target, anchor);
+        if (!customElement) {
+            // onMount happens before the initial afterUpdate
+            add_render_callback(() => {
+                const new_on_destroy = on_mount.map(run).filter(is_function);
+                if (on_destroy) {
+                    on_destroy.push(...new_on_destroy);
+                }
+                else {
+                    // Edge case - component was destroyed immediately,
+                    // most likely as a result of a binding initialising
+                    run_all(new_on_destroy);
+                }
+                component.$$.on_mount = [];
+            });
+        }
+        after_update.forEach(add_render_callback);
+    }
+    function destroy_component(component, detaching) {
+        const $$ = component.$$;
+        if ($$.fragment !== null) {
+            run_all($$.on_destroy);
+            $$.fragment && $$.fragment.d(detaching);
+            // TODO null out other refs, including component.$$ (but need to
+            // preserve final state?)
+            $$.on_destroy = $$.fragment = null;
+            $$.ctx = [];
+        }
+    }
+    function make_dirty(component, i) {
+        if (component.$$.dirty[0] === -1) {
+            dirty_components.push(component);
+            schedule_update();
+            component.$$.dirty.fill(0);
+        }
+        component.$$.dirty[(i / 31) | 0] |= (1 << (i % 31));
+    }
+    function init(component, options, instance, create_fragment, not_equal, props, append_styles, dirty = [-1]) {
+        const parent_component = current_component;
+        set_current_component(component);
+        const $$ = component.$$ = {
+            fragment: null,
+            ctx: null,
+            // state
+            props,
+            update: noop,
+            not_equal,
+            bound: blank_object(),
+            // lifecycle
+            on_mount: [],
+            on_destroy: [],
+            on_disconnect: [],
+            before_update: [],
+            after_update: [],
+            context: new Map(options.context || (parent_component ? parent_component.$$.context : [])),
+            // everything else
+            callbacks: blank_object(),
+            dirty,
+            skip_bound: false,
+            root: options.target || parent_component.$$.root
+        };
+        append_styles && append_styles($$.root);
+        let ready = false;
+        $$.ctx = instance
+            ? instance(component, options.props || {}, (i, ret, ...rest) => {
+                const value = rest.length ? rest[0] : ret;
+                if ($$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value)) {
+                    if (!$$.skip_bound && $$.bound[i])
+                        $$.bound[i](value);
+                    if (ready)
+                        make_dirty(component, i);
+                }
+                return ret;
+            })
+            : [];
+        $$.update();
+        ready = true;
+        run_all($$.before_update);
+        // `false` as a special case of no DOM component
+        $$.fragment = create_fragment ? create_fragment($$.ctx) : false;
+        if (options.target) {
+            if (options.hydrate) {
+                start_hydrating();
+                const nodes = children(options.target);
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                $$.fragment && $$.fragment.l(nodes);
+                nodes.forEach(detach);
+            }
+            else {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                $$.fragment && $$.fragment.c();
+            }
+            if (options.intro)
+                transition_in(component.$$.fragment);
+            mount_component(component, options.target, options.anchor, options.customElement);
+            end_hydrating();
+            flush();
+        }
+        set_current_component(parent_component);
+    }
+    /**
+     * Base class for Svelte components. Used when dev=false.
+     */
+    class SvelteComponent {
+        $destroy() {
+            destroy_component(this, 1);
+            this.$destroy = noop;
+        }
+        $on(type, callback) {
+            const callbacks = (this.$$.callbacks[type] || (this.$$.callbacks[type] = []));
+            callbacks.push(callback);
+            return () => {
+                const index = callbacks.indexOf(callback);
+                if (index !== -1)
+                    callbacks.splice(index, 1);
+            };
+        }
+        $set($$props) {
+            if (this.$$set && !is_empty($$props)) {
+                this.$$.skip_bound = true;
+                this.$$set($$props);
+                this.$$.skip_bound = false;
+            }
+        }
+    }
+
+    function dispatch_dev(type, detail) {
+        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.49.0' }, detail), { bubbles: true }));
+    }
+    function append_hydration_dev(target, node) {
+        dispatch_dev('SvelteDOMInsert', { target, node });
+        append_hydration(target, node);
+    }
+    function insert_hydration_dev(target, node, anchor) {
+        dispatch_dev('SvelteDOMInsert', { target, node, anchor });
+        insert_hydration(target, node, anchor);
+    }
+    function detach_dev(node) {
+        dispatch_dev('SvelteDOMRemove', { node });
+        detach(node);
+    }
+    function listen_dev(node, event, handler, options, has_prevent_default, has_stop_propagation) {
+        const modifiers = options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+        if (has_prevent_default)
+            modifiers.push('preventDefault');
+        if (has_stop_propagation)
+            modifiers.push('stopPropagation');
+        dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+        const dispose = listen(node, event, handler, options);
+        return () => {
+            dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+            dispose();
+        };
+    }
+    function attr_dev(node, attribute, value) {
+        attr(node, attribute, value);
+        if (value == null)
+            dispatch_dev('SvelteDOMRemoveAttribute', { node, attribute });
+        else
+            dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
+    }
+    function set_data_dev(text, data) {
+        data = '' + data;
+        if (text.wholeText === data)
+            return;
+        dispatch_dev('SvelteDOMSetData', { node: text, data });
+        text.data = data;
+    }
+    function validate_each_argument(arg) {
+        if (typeof arg !== 'string' && !(arg && typeof arg === 'object' && 'length' in arg)) {
+            let msg = '{#each} only iterates over array-like objects.';
+            if (typeof Symbol === 'function' && arg && Symbol.iterator in arg) {
+                msg += ' You can use a spread to convert this iterable into an array.';
+            }
+            throw new Error(msg);
+        }
+    }
+    function validate_slots(name, slot, keys) {
+        for (const slot_key of Object.keys(slot)) {
+            if (!~keys.indexOf(slot_key)) {
+                console.warn(`<${name}> received an unexpected slot "${slot_key}".`);
+            }
+        }
+    }
+    /**
+     * Base class for Svelte components with some minor dev-enhancements. Used when dev=true.
+     */
+    class SvelteComponentDev extends SvelteComponent {
+        constructor(options) {
+            if (!options || (!options.target && !options.$$inline)) {
+                throw new Error("'target' is a required option");
+            }
+            super();
+        }
+        $destroy() {
+            super.$destroy();
+            this.$destroy = () => {
+                console.warn('Component was already destroyed'); // eslint-disable-line no-console
+            };
+        }
+        $capture_state() { }
+        $inject_state() { }
+    }
+
+    const subscriber_queue = [];
+    /**
+     * Creates a `Readable` store that allows reading by subscription.
+     * @param value initial value
+     * @param {StartStopNotifier}start start and stop notifications for subscriptions
+     */
+    function readable(value, start) {
+        return {
+            subscribe: writable(value, start).subscribe
+        };
+    }
+    /**
+     * Create a `Writable` store that allows both updating and reading by subscription.
+     * @param {*=}value initial value
+     * @param {StartStopNotifier=}start start and stop notifications for subscriptions
+     */
+    function writable(value, start = noop) {
+        let stop;
+        const subscribers = new Set();
+        function set(new_value) {
+            if (safe_not_equal(value, new_value)) {
+                value = new_value;
+                if (stop) { // store is ready
+                    const run_queue = !subscriber_queue.length;
+                    for (const subscriber of subscribers) {
+                        subscriber[1]();
+                        subscriber_queue.push(subscriber, value);
+                    }
+                    if (run_queue) {
+                        for (let i = 0; i < subscriber_queue.length; i += 2) {
+                            subscriber_queue[i][0](subscriber_queue[i + 1]);
+                        }
+                        subscriber_queue.length = 0;
+                    }
+                }
+            }
+        }
+        function update(fn) {
+            set(fn(value));
+        }
+        function subscribe(run, invalidate = noop) {
+            const subscriber = [run, invalidate];
+            subscribers.add(subscriber);
+            if (subscribers.size === 1) {
+                stop = start(set) || noop;
+            }
+            run(value);
+            return () => {
+                subscribers.delete(subscriber);
+                if (subscribers.size === 0) {
+                    stop();
+                    stop = null;
+                }
+            };
+        }
+        return { set, update, subscribe };
+    }
+    function derived(stores, fn, initial_value) {
+        const single = !Array.isArray(stores);
+        const stores_array = single
+            ? [stores]
+            : stores;
+        const auto = fn.length < 2;
+        return readable(initial_value, (set) => {
+            let inited = false;
+            const values = [];
+            let pending = 0;
+            let cleanup = noop;
+            const sync = () => {
+                if (pending) {
+                    return;
+                }
+                cleanup();
+                const result = fn(single ? values[0] : values, set);
+                if (auto) {
+                    set(result);
+                }
+                else {
+                    cleanup = is_function(result) ? result : noop;
+                }
+            };
+            const unsubscribers = stores_array.map((store, i) => subscribe(store, (value) => {
+                values[i] = value;
+                pending &= ~(1 << i);
+                if (inited) {
+                    sync();
+                }
+            }, () => {
+                pending |= (1 << i);
+            }));
+            inited = true;
+            sync();
+            return function stop() {
+                run_all(unsubscribers);
+                cleanup();
+            };
+        });
+    }
+
+    const LOCATION = {};
+    const ROUTER = {};
+
+    /**
+     * Adapted from https://github.com/reach/router/blob/b60e6dd781d5d3a4bdaaf4de665649c0f6a7e78d/src/lib/history.js
+     *
+     * https://github.com/reach/router/blob/master/LICENSE
+     * */
+
+    function getLocation(source) {
+      return {
+        ...source.location,
+        state: source.history.state,
+        key: (source.history.state && source.history.state.key) || "initial"
+      };
+    }
+
+    function createHistory(source, options) {
+      const listeners = [];
+      let location = getLocation(source);
+
+      return {
+        get location() {
+          return location;
+        },
+
+        listen(listener) {
+          listeners.push(listener);
+
+          const popstateListener = () => {
+            location = getLocation(source);
+            listener({ location, action: "POP" });
+          };
+
+          source.addEventListener("popstate", popstateListener);
+
+          return () => {
+            source.removeEventListener("popstate", popstateListener);
+
+            const index = listeners.indexOf(listener);
+            listeners.splice(index, 1);
+          };
+        },
+
+        navigate(to, { state, replace = false } = {}) {
+          state = { ...state, key: Date.now() + "" };
+          // try...catch iOS Safari limits to 100 pushState calls
+          try {
+            if (replace) {
+              source.history.replaceState(state, null, to);
+            } else {
+              source.history.pushState(state, null, to);
+            }
+          } catch (e) {
+            source.location[replace ? "replace" : "assign"](to);
+          }
+
+          location = getLocation(source);
+          listeners.forEach(listener => listener({ location, action: "PUSH" }));
+        }
+      };
+    }
+
+    // Stores history entries in memory for testing or other platforms like Native
+    function createMemorySource(initialPathname = "/") {
+      let index = 0;
+      const stack = [{ pathname: initialPathname, search: "" }];
+      const states = [];
+
+      return {
+        get location() {
+          return stack[index];
+        },
+        addEventListener(name, fn) {},
+        removeEventListener(name, fn) {},
+        history: {
+          get entries() {
+            return stack;
+          },
+          get index() {
+            return index;
+          },
+          get state() {
+            return states[index];
+          },
+          pushState(state, _, uri) {
+            const [pathname, search = ""] = uri.split("?");
+            index++;
+            stack.push({ pathname, search });
+            states.push(state);
+          },
+          replaceState(state, _, uri) {
+            const [pathname, search = ""] = uri.split("?");
+            stack[index] = { pathname, search };
+            states[index] = state;
+          }
+        }
+      };
+    }
+
+    // Global history uses window.history as the source if available,
+    // otherwise a memory history
+    const canUseDOM = Boolean(
+      typeof window !== "undefined" &&
+        window.document &&
+        window.document.createElement
+    );
+    const globalHistory = createHistory(canUseDOM ? window : createMemorySource());
+    const { navigate } = globalHistory;
+
+    /**
+     * Adapted from https://github.com/reach/router/blob/b60e6dd781d5d3a4bdaaf4de665649c0f6a7e78d/src/lib/utils.js
+     *
+     * https://github.com/reach/router/blob/master/LICENSE
+     * */
+
+    const paramRe = /^:(.+)/;
+
+    const SEGMENT_POINTS = 4;
+    const STATIC_POINTS = 3;
+    const DYNAMIC_POINTS = 2;
+    const SPLAT_PENALTY = 1;
+    const ROOT_POINTS = 1;
+
+    /**
+     * Check if `string` starts with `search`
+     * @param {string} string
+     * @param {string} search
+     * @return {boolean}
+     */
+    function startsWith(string, search) {
+      return string.substr(0, search.length) === search;
+    }
+
+    /**
+     * Check if `segment` is a root segment
+     * @param {string} segment
+     * @return {boolean}
+     */
+    function isRootSegment(segment) {
+      return segment === "";
+    }
+
+    /**
+     * Check if `segment` is a dynamic segment
+     * @param {string} segment
+     * @return {boolean}
+     */
+    function isDynamic(segment) {
+      return paramRe.test(segment);
+    }
+
+    /**
+     * Check if `segment` is a splat
+     * @param {string} segment
+     * @return {boolean}
+     */
+    function isSplat(segment) {
+      return segment[0] === "*";
+    }
+
+    /**
+     * Split up the URI into segments delimited by `/`
+     * @param {string} uri
+     * @return {string[]}
+     */
+    function segmentize(uri) {
+      return (
+        uri
+          // Strip starting/ending `/`
+          .replace(/(^\/+|\/+$)/g, "")
+          .split("/")
+      );
+    }
+
+    /**
+     * Strip `str` of potential start and end `/`
+     * @param {string} str
+     * @return {string}
+     */
+    function stripSlashes(str) {
+      return str.replace(/(^\/+|\/+$)/g, "");
+    }
+
+    /**
+     * Score a route depending on how its individual segments look
+     * @param {object} route
+     * @param {number} index
+     * @return {object}
+     */
+    function rankRoute(route, index) {
+      const score = route.default
+        ? 0
+        : segmentize(route.path).reduce((score, segment) => {
+            score += SEGMENT_POINTS;
+
+            if (isRootSegment(segment)) {
+              score += ROOT_POINTS;
+            } else if (isDynamic(segment)) {
+              score += DYNAMIC_POINTS;
+            } else if (isSplat(segment)) {
+              score -= SEGMENT_POINTS + SPLAT_PENALTY;
+            } else {
+              score += STATIC_POINTS;
+            }
+
+            return score;
+          }, 0);
+
+      return { route, score, index };
+    }
+
+    /**
+     * Give a score to all routes and sort them on that
+     * @param {object[]} routes
+     * @return {object[]}
+     */
+    function rankRoutes(routes) {
+      return (
+        routes
+          .map(rankRoute)
+          // If two routes have the exact same score, we go by index instead
+          .sort((a, b) =>
+            a.score < b.score ? 1 : a.score > b.score ? -1 : a.index - b.index
+          )
+      );
+    }
+
+    /**
+     * Ranks and picks the best route to match. Each segment gets the highest
+     * amount of points, then the type of segment gets an additional amount of
+     * points where
+     *
+     *  static > dynamic > splat > root
+     *
+     * This way we don't have to worry about the order of our routes, let the
+     * computers do it.
+     *
+     * A route looks like this
+     *
+     *  { path, default, value }
+     *
+     * And a returned match looks like:
+     *
+     *  { route, params, uri }
+     *
+     * @param {object[]} routes
+     * @param {string} uri
+     * @return {?object}
+     */
+    function pick(routes, uri) {
+      let match;
+      let default_;
+
+      const [uriPathname] = uri.split("?");
+      const uriSegments = segmentize(uriPathname);
+      const isRootUri = uriSegments[0] === "";
+      const ranked = rankRoutes(routes);
+
+      for (let i = 0, l = ranked.length; i < l; i++) {
+        const route = ranked[i].route;
+        let missed = false;
+
+        if (route.default) {
+          default_ = {
+            route,
+            params: {},
+            uri
+          };
+          continue;
+        }
+
+        const routeSegments = segmentize(route.path);
+        const params = {};
+        const max = Math.max(uriSegments.length, routeSegments.length);
+        let index = 0;
+
+        for (; index < max; index++) {
+          const routeSegment = routeSegments[index];
+          const uriSegment = uriSegments[index];
+
+          if (routeSegment !== undefined && isSplat(routeSegment)) {
+            // Hit a splat, just grab the rest, and return a match
+            // uri:   /files/documents/work
+            // route: /files/* or /files/*splatname
+            const splatName = routeSegment === "*" ? "*" : routeSegment.slice(1);
+
+            params[splatName] = uriSegments
+              .slice(index)
+              .map(decodeURIComponent)
+              .join("/");
+            break;
+          }
+
+          if (uriSegment === undefined) {
+            // URI is shorter than the route, no match
+            // uri:   /users
+            // route: /users/:userId
+            missed = true;
+            break;
+          }
+
+          let dynamicMatch = paramRe.exec(routeSegment);
+
+          if (dynamicMatch && !isRootUri) {
+            const value = decodeURIComponent(uriSegment);
+            params[dynamicMatch[1]] = value;
+          } else if (routeSegment !== uriSegment) {
+            // Current segments don't match, not dynamic, not splat, so no match
+            // uri:   /users/123/settings
+            // route: /users/:id/profile
+            missed = true;
+            break;
+          }
+        }
+
+        if (!missed) {
+          match = {
+            route,
+            params,
+            uri: "/" + uriSegments.slice(0, index).join("/")
+          };
+          break;
+        }
+      }
+
+      return match || default_ || null;
+    }
+
+    /**
+     * Check if the `path` matches the `uri`.
+     * @param {string} path
+     * @param {string} uri
+     * @return {?object}
+     */
+    function match(route, uri) {
+      return pick([route], uri);
+    }
+
+    /**
+     * Add the query to the pathname if a query is given
+     * @param {string} pathname
+     * @param {string} [query]
+     * @return {string}
+     */
+    function addQuery(pathname, query) {
+      return pathname + (query ? `?${query}` : "");
+    }
+
+    /**
+     * Resolve URIs as though every path is a directory, no files. Relative URIs
+     * in the browser can feel awkward because not only can you be "in a directory",
+     * you can be "at a file", too. For example:
+     *
+     *  browserSpecResolve('foo', '/bar/') => /bar/foo
+     *  browserSpecResolve('foo', '/bar') => /foo
+     *
+     * But on the command line of a file system, it's not as complicated. You can't
+     * `cd` from a file, only directories. This way, links have to know less about
+     * their current path. To go deeper you can do this:
+     *
+     *  <Link to="deeper"/>
+     *  // instead of
+     *  <Link to=`{${props.uri}/deeper}`/>
+     *
+     * Just like `cd`, if you want to go deeper from the command line, you do this:
+     *
+     *  cd deeper
+     *  # not
+     *  cd $(pwd)/deeper
+     *
+     * By treating every path as a directory, linking to relative paths should
+     * require less contextual information and (fingers crossed) be more intuitive.
+     * @param {string} to
+     * @param {string} base
+     * @return {string}
+     */
+    function resolve(to, base) {
+      // /foo/bar, /baz/qux => /foo/bar
+      if (startsWith(to, "/")) {
+        return to;
+      }
+
+      const [toPathname, toQuery] = to.split("?");
+      const [basePathname] = base.split("?");
+      const toSegments = segmentize(toPathname);
+      const baseSegments = segmentize(basePathname);
+
+      // ?a=b, /users?b=c => /users?a=b
+      if (toSegments[0] === "") {
+        return addQuery(basePathname, toQuery);
+      }
+
+      // profile, /users/789 => /users/789/profile
+      if (!startsWith(toSegments[0], ".")) {
+        const pathname = baseSegments.concat(toSegments).join("/");
+
+        return addQuery((basePathname === "/" ? "" : "/") + pathname, toQuery);
+      }
+
+      // ./       , /users/123 => /users/123
+      // ../      , /users/123 => /users
+      // ../..    , /users/123 => /
+      // ../../one, /a/b/c/d   => /a/b/one
+      // .././one , /a/b/c/d   => /a/b/c/one
+      const allSegments = baseSegments.concat(toSegments);
+      const segments = [];
+
+      allSegments.forEach(segment => {
+        if (segment === "..") {
+          segments.pop();
+        } else if (segment !== ".") {
+          segments.push(segment);
+        }
+      });
+
+      return addQuery("/" + segments.join("/"), toQuery);
+    }
+
+    /**
+     * Combines the `basepath` and the `path` into one path.
+     * @param {string} basepath
+     * @param {string} path
+     */
+    function combinePaths(basepath, path) {
+      return `${stripSlashes(
+    path === "/" ? basepath : `${stripSlashes(basepath)}/${stripSlashes(path)}`
+  )}/`;
+    }
+
+    /**
+     * Decides whether a given `event` should result in a navigation or not.
+     * @param {object} event
+     */
+    function shouldNavigate(event) {
+      return (
+        !event.defaultPrevented &&
+        event.button === 0 &&
+        !(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey)
+      );
+    }
+
+    /* node_modules\svelte-routing\src\Router.svelte generated by Svelte v3.49.0 */
+
+    function create_fragment$r(ctx) {
+    	let current;
+    	const default_slot_template = /*#slots*/ ctx[9].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[8], null);
+
+    	const block = {
+    		c: function create() {
+    			if (default_slot) default_slot.c();
+    		},
+    		l: function claim(nodes) {
+    			if (default_slot) default_slot.l(nodes);
+    		},
+    		m: function mount(target, anchor) {
+    			if (default_slot) {
+    				default_slot.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 256)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[8],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[8])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[8], dirty, null),
+    						null
+    					);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (default_slot) default_slot.d(detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$r.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$r($$self, $$props, $$invalidate) {
+    	let $location;
+    	let $routes;
+    	let $base;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Router', slots, ['default']);
+    	let { basepath = "/" } = $$props;
+    	let { url = null } = $$props;
+    	const locationContext = getContext(LOCATION);
+    	const routerContext = getContext(ROUTER);
+    	const routes = writable([]);
+    	validate_store(routes, 'routes');
+    	component_subscribe($$self, routes, value => $$invalidate(6, $routes = value));
+    	const activeRoute = writable(null);
+    	let hasActiveRoute = false; // Used in SSR to synchronously set that a Route is active.
+
+    	// If locationContext is not set, this is the topmost Router in the tree.
+    	// If the `url` prop is given we force the location to it.
+    	const location = locationContext || writable(url ? { pathname: url } : globalHistory.location);
+
+    	validate_store(location, 'location');
+    	component_subscribe($$self, location, value => $$invalidate(5, $location = value));
+
+    	// If routerContext is set, the routerBase of the parent Router
+    	// will be the base for this Router's descendants.
+    	// If routerContext is not set, the path and resolved uri will both
+    	// have the value of the basepath prop.
+    	const base = routerContext
+    	? routerContext.routerBase
+    	: writable({ path: basepath, uri: basepath });
+
+    	validate_store(base, 'base');
+    	component_subscribe($$self, base, value => $$invalidate(7, $base = value));
+
+    	const routerBase = derived([base, activeRoute], ([base, activeRoute]) => {
+    		// If there is no activeRoute, the routerBase will be identical to the base.
+    		if (activeRoute === null) {
+    			return base;
+    		}
+
+    		const { path: basepath } = base;
+    		const { route, uri } = activeRoute;
+
+    		// Remove the potential /* or /*splatname from
+    		// the end of the child Routes relative paths.
+    		const path = route.default
+    		? basepath
+    		: route.path.replace(/\*.*$/, "");
+
+    		return { path, uri };
+    	});
+
+    	function registerRoute(route) {
+    		const { path: basepath } = $base;
+    		let { path } = route;
+
+    		// We store the original path in the _path property so we can reuse
+    		// it when the basepath changes. The only thing that matters is that
+    		// the route reference is intact, so mutation is fine.
+    		route._path = path;
+
+    		route.path = combinePaths(basepath, path);
+
+    		if (typeof window === "undefined") {
+    			// In SSR we should set the activeRoute immediately if it is a match.
+    			// If there are more Routes being registered after a match is found,
+    			// we just skip them.
+    			if (hasActiveRoute) {
+    				return;
+    			}
+
+    			const matchingRoute = match(route, $location.pathname);
+
+    			if (matchingRoute) {
+    				activeRoute.set(matchingRoute);
+    				hasActiveRoute = true;
+    			}
+    		} else {
+    			routes.update(rs => {
+    				rs.push(route);
+    				return rs;
+    			});
+    		}
+    	}
+
+    	function unregisterRoute(route) {
+    		routes.update(rs => {
+    			const index = rs.indexOf(route);
+    			rs.splice(index, 1);
+    			return rs;
+    		});
+    	}
+
+    	if (!locationContext) {
+    		// The topmost Router in the tree is responsible for updating
+    		// the location store and supplying it through context.
+    		onMount(() => {
+    			const unlisten = globalHistory.listen(history => {
+    				location.set(history.location);
+    			});
+
+    			return unlisten;
+    		});
+
+    		setContext(LOCATION, location);
+    	}
+
+    	setContext(ROUTER, {
+    		activeRoute,
+    		base,
+    		routerBase,
+    		registerRoute,
+    		unregisterRoute
+    	});
+
+    	const writable_props = ['basepath', 'url'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Router> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('basepath' in $$props) $$invalidate(3, basepath = $$props.basepath);
+    		if ('url' in $$props) $$invalidate(4, url = $$props.url);
+    		if ('$$scope' in $$props) $$invalidate(8, $$scope = $$props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		getContext,
+    		setContext,
+    		onMount,
+    		writable,
+    		derived,
+    		LOCATION,
+    		ROUTER,
+    		globalHistory,
+    		pick,
+    		match,
+    		stripSlashes,
+    		combinePaths,
+    		basepath,
+    		url,
+    		locationContext,
+    		routerContext,
+    		routes,
+    		activeRoute,
+    		hasActiveRoute,
+    		location,
+    		base,
+    		routerBase,
+    		registerRoute,
+    		unregisterRoute,
+    		$location,
+    		$routes,
+    		$base
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('basepath' in $$props) $$invalidate(3, basepath = $$props.basepath);
+    		if ('url' in $$props) $$invalidate(4, url = $$props.url);
+    		if ('hasActiveRoute' in $$props) hasActiveRoute = $$props.hasActiveRoute;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*$base*/ 128) {
+    			// This reactive statement will update all the Routes' path when
+    			// the basepath changes.
+    			{
+    				const { path: basepath } = $base;
+
+    				routes.update(rs => {
+    					rs.forEach(r => r.path = combinePaths(basepath, r._path));
+    					return rs;
+    				});
+    			}
+    		}
+
+    		if ($$self.$$.dirty & /*$routes, $location*/ 96) {
+    			// This reactive statement will be run when the Router is created
+    			// when there are no Routes and then again the following tick, so it
+    			// will not find an active Route in SSR and in the browser it will only
+    			// pick an active Route after all Routes have been registered.
+    			{
+    				const bestMatch = pick($routes, $location.pathname);
+    				activeRoute.set(bestMatch);
+    			}
+    		}
+    	};
+
+    	return [
+    		routes,
+    		location,
+    		base,
+    		basepath,
+    		url,
+    		$location,
+    		$routes,
+    		$base,
+    		$$scope,
+    		slots
+    	];
+    }
+
+    class Router extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$r, create_fragment$r, safe_not_equal, { basepath: 3, url: 4 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Router",
+    			options,
+    			id: create_fragment$r.name
+    		});
+    	}
+
+    	get basepath() {
+    		throw new Error("<Router>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set basepath(value) {
+    		throw new Error("<Router>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get url() {
+    		throw new Error("<Router>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set url(value) {
+    		throw new Error("<Router>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* node_modules\svelte-routing\src\Route.svelte generated by Svelte v3.49.0 */
+
+    const get_default_slot_changes = dirty => ({
+    	params: dirty & /*routeParams*/ 4,
+    	location: dirty & /*$location*/ 16
+    });
+
+    const get_default_slot_context = ctx => ({
+    	params: /*routeParams*/ ctx[2],
+    	location: /*$location*/ ctx[4]
+    });
+
+    // (40:0) {#if $activeRoute !== null && $activeRoute.route === route}
+    function create_if_block$b(ctx) {
+    	let current_block_type_index;
+    	let if_block;
+    	let if_block_anchor;
+    	let current;
+    	const if_block_creators = [create_if_block_1$7, create_else_block$7];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*component*/ ctx[0] !== null) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_blocks[current_block_type_index].m(target, anchor);
+    			insert_hydration_dev(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if_blocks[current_block_type_index].d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$b.name,
+    		type: "if",
+    		source: "(40:0) {#if $activeRoute !== null && $activeRoute.route === route}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (43:2) {:else}
+    function create_else_block$7(ctx) {
+    	let current;
+    	const default_slot_template = /*#slots*/ ctx[10].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[9], get_default_slot_context);
+
+    	const block = {
+    		c: function create() {
+    			if (default_slot) default_slot.c();
+    		},
+    		l: function claim(nodes) {
+    			if (default_slot) default_slot.l(nodes);
+    		},
+    		m: function mount(target, anchor) {
+    			if (default_slot) {
+    				default_slot.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope, routeParams, $location*/ 532)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[9],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[9])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[9], dirty, get_default_slot_changes),
+    						get_default_slot_context
+    					);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (default_slot) default_slot.d(detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$7.name,
+    		type: "else",
+    		source: "(43:2) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (41:2) {#if component !== null}
+    function create_if_block_1$7(ctx) {
+    	let switch_instance;
+    	let switch_instance_anchor;
+    	let current;
+
+    	const switch_instance_spread_levels = [
+    		{ location: /*$location*/ ctx[4] },
+    		/*routeParams*/ ctx[2],
+    		/*routeProps*/ ctx[3]
+    	];
+
+    	var switch_value = /*component*/ ctx[0];
+
+    	function switch_props(ctx) {
+    		let switch_instance_props = {};
+
+    		for (let i = 0; i < switch_instance_spread_levels.length; i += 1) {
+    			switch_instance_props = assign(switch_instance_props, switch_instance_spread_levels[i]);
+    		}
+
+    		return {
+    			props: switch_instance_props,
+    			$$inline: true
+    		};
+    	}
+
+    	if (switch_value) {
+    		switch_instance = new switch_value(switch_props());
+    	}
+
+    	const block = {
+    		c: function create() {
+    			if (switch_instance) create_component(switch_instance.$$.fragment);
+    			switch_instance_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			if (switch_instance) claim_component(switch_instance.$$.fragment, nodes);
+    			switch_instance_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (switch_instance) {
+    				mount_component(switch_instance, target, anchor);
+    			}
+
+    			insert_hydration_dev(target, switch_instance_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const switch_instance_changes = (dirty & /*$location, routeParams, routeProps*/ 28)
+    			? get_spread_update(switch_instance_spread_levels, [
+    					dirty & /*$location*/ 16 && { location: /*$location*/ ctx[4] },
+    					dirty & /*routeParams*/ 4 && get_spread_object(/*routeParams*/ ctx[2]),
+    					dirty & /*routeProps*/ 8 && get_spread_object(/*routeProps*/ ctx[3])
+    				])
+    			: {};
+
+    			if (switch_value !== (switch_value = /*component*/ ctx[0])) {
+    				if (switch_instance) {
+    					group_outros();
+    					const old_component = switch_instance;
+
+    					transition_out(old_component.$$.fragment, 1, 0, () => {
+    						destroy_component(old_component, 1);
+    					});
+
+    					check_outros();
+    				}
+
+    				if (switch_value) {
+    					switch_instance = new switch_value(switch_props());
+    					create_component(switch_instance.$$.fragment);
+    					transition_in(switch_instance.$$.fragment, 1);
+    					mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
+    				} else {
+    					switch_instance = null;
+    				}
+    			} else if (switch_value) {
+    				switch_instance.$set(switch_instance_changes);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(switch_instance_anchor);
+    			if (switch_instance) destroy_component(switch_instance, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$7.name,
+    		type: "if",
+    		source: "(41:2) {#if component !== null}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$q(ctx) {
+    	let if_block_anchor;
+    	let current;
+    	let if_block = /*$activeRoute*/ ctx[1] !== null && /*$activeRoute*/ ctx[1].route === /*route*/ ctx[7] && create_if_block$b(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration_dev(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*$activeRoute*/ ctx[1] !== null && /*$activeRoute*/ ctx[1].route === /*route*/ ctx[7]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*$activeRoute*/ 2) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$b(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$q.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$q($$self, $$props, $$invalidate) {
+    	let $activeRoute;
+    	let $location;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Route', slots, ['default']);
+    	let { path = "" } = $$props;
+    	let { component = null } = $$props;
+    	const { registerRoute, unregisterRoute, activeRoute } = getContext(ROUTER);
+    	validate_store(activeRoute, 'activeRoute');
+    	component_subscribe($$self, activeRoute, value => $$invalidate(1, $activeRoute = value));
+    	const location = getContext(LOCATION);
+    	validate_store(location, 'location');
+    	component_subscribe($$self, location, value => $$invalidate(4, $location = value));
+
+    	const route = {
+    		path,
+    		// If no path prop is given, this Route will act as the default Route
+    		// that is rendered if no other Route in the Router is a match.
+    		default: path === ""
+    	};
+
+    	let routeParams = {};
+    	let routeProps = {};
+    	registerRoute(route);
+
+    	// There is no need to unregister Routes in SSR since it will all be
+    	// thrown away anyway.
+    	if (typeof window !== "undefined") {
+    		onDestroy(() => {
+    			unregisterRoute(route);
+    		});
+    	}
+
+    	$$self.$$set = $$new_props => {
+    		$$invalidate(13, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+    		if ('path' in $$new_props) $$invalidate(8, path = $$new_props.path);
+    		if ('component' in $$new_props) $$invalidate(0, component = $$new_props.component);
+    		if ('$$scope' in $$new_props) $$invalidate(9, $$scope = $$new_props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		getContext,
+    		onDestroy,
+    		ROUTER,
+    		LOCATION,
+    		path,
+    		component,
+    		registerRoute,
+    		unregisterRoute,
+    		activeRoute,
+    		location,
+    		route,
+    		routeParams,
+    		routeProps,
+    		$activeRoute,
+    		$location
+    	});
+
+    	$$self.$inject_state = $$new_props => {
+    		$$invalidate(13, $$props = assign(assign({}, $$props), $$new_props));
+    		if ('path' in $$props) $$invalidate(8, path = $$new_props.path);
+    		if ('component' in $$props) $$invalidate(0, component = $$new_props.component);
+    		if ('routeParams' in $$props) $$invalidate(2, routeParams = $$new_props.routeParams);
+    		if ('routeProps' in $$props) $$invalidate(3, routeProps = $$new_props.routeProps);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*$activeRoute*/ 2) {
+    			if ($activeRoute && $activeRoute.route === route) {
+    				$$invalidate(2, routeParams = $activeRoute.params);
+    			}
+    		}
+
+    		{
+    			const { path, component, ...rest } = $$props;
+    			$$invalidate(3, routeProps = rest);
+    		}
+    	};
+
+    	$$props = exclude_internal_props($$props);
+
+    	return [
+    		component,
+    		$activeRoute,
+    		routeParams,
+    		routeProps,
+    		$location,
+    		activeRoute,
+    		location,
+    		route,
+    		path,
+    		$$scope,
+    		slots
+    	];
+    }
+
+    class Route extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$q, create_fragment$q, safe_not_equal, { path: 8, component: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Route",
+    			options,
+    			id: create_fragment$q.name
+    		});
+    	}
+
+    	get path() {
+    		throw new Error("<Route>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set path(value) {
+    		throw new Error("<Route>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get component() {
+    		throw new Error("<Route>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set component(value) {
+    		throw new Error("<Route>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* node_modules\svelte-routing\src\Link.svelte generated by Svelte v3.49.0 */
+    const file$o = "node_modules\\svelte-routing\\src\\Link.svelte";
+
+    function create_fragment$p(ctx) {
+    	let a;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const default_slot_template = /*#slots*/ ctx[16].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[15], null);
+
+    	let a_levels = [
+    		{ href: /*href*/ ctx[0] },
+    		{ "aria-current": /*ariaCurrent*/ ctx[2] },
+    		/*props*/ ctx[1],
+    		/*$$restProps*/ ctx[6]
+    	];
+
+    	let a_data = {};
+
+    	for (let i = 0; i < a_levels.length; i += 1) {
+    		a_data = assign(a_data, a_levels[i]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			a = element("a");
+    			if (default_slot) default_slot.c();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			a = claim_element(nodes, "A", { href: true, "aria-current": true });
+    			var a_nodes = children(a);
+    			if (default_slot) default_slot.l(a_nodes);
+    			a_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			set_attributes(a, a_data);
+    			add_location(a, file$o, 40, 0, 1249);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, a, anchor);
+
+    			if (default_slot) {
+    				default_slot.m(a, null);
+    			}
+
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = listen_dev(a, "click", /*onClick*/ ctx[5], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 32768)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[15],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[15])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[15], dirty, null),
+    						null
+    					);
+    				}
+    			}
+
+    			set_attributes(a, a_data = get_spread_update(a_levels, [
+    				(!current || dirty & /*href*/ 1) && { href: /*href*/ ctx[0] },
+    				(!current || dirty & /*ariaCurrent*/ 4) && { "aria-current": /*ariaCurrent*/ ctx[2] },
+    				dirty & /*props*/ 2 && /*props*/ ctx[1],
+    				dirty & /*$$restProps*/ 64 && /*$$restProps*/ ctx[6]
+    			]));
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(a);
+    			if (default_slot) default_slot.d(detaching);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$p.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$p($$self, $$props, $$invalidate) {
+    	let ariaCurrent;
+    	const omit_props_names = ["to","replace","state","getProps"];
+    	let $$restProps = compute_rest_props($$props, omit_props_names);
+    	let $location;
+    	let $base;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Link', slots, ['default']);
+    	let { to = "#" } = $$props;
+    	let { replace = false } = $$props;
+    	let { state = {} } = $$props;
+    	let { getProps = () => ({}) } = $$props;
+    	const { base } = getContext(ROUTER);
+    	validate_store(base, 'base');
+    	component_subscribe($$self, base, value => $$invalidate(14, $base = value));
+    	const location = getContext(LOCATION);
+    	validate_store(location, 'location');
+    	component_subscribe($$self, location, value => $$invalidate(13, $location = value));
+    	const dispatch = createEventDispatcher();
+    	let href, isPartiallyCurrent, isCurrent, props;
+
+    	function onClick(event) {
+    		dispatch("click", event);
+
+    		if (shouldNavigate(event)) {
+    			event.preventDefault();
+
+    			// Don't push another entry to the history stack when the user
+    			// clicks on a Link to the page they are currently on.
+    			const shouldReplace = $location.pathname === href || replace;
+
+    			navigate(href, { state, replace: shouldReplace });
+    		}
+    	}
+
+    	$$self.$$set = $$new_props => {
+    		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
+    		$$invalidate(6, $$restProps = compute_rest_props($$props, omit_props_names));
+    		if ('to' in $$new_props) $$invalidate(7, to = $$new_props.to);
+    		if ('replace' in $$new_props) $$invalidate(8, replace = $$new_props.replace);
+    		if ('state' in $$new_props) $$invalidate(9, state = $$new_props.state);
+    		if ('getProps' in $$new_props) $$invalidate(10, getProps = $$new_props.getProps);
+    		if ('$$scope' in $$new_props) $$invalidate(15, $$scope = $$new_props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		getContext,
+    		createEventDispatcher,
+    		ROUTER,
+    		LOCATION,
+    		navigate,
+    		startsWith,
+    		resolve,
+    		shouldNavigate,
+    		to,
+    		replace,
+    		state,
+    		getProps,
+    		base,
+    		location,
+    		dispatch,
+    		href,
+    		isPartiallyCurrent,
+    		isCurrent,
+    		props,
+    		onClick,
+    		ariaCurrent,
+    		$location,
+    		$base
+    	});
+
+    	$$self.$inject_state = $$new_props => {
+    		if ('to' in $$props) $$invalidate(7, to = $$new_props.to);
+    		if ('replace' in $$props) $$invalidate(8, replace = $$new_props.replace);
+    		if ('state' in $$props) $$invalidate(9, state = $$new_props.state);
+    		if ('getProps' in $$props) $$invalidate(10, getProps = $$new_props.getProps);
+    		if ('href' in $$props) $$invalidate(0, href = $$new_props.href);
+    		if ('isPartiallyCurrent' in $$props) $$invalidate(11, isPartiallyCurrent = $$new_props.isPartiallyCurrent);
+    		if ('isCurrent' in $$props) $$invalidate(12, isCurrent = $$new_props.isCurrent);
+    		if ('props' in $$props) $$invalidate(1, props = $$new_props.props);
+    		if ('ariaCurrent' in $$props) $$invalidate(2, ariaCurrent = $$new_props.ariaCurrent);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*to, $base*/ 16512) {
+    			$$invalidate(0, href = to === "/" ? $base.uri : resolve(to, $base.uri));
+    		}
+
+    		if ($$self.$$.dirty & /*$location, href*/ 8193) {
+    			$$invalidate(11, isPartiallyCurrent = startsWith($location.pathname, href));
+    		}
+
+    		if ($$self.$$.dirty & /*href, $location*/ 8193) {
+    			$$invalidate(12, isCurrent = href === $location.pathname);
+    		}
+
+    		if ($$self.$$.dirty & /*isCurrent*/ 4096) {
+    			$$invalidate(2, ariaCurrent = isCurrent ? "page" : undefined);
+    		}
+
+    		if ($$self.$$.dirty & /*getProps, $location, href, isPartiallyCurrent, isCurrent*/ 15361) {
+    			$$invalidate(1, props = getProps({
+    				location: $location,
+    				href,
+    				isPartiallyCurrent,
+    				isCurrent
+    			}));
+    		}
+    	};
+
+    	return [
+    		href,
+    		props,
+    		ariaCurrent,
+    		base,
+    		location,
+    		onClick,
+    		$$restProps,
+    		to,
+    		replace,
+    		state,
+    		getProps,
+    		isPartiallyCurrent,
+    		isCurrent,
+    		$location,
+    		$base,
+    		$$scope,
+    		slots
+    	];
+    }
+
+    class Link extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$p, create_fragment$p, safe_not_equal, {
+    			to: 7,
+    			replace: 8,
+    			state: 9,
+    			getProps: 10
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Link",
+    			options,
+    			id: create_fragment$p.name
+    		});
+    	}
+
+    	get to() {
+    		throw new Error("<Link>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set to(value) {
+    		throw new Error("<Link>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get replace() {
+    		throw new Error("<Link>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set replace(value) {
+    		throw new Error("<Link>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get state() {
+    		throw new Error("<Link>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set state(value) {
+    		throw new Error("<Link>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getProps() {
+    		throw new Error("<Link>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set getProps(value) {
+    		throw new Error("<Link>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\routes\Teams.svelte generated by Svelte v3.49.0 */
+
+    const { document: document_1$2 } = globals;
+    const file$n = "src\\routes\\Teams.svelte";
+
+    function get_each_context$6(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[1] = list[i];
+    	child_ctx[3] = i;
+    	return child_ctx;
+    }
+
+    // (76:4) <Link to="/">
+    function create_default_slot_2$1(ctx) {
+    	let div;
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t = text("Premier League");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t = claim_text(div_nodes, "Premier League");
+    			div_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "title main-link no-decoration");
+    			add_location(div, file$n, 76, 6, 2716);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    			append_hydration_dev(div, t);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_2$1.name,
+    		type: "slot",
+    		source: "(76:4) <Link to=\\\"/\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (83:8) <Link            to="/{team.toLowerCase().replace(/ /g, '-')}"            class="team-button"            id="team-{i + 1}"            style="background-color: var(--{team              .toLowerCase()              .replace(/ /g, '-')});"          >
+    function create_default_slot_1$1(ctx) {
+    	let div;
+    	let t0_value = /*team*/ ctx[1] + "";
+    	let t0;
+    	let t1;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true, style: true });
+    			var div_nodes = children(div);
+    			t0 = claim_text(div_nodes, t0_value);
+    			div_nodes.forEach(detach_dev);
+    			t1 = claim_space(nodes);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "main-link");
+    			set_style(div, "color", "var(--" + /*team*/ ctx[1].toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			add_location(div, file$n, 90, 10, 3164);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    			append_hydration_dev(div, t0);
+    			insert_hydration_dev(target, t1, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(t1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1$1.name,
+    		type: "slot",
+    		source: "(83:8) <Link            to=\\\"/{team.toLowerCase().replace(/ /g, '-')}\\\"            class=\\\"team-button\\\"            id=\\\"team-{i + 1}\\\"            style=\\\"background-color: var(--{team              .toLowerCase()              .replace(/ /g, '-')});\\\"          >",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (82:6) {#each teams as team, i (team)}
+    function create_each_block$6(key_1, ctx) {
+    	let first;
+    	let link;
+    	let current;
+
+    	link = new Link({
+    			props: {
+    				to: "/" + /*team*/ ctx[1].toLowerCase().replace(/ /g, '-'),
+    				class: "team-button",
+    				id: "team-" + (/*i*/ ctx[3] + 1),
+    				style: "background-color: var(--" + /*team*/ ctx[1].toLowerCase().replace(/ /g, '-') + ");",
+    				$$slots: { default: [create_default_slot_1$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			first = empty();
+    			create_component(link.$$.fragment);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			first = empty();
+    			claim_component(link.$$.fragment, nodes);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			this.first = first;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, first, anchor);
+    			mount_component(link, target, anchor);
+    			current = true;
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			const link_changes = {};
+
+    			if (dirty & /*$$scope*/ 16) {
+    				link_changes.$$scope = { dirty, ctx };
+    			}
+
+    			link.$set(link_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(link.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(link.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(first);
+    			destroy_component(link, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$6.name,
+    		type: "each",
+    		source: "(82:6) {#each teams as team, i (team)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (74:0) <Router>
+    function create_default_slot$5(ctx) {
+    	let div0;
+    	let link;
+    	let t;
+    	let div2;
+    	let div1;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
+    	let current;
+
+    	link = new Link({
+    			props: {
+    				to: "/",
+    				$$slots: { default: [create_default_slot_2$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	let each_value = /*teams*/ ctx[0];
+    	validate_each_argument(each_value);
+    	const get_key = ctx => /*team*/ ctx[1];
+    	validate_each_keys(ctx, each_value, get_each_context$6, get_key);
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context$6(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$6(key, child_ctx));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div0 = element("div");
+    			create_component(link.$$.fragment);
+    			t = space();
+    			div2 = element("div");
+    			div1 = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div0 = claim_element(nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			claim_component(link.$$.fragment, div0_nodes);
+    			div0_nodes.forEach(detach_dev);
+    			t = claim_space(nodes);
+    			div2 = claim_element(nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(div1_nodes);
+    			}
+
+    			div1_nodes.forEach(detach_dev);
+    			div2_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "header");
+    			add_location(div0, file$n, 74, 2, 2669);
+    			attr_dev(div1, "class", "teams svelte-i9b06i");
+    			add_location(div1, file$n, 80, 4, 2838);
+    			attr_dev(div2, "class", "page-content");
+    			add_location(div2, file$n, 79, 2, 2806);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div0, anchor);
+    			mount_component(link, div0, null);
+    			insert_hydration_dev(target, t, anchor);
+    			insert_hydration_dev(target, div2, anchor);
+    			append_hydration_dev(div2, div1);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div1, null);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const link_changes = {};
+
+    			if (dirty & /*$$scope*/ 16) {
+    				link_changes.$$scope = { dirty, ctx };
+    			}
+
+    			link.$set(link_changes);
+
+    			if (dirty & /*teams*/ 1) {
+    				each_value = /*teams*/ ctx[0];
+    				validate_each_argument(each_value);
+    				group_outros();
+    				validate_each_keys(ctx, each_value, get_each_context$6, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, div1, outro_and_destroy_block, create_each_block$6, null, get_each_context$6);
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(link.$$.fragment, local);
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(link.$$.fragment, local);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div0);
+    			destroy_component(link);
+    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(div2);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d();
+    			}
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$5.name,
+    		type: "slot",
+    		source: "(74:0) <Router>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$o(ctx) {
+    	let meta;
+    	let t;
+    	let router;
+    	let current;
+
+    	router = new Router({
+    			props: {
+    				$$slots: { default: [create_default_slot$5] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			meta = element("meta");
+    			t = space();
+    			create_component(router.$$.fragment);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1rqatx0\"]', document_1$2.head);
+    			meta = claim_element(head_nodes, "META", { name: true, content: true });
+    			head_nodes.forEach(detach_dev);
+    			t = claim_space(nodes);
+    			claim_component(router.$$.fragment, nodes);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			document_1$2.title = "Premier League";
+    			attr_dev(meta, "name", "description");
+    			attr_dev(meta, "content", "Premier League Statistics Dashboard");
+    			add_location(meta, file$n, 70, 2, 2564);
+    		},
+    		m: function mount(target, anchor) {
+    			append_hydration_dev(document_1$2.head, meta);
+    			insert_hydration_dev(target, t, anchor);
+    			mount_component(router, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const router_changes = {};
+
+    			if (dirty & /*$$scope*/ 16) {
+    				router_changes.$$scope = { dirty, ctx };
+    			}
+
+    			router.$set(router_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(router.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(router.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			detach_dev(meta);
+    			if (detaching) detach_dev(t);
+    			destroy_component(router, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$o.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function removeBorderRadius() {
+    	document.getElementById("team-1").classList.remove("top-left");
+    	document.getElementById("team-1").classList.remove("top-right");
+    	document.getElementById("team-2").classList.remove("top-right");
+    	document.getElementById("team-4").classList.remove("top-right");
+    	document.getElementById("team-17").classList.remove("bottom-left");
+    	document.getElementById("team-18").classList.remove("bottom-left");
+    	document.getElementById("team-19").classList.remove("bottom-left");
+    	document.getElementById("team-20").classList.remove("bottom-left");
+    	document.getElementById("team-20").classList.remove("bottom-right");
+    }
+
+    function setBorderRadius() {
+    	let width = window.innerWidth;
+    	removeBorderRadius();
+
+    	if (width < 500) {
+    		// 20 rows of 1 column
+    		document.getElementById("team-1").classList.add("top-both");
+
+    		document.getElementById("team-20").classList.add("bottom-both");
+    	} else if (width < 1100) {
+    		// 10 rows of 2 columns
+    		document.getElementById("team-1").classList.add("top-left");
+
+    		document.getElementById("team-2").classList.add("top-right");
+    		document.getElementById("team-19").classList.add("bottom-left");
+    		document.getElementById("team-20").classList.add("bottom-right");
+    	} else {
+    		// 5 rows of 4 columns
+    		document.getElementById("team-1").classList.add("top-left");
+
+    		document.getElementById("team-4").classList.add("top-right");
+    		document.getElementById("team-17").classList.add("bottom-left");
+    		document.getElementById("team-20").classList.add("bottom-right");
+    	}
+    }
+
+    function instance$o($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Teams', slots, []);
+
+    	let teams = [
+    		"Manchester City",
+    		"Liverpool",
+    		"Chelsea",
+    		"Tottenham Hotspur",
+    		"Arsenal",
+    		"Manchester United",
+    		"West Ham United",
+    		"Leicester City",
+    		"Brighton and Hove Albion",
+    		"Wolverhampton Wanderers",
+    		"Newcastle United",
+    		"Crystal Palace",
+    		"Brentford",
+    		"Aston Villa",
+    		"Southampton",
+    		"Everton",
+    		"Leeds United",
+    		"Fulham",
+    		"Bournemouth",
+    		"Nottingham Forest"
+    	];
+
+    	onMount(() => {
+    		window.addEventListener("resize", setBorderRadius, true);
+    		setBorderRadius();
+
+    		return () => {
+    			// Called when component is destroyed
+    			window.removeEventListener("resize", setBorderRadius, true);
+    		};
+    	});
+
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Teams> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$capture_state = () => ({
+    		Router,
+    		Link,
+    		onMount,
+    		removeBorderRadius,
+    		setBorderRadius,
+    		teams
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('teams' in $$props) $$invalidate(0, teams = $$props.teams);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [teams];
+    }
+
+    class Teams extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$o, create_fragment$o, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Teams",
+    			options,
+    			id: create_fragment$o.name
+    		});
+    	}
+    }
+
+    /* src\components\current_form\FormTiles.svelte generated by Svelte v3.49.0 */
+
+    const file$m = "src\\components\\current_form\\FormTiles.svelte";
+
+    function create_fragment$n(ctx) {
+    	let div2;
+    	let div1;
+    	let div0;
+    	let t0_value = formatResult(/*form*/ ctx[0][0]) + "";
+    	let t0;
+    	let t1;
+    	let div5;
+    	let div4;
+    	let div3;
+    	let t2_value = formatResult(/*form*/ ctx[0][1]) + "";
+    	let t2;
+    	let t3;
+    	let div8;
+    	let div7;
+    	let div6;
+    	let t4_value = formatResult(/*form*/ ctx[0][2]) + "";
+    	let t4;
+    	let t5;
+    	let div11;
+    	let div10;
+    	let div9;
+    	let t6_value = formatResult(/*form*/ ctx[0][3]) + "";
+    	let t6;
+    	let t7;
+    	let div14;
+    	let div13;
+    	let div12;
+    	let t8_value = formatResult(/*form*/ ctx[0][4]) + "";
+    	let t8;
+
+    	const block = {
+    		c: function create() {
+    			div2 = element("div");
+    			div1 = element("div");
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			div5 = element("div");
+    			div4 = element("div");
+    			div3 = element("div");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			div8 = element("div");
+    			div7 = element("div");
+    			div6 = element("div");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			div11 = element("div");
+    			div10 = element("div");
+    			div9 = element("div");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div14 = element("div");
+    			div13 = element("div");
+    			div12 = element("div");
+    			t8 = text(t8_value);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div2 = claim_element(nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div1 = claim_element(div2_nodes, "DIV", { id: true, style: true, class: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, t0_value);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			div2_nodes.forEach(detach_dev);
+    			t1 = claim_space(nodes);
+    			div5 = claim_element(nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div4 = claim_element(div5_nodes, "DIV", { id: true, style: true, class: true });
+    			var div4_nodes = children(div4);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			t2 = claim_text(div3_nodes, t2_value);
+    			div3_nodes.forEach(detach_dev);
+    			div4_nodes.forEach(detach_dev);
+    			div5_nodes.forEach(detach_dev);
+    			t3 = claim_space(nodes);
+    			div8 = claim_element(nodes, "DIV", { class: true });
+    			var div8_nodes = children(div8);
+    			div7 = claim_element(div8_nodes, "DIV", { id: true, style: true, class: true });
+    			var div7_nodes = children(div7);
+    			div6 = claim_element(div7_nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			t4 = claim_text(div6_nodes, t4_value);
+    			div6_nodes.forEach(detach_dev);
+    			div7_nodes.forEach(detach_dev);
+    			div8_nodes.forEach(detach_dev);
+    			t5 = claim_space(nodes);
+    			div11 = claim_element(nodes, "DIV", { class: true });
+    			var div11_nodes = children(div11);
+    			div10 = claim_element(div11_nodes, "DIV", { id: true, style: true, class: true });
+    			var div10_nodes = children(div10);
+    			div9 = claim_element(div10_nodes, "DIV", { class: true });
+    			var div9_nodes = children(div9);
+    			t6 = claim_text(div9_nodes, t6_value);
+    			div9_nodes.forEach(detach_dev);
+    			div10_nodes.forEach(detach_dev);
+    			div11_nodes.forEach(detach_dev);
+    			t7 = claim_space(nodes);
+    			div14 = claim_element(nodes, "DIV", { class: true });
+    			var div14_nodes = children(div14);
+    			div13 = claim_element(div14_nodes, "DIV", { id: true, style: true, class: true });
+    			var div13_nodes = children(div13);
+    			div12 = claim_element(div13_nodes, "DIV", { class: true });
+    			var div12_nodes = children(div12);
+    			t8 = claim_text(div12_nodes, t8_value);
+    			div12_nodes.forEach(detach_dev);
+    			div13_nodes.forEach(detach_dev);
+    			div14_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "result svelte-1duemg");
+    			add_location(div0, file$m, 32, 4, 795);
+    			attr_dev(div1, "id", "formTile");
+    			set_style(div1, "background", background(/*form*/ ctx[0][0], /*starTeams*/ ctx[1][0]));
+    			attr_dev(div1, "class", "svelte-1duemg");
+    			add_location(div1, file$m, 31, 2, 714);
+    			attr_dev(div2, "class", "icon pos-0 svelte-1duemg");
+    			add_location(div2, file$m, 30, 0, 686);
+    			attr_dev(div3, "class", "result svelte-1duemg");
+    			add_location(div3, file$m, 39, 4, 987);
+    			attr_dev(div4, "id", "formTile");
+    			set_style(div4, "background", background(/*form*/ ctx[0][1], /*starTeams*/ ctx[1][1]));
+    			attr_dev(div4, "class", "svelte-1duemg");
+    			add_location(div4, file$m, 38, 2, 906);
+    			attr_dev(div5, "class", "icon pos-1 svelte-1duemg");
+    			add_location(div5, file$m, 37, 0, 878);
+    			attr_dev(div6, "class", "result svelte-1duemg");
+    			add_location(div6, file$m, 46, 4, 1179);
+    			attr_dev(div7, "id", "formTile");
+    			set_style(div7, "background", background(/*form*/ ctx[0][2], /*starTeams*/ ctx[1][2]));
+    			attr_dev(div7, "class", "svelte-1duemg");
+    			add_location(div7, file$m, 45, 2, 1098);
+    			attr_dev(div8, "class", "icon pos-2 svelte-1duemg");
+    			add_location(div8, file$m, 44, 0, 1070);
+    			attr_dev(div9, "class", "result svelte-1duemg");
+    			add_location(div9, file$m, 53, 4, 1371);
+    			attr_dev(div10, "id", "formTile");
+    			set_style(div10, "background", background(/*form*/ ctx[0][3], /*starTeams*/ ctx[1][3]));
+    			attr_dev(div10, "class", "svelte-1duemg");
+    			add_location(div10, file$m, 52, 2, 1290);
+    			attr_dev(div11, "class", "icon pos-3 svelte-1duemg");
+    			add_location(div11, file$m, 51, 0, 1262);
+    			attr_dev(div12, "class", "result svelte-1duemg");
+    			add_location(div12, file$m, 60, 4, 1563);
+    			attr_dev(div13, "id", "formTile");
+    			set_style(div13, "background", background(/*form*/ ctx[0][4], /*starTeams*/ ctx[1][4]));
+    			attr_dev(div13, "class", "svelte-1duemg");
+    			add_location(div13, file$m, 59, 2, 1482);
+    			attr_dev(div14, "class", "icon pos-4 svelte-1duemg");
+    			add_location(div14, file$m, 58, 0, 1454);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div2, anchor);
+    			append_hydration_dev(div2, div1);
+    			append_hydration_dev(div1, div0);
+    			append_hydration_dev(div0, t0);
+    			insert_hydration_dev(target, t1, anchor);
+    			insert_hydration_dev(target, div5, anchor);
+    			append_hydration_dev(div5, div4);
+    			append_hydration_dev(div4, div3);
+    			append_hydration_dev(div3, t2);
+    			insert_hydration_dev(target, t3, anchor);
+    			insert_hydration_dev(target, div8, anchor);
+    			append_hydration_dev(div8, div7);
+    			append_hydration_dev(div7, div6);
+    			append_hydration_dev(div6, t4);
+    			insert_hydration_dev(target, t5, anchor);
+    			insert_hydration_dev(target, div11, anchor);
+    			append_hydration_dev(div11, div10);
+    			append_hydration_dev(div10, div9);
+    			append_hydration_dev(div9, t6);
+    			insert_hydration_dev(target, t7, anchor);
+    			insert_hydration_dev(target, div14, anchor);
+    			append_hydration_dev(div14, div13);
+    			append_hydration_dev(div13, div12);
+    			append_hydration_dev(div12, t8);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*form*/ 1 && t0_value !== (t0_value = formatResult(/*form*/ ctx[0][0]) + "")) set_data_dev(t0, t0_value);
+
+    			if (dirty & /*form, starTeams*/ 3) {
+    				set_style(div1, "background", background(/*form*/ ctx[0][0], /*starTeams*/ ctx[1][0]));
+    			}
+
+    			if (dirty & /*form*/ 1 && t2_value !== (t2_value = formatResult(/*form*/ ctx[0][1]) + "")) set_data_dev(t2, t2_value);
+
+    			if (dirty & /*form, starTeams*/ 3) {
+    				set_style(div4, "background", background(/*form*/ ctx[0][1], /*starTeams*/ ctx[1][1]));
+    			}
+
+    			if (dirty & /*form*/ 1 && t4_value !== (t4_value = formatResult(/*form*/ ctx[0][2]) + "")) set_data_dev(t4, t4_value);
+
+    			if (dirty & /*form, starTeams*/ 3) {
+    				set_style(div7, "background", background(/*form*/ ctx[0][2], /*starTeams*/ ctx[1][2]));
+    			}
+
+    			if (dirty & /*form*/ 1 && t6_value !== (t6_value = formatResult(/*form*/ ctx[0][3]) + "")) set_data_dev(t6, t6_value);
+
+    			if (dirty & /*form, starTeams*/ 3) {
+    				set_style(div10, "background", background(/*form*/ ctx[0][3], /*starTeams*/ ctx[1][3]));
+    			}
+
+    			if (dirty & /*form*/ 1 && t8_value !== (t8_value = formatResult(/*form*/ ctx[0][4]) + "")) set_data_dev(t8, t8_value);
+
+    			if (dirty & /*form, starTeams*/ 3) {
+    				set_style(div13, "background", background(/*form*/ ctx[0][4], /*starTeams*/ ctx[1][4]));
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div2);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(div5);
+    			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(div8);
+    			if (detaching) detach_dev(t5);
+    			if (detaching) detach_dev(div11);
+    			if (detaching) detach_dev(t7);
+    			if (detaching) detach_dev(div14);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$n.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function background(result, starTeam) {
+    	switch (result) {
+    		case "W":
+    			if (starTeam) {
+    				return "linear-gradient(30deg, #00ff87, #2bd2ff, #fa8bff)";
+    			} else {
+    				return "#00fe87";
+    			}
+    		case "D":
+    			return "#ffdd00";
+    		case "L":
+    			return "#f83027";
+    		default:
+    			return "#d6d6d6";
+    	}
+    }
+
+    function formatResult(result) {
+    	switch (result) {
+    		case "W":
+    		case "D":
+    		case "L":
+    			return result;
+    		default:
+    			return "";
+    	}
+    }
+
+    function instance$n($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('FormTiles', slots, []);
+    	let { form, starTeams } = $$props;
+    	const writable_props = ['form', 'starTeams'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<FormTiles> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('form' in $$props) $$invalidate(0, form = $$props.form);
+    		if ('starTeams' in $$props) $$invalidate(1, starTeams = $$props.starTeams);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		background,
+    		formatResult,
+    		form,
+    		starTeams
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('form' in $$props) $$invalidate(0, form = $$props.form);
+    		if ('starTeams' in $$props) $$invalidate(1, starTeams = $$props.starTeams);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [form, starTeams];
+    }
+
+    class FormTiles extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$n, create_fragment$n, safe_not_equal, { form: 0, starTeams: 1 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "FormTiles",
+    			options,
+    			id: create_fragment$n.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*form*/ ctx[0] === undefined && !('form' in props)) {
+    			console.warn("<FormTiles> was created without expected prop 'form'");
+    		}
+
+    		if (/*starTeams*/ ctx[1] === undefined && !('starTeams' in props)) {
+    			console.warn("<FormTiles> was created without expected prop 'starTeams'");
+    		}
+    	}
+
+    	get form() {
+    		throw new Error("<FormTiles>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set form(value) {
+    		throw new Error("<FormTiles>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get starTeams() {
+    		throw new Error("<FormTiles>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set starTeams(value) {
+    		throw new Error("<FormTiles>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\current_form\CurrentForm.svelte generated by Svelte v3.49.0 */
+
+    const { Object: Object_1$b } = globals;
+    const file$l = "src\\components\\current_form\\CurrentForm.svelte";
+
+    // (67:0) {#if formInitials != undefined}
+    function create_if_block_1$6(ctx) {
+    	let div0;
+    	let formtiles;
+    	let t0;
+    	let div6;
+    	let div1;
+    	let t1_value = /*formInitials*/ ctx[5][0] + "";
+    	let t1;
+    	let t2;
+    	let div2;
+    	let t3_value = /*formInitials*/ ctx[5][1] + "";
+    	let t3;
+    	let t4;
+    	let div3;
+    	let t5_value = /*formInitials*/ ctx[5][2] + "";
+    	let t5;
+    	let t6;
+    	let div4;
+    	let t7_value = /*formInitials*/ ctx[5][3] + "";
+    	let t7;
+    	let t8;
+    	let div5;
+    	let t9_value = /*formInitials*/ ctx[5][4] + "";
+    	let t9;
+    	let current;
+
+    	formtiles = new FormTiles({
+    			props: {
+    				form: "" + (/*formIcons*/ ctx[3] + ","),
+    				starTeams: /*formStarTeams*/ ctx[4]
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			div0 = element("div");
+    			create_component(formtiles.$$.fragment);
+    			t0 = space();
+    			div6 = element("div");
+    			div1 = element("div");
+    			t1 = text(t1_value);
+    			t2 = space();
+    			div2 = element("div");
+    			t3 = text(t3_value);
+    			t4 = space();
+    			div3 = element("div");
+    			t5 = text(t5_value);
+    			t6 = space();
+    			div4 = element("div");
+    			t7 = text(t7_value);
+    			t8 = space();
+    			div5 = element("div");
+    			t9 = text(t9_value);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div0 = claim_element(nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			claim_component(formtiles.$$.fragment, div0_nodes);
+    			div0_nodes.forEach(detach_dev);
+    			t0 = claim_space(nodes);
+    			div6 = claim_element(nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			div1 = claim_element(div6_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t1 = claim_text(div1_nodes, t1_value);
+    			div1_nodes.forEach(detach_dev);
+    			t2 = claim_space(div6_nodes);
+    			div2 = claim_element(div6_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t3 = claim_text(div2_nodes, t3_value);
+    			div2_nodes.forEach(detach_dev);
+    			t4 = claim_space(div6_nodes);
+    			div3 = claim_element(div6_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			t5 = claim_text(div3_nodes, t5_value);
+    			div3_nodes.forEach(detach_dev);
+    			t6 = claim_space(div6_nodes);
+    			div4 = claim_element(div6_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			t7 = claim_text(div4_nodes, t7_value);
+    			div4_nodes.forEach(detach_dev);
+    			t8 = claim_space(div6_nodes);
+    			div5 = claim_element(div6_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			t9 = claim_text(div5_nodes, t9_value);
+    			div5_nodes.forEach(detach_dev);
+    			div6_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "current-form-row icon-row svelte-11hg8fr");
+    			add_location(div0, file$l, 67, 2, 2433);
+    			attr_dev(div1, "class", "icon-name pos-0 svelte-11hg8fr");
+    			add_location(div1, file$l, 71, 4, 2594);
+    			attr_dev(div2, "class", "icon-name pos-1 svelte-11hg8fr");
+    			add_location(div2, file$l, 72, 4, 2652);
+    			attr_dev(div3, "class", "icon-name pos-2 svelte-11hg8fr");
+    			add_location(div3, file$l, 73, 4, 2710);
+    			attr_dev(div4, "class", "icon-name pos-3 svelte-11hg8fr");
+    			add_location(div4, file$l, 74, 4, 2768);
+    			attr_dev(div5, "class", "icon-name pos-4 svelte-11hg8fr");
+    			add_location(div5, file$l, 75, 4, 2826);
+    			attr_dev(div6, "class", "current-form-row name-row svelte-11hg8fr");
+    			add_location(div6, file$l, 70, 2, 2549);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div0, anchor);
+    			mount_component(formtiles, div0, null);
+    			insert_hydration_dev(target, t0, anchor);
+    			insert_hydration_dev(target, div6, anchor);
+    			append_hydration_dev(div6, div1);
+    			append_hydration_dev(div1, t1);
+    			append_hydration_dev(div6, t2);
+    			append_hydration_dev(div6, div2);
+    			append_hydration_dev(div2, t3);
+    			append_hydration_dev(div6, t4);
+    			append_hydration_dev(div6, div3);
+    			append_hydration_dev(div3, t5);
+    			append_hydration_dev(div6, t6);
+    			append_hydration_dev(div6, div4);
+    			append_hydration_dev(div4, t7);
+    			append_hydration_dev(div6, t8);
+    			append_hydration_dev(div6, div5);
+    			append_hydration_dev(div5, t9);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const formtiles_changes = {};
+    			if (dirty & /*formIcons*/ 8) formtiles_changes.form = "" + (/*formIcons*/ ctx[3] + ",");
+    			if (dirty & /*formStarTeams*/ 16) formtiles_changes.starTeams = /*formStarTeams*/ ctx[4];
+    			formtiles.$set(formtiles_changes);
+    			if ((!current || dirty & /*formInitials*/ 32) && t1_value !== (t1_value = /*formInitials*/ ctx[5][0] + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty & /*formInitials*/ 32) && t3_value !== (t3_value = /*formInitials*/ ctx[5][1] + "")) set_data_dev(t3, t3_value);
+    			if ((!current || dirty & /*formInitials*/ 32) && t5_value !== (t5_value = /*formInitials*/ ctx[5][2] + "")) set_data_dev(t5, t5_value);
+    			if ((!current || dirty & /*formInitials*/ 32) && t7_value !== (t7_value = /*formInitials*/ ctx[5][3] + "")) set_data_dev(t7, t7_value);
+    			if ((!current || dirty & /*formInitials*/ 32) && t9_value !== (t9_value = /*formInitials*/ ctx[5][4] + "")) set_data_dev(t9, t9_value);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(formtiles.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(formtiles.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div0);
+    			destroy_component(formtiles);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div6);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$6.name,
+    		type: "if",
+    		source: "(67:0) {#if formInitials != undefined}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (83:2) {:else}
+    function create_else_block$6(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("None");
+    		},
+    		l: function claim(nodes) {
+    			t = claim_text(nodes, "None");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, t, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$6.name,
+    		type: "else",
+    		source: "(83:2) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (81:2) {#if currentMatchday != null}
+    function create_if_block$a(ctx) {
+    	let span;
+    	let t0_value = (/*data*/ ctx[0].form[/*team*/ ctx[2]][/*data*/ ctx[0]._id][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "";
+    	let t0;
+    	let t1;
+
+    	const block = {
+    		c: function create() {
+    			span = element("span");
+    			t0 = text(t0_value);
+    			t1 = text("%");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			span = claim_element(nodes, "SPAN", { class: true });
+    			var span_nodes = children(span);
+    			t0 = claim_text(span_nodes, t0_value);
+    			t1 = claim_text(span_nodes, "%");
+    			span_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(span, "class", "current-form-value svelte-11hg8fr");
+    			add_location(span, file$l, 81, 4, 2979);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, span, anchor);
+    			append_hydration_dev(span, t0);
+    			append_hydration_dev(span, t1);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*data, team, currentMatchday*/ 7 && t0_value !== (t0_value = (/*data*/ ctx[0].form[/*team*/ ctx[2]][/*data*/ ctx[0]._id][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "")) set_data_dev(t0, t0_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(span);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$a.name,
+    		type: "if",
+    		source: "(81:2) {#if currentMatchday != null}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$m(ctx) {
+    	let t0;
+    	let div;
+    	let t1;
+    	let current;
+    	let if_block0 = /*formInitials*/ ctx[5] != undefined && create_if_block_1$6(ctx);
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*currentMatchday*/ ctx[1] != null) return create_if_block$a;
+    		return create_else_block$6;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block1 = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block0) if_block0.c();
+    			t0 = space();
+    			div = element("div");
+    			t1 = text("Current form:\r\n  ");
+    			if_block1.c();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			if (if_block0) if_block0.l(nodes);
+    			t0 = claim_space(nodes);
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t1 = claim_text(div_nodes, "Current form:\r\n  ");
+    			if_block1.l(div_nodes);
+    			div_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "current-form svelte-11hg8fr");
+    			add_location(div, file$l, 78, 0, 2897);
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block0) if_block0.m(target, anchor);
+    			insert_hydration_dev(target, t0, anchor);
+    			insert_hydration_dev(target, div, anchor);
+    			append_hydration_dev(div, t1);
+    			if_block1.m(div, null);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*formInitials*/ ctx[5] != undefined) {
+    				if (if_block0) {
+    					if_block0.p(ctx, dirty);
+
+    					if (dirty & /*formInitials*/ 32) {
+    						transition_in(if_block0, 1);
+    					}
+    				} else {
+    					if_block0 = create_if_block_1$6(ctx);
+    					if_block0.c();
+    					transition_in(if_block0, 1);
+    					if_block0.m(t0.parentNode, t0);
+    				}
+    			} else if (if_block0) {
+    				group_outros();
+
+    				transition_out(if_block0, 1, 1, () => {
+    					if_block0 = null;
+    				});
+
+    				check_outros();
+    			}
+
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block1) {
+    				if_block1.p(ctx, dirty);
+    			} else {
+    				if_block1.d(1);
+    				if_block1 = current_block_type(ctx);
+
+    				if (if_block1) {
+    					if_block1.c();
+    					if_block1.m(div, null);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block0);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block0);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (if_block0) if_block0.d(detaching);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div);
+    			if_block1.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$m.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function getSortedMatchdays(data, team) {
+    	let matchdays = Object.keys(data.form[team][data._id]).sort(function (matchday1, matchday2) {
+    		return new Date(data.form[team][data._id][matchday1].date) - new Date(data.form[team][data._id][matchday2].date);
+    	});
+
+    	return matchdays;
+    }
+
+    function getFormStarTeams(data, team, matchdays) {
+    	let formStarTeams = [];
+
+    	for (let matchday of matchdays) {
+    		let oppTeam = data.form[team][data._id][matchday].team;
+    		formStarTeams.unshift(data.teamRatings[oppTeam].totalRating > 0.75);
+    	}
+
+    	// Fill in blanks
+    	for (let i = formStarTeams.length; i < 5; i++) {
+    		formStarTeams.unshift(false);
+    	}
+
+    	return formStarTeams;
+    }
+
+    function latestNPlayedMatchdays(data, team, matchdays, N) {
+    	let latestN = [];
+
+    	for (let i = matchdays.length - 1; i >= 0; i--) {
+    		if (data.form[team][data._id][matchdays[i]].score != null) {
+    			latestN.push(matchdays[i]);
+    		}
+
+    		if (latestN.length >= N) {
+    			break;
+    		}
+    	}
+
+    	return latestN;
+    }
+
+    function instance$m($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('CurrentForm', slots, []);
+
+    	function getFormIcons(data, team) {
+    		let formIcons = [];
+
+    		if (Object.keys(data.form[team][data._id][currentMatchday]).length > 0) {
+    			formIcons = data.form[team][data._id][currentMatchday].form5.split("");
+    		}
+
+    		// Fill in blanks with None icons
+    		for (let i = formIcons.length; i < 5; i++) {
+    			formIcons.unshift("N");
+    		}
+
+    		return formIcons.join('');
+    	}
+
+    	function getFormInitials(data, team, matchdays) {
+    		let formInitials = [];
+
+    		for (let matchday of matchdays) {
+    			formInitials.unshift(toInitials(data.form[team][data._id][matchday].team));
+    		}
+
+    		// Fill in blanks with None icons
+    		for (let i = formInitials.length; i < 5; i++) {
+    			formInitials.unshift("");
+    		}
+
+    		return formInitials;
+    	}
+
+    	function setFormValues() {
+    		let sortedMatchdays = getSortedMatchdays(data, team);
+    		let matchdays = latestNPlayedMatchdays(data, team, sortedMatchdays, 5);
+    		$$invalidate(3, formIcons = getFormIcons(data, team));
+    		$$invalidate(4, formStarTeams = getFormStarTeams(data, team, matchdays));
+    		$$invalidate(5, formInitials = getFormInitials(data, team, matchdays));
+    	}
+
+    	let formIcons, formStarTeams, formInitials;
+    	let { data, currentMatchday, team, toInitials } = $$props;
+    	const writable_props = ['data', 'currentMatchday', 'team', 'toInitials'];
+
+    	Object_1$b.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<CurrentForm> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
+    		if ('currentMatchday' in $$props) $$invalidate(1, currentMatchday = $$props.currentMatchday);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('toInitials' in $$props) $$invalidate(6, toInitials = $$props.toInitials);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		FormTiles,
+    		getSortedMatchdays,
+    		getFormStarTeams,
+    		getFormIcons,
+    		getFormInitials,
+    		latestNPlayedMatchdays,
+    		setFormValues,
+    		formIcons,
+    		formStarTeams,
+    		formInitials,
+    		data,
+    		currentMatchday,
+    		team,
+    		toInitials
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('formIcons' in $$props) $$invalidate(3, formIcons = $$props.formIcons);
+    		if ('formStarTeams' in $$props) $$invalidate(4, formStarTeams = $$props.formStarTeams);
+    		if ('formInitials' in $$props) $$invalidate(5, formInitials = $$props.formInitials);
+    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
+    		if ('currentMatchday' in $$props) $$invalidate(1, currentMatchday = $$props.currentMatchday);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('toInitials' in $$props) $$invalidate(6, toInitials = $$props.toInitials);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && setFormValues();
+    		}
+    	};
+
+    	return [
+    		data,
+    		currentMatchday,
+    		team,
+    		formIcons,
+    		formStarTeams,
+    		formInitials,
+    		toInitials
+    	];
+    }
+
+    class CurrentForm extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$m, create_fragment$m, safe_not_equal, {
+    			data: 0,
+    			currentMatchday: 1,
+    			team: 2,
+    			toInitials: 6
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "CurrentForm",
+    			options,
+    			id: create_fragment$m.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[0] === undefined && !('data' in props)) {
+    			console.warn("<CurrentForm> was created without expected prop 'data'");
+    		}
+
+    		if (/*currentMatchday*/ ctx[1] === undefined && !('currentMatchday' in props)) {
+    			console.warn("<CurrentForm> was created without expected prop 'currentMatchday'");
+    		}
+
+    		if (/*team*/ ctx[2] === undefined && !('team' in props)) {
+    			console.warn("<CurrentForm> was created without expected prop 'team'");
+    		}
+
+    		if (/*toInitials*/ ctx[6] === undefined && !('toInitials' in props)) {
+    			console.warn("<CurrentForm> was created without expected prop 'toInitials'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<CurrentForm>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<CurrentForm>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get currentMatchday() {
+    		throw new Error("<CurrentForm>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set currentMatchday(value) {
+    		throw new Error("<CurrentForm>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<CurrentForm>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<CurrentForm>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get toInitials() {
+    		throw new Error("<CurrentForm>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set toInitials(value) {
+    		throw new Error("<CurrentForm>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\TableSnippet.svelte generated by Svelte v3.49.0 */
+
+    const { Object: Object_1$a } = globals;
+    const file$k = "src\\components\\TableSnippet.svelte";
+
+    function get_each_context$5(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[8] = list[i];
+    	child_ctx[10] = i;
+    	return child_ctx;
+    }
+
+    // (47:2) {#if tableSnippet != undefined}
+    function create_if_block$9(ctx) {
+    	let div0;
+    	let t0;
+    	let div5;
+    	let div1;
+    	let t1;
+    	let div2;
+    	let t2;
+    	let t3;
+    	let div3;
+    	let t4;
+    	let t5;
+    	let div4;
+    	let t6;
+    	let t7;
+    	let t8;
+    	let if_block_anchor;
+    	let each_value = /*tableSnippet*/ ctx[3].rows;
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$5(get_each_context$5(ctx, each_value, i));
+    	}
+
+    	let if_block = /*tableSnippet*/ ctx[3].teamTableIdx != 6 && create_if_block_1$5(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div0 = element("div");
+    			t0 = space();
+    			div5 = element("div");
+    			div1 = element("div");
+    			t1 = space();
+    			div2 = element("div");
+    			t2 = text("Team");
+    			t3 = space();
+    			div3 = element("div");
+    			t4 = text("GD");
+    			t5 = space();
+    			div4 = element("div");
+    			t6 = text("Points");
+    			t7 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t8 = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div0 = claim_element(nodes, "DIV", { class: true });
+    			children(div0).forEach(detach_dev);
+    			t0 = claim_space(nodes);
+    			div5 = claim_element(nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div1 = claim_element(div5_nodes, "DIV", { class: true });
+    			children(div1).forEach(detach_dev);
+    			t1 = claim_space(div5_nodes);
+    			div2 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t2 = claim_text(div2_nodes, "Team");
+    			div2_nodes.forEach(detach_dev);
+    			t3 = claim_space(div5_nodes);
+    			div3 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			t4 = claim_text(div3_nodes, "GD");
+    			div3_nodes.forEach(detach_dev);
+    			t5 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			t6 = claim_text(div4_nodes, "Points");
+    			div4_nodes.forEach(detach_dev);
+    			div5_nodes.forEach(detach_dev);
+    			t7 = claim_space(nodes);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(nodes);
+    			}
+
+    			t8 = claim_space(nodes);
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "divider");
+    			add_location(div0, file$k, 47, 4, 1525);
+    			attr_dev(div1, "class", "table-element table-position column-title svelte-1l9y3x9");
+    			add_location(div1, file$k, 49, 6, 1585);
+    			attr_dev(div2, "class", "table-element table-team-name column-title svelte-1l9y3x9");
+    			add_location(div2, file$k, 50, 6, 1650);
+    			attr_dev(div3, "class", "table-element table-gd column-title svelte-1l9y3x9");
+    			add_location(div3, file$k, 51, 6, 1724);
+    			attr_dev(div4, "class", "table-element table-points column-title svelte-1l9y3x9");
+    			add_location(div4, file$k, 52, 6, 1789);
+    			attr_dev(div5, "class", "table-row svelte-1l9y3x9");
+    			add_location(div5, file$k, 48, 4, 1554);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div0, anchor);
+    			insert_hydration_dev(target, t0, anchor);
+    			insert_hydration_dev(target, div5, anchor);
+    			append_hydration_dev(div5, div1);
+    			append_hydration_dev(div5, t1);
+    			append_hydration_dev(div5, div2);
+    			append_hydration_dev(div2, t2);
+    			append_hydration_dev(div5, t3);
+    			append_hydration_dev(div5, div3);
+    			append_hydration_dev(div3, t4);
+    			append_hydration_dev(div5, t5);
+    			append_hydration_dev(div5, div4);
+    			append_hydration_dev(div4, t6);
+    			insert_hydration_dev(target, t7, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_hydration_dev(target, t8, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*hyphenatedTeam, tableSnippet, toAlias, switchTeam*/ 15) {
+    				each_value = /*tableSnippet*/ ctx[3].rows;
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$5(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$5(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(t8.parentNode, t8);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+
+    			if (/*tableSnippet*/ ctx[3].teamTableIdx != 6) {
+    				if (if_block) ; else {
+    					if_block = create_if_block_1$5(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div0);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div5);
+    			if (detaching) detach_dev(t7);
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(t8);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$9.name,
+    		type: "if",
+    		source: "(47:2) {#if tableSnippet != undefined}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (62:85) 
+    function create_if_block_5(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { id: true, class: true });
+    			children(div).forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "id", "divider");
+    			attr_dev(div, "class", "svelte-1l9y3x9");
+    			add_location(div, file$k, 62, 8, 2143);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_5.name,
+    		type: "if",
+    		source: "(62:85) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (58:6) {#if i == 0}
+    function create_if_block_3$4(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*i*/ ctx[10] != /*tableSnippet*/ ctx[3].teamTableIdx && create_if_block_4$1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*i*/ ctx[10] != /*tableSnippet*/ ctx[3].teamTableIdx) {
+    				if (if_block) ; else {
+    					if_block = create_if_block_4$1(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3$4.name,
+    		type: "if",
+    		source: "(58:6) {#if i == 0}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (59:8) {#if i != tableSnippet.teamTableIdx}
+    function create_if_block_4$1(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { id: true, class: true });
+    			children(div).forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "id", "divider");
+    			attr_dev(div, "class", "svelte-1l9y3x9");
+    			add_location(div, file$k, 59, 10, 2011);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_4$1.name,
+    		type: "if",
+    		source: "(59:8) {#if i != tableSnippet.teamTableIdx}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (98:6) {:else}
+    function create_else_block$5(ctx) {
+    	let div3;
+    	let div0;
+    	let t0_value = /*row*/ ctx[8].position + "";
+    	let t0;
+    	let t1;
+    	let button;
+    	let t2_value = /*toAlias*/ ctx[1](/*row*/ ctx[8].name) + "";
+    	let t2;
+    	let t3;
+    	let div1;
+    	let t4_value = /*row*/ ctx[8].gd + "";
+    	let t4;
+    	let t5;
+    	let div2;
+    	let t6_value = /*row*/ ctx[8].points + "";
+    	let t6;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[6](/*row*/ ctx[8]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div3 = element("div");
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			button = element("button");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			div1 = element("div");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			div2 = element("div");
+    			t6 = text(t6_value);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div3 = claim_element(nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			div0 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, t0_value);
+    			div0_nodes.forEach(detach_dev);
+    			t1 = claim_space(div3_nodes);
+    			button = claim_element(div3_nodes, "BUTTON", { class: true });
+    			var button_nodes = children(button);
+    			t2 = claim_text(button_nodes, t2_value);
+    			button_nodes.forEach(detach_dev);
+    			t3 = claim_space(div3_nodes);
+    			div1 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t4 = claim_text(div1_nodes, t4_value);
+    			div1_nodes.forEach(detach_dev);
+    			t5 = claim_space(div3_nodes);
+    			div2 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t6 = claim_text(div2_nodes, t6_value);
+    			div2_nodes.forEach(detach_dev);
+    			div3_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "table-element table-position svelte-1l9y3x9");
+    			add_location(div0, file$k, 100, 10, 3362);
+    			attr_dev(button, "class", "table-element table-team-name svelte-1l9y3x9");
+    			add_location(button, file$k, 103, 10, 3462);
+    			attr_dev(div1, "class", "table-element table-gd svelte-1l9y3x9");
+    			add_location(div1, file$k, 109, 10, 3687);
+    			attr_dev(div2, "class", "table-element table-points svelte-1l9y3x9");
+    			add_location(div2, file$k, 112, 10, 3775);
+    			attr_dev(div3, "class", "table-row svelte-1l9y3x9");
+    			add_location(div3, file$k, 99, 8, 3327);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div3, anchor);
+    			append_hydration_dev(div3, div0);
+    			append_hydration_dev(div0, t0);
+    			append_hydration_dev(div3, t1);
+    			append_hydration_dev(div3, button);
+    			append_hydration_dev(button, t2);
+    			append_hydration_dev(div3, t3);
+    			append_hydration_dev(div3, div1);
+    			append_hydration_dev(div1, t4);
+    			append_hydration_dev(div3, t5);
+    			append_hydration_dev(div3, div2);
+    			append_hydration_dev(div2, t6);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", click_handler, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*tableSnippet*/ 8 && t0_value !== (t0_value = /*row*/ ctx[8].position + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*toAlias, tableSnippet*/ 10 && t2_value !== (t2_value = /*toAlias*/ ctx[1](/*row*/ ctx[8].name) + "")) set_data_dev(t2, t2_value);
+    			if (dirty & /*tableSnippet*/ 8 && t4_value !== (t4_value = /*row*/ ctx[8].gd + "")) set_data_dev(t4, t4_value);
+    			if (dirty & /*tableSnippet*/ 8 && t6_value !== (t6_value = /*row*/ ctx[8].points + "")) set_data_dev(t6, t6_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div3);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$5.name,
+    		type: "else",
+    		source: "(98:6) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (66:6) {#if i == tableSnippet.teamTableIdx}
+    function create_if_block_2$3(ctx) {
+    	let div3;
+    	let div0;
+    	let t0_value = /*row*/ ctx[8].position + "";
+    	let t0;
+    	let t1;
+    	let a;
+    	let t2_value = /*toAlias*/ ctx[1](/*row*/ ctx[8].name) + "";
+    	let t2;
+    	let a_href_value;
+    	let t3;
+    	let div1;
+    	let t4_value = /*row*/ ctx[8].gd + "";
+    	let t4;
+    	let t5;
+    	let div2;
+    	let t6_value = /*row*/ ctx[8].points + "";
+    	let t6;
+
+    	const block = {
+    		c: function create() {
+    			div3 = element("div");
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			a = element("a");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			div1 = element("div");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			div2 = element("div");
+    			t6 = text(t6_value);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div3 = claim_element(nodes, "DIV", { class: true, style: true });
+    			var div3_nodes = children(div3);
+    			div0 = claim_element(div3_nodes, "DIV", { class: true, style: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, t0_value);
+    			div0_nodes.forEach(detach_dev);
+    			t1 = claim_space(div3_nodes);
+    			a = claim_element(div3_nodes, "A", { href: true, class: true, style: true });
+    			var a_nodes = children(a);
+    			t2 = claim_text(a_nodes, t2_value);
+    			a_nodes.forEach(detach_dev);
+    			t3 = claim_space(div3_nodes);
+    			div1 = claim_element(div3_nodes, "DIV", { class: true, style: true });
+    			var div1_nodes = children(div1);
+    			t4 = claim_text(div1_nodes, t4_value);
+    			div1_nodes.forEach(detach_dev);
+    			t5 = claim_space(div3_nodes);
+    			div2 = claim_element(div3_nodes, "DIV", { class: true, style: true });
+    			var div2_nodes = children(div2);
+    			t6 = claim_text(div2_nodes, t6_value);
+    			div2_nodes.forEach(detach_dev);
+    			div3_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "table-element table-position this-team svelte-1l9y3x9");
+    			set_style(div0, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
+    			add_location(div0, file$k, 71, 10, 2454);
+    			attr_dev(a, "href", a_href_value = "/" + /*hyphenatedTeam*/ ctx[0]);
+    			attr_dev(a, "class", "table-element table-team-name this-team svelte-1l9y3x9");
+    			set_style(a, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
+    			add_location(a, file$k, 77, 10, 2652);
+    			attr_dev(div1, "class", "table-element table-gd this-team svelte-1l9y3x9");
+    			set_style(div1, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
+    			add_location(div1, file$k, 84, 10, 2890);
+    			attr_dev(div2, "class", "table-element table-points this-team svelte-1l9y3x9");
+    			set_style(div2, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
+    			add_location(div2, file$k, 90, 10, 3076);
+    			attr_dev(div3, "class", "table-row this-team svelte-1l9y3x9");
+    			set_style(div3, "background-color", "var(--" + /*hyphenatedTeam*/ ctx[0] + ")");
+    			add_location(div3, file$k, 67, 8, 2326);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div3, anchor);
+    			append_hydration_dev(div3, div0);
+    			append_hydration_dev(div0, t0);
+    			append_hydration_dev(div3, t1);
+    			append_hydration_dev(div3, a);
+    			append_hydration_dev(a, t2);
+    			append_hydration_dev(div3, t3);
+    			append_hydration_dev(div3, div1);
+    			append_hydration_dev(div1, t4);
+    			append_hydration_dev(div3, t5);
+    			append_hydration_dev(div3, div2);
+    			append_hydration_dev(div2, t6);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*tableSnippet*/ 8 && t0_value !== (t0_value = /*row*/ ctx[8].position + "")) set_data_dev(t0, t0_value);
+
+    			if (dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(div0, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
+    			}
+
+    			if (dirty & /*toAlias, tableSnippet*/ 10 && t2_value !== (t2_value = /*toAlias*/ ctx[1](/*row*/ ctx[8].name) + "")) set_data_dev(t2, t2_value);
+
+    			if (dirty & /*hyphenatedTeam*/ 1 && a_href_value !== (a_href_value = "/" + /*hyphenatedTeam*/ ctx[0])) {
+    				attr_dev(a, "href", a_href_value);
+    			}
+
+    			if (dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(a, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
+    			}
+
+    			if (dirty & /*tableSnippet*/ 8 && t4_value !== (t4_value = /*row*/ ctx[8].gd + "")) set_data_dev(t4, t4_value);
+
+    			if (dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(div1, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
+    			}
+
+    			if (dirty & /*tableSnippet*/ 8 && t6_value !== (t6_value = /*row*/ ctx[8].points + "")) set_data_dev(t6, t6_value);
+
+    			if (dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(div2, "color", "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
+    			}
+
+    			if (dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(div3, "background-color", "var(--" + /*hyphenatedTeam*/ ctx[0] + ")");
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div3);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2$3.name,
+    		type: "if",
+    		source: "(66:6) {#if i == tableSnippet.teamTableIdx}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (56:4) {#each tableSnippet.rows as row, i}
+    function create_each_block$5(ctx) {
+    	let t;
+    	let if_block1_anchor;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*i*/ ctx[10] == 0) return create_if_block_3$4;
+    		if (/*i*/ ctx[10] - 1 != /*tableSnippet*/ ctx[3].teamTableIdx && /*i*/ ctx[10] != /*tableSnippet*/ ctx[3].teamTableIdx) return create_if_block_5;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block0 = current_block_type && current_block_type(ctx);
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*i*/ ctx[10] == /*tableSnippet*/ ctx[3].teamTableIdx) return create_if_block_2$3;
+    		return create_else_block$5;
+    	}
+
+    	let current_block_type_1 = select_block_type_1(ctx);
+    	let if_block1 = current_block_type_1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block0) if_block0.c();
+    			t = space();
+    			if_block1.c();
+    			if_block1_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			if (if_block0) if_block0.l(nodes);
+    			t = claim_space(nodes);
+    			if_block1.l(nodes);
+    			if_block1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block0) if_block0.m(target, anchor);
+    			insert_hydration_dev(target, t, anchor);
+    			if_block1.m(target, anchor);
+    			insert_hydration_dev(target, if_block1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block0) {
+    				if_block0.p(ctx, dirty);
+    			} else {
+    				if (if_block0) if_block0.d(1);
+    				if_block0 = current_block_type && current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(t.parentNode, t);
+    				}
+    			}
+
+    			if (current_block_type_1 === (current_block_type_1 = select_block_type_1(ctx)) && if_block1) {
+    				if_block1.p(ctx, dirty);
+    			} else {
+    				if_block1.d(1);
+    				if_block1 = current_block_type_1(ctx);
+
+    				if (if_block1) {
+    					if_block1.c();
+    					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (if_block0) {
+    				if_block0.d(detaching);
+    			}
+
+    			if (detaching) detach_dev(t);
+    			if_block1.d(detaching);
+    			if (detaching) detach_dev(if_block1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$5.name,
+    		type: "each",
+    		source: "(56:4) {#each tableSnippet.rows as row, i}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (119:4) {#if tableSnippet.teamTableIdx != 6}
+    function create_if_block_1$5(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { id: true, class: true });
+    			children(div).forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "id", "divider");
+    			attr_dev(div, "class", "svelte-1l9y3x9");
+    			add_location(div, file$k, 119, 6, 3951);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$5.name,
+    		type: "if",
+    		source: "(119:4) {#if tableSnippet.teamTableIdx != 6}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$l(ctx) {
+    	let div;
+    	let if_block = /*tableSnippet*/ ctx[3] != undefined && create_if_block$9(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			if (if_block) if_block.c();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			if (if_block) if_block.l(div_nodes);
+    			div_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "table-snippet svelte-1l9y3x9");
+    			add_location(div, file$k, 45, 0, 1457);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    			if (if_block) if_block.m(div, null);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*tableSnippet*/ ctx[3] != undefined) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$9(ctx);
+    					if_block.c();
+    					if_block.m(div, null);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			if (if_block) if_block.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$l.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function tableSnippetRange(sortedTeams, team) {
+    	let teamStandingsIdx = sortedTeams.indexOf(team);
+    	let low = teamStandingsIdx - 3;
+    	let high = teamStandingsIdx + 4;
+
+    	if (low < 0) {
+    		let overflow = low;
+    		high -= overflow;
+    		low = 0;
+    	}
+
+    	if (high > sortedTeams.length - 1) {
+    		let overflow = high - sortedTeams.length;
+    		low -= overflow;
+    		high = sortedTeams.length;
+    	}
+
+    	return [low, high];
+    }
+
+    function instance$l($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('TableSnippet', slots, []);
+
+    	function buildTableSnippet() {
+    		let sortedTeams = Object.keys(data.standings).sort(function (teamA, teamB) {
+    			return data.standings[teamA][data._id].position - data.standings[teamB][data._id].position;
+    		});
+
+    		let [low, high] = tableSnippetRange(sortedTeams, team);
+    		let teamTableIdx;
+    		let rows = [];
+
+    		for (let i = low; i < high; i++) {
+    			if (sortedTeams[i] == team) {
+    				teamTableIdx = i - low;
+    			}
+
+    			rows.push({
+    				name: sortedTeams[i],
+    				position: data.standings[sortedTeams[i]][data._id].position,
+    				points: data.standings[sortedTeams[i]][data._id].points,
+    				gd: data.standings[sortedTeams[i]][data._id].gD
+    			});
+    		}
+
+    		$$invalidate(3, tableSnippet = { teamTableIdx, rows });
+    	}
+
+    	let tableSnippet;
+    	let { data, hyphenatedTeam, team, toAlias, switchTeam } = $$props;
+    	const writable_props = ['data', 'hyphenatedTeam', 'team', 'toAlias', 'switchTeam'];
+
+    	Object_1$a.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<TableSnippet> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = row => {
+    		switchTeam(row.name.toLowerCase().replace(/ /g, '-'));
+    	};
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(4, data = $$props.data);
+    		if ('hyphenatedTeam' in $$props) $$invalidate(0, hyphenatedTeam = $$props.hyphenatedTeam);
+    		if ('team' in $$props) $$invalidate(5, team = $$props.team);
+    		if ('toAlias' in $$props) $$invalidate(1, toAlias = $$props.toAlias);
+    		if ('switchTeam' in $$props) $$invalidate(2, switchTeam = $$props.switchTeam);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		tableSnippetRange,
+    		buildTableSnippet,
+    		tableSnippet,
+    		data,
+    		hyphenatedTeam,
+    		team,
+    		toAlias,
+    		switchTeam
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('tableSnippet' in $$props) $$invalidate(3, tableSnippet = $$props.tableSnippet);
+    		if ('data' in $$props) $$invalidate(4, data = $$props.data);
+    		if ('hyphenatedTeam' in $$props) $$invalidate(0, hyphenatedTeam = $$props.hyphenatedTeam);
+    		if ('team' in $$props) $$invalidate(5, team = $$props.team);
+    		if ('toAlias' in $$props) $$invalidate(1, toAlias = $$props.toAlias);
+    		if ('switchTeam' in $$props) $$invalidate(2, switchTeam = $$props.switchTeam);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 32) {
+    			team && buildTableSnippet();
+    		}
+    	};
+
+    	return [hyphenatedTeam, toAlias, switchTeam, tableSnippet, data, team, click_handler];
+    }
+
+    class TableSnippet extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$l, create_fragment$l, safe_not_equal, {
+    			data: 4,
+    			hyphenatedTeam: 0,
+    			team: 5,
+    			toAlias: 1,
+    			switchTeam: 2
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "TableSnippet",
+    			options,
+    			id: create_fragment$l.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[4] === undefined && !('data' in props)) {
+    			console.warn("<TableSnippet> was created without expected prop 'data'");
+    		}
+
+    		if (/*hyphenatedTeam*/ ctx[0] === undefined && !('hyphenatedTeam' in props)) {
+    			console.warn("<TableSnippet> was created without expected prop 'hyphenatedTeam'");
+    		}
+
+    		if (/*team*/ ctx[5] === undefined && !('team' in props)) {
+    			console.warn("<TableSnippet> was created without expected prop 'team'");
+    		}
+
+    		if (/*toAlias*/ ctx[1] === undefined && !('toAlias' in props)) {
+    			console.warn("<TableSnippet> was created without expected prop 'toAlias'");
+    		}
+
+    		if (/*switchTeam*/ ctx[2] === undefined && !('switchTeam' in props)) {
+    			console.warn("<TableSnippet> was created without expected prop 'switchTeam'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<TableSnippet>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<TableSnippet>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get hyphenatedTeam() {
+    		throw new Error("<TableSnippet>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set hyphenatedTeam(value) {
+    		throw new Error("<TableSnippet>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<TableSnippet>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<TableSnippet>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get toAlias() {
+    		throw new Error("<TableSnippet>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set toAlias(value) {
+    		throw new Error("<TableSnippet>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get switchTeam() {
+    		throw new Error("<TableSnippet>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set switchTeam(value) {
+    		throw new Error("<TableSnippet>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\NextGame.svelte generated by Svelte v3.49.0 */
+
+    const file$j = "src\\components\\NextGame.svelte";
+
+    function get_each_context$4(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[8] = list[i];
+    	return child_ctx;
+    }
+
+    // (27:0) {#if data != undefined}
+    function create_if_block$8(ctx) {
+    	let if_block_anchor;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].nextTeam == null) return create_if_block_1$4;
+    		return create_else_block$4;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert_hydration_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$8.name,
+    		type: "if",
+    		source: "(27:0) {#if data != undefined}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (36:2) {:else}
+    function create_else_block$4(ctx) {
+    	let div9;
+    	let div0;
+    	let h1;
+    	let t0;
+    	let button;
+    	let t1_value = /*toAlias*/ ctx[4](/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].nextTeam) + "";
+    	let t1;
+    	let t2;
+    	let t3;
+
+    	let t4_value = (/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].atHome
+    	? "Home"
+    	: "Away") + "";
+
+    	let t4;
+    	let t5;
+    	let t6;
+    	let div8;
+    	let div6;
+    	let t7;
+    	let div5;
+    	let div2;
+    	let div1;
+    	let t8_value = /*data*/ ctx[0].standings[/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].nextTeam][/*data*/ ctx[0]._id].position + "";
+    	let t8;
+    	let span;
+    	let t9_value = ordinal$1(/*data*/ ctx[0].standings[/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].nextTeam][/*data*/ ctx[0]._id].position) + "";
+    	let t9;
+    	let t10;
+    	let div3;
+    	let t11;
+    	let t12;
+    	let div4;
+    	let t13;
+    	let br0;
+    	let t14;
+    	let a;
+    	let b;
+    	let t15_value = Math.round(/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].prediction.homeGoals) + "";
+    	let t15;
+    	let t16;
+    	let t17_value = Math.round(/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].prediction.awayGoals) + "";
+    	let t17;
+    	let t18;
+    	let br1;
+    	let t19;
+    	let div7;
+    	let t20;
+    	let mounted;
+    	let dispose;
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*showBadge*/ ctx[3]) return create_if_block_4;
+    		return create_else_block_3;
+    	}
+
+    	let current_block_type = select_block_type_1(ctx);
+    	let if_block0 = current_block_type(ctx);
+
+    	function select_block_type_2(ctx, dirty) {
+    		if (/*currentMatchday*/ ctx[1] != null) return create_if_block_3$3;
+    		return create_else_block_2$1;
+    	}
+
+    	let current_block_type_1 = select_block_type_2(ctx);
+    	let if_block1 = current_block_type_1(ctx);
+
+    	function select_block_type_3(ctx, dirty) {
+    		if (/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].prevMatches.length == 0) return create_if_block_2$2;
+    		return create_else_block_1$3;
+    	}
+
+    	let current_block_type_2 = select_block_type_3(ctx);
+    	let if_block2 = current_block_type_2(ctx);
+    	let each_value = /*data*/ ctx[0].upcoming[/*team*/ ctx[2]].prevMatches;
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$4(get_each_context$4(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div9 = element("div");
+    			div0 = element("div");
+    			h1 = element("h1");
+    			t0 = text("Next Game: \r\n          ");
+    			button = element("button");
+    			t1 = text(t1_value);
+    			t2 = text(" ");
+    			t3 = text("\r\n          (");
+    			t4 = text(t4_value);
+    			t5 = text(")");
+    			t6 = space();
+    			div8 = element("div");
+    			div6 = element("div");
+    			if_block0.c();
+    			t7 = space();
+    			div5 = element("div");
+    			div2 = element("div");
+    			div1 = element("div");
+    			t8 = text(t8_value);
+    			span = element("span");
+    			t9 = text(t9_value);
+    			t10 = space();
+    			div3 = element("div");
+    			t11 = text("Current form:\r\n              ");
+    			if_block1.c();
+    			t12 = space();
+    			div4 = element("div");
+    			t13 = text("Score prediction\r\n              ");
+    			br0 = element("br");
+    			t14 = space();
+    			a = element("a");
+    			b = element("b");
+    			t15 = text(t15_value);
+    			t16 = text(" - ");
+    			t17 = text(t17_value);
+    			t18 = space();
+    			br1 = element("br");
+    			t19 = space();
+    			div7 = element("div");
+    			if_block2.c();
+    			t20 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div9 = claim_element(nodes, "DIV", { class: true });
+    			var div9_nodes = children(div9);
+    			div0 = claim_element(div9_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			h1 = claim_element(div0_nodes, "H1", { class: true });
+    			var h1_nodes = children(h1);
+    			t0 = claim_text(h1_nodes, "Next Game: \r\n          ");
+    			button = claim_element(h1_nodes, "BUTTON", { class: true });
+    			var button_nodes = children(button);
+    			t1 = claim_text(button_nodes, t1_value);
+    			t2 = claim_text(button_nodes, " ");
+    			button_nodes.forEach(detach_dev);
+    			t3 = claim_text(h1_nodes, "\r\n          (");
+    			t4 = claim_text(h1_nodes, t4_value);
+    			t5 = claim_text(h1_nodes, ")");
+    			h1_nodes.forEach(detach_dev);
+    			div0_nodes.forEach(detach_dev);
+    			t6 = claim_space(div9_nodes);
+    			div8 = claim_element(div9_nodes, "DIV", { class: true });
+    			var div8_nodes = children(div8);
+    			div6 = claim_element(div8_nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			if_block0.l(div6_nodes);
+    			t7 = claim_space(div6_nodes);
+    			div5 = claim_element(div6_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div2 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t8 = claim_text(div1_nodes, t8_value);
+    			span = claim_element(div1_nodes, "SPAN", { class: true });
+    			var span_nodes = children(span);
+    			t9 = claim_text(span_nodes, t9_value);
+    			span_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			div2_nodes.forEach(detach_dev);
+    			t10 = claim_space(div5_nodes);
+    			div3 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			t11 = claim_text(div3_nodes, "Current form:\r\n              ");
+    			if_block1.l(div3_nodes);
+    			div3_nodes.forEach(detach_dev);
+    			t12 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			t13 = claim_text(div4_nodes, "Score prediction\r\n              ");
+    			br0 = claim_element(div4_nodes, "BR", {});
+    			t14 = claim_space(div4_nodes);
+    			a = claim_element(div4_nodes, "A", { class: true, href: true });
+    			var a_nodes = children(a);
+    			b = claim_element(a_nodes, "B", {});
+    			var b_nodes = children(b);
+    			t15 = claim_text(b_nodes, t15_value);
+    			t16 = claim_text(b_nodes, " - ");
+    			t17 = claim_text(b_nodes, t17_value);
+    			b_nodes.forEach(detach_dev);
+    			a_nodes.forEach(detach_dev);
+    			t18 = claim_space(div4_nodes);
+    			br1 = claim_element(div4_nodes, "BR", {});
+    			div4_nodes.forEach(detach_dev);
+    			div5_nodes.forEach(detach_dev);
+    			div6_nodes.forEach(detach_dev);
+    			t19 = claim_space(div8_nodes);
+    			div7 = claim_element(div8_nodes, "DIV", { class: true });
+    			var div7_nodes = children(div7);
+    			if_block2.l(div7_nodes);
+    			t20 = claim_space(div7_nodes);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(div7_nodes);
+    			}
+
+    			div7_nodes.forEach(detach_dev);
+    			div8_nodes.forEach(detach_dev);
+    			div9_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(button, "class", "next-game-team-btn svelte-yed2u9");
+    			add_location(button, file$j, 40, 10, 1150);
+    			attr_dev(h1, "class", "next-game-title-text svelte-yed2u9");
+    			add_location(h1, file$j, 38, 8, 1078);
+    			attr_dev(div0, "class", "next-game-title svelte-yed2u9");
+    			add_location(div0, file$j, 37, 6, 1039);
+    			attr_dev(span, "class", "ordinal-position svelte-yed2u9");
+    			add_location(span, file$j, 69, 28, 2179);
+    			attr_dev(div1, "class", "next-game-position svelte-yed2u9");
+    			add_location(div1, file$j, 67, 14, 2044);
+    			attr_dev(div2, "class", "next-game-item svelte-yed2u9");
+    			add_location(div2, file$j, 66, 12, 2000);
+    			attr_dev(div3, "class", "next-game-item current-form svelte-yed2u9");
+    			add_location(div3, file$j, 77, 12, 2451);
+    			add_location(br0, file$j, 93, 14, 3026);
+    			add_location(b, file$j, 95, 16, 3114);
+    			attr_dev(a, "class", "predictions-link svelte-yed2u9");
+    			attr_dev(a, "href", "/predictions");
+    			add_location(a, file$j, 94, 14, 3048);
+    			add_location(br1, file$j, 101, 14, 3348);
+    			attr_dev(div4, "class", "next-game-item svelte-yed2u9");
+    			add_location(div4, file$j, 91, 12, 2950);
+    			attr_dev(div5, "class", "predictions");
+    			add_location(div5, file$j, 65, 10, 1961);
+    			attr_dev(div6, "class", "predictions-and-logo svelte-yed2u9");
+    			add_location(div6, file$j, 54, 8, 1587);
+    			attr_dev(div7, "class", "past-results svelte-yed2u9");
+    			add_location(div7, file$j, 105, 8, 3418);
+    			attr_dev(div8, "class", "next-game-values svelte-yed2u9");
+    			add_location(div8, file$j, 53, 6, 1547);
+    			attr_dev(div9, "class", "next-game-prediction svelte-yed2u9");
+    			add_location(div9, file$j, 36, 4, 997);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div9, anchor);
+    			append_hydration_dev(div9, div0);
+    			append_hydration_dev(div0, h1);
+    			append_hydration_dev(h1, t0);
+    			append_hydration_dev(h1, button);
+    			append_hydration_dev(button, t1);
+    			append_hydration_dev(button, t2);
+    			append_hydration_dev(h1, t3);
+    			append_hydration_dev(h1, t4);
+    			append_hydration_dev(h1, t5);
+    			append_hydration_dev(div9, t6);
+    			append_hydration_dev(div9, div8);
+    			append_hydration_dev(div8, div6);
+    			if_block0.m(div6, null);
+    			append_hydration_dev(div6, t7);
+    			append_hydration_dev(div6, div5);
+    			append_hydration_dev(div5, div2);
+    			append_hydration_dev(div2, div1);
+    			append_hydration_dev(div1, t8);
+    			append_hydration_dev(div1, span);
+    			append_hydration_dev(span, t9);
+    			append_hydration_dev(div5, t10);
+    			append_hydration_dev(div5, div3);
+    			append_hydration_dev(div3, t11);
+    			if_block1.m(div3, null);
+    			append_hydration_dev(div5, t12);
+    			append_hydration_dev(div5, div4);
+    			append_hydration_dev(div4, t13);
+    			append_hydration_dev(div4, br0);
+    			append_hydration_dev(div4, t14);
+    			append_hydration_dev(div4, a);
+    			append_hydration_dev(a, b);
+    			append_hydration_dev(b, t15);
+    			append_hydration_dev(b, t16);
+    			append_hydration_dev(b, t17);
+    			append_hydration_dev(div4, t18);
+    			append_hydration_dev(div4, br1);
+    			append_hydration_dev(div8, t19);
+    			append_hydration_dev(div8, div7);
+    			if_block2.m(div7, null);
+    			append_hydration_dev(div7, t20);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div7, null);
+    			}
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*click_handler*/ ctx[7], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*toAlias, data, team*/ 21 && t1_value !== (t1_value = /*toAlias*/ ctx[4](/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].nextTeam) + "")) set_data_dev(t1, t1_value);
+
+    			if (dirty & /*data, team*/ 5 && t4_value !== (t4_value = (/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].atHome
+    			? "Home"
+    			: "Away") + "")) set_data_dev(t4, t4_value);
+
+    			if (current_block_type === (current_block_type = select_block_type_1(ctx)) && if_block0) {
+    				if_block0.p(ctx, dirty);
+    			} else {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(div6, t7);
+    				}
+    			}
+
+    			if (dirty & /*data, team*/ 5 && t8_value !== (t8_value = /*data*/ ctx[0].standings[/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].nextTeam][/*data*/ ctx[0]._id].position + "")) set_data_dev(t8, t8_value);
+    			if (dirty & /*data, team*/ 5 && t9_value !== (t9_value = ordinal$1(/*data*/ ctx[0].standings[/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].nextTeam][/*data*/ ctx[0]._id].position) + "")) set_data_dev(t9, t9_value);
+
+    			if (current_block_type_1 === (current_block_type_1 = select_block_type_2(ctx)) && if_block1) {
+    				if_block1.p(ctx, dirty);
+    			} else {
+    				if_block1.d(1);
+    				if_block1 = current_block_type_1(ctx);
+
+    				if (if_block1) {
+    					if_block1.c();
+    					if_block1.m(div3, null);
+    				}
+    			}
+
+    			if (dirty & /*data, team*/ 5 && t15_value !== (t15_value = Math.round(/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].prediction.homeGoals) + "")) set_data_dev(t15, t15_value);
+    			if (dirty & /*data, team*/ 5 && t17_value !== (t17_value = Math.round(/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].prediction.awayGoals) + "")) set_data_dev(t17, t17_value);
+
+    			if (current_block_type_2 !== (current_block_type_2 = select_block_type_3(ctx))) {
+    				if_block2.d(1);
+    				if_block2 = current_block_type_2(ctx);
+
+    				if (if_block2) {
+    					if_block2.c();
+    					if_block2.m(div7, t20);
+    				}
+    			}
+
+    			if (dirty & /*data, team, toInitials, resultColour, Date*/ 37) {
+    				each_value = /*data*/ ctx[0].upcoming[/*team*/ ctx[2]].prevMatches;
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$4(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$4(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div7, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div9);
+    			if_block0.d();
+    			if_block1.d();
+    			if_block2.d();
+    			destroy_each(each_blocks, detaching);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$4.name,
+    		type: "else",
+    		source: "(36:2) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (28:2) {#if data.upcoming[team].nextTeam == null}
+    function create_if_block_1$4(ctx) {
+    	let div1;
+    	let div0;
+    	let h1;
+    	let t0_value = /*data*/ ctx[0]._id + "";
+    	let t0;
+    	let t1;
+    	let t2_value = /*data*/ ctx[0]._id + 1 + "";
+    	let t2;
+    	let t3;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			h1 = element("h1");
+    			t0 = text(t0_value);
+    			t1 = text("/");
+    			t2 = text(t2_value);
+    			t3 = text(" SEASON COMPLETE");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			h1 = claim_element(div0_nodes, "H1", { class: true });
+    			var h1_nodes = children(h1);
+    			t0 = claim_text(h1_nodes, t0_value);
+    			t1 = claim_text(h1_nodes, "/");
+    			t2 = claim_text(h1_nodes, t2_value);
+    			t3 = claim_text(h1_nodes, " SEASON COMPLETE");
+    			h1_nodes.forEach(detach_dev);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(h1, "class", "next-game-title-text svelte-yed2u9");
+    			add_location(h1, file$j, 30, 8, 853);
+    			attr_dev(div0, "class", "next-game-season-complete svelte-yed2u9");
+    			add_location(div0, file$j, 29, 6, 804);
+    			attr_dev(div1, "class", "next-game-prediction svelte-yed2u9");
+    			add_location(div1, file$j, 28, 4, 762);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			append_hydration_dev(div0, h1);
+    			append_hydration_dev(h1, t0);
+    			append_hydration_dev(h1, t1);
+    			append_hydration_dev(h1, t2);
+    			append_hydration_dev(h1, t3);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*data*/ 1 && t0_value !== (t0_value = /*data*/ ctx[0]._id + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*data*/ 1 && t2_value !== (t2_value = /*data*/ ctx[0]._id + 1 + "")) set_data_dev(t2, t2_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$4.name,
+    		type: "if",
+    		source: "(28:2) {#if data.upcoming[team].nextTeam == null}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (63:10) {:else}
+    function create_else_block_3(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			children(div).forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "next-game-position svelte-yed2u9");
+    			add_location(div, file$j, 63, 12, 1898);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_3.name,
+    		type: "else",
+    		source: "(63:10) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (56:10) {#if showBadge}
+    function create_if_block_4(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true, style: true });
+    			children(div).forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "next-game-logo opposition-badge svelte-yed2u9");
+    			set_style(div, "background-image", "url('" + /*data*/ ctx[0].logoURLs[/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].nextTeam] + "')");
+    			add_location(div, file$j, 56, 12, 1662);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*data, team*/ 5) {
+    				set_style(div, "background-image", "url('" + /*data*/ ctx[0].logoURLs[/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].nextTeam] + "')");
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_4.name,
+    		type: "if",
+    		source: "(56:10) {#if showBadge}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (88:14) {:else}
+    function create_else_block_2$1(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("None");
+    		},
+    		l: function claim(nodes) {
+    			t = claim_text(nodes, "None");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, t, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_2$1.name,
+    		type: "else",
+    		source: "(88:14) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (80:14) {#if currentMatchday != null}
+    function create_if_block_3$3(ctx) {
+    	let span;
+    	let t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].nextTeam][/*data*/ ctx[0]._id][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "";
+    	let t0;
+    	let t1;
+
+    	const block = {
+    		c: function create() {
+    			span = element("span");
+    			t0 = text(t0_value);
+    			t1 = text("%");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			span = claim_element(nodes, "SPAN", { class: true });
+    			var span_nodes = children(span);
+    			t0 = claim_text(span_nodes, t0_value);
+    			t1 = claim_text(span_nodes, "%");
+    			span_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(span, "class", "current-form-value svelte-yed2u9");
+    			add_location(span, file$j, 80, 16, 2584);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, span, anchor);
+    			append_hydration_dev(span, t0);
+    			append_hydration_dev(span, t1);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*data, team, currentMatchday*/ 7 && t0_value !== (t0_value = (/*data*/ ctx[0].form[/*data*/ ctx[0].upcoming[/*team*/ ctx[2]].nextTeam][/*data*/ ctx[0]._id][/*currentMatchday*/ ctx[1]].formRating5 * 100).toFixed(1) + "")) set_data_dev(t0, t0_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(span);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3$3.name,
+    		type: "if",
+    		source: "(80:14) {#if currentMatchday != null}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (111:10) {:else}
+    function create_else_block_1$3(ctx) {
+    	let div;
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t = text("Previous Results");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t = claim_text(div_nodes, "Previous Results");
+    			div_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "next-game-item prev-results-title svelte-yed2u9");
+    			add_location(div, file$j, 111, 12, 3670);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    			append_hydration_dev(div, t);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1$3.name,
+    		type: "else",
+    		source: "(111:10) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (107:10) {#if data.upcoming[team].prevMatches.length == 0}
+    function create_if_block_2$2(ctx) {
+    	let div;
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t = text("No Previous Results");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t = claim_text(div_nodes, "No Previous Results");
+    			div_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "next-game-item prev-results-title no-prev-results svelte-yed2u9");
+    			add_location(div, file$j, 107, 12, 3519);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    			append_hydration_dev(div, t);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2$2.name,
+    		type: "if",
+    		source: "(107:10) {#if data.upcoming[team].prevMatches.length == 0}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (118:10) {#each data.upcoming[team].prevMatches as prevMatch}
+    function create_each_block$4(ctx) {
+    	let div12;
+    	let div0;
+
+    	let t0_value = new Date(/*prevMatch*/ ctx[8].date).toLocaleDateString("en-GB", {
+    		year: "numeric",
+    		month: "short",
+    		day: "numeric"
+    	}) + "";
+
+    	let t0;
+    	let t1;
+    	let div11;
+    	let div9;
+    	let div4;
+    	let div1;
+    	let t2_value = /*toInitials*/ ctx[5](/*prevMatch*/ ctx[8].homeTeam) + "";
+    	let t2;
+    	let t3;
+    	let div3;
+    	let div2;
+    	let t4_value = /*prevMatch*/ ctx[8].homeGoals + "";
+    	let t4;
+    	let t5;
+    	let div8;
+    	let div6;
+    	let div5;
+    	let t6_value = /*prevMatch*/ ctx[8].awayGoals + "";
+    	let t6;
+    	let t7;
+    	let div7;
+    	let t8_value = /*toInitials*/ ctx[5](/*prevMatch*/ ctx[8].awayTeam) + "";
+    	let t8;
+    	let t9;
+    	let div10;
+    	let t10;
+
+    	const block = {
+    		c: function create() {
+    			div12 = element("div");
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			div11 = element("div");
+    			div9 = element("div");
+    			div4 = element("div");
+    			div1 = element("div");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			div3 = element("div");
+    			div2 = element("div");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			div8 = element("div");
+    			div6 = element("div");
+    			div5 = element("div");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div7 = element("div");
+    			t8 = text(t8_value);
+    			t9 = space();
+    			div10 = element("div");
+    			t10 = space();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div12 = claim_element(nodes, "DIV", { class: true });
+    			var div12_nodes = children(div12);
+    			div0 = claim_element(div12_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, t0_value);
+    			div0_nodes.forEach(detach_dev);
+    			t1 = claim_space(div12_nodes);
+    			div11 = claim_element(div12_nodes, "DIV", { class: true });
+    			var div11_nodes = children(div11);
+    			div9 = claim_element(div11_nodes, "DIV", { class: true });
+    			var div9_nodes = children(div9);
+    			div4 = claim_element(div9_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			div1 = claim_element(div4_nodes, "DIV", { class: true, style: true });
+    			var div1_nodes = children(div1);
+    			t2 = claim_text(div1_nodes, t2_value);
+    			div1_nodes.forEach(detach_dev);
+    			t3 = claim_space(div4_nodes);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true, style: true });
+    			var div3_nodes = children(div3);
+    			div2 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t4 = claim_text(div2_nodes, t4_value);
+    			div2_nodes.forEach(detach_dev);
+    			div3_nodes.forEach(detach_dev);
+    			div4_nodes.forEach(detach_dev);
+    			t5 = claim_space(div9_nodes);
+    			div8 = claim_element(div9_nodes, "DIV", { class: true });
+    			var div8_nodes = children(div8);
+    			div6 = claim_element(div8_nodes, "DIV", { class: true, style: true });
+    			var div6_nodes = children(div6);
+    			div5 = claim_element(div6_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			t6 = claim_text(div5_nodes, t6_value);
+    			div5_nodes.forEach(detach_dev);
+    			div6_nodes.forEach(detach_dev);
+    			t7 = claim_space(div8_nodes);
+    			div7 = claim_element(div8_nodes, "DIV", { class: true, style: true });
+    			var div7_nodes = children(div7);
+    			t8 = claim_text(div7_nodes, t8_value);
+    			div7_nodes.forEach(detach_dev);
+    			div8_nodes.forEach(detach_dev);
+    			div9_nodes.forEach(detach_dev);
+    			t9 = claim_space(div11_nodes);
+    			div10 = claim_element(div11_nodes, "DIV", { style: true });
+    			children(div10).forEach(detach_dev);
+    			div11_nodes.forEach(detach_dev);
+    			t10 = claim_space(div12_nodes);
+    			div12_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "past-result-date result-details svelte-yed2u9");
+    			add_location(div0, file$j, 119, 14, 4017);
+    			attr_dev(div1, "class", "home-team svelte-yed2u9");
+    			set_style(div1, "background", "var(--" + /*prevMatch*/ ctx[8].homeTeam.toLowerCase().replace(/ /g, '-') + ")");
+    			set_style(div1, "color", "var(--" + /*prevMatch*/ ctx[8].homeTeam.toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			add_location(div1, file$j, 129, 20, 4451);
+    			attr_dev(div2, "class", "home-goals svelte-yed2u9");
+    			add_location(div2, file$j, 146, 22, 5300);
+    			attr_dev(div3, "class", "goals-container svelte-yed2u9");
+    			set_style(div3, "background", "var(--" + resultColour(/*prevMatch*/ ctx[8], true).toLowerCase().replace(/ /g, '-') + ")");
+    			set_style(div3, "color", "var(--" + resultColour(/*prevMatch*/ ctx[8], true).toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			add_location(div3, file$j, 139, 20, 4912);
+    			attr_dev(div4, "class", "left-side svelte-yed2u9");
+    			add_location(div4, file$j, 128, 18, 4406);
+    			attr_dev(div5, "class", "away-goals svelte-yed2u9");
+    			add_location(div5, file$j, 159, 22, 5913);
+    			attr_dev(div6, "class", "goals-container svelte-yed2u9");
+    			set_style(div6, "background", "var(--" + resultColour(/*prevMatch*/ ctx[8], false).toLowerCase().replace(/ /g, '-') + ")");
+    			set_style(div6, "color", "var(--" + resultColour(/*prevMatch*/ ctx[8], false).toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			add_location(div6, file$j, 152, 20, 5521);
+    			attr_dev(div7, "class", "away-team svelte-yed2u9");
+    			set_style(div7, "background", "var(--" + /*prevMatch*/ ctx[8].awayTeam.toLowerCase().replace(/ /g, '-') + ")");
+    			set_style(div7, "color", "var(--" + /*prevMatch*/ ctx[8].awayTeam.toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			add_location(div7, file$j, 163, 20, 6064);
+    			attr_dev(div8, "class", "right-side svelte-yed2u9");
+    			add_location(div8, file$j, 151, 18, 5475);
+    			attr_dev(div9, "class", "past-result svelte-yed2u9");
+    			add_location(div9, file$j, 127, 16, 4361);
+    			set_style(div10, "clear", "both");
+    			add_location(div10, file$j, 175, 16, 6571);
+    			attr_dev(div11, "class", "next-game-item result-details svelte-yed2u9");
+    			add_location(div11, file$j, 126, 14, 4300);
+    			attr_dev(div12, "class", "next-game-item-container");
+    			add_location(div12, file$j, 118, 12, 3963);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div12, anchor);
+    			append_hydration_dev(div12, div0);
+    			append_hydration_dev(div0, t0);
+    			append_hydration_dev(div12, t1);
+    			append_hydration_dev(div12, div11);
+    			append_hydration_dev(div11, div9);
+    			append_hydration_dev(div9, div4);
+    			append_hydration_dev(div4, div1);
+    			append_hydration_dev(div1, t2);
+    			append_hydration_dev(div4, t3);
+    			append_hydration_dev(div4, div3);
+    			append_hydration_dev(div3, div2);
+    			append_hydration_dev(div2, t4);
+    			append_hydration_dev(div9, t5);
+    			append_hydration_dev(div9, div8);
+    			append_hydration_dev(div8, div6);
+    			append_hydration_dev(div6, div5);
+    			append_hydration_dev(div5, t6);
+    			append_hydration_dev(div8, t7);
+    			append_hydration_dev(div8, div7);
+    			append_hydration_dev(div7, t8);
+    			append_hydration_dev(div11, t9);
+    			append_hydration_dev(div11, div10);
+    			append_hydration_dev(div12, t10);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*data, team*/ 5 && t0_value !== (t0_value = new Date(/*prevMatch*/ ctx[8].date).toLocaleDateString("en-GB", {
+    				year: "numeric",
+    				month: "short",
+    				day: "numeric"
+    			}) + "")) set_data_dev(t0, t0_value);
+
+    			if (dirty & /*toInitials, data, team*/ 37 && t2_value !== (t2_value = /*toInitials*/ ctx[5](/*prevMatch*/ ctx[8].homeTeam) + "")) set_data_dev(t2, t2_value);
+
+    			if (dirty & /*data, team*/ 5) {
+    				set_style(div1, "background", "var(--" + /*prevMatch*/ ctx[8].homeTeam.toLowerCase().replace(/ /g, '-') + ")");
+    			}
+
+    			if (dirty & /*data, team*/ 5) {
+    				set_style(div1, "color", "var(--" + /*prevMatch*/ ctx[8].homeTeam.toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			}
+
+    			if (dirty & /*data, team*/ 5 && t4_value !== (t4_value = /*prevMatch*/ ctx[8].homeGoals + "")) set_data_dev(t4, t4_value);
+
+    			if (dirty & /*data, team*/ 5) {
+    				set_style(div3, "background", "var(--" + resultColour(/*prevMatch*/ ctx[8], true).toLowerCase().replace(/ /g, '-') + ")");
+    			}
+
+    			if (dirty & /*data, team*/ 5) {
+    				set_style(div3, "color", "var(--" + resultColour(/*prevMatch*/ ctx[8], true).toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			}
+
+    			if (dirty & /*data, team*/ 5 && t6_value !== (t6_value = /*prevMatch*/ ctx[8].awayGoals + "")) set_data_dev(t6, t6_value);
+
+    			if (dirty & /*data, team*/ 5) {
+    				set_style(div6, "background", "var(--" + resultColour(/*prevMatch*/ ctx[8], false).toLowerCase().replace(/ /g, '-') + ")");
+    			}
+
+    			if (dirty & /*data, team*/ 5) {
+    				set_style(div6, "color", "var(--" + resultColour(/*prevMatch*/ ctx[8], false).toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			}
+
+    			if (dirty & /*toInitials, data, team*/ 37 && t8_value !== (t8_value = /*toInitials*/ ctx[5](/*prevMatch*/ ctx[8].awayTeam) + "")) set_data_dev(t8, t8_value);
+
+    			if (dirty & /*data, team*/ 5) {
+    				set_style(div7, "background", "var(--" + /*prevMatch*/ ctx[8].awayTeam.toLowerCase().replace(/ /g, '-') + ")");
+    			}
+
+    			if (dirty & /*data, team*/ 5) {
+    				set_style(div7, "color", "var(--" + /*prevMatch*/ ctx[8].awayTeam.toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div12);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$4.name,
+    		type: "each",
+    		source: "(118:10) {#each data.upcoming[team].prevMatches as prevMatch}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$k(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*data*/ ctx[0] != undefined && create_if_block$8(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*data*/ ctx[0] != undefined) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$8(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$k.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function ordinal$1(n) {
+    	let ord = [,"st", "nd", "rd"];
+    	let a = n % 100;
+    	return ord[a > 20 ? a % 10 : a] || "th";
+    }
+
+    function resultColour(prevMatch, home) {
+    	if (home) {
+    		if (prevMatch.homeGoals < prevMatch.awayGoals) {
+    			return prevMatch.awayTeam;
+    		} else {
+    			return prevMatch.homeTeam;
+    		}
+    	} else {
+    		if (prevMatch.homeGoals > prevMatch.awayGoals) {
+    			return prevMatch.homeTeam;
+    		} else {
+    			return prevMatch.awayTeam;
+    		}
+    	}
+    }
+
+    function instance$k($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('NextGame', slots, []);
+    	let { data, currentMatchday, team, showBadge, toAlias, toInitials, switchTeam } = $$props;
+
+    	const writable_props = [
+    		'data',
+    		'currentMatchday',
+    		'team',
+    		'showBadge',
+    		'toAlias',
+    		'toInitials',
+    		'switchTeam'
+    	];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<NextGame> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = () => {
+    		switchTeam(data.upcoming[team].nextTeam.toLowerCase().replace(/ /g, "-"));
+    	};
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
+    		if ('currentMatchday' in $$props) $$invalidate(1, currentMatchday = $$props.currentMatchday);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('showBadge' in $$props) $$invalidate(3, showBadge = $$props.showBadge);
+    		if ('toAlias' in $$props) $$invalidate(4, toAlias = $$props.toAlias);
+    		if ('toInitials' in $$props) $$invalidate(5, toInitials = $$props.toInitials);
+    		if ('switchTeam' in $$props) $$invalidate(6, switchTeam = $$props.switchTeam);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		ordinal: ordinal$1,
+    		resultColour,
+    		data,
+    		currentMatchday,
+    		team,
+    		showBadge,
+    		toAlias,
+    		toInitials,
+    		switchTeam
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
+    		if ('currentMatchday' in $$props) $$invalidate(1, currentMatchday = $$props.currentMatchday);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('showBadge' in $$props) $$invalidate(3, showBadge = $$props.showBadge);
+    		if ('toAlias' in $$props) $$invalidate(4, toAlias = $$props.toAlias);
+    		if ('toInitials' in $$props) $$invalidate(5, toInitials = $$props.toInitials);
+    		if ('switchTeam' in $$props) $$invalidate(6, switchTeam = $$props.switchTeam);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		data,
+    		currentMatchday,
+    		team,
+    		showBadge,
+    		toAlias,
+    		toInitials,
+    		switchTeam,
+    		click_handler
+    	];
+    }
+
+    class NextGame extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$k, create_fragment$k, safe_not_equal, {
+    			data: 0,
+    			currentMatchday: 1,
+    			team: 2,
+    			showBadge: 3,
+    			toAlias: 4,
+    			toInitials: 5,
+    			switchTeam: 6
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "NextGame",
+    			options,
+    			id: create_fragment$k.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[0] === undefined && !('data' in props)) {
+    			console.warn("<NextGame> was created without expected prop 'data'");
+    		}
+
+    		if (/*currentMatchday*/ ctx[1] === undefined && !('currentMatchday' in props)) {
+    			console.warn("<NextGame> was created without expected prop 'currentMatchday'");
+    		}
+
+    		if (/*team*/ ctx[2] === undefined && !('team' in props)) {
+    			console.warn("<NextGame> was created without expected prop 'team'");
+    		}
+
+    		if (/*showBadge*/ ctx[3] === undefined && !('showBadge' in props)) {
+    			console.warn("<NextGame> was created without expected prop 'showBadge'");
+    		}
+
+    		if (/*toAlias*/ ctx[4] === undefined && !('toAlias' in props)) {
+    			console.warn("<NextGame> was created without expected prop 'toAlias'");
+    		}
+
+    		if (/*toInitials*/ ctx[5] === undefined && !('toInitials' in props)) {
+    			console.warn("<NextGame> was created without expected prop 'toInitials'");
+    		}
+
+    		if (/*switchTeam*/ ctx[6] === undefined && !('switchTeam' in props)) {
+    			console.warn("<NextGame> was created without expected prop 'switchTeam'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<NextGame>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<NextGame>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get currentMatchday() {
+    		throw new Error("<NextGame>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set currentMatchday(value) {
+    		throw new Error("<NextGame>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<NextGame>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<NextGame>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get showBadge() {
+    		throw new Error("<NextGame>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set showBadge(value) {
+    		throw new Error("<NextGame>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get toAlias() {
+    		throw new Error("<NextGame>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set toAlias(value) {
+    		throw new Error("<NextGame>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get toInitials() {
+    		throw new Error("<NextGame>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set toInitials(value) {
+    		throw new Error("<NextGame>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get switchTeam() {
+    		throw new Error("<NextGame>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set switchTeam(value) {
+    		throw new Error("<NextGame>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\goals_scored_and_conceded\StatsValues.svelte generated by Svelte v3.49.0 */
+
+    const { Object: Object_1$9 } = globals;
+    const file$i = "src\\components\\goals_scored_and_conceded\\StatsValues.svelte";
+
+    // (131:0) {#if stats != undefined}
+    function create_if_block$7(ctx) {
+    	let div18;
+    	let div5;
+    	let div3;
+    	let div0;
+    	let t0_value = /*rank*/ ctx[2].xG + "";
+    	let t0;
+    	let t1;
+    	let div1;
+    	let t2_value = /*stats*/ ctx[1][/*team*/ ctx[0]].xG.toFixed(2) + "";
+    	let t2;
+    	let t3;
+    	let div2;
+    	let t4_value = /*rank*/ ctx[2].xG + "";
+    	let t4;
+    	let div2_class_value;
+    	let t5;
+    	let div4;
+    	let t6;
+    	let t7;
+    	let div11;
+    	let div9;
+    	let div6;
+    	let t8_value = /*rank*/ ctx[2].xC + "";
+    	let t8;
+    	let t9;
+    	let div7;
+    	let t10_value = /*stats*/ ctx[1][/*team*/ ctx[0]].xC.toFixed(2) + "";
+    	let t10;
+    	let t11;
+    	let div8;
+    	let t12_value = /*rank*/ ctx[2].xC + "";
+    	let t12;
+    	let div8_class_value;
+    	let t13;
+    	let div10;
+    	let t14;
+    	let t15;
+    	let div17;
+    	let div15;
+    	let div12;
+    	let t16_value = /*rank*/ ctx[2].cleanSheetRatio + "";
+    	let t16;
+    	let t17;
+    	let div13;
+    	let t18_value = /*stats*/ ctx[1][/*team*/ ctx[0]].cleanSheetRatio.toFixed(2) + "";
+    	let t18;
+    	let t19;
+    	let div14;
+    	let t20_value = /*rank*/ ctx[2].cleanSheetRatio + "";
+    	let t20;
+    	let div14_class_value;
+    	let t21;
+    	let div16;
+    	let t22;
+
+    	const block = {
+    		c: function create() {
+    			div18 = element("div");
+    			div5 = element("div");
+    			div3 = element("div");
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			div1 = element("div");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			div2 = element("div");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			div4 = element("div");
+    			t6 = text("goals per game");
+    			t7 = space();
+    			div11 = element("div");
+    			div9 = element("div");
+    			div6 = element("div");
+    			t8 = text(t8_value);
+    			t9 = space();
+    			div7 = element("div");
+    			t10 = text(t10_value);
+    			t11 = space();
+    			div8 = element("div");
+    			t12 = text(t12_value);
+    			t13 = space();
+    			div10 = element("div");
+    			t14 = text("conceded per game");
+    			t15 = space();
+    			div17 = element("div");
+    			div15 = element("div");
+    			div12 = element("div");
+    			t16 = text(t16_value);
+    			t17 = space();
+    			div13 = element("div");
+    			t18 = text(t18_value);
+    			t19 = space();
+    			div14 = element("div");
+    			t20 = text(t20_value);
+    			t21 = space();
+    			div16 = element("div");
+    			t22 = text("clean sheets");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div18 = claim_element(nodes, "DIV", { class: true });
+    			var div18_nodes = children(div18);
+    			div5 = claim_element(div18_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div3 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			div0 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, t0_value);
+    			div0_nodes.forEach(detach_dev);
+    			t1 = claim_space(div3_nodes);
+    			div1 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t2 = claim_text(div1_nodes, t2_value);
+    			div1_nodes.forEach(detach_dev);
+    			t3 = claim_space(div3_nodes);
+    			div2 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t4 = claim_text(div2_nodes, t4_value);
+    			div2_nodes.forEach(detach_dev);
+    			div3_nodes.forEach(detach_dev);
+    			t5 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			t6 = claim_text(div4_nodes, "goals per game");
+    			div4_nodes.forEach(detach_dev);
+    			div5_nodes.forEach(detach_dev);
+    			t7 = claim_space(div18_nodes);
+    			div11 = claim_element(div18_nodes, "DIV", { class: true });
+    			var div11_nodes = children(div11);
+    			div9 = claim_element(div11_nodes, "DIV", { class: true });
+    			var div9_nodes = children(div9);
+    			div6 = claim_element(div9_nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			t8 = claim_text(div6_nodes, t8_value);
+    			div6_nodes.forEach(detach_dev);
+    			t9 = claim_space(div9_nodes);
+    			div7 = claim_element(div9_nodes, "DIV", { class: true });
+    			var div7_nodes = children(div7);
+    			t10 = claim_text(div7_nodes, t10_value);
+    			div7_nodes.forEach(detach_dev);
+    			t11 = claim_space(div9_nodes);
+    			div8 = claim_element(div9_nodes, "DIV", { class: true });
+    			var div8_nodes = children(div8);
+    			t12 = claim_text(div8_nodes, t12_value);
+    			div8_nodes.forEach(detach_dev);
+    			div9_nodes.forEach(detach_dev);
+    			t13 = claim_space(div11_nodes);
+    			div10 = claim_element(div11_nodes, "DIV", { class: true });
+    			var div10_nodes = children(div10);
+    			t14 = claim_text(div10_nodes, "conceded per game");
+    			div10_nodes.forEach(detach_dev);
+    			div11_nodes.forEach(detach_dev);
+    			t15 = claim_space(div18_nodes);
+    			div17 = claim_element(div18_nodes, "DIV", { class: true });
+    			var div17_nodes = children(div17);
+    			div15 = claim_element(div17_nodes, "DIV", { class: true });
+    			var div15_nodes = children(div15);
+    			div12 = claim_element(div15_nodes, "DIV", { class: true });
+    			var div12_nodes = children(div12);
+    			t16 = claim_text(div12_nodes, t16_value);
+    			div12_nodes.forEach(detach_dev);
+    			t17 = claim_space(div15_nodes);
+    			div13 = claim_element(div15_nodes, "DIV", { class: true });
+    			var div13_nodes = children(div13);
+    			t18 = claim_text(div13_nodes, t18_value);
+    			div13_nodes.forEach(detach_dev);
+    			t19 = claim_space(div15_nodes);
+    			div14 = claim_element(div15_nodes, "DIV", { class: true });
+    			var div14_nodes = children(div14);
+    			t20 = claim_text(div14_nodes, t20_value);
+    			div14_nodes.forEach(detach_dev);
+    			div15_nodes.forEach(detach_dev);
+    			t21 = claim_space(div17_nodes);
+    			div16 = claim_element(div17_nodes, "DIV", { class: true });
+    			var div16_nodes = children(div16);
+    			t22 = claim_text(div16_nodes, "clean sheets");
+    			div16_nodes.forEach(detach_dev);
+    			div17_nodes.forEach(detach_dev);
+    			div18_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "season-stat-position hidden svelte-1wquk6c");
+    			add_location(div0, file$i, 134, 8, 4175);
+    			attr_dev(div1, "class", "season-stat-number");
+    			add_location(div1, file$i, 137, 8, 4263);
+    			attr_dev(div2, "class", div2_class_value = "season-stat-position ssp-" + /*rank*/ ctx[2].xG + " svelte-1wquk6c");
+    			add_location(div2, file$i, 140, 8, 4360);
+    			attr_dev(div3, "class", "season-stat-value svelte-1wquk6c");
+    			add_location(div3, file$i, 133, 6, 4134);
+    			attr_dev(div4, "class", "season-stat-text svelte-1wquk6c");
+    			add_location(div4, file$i, 144, 6, 4467);
+    			attr_dev(div5, "class", "season-stat goals-per-game svelte-1wquk6c");
+    			add_location(div5, file$i, 132, 4, 4086);
+    			attr_dev(div6, "class", "season-stat-position hidden svelte-1wquk6c");
+    			add_location(div6, file$i, 148, 8, 4627);
+    			attr_dev(div7, "class", "season-stat-number");
+    			add_location(div7, file$i, 151, 8, 4715);
+    			attr_dev(div8, "class", div8_class_value = "season-stat-position ssp-" + /*rank*/ ctx[2].xC + " svelte-1wquk6c");
+    			add_location(div8, file$i, 154, 8, 4812);
+    			attr_dev(div9, "class", "season-stat-value svelte-1wquk6c");
+    			add_location(div9, file$i, 147, 6, 4586);
+    			attr_dev(div10, "class", "season-stat-text svelte-1wquk6c");
+    			add_location(div10, file$i, 158, 6, 4919);
+    			attr_dev(div11, "class", "season-stat conceded-per-game svelte-1wquk6c");
+    			add_location(div11, file$i, 146, 4, 4535);
+    			attr_dev(div12, "class", "season-stat-position hidden svelte-1wquk6c");
+    			add_location(div12, file$i, 162, 8, 5082);
+    			attr_dev(div13, "class", "season-stat-number");
+    			add_location(div13, file$i, 165, 8, 5183);
+    			attr_dev(div14, "class", div14_class_value = "season-stat-position ssp-" + /*rank*/ ctx[2].cleanSheetRatio + " svelte-1wquk6c");
+    			add_location(div14, file$i, 168, 8, 5293);
+    			attr_dev(div15, "class", "season-stat-value svelte-1wquk6c");
+    			add_location(div15, file$i, 161, 6, 5041);
+    			attr_dev(div16, "class", "season-stat-text svelte-1wquk6c");
+    			add_location(div16, file$i, 172, 6, 5426);
+    			attr_dev(div17, "class", "season-stat clean-sheet-ratio svelte-1wquk6c");
+    			add_location(div17, file$i, 160, 4, 4990);
+    			attr_dev(div18, "class", "season-stats svelte-1wquk6c");
+    			add_location(div18, file$i, 131, 2, 4054);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div18, anchor);
+    			append_hydration_dev(div18, div5);
+    			append_hydration_dev(div5, div3);
+    			append_hydration_dev(div3, div0);
+    			append_hydration_dev(div0, t0);
+    			append_hydration_dev(div3, t1);
+    			append_hydration_dev(div3, div1);
+    			append_hydration_dev(div1, t2);
+    			append_hydration_dev(div3, t3);
+    			append_hydration_dev(div3, div2);
+    			append_hydration_dev(div2, t4);
+    			append_hydration_dev(div5, t5);
+    			append_hydration_dev(div5, div4);
+    			append_hydration_dev(div4, t6);
+    			append_hydration_dev(div18, t7);
+    			append_hydration_dev(div18, div11);
+    			append_hydration_dev(div11, div9);
+    			append_hydration_dev(div9, div6);
+    			append_hydration_dev(div6, t8);
+    			append_hydration_dev(div9, t9);
+    			append_hydration_dev(div9, div7);
+    			append_hydration_dev(div7, t10);
+    			append_hydration_dev(div9, t11);
+    			append_hydration_dev(div9, div8);
+    			append_hydration_dev(div8, t12);
+    			append_hydration_dev(div11, t13);
+    			append_hydration_dev(div11, div10);
+    			append_hydration_dev(div10, t14);
+    			append_hydration_dev(div18, t15);
+    			append_hydration_dev(div18, div17);
+    			append_hydration_dev(div17, div15);
+    			append_hydration_dev(div15, div12);
+    			append_hydration_dev(div12, t16);
+    			append_hydration_dev(div15, t17);
+    			append_hydration_dev(div15, div13);
+    			append_hydration_dev(div13, t18);
+    			append_hydration_dev(div15, t19);
+    			append_hydration_dev(div15, div14);
+    			append_hydration_dev(div14, t20);
+    			append_hydration_dev(div17, t21);
+    			append_hydration_dev(div17, div16);
+    			append_hydration_dev(div16, t22);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*rank*/ 4 && t0_value !== (t0_value = /*rank*/ ctx[2].xG + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*stats, team*/ 3 && t2_value !== (t2_value = /*stats*/ ctx[1][/*team*/ ctx[0]].xG.toFixed(2) + "")) set_data_dev(t2, t2_value);
+    			if (dirty & /*rank*/ 4 && t4_value !== (t4_value = /*rank*/ ctx[2].xG + "")) set_data_dev(t4, t4_value);
+
+    			if (dirty & /*rank*/ 4 && div2_class_value !== (div2_class_value = "season-stat-position ssp-" + /*rank*/ ctx[2].xG + " svelte-1wquk6c")) {
+    				attr_dev(div2, "class", div2_class_value);
+    			}
+
+    			if (dirty & /*rank*/ 4 && t8_value !== (t8_value = /*rank*/ ctx[2].xC + "")) set_data_dev(t8, t8_value);
+    			if (dirty & /*stats, team*/ 3 && t10_value !== (t10_value = /*stats*/ ctx[1][/*team*/ ctx[0]].xC.toFixed(2) + "")) set_data_dev(t10, t10_value);
+    			if (dirty & /*rank*/ 4 && t12_value !== (t12_value = /*rank*/ ctx[2].xC + "")) set_data_dev(t12, t12_value);
+
+    			if (dirty & /*rank*/ 4 && div8_class_value !== (div8_class_value = "season-stat-position ssp-" + /*rank*/ ctx[2].xC + " svelte-1wquk6c")) {
+    				attr_dev(div8, "class", div8_class_value);
+    			}
+
+    			if (dirty & /*rank*/ 4 && t16_value !== (t16_value = /*rank*/ ctx[2].cleanSheetRatio + "")) set_data_dev(t16, t16_value);
+    			if (dirty & /*stats, team*/ 3 && t18_value !== (t18_value = /*stats*/ ctx[1][/*team*/ ctx[0]].cleanSheetRatio.toFixed(2) + "")) set_data_dev(t18, t18_value);
+    			if (dirty & /*rank*/ 4 && t20_value !== (t20_value = /*rank*/ ctx[2].cleanSheetRatio + "")) set_data_dev(t20, t20_value);
+
+    			if (dirty & /*rank*/ 4 && div14_class_value !== (div14_class_value = "season-stat-position ssp-" + /*rank*/ ctx[2].cleanSheetRatio + " svelte-1wquk6c")) {
+    				attr_dev(div14, "class", div14_class_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div18);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$7.name,
+    		type: "if",
+    		source: "(131:0) {#if stats != undefined}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$j(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*stats*/ ctx[1] != undefined && create_if_block$7(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*stats*/ ctx[1] != undefined) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$7(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$j.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function ordinal(n) {
+    	let ord = [,"st", "nd", "rd"];
+    	let a = n % 100;
+    	return n + (ord[a > 20 ? a % 10 : a] || "th");
+    }
+
+    function getStatsRank(seasonStats, attribute, team, reverse) {
+    	let sorted = Object.keys(seasonStats).sort(function (team1, team2) {
+    		return seasonStats[team2][attribute] - seasonStats[team1][attribute];
+    	});
+
+    	let rank = sorted.indexOf(team) + 1;
+
+    	if (reverse) {
+    		rank = 21 - rank;
+    	}
+
+    	return rank;
+    }
+
+    function getStatsRankings(seasonStats, team) {
+    	let xGRank = ordinal(getStatsRank(seasonStats, "xG", team, false));
+
+    	// Reverse - lower rank the better
+    	let xCRank = ordinal(getStatsRank(seasonStats, "xC", team, true));
+
+    	let cleanSheetRatioRank = ordinal(getStatsRank(seasonStats, "cleanSheetRatio", team, false));
+
+    	return {
+    		xG: xGRank,
+    		xC: xCRank,
+    		cleanSheetRatio: cleanSheetRatioRank
+    	};
+    }
+
+    // window.addEventListener("resize", setPositionalOffset);
+    function isCleanSheet(h, a, atHome) {
+    	return a == 0 && atHome || h == 0 && !atHome;
+    }
+
+    function goalsScored(h, a, atHome) {
+    	if (atHome) {
+    		return h;
+    	} else {
+    		return a;
+    	}
+    }
+
+    function goalsConceded(h, a, atHome) {
+    	if (atHome) {
+    		return a;
+    	} else {
+    		return h;
+    	}
+    }
+
+    function notScored(h, a, atHome) {
+    	return h == 0 && atHome || a == 0 && !atHome;
+    }
+
+    function countOccurances(data, seasonStats, team, season) {
+    	if (!(team in data.form)) {
+    		return;
+    	}
+
+    	for (let matchday of Object.keys(data.form[team][season])) {
+    		let score = data.form[team][season][matchday].score;
+
+    		if (score != null) {
+    			let [h, _, a] = score.split(" ");
+    			h = parseInt(h);
+    			a = parseInt(a);
+    			let atHome = data.form[team][season][matchday].atHome;
+
+    			if (isCleanSheet(h, a, atHome)) {
+    				seasonStats[team].cleanSheetRatio += 1;
+    			}
+
+    			if (notScored(h, a, atHome)) {
+    				seasonStats[team].noGoalRatio += 1;
+    			}
+
+    			seasonStats[team].xG += goalsScored(h, a, atHome);
+    			seasonStats[team].xC += goalsConceded(h, a, atHome);
+    			seasonStats[team].played += 1;
+    		}
+    	}
+    }
+
+    function buildStats(data) {
+    	let stats = {};
+
+    	for (let team of Object.keys(data.standings)) {
+    		stats[team] = {
+    			cleanSheetRatio: 0,
+    			noGoalRatio: 0,
+    			xC: 0,
+    			xG: 0,
+    			played: 0
+    		};
+
+    		countOccurances(data, stats, team, data._id);
+    		countOccurances(data, stats, team, data._id - 1);
+
+    		if (stats[team].played > 0) {
+    			stats[team].xG /= stats[team].played;
+    			stats[team].xC /= stats[team].played;
+    			stats[team].cleanSheetRatio /= stats[team].played;
+    			stats[team].noGoalRatio /= stats[team].played;
+    		}
+    	}
+
+    	return stats;
+    }
+
+    function instance$j($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('StatsValues', slots, []);
+
+    	function setStatsValues(seasonStats, team) {
+    		$$invalidate(2, rank = getStatsRankings(seasonStats, team));
+    	} // Keep ordinal values at the correct offset
+    	// Once rank values have updated, init positional offset for ordinal values
+
+    	function refreshStatsValues() {
+    		if (setup) {
+    			setStatsValues(stats, team);
+    		}
+    	}
+
+    	let stats;
+    	let rank = { xG: "", xC: "", cleanSheetRatio: "" };
+    	let setup = false;
+
+    	onMount(() => {
+    		$$invalidate(1, stats = buildStats(data));
+    		setStatsValues(stats, team);
+    		setup = true;
+    	});
+
+    	let { data, team } = $$props;
+    	const writable_props = ['data', 'team'];
+
+    	Object_1$9.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<StatsValues> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(3, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		ordinal,
+    		getStatsRank,
+    		getStatsRankings,
+    		setStatsValues,
+    		isCleanSheet,
+    		goalsScored,
+    		goalsConceded,
+    		notScored,
+    		countOccurances,
+    		buildStats,
+    		refreshStatsValues,
+    		stats,
+    		rank,
+    		setup,
+    		data,
+    		team
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('stats' in $$props) $$invalidate(1, stats = $$props.stats);
+    		if ('rank' in $$props) $$invalidate(2, rank = $$props.rank);
+    		if ('setup' in $$props) setup = $$props.setup;
+    		if ('data' in $$props) $$invalidate(3, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 1) {
+    			team && refreshStatsValues();
+    		}
+    	};
+
+    	return [team, stats, rank, data];
+    }
+
+    class StatsValues extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$j, create_fragment$j, safe_not_equal, { data: 3, team: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "StatsValues",
+    			options,
+    			id: create_fragment$j.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[3] === undefined && !('data' in props)) {
+    			console.warn("<StatsValues> was created without expected prop 'data'");
+    		}
+
+    		if (/*team*/ ctx[0] === undefined && !('team' in props)) {
+    			console.warn("<StatsValues> was created without expected prop 'team'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<StatsValues>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<StatsValues>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<StatsValues>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<StatsValues>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\TeamsFooter.svelte generated by Svelte v3.49.0 */
+
+    const file$h = "src\\components\\TeamsFooter.svelte";
+
+    // (6:4) {#if lastUpdated != null}
+    function create_if_block$6(ctx) {
+    	let div;
+    	let t0;
+    	let t1_value = new Date(/*lastUpdated*/ ctx[0]).toLocaleString() + "";
+    	let t1;
+    	let t2;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t0 = text("Last updated: ");
+    			t1 = text(t1_value);
+    			t2 = text(" UTC");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t0 = claim_text(div_nodes, "Last updated: ");
+    			t1 = claim_text(div_nodes, t1_value);
+    			t2 = claim_text(div_nodes, " UTC");
+    			div_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "last-updated svelte-1snjhax");
+    			add_location(div, file$h, 6, 6, 177);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    			append_hydration_dev(div, t0);
+    			append_hydration_dev(div, t1);
+    			append_hydration_dev(div, t2);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*lastUpdated*/ 1 && t1_value !== (t1_value = new Date(/*lastUpdated*/ ctx[0]).toLocaleString() + "")) set_data_dev(t1, t1_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$6.name,
+    		type: "if",
+    		source: "(6:4) {#if lastUpdated != null}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$i(ctx) {
+    	let div2;
+    	let div1;
+    	let t0;
+    	let div0;
+    	let t1;
+    	let if_block = /*lastUpdated*/ ctx[0] != null && create_if_block$6(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div2 = element("div");
+    			div1 = element("div");
+    			if (if_block) if_block.c();
+    			t0 = space();
+    			div0 = element("div");
+    			t1 = text("pldashboard v2.0");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div2 = claim_element(nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			if (if_block) if_block.l(div1_nodes);
+    			t0 = claim_space(div1_nodes);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t1 = claim_text(div0_nodes, "pldashboard v2.0");
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			div2_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "version svelte-1snjhax");
+    			add_location(div0, file$h, 8, 4, 284);
+    			attr_dev(div1, "class", "teams-footer-bottom svelte-1snjhax");
+    			add_location(div1, file$h, 4, 2, 105);
+    			attr_dev(div2, "class", "teams-footer footer-text-colour svelte-1snjhax");
+    			add_location(div2, file$h, 3, 0, 56);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div2, anchor);
+    			append_hydration_dev(div2, div1);
+    			if (if_block) if_block.m(div1, null);
+    			append_hydration_dev(div1, t0);
+    			append_hydration_dev(div1, div0);
+    			append_hydration_dev(div0, t1);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*lastUpdated*/ ctx[0] != null) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$6(ctx);
+    					if_block.c();
+    					if_block.m(div1, t0);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div2);
+    			if (if_block) if_block.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$i.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$i($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('TeamsFooter', slots, []);
+    	let { lastUpdated } = $$props;
+    	const writable_props = ['lastUpdated'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<TeamsFooter> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('lastUpdated' in $$props) $$invalidate(0, lastUpdated = $$props.lastUpdated);
+    	};
+
+    	$$self.$capture_state = () => ({ lastUpdated });
+
+    	$$self.$inject_state = $$props => {
+    		if ('lastUpdated' in $$props) $$invalidate(0, lastUpdated = $$props.lastUpdated);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [lastUpdated];
+    }
+
+    class TeamsFooter extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$i, create_fragment$i, safe_not_equal, { lastUpdated: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "TeamsFooter",
+    			options,
+    			id: create_fragment$i.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*lastUpdated*/ ctx[0] === undefined && !('lastUpdated' in props)) {
+    			console.warn("<TeamsFooter> was created without expected prop 'lastUpdated'");
+    		}
+    	}
+
+    	get lastUpdated() {
+    		throw new Error("<TeamsFooter>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set lastUpdated(value) {
+    		throw new Error("<TeamsFooter>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\FixturesGraph.svelte generated by Svelte v3.49.0 */
+    const file$g = "src\\components\\FixturesGraph.svelte";
+
+    function create_fragment$h(ctx) {
+    	let div1;
+    	let div0;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "id", "plotDiv");
+    			add_location(div0, file$g, 255, 2, 7737);
+    			attr_dev(div1, "id", "plotly");
+    			add_location(div1, file$g, 254, 0, 7716);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			/*div0_binding*/ ctx[5](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			/*div0_binding*/ ctx[5](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$h.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function getMatchDetail(match) {
+    	let matchDetail;
+    	let homeAway = match.atHome ? "Home" : "Away";
+
+    	if (match.score != null) {
+    		matchDetail = `${match.team} (${homeAway}) ${match.score}`;
+    	} else {
+    		matchDetail = `${match.team} (${homeAway})`;
+    	}
+
+    	return matchDetail;
+    }
+
+    function sortByMatchDate(x, y, details) {
+    	let list = [];
+
+    	for (let i = 0; i < x.length; i++) {
+    		list.push({ x: x[i], y: y[i], details: details[i] });
+    	}
+
+    	list.sort(function (a, b) {
+    		return a.x < b.x ? -1 : a.x == b.x ? 0 : 1;
+    	});
+
+    	for (let i = 0; i < list.length; i++) {
+    		x[i] = list[i].x;
+    		y[i] = list[i].y;
+    		details[i] = list[i].details;
+    	}
+    }
+
+    function increaseNextGameMarker(sizes, x, now, bigMarkerSize) {
+    	// Get matchday date with smallest time difference to now
+    	let nextGameIdx;
+
+    	let minDiff = Number.POSITIVE_INFINITY;
+
+    	for (let i = 0; i < x.length; i++) {
+    		//@ts-ignore
+    		let diff = x[i] - now;
+
+    		if (0 < diff && diff < minDiff) {
+    			minDiff = diff;
+    			nextGameIdx = i;
+    		}
+    	}
+
+    	// Increase marker size of next game
+    	if (nextGameIdx != undefined) {
+    		sizes[nextGameIdx] = bigMarkerSize;
+    	}
+
+    	return sizes;
+    }
+
+    function linePoints(data, team) {
+    	let x = [];
+    	let y = [];
+    	let details = [];
+
+    	for (let matchday = 1; matchday <= 38; matchday++) {
+    		let match = data.fixtures[team][matchday];
+    		x.push(new Date(match.date));
+    		let oppTeamRating = data.teamRatings[match.team].totalRating;
+
+    		if (match.atHome) {
+    			// If team playing at home, decrease opposition rating by the amount of home advantage the team gains
+    			oppTeamRating *= 1 - data.homeAdvantages[match.team].totalHomeAdvantage;
+    		}
+
+    		y.push(oppTeamRating * 100);
+    		let matchDetail = getMatchDetail(match);
+    		details.push(matchDetail);
+    	}
+
+    	return [x, y, details];
+    }
+
+    function line(data, team, now) {
+    	let [x, y, details] = linePoints(data, team);
+    	sortByMatchDate(x, y, details);
+    	let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
+    	let sizes = Array(x.length).fill(13);
+    	sizes = increaseNextGameMarker(sizes, x, now, 26);
+
+    	return {
+    		x,
+    		y,
+    		type: "scatter",
+    		mode: "lines+markers",
+    		text: details,
+    		line: { color: "#737373" },
+    		marker: {
+    			size: sizes,
+    			colorscale: [[0, "#00fe87"], [0.5, "#f3f3f3"], [1, "#f83027"]],
+    			color: y,
+    			opacity: 1,
+    			line: { width: 1 }
+    		},
+    		customdata: matchdays,
+    		hovertemplate: "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>"
+    	};
+    }
+
+    function nowLine(now, maxX) {
+    	let nowLine = {};
+
+    	if (now <= maxX) {
+    		// Vertical line shapw marking current day
+    		nowLine = {
+    			type: "line",
+    			x0: now,
+    			y0: -4,
+    			x1: now,
+    			y1: 104,
+    			line: { color: "black", dash: "dot", width: 1 }
+    		};
+    	}
+
+    	return nowLine;
+    }
+
+    function xRange(x) {
+    	let minX = new Date(x[0]);
+    	minX.setDate(minX.getDate() - 7);
+    	let maxX = new Date(x[x.length - 1]);
+    	maxX.setDate(maxX.getDate() + 7);
+    	return [minX, maxX];
+    }
+
+    function defaultLayout$4(x, now) {
+    	let yLabels = Array.from(Array(11), (_, i) => i * 10);
+    	let [minX, maxX] = xRange(x);
+
+    	return {
+    		title: false,
+    		autosize: true,
+    		margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
+    		hovermode: "closest",
+    		plot_bgcolor: "#fafafa",
+    		paper_bgcolor: "#fafafa",
+    		yaxis: {
+    			title: { text: "Team rating" },
+    			gridcolor: "#d6d6d6",
+    			showline: false,
+    			zeroline: false,
+    			fixedrange: true,
+    			ticktext: yLabels,
+    			tickvals: yLabels
+    		},
+    		xaxis: {
+    			linecolor: "black",
+    			showgrid: false,
+    			showline: false,
+    			range: [minX, maxX],
+    			fixedrange: true
+    		},
+    		//@ts-ignore
+    		shapes: [nowLine(now, maxX)],
+    		dragmode: false
+    	};
+    }
+
+    function buildPlotData$1(data, team) {
+    	// Build data to create a fixtures line graph displaying the date along the
+    	// x-axis and opponent strength along the y-axis
+    	let now = Date.now();
+
+    	let l = line(data, team, now);
+
+    	let plotData = {
+    		data: [l],
+    		layout: defaultLayout$4(l.x, now),
+    		config: {
+    			responsive: true,
+    			showSendToCloud: false,
+    			displayModeBar: false
+    		}
+    	};
+
+    	return plotData;
+    }
+
+    function instance$h($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('FixturesGraph', slots, []);
+
+    	function setDefaultLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": { text: "Team rating" },
+    				"margin.l": 60,
+    				"yaxis.color": "black"
+    			};
+
+    			let sizes = plotData.data[0].marker.size;
+
+    			for (let i = 0; i < sizes.length; i++) {
+    				sizes[i] = Math.round(sizes[i] * 1.7);
+    			}
+
+    			let dataUpdate = {
+    				marker: {
+    					size: sizes,
+    					colorscale: [[0, "#00fe87"], [0.5, "#f3f3f3"], [1, "#f83027"]],
+    					color: plotData.data[0].y,
+    					opacity: 1,
+    					line: { width: 1 }
+    				}
+    			};
+
+    			plotData.data[0].marker.size = sizes;
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+    		}
+    	}
+
+    	function setMobileLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": null,
+    				"margin.l": 20,
+    				"yaxis.color": "#fafafa"
+    			};
+
+    			let sizes = plotData.data[0].marker.size;
+
+    			for (let i = 0; i < sizes.length; i++) {
+    				sizes[i] = Math.round(sizes[i] / 1.7);
+    			}
+
+    			let dataUpdate = {
+    				marker: {
+    					size: sizes,
+    					colorscale: [[0, "#00fe87"], [0.5, "#f3f3f3"], [1, "#f83027"]],
+    					color: plotData.data[0].y,
+    					opacity: 1,
+    					line: { width: 1 }
+    				}
+    			};
+
+    			plotData.data[0].marker.size = sizes;
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+    		}
+    	}
+
+    	function genPlot() {
+    		plotData = buildPlotData$1(data, team);
+
+    		//@ts-ignore
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let l = line(data, team, Date.now());
+    			plotData.data[0] = l; // Overwrite plot data
+
+    			//@ts-ignore
+    			Plotly.redraw(plotDiv);
+
+    			if (mobileView) {
+    				setMobileLayout();
+    			}
+    		}
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		$$invalidate(4, setup = true);
+    	});
+
+    	let { data, team, mobileView } = $$props;
+    	const writable_props = ['data', 'team', 'mobileView'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<FixturesGraph> was created with unknown prop '${key}'`);
+    	});
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('mobileView' in $$props) $$invalidate(3, mobileView = $$props.mobileView);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		getMatchDetail,
+    		sortByMatchDate,
+    		increaseNextGameMarker,
+    		linePoints,
+    		line,
+    		nowLine,
+    		xRange,
+    		defaultLayout: defaultLayout$4,
+    		setDefaultLayout,
+    		setMobileLayout,
+    		buildPlotData: buildPlotData$1,
+    		genPlot,
+    		refreshPlot,
+    		plotDiv,
+    		plotData,
+    		setup,
+    		data,
+    		team,
+    		mobileView
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('plotDiv' in $$props) $$invalidate(0, plotDiv = $$props.plotDiv);
+    		if ('plotData' in $$props) plotData = $$props.plotData;
+    		if ('setup' in $$props) $$invalidate(4, setup = $$props.setup);
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('mobileView' in $$props) $$invalidate(3, mobileView = $$props.mobileView);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && refreshPlot();
+    		}
+
+    		if ($$self.$$.dirty & /*mobileView*/ 8) {
+    			!mobileView && setDefaultLayout();
+    		}
+
+    		if ($$self.$$.dirty & /*setup, mobileView*/ 24) {
+    			setup && mobileView && setMobileLayout();
+    		}
+    	};
+
+    	return [plotDiv, data, team, mobileView, setup, div0_binding];
+    }
+
+    class FixturesGraph extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$h, create_fragment$h, safe_not_equal, { data: 1, team: 2, mobileView: 3 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "FixturesGraph",
+    			options,
+    			id: create_fragment$h.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[1] === undefined && !('data' in props)) {
+    			console.warn("<FixturesGraph> was created without expected prop 'data'");
+    		}
+
+    		if (/*team*/ ctx[2] === undefined && !('team' in props)) {
+    			console.warn("<FixturesGraph> was created without expected prop 'team'");
+    		}
+
+    		if (/*mobileView*/ ctx[3] === undefined && !('mobileView' in props)) {
+    			console.warn("<FixturesGraph> was created without expected prop 'mobileView'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<FixturesGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<FixturesGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<FixturesGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<FixturesGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get mobileView() {
+    		throw new Error("<FixturesGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set mobileView(value) {
+    		throw new Error("<FixturesGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\FormOverTimeGraph.svelte generated by Svelte v3.49.0 */
+
+    const { Object: Object_1$8 } = globals;
+    const file$f = "src\\components\\FormOverTimeGraph.svelte";
+
+    function create_fragment$g(ctx) {
+    	let div1;
+    	let div0;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "id", "plotDiv");
+    			add_location(div0, file$f, 157, 2, 4809);
+    			attr_dev(div1, "id", "plotly");
+    			add_location(div1, file$f, 156, 0, 4788);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			/*div0_binding*/ ctx[6](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			/*div0_binding*/ ctx[6](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$g.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function getFormLine(data, team, isMainTeam) {
+    	let playedDates = [];
+    	let matchdays = [];
+
+    	for (let matchday in data.form[team][data._id]) {
+    		if (data.form[team][data._id][matchday].score != null) {
+    			matchdays.push(matchday);
+    			playedDates.push(new Date(data.form[team][data._id][matchday].date));
+    		}
+    	}
+
+    	let y = [];
+
+    	for (let matchday of matchdays) {
+    		let form = data.form[team][data._id][matchday].formRating5;
+    		y.push(form * 100);
+    	}
+
+    	let lineVal;
+
+    	if (isMainTeam) {
+    		// Get team primary colour from css variable
+    		let teamKey = team[0].toLowerCase() + team.slice(1);
+
+    		teamKey = teamKey.replace(/ /g, "-").toLowerCase();
+    		let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
+    		lineVal = { color: lineColor, width: 4 };
+    	} else {
+    		lineVal = { color: "#d3d3d3" };
+    	}
+
+    	let line = {
+    		x: playedDates,
+    		y,
+    		name: team,
+    		mode: "lines",
+    		line: lineVal,
+    		text: matchdays,
+    		hovertemplate: `<b>${team}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
+    		showlegend: false
+    	};
+
+    	return line;
+    }
+
+    function lines$2(data, team) {
+    	let lines = [];
+    	let teams = Object.keys(data.standings);
+
+    	for (let i = 0; i < teams.length; i++) {
+    		if (teams[i] != team) {
+    			let line = getFormLine(data, teams[i], false);
+    			lines.push(line);
+    		}
+    	}
+
+    	// Add this team last to ensure it overlaps all other lines
+    	let line = getFormLine(data, team, true);
+
+    	lines.push(line);
+    	return lines;
+    }
+
+    function instance$g($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('FormOverTimeGraph', slots, []);
+
+    	function defaultLayout() {
+    		let yLabels = Array.from(Array(11), (_, i) => i * 10);
+
+    		return {
+    			title: false,
+    			autosize: true,
+    			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+    			hovermode: "closest",
+    			plot_bgcolor: "#fafafa",
+    			paper_bgcolor: "#fafafa",
+    			yaxis: {
+    				title: { text: "Form rating" },
+    				gridcolor: "gray",
+    				showgrid: false,
+    				showline: false,
+    				zeroline: false,
+    				fixedrange: true,
+    				ticktext: yLabels,
+    				tickvals: yLabels,
+    				range: [-1, 101]
+    			},
+    			xaxis: {
+    				linecolor: "black",
+    				showgrid: false,
+    				showline: false,
+    				fixedrange: true,
+    				range: [playedMatchdays[0], playedMatchdays[playedMatchdays.length - 1]]
+    			},
+    			dragmode: false
+    		};
+    	}
+
+    	function setDefaultLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": { text: "Form rating" },
+    				"yaxis.visible": true,
+    				"margin.l": 60,
+    				"margin.t": 15
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function setMobileLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": null,
+    				"yaxis.visible": false,
+    				"margin.l": 20,
+    				"margin.t": 5
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function buildPlotData(data, team) {
+    		let plotData = {
+    			data: lines$2(data, team),
+    			layout: defaultLayout(),
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		$$invalidate(5, setup = true);
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData(data, team);
+
+    		//@ts-ignore
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let newPlotData = buildPlotData(data, team);
+
+    			for (let i = 0; i < 20; i++) {
+    				plotData.data[i] = newPlotData.data[i];
+    			}
+
+    			plotData.layout.xaxis.range[0] = playedMatchdays[0];
+    			plotData.layout.xaxis.range[1] = playedMatchdays[playedMatchdays.length - 1];
+
+    			//@ts-ignore
+    			Plotly.redraw(plotDiv);
+
+    			if (mobileView) {
+    				setMobileLayout();
+    			}
+    		}
+    	}
+
+    	let { data, team, playedMatchdays, mobileView } = $$props;
+    	const writable_props = ['data', 'team', 'playedMatchdays', 'mobileView'];
+
+    	Object_1$8.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<FormOverTimeGraph> was created with unknown prop '${key}'`);
+    	});
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
+    		if ('mobileView' in $$props) $$invalidate(4, mobileView = $$props.mobileView);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		getFormLine,
+    		lines: lines$2,
+    		defaultLayout,
+    		setDefaultLayout,
+    		setMobileLayout,
+    		buildPlotData,
+    		plotDiv,
+    		plotData,
+    		setup,
+    		genPlot,
+    		refreshPlot,
+    		data,
+    		team,
+    		playedMatchdays,
+    		mobileView
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('plotDiv' in $$props) $$invalidate(0, plotDiv = $$props.plotDiv);
+    		if ('plotData' in $$props) plotData = $$props.plotData;
+    		if ('setup' in $$props) $$invalidate(5, setup = $$props.setup);
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
+    		if ('mobileView' in $$props) $$invalidate(4, mobileView = $$props.mobileView);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && refreshPlot();
+    		}
+
+    		if ($$self.$$.dirty & /*mobileView*/ 16) {
+    			!mobileView && setDefaultLayout();
+    		}
+
+    		if ($$self.$$.dirty & /*setup, mobileView*/ 48) {
+    			setup && mobileView && setMobileLayout();
+    		}
+    	};
+
+    	return [plotDiv, data, team, playedMatchdays, mobileView, setup, div0_binding];
+    }
+
+    class FormOverTimeGraph extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$g, create_fragment$g, safe_not_equal, {
+    			data: 1,
+    			team: 2,
+    			playedMatchdays: 3,
+    			mobileView: 4
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "FormOverTimeGraph",
+    			options,
+    			id: create_fragment$g.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[1] === undefined && !('data' in props)) {
+    			console.warn("<FormOverTimeGraph> was created without expected prop 'data'");
+    		}
+
+    		if (/*team*/ ctx[2] === undefined && !('team' in props)) {
+    			console.warn("<FormOverTimeGraph> was created without expected prop 'team'");
+    		}
+
+    		if (/*playedMatchdays*/ ctx[3] === undefined && !('playedMatchdays' in props)) {
+    			console.warn("<FormOverTimeGraph> was created without expected prop 'playedMatchdays'");
+    		}
+
+    		if (/*mobileView*/ ctx[4] === undefined && !('mobileView' in props)) {
+    			console.warn("<FormOverTimeGraph> was created without expected prop 'mobileView'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<FormOverTimeGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<FormOverTimeGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<FormOverTimeGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<FormOverTimeGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get playedMatchdays() {
+    		throw new Error("<FormOverTimeGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set playedMatchdays(value) {
+    		throw new Error("<FormOverTimeGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get mobileView() {
+    		throw new Error("<FormOverTimeGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set mobileView(value) {
+    		throw new Error("<FormOverTimeGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\PositionOverTimeGraph.svelte generated by Svelte v3.49.0 */
+
+    const { Object: Object_1$7 } = globals;
+    const file$e = "src\\components\\PositionOverTimeGraph.svelte";
+
+    function create_fragment$f(ctx) {
+    	let div1;
+    	let div0;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "id", "plotDiv");
+    			add_location(div0, file$e, 203, 2, 6068);
+    			attr_dev(div1, "id", "plotly");
+    			add_location(div1, file$e, 202, 0, 6047);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			/*div0_binding*/ ctx[6](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			/*div0_binding*/ ctx[6](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$f.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function getLineConfig(team, isMainTeam) {
+    	let lineConfig;
+
+    	if (isMainTeam) {
+    		// Get team primary colour from css variable
+    		let teamKey = team[0].toLowerCase() + team.slice(1);
+
+    		teamKey = teamKey.replace(/ /g, "-").toLowerCase();
+    		let lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
+    		lineConfig = { color: lineColor, width: 4 };
+    	} else {
+    		lineConfig = { color: "#d3d3d3" };
+    	}
+
+    	return lineConfig;
+    }
+
+    function getLineY(data, team, matchdays) {
+    	let y = [];
+
+    	for (let matchday of matchdays) {
+    		let position = data.form[team][data._id][matchday].position;
+    		y.push(position);
+    	}
+
+    	return y;
+    }
+
+    function getLine(data, x, team, isMainTeam) {
+    	let matchdays = Object.keys(data.form[team][data._id]);
+    	let y = getLineY(data, team, matchdays);
+    	let lineConfig = getLineConfig(team, isMainTeam);
+
+    	let line = {
+    		x,
+    		y,
+    		name: team,
+    		mode: "lines",
+    		line: lineConfig,
+    		text: matchdays,
+    		hovertemplate: `<b>${team}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
+    		showlegend: false
+    	};
+
+    	return line;
+    }
+
+    function lines$1(data, team, playedMatchdays) {
+    	let lines = [];
+    	let teams = Object.keys(data.standings);
+
+    	for (let i = 0; i < Object.keys(data.standings).length; i++) {
+    		if (teams[i] != team) {
+    			let line = getLine(data, playedMatchdays, teams[i], false);
+    			lines.push(line);
+    		}
+    	}
+
+    	// Add this team last to ensure it overlaps all other lines
+    	let line = getLine(data, playedMatchdays, team, true);
+
+    	lines.push(line);
+    	return lines;
+    }
+
+    function instance$f($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('PositionOverTimeGraph', slots, []);
+
+    	function positionRangeShapes() {
+    		return [
+    			{
+    				type: "rect",
+    				x0: playedMatchdays[0],
+    				y0: 4.5,
+    				x1: playedMatchdays[playedMatchdays.length - 1],
+    				y1: 0.5,
+    				line: { width: 0 },
+    				// fillcolor: "#77DD77",
+    				fillcolor: "#00fe87",
+    				opacity: 0.2,
+    				layer: "below"
+    			},
+    			{
+    				type: "rect",
+    				x0: playedMatchdays[0],
+    				y0: 6.5,
+    				x1: playedMatchdays[playedMatchdays.length - 1],
+    				y1: 4.5,
+    				line: { width: 0 },
+    				// fillcolor: "#4CDEEE",
+    				fillcolor: "#02efff",
+    				opacity: 0.2,
+    				layer: "below"
+    			},
+    			{
+    				type: "rect",
+    				x0: playedMatchdays[0],
+    				y0: 20.5,
+    				x1: playedMatchdays[playedMatchdays.length - 1],
+    				y1: 17.5,
+    				line: { width: 0 },
+    				fillcolor: "#f83027",
+    				// fillcolor: "#C23B22",
+    				opacity: 0.2,
+    				layer: "below"
+    			}
+    		];
+    	}
+
+    	function defaultLayout() {
+    		let yLabels = Array.from(Array(20), (_, i) => i + 1);
+
+    		return {
+    			title: false,
+    			autosize: true,
+    			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+    			hovermode: "closest",
+    			plot_bgcolor: "#fafafa",
+    			paper_bgcolor: "#fafafa",
+    			yaxis: {
+    				title: { text: "Position" },
+    				gridcolor: "gray",
+    				showgrid: false,
+    				showline: false,
+    				zeroline: false,
+    				autorange: "reversed",
+    				fixedrange: true,
+    				ticktext: yLabels,
+    				tickvals: yLabels,
+    				visible: true
+    			},
+    			xaxis: {
+    				linecolor: "black",
+    				showgrid: false,
+    				showline: false,
+    				fixedrange: true
+    			},
+    			shapes: positionRangeShapes(),
+    			dragmode: false
+    		};
+    	}
+
+    	function setDefaultLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				'yaxis.title': { text: 'Position' },
+    				'yaxis.visible': true,
+    				'yaxis.tickvals': Array.from(Array(20), (_, i) => i + 1),
+    				'margin.l': 60,
+    				'margin.t': 15
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function setMobileLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				'yaxis.title': null,
+    				'yaxis.visible': false,
+    				'yaxis.tickvals': Array.from(Array(10), (_, i) => i + 2),
+    				'margin.l': 20,
+    				'margin.t': 5
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function buildPlotData(data, team) {
+    		let plotData = {
+    			data: lines$1(data, team, playedMatchdays),
+    			layout: defaultLayout(),
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		$$invalidate(5, setup = true);
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData(data, team);
+
+    		//@ts-ignore
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let newPlotData = buildPlotData(data, team);
+
+    			for (let i = 0; i < 20; i++) {
+    				plotData.data[i] = newPlotData.data[i];
+    			}
+
+    			plotData.layout.shapes = positionRangeShapes();
+
+    			//@ts-ignore
+    			Plotly.redraw(plotDiv);
+
+    			if (mobileView) {
+    				setMobileLayout();
+    			}
+    		}
+    	}
+
+    	let { data, team, playedMatchdays, mobileView } = $$props;
+    	const writable_props = ['data', 'team', 'playedMatchdays', 'mobileView'];
+
+    	Object_1$7.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<PositionOverTimeGraph> was created with unknown prop '${key}'`);
+    	});
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
+    		if ('mobileView' in $$props) $$invalidate(4, mobileView = $$props.mobileView);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		getLineConfig,
+    		getLineY,
+    		getLine,
+    		lines: lines$1,
+    		positionRangeShapes,
+    		defaultLayout,
+    		setDefaultLayout,
+    		setMobileLayout,
+    		buildPlotData,
+    		plotDiv,
+    		plotData,
+    		setup,
+    		genPlot,
+    		refreshPlot,
+    		data,
+    		team,
+    		playedMatchdays,
+    		mobileView
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('plotDiv' in $$props) $$invalidate(0, plotDiv = $$props.plotDiv);
+    		if ('plotData' in $$props) plotData = $$props.plotData;
+    		if ('setup' in $$props) $$invalidate(5, setup = $$props.setup);
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
+    		if ('mobileView' in $$props) $$invalidate(4, mobileView = $$props.mobileView);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && refreshPlot();
+    		}
+
+    		if ($$self.$$.dirty & /*mobileView*/ 16) {
+    			!mobileView && setDefaultLayout();
+    		}
+
+    		if ($$self.$$.dirty & /*setup, mobileView*/ 48) {
+    			setup && mobileView && setMobileLayout();
+    		}
+    	};
+
+    	return [plotDiv, data, team, playedMatchdays, mobileView, setup, div0_binding];
+    }
+
+    class PositionOverTimeGraph extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$f, create_fragment$f, safe_not_equal, {
+    			data: 1,
+    			team: 2,
+    			playedMatchdays: 3,
+    			mobileView: 4
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "PositionOverTimeGraph",
+    			options,
+    			id: create_fragment$f.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[1] === undefined && !('data' in props)) {
+    			console.warn("<PositionOverTimeGraph> was created without expected prop 'data'");
+    		}
+
+    		if (/*team*/ ctx[2] === undefined && !('team' in props)) {
+    			console.warn("<PositionOverTimeGraph> was created without expected prop 'team'");
+    		}
+
+    		if (/*playedMatchdays*/ ctx[3] === undefined && !('playedMatchdays' in props)) {
+    			console.warn("<PositionOverTimeGraph> was created without expected prop 'playedMatchdays'");
+    		}
+
+    		if (/*mobileView*/ ctx[4] === undefined && !('mobileView' in props)) {
+    			console.warn("<PositionOverTimeGraph> was created without expected prop 'mobileView'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<PositionOverTimeGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<PositionOverTimeGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<PositionOverTimeGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<PositionOverTimeGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get playedMatchdays() {
+    		throw new Error("<PositionOverTimeGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set playedMatchdays(value) {
+    		throw new Error("<PositionOverTimeGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get mobileView() {
+    		throw new Error("<PositionOverTimeGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set mobileView(value) {
+    		throw new Error("<PositionOverTimeGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\goals_scored_and_conceded\ScoredAndConcededGraph.svelte generated by Svelte v3.49.0 */
+
+    const { Object: Object_1$6 } = globals;
+    const file$d = "src\\components\\goals_scored_and_conceded\\ScoredAndConcededGraph.svelte";
+
+    function create_fragment$e(ctx) {
+    	let div1;
+    	let div0;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "id", "plotDiv");
+    			add_location(div0, file$d, 194, 2, 6223);
+    			attr_dev(div1, "id", "plotly");
+    			add_location(div1, file$d, 193, 0, 6202);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			/*div0_binding*/ ctx[6](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			/*div0_binding*/ ctx[6](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$e.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function getAvgGoalsPerGame(data) {
+    	let avgGoals = {};
+
+    	for (let team of Object.keys(data.standings)) {
+    		for (let matchday of Object.keys(data.form[team][data._id])) {
+    			let score = data.form[team][data._id][matchday].score;
+
+    			if (score != null) {
+    				let [h, _, a] = score.split(" ");
+    				h = parseInt(h);
+    				a = parseInt(a);
+
+    				if (matchday in avgGoals) {
+    					avgGoals[matchday] += h + a;
+    				} else {
+    					avgGoals[matchday] = h + a;
+    				}
+    			}
+    		}
+    	}
+
+    	// Divide by number of teams to get avg goals per gameweek
+    	for (let matchday of Object.keys(avgGoals)) {
+    		avgGoals[matchday] /= 20;
+    	}
+
+    	return avgGoals;
+    }
+
+    function getTeamGoalsPerGame(data, team) {
+    	let scored = {};
+    	let conceded = {};
+
+    	for (let matchday of Object.keys(data.form[team][data._id])) {
+    		let score = data.form[team][data._id][matchday].score;
+
+    		if (score != null) {
+    			let [h, _, a] = score.split(" ");
+    			h = parseInt(h);
+    			a = parseInt(a);
+
+    			if (data.form[team][data._id][matchday].atHome) {
+    				scored[matchday] = h;
+    				conceded[matchday] = a;
+    			} else {
+    				scored[matchday] = a;
+    				conceded[matchday] = h;
+    			}
+    		}
+    	}
+
+    	return [scored, conceded];
+    }
+
+    function avgLine(playedMatchdays, avgGoals, matchdays) {
+    	return {
+    		name: "Avg",
+    		type: "line",
+    		x: playedMatchdays,
+    		y: Object.values(avgGoals),
+    		text: matchdays,
+    		hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",
+    		line: { color: "#0080FF", width: 2 }
+    	};
+    }
+
+    function teamScoredBar(playedMatchdays, teamScored, matchdays) {
+    	return {
+    		name: "Scored",
+    		type: "bar",
+    		x: playedMatchdays,
+    		y: Object.values(teamScored),
+    		text: matchdays,
+    		marker: { color: "#00fe87" },
+    		hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>"
+    	};
+    }
+
+    function teamConcededBar(playedMatchdays, teamConceded, matchdays) {
+    	return {
+    		name: "Conceded",
+    		type: "bar",
+    		x: playedMatchdays,
+    		y: Object.values(teamConceded),
+    		text: matchdays,
+    		marker: { color: "#f83027" },
+    		hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals scored<extra></extra>"
+    	};
+    }
+
+    function defaultLayout$3() {
+    	return {
+    		title: false,
+    		autosize: true,
+    		margin: { r: 20, l: 60, t: 15, b: 15, pad: 5 },
+    		barmode: "stack",
+    		hovermode: "closest",
+    		plot_bgcolor: "#fafafa",
+    		paper_bgcolor: "#fafafa",
+    		yaxis: {
+    			title: { text: "Goals" },
+    			gridcolor: "gray",
+    			showgrid: false,
+    			showline: false,
+    			zeroline: false,
+    			fixedrange: true,
+    			rangemode: "nonnegative",
+    			visible: true,
+    			tickformat: 'd'
+    		},
+    		xaxis: {
+    			linecolor: "black",
+    			showgrid: false,
+    			showline: false,
+    			fixedrange: true,
+    			showticklabels: false
+    		},
+    		legend: { x: 1, xanchor: "right", y: 1 },
+    		dragmode: false
+    	};
+    }
+
+    function instance$e($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('ScoredAndConcededGraph', slots, []);
+
+    	function setDefaultLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": { text: "Goals" },
+    				"yaxis.visible": true,
+    				"margin.l": 60
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function setMobileLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": null,
+    				"yaxis.visible": false,
+    				"margin.l": 20
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function buildPlotData(data, team) {
+    		// let x = getMatchdayDates(data, fullTeamName);
+    		let [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
+
+    		let avgGoals = getAvgGoalsPerGame(data);
+    		let matchdays = Object.keys(avgGoals);
+    		let scoredBar = teamScoredBar(playedMatchdays, teamScored, matchdays);
+    		let concededBar = teamConcededBar(playedMatchdays, teamConceded, matchdays);
+    		let line = avgLine(playedMatchdays, avgGoals, matchdays);
+
+    		let plotData = {
+    			data: [scoredBar, concededBar, line],
+    			layout: defaultLayout$3(),
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		$$invalidate(5, setup = true);
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData(data, team);
+
+    		//@ts-ignore
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
+    			let avgGoals = getAvgGoalsPerGame(data);
+    			let matchdays = Object.keys(avgGoals);
+    			let scoredBar = teamScoredBar(playedMatchdays, teamScored, matchdays);
+    			let concededBar = teamConcededBar(playedMatchdays, teamConceded, matchdays);
+    			let line = avgLine(playedMatchdays, avgGoals, matchdays);
+    			plotData.data[0] = scoredBar;
+    			plotData.data[1] = concededBar;
+    			plotData.data[2] = line;
+
+    			//@ts-ignore
+    			Plotly.redraw(plotDiv);
+
+    			if (mobileView) {
+    				setMobileLayout();
+    			}
+    		}
+    	}
+
+    	let { data, team, playedMatchdays, mobileView } = $$props;
+    	const writable_props = ['data', 'team', 'playedMatchdays', 'mobileView'];
+
+    	Object_1$6.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<ScoredAndConcededGraph> was created with unknown prop '${key}'`);
+    	});
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
+    		if ('mobileView' in $$props) $$invalidate(4, mobileView = $$props.mobileView);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		getAvgGoalsPerGame,
+    		getTeamGoalsPerGame,
+    		avgLine,
+    		teamScoredBar,
+    		teamConcededBar,
+    		defaultLayout: defaultLayout$3,
+    		setDefaultLayout,
+    		setMobileLayout,
+    		buildPlotData,
+    		plotDiv,
+    		plotData,
+    		setup,
+    		genPlot,
+    		refreshPlot,
+    		data,
+    		team,
+    		playedMatchdays,
+    		mobileView
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('plotDiv' in $$props) $$invalidate(0, plotDiv = $$props.plotDiv);
+    		if ('plotData' in $$props) plotData = $$props.plotData;
+    		if ('setup' in $$props) $$invalidate(5, setup = $$props.setup);
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
+    		if ('mobileView' in $$props) $$invalidate(4, mobileView = $$props.mobileView);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && refreshPlot();
+    		}
+
+    		if ($$self.$$.dirty & /*mobileView*/ 16) {
+    			!mobileView && setDefaultLayout();
+    		}
+
+    		if ($$self.$$.dirty & /*setup, mobileView*/ 48) {
+    			setup && mobileView && setMobileLayout();
+    		}
+    	};
+
+    	return [plotDiv, data, team, playedMatchdays, mobileView, setup, div0_binding];
+    }
+
+    class ScoredAndConcededGraph extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$e, create_fragment$e, safe_not_equal, {
+    			data: 1,
+    			team: 2,
+    			playedMatchdays: 3,
+    			mobileView: 4
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "ScoredAndConcededGraph",
+    			options,
+    			id: create_fragment$e.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[1] === undefined && !('data' in props)) {
+    			console.warn("<ScoredAndConcededGraph> was created without expected prop 'data'");
+    		}
+
+    		if (/*team*/ ctx[2] === undefined && !('team' in props)) {
+    			console.warn("<ScoredAndConcededGraph> was created without expected prop 'team'");
+    		}
+
+    		if (/*playedMatchdays*/ ctx[3] === undefined && !('playedMatchdays' in props)) {
+    			console.warn("<ScoredAndConcededGraph> was created without expected prop 'playedMatchdays'");
+    		}
+
+    		if (/*mobileView*/ ctx[4] === undefined && !('mobileView' in props)) {
+    			console.warn("<ScoredAndConcededGraph> was created without expected prop 'mobileView'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<ScoredAndConcededGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<ScoredAndConcededGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<ScoredAndConcededGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<ScoredAndConcededGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get playedMatchdays() {
+    		throw new Error("<ScoredAndConcededGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set playedMatchdays(value) {
+    		throw new Error("<ScoredAndConcededGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get mobileView() {
+    		throw new Error("<ScoredAndConcededGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set mobileView(value) {
+    		throw new Error("<ScoredAndConcededGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\goals_scored_and_conceded\CleanSheetsGraph.svelte generated by Svelte v3.49.0 */
+
+    const { Object: Object_1$5 } = globals;
+    const file$c = "src\\components\\goals_scored_and_conceded\\CleanSheetsGraph.svelte";
+
+    function create_fragment$d(ctx) {
+    	let div1;
+    	let div0;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "id", "plotDiv");
+    			add_location(div0, file$c, 183, 2, 5197);
+    			attr_dev(div1, "id", "plotly");
+    			add_location(div1, file$c, 182, 0, 5176);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			/*div0_binding*/ ctx[6](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			/*div0_binding*/ ctx[6](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$d.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function getTeamCleanSheets(data, team) {
+    	let notCleanSheets = [];
+    	let cleanSheets = [];
+
+    	for (let matchday of Object.keys(data.form[team][data._id])) {
+    		let score = data.form[team][data._id][matchday].score;
+
+    		if (score != null) {
+    			let [h, _, a] = score.split(" ");
+    			h = parseInt(h);
+    			a = parseInt(a);
+
+    			if (data.form[team][data._id][matchday].atHome) {
+    				if (a > 0) {
+    					notCleanSheets.push(1);
+    					cleanSheets.push(0);
+    				} else {
+    					cleanSheets.push(1);
+    					notCleanSheets.push(0);
+    				}
+    			} else {
+    				if (h > 0) {
+    					notCleanSheets.push(1);
+    					cleanSheets.push(0);
+    				} else {
+    					cleanSheets.push(1);
+    					notCleanSheets.push(0);
+    				}
+    			}
+    		}
+    	}
+
+    	return [cleanSheets, notCleanSheets];
+    }
+
+    function bars(data, team, playedMatchdays) {
+    	let matchdays = Object.keys(data.form[team][data._id]);
+    	let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, team);
+
+    	return [
+    		{
+    			name: "Clean sheets",
+    			type: "bar",
+    			x: playedMatchdays,
+    			y: cleanSheets,
+    			text: matchdays,
+    			marker: { color: "#00fe87" },
+    			hovertemplate: "<b>Clean sheet<extra></extra>",
+    			showlegend: false
+    		},
+    		{
+    			name: "Conceded",
+    			type: "bar",
+    			x: playedMatchdays,
+    			y: notCleanSheets,
+    			text: matchdays,
+    			marker: { color: "#f83027" },
+    			hovertemplate: "<b>Goals conceded<extra></extra>",
+    			showlegend: false
+    		}
+    	];
+    }
+
+    function hiddenLine(x) {
+    	return {
+    		name: "Avg",
+    		type: "line",
+    		x,
+    		y: Array(x.length).fill(1.1),
+    		line: { color: "#FAFAFA", width: 1 },
+    		marker: { size: 1 },
+    		hoverinfo: "skip"
+    	};
+    }
+
+    function instance$d($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('CleanSheetsGraph', slots, []);
+
+    	function baseLine() {
+    		return {
+    			type: "line",
+    			x0: playedMatchdays[0],
+    			y0: 0.5,
+    			x1: playedMatchdays[playedMatchdays.length - 1],
+    			y1: 0.5,
+    			layer: "below",
+    			line: { color: "#d3d3d3", width: 2 }
+    		};
+    	}
+
+    	function defaultLayout() {
+    		return {
+    			title: false,
+    			autosize: true,
+    			height: 60,
+    			margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
+    			barmode: "stack",
+    			hovermode: "closest",
+    			plot_bgcolor: "#fafafa",
+    			paper_bgcolor: "#fafafa",
+    			yaxis: {
+    				showticklabels: false,
+    				gridcolor: "gray",
+    				showgrid: false,
+    				showline: false,
+    				zeroline: false,
+    				fixedrange: true
+    			},
+    			xaxis: {
+    				linecolor: "black",
+    				showgrid: false,
+    				showline: false,
+    				fixedrange: true
+    			},
+    			shapes: [baseLine()],
+    			dragmode: false,
+    			showlegend: false
+    		};
+    	}
+
+    	function setDefaultLayout() {
+    		if (setup) {
+    			let layoutUpdate = { "margin.l": 60 };
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function setMobileLayout() {
+    		if (setup) {
+    			let layoutUpdate = { "margin.l": 20 };
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function buildPlotData(data, team) {
+    		let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
+
+    		// Line required on plot to make match goalsScoredAndConcededGraph
+    		// TODO: Improve solution
+    		let line = hiddenLine(cleanSheetsBar.x);
+
+    		let plotData = {
+    			data: [cleanSheetsBar, concededBar, line],
+    			layout: defaultLayout(),
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		$$invalidate(5, setup = true);
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData(data, team);
+
+    		//@ts-ignore
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
+    			let line = hiddenLine(cleanSheetsBar.x);
+    			plotData.data[0] = cleanSheetsBar;
+    			plotData.data[1] = concededBar;
+    			plotData.data[2] = line;
+    			plotData.layout.shapes[0] = baseLine();
+
+    			//@ts-ignore
+    			Plotly.redraw(plotDiv);
+
+    			if (mobileView) {
+    				setMobileLayout();
+    			}
+    		}
+    	}
+
+    	let { data, team, playedMatchdays, mobileView } = $$props;
+    	const writable_props = ['data', 'team', 'playedMatchdays', 'mobileView'];
+
+    	Object_1$5.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<CleanSheetsGraph> was created with unknown prop '${key}'`);
+    	});
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
+    		if ('mobileView' in $$props) $$invalidate(4, mobileView = $$props.mobileView);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		getTeamCleanSheets,
+    		bars,
+    		baseLine,
+    		defaultLayout,
+    		setDefaultLayout,
+    		setMobileLayout,
+    		hiddenLine,
+    		buildPlotData,
+    		plotDiv,
+    		plotData,
+    		setup,
+    		genPlot,
+    		refreshPlot,
+    		data,
+    		team,
+    		playedMatchdays,
+    		mobileView
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('plotDiv' in $$props) $$invalidate(0, plotDiv = $$props.plotDiv);
+    		if ('plotData' in $$props) plotData = $$props.plotData;
+    		if ('setup' in $$props) $$invalidate(5, setup = $$props.setup);
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('playedMatchdays' in $$props) $$invalidate(3, playedMatchdays = $$props.playedMatchdays);
+    		if ('mobileView' in $$props) $$invalidate(4, mobileView = $$props.mobileView);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && refreshPlot();
+    		}
+
+    		if ($$self.$$.dirty & /*mobileView*/ 16) {
+    			!mobileView && setDefaultLayout();
+    		}
+
+    		if ($$self.$$.dirty & /*setup, mobileView*/ 48) {
+    			setup && mobileView && setMobileLayout();
+    		}
+    	};
+
+    	return [plotDiv, data, team, playedMatchdays, mobileView, setup, div0_binding];
+    }
+
+    class CleanSheetsGraph extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$d, create_fragment$d, safe_not_equal, {
+    			data: 1,
+    			team: 2,
+    			playedMatchdays: 3,
+    			mobileView: 4
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "CleanSheetsGraph",
+    			options,
+    			id: create_fragment$d.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[1] === undefined && !('data' in props)) {
+    			console.warn("<CleanSheetsGraph> was created without expected prop 'data'");
+    		}
+
+    		if (/*team*/ ctx[2] === undefined && !('team' in props)) {
+    			console.warn("<CleanSheetsGraph> was created without expected prop 'team'");
+    		}
+
+    		if (/*playedMatchdays*/ ctx[3] === undefined && !('playedMatchdays' in props)) {
+    			console.warn("<CleanSheetsGraph> was created without expected prop 'playedMatchdays'");
+    		}
+
+    		if (/*mobileView*/ ctx[4] === undefined && !('mobileView' in props)) {
+    			console.warn("<CleanSheetsGraph> was created without expected prop 'mobileView'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<CleanSheetsGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<CleanSheetsGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<CleanSheetsGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<CleanSheetsGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get playedMatchdays() {
+    		throw new Error("<CleanSheetsGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set playedMatchdays(value) {
+    		throw new Error("<CleanSheetsGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get mobileView() {
+    		throw new Error("<CleanSheetsGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set mobileView(value) {
+    		throw new Error("<CleanSheetsGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\goals_per_game\GoalsScoredFreqGraph.svelte generated by Svelte v3.49.0 */
+    const file$b = "src\\components\\goals_per_game\\GoalsScoredFreqGraph.svelte";
+
+    function create_fragment$c(ctx) {
+    	let div1;
+    	let div0;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "id", "plotDiv");
+    			add_location(div0, file$b, 99, 2, 2707);
+    			attr_dev(div1, "id", "plotly");
+    			add_location(div1, file$b, 98, 0, 2686);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			/*div0_binding*/ ctx[8](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			/*div0_binding*/ ctx[8](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$c.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$c($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('GoalsScoredFreqGraph', slots, []);
+
+    	function defaultLayout() {
+    		let xLabels = getXLabels();
+
+    		return {
+    			title: false,
+    			autosize: true,
+    			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+    			hovermode: "closest",
+    			barmode: "overlay",
+    			bargap: 0,
+    			plot_bgcolor: "#fafafa",
+    			paper_bgcolor: "#fafafa",
+    			yaxis: getYAxisLayout(),
+    			xaxis: {
+    				title: { text: "Scored" },
+    				linecolor: "black",
+    				showgrid: false,
+    				showline: false,
+    				fixedrange: true,
+    				ticktext: xLabels,
+    				tickvals: xLabels
+    			},
+    			legend: { x: 1, xanchor: "right", y: 0.95 },
+    			dragmode: false
+    		};
+    	}
+
+    	function setDefaultLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": { text: "Scored" },
+    				"yaxis.visible": true,
+    				"margin.l": 60
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function setMobileLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": null,
+    				"yaxis.visible": false,
+    				"margin.l": 20
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function buildPlotData() {
+    		let plotData = {
+    			data: getScoredBars(),
+    			layout: defaultLayout(),
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
+    	function genPlot() {
+    		plotData = buildPlotData();
+
+    		//@ts-ignore
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			plotData.data[1] = getScoredTeamBars(); // Update team bars
+
+    			//@ts-ignore
+    			Plotly.relayout(plotDiv, { yaxis: getYAxisLayout() });
+
+    			//@ts-ignore
+    			Plotly.redraw(plotDiv);
+
+    			if (mobileView) {
+    				setMobileLayout();
+    			}
+    		}
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		$$invalidate(7, setup = true);
+    	});
+
+    	let { team, getScoredBars, getScoredTeamBars, getXLabels, getYAxisLayout, mobileView } = $$props;
+
+    	const writable_props = [
+    		'team',
+    		'getScoredBars',
+    		'getScoredTeamBars',
+    		'getXLabels',
+    		'getYAxisLayout',
+    		'mobileView'
+    	];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<GoalsScoredFreqGraph> was created with unknown prop '${key}'`);
+    	});
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('team' in $$props) $$invalidate(1, team = $$props.team);
+    		if ('getScoredBars' in $$props) $$invalidate(2, getScoredBars = $$props.getScoredBars);
+    		if ('getScoredTeamBars' in $$props) $$invalidate(3, getScoredTeamBars = $$props.getScoredTeamBars);
+    		if ('getXLabels' in $$props) $$invalidate(4, getXLabels = $$props.getXLabels);
+    		if ('getYAxisLayout' in $$props) $$invalidate(5, getYAxisLayout = $$props.getYAxisLayout);
+    		if ('mobileView' in $$props) $$invalidate(6, mobileView = $$props.mobileView);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		defaultLayout,
+    		setDefaultLayout,
+    		setMobileLayout,
+    		buildPlotData,
+    		genPlot,
+    		refreshPlot,
+    		plotDiv,
+    		plotData,
+    		setup,
+    		team,
+    		getScoredBars,
+    		getScoredTeamBars,
+    		getXLabels,
+    		getYAxisLayout,
+    		mobileView
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('plotDiv' in $$props) $$invalidate(0, plotDiv = $$props.plotDiv);
+    		if ('plotData' in $$props) plotData = $$props.plotData;
+    		if ('setup' in $$props) $$invalidate(7, setup = $$props.setup);
+    		if ('team' in $$props) $$invalidate(1, team = $$props.team);
+    		if ('getScoredBars' in $$props) $$invalidate(2, getScoredBars = $$props.getScoredBars);
+    		if ('getScoredTeamBars' in $$props) $$invalidate(3, getScoredTeamBars = $$props.getScoredTeamBars);
+    		if ('getXLabels' in $$props) $$invalidate(4, getXLabels = $$props.getXLabels);
+    		if ('getYAxisLayout' in $$props) $$invalidate(5, getYAxisLayout = $$props.getYAxisLayout);
+    		if ('mobileView' in $$props) $$invalidate(6, mobileView = $$props.mobileView);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 2) {
+    			team && refreshPlot();
+    		}
+
+    		if ($$self.$$.dirty & /*mobileView*/ 64) {
+    			!mobileView && setDefaultLayout();
+    		}
+
+    		if ($$self.$$.dirty & /*setup, mobileView*/ 192) {
+    			setup && mobileView && setMobileLayout();
+    		}
+    	};
+
+    	return [
+    		plotDiv,
+    		team,
+    		getScoredBars,
+    		getScoredTeamBars,
+    		getXLabels,
+    		getYAxisLayout,
+    		mobileView,
+    		setup,
+    		div0_binding
+    	];
+    }
+
+    class GoalsScoredFreqGraph extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$c, create_fragment$c, safe_not_equal, {
+    			team: 1,
+    			getScoredBars: 2,
+    			getScoredTeamBars: 3,
+    			getXLabels: 4,
+    			getYAxisLayout: 5,
+    			mobileView: 6
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "GoalsScoredFreqGraph",
+    			options,
+    			id: create_fragment$c.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*team*/ ctx[1] === undefined && !('team' in props)) {
+    			console.warn("<GoalsScoredFreqGraph> was created without expected prop 'team'");
+    		}
+
+    		if (/*getScoredBars*/ ctx[2] === undefined && !('getScoredBars' in props)) {
+    			console.warn("<GoalsScoredFreqGraph> was created without expected prop 'getScoredBars'");
+    		}
+
+    		if (/*getScoredTeamBars*/ ctx[3] === undefined && !('getScoredTeamBars' in props)) {
+    			console.warn("<GoalsScoredFreqGraph> was created without expected prop 'getScoredTeamBars'");
+    		}
+
+    		if (/*getXLabels*/ ctx[4] === undefined && !('getXLabels' in props)) {
+    			console.warn("<GoalsScoredFreqGraph> was created without expected prop 'getXLabels'");
+    		}
+
+    		if (/*getYAxisLayout*/ ctx[5] === undefined && !('getYAxisLayout' in props)) {
+    			console.warn("<GoalsScoredFreqGraph> was created without expected prop 'getYAxisLayout'");
+    		}
+
+    		if (/*mobileView*/ ctx[6] === undefined && !('mobileView' in props)) {
+    			console.warn("<GoalsScoredFreqGraph> was created without expected prop 'mobileView'");
+    		}
+    	}
+
+    	get team() {
+    		throw new Error("<GoalsScoredFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<GoalsScoredFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getScoredBars() {
+    		throw new Error("<GoalsScoredFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set getScoredBars(value) {
+    		throw new Error("<GoalsScoredFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getScoredTeamBars() {
+    		throw new Error("<GoalsScoredFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set getScoredTeamBars(value) {
+    		throw new Error("<GoalsScoredFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getXLabels() {
+    		throw new Error("<GoalsScoredFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set getXLabels(value) {
+    		throw new Error("<GoalsScoredFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getYAxisLayout() {
+    		throw new Error("<GoalsScoredFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set getYAxisLayout(value) {
+    		throw new Error("<GoalsScoredFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get mobileView() {
+    		throw new Error("<GoalsScoredFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set mobileView(value) {
+    		throw new Error("<GoalsScoredFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\goals_per_game\GoalsConcededFreqGraph.svelte generated by Svelte v3.49.0 */
+    const file$a = "src\\components\\goals_per_game\\GoalsConcededFreqGraph.svelte";
+
+    function create_fragment$b(ctx) {
+    	let div1;
+    	let div0;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			children(div0).forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "id", "plotDiv");
+    			add_location(div0, file$a, 99, 2, 2699);
+    			attr_dev(div1, "id", "plotly");
+    			add_location(div1, file$a, 98, 0, 2678);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			/*div0_binding*/ ctx[8](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			/*div0_binding*/ ctx[8](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$b.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$b($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('GoalsConcededFreqGraph', slots, []);
+
+    	function defaultLayout() {
+    		let xLabels = getXLabels();
+
+    		return {
+    			title: false,
+    			autosize: true,
+    			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+    			hovermode: "closest",
+    			barmode: "overlay",
+    			bargap: 0,
+    			plot_bgcolor: "#fafafa",
+    			paper_bgcolor: "#fafafa",
+    			yaxis: getYAxisLayout(),
+    			xaxis: {
+    				title: { text: "Conceded" },
+    				linecolor: "black",
+    				showgrid: false,
+    				showline: false,
+    				fixedrange: true,
+    				ticktext: xLabels,
+    				tickvals: xLabels
+    			},
+    			legend: { x: 1, xanchor: "right", y: 0.95 },
+    			dragmode: false
+    		};
+    	}
+
+    	function setDefaultLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": { text: "Conceded" },
+    				"yaxis.visible": true,
+    				"margin.l": 60
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function setMobileLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": null,
+    				"yaxis.visible": false,
+    				"margin.l": 20
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function buildPlotData() {
+    		let plotData = {
+    			data: getConcededBars(),
+    			layout: defaultLayout(),
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
+    	function genPlot() {
+    		plotData = buildPlotData();
+
+    		//@ts-ignore
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			plotData.data[1] = getConcededTeamBars();
+
+    			//@ts-ignore
+    			Plotly.relayout(plotDiv, { yaxis: getYAxisLayout() });
+
+    			//@ts-ignore
+    			Plotly.redraw(plotDiv);
+
+    			if (mobileView) {
+    				setMobileLayout();
+    			}
+    		}
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		$$invalidate(7, setup = true);
+    	});
+
+    	let { team, getConcededBars, getConcededTeamBars, getXLabels, getYAxisLayout, mobileView } = $$props;
+
+    	const writable_props = [
+    		'team',
+    		'getConcededBars',
+    		'getConcededTeamBars',
+    		'getXLabels',
+    		'getYAxisLayout',
+    		'mobileView'
+    	];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<GoalsConcededFreqGraph> was created with unknown prop '${key}'`);
+    	});
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('team' in $$props) $$invalidate(1, team = $$props.team);
+    		if ('getConcededBars' in $$props) $$invalidate(2, getConcededBars = $$props.getConcededBars);
+    		if ('getConcededTeamBars' in $$props) $$invalidate(3, getConcededTeamBars = $$props.getConcededTeamBars);
+    		if ('getXLabels' in $$props) $$invalidate(4, getXLabels = $$props.getXLabels);
+    		if ('getYAxisLayout' in $$props) $$invalidate(5, getYAxisLayout = $$props.getYAxisLayout);
+    		if ('mobileView' in $$props) $$invalidate(6, mobileView = $$props.mobileView);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		defaultLayout,
+    		setDefaultLayout,
+    		setMobileLayout,
+    		buildPlotData,
+    		genPlot,
+    		refreshPlot,
+    		plotDiv,
+    		plotData,
+    		setup,
+    		team,
+    		getConcededBars,
+    		getConcededTeamBars,
+    		getXLabels,
+    		getYAxisLayout,
+    		mobileView
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('plotDiv' in $$props) $$invalidate(0, plotDiv = $$props.plotDiv);
+    		if ('plotData' in $$props) plotData = $$props.plotData;
+    		if ('setup' in $$props) $$invalidate(7, setup = $$props.setup);
+    		if ('team' in $$props) $$invalidate(1, team = $$props.team);
+    		if ('getConcededBars' in $$props) $$invalidate(2, getConcededBars = $$props.getConcededBars);
+    		if ('getConcededTeamBars' in $$props) $$invalidate(3, getConcededTeamBars = $$props.getConcededTeamBars);
+    		if ('getXLabels' in $$props) $$invalidate(4, getXLabels = $$props.getXLabels);
+    		if ('getYAxisLayout' in $$props) $$invalidate(5, getYAxisLayout = $$props.getYAxisLayout);
+    		if ('mobileView' in $$props) $$invalidate(6, mobileView = $$props.mobileView);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 2) {
+    			team && refreshPlot();
+    		}
+
+    		if ($$self.$$.dirty & /*mobileView*/ 64) {
+    			!mobileView && setDefaultLayout();
+    		}
+
+    		if ($$self.$$.dirty & /*setup, mobileView*/ 192) {
+    			setup && mobileView && setMobileLayout();
+    		}
+    	};
+
+    	return [
+    		plotDiv,
+    		team,
+    		getConcededBars,
+    		getConcededTeamBars,
+    		getXLabels,
+    		getYAxisLayout,
+    		mobileView,
+    		setup,
+    		div0_binding
+    	];
+    }
+
+    class GoalsConcededFreqGraph extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$b, create_fragment$b, safe_not_equal, {
+    			team: 1,
+    			getConcededBars: 2,
+    			getConcededTeamBars: 3,
+    			getXLabels: 4,
+    			getYAxisLayout: 5,
+    			mobileView: 6
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "GoalsConcededFreqGraph",
+    			options,
+    			id: create_fragment$b.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*team*/ ctx[1] === undefined && !('team' in props)) {
+    			console.warn("<GoalsConcededFreqGraph> was created without expected prop 'team'");
+    		}
+
+    		if (/*getConcededBars*/ ctx[2] === undefined && !('getConcededBars' in props)) {
+    			console.warn("<GoalsConcededFreqGraph> was created without expected prop 'getConcededBars'");
+    		}
+
+    		if (/*getConcededTeamBars*/ ctx[3] === undefined && !('getConcededTeamBars' in props)) {
+    			console.warn("<GoalsConcededFreqGraph> was created without expected prop 'getConcededTeamBars'");
+    		}
+
+    		if (/*getXLabels*/ ctx[4] === undefined && !('getXLabels' in props)) {
+    			console.warn("<GoalsConcededFreqGraph> was created without expected prop 'getXLabels'");
+    		}
+
+    		if (/*getYAxisLayout*/ ctx[5] === undefined && !('getYAxisLayout' in props)) {
+    			console.warn("<GoalsConcededFreqGraph> was created without expected prop 'getYAxisLayout'");
+    		}
+
+    		if (/*mobileView*/ ctx[6] === undefined && !('mobileView' in props)) {
+    			console.warn("<GoalsConcededFreqGraph> was created without expected prop 'mobileView'");
+    		}
+    	}
+
+    	get team() {
+    		throw new Error("<GoalsConcededFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<GoalsConcededFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getConcededBars() {
+    		throw new Error("<GoalsConcededFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set getConcededBars(value) {
+    		throw new Error("<GoalsConcededFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getConcededTeamBars() {
+    		throw new Error("<GoalsConcededFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set getConcededTeamBars(value) {
+    		throw new Error("<GoalsConcededFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getXLabels() {
+    		throw new Error("<GoalsConcededFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set getXLabels(value) {
+    		throw new Error("<GoalsConcededFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getYAxisLayout() {
+    		throw new Error("<GoalsConcededFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set getYAxisLayout(value) {
+    		throw new Error("<GoalsConcededFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get mobileView() {
+    		throw new Error("<GoalsConcededFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set mobileView(value) {
+    		throw new Error("<GoalsConcededFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\goals_per_game\GoalsPerGame.svelte generated by Svelte v3.49.0 */
+
+    const { Object: Object_1$4 } = globals;
+    const file$9 = "src\\components\\goals_per_game\\GoalsPerGame.svelte";
+
+    // (261:2) {#if setup}
+    function create_if_block$5(ctx) {
+    	let div0;
+    	let goalsscoredfreq;
+    	let t;
+    	let div1;
+    	let goalsconcededfreq;
+    	let current;
+
+    	goalsscoredfreq = new GoalsScoredFreqGraph({
+    			props: {
+    				team: /*team*/ ctx[0],
+    				getScoredBars: /*getScoredBars*/ ctx[3],
+    				getScoredTeamBars: /*getScoredTeamBars*/ ctx[5],
+    				getXLabels: /*getXLabels*/ ctx[7],
+    				getYAxisLayout: /*getYAxisLayout*/ ctx[8],
+    				mobileView: /*mobileView*/ ctx[1]
+    			},
+    			$$inline: true
+    		});
+
+    	goalsconcededfreq = new GoalsConcededFreqGraph({
+    			props: {
+    				team: /*team*/ ctx[0],
+    				getConcededBars: /*getConcededBars*/ ctx[4],
+    				getConcededTeamBars: /*getConcededTeamBars*/ ctx[6],
+    				getXLabels: /*getXLabels*/ ctx[7],
+    				getYAxisLayout: /*getYAxisLayout*/ ctx[8],
+    				mobileView: /*mobileView*/ ctx[1]
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			div0 = element("div");
+    			create_component(goalsscoredfreq.$$.fragment);
+    			t = space();
+    			div1 = element("div");
+    			create_component(goalsconcededfreq.$$.fragment);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div0 = claim_element(nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			claim_component(goalsscoredfreq.$$.fragment, div0_nodes);
+    			div0_nodes.forEach(detach_dev);
+    			t = claim_space(nodes);
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			claim_component(goalsconcededfreq.$$.fragment, div1_nodes);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "graph freq-graph mini-graph");
+    			add_location(div0, file$9, 261, 4, 8052);
+    			attr_dev(div1, "class", "graph freq-graph mini-graph");
+    			add_location(div1, file$9, 271, 4, 8285);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div0, anchor);
+    			mount_component(goalsscoredfreq, div0, null);
+    			insert_hydration_dev(target, t, anchor);
+    			insert_hydration_dev(target, div1, anchor);
+    			mount_component(goalsconcededfreq, div1, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const goalsscoredfreq_changes = {};
+    			if (dirty & /*team*/ 1) goalsscoredfreq_changes.team = /*team*/ ctx[0];
+    			if (dirty & /*mobileView*/ 2) goalsscoredfreq_changes.mobileView = /*mobileView*/ ctx[1];
+    			goalsscoredfreq.$set(goalsscoredfreq_changes);
+    			const goalsconcededfreq_changes = {};
+    			if (dirty & /*team*/ 1) goalsconcededfreq_changes.team = /*team*/ ctx[0];
+    			if (dirty & /*mobileView*/ 2) goalsconcededfreq_changes.mobileView = /*mobileView*/ ctx[1];
+    			goalsconcededfreq.$set(goalsconcededfreq_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(goalsscoredfreq.$$.fragment, local);
+    			transition_in(goalsconcededfreq.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(goalsscoredfreq.$$.fragment, local);
+    			transition_out(goalsconcededfreq.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div0);
+    			destroy_component(goalsscoredfreq);
+    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(div1);
+    			destroy_component(goalsconcededfreq);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$5.name,
+    		type: "if",
+    		source: "(261:2) {#if setup}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$a(ctx) {
+    	let div;
+    	let current;
+    	let if_block = /*setup*/ ctx[2] && create_if_block$5(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			if (if_block) if_block.c();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			if (if_block) if_block.l(div_nodes);
+    			div_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "two-graphs svelte-1y33275");
+    			add_location(div, file$9, 259, 0, 8007);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    			if (if_block) if_block.m(div, null);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*setup*/ ctx[2]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*setup*/ 4) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$5(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(div, null);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			if (if_block) if_block.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$a.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function teamBars(data, type, color) {
+    	let opener = "Score";
+
+    	if (type == "Conceded") {
+    		opener = "Concede";
+    	}
+
+    	return {
+    		x: Object.keys(data),
+    		y: Object.values(data),
+    		type: "bar",
+    		name: type,
+    		marker: { color },
+    		hovertemplate: `${opener} %{x} with probability <b>%{y:.2f}</b><extra></extra>`,
+    		// marker: { color: color },
+    		line: { width: 0 },
+    		hoverinfo: "x+y",
+    		opacity: 0.5
+    	};
+    }
+
+    function reversed(arr) {
+    	return arr.slice().reverse();
+    }
+
+    function countScored(data, goalFreq, season, team) {
+    	if (!(team in data.form)) {
+    		return;
+    	}
+
+    	for (let matchday of Object.keys(data.form[team][season])) {
+    		let score = data.form[team][season][matchday].score;
+
+    		if (score != null) {
+    			let [h, _, a] = score.split(" ");
+    			h = parseInt(h);
+    			a = parseInt(a);
+
+    			if (data.form[team][season][matchday].atHome) {
+    				if (h in goalFreq) {
+    					goalFreq[h] += 1;
+    				} else {
+    					goalFreq[h] = 1;
+    				}
+    			} else {
+    				if (a in goalFreq) {
+    					goalFreq[a] += 1;
+    				} else {
+    					goalFreq[a] = 1;
+    				}
+    			}
+    		}
+    	}
+    }
+
+    function maxObjKey(obj) {
+    	let max = 0;
+
+    	for (let goals in obj) {
+    		let g = parseInt(goals);
+
+    		if (g > max) {
+    			max = g;
+    		}
+    	}
+
+    	return max;
+    }
+
+    function fillGoalFreqBlanks(goalFreq) {
+    	let max = maxObjKey(goalFreq);
+
+    	for (let i = 1; i < max; i++) {
+    		if (!(i in goalFreq)) {
+    			goalFreq[i] = 0;
+    		}
+    	}
+    }
+
+    function avgGoalFrequencies(data) {
+    	let goalFreq = {};
+
+    	for (let team of Object.keys(data.standings)) {
+    		countScored(data, goalFreq, data._id, team);
+    		countScored(data, goalFreq, data._id - 1, team);
+    	}
+
+    	fillGoalFreqBlanks(goalFreq);
+
+    	// Divide by number of teams to get avg
+    	for (let goals of Object.keys(goalFreq)) {
+    		goalFreq[goals] /= 20;
+    	}
+
+    	return goalFreq;
+    }
+
+    function teamScoredFrequencies(data, team) {
+    	let goalFreq = {};
+    	countScored(data, goalFreq, data._id, team);
+    	countScored(data, goalFreq, data._id - 1, team);
+    	fillGoalFreqBlanks(goalFreq);
+    	return goalFreq;
+    }
+
+    function countConceded(data, goalFreq, season, team) {
+    	if (!(team in data.form)) {
+    		return;
+    	}
+
+    	for (let matchday of Object.keys(data.form[team][season])) {
+    		let score = data.form[team][season][matchday].score;
+
+    		if (score != null) {
+    			let [h, _, a] = score.split(" ");
+    			h = parseInt(h);
+    			a = parseInt(a);
+
+    			if (data.form[team][season][matchday].atHome) {
+    				if (a in goalFreq) {
+    					goalFreq[a] += 1;
+    				} else {
+    					goalFreq[a] = 1;
+    				}
+    			} else {
+    				if (h in goalFreq) {
+    					goalFreq[h] += 1;
+    				} else {
+    					goalFreq[h] = 1;
+    				}
+    			}
+    		}
+    	}
+    }
+
+    function teamConcededFrequencies(data, team) {
+    	let goalFreq = {};
+    	countConceded(data, goalFreq, data._id, team);
+    	countConceded(data, goalFreq, data._id - 1, team);
+    	fillGoalFreqBlanks(goalFreq);
+    	return goalFreq;
+    }
+
+    function checkForMax(freq, max) {
+    	for (let goals of Object.values(freq)) {
+    		if (goals > max) {
+    			max = goals;
+    		}
+    	}
+
+    	return max;
+    }
+
+    function maxValue(goalFreq, teamScoredFreq, teamConcededFreq) {
+    	let max = 0;
+    	max = checkForMax(goalFreq, max);
+    	max = checkForMax(teamScoredFreq, max);
+    	max = checkForMax(teamConcededFreq, max);
+    	return max;
+    }
+
+    function valueSum(obj) {
+    	let total = 0;
+
+    	for (let freq in obj) {
+    		total += obj[freq];
+    	}
+
+    	return total;
+    }
+
+    function scaleTeamFreq(goalFreq, teamScoredFreq, teamConcededFreq) {
+    	let totalGoalFreq = valueSum(goalFreq);
+    	let totalTeamScoredFreq = valueSum(teamScoredFreq);
+
+    	for (let goals in teamScoredFreq) {
+    		teamScoredFreq[goals] *= totalGoalFreq / totalTeamScoredFreq;
+    	}
+
+    	let totalTeamConcededFreq = valueSum(teamConcededFreq);
+
+    	for (let goals in teamConcededFreq) {
+    		teamConcededFreq[goals] *= totalGoalFreq / totalTeamConcededFreq;
+    	}
+    }
+
+    function convertToPercentage$1(freq) {
+    	let totalFreq = valueSum(freq);
+
+    	for (let goals in freq) {
+    		freq[goals] /= totalFreq;
+    	}
+    }
+
+    function convertAllToPercentage(goalFreq, teamScoredFreq, teamConcededFreq) {
+    	convertToPercentage$1(goalFreq);
+    	convertToPercentage$1(teamScoredFreq);
+    	convertToPercentage$1(teamConcededFreq);
+    }
+
+    function instance$a($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('GoalsPerGame', slots, []);
+
+    	function avgBars() {
+    		return {
+    			x: Object.keys(goalFreq),
+    			y: Object.values(goalFreq),
+    			type: "bar",
+    			name: "Avg",
+    			marker: { color: "#C6C6C6" },
+    			line: { width: 0 },
+    			hovertemplate: `Average %{x} with probability <b>%{y:.2f}</b><extra></extra>`,
+    			hoverinfo: "x+y"
+    		};
+    	}
+
+    	function bars(data, name, color) {
+    		return [avgBars(), teamBars(data, name, color)];
+    	}
+
+    	// Basic colour scale shared between the two bar chars
+    	// let colourScale = ["#5df455", "#b2d000", "#dfa700", "#f77a1c", "#f74d4d"];
+    	let colourScale = ["#00fe87", "#aef23e", "#ffdd00", "#ff9000", "#f83027"];
+
+    	// Concatenate unique extreme colours, for extreme values that only a few teams achieve
+    	// Concatenate bright greens
+    	let scoredColourScale = reversed(colourScale).concat(["#00fe87", "#00fe87", "#00fe87", "#00fe87", "#00fe87"]);
+
+    	// Concatenate bright reds
+    	let concededColourScale = colourScale.concat(["#f83027", "#f83027", "#f83027", "#f83027", "#f83027"]);
+
+    	function getScoredBars() {
+    		// return bars(teamScoredFreq, "Goals scored", "#77DD77");
+    		return bars(teamScoredFreq, "Scored", scoredColourScale);
+    	}
+
+    	function getConcededBars() {
+    		return bars(teamConcededFreq, "Conceded", concededColourScale);
+    	}
+
+    	function getScoredTeamBars() {
+    		return teamBars(teamScoredFreq, "Scored", scoredColourScale);
+    	}
+
+    	function getConcededTeamBars() {
+    		return teamBars(teamConcededFreq, "Conceded", concededColourScale);
+    	}
+
+    	function getXLabels() {
+    		return Object.keys(goalFreq);
+    	}
+
+    	function getYAxisLayout() {
+    		return {
+    			title: { text: "Probability" },
+    			gridcolor: "gray",
+    			showgrid: false,
+    			showline: false,
+    			zeroline: false,
+    			fixedrange: true,
+    			autorange: false,
+    			range: [0, maxY]
+    		};
+    	}
+
+    	function refreshTeamData() {
+    		if (setup) {
+    			teamScoredFreq = teamScoredFrequencies(data, team);
+    			teamConcededFreq = teamConcededFrequencies(data, team);
+    			scaleTeamFreq(goalFreq, teamScoredFreq, teamConcededFreq);
+    			convertToPercentage$1(teamScoredFreq);
+    			convertToPercentage$1(teamConcededFreq);
+    			maxY = maxValue(goalFreq, teamScoredFreq, teamConcededFreq);
+    		}
+    	}
+
+    	let goalFreq, teamScoredFreq, teamConcededFreq, maxY;
+    	let setup = false;
+
+    	onMount(() => {
+    		goalFreq = avgGoalFrequencies(data);
+    		teamScoredFreq = teamScoredFrequencies(data, team);
+    		teamConcededFreq = teamConcededFrequencies(data, team);
+    		scaleTeamFreq(goalFreq, teamScoredFreq, teamConcededFreq);
+    		convertAllToPercentage(goalFreq, teamScoredFreq, teamConcededFreq);
+    		maxY = maxValue(goalFreq, teamScoredFreq, teamConcededFreq);
+    		$$invalidate(2, setup = true);
+    	});
+
+    	let { data, team, mobileView } = $$props;
+    	const writable_props = ['data', 'team', 'mobileView'];
+
+    	Object_1$4.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<GoalsPerGame> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(9, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    		if ('mobileView' in $$props) $$invalidate(1, mobileView = $$props.mobileView);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		GoalsScoredFreq: GoalsScoredFreqGraph,
+    		GoalsConcededFreq: GoalsConcededFreqGraph,
+    		avgBars,
+    		teamBars,
+    		bars,
+    		colourScale,
+    		scoredColourScale,
+    		concededColourScale,
+    		reversed,
+    		getScoredBars,
+    		getConcededBars,
+    		getScoredTeamBars,
+    		getConcededTeamBars,
+    		getXLabels,
+    		getYAxisLayout,
+    		countScored,
+    		maxObjKey,
+    		fillGoalFreqBlanks,
+    		avgGoalFrequencies,
+    		teamScoredFrequencies,
+    		countConceded,
+    		teamConcededFrequencies,
+    		checkForMax,
+    		maxValue,
+    		valueSum,
+    		scaleTeamFreq,
+    		convertToPercentage: convertToPercentage$1,
+    		convertAllToPercentage,
+    		refreshTeamData,
+    		goalFreq,
+    		teamScoredFreq,
+    		teamConcededFreq,
+    		maxY,
+    		setup,
+    		data,
+    		team,
+    		mobileView
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('colourScale' in $$props) colourScale = $$props.colourScale;
+    		if ('scoredColourScale' in $$props) scoredColourScale = $$props.scoredColourScale;
+    		if ('concededColourScale' in $$props) concededColourScale = $$props.concededColourScale;
+    		if ('goalFreq' in $$props) goalFreq = $$props.goalFreq;
+    		if ('teamScoredFreq' in $$props) teamScoredFreq = $$props.teamScoredFreq;
+    		if ('teamConcededFreq' in $$props) teamConcededFreq = $$props.teamConcededFreq;
+    		if ('maxY' in $$props) maxY = $$props.maxY;
+    		if ('setup' in $$props) $$invalidate(2, setup = $$props.setup);
+    		if ('data' in $$props) $$invalidate(9, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    		if ('mobileView' in $$props) $$invalidate(1, mobileView = $$props.mobileView);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 1) {
+    			team && refreshTeamData();
+    		}
+    	};
+
+    	return [
+    		team,
+    		mobileView,
+    		setup,
+    		getScoredBars,
+    		getConcededBars,
+    		getScoredTeamBars,
+    		getConcededTeamBars,
+    		getXLabels,
+    		getYAxisLayout,
+    		data
+    	];
+    }
+
+    class GoalsPerGame extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$a, create_fragment$a, safe_not_equal, { data: 9, team: 0, mobileView: 1 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "GoalsPerGame",
+    			options,
+    			id: create_fragment$a.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[9] === undefined && !('data' in props)) {
+    			console.warn("<GoalsPerGame> was created without expected prop 'data'");
+    		}
+
+    		if (/*team*/ ctx[0] === undefined && !('team' in props)) {
+    			console.warn("<GoalsPerGame> was created without expected prop 'team'");
+    		}
+
+    		if (/*mobileView*/ ctx[1] === undefined && !('mobileView' in props)) {
+    			console.warn("<GoalsPerGame> was created without expected prop 'mobileView'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<GoalsPerGame>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<GoalsPerGame>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<GoalsPerGame>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<GoalsPerGame>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get mobileView() {
+    		throw new Error("<GoalsPerGame>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set mobileView(value) {
+    		throw new Error("<GoalsPerGame>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\SpiderGraph.svelte generated by Svelte v3.49.0 */
+
+    const { Object: Object_1$3 } = globals;
+    const file$8 = "src\\components\\SpiderGraph.svelte";
+
+    function get_each_context$3(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[31] = list[i];
+    	return child_ctx;
+    }
+
+    // (527:6) {#if _team != team}
+    function create_if_block$4(ctx) {
+    	let button;
+    	let t_value = /*toAlias*/ ctx[2](/*_team*/ ctx[31]) + "";
+    	let t;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			t = text(t_value);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			button = claim_element(nodes, "BUTTON", { class: true });
+    			var button_nodes = children(button);
+    			t = claim_text(button_nodes, t_value);
+    			button_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(button, "class", "spider-opp-team-btn svelte-1cvzyov");
+    			add_location(button, file$8, 527, 8, 17236);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, button, anchor);
+    			append_hydration_dev(button, t);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*click_handler*/ ctx[8], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*toAlias, teams*/ 6 && t_value !== (t_value = /*toAlias*/ ctx[2](/*_team*/ ctx[31]) + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$4.name,
+    		type: "if",
+    		source: "(527:6) {#if _team != team}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (526:4) {#each teams as _team}
+    function create_each_block$3(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*_team*/ ctx[31] != /*team*/ ctx[0] && create_if_block$4(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*_team*/ ctx[31] != /*team*/ ctx[0]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$4(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$3.name,
+    		type: "each",
+    		source: "(526:4) {#each teams as _team}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$9(ctx) {
+    	let div2;
+    	let div1;
+    	let div0;
+    	let t;
+    	let div4;
+    	let div3;
+    	let each_value = /*teams*/ ctx[1];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$3(get_each_context$3(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div2 = element("div");
+    			div1 = element("div");
+    			div0 = element("div");
+    			t = space();
+    			div4 = element("div");
+    			div3 = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div2 = claim_element(nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div1 = claim_element(div2_nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			div2_nodes.forEach(detach_dev);
+    			t = claim_space(nodes);
+    			div4 = claim_element(nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true, id: true });
+    			var div3_nodes = children(div3);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(div3_nodes);
+    			}
+
+    			div3_nodes.forEach(detach_dev);
+    			div4_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "id", "plotDiv");
+    			add_location(div0, file$8, 518, 4, 16944);
+    			attr_dev(div1, "id", "plotly");
+    			add_location(div1, file$8, 517, 2, 16921);
+    			attr_dev(div2, "class", "spider-chart svelte-1cvzyov");
+    			add_location(div2, file$8, 516, 0, 16891);
+    			attr_dev(div3, "class", "spider-opp-team-btns svelte-1cvzyov");
+    			attr_dev(div3, "id", "spider-opp-teams");
+    			add_location(div3, file$8, 524, 2, 17115);
+    			attr_dev(div4, "class", "spider-opp-team-selector svelte-1cvzyov");
+    			add_location(div4, file$8, 523, 0, 17073);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div2, anchor);
+    			append_hydration_dev(div2, div1);
+    			append_hydration_dev(div1, div0);
+    			/*div0_binding*/ ctx[7](div0);
+    			insert_hydration_dev(target, t, anchor);
+    			insert_hydration_dev(target, div4, anchor);
+    			append_hydration_dev(div4, div3);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div3, null);
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*spiderBtnClick, toAlias, teams, team*/ 23) {
+    				each_value = /*teams*/ ctx[1];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$3(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$3(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div3, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div2);
+    			/*div0_binding*/ ctx[7](null);
+    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(div4);
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$9.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function getTeamColor(team) {
+    	let teamKey = team[0].toLowerCase() + team.slice(1);
+    	teamKey = teamKey.replace(/ /g, "-").toLowerCase();
+    	let teamColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
+    	return teamColor;
+    }
+
+    function teamInSeason$1(form, team, season) {
+    	return team in form && form[team][season]['1'] != null;
+    }
+
+    function resetTeamComparisonBtns() {
+    	let btns = document.getElementById("spider-opp-teams");
+
+    	for (let i = 0; i < btns.children.length; i++) {
+    		//@ts-ignore
+    		let btn = btns.children[i];
+
+    		if (btn.style.background != "") {
+    			btn.style.background = "";
+    			btn.style.color = "black";
+    		}
+    	}
+    }
+
+    function goalsPerSeason(data) {
+    	let attack = {};
+    	let maxGoals = Number.NEGATIVE_INFINITY;
+    	let minGoals = Number.POSITIVE_INFINITY;
+
+    	for (let team of Object.keys(data.standings)) {
+    		let totalGoals = 0;
+    		let gamesPlayed = 0;
+
+    		for (let season in data.standings[team]) {
+    			let goals = data.standings[team][season].gF;
+
+    			if (goals > 0) {
+    				totalGoals += goals;
+    				gamesPlayed += data.standings[team][season].played;
+    			}
+    		}
+
+    		let goalsPerGame = null;
+
+    		if (gamesPlayed > 0) {
+    			goalsPerGame = totalGoals / gamesPlayed;
+    		}
+
+    		if (goalsPerGame > maxGoals) {
+    			maxGoals = goalsPerGame;
+    		} else if (goalsPerGame < minGoals) {
+    			minGoals = goalsPerGame;
+    		}
+
+    		attack[team] = goalsPerGame;
+    	}
+
+    	return [attack, [minGoals, maxGoals]];
+    }
+
+    function scaleAttack(attack, range) {
+    	let [lower, upper] = range;
+
+    	for (let team in attack) {
+    		if (attack[team] == null) {
+    			attack[team] = 0;
+    		} else {
+    			attack[team] = (attack[team] - lower) / (upper - lower) * 100;
+    		}
+    	}
+
+    	return attack;
+    }
+
+    function attributeAvgScaled(attribute, max) {
+    	let total = 0;
+
+    	for (let team in attribute) {
+    		attribute[team] = attribute[team] / max * 100;
+    		total += attribute[team];
+    	}
+
+    	let avg = total / Object.keys(attribute).length;
+    	return avg;
+    }
+
+    function attributeAvg(attribute) {
+    	let total = 0;
+
+    	for (let team in attribute) {
+    		total += attribute[team];
+    	}
+
+    	let avg = total / Object.keys(attribute).length;
+    	return avg;
+    }
+
+    function getAttack(data) {
+    	let [attack, extremes] = goalsPerSeason(data);
+    	attack = scaleAttack(attack, extremes);
+    	attack.avg = attributeAvg(attack);
+    	return attack;
+    }
+
+    function concededPerSeason(data) {
+    	let defence = {};
+    	let maxConceded = Number.NEGATIVE_INFINITY;
+    	let minConceded = Number.POSITIVE_INFINITY;
+
+    	for (let team of Object.keys(data.standings)) {
+    		let totalConceded = 0;
+    		let gamesPlayed = 0;
+
+    		for (let season in data.standings[team]) {
+    			let goals = data.standings[team][season].gA;
+
+    			if (goals > 0) {
+    				totalConceded += goals;
+    				gamesPlayed += data.standings[team][season].played;
+    			}
+    		}
+
+    		let goalsPerGame = null;
+
+    		if (gamesPlayed > 0) {
+    			goalsPerGame = totalConceded / gamesPlayed;
+    		}
+
+    		maxConceded = Math.max(maxConceded, goalsPerGame);
+    		minConceded = Math.min(minConceded, goalsPerGame);
+    		defence[team] = goalsPerGame;
+    	}
+
+    	return [defence, [minConceded, maxConceded]];
+    }
+
+    function scaleDefence(defence, range) {
+    	let [lower, upper] = range;
+
+    	for (let team in defence) {
+    		if (defence[team] == null) {
+    			defence[team] = 0;
+    		} else {
+    			defence[team] = 100 - (defence[team] - lower) / (upper - lower) * 100;
+    		}
+    	}
+
+    	return defence;
+    }
+
+    function getDefence(data) {
+    	let [defence, range] = concededPerSeason(data);
+    	defence = scaleDefence(defence, range);
+    	defence.avg = attributeAvg(defence);
+    	return defence;
+    }
+
+    function formCleanSheets(form, team, season) {
+    	let nCleanSheets = 0;
+
+    	for (let matchday in form[team][season]) {
+    		let match = form[team][season][matchday];
+
+    		if (match.score != null) {
+    			let [h, _, a] = match.score.split(" ");
+
+    			if (match.atHome && a == 0) {
+    				nCleanSheets += 1;
+    			} else if (!match.atHome && h == 0) {
+    				nCleanSheets += 1;
+    			}
+    		}
+    	}
+
+    	return nCleanSheets;
+    }
+
+    function getCleanSheets(data) {
+    	//@ts-ignore
+    	let cleanSheets = {};
+
+    	let maxCleanSheets = Number.NEGATIVE_INFINITY;
+
+    	for (let team of Object.keys(data.standings)) {
+    		let nCleanSheets = formCleanSheets(data.form, team, data._id);
+
+    		if (teamInSeason$1(data.form, team, data._id - 1)) {
+    			nCleanSheets += formCleanSheets(data.form, team, data._id - 1);
+    		}
+
+    		if (teamInSeason$1(data.form, team, data._id - 2)) {
+    			nCleanSheets += formCleanSheets(data.form, team, data._id - 2);
+    		}
+
+    		if (nCleanSheets > maxCleanSheets) {
+    			maxCleanSheets = nCleanSheets;
+    		}
+
+    		cleanSheets[team] = nCleanSheets;
+    	}
+
+    	cleanSheets.avg = attributeAvgScaled(cleanSheets, maxCleanSheets);
+    	return cleanSheets;
+    }
+
+    function formConsistency(form, team, season) {
+    	let backToBack = 0; // Counts pairs of back to back identical match results
+    	let prevResult = null;
+
+    	for (let matchday in form[team][season]) {
+    		let match = form[team][season][matchday];
+
+    		if (match.score != null) {
+    			let [h, _, a] = match.score.split(" ");
+    			let result;
+
+    			if (match.atHome && h > a || !match.atHome && h < a) {
+    				result = "win";
+    			} else if (match.atHome && h < a || !match.atHome && h > a) {
+    				result = "lost";
+    			} else {
+    				result = "draw";
+    			}
+
+    			if (prevResult != null && prevResult == result) {
+    				backToBack += 1;
+    			}
+
+    			prevResult = result;
+    		}
+    	}
+
+    	return backToBack;
+    }
+
+    function getConsistency(data) {
+    	//@ts-ignore
+    	let consistency = {};
+
+    	let maxConsistency = Number.NEGATIVE_INFINITY;
+
+    	for (let team of Object.keys(data.standings)) {
+    		let backToBack = formConsistency(data.form, team, data._id);
+
+    		if (teamInSeason$1(data.form, team, data._id - 1)) {
+    			backToBack += formConsistency(data.form, team, data._id - 1);
+    		}
+
+    		if (teamInSeason$1(data.form, team, data._id - 2)) {
+    			backToBack += formConsistency(data.form, team, data._id - 2);
+    		}
+
+    		if (backToBack > maxConsistency) {
+    			maxConsistency = backToBack;
+    		}
+
+    		consistency[team] = backToBack;
+    	}
+
+    	consistency.avg = attributeAvgScaled(consistency, maxConsistency);
+    	return consistency;
+    }
+
+    function formWinStreak(form, team, season) {
+    	let winStreak = 0;
+    	let tempWinStreak = 0;
+
+    	for (let matchday in form[team][season]) {
+    		let match = form[team][season][matchday];
+
+    		if (match.score != null) {
+    			let [h, _, a] = match.score.split(" ");
+
+    			if (match.atHome && h > a || !match.atHome && h < a) {
+    				tempWinStreak += 1;
+
+    				if (tempWinStreak > winStreak) {
+    					winStreak = tempWinStreak;
+    				}
+    			} else {
+    				tempWinStreak = 0;
+    			}
+    		}
+    	}
+
+    	return winStreak;
+    }
+
+    function getWinStreak(data) {
+    	//@ts-ignore
+    	let winStreaks = {};
+
+    	let maxWinStreaks = Number.NEGATIVE_INFINITY;
+
+    	for (let team of Object.keys(data.standings)) {
+    		let winStreak = formWinStreak(data.form, team, data._id);
+
+    		if (teamInSeason$1(data.form, team, data._id - 1)) {
+    			winStreak += formWinStreak(data.form, team, data._id - 1);
+    		}
+
+    		if (teamInSeason$1(data.form, team, data._id - 2)) {
+    			winStreak += formWinStreak(data.form, team, data._id - 2);
+    		}
+
+    		if (winStreak > maxWinStreaks) {
+    			maxWinStreaks = winStreak;
+    		}
+
+    		winStreaks[team] = winStreak;
+    	}
+
+    	winStreaks.avg = attributeAvgScaled(winStreaks, maxWinStreaks);
+    	return winStreaks;
+    }
+
+    function removeItem(arr, value) {
+    	let index = arr.indexOf(value);
+
+    	if (index > -1) {
+    		arr.splice(index, 1);
+    	}
+
+    	return arr;
+    }
+
+    function formWinsVsBig6(form, team, season, big6) {
+    	let winsVsBig6 = 0;
+
+    	for (let matchday in form[team][season]) {
+    		let match = form[team][season][matchday];
+
+    		if (match.score != null && big6.includes(match.team)) {
+    			let [h, _, a] = match.score.split(" ");
+
+    			if (match.atHome && h > a || !match.atHome && h < a) {
+    				winsVsBig6 += 1;
+    			}
+    		}
+    	}
+
+    	return winsVsBig6;
+    }
+
+    function getVsBig6(data) {
+    	//@ts-ignore
+    	let vsBig6 = {};
+
+    	let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
+
+    	for (let team of Object.keys(data.standings)) {
+    		let big6 = [
+    			"Manchester United",
+    			"Liverpool",
+    			"Manchester City",
+    			"Arsenal",
+    			"Chelsea",
+    			"Tottenham Hotspur"
+    		];
+
+    		big6 = removeItem(big6, team);
+    		let winsVsBig6 = formWinsVsBig6(data.form, team, data._id, big6);
+
+    		if (teamInSeason$1(data.form, team, data._id - 1)) {
+    			winsVsBig6 += formWinsVsBig6(data.form, team, data._id - 1, big6);
+    		}
+
+    		if (teamInSeason$1(data.form, team, data._id - 2)) {
+    			winsVsBig6 += formWinsVsBig6(data.form, team, data._id - 2, big6);
+    		}
+
+    		if (winsVsBig6 > maxWinsVsBig6) {
+    			maxWinsVsBig6 = winsVsBig6;
+    		}
+
+    		vsBig6[team] = winsVsBig6;
+    	}
+
+    	vsBig6.avg = attributeAvgScaled(vsBig6, maxWinsVsBig6);
+    	return vsBig6;
+    }
+
+    function defaultLayout$2() {
+    	return {
+    		height: 550,
+    		polar: {
+    			radialaxis: { visible: true, range: [0, 100] }
+    		},
+    		hover: "closest",
+    		margin: { t: 25, b: 25, l: 75, r: 75 },
+    		showlegend: false,
+    		plot_bgcolor: "#fafafa",
+    		paper_bgcolor: "#fafafa",
+    		dragmode: false
+    	};
+    }
+
+    function emptyArray(arr) {
+    	let length = arr.length;
+
+    	for (let i = 0; i < length; i++) {
+    		arr.pop();
+    	}
+    }
+
+    function instance$9($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('SpiderGraph', slots, []);
+
+    	function addTeamComparison(team) {
+    		let teamColor = getTeamColor(team);
+
+    		let teamData = {
+    			name: team,
+    			type: "scatterpolar",
+    			r: [
+    				attack[team],
+    				defence[team],
+    				cleanSheets[team],
+    				consistency[team],
+    				winStreaks[team],
+    				vsBig6[team]
+    			],
+    			theta: labels,
+    			fill: "toself",
+    			marker: { color: teamColor }
+    		};
+
+    		plotData.data.push(teamData);
+
+    		//@ts-ignore
+    		Plotly.redraw(plotDiv); // Redraw with teamName added
+    	}
+
+    	function addAvg() {
+    		let avg = avgScatterPlot();
+    		plotData.data.unshift(avg); // Add avg below the teamName spider plot
+    	}
+
+    	function removeTeamComparison(team) {
+    		// Remove spider plot for this teamName
+    		for (let i = 0; i < plotData.data.length; i++) {
+    			if (plotData.data[i].name == team) {
+    				plotData.data.splice(i, 1);
+    				break;
+    			}
+    		}
+
+    		// If removing only comparison teamName, re-insert the initial avg spider plot
+    		if (comparisonTeams.length == 1) {
+    			addAvg();
+    		}
+
+    		//@ts-ignore
+    		Plotly.redraw(plotDiv); // Redraw with teamName removed
+    	}
+
+    	function removeAllTeamComparisons() {
+    		for (let i = 0; i < comparisonTeams.length; i++) {
+    			// Remove spider plot for this teamName
+    			for (let i = 0; i < plotData.data.length; i++) {
+    				if (plotData.data[i].name == comparisonTeams[i]) {
+    					plotData.data.splice(i, 1);
+    					break;
+    				}
+    			}
+
+    			// If removing only comparison teamName, re-insert the initial avg spider plot
+    			if (comparisonTeams.length == 1) {
+    				addAvg();
+    			}
+
+    			removeItem(comparisonTeams, comparisonTeams[i]); // Remove from comparison teams
+    		}
+
+    		//@ts-ignore
+    		Plotly.redraw(plotDiv); // Redraw with teamName removed
+    	}
+
+    	function spiderBtnClick(btn) {
+    		let team = toName(btn.innerHTML);
+
+    		if (btn.style.background == "") {
+    			let teamKey = team.toLowerCase().replace(/ /g, "-");
+    			btn.style.background = `var(--${teamKey})`;
+    			btn.style.color = `var(--${teamKey}-secondary)`;
+    		} else {
+    			btn.style.background = "";
+    			btn.style.color = "black";
+    		}
+
+    		if (comparisonTeams.length == 0) {
+    			plotData.data.splice(0, 1); // Remove avg
+    		}
+
+    		if (comparisonTeams.includes(team)) {
+    			removeTeamComparison(team); // Remove from spider chart
+    			removeItem(comparisonTeams, team); // Remove from comparison teams
+    		} else {
+    			addTeamComparison(team); // Add teamName to spider chart
+    			comparisonTeams.push(team); // Add to comparison teams
+    		}
+    	}
+
+    	function scatterPlot(name, r, color) {
+    		return {
+    			name,
+    			type: "scatterpolar",
+    			r,
+    			theta: labels,
+    			fill: "toself",
+    			marker: { color },
+    			hovertemplate: `<b>${name}</b><br>%{theta}: %{r}<extra></extra>`,
+    			hoveron: "points"
+    		};
+    	}
+
+    	function avgScatterPlot() {
+    		return scatterPlot(
+    			"Avg",
+    			[
+    				attack.avg,
+    				defence.avg,
+    				cleanSheets.avg,
+    				consistency.avg,
+    				winStreaks.avg,
+    				vsBig6.avg
+    			],
+    			"#ADADAD"
+    		);
+    	}
+
+    	function getTeamData(team) {
+    		let teamColor = getTeamColor(team);
+
+    		let teamData = scatterPlot(
+    			team,
+    			[
+    				attack[team],
+    				defence[team],
+    				cleanSheets[team],
+    				consistency[team],
+    				winStreaks[team],
+    				vsBig6[team]
+    			],
+    			teamColor
+    		);
+
+    		return teamData;
+    	}
+
+    	function initSpiderPlots(team) {
+    		let avgData = avgScatterPlot();
+    		let teamData = getTeamData(team);
+    		return [avgData, teamData];
+    	}
+
+    	function computePlotData(data) {
+    		attack = getAttack(data);
+    		defence = getDefence(data);
+    		cleanSheets = getCleanSheets(data);
+    		consistency = getConsistency(data);
+    		winStreaks = getWinStreak(data);
+    		vsBig6 = getVsBig6(data);
+    	}
+
+    	function buildPlotData(data, team) {
+    		computePlotData(data);
+    		let spiderPlots = initSpiderPlots(team);
+
+    		let plotData = {
+    			data: spiderPlots,
+    			layout: defaultLayout$2(),
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
+    	let attack, defence, cleanSheets, consistency, winStreaks, vsBig6;
+    	let labels = ["Attack", "Defence", "Clean Sheets", "Consistency", "Win Streak", "Vs Big 6"];
+    	let plotDiv, plotData;
+    	let comparisonTeams = [];
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		setup = true;
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData(data, team);
+
+    		//@ts-ignore
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-spider-chart");
+    		});
+
+    		// Add inner border radius to top and bottom teams
+    		document.getElementById("spider-opp-teams").children[0].classList.add("top-spider-opp-team-btn");
+
+    		document.getElementById("spider-opp-teams").children[18].classList.add("bottom-spider-opp-team-btn");
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let spiderPlots = initSpiderPlots(team);
+
+    			// Remove all but two plots
+    			emptyArray(plotData.data);
+
+    			// Replace final two plots with defaults
+    			plotData.data.push(spiderPlots[0]); // Reset to avg
+
+    			plotData.data.push(spiderPlots[1]); // Reset to team data
+    			removeAllTeamComparisons();
+    			resetTeamComparisonBtns();
+
+    			setTimeout(
+    				() => {
+    					document.getElementById("spider-opp-teams").children[0].classList.add("top-spider-opp-team-btn");
+    					document.getElementById("spider-opp-teams").children[18].classList.add("bottom-spider-opp-team-btn");
+    				},
+    				0
+    			);
+    		}
+    	}
+
+    	let { data, team, teams, toAlias, toName } = $$props;
+    	const writable_props = ['data', 'team', 'teams', 'toAlias', 'toName'];
+
+    	Object_1$3.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<SpiderGraph> was created with unknown prop '${key}'`);
+    	});
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(3, plotDiv);
+    		});
+    	}
+
+    	const click_handler = e => {
+    		//@ts-ignore
+    		spiderBtnClick(e.target);
+    	};
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(5, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    		if ('teams' in $$props) $$invalidate(1, teams = $$props.teams);
+    		if ('toAlias' in $$props) $$invalidate(2, toAlias = $$props.toAlias);
+    		if ('toName' in $$props) $$invalidate(6, toName = $$props.toName);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		getTeamColor,
+    		teamInSeason: teamInSeason$1,
+    		addTeamComparison,
+    		addAvg,
+    		removeTeamComparison,
+    		removeAllTeamComparisons,
+    		resetTeamComparisonBtns,
+    		spiderBtnClick,
+    		goalsPerSeason,
+    		scaleAttack,
+    		attributeAvgScaled,
+    		attributeAvg,
+    		getAttack,
+    		concededPerSeason,
+    		scaleDefence,
+    		getDefence,
+    		formCleanSheets,
+    		getCleanSheets,
+    		formConsistency,
+    		getConsistency,
+    		formWinStreak,
+    		getWinStreak,
+    		removeItem,
+    		formWinsVsBig6,
+    		getVsBig6,
+    		scatterPlot,
+    		avgScatterPlot,
+    		getTeamData,
+    		initSpiderPlots,
+    		computePlotData,
+    		defaultLayout: defaultLayout$2,
+    		buildPlotData,
+    		attack,
+    		defence,
+    		cleanSheets,
+    		consistency,
+    		winStreaks,
+    		vsBig6,
+    		labels,
+    		plotDiv,
+    		plotData,
+    		comparisonTeams,
+    		setup,
+    		genPlot,
+    		emptyArray,
+    		refreshPlot,
+    		data,
+    		team,
+    		teams,
+    		toAlias,
+    		toName
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('attack' in $$props) attack = $$props.attack;
+    		if ('defence' in $$props) defence = $$props.defence;
+    		if ('cleanSheets' in $$props) cleanSheets = $$props.cleanSheets;
+    		if ('consistency' in $$props) consistency = $$props.consistency;
+    		if ('winStreaks' in $$props) winStreaks = $$props.winStreaks;
+    		if ('vsBig6' in $$props) vsBig6 = $$props.vsBig6;
+    		if ('labels' in $$props) labels = $$props.labels;
+    		if ('plotDiv' in $$props) $$invalidate(3, plotDiv = $$props.plotDiv);
+    		if ('plotData' in $$props) plotData = $$props.plotData;
+    		if ('comparisonTeams' in $$props) comparisonTeams = $$props.comparisonTeams;
+    		if ('setup' in $$props) setup = $$props.setup;
+    		if ('data' in $$props) $$invalidate(5, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    		if ('teams' in $$props) $$invalidate(1, teams = $$props.teams);
+    		if ('toAlias' in $$props) $$invalidate(2, toAlias = $$props.toAlias);
+    		if ('toName' in $$props) $$invalidate(6, toName = $$props.toName);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty[0] & /*team*/ 1) {
+    			team && refreshPlot();
+    		}
+    	};
+
+    	return [
+    		team,
+    		teams,
+    		toAlias,
+    		plotDiv,
+    		spiderBtnClick,
+    		data,
+    		toName,
+    		div0_binding,
+    		click_handler
+    	];
+    }
+
+    class SpiderGraph extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(
+    			this,
+    			options,
+    			instance$9,
+    			create_fragment$9,
+    			safe_not_equal,
+    			{
+    				data: 5,
+    				team: 0,
+    				teams: 1,
+    				toAlias: 2,
+    				toName: 6
+    			},
+    			null,
+    			[-1, -1]
+    		);
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "SpiderGraph",
+    			options,
+    			id: create_fragment$9.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[5] === undefined && !('data' in props)) {
+    			console.warn("<SpiderGraph> was created without expected prop 'data'");
+    		}
+
+    		if (/*team*/ ctx[0] === undefined && !('team' in props)) {
+    			console.warn("<SpiderGraph> was created without expected prop 'team'");
+    		}
+
+    		if (/*teams*/ ctx[1] === undefined && !('teams' in props)) {
+    			console.warn("<SpiderGraph> was created without expected prop 'teams'");
+    		}
+
+    		if (/*toAlias*/ ctx[2] === undefined && !('toAlias' in props)) {
+    			console.warn("<SpiderGraph> was created without expected prop 'toAlias'");
+    		}
+
+    		if (/*toName*/ ctx[6] === undefined && !('toName' in props)) {
+    			console.warn("<SpiderGraph> was created without expected prop 'toName'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<SpiderGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<SpiderGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<SpiderGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<SpiderGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get teams() {
+    		throw new Error("<SpiderGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set teams(value) {
+    		throw new Error("<SpiderGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get toAlias() {
+    		throw new Error("<SpiderGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set toAlias(value) {
+    		throw new Error("<SpiderGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get toName() {
+    		throw new Error("<SpiderGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set toName(value) {
+    		throw new Error("<SpiderGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\ScorelineFreqGraph.svelte generated by Svelte v3.49.0 */
+
+    const { Object: Object_1$2 } = globals;
+    const file$7 = "src\\components\\ScorelineFreqGraph.svelte";
+
+    function create_fragment$8(ctx) {
+    	let div1;
+    	let div0;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "id", "plotDiv");
+    			add_location(div0, file$7, 250, 2, 7570);
+    			attr_dev(div1, "id", "plotly");
+    			add_location(div1, file$7, 249, 0, 7549);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			/*div0_binding*/ ctx[5](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			/*div0_binding*/ ctx[5](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$8.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function teamInSeason(form, team, season) {
+    	return team in form && form[team][season]['1'] != null;
+    }
+
+    function insertSeasonTeamScoreBars(scoreFreq, form, team, season) {
+    	for (let matchday in form[team][season]) {
+    		let score = form[team][season][matchday].score;
+
+    		if (score != null) {
+    			let [h, _, a] = score.split(" ");
+
+    			if (!form[team][season][matchday].atHome) {
+    				score = a + " - " + h;
+    			}
+
+    			scoreFreq[score][1] += 1;
+    		}
+    	}
+    }
+
+    function insertTeamScoreBars(data, team, scoreFreq) {
+    	for (let score in scoreFreq) {
+    		if (scoreFreq[score].length == 1) {
+    			scoreFreq[score].push(0);
+    		}
+    	}
+
+    	insertSeasonTeamScoreBars(scoreFreq, data.form, team, data._id);
+
+    	if (teamInSeason(data.form, team, data._id - 1)) {
+    		insertSeasonTeamScoreBars(scoreFreq, data.form, team, data._id - 1);
+    	}
+
+    	if (teamInSeason(data.form, team, data._id - 2)) {
+    		insertSeasonTeamScoreBars(scoreFreq, data.form, team, data._id - 2);
+    	}
+    }
+
+    function getColours(scores) {
+    	let colours = [];
+
+    	for (let score of scores) {
+    		let [h, _, a] = score.split(" ");
+    		h = parseInt(h);
+    		a = parseInt(a);
+
+    		if (h > a) {
+    			colours.push("#00fe87");
+    		} else if (h < a) {
+    			colours.push("#f83027");
+    		} else {
+    			colours.push("#ffdd00");
+    		}
+    	}
+
+    	return colours;
+    }
+
+    function separateBars(scoreFreq) {
+    	let sorted = Object.entries(scoreFreq).sort((a, b) => b[1][0] - a[1][0]);
+    	let x = [];
+    	let avgY = [];
+    	let teamY = [];
+
+    	for (let i = 0; i < sorted.length; i++) {
+    		x.push(sorted[i][0]);
+    		avgY.push(sorted[i][1][0]);
+    		teamY.push(sorted[i][1][1]);
+    	}
+
+    	let colours = getColours(x);
+
+    	return [
+    		{
+    			x,
+    			y: avgY,
+    			type: "bar",
+    			name: "Avg",
+    			marker: { color: "#C6C6C6" },
+    			hovertemplate: `%{x} with probability <b>%{y:.2f}</b><extra></extra>`,
+    			hoverinfo: "x+y"
+    		},
+    		{
+    			x,
+    			y: teamY,
+    			type: "bar",
+    			name: "Scorelines",
+    			marker: { color: colours },
+    			hovertemplate: `%{x} with probability <b>%{y:.2f}</b><extra></extra>`,
+    			hoverinfo: "x+y",
+    			opacity: 0.5
+    		}
+    	];
+    }
+
+    function scaleBars(scoreFreq) {
+    	let avgTotal = 0;
+    	let teamTotal = 0;
+
+    	for (let score in scoreFreq) {
+    		avgTotal += scoreFreq[score][0];
+    		teamTotal += scoreFreq[score][1];
+    	}
+
+    	// Scale team frequency values to match average
+    	for (let score in scoreFreq) {
+    		scoreFreq[score][1] *= avgTotal / teamTotal;
+    	}
+    }
+
+    function convertToPercentage(scoreFreq) {
+    	let avgTotal = 0;
+    	let teamTotal = 0;
+
+    	for (let score in scoreFreq) {
+    		avgTotal += scoreFreq[score][0];
+    		teamTotal += scoreFreq[score][1];
+    	}
+
+    	// Scale team frequency values to match average
+    	for (let score in scoreFreq) {
+    		scoreFreq[score][0] /= avgTotal;
+    		scoreFreq[score][1] /= teamTotal;
+    	}
+    }
+
+    function defaultLayout$1() {
+    	return {
+    		title: false,
+    		autosize: true,
+    		margin: { r: 20, l: 65, t: 15, b: 60, pad: 5 },
+    		hovermode: "closest",
+    		barmode: "overlay",
+    		bargap: 0,
+    		plot_bgcolor: "#fafafa",
+    		paper_bgcolor: "#fafafa",
+    		yaxis: {
+    			title: { text: "Probability" },
+    			gridcolor: "gray",
+    			showgrid: false,
+    			showline: false,
+    			zeroline: false,
+    			fixedrange: true
+    		},
+    		xaxis: {
+    			title: { text: "Scoreline" },
+    			linecolor: "black",
+    			showgrid: false,
+    			showline: false,
+    			fixedrange: true
+    		},
+    		legend: { x: 1, xanchor: "right", y: 0.95 },
+    		dragmode: false
+    	};
+    }
+
+    function resetTeamBars(scoreFreq) {
+    	for (let score in scoreFreq) {
+    		scoreFreq[score][1] = 0;
+    	}
+    }
+
+    function instance$8($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('ScorelineFreqGraph', slots, []);
+
+    	function insertSeasonAvgScoreFreq(scoreFreq, form, team, season) {
+    		for (let matchday in form[team][season]) {
+    			let score = data.form[team][season][matchday].score;
+
+    			if (score != null) {
+    				let [h, _, a] = score.split(" ");
+
+    				if (!data.form[team][season][matchday].atHome) {
+    					score = a + " - " + h;
+    				}
+
+    				if (!(score in scoreFreq)) {
+    					scoreFreq[score] = [0];
+    				}
+
+    				scoreFreq[score][0] += 1;
+    			}
+    		}
+    	}
+
+    	function getAvgScoreFreq(data) {
+    		let scoreFreq = {};
+
+    		for (let team in data.form) {
+    			insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id);
+
+    			if (teamInSeason(data.form, team, data._id - 1)) {
+    				insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id - 1);
+    			}
+
+    			if (teamInSeason(data.form, team, data._id - 2)) {
+    				insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id - 2);
+    			}
+    		}
+
+    		return scoreFreq;
+    	}
+
+    	function setDefaultLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": { text: "Probability" },
+    				"yaxis.visible": true,
+    				"xaxis.tickfont.size": 12,
+    				"margin.l": 65
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function setMobileLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": null,
+    				"yaxis.visible": false,
+    				"xaxis.tickfont.size": 5,
+    				"margin.l": 20
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function buildPlotData(data, team) {
+    		scoreFreq = getAvgScoreFreq(data);
+    		insertTeamScoreBars(data, team, scoreFreq);
+    		scaleBars(scoreFreq);
+    		convertToPercentage(scoreFreq);
+    		let [avgBars, teamBars] = separateBars(scoreFreq);
+
+    		let plotData = {
+    			data: [avgBars, teamBars],
+    			layout: defaultLayout$1(),
+    			config: {
+    				responsive: true,
+    				showSendToCloud: false,
+    				displayModeBar: false
+    			}
+    		};
+
+    		return plotData;
+    	}
+
+    	function genPlot() {
+    		plotData = buildPlotData(data, team);
+
+    		//@ts-ignore
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			resetTeamBars(scoreFreq);
+    			insertTeamScoreBars(data, team, scoreFreq);
+    			scaleBars(scoreFreq);
+    			convertToPercentage(scoreFreq);
+    			let [_, teamBars] = separateBars(scoreFreq);
+    			plotData.data[1] = teamBars; // Update team bars
+
+    			//@ts-ignore
+    			Plotly.redraw(plotDiv);
+
+    			if (mobileView) {
+    				setMobileLayout();
+    			}
+    		}
+    	}
+
+    	let plotDiv, plotData;
+    	let scoreFreq;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		$$invalidate(4, setup = true);
+    	});
+
+    	let { data, team, mobileView } = $$props;
+    	const writable_props = ['data', 'team', 'mobileView'];
+
+    	Object_1$2.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<ScorelineFreqGraph> was created with unknown prop '${key}'`);
+    	});
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('mobileView' in $$props) $$invalidate(3, mobileView = $$props.mobileView);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		teamInSeason,
+    		insertSeasonAvgScoreFreq,
+    		getAvgScoreFreq,
+    		insertSeasonTeamScoreBars,
+    		insertTeamScoreBars,
+    		getColours,
+    		separateBars,
+    		scaleBars,
+    		convertToPercentage,
+    		defaultLayout: defaultLayout$1,
+    		setDefaultLayout,
+    		setMobileLayout,
+    		buildPlotData,
+    		genPlot,
+    		resetTeamBars,
+    		refreshPlot,
+    		plotDiv,
+    		plotData,
+    		scoreFreq,
+    		setup,
+    		data,
+    		team,
+    		mobileView
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('plotDiv' in $$props) $$invalidate(0, plotDiv = $$props.plotDiv);
+    		if ('plotData' in $$props) plotData = $$props.plotData;
+    		if ('scoreFreq' in $$props) scoreFreq = $$props.scoreFreq;
+    		if ('setup' in $$props) $$invalidate(4, setup = $$props.setup);
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('mobileView' in $$props) $$invalidate(3, mobileView = $$props.mobileView);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && refreshPlot();
+    		}
+
+    		if ($$self.$$.dirty & /*mobileView*/ 8) {
+    			!mobileView && setDefaultLayout();
+    		}
+
+    		if ($$self.$$.dirty & /*setup, mobileView*/ 24) {
+    			setup && mobileView && setMobileLayout();
+    		}
+    	};
+
+    	return [plotDiv, data, team, mobileView, setup, div0_binding];
+    }
+
+    class ScorelineFreqGraph extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$8, create_fragment$8, safe_not_equal, { data: 1, team: 2, mobileView: 3 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "ScorelineFreqGraph",
+    			options,
+    			id: create_fragment$8.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[1] === undefined && !('data' in props)) {
+    			console.warn("<ScorelineFreqGraph> was created without expected prop 'data'");
+    		}
+
+    		if (/*team*/ ctx[2] === undefined && !('team' in props)) {
+    			console.warn("<ScorelineFreqGraph> was created without expected prop 'team'");
+    		}
+
+    		if (/*mobileView*/ ctx[3] === undefined && !('mobileView' in props)) {
+    			console.warn("<ScorelineFreqGraph> was created without expected prop 'mobileView'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<ScorelineFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<ScorelineFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<ScorelineFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<ScorelineFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get mobileView() {
+    		throw new Error("<ScorelineFreqGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set mobileView(value) {
+    		throw new Error("<ScorelineFreqGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\nav\Nav.svelte generated by Svelte v3.49.0 */
+
+    const file$6 = "src\\components\\nav\\Nav.svelte";
+
+    function get_each_context_1$1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[9] = list[i];
+    	child_ctx[8] = i;
+    	return child_ctx;
+    }
+
+    function get_each_context$2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[6] = list[i];
+    	child_ctx[8] = i;
+    	return child_ctx;
+    }
+
+    // (28:6) {:else}
+    function create_else_block$3(ctx) {
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
+    	let each_1_anchor;
+    	let each_value_1 = /*teams*/ ctx[1];
+    	validate_each_argument(each_value_1);
+    	const get_key = ctx => /*_team*/ ctx[9];
+    	validate_each_keys(ctx, each_value_1, get_each_context_1$1, get_key);
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		let child_ctx = get_each_context_1$1(ctx, each_value_1, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block_1$1(key, child_ctx));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(nodes);
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_hydration_dev(target, each_1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*teams, toAlias, team, switchTeam*/ 15) {
+    				each_value_1 = /*teams*/ ctx[1];
+    				validate_each_argument(each_value_1);
+    				validate_each_keys(ctx, each_value_1, get_each_context_1$1, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value_1, each_1_lookup, each_1_anchor.parentNode, destroy_block, create_each_block_1$1, each_1_anchor, get_each_context_1$1);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d(detaching);
+    			}
+
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$3.name,
+    		type: "else",
+    		source: "(28:6) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (24:6) {#if teams.length == 0}
+    function create_if_block$3(ctx) {
+    	let each_1_anchor;
+    	let each_value = /*widths*/ ctx[4];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(nodes);
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_hydration_dev(target, each_1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*widths*/ 16) {
+    				each_value = /*widths*/ ctx[4];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$2(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$2(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$3.name,
+    		type: "if",
+    		source: "(24:6) {#if teams.length == 0}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (42:10) {:else}
+    function create_else_block_1$2(ctx) {
+    	let button;
+    	let div;
+    	let t0_value = /*toAlias*/ ctx[2](/*_team*/ ctx[9]) + "";
+    	let t0;
+    	let t1;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[5](/*_team*/ ctx[9]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			div = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			button = claim_element(nodes, "BUTTON", { class: true });
+    			var button_nodes = children(button);
+    			div = claim_element(button_nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t0 = claim_text(div_nodes, t0_value);
+    			div_nodes.forEach(detach_dev);
+    			t1 = claim_space(button_nodes);
+    			button_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "team-name svelte-14nmjz0");
+    			add_location(div, file$6, 48, 14, 1706);
+    			attr_dev(button, "class", "team-link svelte-14nmjz0");
+    			add_location(button, file$6, 42, 12, 1515);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, button, anchor);
+    			append_hydration_dev(button, div);
+    			append_hydration_dev(div, t0);
+    			append_hydration_dev(button, t1);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", click_handler, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*toAlias, teams*/ 6 && t0_value !== (t0_value = /*toAlias*/ ctx[2](/*_team*/ ctx[9]) + "")) set_data_dev(t0, t0_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1$2.name,
+    		type: "else",
+    		source: "(42:10) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (30:10) {#if _team.toLowerCase().replace(/ /g, "-") == team}
+    function create_if_block_1$3(ctx) {
+    	let a;
+    	let div;
+    	let t0_value = /*toAlias*/ ctx[2](/*_team*/ ctx[9]) + "";
+    	let t0;
+    	let t1;
+    	let a_href_value;
+
+    	const block = {
+    		c: function create() {
+    			a = element("a");
+    			div = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			a = claim_element(nodes, "A", { href: true, class: true });
+    			var a_nodes = children(a);
+    			div = claim_element(a_nodes, "DIV", { class: true, style: true });
+    			var div_nodes = children(div);
+    			t0 = claim_text(div_nodes, t0_value);
+    			div_nodes.forEach(detach_dev);
+    			t1 = claim_space(a_nodes);
+    			a_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "this-team-name svelte-14nmjz0");
+    			set_style(div, "color", "var(--" + /*_team*/ ctx[9].toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			set_style(div, "background-color", "var(--" + /*_team*/ ctx[9].toLowerCase().replace(/ /g, '-') + ")");
+    			add_location(div, file$6, 31, 14, 1131);
+    			attr_dev(a, "href", a_href_value = "/" + /*_team*/ ctx[9].toLowerCase().replace(/ /g, '-'));
+    			attr_dev(a, "class", "team-link");
+    			add_location(a, file$6, 30, 12, 1045);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, a, anchor);
+    			append_hydration_dev(a, div);
+    			append_hydration_dev(div, t0);
+    			append_hydration_dev(a, t1);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*toAlias, teams*/ 6 && t0_value !== (t0_value = /*toAlias*/ ctx[2](/*_team*/ ctx[9]) + "")) set_data_dev(t0, t0_value);
+
+    			if (dirty & /*teams*/ 2) {
+    				set_style(div, "color", "var(--" + /*_team*/ ctx[9].toLowerCase().replace(/ /g, '-') + "-secondary)");
+    			}
+
+    			if (dirty & /*teams*/ 2) {
+    				set_style(div, "background-color", "var(--" + /*_team*/ ctx[9].toLowerCase().replace(/ /g, '-') + ")");
+    			}
+
+    			if (dirty & /*teams*/ 2 && a_href_value !== (a_href_value = "/" + /*_team*/ ctx[9].toLowerCase().replace(/ /g, '-'))) {
+    				attr_dev(a, "href", a_href_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(a);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$3.name,
+    		type: "if",
+    		source: "(30:10) {#if _team.toLowerCase().replace(/ /g, \\\"-\\\") == team}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (29:8) {#each teams as _team, _ (_team)}
+    function create_each_block_1$1(key_1, ctx) {
+    	let first;
+    	let show_if;
+    	let if_block_anchor;
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (dirty & /*teams, team*/ 3) show_if = null;
+    		if (show_if == null) show_if = !!(/*_team*/ ctx[9].toLowerCase().replace(/ /g, "-") == /*team*/ ctx[0]);
+    		if (show_if) return create_if_block_1$3;
+    		return create_else_block_1$2;
+    	}
+
+    	let current_block_type = select_block_type_1(ctx, -1);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			first = empty();
+    			if_block.c();
+    			if_block_anchor = empty();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			first = empty();
+    			if_block.l(nodes);
+    			if_block_anchor = empty();
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			this.first = first;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, first, anchor);
+    			if_block.m(target, anchor);
+    			insert_hydration_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+
+    			if (current_block_type === (current_block_type = select_block_type_1(ctx, dirty)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(first);
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1$1.name,
+    		type: "each",
+    		source: "(29:8) {#each teams as _team, _ (_team)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (25:8) {#each widths as width, _}
+    function create_each_block$2(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true, style: true });
+    			children(div).forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "placeholder svelte-14nmjz0");
+    			set_style(div, "width", /*width*/ ctx[6] + "%");
+    			add_location(div, file$6, 25, 10, 837);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$2.name,
+    		type: "each",
+    		source: "(25:8) {#each widths as width, _}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$7(ctx) {
+    	let nav;
+    	let div0;
+    	let p;
+    	let span;
+    	let t0;
+    	let t1;
+    	let t2;
+    	let div1;
+    	let t3;
+    	let div2;
+    	let button;
+    	let img;
+    	let img_src_value;
+    	let mounted;
+    	let dispose;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*teams*/ ctx[1].length == 0) return create_if_block$3;
+    		return create_else_block$3;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			nav = element("nav");
+    			div0 = element("div");
+    			p = element("p");
+    			span = element("span");
+    			t0 = text("pl");
+    			t1 = text("dashboard");
+    			t2 = space();
+    			div1 = element("div");
+    			if_block.c();
+    			t3 = space();
+    			div2 = element("div");
+    			button = element("button");
+    			img = element("img");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			nav = claim_element(nodes, "NAV", { id: true, class: true });
+    			var nav_nodes = children(nav);
+    			div0 = claim_element(nav_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			p = claim_element(div0_nodes, "P", {});
+    			var p_nodes = children(p);
+    			span = claim_element(p_nodes, "SPAN", { style: true });
+    			var span_nodes = children(span);
+    			t0 = claim_text(span_nodes, "pl");
+    			span_nodes.forEach(detach_dev);
+    			t1 = claim_text(p_nodes, "dashboard");
+    			p_nodes.forEach(detach_dev);
+    			div0_nodes.forEach(detach_dev);
+    			t2 = claim_space(nav_nodes);
+    			div1 = claim_element(nav_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			if_block.l(div1_nodes);
+    			div1_nodes.forEach(detach_dev);
+    			t3 = claim_space(nav_nodes);
+    			div2 = claim_element(nav_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			button = claim_element(div2_nodes, "BUTTON", { class: true });
+    			var button_nodes = children(button);
+    			img = claim_element(button_nodes, "IMG", { src: true, alt: true });
+    			button_nodes.forEach(detach_dev);
+    			div2_nodes.forEach(detach_dev);
+    			nav_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			set_style(span, "color", "#00fe87");
+    			add_location(span, file$6, 19, 6, 663);
+    			add_location(p, file$6, 18, 4, 652);
+    			attr_dev(div0, "class", "title no-selection svelte-14nmjz0");
+    			add_location(div0, file$6, 17, 2, 614);
+    			attr_dev(div1, "class", "team-links svelte-14nmjz0");
+    			add_location(div1, file$6, 22, 2, 734);
+    			if (!src_url_equal(img.src, img_src_value = "img/arrow-bar-left.svg")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", "");
+    			add_location(img, file$6, 58, 6, 1955);
+    			attr_dev(button, "class", "close-btn svelte-14nmjz0");
+    			add_location(button, file$6, 57, 4, 1898);
+    			attr_dev(div2, "class", "close");
+    			add_location(div2, file$6, 56, 4, 1873);
+    			attr_dev(nav, "id", "navBar");
+    			attr_dev(nav, "class", "svelte-14nmjz0");
+    			add_location(nav, file$6, 16, 0, 593);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, nav, anchor);
+    			append_hydration_dev(nav, div0);
+    			append_hydration_dev(div0, p);
+    			append_hydration_dev(p, span);
+    			append_hydration_dev(span, t0);
+    			append_hydration_dev(p, t1);
+    			append_hydration_dev(nav, t2);
+    			append_hydration_dev(nav, div1);
+    			if_block.m(div1, null);
+    			append_hydration_dev(nav, t3);
+    			append_hydration_dev(nav, div2);
+    			append_hydration_dev(div2, button);
+    			append_hydration_dev(button, img);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", closeNavBar, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(div1, null);
+    				}
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(nav);
+    			if_block.d();
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$7.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function closeNavBar() {
+    	document.getElementById("navBar").style.display = "none";
+    	document.getElementById("dashboard").style.marginLeft = "0";
+    	window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
+    }
+
+    function openNavBar() {
+    	document.getElementById("navBar").style.display = "block";
+    	document.getElementById("dashboard").style.marginLeft = "200px";
+    }
+
+    function instance$7($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Nav', slots, []);
+    	let widths = [];
+
+    	for (let i = 0; i < 20; i++) {
+    		widths.push(35 + Math.floor(Math.random() * 8) * 5);
+    	}
+
+    	let { team, teams, toAlias, switchTeam } = $$props;
+    	const writable_props = ['team', 'teams', 'toAlias', 'switchTeam'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Nav> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = _team => {
+    		switchTeam(_team.toLowerCase().replace(/ /g, "-"));
+    	};
+
+    	$$self.$$set = $$props => {
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    		if ('teams' in $$props) $$invalidate(1, teams = $$props.teams);
+    		if ('toAlias' in $$props) $$invalidate(2, toAlias = $$props.toAlias);
+    		if ('switchTeam' in $$props) $$invalidate(3, switchTeam = $$props.switchTeam);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		closeNavBar,
+    		openNavBar,
+    		widths,
+    		team,
+    		teams,
+    		toAlias,
+    		switchTeam
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('widths' in $$props) $$invalidate(4, widths = $$props.widths);
+    		if ('team' in $$props) $$invalidate(0, team = $$props.team);
+    		if ('teams' in $$props) $$invalidate(1, teams = $$props.teams);
+    		if ('toAlias' in $$props) $$invalidate(2, toAlias = $$props.toAlias);
+    		if ('switchTeam' in $$props) $$invalidate(3, switchTeam = $$props.switchTeam);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [team, teams, toAlias, switchTeam, widths, click_handler];
+    }
+
+    class Nav extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$7, create_fragment$7, safe_not_equal, {
+    			team: 0,
+    			teams: 1,
+    			toAlias: 2,
+    			switchTeam: 3
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Nav",
+    			options,
+    			id: create_fragment$7.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*team*/ ctx[0] === undefined && !('team' in props)) {
+    			console.warn("<Nav> was created without expected prop 'team'");
+    		}
+
+    		if (/*teams*/ ctx[1] === undefined && !('teams' in props)) {
+    			console.warn("<Nav> was created without expected prop 'teams'");
+    		}
+
+    		if (/*toAlias*/ ctx[2] === undefined && !('toAlias' in props)) {
+    			console.warn("<Nav> was created without expected prop 'toAlias'");
+    		}
+
+    		if (/*switchTeam*/ ctx[3] === undefined && !('switchTeam' in props)) {
+    			console.warn("<Nav> was created without expected prop 'switchTeam'");
+    		}
+    	}
+
+    	get team() {
+    		throw new Error("<Nav>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<Nav>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get teams() {
+    		throw new Error("<Nav>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set teams(value) {
+    		throw new Error("<Nav>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get toAlias() {
+    		throw new Error("<Nav>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set toAlias(value) {
+    		throw new Error("<Nav>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get switchTeam() {
+    		throw new Error("<Nav>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set switchTeam(value) {
+    		throw new Error("<Nav>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\nav\MobileNav.svelte generated by Svelte v3.49.0 */
+
+    const file$5 = "src\\components\\nav\\MobileNav.svelte";
+
+    function get_each_context$1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[11] = list[i];
+    	child_ctx[13] = i;
+    	return child_ctx;
+    }
+
+    // (26:2) {#if hyphenatedTeams != undefined}
+    function create_if_block$2(ctx) {
+    	let div;
+    	let each_value = /*hyphenatedTeams*/ ctx[2];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(div_nodes);
+    			}
+
+    			div_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "team-links svelte-1d401pl");
+    			add_location(div, file$5, 26, 4, 866);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div, null);
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*hyphenatedTeams, switchTeamToTop, toAlias, teams*/ 15) {
+    				each_value = /*hyphenatedTeams*/ ctx[2];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$1(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$2.name,
+    		type: "if",
+    		source: "(26:2) {#if hyphenatedTeams != undefined}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (29:8) {#if team != null}
+    function create_if_block_1$2(ctx) {
+    	let if_block_anchor;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*i*/ ctx[13] == 0 || /*i*/ ctx[13] == 1 && /*hyphenatedTeams*/ ctx[2][0] == null) return create_if_block_2$1;
+    		if (/*i*/ ctx[13] == /*hyphenatedTeams*/ ctx[2].length - 1 || /*i*/ ctx[13] == /*hyphenatedTeams*/ ctx[2].length - 2 && /*hyphenatedTeams*/ ctx[2][/*hyphenatedTeams*/ ctx[2].length - 1] == null) return create_if_block_3$2;
+    		return create_else_block$2;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert_hydration_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$2.name,
+    		type: "if",
+    		source: "(29:8) {#if team != null}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (50:10) {:else}
+    function create_else_block$2(ctx) {
+    	let button;
+    	let t_value = /*toAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[13]]) + "";
+    	let t;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler_2() {
+    		return /*click_handler_2*/ ctx[9](/*team*/ ctx[11]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			t = text(t_value);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			button = claim_element(nodes, "BUTTON", { style: true, class: true });
+    			var button_nodes = children(button);
+    			t = claim_text(button_nodes, t_value);
+    			button_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			set_style(button, "color", "var(--" + /*team*/ ctx[11] + "-secondary)");
+    			set_style(button, "background-color", "var(--" + /*team*/ ctx[11] + ")");
+    			attr_dev(button, "class", "team-link svelte-1d401pl");
+    			add_location(button, file$5, 50, 12, 1991);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, button, anchor);
+    			append_hydration_dev(button, t);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", click_handler_2, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*toAlias, teams*/ 3 && t_value !== (t_value = /*toAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[13]]) + "")) set_data_dev(t, t_value);
+
+    			if (dirty & /*hyphenatedTeams*/ 4) {
+    				set_style(button, "color", "var(--" + /*team*/ ctx[11] + "-secondary)");
+    			}
+
+    			if (dirty & /*hyphenatedTeams*/ 4) {
+    				set_style(button, "background-color", "var(--" + /*team*/ ctx[11] + ")");
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$2.name,
+    		type: "else",
+    		source: "(50:10) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (40:144) 
+    function create_if_block_3$2(ctx) {
+    	let button;
+    	let t_value = /*toAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[13]]) + "";
+    	let t;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler_1() {
+    		return /*click_handler_1*/ ctx[8](/*i*/ ctx[13]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			t = text(t_value);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			button = claim_element(nodes, "BUTTON", { style: true, class: true });
+    			var button_nodes = children(button);
+    			t = claim_text(button_nodes, t_value);
+    			button_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			set_style(button, "color", "var(--" + /*hyphenatedTeams*/ ctx[2][/*i*/ ctx[13]] + "-secondary)");
+    			set_style(button, "background-color", "var(--" + /*hyphenatedTeams*/ ctx[2][/*i*/ ctx[13]] + ")");
+    			attr_dev(button, "class", "team-link last-team svelte-1d401pl");
+    			add_location(button, file$5, 41, 12, 1628);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, button, anchor);
+    			append_hydration_dev(button, t);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", click_handler_1, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*toAlias, teams*/ 3 && t_value !== (t_value = /*toAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[13]]) + "")) set_data_dev(t, t_value);
+
+    			if (dirty & /*hyphenatedTeams*/ 4) {
+    				set_style(button, "color", "var(--" + /*hyphenatedTeams*/ ctx[2][/*i*/ ctx[13]] + "-secondary)");
+    			}
+
+    			if (dirty & /*hyphenatedTeams*/ 4) {
+    				set_style(button, "background-color", "var(--" + /*hyphenatedTeams*/ ctx[2][/*i*/ ctx[13]] + ")");
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3$2.name,
+    		type: "if",
+    		source: "(40:144) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (30:10) {#if i == 0 || (i == 1 && hyphenatedTeams[0] == null)}
+    function create_if_block_2$1(ctx) {
+    	let button;
+    	let t_value = /*toAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[13]]) + "";
+    	let t;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[7](/*i*/ ctx[13]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			t = text(t_value);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			button = claim_element(nodes, "BUTTON", { style: true, class: true });
+    			var button_nodes = children(button);
+    			t = claim_text(button_nodes, t_value);
+    			button_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			set_style(button, "color", "var(--" + /*hyphenatedTeams*/ ctx[2][/*i*/ ctx[13]] + "-secondary)");
+    			set_style(button, "background-color", "var(--" + /*hyphenatedTeams*/ ctx[2][/*i*/ ctx[13]] + ")");
+    			attr_dev(button, "class", "team-link first-team svelte-1d401pl");
+    			add_location(button, file$5, 31, 12, 1091);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, button, anchor);
+    			append_hydration_dev(button, t);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", click_handler, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*toAlias, teams*/ 3 && t_value !== (t_value = /*toAlias*/ ctx[1](/*teams*/ ctx[0][/*i*/ ctx[13]]) + "")) set_data_dev(t, t_value);
+
+    			if (dirty & /*hyphenatedTeams*/ 4) {
+    				set_style(button, "color", "var(--" + /*hyphenatedTeams*/ ctx[2][/*i*/ ctx[13]] + "-secondary)");
+    			}
+
+    			if (dirty & /*hyphenatedTeams*/ 4) {
+    				set_style(button, "background-color", "var(--" + /*hyphenatedTeams*/ ctx[2][/*i*/ ctx[13]] + ")");
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2$1.name,
+    		type: "if",
+    		source: "(30:10) {#if i == 0 || (i == 1 && hyphenatedTeams[0] == null)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (28:6) {#each hyphenatedTeams as team, i}
+    function create_each_block$1(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*team*/ ctx[11] != null && create_if_block_1$2(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			if (if_block) if_block.l(nodes);
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_hydration_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*team*/ ctx[11] != null) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_1$2(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$1.name,
+    		type: "each",
+    		source: "(28:6) {#each hyphenatedTeams as team, i}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$6(ctx) {
+    	let nav;
+    	let if_block = /*hyphenatedTeams*/ ctx[2] != undefined && create_if_block$2(ctx);
+
+    	const block = {
+    		c: function create() {
+    			nav = element("nav");
+    			if (if_block) if_block.c();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			nav = claim_element(nodes, "NAV", { id: true, style: true, class: true });
+    			var nav_nodes = children(nav);
+    			if (if_block) if_block.l(nav_nodes);
+    			nav_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(nav, "id", "mobileNav");
+    			set_style(nav, "width", "0px");
+    			attr_dev(nav, "class", "svelte-1d401pl");
+    			add_location(nav, file$5, 24, 0, 782);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, nav, anchor);
+    			if (if_block) if_block.m(nav, null);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*hyphenatedTeams*/ ctx[2] != undefined) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$2(ctx);
+    					if_block.c();
+    					if_block.m(nav, null);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(nav);
+    			if (if_block) if_block.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$6.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$6($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('MobileNav', slots, []);
+
+    	function switchTeamToTop(team) {
+    		switchTeam(team);
+    		window.scrollTo(0, 0);
+    		toggleMobileNav();
+    	}
+
+    	function getHyphenatedTeamNames() {
+    		let hyphenatedTeamNames = [];
+
+    		for (let i = 0; i < teams.length; i++) {
+    			let teamLink = teams[i].toLowerCase().replace(/ /g, "-");
+
+    			if (teamLink != hyphenatedTeam) {
+    				hyphenatedTeamNames.push(teamLink);
+    			} else {
+    				hyphenatedTeamNames.push(null); // To keep teams and teamLinks list same length
+    			}
+    		}
+
+    		$$invalidate(2, hyphenatedTeams = hyphenatedTeamNames);
+    	}
+
+    	let hyphenatedTeams;
+    	let { hyphenatedTeam, teams, toAlias, switchTeam, toggleMobileNav } = $$props;
+    	const writable_props = ['hyphenatedTeam', 'teams', 'toAlias', 'switchTeam', 'toggleMobileNav'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<MobileNav> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = i => {
+    		switchTeamToTop(hyphenatedTeams[i]);
+    	};
+
+    	const click_handler_1 = i => {
+    		switchTeamToTop(hyphenatedTeams[i]);
+    	};
+
+    	const click_handler_2 = team => {
+    		switchTeamToTop(team);
+    	};
+
+    	$$self.$$set = $$props => {
+    		if ('hyphenatedTeam' in $$props) $$invalidate(4, hyphenatedTeam = $$props.hyphenatedTeam);
+    		if ('teams' in $$props) $$invalidate(0, teams = $$props.teams);
+    		if ('toAlias' in $$props) $$invalidate(1, toAlias = $$props.toAlias);
+    		if ('switchTeam' in $$props) $$invalidate(5, switchTeam = $$props.switchTeam);
+    		if ('toggleMobileNav' in $$props) $$invalidate(6, toggleMobileNav = $$props.toggleMobileNav);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		switchTeamToTop,
+    		getHyphenatedTeamNames,
+    		hyphenatedTeams,
+    		hyphenatedTeam,
+    		teams,
+    		toAlias,
+    		switchTeam,
+    		toggleMobileNav
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('hyphenatedTeams' in $$props) $$invalidate(2, hyphenatedTeams = $$props.hyphenatedTeams);
+    		if ('hyphenatedTeam' in $$props) $$invalidate(4, hyphenatedTeam = $$props.hyphenatedTeam);
+    		if ('teams' in $$props) $$invalidate(0, teams = $$props.teams);
+    		if ('toAlias' in $$props) $$invalidate(1, toAlias = $$props.toAlias);
+    		if ('switchTeam' in $$props) $$invalidate(5, switchTeam = $$props.switchTeam);
+    		if ('toggleMobileNav' in $$props) $$invalidate(6, toggleMobileNav = $$props.toggleMobileNav);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*hyphenatedTeam, teams*/ 17) {
+    			//@ts-ignore
+    			hyphenatedTeam & teams.length > 0 & getHyphenatedTeamNames();
+    		}
+    	};
+
+    	return [
+    		teams,
+    		toAlias,
+    		hyphenatedTeams,
+    		switchTeamToTop,
+    		hyphenatedTeam,
+    		switchTeam,
+    		toggleMobileNav,
+    		click_handler,
+    		click_handler_1,
+    		click_handler_2
+    	];
+    }
+
+    class MobileNav extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$6, create_fragment$6, safe_not_equal, {
+    			hyphenatedTeam: 4,
+    			teams: 0,
+    			toAlias: 1,
+    			switchTeam: 5,
+    			toggleMobileNav: 6
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "MobileNav",
+    			options,
+    			id: create_fragment$6.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*hyphenatedTeam*/ ctx[4] === undefined && !('hyphenatedTeam' in props)) {
+    			console.warn("<MobileNav> was created without expected prop 'hyphenatedTeam'");
+    		}
+
+    		if (/*teams*/ ctx[0] === undefined && !('teams' in props)) {
+    			console.warn("<MobileNav> was created without expected prop 'teams'");
+    		}
+
+    		if (/*toAlias*/ ctx[1] === undefined && !('toAlias' in props)) {
+    			console.warn("<MobileNav> was created without expected prop 'toAlias'");
+    		}
+
+    		if (/*switchTeam*/ ctx[5] === undefined && !('switchTeam' in props)) {
+    			console.warn("<MobileNav> was created without expected prop 'switchTeam'");
+    		}
+
+    		if (/*toggleMobileNav*/ ctx[6] === undefined && !('toggleMobileNav' in props)) {
+    			console.warn("<MobileNav> was created without expected prop 'toggleMobileNav'");
+    		}
+    	}
+
+    	get hyphenatedTeam() {
+    		throw new Error("<MobileNav>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set hyphenatedTeam(value) {
+    		throw new Error("<MobileNav>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get teams() {
+    		throw new Error("<MobileNav>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set teams(value) {
+    		throw new Error("<MobileNav>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get toAlias() {
+    		throw new Error("<MobileNav>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set toAlias(value) {
+    		throw new Error("<MobileNav>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get switchTeam() {
+    		throw new Error("<MobileNav>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set switchTeam(value) {
+    		throw new Error("<MobileNav>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get toggleMobileNav() {
+    		throw new Error("<MobileNav>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set toggleMobileNav(value) {
+    		throw new Error("<MobileNav>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\components\goals_scored_and_conceded\ScoredConcededOverTimeGraph.svelte generated by Svelte v3.49.0 */
+
+    const { Object: Object_1$1 } = globals;
+    const file$4 = "src\\components\\goals_scored_and_conceded\\ScoredConcededOverTimeGraph.svelte";
+
+    function create_fragment$5(ctx) {
+    	let div1;
+    	let div0;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { id: true });
+    			var div0_nodes = children(div0);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "id", "plotDiv");
+    			add_location(div0, file$4, 234, 2, 6768);
+    			attr_dev(div1, "id", "plotly");
+    			add_location(div1, file$4, 233, 0, 6747);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			/*div0_binding*/ ctx[5](div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			/*div0_binding*/ ctx[5](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$5.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function dateDiffInDays(date1, date2) {
+    	//@ts-ignore
+    	return Math.floor((date1 - date2) / (1000 * 60 * 60 * 24));
+    }
+
+    function seasonFinishLines(x, maxY) {
+    	let lines = [];
+
+    	for (let i = 0; i < x.length - 1; i++) {
+    		if (dateDiffInDays(new Date(x[i + 1]), new Date(x[i])) > 60) {
+    			lines.push({
+    				type: "line",
+    				x0: x[i],
+    				y0: 0,
+    				x1: x[i],
+    				y1: maxY,
+    				line: { color: "black", dash: "dot", width: 1 }
+    			});
+    		}
+    	}
+
+    	return lines;
+    }
+
+    function goalsScoredLine(x, y) {
+    	return {
+    		x,
+    		y,
+    		type: "scatter",
+    		fill: "tozeroy",
+    		mode: "lines",
+    		name: "Scored",
+    		line: { color: "#00fe87" },
+    		hovertemplate: "%{x|%d %b %Y}<br>Avg scored: <b>%{y:.1f}</b><extra></extra>"
+    	};
+    }
+
+    function goalsConcededLine(x, y) {
+    	return {
+    		x,
+    		y,
+    		type: "scatter",
+    		fill: "tozeroy",
+    		mode: "lines",
+    		name: "Conceded",
+    		line: { color: "#f83027" },
+    		hovertemplate: "%{x|%d %b %Y}<br>Avg conceded: <b>%{y:.1f}</b><extra></extra>"
+    	};
+    }
+
+    function goalsOverTime(data, team, numSeasons) {
+    	let goals = [];
+
+    	for (let i = numSeasons - 1; i >= 0; i--) {
+    		let teamGames = data.form[team][data._id - i];
+
+    		for (let matchday of Object.keys(teamGames)) {
+    			let match = teamGames[matchday];
+
+    			if (match.score != null) {
+    				let [h, _, a] = match.score.split(" ");
+    				h = parseInt(h);
+    				a = parseInt(a);
+    				let scored, conceded;
+
+    				if (match.atHome) {
+    					scored = h;
+    					conceded = a;
+    				} else {
+    					scored = a;
+    					conceded = h;
+    				}
+
+    				goals.push({
+    					date: match.date,
+    					matchday: parseInt(matchday),
+    					scored,
+    					conceded
+    				});
+    			}
+    		}
+    	}
+
+    	return goals;
+    }
+
+    function lineData(data, team) {
+    	let goals = goalsOverTime(data, team, 3);
+
+    	// Sort by game date
+    	goals.sort(function (a, b) {
+    		return a.date < b.date ? -1 : a.date == b.date ? 0 : 1;
+    	});
+
+    	let dates = [];
+    	let scored = [];
+    	let conceded = [];
+
+    	for (let i = 0; i < goals.length; i++) {
+    		dates.push(goals[i].date);
+    		scored.push(goals[i].scored);
+    		conceded.push(goals[i].conceded);
+    	}
+
+    	let nGames = 5;
+
+    	// Smooth goals with last nGames average
+    	for (let i = 0; i < dates.length; i++) {
+    		let j = i - 1;
+    		let count = 1;
+
+    		while (j > i - nGames && j >= 0) {
+    			scored[i] += scored[j];
+    			conceded[i] += conceded[j];
+    			count += 1;
+    			j -= 1;
+    		}
+
+    		if (count > 1) {
+    			scored[i] /= count;
+    			conceded[i] /= count;
+    		}
+    	}
+
+    	return [dates, scored, conceded];
+    }
+
+    function lines(dates, scored, conceded) {
+    	return [goalsScoredLine(dates, scored), goalsConcededLine(dates, conceded)];
+    }
+
+    function defaultLayout(seasonLines) {
+    	return {
+    		title: false,
+    		autosize: true,
+    		margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+    		hovermode: "closest",
+    		plot_bgcolor: "#fafafa",
+    		paper_bgcolor: "#fafafa",
+    		yaxis: {
+    			title: { text: "Goals (5-game avg)" },
+    			gridcolor: "gray",
+    			showgrid: false,
+    			showline: false,
+    			zeroline: false,
+    			fixedrange: true
+    		},
+    		xaxis: {
+    			linecolor: "black",
+    			showgrid: false,
+    			showline: false,
+    			fixedrange: true
+    		},
+    		dragmode: false,
+    		shapes: [...seasonLines],
+    		legend: { x: 1, xanchor: "right", y: 0.95 }
+    	};
+    }
+
+    function buildPlotData(data, team) {
+    	let [dates, scored, conceded] = lineData(data, team);
+    	let maxY = Math.max(Math.max(...scored), Math.max(...conceded));
+    	let seasonLines = seasonFinishLines(dates, maxY);
+
+    	let plotData = {
+    		data: [...lines(dates, scored, conceded)],
+    		layout: defaultLayout(seasonLines),
+    		config: {
+    			responsive: true,
+    			showSendToCloud: false,
+    			displayModeBar: false
+    		}
+    	};
+
+    	return plotData;
+    }
+
+    function instance$5($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('ScoredConcededOverTimeGraph', slots, []);
+
+    	function setDefaultLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": { text: "Goals (5-game avg)" },
+    				"yaxis.visible": true,
+    				"margin.l": 60,
+    				"margin.t": 15
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	function setMobileLayout() {
+    		if (setup) {
+    			let layoutUpdate = {
+    				"yaxis.title": null,
+    				"yaxis.visible": false,
+    				"margin.l": 20,
+    				"margin.t": 5
+    			};
+
+    			//@ts-ignore
+    			Plotly.update(plotDiv, {}, layoutUpdate);
+    		}
+    	}
+
+    	let plotDiv, plotData;
+    	let setup = false;
+
+    	onMount(() => {
+    		genPlot();
+    		$$invalidate(4, setup = true);
+    	});
+
+    	function genPlot() {
+    		plotData = buildPlotData(data, team);
+
+    		//@ts-ignore
+    		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(plot => {
+    			// Once plot generated, add resizable attribute to it to shorten height for mobile view
+    			plot.children[0].children[0].classList.add("resizable-graph");
+    		});
+    	}
+
+    	function refreshPlot() {
+    		if (setup) {
+    			let newPlotData = buildPlotData(data, team);
+    			plotData.data[0] = newPlotData.data[0];
+    			plotData.data[1] = newPlotData.data[1];
+
+    			for (let i = 0; i < plotData.layout.shapes.length; i++) {
+    				if (i < newPlotData.layout.shapes.length) {
+    					plotData.layout.shapes[i] = newPlotData.layout.shapes[i];
+    				} else {
+    					plotData.layout.shapes[i] = null;
+    				}
+    			}
+
+    			//@ts-ignore
+    			Plotly.redraw(plotDiv);
+
+    			if (mobileView) {
+    				setMobileLayout();
+    			}
+    		}
+    	}
+
+    	let { data, team, mobileView } = $$props;
+    	const writable_props = ['data', 'team', 'mobileView'];
+
+    	Object_1$1.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<ScoredConcededOverTimeGraph> was created with unknown prop '${key}'`);
+    	});
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			plotDiv = $$value;
+    			$$invalidate(0, plotDiv);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('mobileView' in $$props) $$invalidate(3, mobileView = $$props.mobileView);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		dateDiffInDays,
+    		seasonFinishLines,
+    		goalsScoredLine,
+    		goalsConcededLine,
+    		goalsOverTime,
+    		lineData,
+    		lines,
+    		defaultLayout,
+    		setDefaultLayout,
+    		setMobileLayout,
+    		buildPlotData,
+    		plotDiv,
+    		plotData,
+    		setup,
+    		genPlot,
+    		refreshPlot,
+    		data,
+    		team,
+    		mobileView
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('plotDiv' in $$props) $$invalidate(0, plotDiv = $$props.plotDiv);
+    		if ('plotData' in $$props) plotData = $$props.plotData;
+    		if ('setup' in $$props) $$invalidate(4, setup = $$props.setup);
+    		if ('data' in $$props) $$invalidate(1, data = $$props.data);
+    		if ('team' in $$props) $$invalidate(2, team = $$props.team);
+    		if ('mobileView' in $$props) $$invalidate(3, mobileView = $$props.mobileView);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*team*/ 4) {
+    			team && refreshPlot();
+    		}
+
+    		if ($$self.$$.dirty & /*mobileView*/ 8) {
+    			!mobileView && setDefaultLayout();
+    		}
+
+    		if ($$self.$$.dirty & /*setup, mobileView*/ 24) {
+    			setup && mobileView && setMobileLayout();
+    		}
+    	};
+
+    	return [plotDiv, data, team, mobileView, setup, div0_binding];
+    }
+
+    class ScoredConcededOverTimeGraph extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { data: 1, team: 2, mobileView: 3 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "ScoredConcededOverTimeGraph",
+    			options,
+    			id: create_fragment$5.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[1] === undefined && !('data' in props)) {
+    			console.warn("<ScoredConcededOverTimeGraph> was created without expected prop 'data'");
+    		}
+
+    		if (/*team*/ ctx[2] === undefined && !('team' in props)) {
+    			console.warn("<ScoredConcededOverTimeGraph> was created without expected prop 'team'");
+    		}
+
+    		if (/*mobileView*/ ctx[3] === undefined && !('mobileView' in props)) {
+    			console.warn("<ScoredConcededOverTimeGraph> was created without expected prop 'mobileView'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<ScoredConcededOverTimeGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<ScoredConcededOverTimeGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get team() {
+    		throw new Error("<ScoredConcededOverTimeGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set team(value) {
+    		throw new Error("<ScoredConcededOverTimeGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get mobileView() {
+    		throw new Error("<ScoredConcededOverTimeGraph>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set mobileView(value) {
+    		throw new Error("<ScoredConcededOverTimeGraph>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\routes\Team.svelte generated by Svelte v3.49.0 */
+
+    const { Object: Object_1, console: console_1$1, document: document_1$1, window: window_1 } = globals;
+    const file$3 = "src\\routes\\Team.svelte";
+
+    // (202:4) {:else}
+    function create_else_block_2(ctx) {
+    	let button;
+    	let t;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			t = text("Select Team");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			button = claim_element(nodes, "BUTTON", { id: true, class: true });
+    			var button_nodes = children(button);
+    			t = claim_text(button_nodes, "Select Team");
+    			button_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(button, "id", "mobileNavBtn");
+    			attr_dev(button, "class", "svelte-1ao5tmf");
+    			add_location(button, file$3, 202, 6, 7141);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, button, anchor);
+    			append_hydration_dev(button, t);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", toggleMobileNav, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_2.name,
+    		type: "else",
+    		source: "(202:4) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (199:4) {#if teams.length == 0}
+    function create_if_block_3$1(ctx) {
+    	let button;
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			t = text("Select Team");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			button = claim_element(nodes, "BUTTON", { id: true, style: true, class: true });
+    			var button_nodes = children(button);
+    			t = claim_text(button_nodes, "Select Team");
+    			button_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(button, "id", "mobileNavBtn");
+    			set_style(button, "cursor", "default");
+    			attr_dev(button, "class", "svelte-1ao5tmf");
+    			add_location(button, file$3, 200, 6, 7048);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, button, anchor);
+    			append_hydration_dev(button, t);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3$1.name,
+    		type: "if",
+    		source: "(199:4) {#if teams.length == 0}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (397:6) {:else}
+    function create_else_block_1$1(ctx) {
+    	let div1;
+    	let div0;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			children(div0).forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "loading-spinner");
+    			add_location(div0, file$3, 398, 10, 13571);
+    			attr_dev(div1, "class", "loading-spinner-container");
+    			add_location(div1, file$3, 397, 8, 13520);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1$1.name,
+    		type: "else",
+    		source: "(397:6) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (222:6) {#if data != undefined}
+    function create_if_block$1(ctx) {
+    	let div9;
+    	let div2;
+    	let t0;
+    	let div1;
+    	let h10;
+    	let t1;
+    	let t2;
+    	let div0;
+    	let fixturesgraph;
+    	let t3;
+    	let div5;
+    	let div3;
+    	let currentform;
+    	let t4;
+    	let tablesnippet;
+    	let t5;
+    	let div4;
+    	let nextgame;
+    	let t6;
+    	let div8;
+    	let div7;
+    	let h11;
+    	let t7;
+    	let t8;
+    	let div6;
+    	let formovertimegraph;
+    	let t9;
+    	let current;
+
+    	function select_block_type_2(ctx, dirty) {
+    		return create_else_block$1;
+    	}
+
+    	let current_block_type = select_block_type_2();
+    	let if_block0 = current_block_type(ctx);
+
+    	fixturesgraph = new FixturesGraph({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				team: /*team*/ ctx[4],
+    				mobileView: /*mobileView*/ ctx[9]
+    			},
+    			$$inline: true
+    		});
+
+    	currentform = new CurrentForm({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				currentMatchday: /*currentMatchday*/ ctx[6],
+    				team: /*team*/ ctx[4],
+    				toInitials
+    			},
+    			$$inline: true
+    		});
+
+    	tablesnippet = new TableSnippet({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				hyphenatedTeam: /*hyphenatedTeam*/ ctx[0],
+    				team: /*team*/ ctx[4],
+    				switchTeam: /*switchTeam*/ ctx[12],
+    				toAlias: /*toAlias*/ ctx[10]
+    			},
+    			$$inline: true
+    		});
+
+    	nextgame = new NextGame({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				currentMatchday: /*currentMatchday*/ ctx[6],
+    				team: /*team*/ ctx[4],
+    				showBadge,
+    				toAlias: /*toAlias*/ ctx[10],
+    				toInitials,
+    				switchTeam: /*switchTeam*/ ctx[12]
+    			},
+    			$$inline: true
+    		});
+
+    	formovertimegraph = new FormOverTimeGraph({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				team: /*team*/ ctx[4],
+    				playedMatchdays: /*playedMatchdays*/ ctx[7],
+    				mobileView: /*mobileView*/ ctx[9]
+    			},
+    			$$inline: true
+    		});
+
+    	let if_block1 = /*load*/ ctx[3] && create_if_block_1$1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div9 = element("div");
+    			div2 = element("div");
+    			if_block0.c();
+    			t0 = space();
+    			div1 = element("div");
+    			h10 = element("h1");
+    			t1 = text("Fixtures");
+    			t2 = space();
+    			div0 = element("div");
+    			create_component(fixturesgraph.$$.fragment);
+    			t3 = space();
+    			div5 = element("div");
+    			div3 = element("div");
+    			create_component(currentform.$$.fragment);
+    			t4 = space();
+    			create_component(tablesnippet.$$.fragment);
+    			t5 = space();
+    			div4 = element("div");
+    			create_component(nextgame.$$.fragment);
+    			t6 = space();
+    			div8 = element("div");
+    			div7 = element("div");
+    			h11 = element("h1");
+    			t7 = text("Form Over Time");
+    			t8 = space();
+    			div6 = element("div");
+    			create_component(formovertimegraph.$$.fragment);
+    			t9 = space();
+    			if (if_block1) if_block1.c();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div9 = claim_element(nodes, "DIV", { class: true });
+    			var div9_nodes = children(div9);
+    			div2 = claim_element(div9_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			if_block0.l(div2_nodes);
+    			t0 = claim_space(div2_nodes);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			h10 = claim_element(div1_nodes, "H1", { class: true });
+    			var h10_nodes = children(h10);
+    			t1 = claim_text(h10_nodes, "Fixtures");
+    			h10_nodes.forEach(detach_dev);
+    			t2 = claim_space(div1_nodes);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			claim_component(fixturesgraph.$$.fragment, div0_nodes);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			div2_nodes.forEach(detach_dev);
+    			t3 = claim_space(div9_nodes);
+    			div5 = claim_element(div9_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div3 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			claim_component(currentform.$$.fragment, div3_nodes);
+    			t4 = claim_space(div3_nodes);
+    			claim_component(tablesnippet.$$.fragment, div3_nodes);
+    			div3_nodes.forEach(detach_dev);
+    			t5 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			claim_component(nextgame.$$.fragment, div4_nodes);
+    			div4_nodes.forEach(detach_dev);
+    			div5_nodes.forEach(detach_dev);
+    			t6 = claim_space(div9_nodes);
+    			div8 = claim_element(div9_nodes, "DIV", { class: true });
+    			var div8_nodes = children(div8);
+    			div7 = claim_element(div8_nodes, "DIV", { class: true });
+    			var div7_nodes = children(div7);
+    			h11 = claim_element(div7_nodes, "H1", { class: true });
+    			var h11_nodes = children(h11);
+    			t7 = claim_text(h11_nodes, "Form Over Time");
+    			h11_nodes.forEach(detach_dev);
+    			t8 = claim_space(div7_nodes);
+    			div6 = claim_element(div7_nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			claim_component(formovertimegraph.$$.fragment, div6_nodes);
+    			div6_nodes.forEach(detach_dev);
+    			div7_nodes.forEach(detach_dev);
+    			div8_nodes.forEach(detach_dev);
+    			t9 = claim_space(div9_nodes);
+    			if (if_block1) if_block1.l(div9_nodes);
+    			div9_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(h10, "class", "lowered");
+    			add_location(h10, file$3, 266, 14, 9382);
+    			attr_dev(div0, "class", "graph mini-graph mobile-margin");
+    			add_location(div0, file$3, 267, 14, 9431);
+    			attr_dev(div1, "class", "row-right fixtures-graph row-graph svelte-1ao5tmf");
+    			add_location(div1, file$3, 265, 12, 9318);
+    			attr_dev(div2, "class", "row multi-element-row small-bottom-margin svelte-1ao5tmf");
+    			add_location(div2, file$3, 223, 10, 7762);
+    			attr_dev(div3, "class", "row-left form-details svelte-1ao5tmf");
+    			add_location(div3, file$3, 274, 12, 9660);
+    			attr_dev(div4, "class", "row-right svelte-1ao5tmf");
+    			add_location(div4, file$3, 284, 12, 9991);
+    			attr_dev(div5, "class", "row multi-element-row svelte-1ao5tmf");
+    			add_location(div5, file$3, 273, 10, 9611);
+    			attr_dev(h11, "class", "lowered");
+    			add_location(h11, file$3, 299, 14, 10389);
+    			attr_dev(div6, "class", "graph full-row-graph svelte-1ao5tmf");
+    			add_location(div6, file$3, 300, 14, 10444);
+    			attr_dev(div7, "class", "form-graph row-graph svelte-1ao5tmf");
+    			add_location(div7, file$3, 298, 12, 10339);
+    			attr_dev(div8, "class", "row svelte-1ao5tmf");
+    			add_location(div8, file$3, 297, 10, 10308);
+    			attr_dev(div9, "class", "page-content svelte-1ao5tmf");
+    			add_location(div9, file$3, 222, 8, 7724);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div9, anchor);
+    			append_hydration_dev(div9, div2);
+    			if_block0.m(div2, null);
+    			append_hydration_dev(div2, t0);
+    			append_hydration_dev(div2, div1);
+    			append_hydration_dev(div1, h10);
+    			append_hydration_dev(h10, t1);
+    			append_hydration_dev(div1, t2);
+    			append_hydration_dev(div1, div0);
+    			mount_component(fixturesgraph, div0, null);
+    			append_hydration_dev(div9, t3);
+    			append_hydration_dev(div9, div5);
+    			append_hydration_dev(div5, div3);
+    			mount_component(currentform, div3, null);
+    			append_hydration_dev(div3, t4);
+    			mount_component(tablesnippet, div3, null);
+    			append_hydration_dev(div5, t5);
+    			append_hydration_dev(div5, div4);
+    			mount_component(nextgame, div4, null);
+    			append_hydration_dev(div9, t6);
+    			append_hydration_dev(div9, div8);
+    			append_hydration_dev(div8, div7);
+    			append_hydration_dev(div7, h11);
+    			append_hydration_dev(h11, t7);
+    			append_hydration_dev(div7, t8);
+    			append_hydration_dev(div7, div6);
+    			mount_component(formovertimegraph, div6, null);
+    			append_hydration_dev(div9, t9);
+    			if (if_block1) if_block1.m(div9, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if_block0.p(ctx, dirty);
+    			const fixturesgraph_changes = {};
+    			if (dirty & /*data*/ 256) fixturesgraph_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*team*/ 16) fixturesgraph_changes.team = /*team*/ ctx[4];
+    			if (dirty & /*mobileView*/ 512) fixturesgraph_changes.mobileView = /*mobileView*/ ctx[9];
+    			fixturesgraph.$set(fixturesgraph_changes);
+    			const currentform_changes = {};
+    			if (dirty & /*data*/ 256) currentform_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*currentMatchday*/ 64) currentform_changes.currentMatchday = /*currentMatchday*/ ctx[6];
+    			if (dirty & /*team*/ 16) currentform_changes.team = /*team*/ ctx[4];
+    			currentform.$set(currentform_changes);
+    			const tablesnippet_changes = {};
+    			if (dirty & /*data*/ 256) tablesnippet_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*hyphenatedTeam*/ 1) tablesnippet_changes.hyphenatedTeam = /*hyphenatedTeam*/ ctx[0];
+    			if (dirty & /*team*/ 16) tablesnippet_changes.team = /*team*/ ctx[4];
+    			tablesnippet.$set(tablesnippet_changes);
+    			const nextgame_changes = {};
+    			if (dirty & /*data*/ 256) nextgame_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*currentMatchday*/ 64) nextgame_changes.currentMatchday = /*currentMatchday*/ ctx[6];
+    			if (dirty & /*team*/ 16) nextgame_changes.team = /*team*/ ctx[4];
+    			nextgame.$set(nextgame_changes);
+    			const formovertimegraph_changes = {};
+    			if (dirty & /*data*/ 256) formovertimegraph_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*team*/ 16) formovertimegraph_changes.team = /*team*/ ctx[4];
+    			if (dirty & /*playedMatchdays*/ 128) formovertimegraph_changes.playedMatchdays = /*playedMatchdays*/ ctx[7];
+    			if (dirty & /*mobileView*/ 512) formovertimegraph_changes.mobileView = /*mobileView*/ ctx[9];
+    			formovertimegraph.$set(formovertimegraph_changes);
+
+    			if (/*load*/ ctx[3]) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+
+    					if (dirty & /*load*/ 8) {
+    						transition_in(if_block1, 1);
+    					}
+    				} else {
+    					if_block1 = create_if_block_1$1(ctx);
+    					if_block1.c();
+    					transition_in(if_block1, 1);
+    					if_block1.m(div9, null);
+    				}
+    			} else if (if_block1) {
+    				group_outros();
+
+    				transition_out(if_block1, 1, 1, () => {
+    					if_block1 = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(fixturesgraph.$$.fragment, local);
+    			transition_in(currentform.$$.fragment, local);
+    			transition_in(tablesnippet.$$.fragment, local);
+    			transition_in(nextgame.$$.fragment, local);
+    			transition_in(formovertimegraph.$$.fragment, local);
+    			transition_in(if_block1);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(fixturesgraph.$$.fragment, local);
+    			transition_out(currentform.$$.fragment, local);
+    			transition_out(tablesnippet.$$.fragment, local);
+    			transition_out(nextgame.$$.fragment, local);
+    			transition_out(formovertimegraph.$$.fragment, local);
+    			transition_out(if_block1);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div9);
+    			if_block0.d();
+    			destroy_component(fixturesgraph);
+    			destroy_component(currentform);
+    			destroy_component(tablesnippet);
+    			destroy_component(nextgame);
+    			destroy_component(formovertimegraph);
+    			if (if_block1) if_block1.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(222:6) {#if data != undefined}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (234:12) {:else}
+    function create_else_block$1(ctx) {
+    	let div2;
+    	let div0;
+    	let svg;
+    	let circle0;
+    	let circle0_fill_value;
+    	let circle1;
+    	let circle1_fill_value;
+    	let circle2;
+    	let circle2_fill_value;
+    	let t0;
+    	let div1;
+    	let t1_value = /*data*/ ctx[8].standings[/*team*/ ctx[4]][/*data*/ ctx[8]._id].position + "";
+    	let t1;
+
+    	const block = {
+    		c: function create() {
+    			div2 = element("div");
+    			div0 = element("div");
+    			svg = svg_element("svg");
+    			circle0 = svg_element("circle");
+    			circle1 = svg_element("circle");
+    			circle2 = svg_element("circle");
+    			t0 = space();
+    			div1 = element("div");
+    			t1 = text(t1_value);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div2 = claim_element(nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div0 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			svg = claim_svg_element(div0_nodes, "svg", { class: true });
+    			var svg_nodes = children(svg);
+
+    			circle0 = claim_svg_element(svg_nodes, "circle", {
+    				cx: true,
+    				cy: true,
+    				r: true,
+    				"stroke-width": true,
+    				fill: true
+    			});
+
+    			children(circle0).forEach(detach_dev);
+
+    			circle1 = claim_svg_element(svg_nodes, "circle", {
+    				cx: true,
+    				cy: true,
+    				r: true,
+    				"stroke-width": true,
+    				fill: true
+    			});
+
+    			children(circle1).forEach(detach_dev);
+
+    			circle2 = claim_svg_element(svg_nodes, "circle", {
+    				cx: true,
+    				cy: true,
+    				r: true,
+    				"stroke-width": true,
+    				fill: true
+    			});
+
+    			children(circle2).forEach(detach_dev);
+    			svg_nodes.forEach(detach_dev);
+    			div0_nodes.forEach(detach_dev);
+    			t0 = claim_space(div2_nodes);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t1 = claim_text(div1_nodes, t1_value);
+    			div1_nodes.forEach(detach_dev);
+    			div2_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(circle0, "cx", "300");
+    			attr_dev(circle0, "cy", "150");
+    			attr_dev(circle0, "r", "100");
+    			attr_dev(circle0, "stroke-width", "0");
+    			attr_dev(circle0, "fill", circle0_fill_value = "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)");
+    			add_location(circle0, file$3, 237, 20, 8366);
+    			attr_dev(circle1, "cx", "170");
+    			attr_dev(circle1, "cy", "170");
+    			attr_dev(circle1, "r", "140");
+    			attr_dev(circle1, "stroke-width", "0");
+    			attr_dev(circle1, "fill", circle1_fill_value = "var(--" + /*hyphenatedTeam*/ ctx[0] + ")");
+    			add_location(circle1, file$3, 244, 20, 8618);
+    			attr_dev(circle2, "cx", "300");
+    			attr_dev(circle2, "cy", "320");
+    			attr_dev(circle2, "r", "170");
+    			attr_dev(circle2, "stroke-width", "0");
+    			attr_dev(circle2, "fill", circle2_fill_value = "var(--" + /*hyphenatedTeam*/ ctx[0] + ")");
+    			add_location(circle2, file$3, 251, 20, 8860);
+    			attr_dev(svg, "class", "circles-background svelte-1ao5tmf");
+    			add_location(svg, file$3, 236, 18, 8312);
+    			attr_dev(div0, "class", "circles-background-container svelte-1ao5tmf");
+    			add_location(div0, file$3, 235, 16, 8250);
+    			attr_dev(div1, "class", "position-central svelte-1ao5tmf");
+    			add_location(div1, file$3, 260, 16, 9148);
+    			attr_dev(div2, "class", "row-left position-no-badge svelte-1ao5tmf");
+    			add_location(div2, file$3, 234, 14, 8192);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div2, anchor);
+    			append_hydration_dev(div2, div0);
+    			append_hydration_dev(div0, svg);
+    			append_hydration_dev(svg, circle0);
+    			append_hydration_dev(svg, circle1);
+    			append_hydration_dev(svg, circle2);
+    			append_hydration_dev(div2, t0);
+    			append_hydration_dev(div2, div1);
+    			append_hydration_dev(div1, t1);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*hyphenatedTeam*/ 1 && circle0_fill_value !== (circle0_fill_value = "var(--" + /*hyphenatedTeam*/ ctx[0] + "-secondary)")) {
+    				attr_dev(circle0, "fill", circle0_fill_value);
+    			}
+
+    			if (dirty & /*hyphenatedTeam*/ 1 && circle1_fill_value !== (circle1_fill_value = "var(--" + /*hyphenatedTeam*/ ctx[0] + ")")) {
+    				attr_dev(circle1, "fill", circle1_fill_value);
+    			}
+
+    			if (dirty & /*hyphenatedTeam*/ 1 && circle2_fill_value !== (circle2_fill_value = "var(--" + /*hyphenatedTeam*/ ctx[0] + ")")) {
+    				attr_dev(circle2, "fill", circle2_fill_value);
+    			}
+
+    			if (dirty & /*data, team*/ 272 && t1_value !== (t1_value = /*data*/ ctx[8].standings[/*team*/ ctx[4]][/*data*/ ctx[8]._id].position + "")) set_data_dev(t1, t1_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div2);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$1.name,
+    		type: "else",
+    		source: "(234:12) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (312:10) {#if load}
+    function create_if_block_1$1(ctx) {
+    	let div2;
+    	let div1;
+    	let h10;
+    	let t0;
+    	let t1;
+    	let div0;
+    	let positionovertimegraph;
+    	let t2;
+    	let div5;
+    	let div4;
+    	let h11;
+    	let t3;
+    	let t4;
+    	let div3;
+    	let goalsscoredandconcededgraph;
+    	let t5;
+    	let div8;
+    	let div7;
+    	let div6;
+    	let cleansheetsgraph;
+    	let t6;
+    	let div9;
+    	let statsvalues;
+    	let t7;
+    	let div12;
+    	let div11;
+    	let div10;
+    	let scoredconcededovertimegraph;
+    	let t8;
+    	let div14;
+    	let div13;
+    	let h12;
+    	let t9;
+    	let t10;
+    	let goalspergame;
+    	let t11;
+    	let div17;
+    	let div16;
+    	let div15;
+    	let scorelinefreqgraph;
+    	let t12;
+    	let div20;
+    	let div19;
+    	let h13;
+    	let t13;
+    	let t14;
+    	let div18;
+    	let spidergraph;
+    	let t15;
+    	let teamsfooter;
+    	let current;
+
+    	positionovertimegraph = new PositionOverTimeGraph({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				team: /*team*/ ctx[4],
+    				playedMatchdays: /*playedMatchdays*/ ctx[7],
+    				mobileView: /*mobileView*/ ctx[9]
+    			},
+    			$$inline: true
+    		});
+
+    	goalsscoredandconcededgraph = new ScoredAndConcededGraph({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				team: /*team*/ ctx[4],
+    				playedMatchdays: /*playedMatchdays*/ ctx[7],
+    				mobileView: /*mobileView*/ ctx[9]
+    			},
+    			$$inline: true
+    		});
+
+    	cleansheetsgraph = new CleanSheetsGraph({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				team: /*team*/ ctx[4],
+    				playedMatchdays: /*playedMatchdays*/ ctx[7],
+    				mobileView: /*mobileView*/ ctx[9]
+    			},
+    			$$inline: true
+    		});
+
+    	statsvalues = new StatsValues({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				team: /*team*/ ctx[4]
+    			},
+    			$$inline: true
+    		});
+
+    	scoredconcededovertimegraph = new ScoredConcededOverTimeGraph({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				team: /*team*/ ctx[4],
+    				mobileView: /*mobileView*/ ctx[9]
+    			},
+    			$$inline: true
+    		});
+
+    	goalspergame = new GoalsPerGame({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				team: /*team*/ ctx[4],
+    				mobileView: /*mobileView*/ ctx[9]
+    			},
+    			$$inline: true
+    		});
+
+    	scorelinefreqgraph = new ScorelineFreqGraph({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				team: /*team*/ ctx[4],
+    				mobileView: /*mobileView*/ ctx[9]
+    			},
+    			$$inline: true
+    		});
+
+    	spidergraph = new SpiderGraph({
+    			props: {
+    				data: /*data*/ ctx[8],
+    				team: /*team*/ ctx[4],
+    				teams: /*teams*/ ctx[5],
+    				toAlias: /*toAlias*/ ctx[10],
+    				toName: /*toName*/ ctx[11]
+    			},
+    			$$inline: true
+    		});
+
+    	teamsfooter = new TeamsFooter({
+    			props: { lastUpdated: /*data*/ ctx[8].lastUpdated },
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			div2 = element("div");
+    			div1 = element("div");
+    			h10 = element("h1");
+    			t0 = text("Position Over Time");
+    			t1 = space();
+    			div0 = element("div");
+    			create_component(positionovertimegraph.$$.fragment);
+    			t2 = space();
+    			div5 = element("div");
+    			div4 = element("div");
+    			h11 = element("h1");
+    			t3 = text("Goals Scored and Conceded");
+    			t4 = space();
+    			div3 = element("div");
+    			create_component(goalsscoredandconcededgraph.$$.fragment);
+    			t5 = space();
+    			div8 = element("div");
+    			div7 = element("div");
+    			div6 = element("div");
+    			create_component(cleansheetsgraph.$$.fragment);
+    			t6 = space();
+    			div9 = element("div");
+    			create_component(statsvalues.$$.fragment);
+    			t7 = space();
+    			div12 = element("div");
+    			div11 = element("div");
+    			div10 = element("div");
+    			create_component(scoredconcededovertimegraph.$$.fragment);
+    			t8 = space();
+    			div14 = element("div");
+    			div13 = element("div");
+    			h12 = element("h1");
+    			t9 = text("Goals Per Game");
+    			t10 = space();
+    			create_component(goalspergame.$$.fragment);
+    			t11 = space();
+    			div17 = element("div");
+    			div16 = element("div");
+    			div15 = element("div");
+    			create_component(scorelinefreqgraph.$$.fragment);
+    			t12 = space();
+    			div20 = element("div");
+    			div19 = element("div");
+    			h13 = element("h1");
+    			t13 = text("Team Comparison");
+    			t14 = space();
+    			div18 = element("div");
+    			create_component(spidergraph.$$.fragment);
+    			t15 = space();
+    			create_component(teamsfooter.$$.fragment);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div2 = claim_element(nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			h10 = claim_element(div1_nodes, "H1", { class: true });
+    			var h10_nodes = children(h10);
+    			t0 = claim_text(h10_nodes, "Position Over Time");
+    			h10_nodes.forEach(detach_dev);
+    			t1 = claim_space(div1_nodes);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			claim_component(positionovertimegraph.$$.fragment, div0_nodes);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			div2_nodes.forEach(detach_dev);
+    			t2 = claim_space(nodes);
+    			div5 = claim_element(nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			h11 = claim_element(div4_nodes, "H1", { class: true });
+    			var h11_nodes = children(h11);
+    			t3 = claim_text(h11_nodes, "Goals Scored and Conceded");
+    			h11_nodes.forEach(detach_dev);
+    			t4 = claim_space(div4_nodes);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			claim_component(goalsscoredandconcededgraph.$$.fragment, div3_nodes);
+    			div3_nodes.forEach(detach_dev);
+    			div4_nodes.forEach(detach_dev);
+    			div5_nodes.forEach(detach_dev);
+    			t5 = claim_space(nodes);
+    			div8 = claim_element(nodes, "DIV", { class: true });
+    			var div8_nodes = children(div8);
+    			div7 = claim_element(div8_nodes, "DIV", { class: true });
+    			var div7_nodes = children(div7);
+    			div6 = claim_element(div7_nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			claim_component(cleansheetsgraph.$$.fragment, div6_nodes);
+    			div6_nodes.forEach(detach_dev);
+    			div7_nodes.forEach(detach_dev);
+    			div8_nodes.forEach(detach_dev);
+    			t6 = claim_space(nodes);
+    			div9 = claim_element(nodes, "DIV", { class: true });
+    			var div9_nodes = children(div9);
+    			claim_component(statsvalues.$$.fragment, div9_nodes);
+    			div9_nodes.forEach(detach_dev);
+    			t7 = claim_space(nodes);
+    			div12 = claim_element(nodes, "DIV", { class: true });
+    			var div12_nodes = children(div12);
+    			div11 = claim_element(div12_nodes, "DIV", { class: true });
+    			var div11_nodes = children(div11);
+    			div10 = claim_element(div11_nodes, "DIV", { class: true });
+    			var div10_nodes = children(div10);
+    			claim_component(scoredconcededovertimegraph.$$.fragment, div10_nodes);
+    			div10_nodes.forEach(detach_dev);
+    			div11_nodes.forEach(detach_dev);
+    			div12_nodes.forEach(detach_dev);
+    			t8 = claim_space(nodes);
+    			div14 = claim_element(nodes, "DIV", { class: true });
+    			var div14_nodes = children(div14);
+    			div13 = claim_element(div14_nodes, "DIV", { class: true });
+    			var div13_nodes = children(div13);
+    			h12 = claim_element(div13_nodes, "H1", {});
+    			var h12_nodes = children(h12);
+    			t9 = claim_text(h12_nodes, "Goals Per Game");
+    			h12_nodes.forEach(detach_dev);
+    			t10 = claim_space(div13_nodes);
+    			claim_component(goalspergame.$$.fragment, div13_nodes);
+    			div13_nodes.forEach(detach_dev);
+    			div14_nodes.forEach(detach_dev);
+    			t11 = claim_space(nodes);
+    			div17 = claim_element(nodes, "DIV", { class: true });
+    			var div17_nodes = children(div17);
+    			div16 = claim_element(div17_nodes, "DIV", { class: true });
+    			var div16_nodes = children(div16);
+    			div15 = claim_element(div16_nodes, "DIV", { class: true });
+    			var div15_nodes = children(div15);
+    			claim_component(scorelinefreqgraph.$$.fragment, div15_nodes);
+    			div15_nodes.forEach(detach_dev);
+    			div16_nodes.forEach(detach_dev);
+    			div17_nodes.forEach(detach_dev);
+    			t12 = claim_space(nodes);
+    			div20 = claim_element(nodes, "DIV", { class: true });
+    			var div20_nodes = children(div20);
+    			div19 = claim_element(div20_nodes, "DIV", { class: true });
+    			var div19_nodes = children(div19);
+    			h13 = claim_element(div19_nodes, "H1", {});
+    			var h13_nodes = children(h13);
+    			t13 = claim_text(h13_nodes, "Team Comparison");
+    			h13_nodes.forEach(detach_dev);
+    			t14 = claim_space(div19_nodes);
+    			div18 = claim_element(div19_nodes, "DIV", { class: true });
+    			var div18_nodes = children(div18);
+    			claim_component(spidergraph.$$.fragment, div18_nodes);
+    			div18_nodes.forEach(detach_dev);
+    			div19_nodes.forEach(detach_dev);
+    			div20_nodes.forEach(detach_dev);
+    			t15 = claim_space(nodes);
+    			claim_component(teamsfooter.$$.fragment, nodes);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(h10, "class", "lowered");
+    			add_location(h10, file$3, 314, 16, 10852);
+    			attr_dev(div0, "class", "graph full-row-graph svelte-1ao5tmf");
+    			add_location(div0, file$3, 315, 16, 10913);
+    			attr_dev(div1, "class", "position-over-time-graph row-graph svelte-1ao5tmf");
+    			add_location(div1, file$3, 313, 14, 10786);
+    			attr_dev(div2, "class", "row svelte-1ao5tmf");
+    			add_location(div2, file$3, 312, 12, 10753);
+    			attr_dev(h11, "class", "lowered");
+    			add_location(h11, file$3, 328, 16, 11344);
+    			attr_dev(div3, "class", "graph full-row-graph svelte-1ao5tmf");
+    			add_location(div3, file$3, 329, 16, 11412);
+    			attr_dev(div4, "class", "goals-scored-vs-conceded-graph row-graph svelte-1ao5tmf");
+    			add_location(div4, file$3, 327, 14, 11272);
+    			attr_dev(div5, "class", "row no-bottom-margin svelte-1ao5tmf");
+    			add_location(div5, file$3, 326, 12, 11222);
+    			attr_dev(div6, "class", "clean-sheets graph full-row-graph svelte-1ao5tmf");
+    			add_location(div6, file$3, 342, 16, 11801);
+    			attr_dev(div7, "class", "row-graph svelte-1ao5tmf");
+    			add_location(div7, file$3, 341, 14, 11760);
+    			attr_dev(div8, "class", "row svelte-1ao5tmf");
+    			add_location(div8, file$3, 340, 12, 11727);
+    			attr_dev(div9, "class", "season-stats-row svelte-1ao5tmf");
+    			add_location(div9, file$3, 353, 12, 12130);
+    			attr_dev(div10, "class", "graph full-row-graph svelte-1ao5tmf");
+    			add_location(div10, file$3, 359, 16, 12327);
+    			attr_dev(div11, "class", "row-graph svelte-1ao5tmf");
+    			add_location(div11, file$3, 358, 14, 12286);
+    			attr_dev(div12, "class", "row svelte-1ao5tmf");
+    			add_location(div12, file$3, 357, 12, 12253);
+    			add_location(h12, file$3, 371, 16, 12692);
+    			attr_dev(div13, "class", "goals-freq-row row-graph svelte-1ao5tmf");
+    			add_location(div13, file$3, 370, 14, 12636);
+    			attr_dev(div14, "class", "row svelte-1ao5tmf");
+    			add_location(div14, file$3, 369, 12, 12603);
+    			attr_dev(div15, "class", "score-freq graph svelte-1ao5tmf");
+    			add_location(div15, file$3, 378, 16, 12908);
+    			attr_dev(div16, "class", "row-graph svelte-1ao5tmf");
+    			add_location(div16, file$3, 377, 14, 12867);
+    			attr_dev(div17, "class", "row svelte-1ao5tmf");
+    			add_location(div17, file$3, 376, 12, 12834);
+    			add_location(h13, file$3, 386, 16, 13180);
+    			attr_dev(div18, "class", "spider-chart-container svelte-1ao5tmf");
+    			add_location(div18, file$3, 387, 16, 13222);
+    			attr_dev(div19, "class", "spider-chart-row row-graph svelte-1ao5tmf");
+    			add_location(div19, file$3, 385, 14, 13122);
+    			attr_dev(div20, "class", "row svelte-1ao5tmf");
+    			add_location(div20, file$3, 384, 12, 13089);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div2, anchor);
+    			append_hydration_dev(div2, div1);
+    			append_hydration_dev(div1, h10);
+    			append_hydration_dev(h10, t0);
+    			append_hydration_dev(div1, t1);
+    			append_hydration_dev(div1, div0);
+    			mount_component(positionovertimegraph, div0, null);
+    			insert_hydration_dev(target, t2, anchor);
+    			insert_hydration_dev(target, div5, anchor);
+    			append_hydration_dev(div5, div4);
+    			append_hydration_dev(div4, h11);
+    			append_hydration_dev(h11, t3);
+    			append_hydration_dev(div4, t4);
+    			append_hydration_dev(div4, div3);
+    			mount_component(goalsscoredandconcededgraph, div3, null);
+    			insert_hydration_dev(target, t5, anchor);
+    			insert_hydration_dev(target, div8, anchor);
+    			append_hydration_dev(div8, div7);
+    			append_hydration_dev(div7, div6);
+    			mount_component(cleansheetsgraph, div6, null);
+    			insert_hydration_dev(target, t6, anchor);
+    			insert_hydration_dev(target, div9, anchor);
+    			mount_component(statsvalues, div9, null);
+    			insert_hydration_dev(target, t7, anchor);
+    			insert_hydration_dev(target, div12, anchor);
+    			append_hydration_dev(div12, div11);
+    			append_hydration_dev(div11, div10);
+    			mount_component(scoredconcededovertimegraph, div10, null);
+    			insert_hydration_dev(target, t8, anchor);
+    			insert_hydration_dev(target, div14, anchor);
+    			append_hydration_dev(div14, div13);
+    			append_hydration_dev(div13, h12);
+    			append_hydration_dev(h12, t9);
+    			append_hydration_dev(div13, t10);
+    			mount_component(goalspergame, div13, null);
+    			insert_hydration_dev(target, t11, anchor);
+    			insert_hydration_dev(target, div17, anchor);
+    			append_hydration_dev(div17, div16);
+    			append_hydration_dev(div16, div15);
+    			mount_component(scorelinefreqgraph, div15, null);
+    			insert_hydration_dev(target, t12, anchor);
+    			insert_hydration_dev(target, div20, anchor);
+    			append_hydration_dev(div20, div19);
+    			append_hydration_dev(div19, h13);
+    			append_hydration_dev(h13, t13);
+    			append_hydration_dev(div19, t14);
+    			append_hydration_dev(div19, div18);
+    			mount_component(spidergraph, div18, null);
+    			insert_hydration_dev(target, t15, anchor);
+    			mount_component(teamsfooter, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const positionovertimegraph_changes = {};
+    			if (dirty & /*data*/ 256) positionovertimegraph_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*team*/ 16) positionovertimegraph_changes.team = /*team*/ ctx[4];
+    			if (dirty & /*playedMatchdays*/ 128) positionovertimegraph_changes.playedMatchdays = /*playedMatchdays*/ ctx[7];
+    			if (dirty & /*mobileView*/ 512) positionovertimegraph_changes.mobileView = /*mobileView*/ ctx[9];
+    			positionovertimegraph.$set(positionovertimegraph_changes);
+    			const goalsscoredandconcededgraph_changes = {};
+    			if (dirty & /*data*/ 256) goalsscoredandconcededgraph_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*team*/ 16) goalsscoredandconcededgraph_changes.team = /*team*/ ctx[4];
+    			if (dirty & /*playedMatchdays*/ 128) goalsscoredandconcededgraph_changes.playedMatchdays = /*playedMatchdays*/ ctx[7];
+    			if (dirty & /*mobileView*/ 512) goalsscoredandconcededgraph_changes.mobileView = /*mobileView*/ ctx[9];
+    			goalsscoredandconcededgraph.$set(goalsscoredandconcededgraph_changes);
+    			const cleansheetsgraph_changes = {};
+    			if (dirty & /*data*/ 256) cleansheetsgraph_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*team*/ 16) cleansheetsgraph_changes.team = /*team*/ ctx[4];
+    			if (dirty & /*playedMatchdays*/ 128) cleansheetsgraph_changes.playedMatchdays = /*playedMatchdays*/ ctx[7];
+    			if (dirty & /*mobileView*/ 512) cleansheetsgraph_changes.mobileView = /*mobileView*/ ctx[9];
+    			cleansheetsgraph.$set(cleansheetsgraph_changes);
+    			const statsvalues_changes = {};
+    			if (dirty & /*data*/ 256) statsvalues_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*team*/ 16) statsvalues_changes.team = /*team*/ ctx[4];
+    			statsvalues.$set(statsvalues_changes);
+    			const scoredconcededovertimegraph_changes = {};
+    			if (dirty & /*data*/ 256) scoredconcededovertimegraph_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*team*/ 16) scoredconcededovertimegraph_changes.team = /*team*/ ctx[4];
+    			if (dirty & /*mobileView*/ 512) scoredconcededovertimegraph_changes.mobileView = /*mobileView*/ ctx[9];
+    			scoredconcededovertimegraph.$set(scoredconcededovertimegraph_changes);
+    			const goalspergame_changes = {};
+    			if (dirty & /*data*/ 256) goalspergame_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*team*/ 16) goalspergame_changes.team = /*team*/ ctx[4];
+    			if (dirty & /*mobileView*/ 512) goalspergame_changes.mobileView = /*mobileView*/ ctx[9];
+    			goalspergame.$set(goalspergame_changes);
+    			const scorelinefreqgraph_changes = {};
+    			if (dirty & /*data*/ 256) scorelinefreqgraph_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*team*/ 16) scorelinefreqgraph_changes.team = /*team*/ ctx[4];
+    			if (dirty & /*mobileView*/ 512) scorelinefreqgraph_changes.mobileView = /*mobileView*/ ctx[9];
+    			scorelinefreqgraph.$set(scorelinefreqgraph_changes);
+    			const spidergraph_changes = {};
+    			if (dirty & /*data*/ 256) spidergraph_changes.data = /*data*/ ctx[8];
+    			if (dirty & /*team*/ 16) spidergraph_changes.team = /*team*/ ctx[4];
+    			if (dirty & /*teams*/ 32) spidergraph_changes.teams = /*teams*/ ctx[5];
+    			spidergraph.$set(spidergraph_changes);
+    			const teamsfooter_changes = {};
+    			if (dirty & /*data*/ 256) teamsfooter_changes.lastUpdated = /*data*/ ctx[8].lastUpdated;
+    			teamsfooter.$set(teamsfooter_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(positionovertimegraph.$$.fragment, local);
+    			transition_in(goalsscoredandconcededgraph.$$.fragment, local);
+    			transition_in(cleansheetsgraph.$$.fragment, local);
+    			transition_in(statsvalues.$$.fragment, local);
+    			transition_in(scoredconcededovertimegraph.$$.fragment, local);
+    			transition_in(goalspergame.$$.fragment, local);
+    			transition_in(scorelinefreqgraph.$$.fragment, local);
+    			transition_in(spidergraph.$$.fragment, local);
+    			transition_in(teamsfooter.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(positionovertimegraph.$$.fragment, local);
+    			transition_out(goalsscoredandconcededgraph.$$.fragment, local);
+    			transition_out(cleansheetsgraph.$$.fragment, local);
+    			transition_out(statsvalues.$$.fragment, local);
+    			transition_out(scoredconcededovertimegraph.$$.fragment, local);
+    			transition_out(goalspergame.$$.fragment, local);
+    			transition_out(scorelinefreqgraph.$$.fragment, local);
+    			transition_out(spidergraph.$$.fragment, local);
+    			transition_out(teamsfooter.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div2);
+    			destroy_component(positionovertimegraph);
+    			if (detaching) detach_dev(t2);
+    			if (detaching) detach_dev(div5);
+    			destroy_component(goalsscoredandconcededgraph);
+    			if (detaching) detach_dev(t5);
+    			if (detaching) detach_dev(div8);
+    			destroy_component(cleansheetsgraph);
+    			if (detaching) detach_dev(t6);
+    			if (detaching) detach_dev(div9);
+    			destroy_component(statsvalues);
+    			if (detaching) detach_dev(t7);
+    			if (detaching) detach_dev(div12);
+    			destroy_component(scoredconcededovertimegraph);
+    			if (detaching) detach_dev(t8);
+    			if (detaching) detach_dev(div14);
+    			destroy_component(goalspergame);
+    			if (detaching) detach_dev(t11);
+    			if (detaching) detach_dev(div17);
+    			destroy_component(scorelinefreqgraph);
+    			if (detaching) detach_dev(t12);
+    			if (detaching) detach_dev(div20);
+    			destroy_component(spidergraph);
+    			if (detaching) detach_dev(t15);
+    			destroy_component(teamsfooter, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$1.name,
+    		type: "if",
+    		source: "(312:10) {#if load}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (189:0) <Router>
+    function create_default_slot$4(ctx) {
+    	let div3;
+    	let nav;
+    	let t0;
+    	let mobilenav;
+    	let t1;
+    	let t2;
+    	let div2;
+    	let div1;
+    	let a;
+    	let div0;
+    	let t3_value = /*toAlias*/ ctx[10](/*team*/ ctx[4]) + "";
+    	let t3;
+    	let a_href_value;
+    	let t4;
+    	let current_block_type_index;
+    	let if_block1;
+    	let current;
+
+    	nav = new Nav({
+    			props: {
+    				team: /*hyphenatedTeam*/ ctx[0],
+    				teams: /*teams*/ ctx[5],
+    				toAlias: /*toAlias*/ ctx[10],
+    				switchTeam: /*switchTeam*/ ctx[12]
+    			},
+    			$$inline: true
+    		});
+
+    	mobilenav = new MobileNav({
+    			props: {
+    				hyphenatedTeam: /*hyphenatedTeam*/ ctx[0],
+    				teams: /*teams*/ ctx[5],
+    				toAlias: /*toAlias*/ ctx[10],
+    				switchTeam: /*switchTeam*/ ctx[12],
+    				toggleMobileNav
+    			},
+    			$$inline: true
+    		});
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*teams*/ ctx[5].length == 0) return create_if_block_3$1;
+    		return create_else_block_2;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block0 = current_block_type(ctx);
+    	const if_block_creators = [create_if_block$1, create_else_block_1$1];
+    	const if_blocks = [];
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*data*/ ctx[8] != undefined) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type_1(ctx);
+    	if_block1 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	const block = {
+    		c: function create() {
+    			div3 = element("div");
+    			create_component(nav.$$.fragment);
+    			t0 = space();
+    			create_component(mobilenav.$$.fragment);
+    			t1 = space();
+    			if_block0.c();
+    			t2 = space();
+    			div2 = element("div");
+    			div1 = element("div");
+    			a = element("a");
+    			div0 = element("div");
+    			t3 = text(t3_value);
+    			t4 = space();
+    			if_block1.c();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div3 = claim_element(nodes, "DIV", { id: true, class: true });
+    			var div3_nodes = children(div3);
+    			claim_component(nav.$$.fragment, div3_nodes);
+    			t0 = claim_space(div3_nodes);
+    			claim_component(mobilenav.$$.fragment, div3_nodes);
+    			t1 = claim_space(div3_nodes);
+    			if_block0.l(div3_nodes);
+    			t2 = claim_space(div3_nodes);
+    			div2 = claim_element(div3_nodes, "DIV", { id: true, class: true });
+    			var div2_nodes = children(div2);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true, style: true });
+    			var div1_nodes = children(div1);
+    			a = claim_element(div1_nodes, "A", { class: true, href: true });
+    			var a_nodes = children(a);
+    			div0 = claim_element(a_nodes, "DIV", { class: true, style: true });
+    			var div0_nodes = children(div0);
+    			t3 = claim_text(div0_nodes, t3_value);
+    			div0_nodes.forEach(detach_dev);
+    			a_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			t4 = claim_space(div2_nodes);
+    			if_block1.l(div2_nodes);
+    			div2_nodes.forEach(detach_dev);
+    			div3_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "title svelte-1ao5tmf");
+    			set_style(div0, "color", "var(--" + (/*hyphenatedTeam*/ ctx[0] + '-secondary') + ")");
+    			add_location(div0, file$3, 211, 10, 7472);
+    			attr_dev(a, "class", "main-link no-decoration svelte-1ao5tmf");
+    			attr_dev(a, "href", a_href_value = "/" + /*hyphenatedTeam*/ ctx[0]);
+    			add_location(a, file$3, 210, 8, 7400);
+    			attr_dev(div1, "class", "header svelte-1ao5tmf");
+    			set_style(div1, "background-color", "var(--" + /*hyphenatedTeam*/ ctx[0] + ")");
+    			add_location(div1, file$3, 209, 6, 7319);
+    			attr_dev(div2, "id", "dashboard");
+    			attr_dev(div2, "class", "svelte-1ao5tmf");
+    			add_location(div2, file$3, 207, 4, 7251);
+    			attr_dev(div3, "id", "team");
+    			attr_dev(div3, "class", "svelte-1ao5tmf");
+    			add_location(div3, file$3, 189, 2, 6740);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div3, anchor);
+    			mount_component(nav, div3, null);
+    			append_hydration_dev(div3, t0);
+    			mount_component(mobilenav, div3, null);
+    			append_hydration_dev(div3, t1);
+    			if_block0.m(div3, null);
+    			append_hydration_dev(div3, t2);
+    			append_hydration_dev(div3, div2);
+    			append_hydration_dev(div2, div1);
+    			append_hydration_dev(div1, a);
+    			append_hydration_dev(a, div0);
+    			append_hydration_dev(div0, t3);
+    			append_hydration_dev(div2, t4);
+    			if_blocks[current_block_type_index].m(div2, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const nav_changes = {};
+    			if (dirty & /*hyphenatedTeam*/ 1) nav_changes.team = /*hyphenatedTeam*/ ctx[0];
+    			if (dirty & /*teams*/ 32) nav_changes.teams = /*teams*/ ctx[5];
+    			nav.$set(nav_changes);
+    			const mobilenav_changes = {};
+    			if (dirty & /*hyphenatedTeam*/ 1) mobilenav_changes.hyphenatedTeam = /*hyphenatedTeam*/ ctx[0];
+    			if (dirty & /*teams*/ 32) mobilenav_changes.teams = /*teams*/ ctx[5];
+    			mobilenav.$set(mobilenav_changes);
+
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block0) {
+    				if_block0.p(ctx, dirty);
+    			} else {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(div3, t2);
+    				}
+    			}
+
+    			if ((!current || dirty & /*team*/ 16) && t3_value !== (t3_value = /*toAlias*/ ctx[10](/*team*/ ctx[4]) + "")) set_data_dev(t3, t3_value);
+
+    			if (!current || dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(div0, "color", "var(--" + (/*hyphenatedTeam*/ ctx[0] + '-secondary') + ")");
+    			}
+
+    			if (!current || dirty & /*hyphenatedTeam*/ 1 && a_href_value !== (a_href_value = "/" + /*hyphenatedTeam*/ ctx[0])) {
+    				attr_dev(a, "href", a_href_value);
+    			}
+
+    			if (!current || dirty & /*hyphenatedTeam*/ 1) {
+    				set_style(div1, "background-color", "var(--" + /*hyphenatedTeam*/ ctx[0] + ")");
+    			}
+
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type_1(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block1 = if_blocks[current_block_type_index];
+
+    				if (!if_block1) {
+    					if_block1 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block1.c();
+    				} else {
+    					if_block1.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block1, 1);
+    				if_block1.m(div2, null);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(nav.$$.fragment, local);
+    			transition_in(mobilenav.$$.fragment, local);
+    			transition_in(if_block1);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(nav.$$.fragment, local);
+    			transition_out(mobilenav.$$.fragment, local);
+    			transition_out(if_block1);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div3);
+    			destroy_component(nav);
+    			destroy_component(mobilenav);
+    			if_block0.d();
+    			if_blocks[current_block_type_index].d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$4.name,
+    		type: "slot",
+    		source: "(189:0) <Router>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$4(ctx) {
+    	let scrolling = false;
+
+    	let clear_scrolling = () => {
+    		scrolling = false;
+    	};
+
+    	let scrolling_timeout;
+    	let title_value;
+    	let meta;
+    	let t;
+    	let router;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	add_render_callback(/*onwindowresize*/ ctx[13]);
+    	add_render_callback(/*onwindowscroll*/ ctx[14]);
+    	document_1$1.title = title_value = /*team*/ ctx[4];
+
+    	router = new Router({
+    			props: {
+    				$$slots: { default: [create_default_slot$4] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			meta = element("meta");
+    			t = space();
+    			create_component(router.$$.fragment);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1x6khl2\"]', document_1$1.head);
+    			meta = claim_element(head_nodes, "META", { name: true, content: true });
+    			head_nodes.forEach(detach_dev);
+    			t = claim_space(nodes);
+    			claim_component(router.$$.fragment, nodes);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(meta, "name", "description");
+    			attr_dev(meta, "content", "Premier League Statistics Dashboard");
+    			add_location(meta, file$3, 183, 2, 6569);
+    		},
+    		m: function mount(target, anchor) {
+    			append_hydration_dev(document_1$1.head, meta);
+    			insert_hydration_dev(target, t, anchor);
+    			mount_component(router, target, anchor);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(window_1, "resize", /*onwindowresize*/ ctx[13]),
+    					listen_dev(window_1, "scroll", () => {
+    						scrolling = true;
+    						clearTimeout(scrolling_timeout);
+    						scrolling_timeout = setTimeout(clear_scrolling, 100);
+    						/*onwindowscroll*/ ctx[14]();
+    					})
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*y*/ 2 && !scrolling) {
+    				scrolling = true;
+    				clearTimeout(scrolling_timeout);
+    				scrollTo(window_1.pageXOffset, /*y*/ ctx[1]);
+    				scrolling_timeout = setTimeout(clear_scrolling, 100);
+    			}
+
+    			if ((!current || dirty & /*team*/ 16) && title_value !== (title_value = /*team*/ ctx[4])) {
+    				document_1$1.title = title_value;
+    			}
+
+    			const router_changes = {};
+
+    			if (dirty & /*$$scope, data, team, teams, mobileView, playedMatchdays, load, currentMatchday, hyphenatedTeam*/ 263161) {
+    				router_changes.$$scope = { dirty, ctx };
+    			}
+
+    			router.$set(router_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(router.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(router.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			detach_dev(meta);
+    			if (detaching) detach_dev(t);
+    			destroy_component(router, detaching);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$4.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    const showBadge = false;
+
+    function toInitials(team) {
+    	switch (team) {
+    		case "Brighton and Hove Albion":
+    			return "BHA";
+    		case "Manchester City":
+    			return "MCI";
+    		case "Manchester United":
+    			return "MUN";
+    		case "Aston Villa":
+    			return "AVL";
+    		case "Sheffield United":
+    			return "SHU";
+    		case "West Bromwich Albion":
+    			return "WBA";
+    		case "West Ham United":
+    			return "WHU";
+    	}
+
+    	return team.slice(0, 3).toUpperCase();
+    }
+
+    function toggleMobileNav() {
+    	let mobileNav = document.getElementById("mobileNav");
+
+    	if (mobileNav.style.width == "0px") {
+    		mobileNav.style.animation = "appear 0.1s ease-in 1";
+    		mobileNav.style.width = "100%";
+    	} else {
+    		mobileNav.style.animation = null;
+    		mobileNav.style.width = "0px";
+    	}
+    }
+
+    function toTitleCase(str) {
+    	return str.toLowerCase().split(" ").map(function (word) {
+    		return word.charAt(0).toUpperCase() + word.slice(1);
+    	}).join(" ").replace("And", "and");
+    }
+
+    function getPlayedMatchdayDates(data, team) {
+    	let matchdays = [];
+
+    	for (let matchday in data.form[team][data._id]) {
+    		if (data.form[team][data._id][matchday].score != null) {
+    			matchdays.push(matchday);
+    		}
+    	}
+
+    	// If played one or no games, take x-axis from whole season dates
+    	if (matchdays.length == 0) {
+    		matchdays = Object.keys(data.fixtures[team]);
+    	}
+
+    	// Find median matchday date across all teams for each matchday
+    	let x = [];
+
+    	for (let matchday of matchdays) {
+    		let matchdayDates = [];
+
+    		Object.keys(data.standings).forEach(team => {
+    			matchdayDates.push(data.fixtures[team][matchday].date);
+    		});
+
+    		matchdayDates = matchdayDates.map(val => {
+    			return new Date(val);
+    		});
+
+    		matchdayDates = matchdayDates.sort();
+    		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
+    	}
+
+    	x.sort(function (a, b) {
+    		return a - b;
+    	});
+
+    	return x;
+    }
+
+    function getCurrentMatchday(data, team) {
+    	let currentMatchday = null;
+
+    	if (Object.keys(data.form[team][data._id]).length > 0) {
+    		// Largest matchday with score is current matchday
+    		for (let matchday of Object.keys(data.form[team][data._id]).reverse()) {
+    			if (data.form[team][data._id][matchday].score != null) {
+    				currentMatchday = matchday;
+    				break;
+    			}
+    		}
+    	}
+
+    	return currentMatchday;
+    }
+
+    async function fetchData$1(address) {
+    	const response = await fetch(address);
+    	let json = await response.json();
+    	return json;
+    }
+
+    function instance$4($$self, $$props, $$invalidate) {
+    	let mobileView;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Team', slots, []);
+
+    	let alias = {
+    		"Wolverhampton Wanderers": "Wolves",
+    		"Tottenham Hotspur": "Spurs",
+    		"Leeds United": "Leeds",
+    		"West Ham United": "West Ham",
+    		"Brighton and Hove Albion": "Brighton"
+    	};
+
+    	function toAlias(team) {
+    		if (team in alias) {
+    			return alias[team];
+    		}
+
+    		return team;
+    	}
+
+    	function toName(teamAlias) {
+    		if (!Object.values(alias).includes(teamAlias)) {
+    			return teamAlias;
+    		}
+
+    		return Object.keys(alias).find(key => alias[key] === teamAlias);
+    	}
+
+    	function initDashboard() {
+    		// Set formatted team name so page header can display while fetching data
+    		if (hyphenatedTeam != null) {
+    			$$invalidate(4, team = toTitleCase(hyphenatedTeam.replace(/\-/g, " ")));
+    		}
+
+    		fetchData$1("https://pldashboard-backend.vercel.app/api/teams").then(json => {
+    			$$invalidate(5, teams = Object.keys(json.standings));
+
+    			if (hyphenatedTeam == null) {
+    				// If '/' searched, set current team to
+    				$$invalidate(4, team = teams[0]);
+
+    				$$invalidate(0, hyphenatedTeam = team.toLowerCase().replace(/ /g, "-"));
+
+    				// Change url to /team-name without reloading page
+    				history.pushState({}, null, window.location.href + hyphenatedTeam);
+    			} else {
+    				// If team from url not in current season teams, 404 redirect
+    				if (!teams.includes(team)) {
+    					window.location.href = "/error";
+    				}
+    			}
+
+    			$$invalidate(6, currentMatchday = getCurrentMatchday(json, team));
+    			$$invalidate(7, playedMatchdays = getPlayedMatchdayDates(json, team));
+    			$$invalidate(8, data = json);
+    			console.log(data);
+    		}).then(() => {
+    			window.dispatchEvent(new Event("resize"));
+    		});
+    	}
+
+    	function switchTeam(newTeam) {
+    		$$invalidate(0, hyphenatedTeam = newTeam);
+    		$$invalidate(4, team = toTitleCase(hyphenatedTeam.replace(/\-/g, " ")));
+    		$$invalidate(6, currentMatchday = getCurrentMatchday(data, team));
+    		$$invalidate(7, playedMatchdays = getPlayedMatchdayDates(data, team));
+    		window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
+    	}
+
+    	function lazyLoad() {
+    		$$invalidate(3, load = true);
+    		window.dispatchEvent(new Event("resize"));
+    	}
+
+    	let y;
+    	let load = false;
+    	let pageWidth;
+    	let team = "";
+    	let teams = []; // Used for nav bar links
+    	let currentMatchday, playedMatchdays;
+    	let data;
+
+    	onMount(() => {
+    		initDashboard();
+    	});
+
+    	let { hyphenatedTeam } = $$props;
+    	const writable_props = ['hyphenatedTeam'];
+
+    	Object_1.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$1.warn(`<Team> was created with unknown prop '${key}'`);
+    	});
+
+    	function onwindowresize() {
+    		$$invalidate(2, pageWidth = window_1.innerWidth);
+    	}
+
+    	function onwindowscroll() {
+    		$$invalidate(1, y = window_1.pageYOffset);
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('hyphenatedTeam' in $$props) $$invalidate(0, hyphenatedTeam = $$props.hyphenatedTeam);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		Router,
+    		onMount,
+    		CurrentForm,
+    		TableSnippet,
+    		NextGame,
+    		StatsValues,
+    		TeamsFooter,
+    		FixturesGraph,
+    		FormOverTimeGraph,
+    		PositionOverTimeGraph,
+    		GoalsScoredAndConcededGraph: ScoredAndConcededGraph,
+    		CleanSheetsGraph,
+    		GoalsPerGame,
+    		SpiderGraph,
+    		ScorelineFreqGraph,
+    		Nav,
+    		MobileNav,
+    		ScoredConcededOverTimeGraph,
+    		alias,
+    		toInitials,
+    		toAlias,
+    		toName,
+    		toggleMobileNav,
+    		toTitleCase,
+    		getPlayedMatchdayDates,
+    		getCurrentMatchday,
+    		fetchData: fetchData$1,
+    		initDashboard,
+    		switchTeam,
+    		lazyLoad,
+    		y,
+    		load,
+    		pageWidth,
+    		showBadge,
+    		team,
+    		teams,
+    		currentMatchday,
+    		playedMatchdays,
+    		data,
+    		hyphenatedTeam,
+    		mobileView
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('alias' in $$props) alias = $$props.alias;
+    		if ('y' in $$props) $$invalidate(1, y = $$props.y);
+    		if ('load' in $$props) $$invalidate(3, load = $$props.load);
+    		if ('pageWidth' in $$props) $$invalidate(2, pageWidth = $$props.pageWidth);
+    		if ('team' in $$props) $$invalidate(4, team = $$props.team);
+    		if ('teams' in $$props) $$invalidate(5, teams = $$props.teams);
+    		if ('currentMatchday' in $$props) $$invalidate(6, currentMatchday = $$props.currentMatchday);
+    		if ('playedMatchdays' in $$props) $$invalidate(7, playedMatchdays = $$props.playedMatchdays);
+    		if ('data' in $$props) $$invalidate(8, data = $$props.data);
+    		if ('hyphenatedTeam' in $$props) $$invalidate(0, hyphenatedTeam = $$props.hyphenatedTeam);
+    		if ('mobileView' in $$props) $$invalidate(9, mobileView = $$props.mobileView);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*y*/ 2) {
+    			y > 30 && lazyLoad();
+    		}
+
+    		if ($$self.$$.dirty & /*pageWidth*/ 4) {
+    			$$invalidate(9, mobileView = pageWidth <= 700);
+    		}
+    	};
+
+    	return [
+    		hyphenatedTeam,
+    		y,
+    		pageWidth,
+    		load,
+    		team,
+    		teams,
+    		currentMatchday,
+    		playedMatchdays,
+    		data,
+    		mobileView,
+    		toAlias,
+    		toName,
+    		switchTeam,
+    		onwindowresize,
+    		onwindowscroll
+    	];
+    }
+
+    class Team extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { hyphenatedTeam: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Team",
+    			options,
+    			id: create_fragment$4.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*hyphenatedTeam*/ ctx[0] === undefined && !('hyphenatedTeam' in props)) {
+    			console_1$1.warn("<Team> was created without expected prop 'hyphenatedTeam'");
+    		}
+    	}
+
+    	get hyphenatedTeam() {
+    		throw new Error("<Team>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set hyphenatedTeam(value) {
+    		throw new Error("<Team>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\routes\Home.svelte generated by Svelte v3.49.0 */
+    const file$2 = "src\\routes\\Home.svelte";
+
+    // (9:0) <Router>
+    function create_default_slot$3(ctx) {
+    	let div3;
+    	let div2;
+    	let div0;
+    	let t0;
+    	let img;
+    	let img_src_value;
+    	let t1;
+    	let div1;
+    	let a0;
+    	let t2;
+    	let t3;
+    	let a1;
+    	let t4;
+
+    	const block = {
+    		c: function create() {
+    			div3 = element("div");
+    			div2 = element("div");
+    			div0 = element("div");
+    			t0 = space();
+    			img = element("img");
+    			t1 = space();
+    			div1 = element("div");
+    			a0 = element("a");
+    			t2 = text("Dashboard");
+    			t3 = space();
+    			a1 = element("a");
+    			t4 = text("Fantasy");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div3 = claim_element(nodes, "DIV", { id: true, class: true });
+    			var div3_nodes = children(div3);
+    			div2 = claim_element(div3_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div0 = claim_element(div2_nodes, "DIV", { id: true, class: true });
+    			children(div0).forEach(detach_dev);
+    			t0 = claim_space(div2_nodes);
+    			img = claim_element(div2_nodes, "IMG", { src: true, alt: true, class: true });
+    			t1 = claim_space(div2_nodes);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			a0 = claim_element(div1_nodes, "A", { class: true, href: true });
+    			var a0_nodes = children(a0);
+    			t2 = claim_text(a0_nodes, "Dashboard");
+    			a0_nodes.forEach(detach_dev);
+    			t3 = claim_space(div1_nodes);
+    			a1 = claim_element(div1_nodes, "A", { class: true, href: true });
+    			var a1_nodes = children(a1);
+    			t4 = claim_text(a1_nodes, "Fantasy");
+    			a1_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			div2_nodes.forEach(detach_dev);
+    			div3_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "id", "circle");
+    			attr_dev(div0, "class", "svelte-1wkac13");
+    			add_location(div0, file$2, 11, 6, 278);
+    			if (!src_url_equal(img.src, img_src_value = "img/pldashboard5.png")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", "pldashboard");
+    			attr_dev(img, "class", "svelte-1wkac13");
+    			add_location(img, file$2, 12, 6, 305);
+    			attr_dev(a0, "class", "dashboard-link svelte-1wkac13");
+    			attr_dev(a0, "href", "/");
+    			add_location(a0, file$2, 14, 8, 394);
+    			attr_dev(a1, "class", "fantasy-link svelte-1wkac13");
+    			attr_dev(a1, "href", "/");
+    			add_location(a1, file$2, 15, 8, 452);
+    			attr_dev(div1, "class", "links svelte-1wkac13");
+    			add_location(div1, file$2, 13, 6, 365);
+    			attr_dev(div2, "class", "content svelte-1wkac13");
+    			add_location(div2, file$2, 10, 4, 249);
+    			attr_dev(div3, "id", "home");
+    			attr_dev(div3, "class", "svelte-1wkac13");
+    			add_location(div3, file$2, 9, 2, 228);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div3, anchor);
+    			append_hydration_dev(div3, div2);
+    			append_hydration_dev(div2, div0);
+    			append_hydration_dev(div2, t0);
+    			append_hydration_dev(div2, img);
+    			append_hydration_dev(div2, t1);
+    			append_hydration_dev(div2, div1);
+    			append_hydration_dev(div1, a0);
+    			append_hydration_dev(a0, t2);
+    			append_hydration_dev(div1, t3);
+    			append_hydration_dev(div1, a1);
+    			append_hydration_dev(a1, t4);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div3);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$3.name,
+    		type: "slot",
+    		source: "(9:0) <Router>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$3(ctx) {
+    	let meta;
+    	let t;
+    	let router;
+    	let current;
+
+    	router = new Router({
+    			props: {
+    				$$slots: { default: [create_default_slot$3] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			meta = element("meta");
+    			t = space();
+    			create_component(router.$$.fragment);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1rqatx0\"]', document.head);
+    			meta = claim_element(head_nodes, "META", { name: true, content: true });
+    			head_nodes.forEach(detach_dev);
+    			t = claim_space(nodes);
+    			claim_component(router.$$.fragment, nodes);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			document.title = "Premier League";
+    			attr_dev(meta, "name", "description");
+    			attr_dev(meta, "content", "Premier League Statistics Dashboard");
+    			add_location(meta, file$2, 5, 2, 123);
+    		},
+    		m: function mount(target, anchor) {
+    			append_hydration_dev(document.head, meta);
+    			insert_hydration_dev(target, t, anchor);
+    			mount_component(router, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const router_changes = {};
+
+    			if (dirty & /*$$scope*/ 1) {
+    				router_changes.$$scope = { dirty, ctx };
+    			}
+
+    			router.$set(router_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(router.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(router.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			detach_dev(meta);
+    			if (detaching) detach_dev(t);
+    			destroy_component(router, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$3.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$3($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Home', slots, []);
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Home> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$capture_state = () => ({ Router });
+    	return [];
+    }
+
+    class Home extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$3, create_fragment$3, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Home",
+    			options,
+    			id: create_fragment$3.name
+    		});
+    	}
+    }
+
+    /* src\routes\Predictions.svelte generated by Svelte v3.49.0 */
+
+    const { console: console_1, document: document_1 } = globals;
+    const file$1 = "src\\routes\\Predictions.svelte";
+
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[2] = list[i]._id;
+    	child_ctx[3] = list[i].predictions;
+    	return child_ctx;
+    }
+
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[6] = list[i];
+    	return child_ctx;
+    }
+
+    // (183:4) {:else}
+    function create_else_block_1(ctx) {
+    	let div1;
+    	let div0;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			children(div0).forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "loading-spinner");
+    			add_location(div0, file$1, 184, 8, 7101);
+    			attr_dev(div1, "class", "loading-spinner-container");
+    			add_location(div1, file$1, 183, 6, 7052);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1.name,
+    		type: "else",
+    		source: "(183:4) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (97:4) {#if data != undefined}
+    function create_if_block(ctx) {
+    	let div5;
+    	let div2;
+    	let div1;
+    	let span;
+    	let t0;
+    	let b0;
+    	let t1_value = (/*data*/ ctx[0].accuracy.scoreAccuracy * 100).toFixed(2) + "";
+    	let t1;
+    	let t2;
+    	let br;
+    	let t3;
+    	let div0;
+    	let t4;
+    	let b1;
+    	let t5_value = (/*data*/ ctx[0].accuracy.resultAccuracy * 100).toFixed(2) + "";
+    	let t5;
+    	let t6;
+    	let t7;
+    	let div4;
+    	let div3;
+    	let if_block = /*data*/ ctx[0].predictions != null && create_if_block_1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div5 = element("div");
+    			div2 = element("div");
+    			div1 = element("div");
+    			span = element("span");
+    			t0 = text("Predicting with accuracy: ");
+    			b0 = element("b");
+    			t1 = text(t1_value);
+    			t2 = text("%");
+    			br = element("br");
+    			t3 = space();
+    			div0 = element("div");
+    			t4 = text("General results accuracy: ");
+    			b1 = element("b");
+    			t5 = text(t5_value);
+    			t6 = text("%");
+    			t7 = space();
+    			div4 = element("div");
+    			div3 = element("div");
+    			if (if_block) if_block.c();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div5 = claim_element(nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div2 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			div1 = claim_element(div2_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			span = claim_element(div1_nodes, "SPAN", { class: true });
+    			var span_nodes = children(span);
+    			t0 = claim_text(span_nodes, "Predicting with accuracy: ");
+    			b0 = claim_element(span_nodes, "B", {});
+    			var b0_nodes = children(b0);
+    			t1 = claim_text(b0_nodes, t1_value);
+    			t2 = claim_text(b0_nodes, "%");
+    			b0_nodes.forEach(detach_dev);
+    			span_nodes.forEach(detach_dev);
+    			br = claim_element(div1_nodes, "BR", {});
+    			t3 = claim_space(div1_nodes);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t4 = claim_text(div0_nodes, "General results accuracy: ");
+    			b1 = claim_element(div0_nodes, "B", {});
+    			var b1_nodes = children(b1);
+    			t5 = claim_text(b1_nodes, t5_value);
+    			t6 = claim_text(b1_nodes, "%");
+    			b1_nodes.forEach(detach_dev);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			div2_nodes.forEach(detach_dev);
+    			t7 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			if (if_block) if_block.l(div3_nodes);
+    			div3_nodes.forEach(detach_dev);
+    			div4_nodes.forEach(detach_dev);
+    			div5_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			add_location(b0, file$1, 101, 40, 3633);
+    			attr_dev(span, "class", "accuracy-item svelte-1qm3m7y");
+    			add_location(span, file$1, 100, 12, 3563);
+    			add_location(br, file$1, 104, 13, 3744);
+    			add_location(b1, file$1, 106, 40, 3833);
+    			attr_dev(div0, "class", "accuracy-item svelte-1qm3m7y");
+    			add_location(div0, file$1, 105, 12, 3764);
+    			attr_dev(div1, "class", "accuracy svelte-1qm3m7y");
+    			add_location(div1, file$1, 99, 10, 3527);
+    			attr_dev(div2, "class", "accuracy-display svelte-1qm3m7y");
+    			add_location(div2, file$1, 98, 8, 3485);
+    			attr_dev(div3, "class", "predictions svelte-1qm3m7y");
+    			add_location(div3, file$1, 114, 10, 4037);
+    			attr_dev(div4, "class", "predictions-container svelte-1qm3m7y");
+    			add_location(div4, file$1, 113, 8, 3990);
+    			attr_dev(div5, "class", "page-content svelte-1qm3m7y");
+    			add_location(div5, file$1, 97, 6, 3449);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div5, anchor);
+    			append_hydration_dev(div5, div2);
+    			append_hydration_dev(div2, div1);
+    			append_hydration_dev(div1, span);
+    			append_hydration_dev(span, t0);
+    			append_hydration_dev(span, b0);
+    			append_hydration_dev(b0, t1);
+    			append_hydration_dev(b0, t2);
+    			append_hydration_dev(div1, br);
+    			append_hydration_dev(div1, t3);
+    			append_hydration_dev(div1, div0);
+    			append_hydration_dev(div0, t4);
+    			append_hydration_dev(div0, b1);
+    			append_hydration_dev(b1, t5);
+    			append_hydration_dev(b1, t6);
+    			append_hydration_dev(div5, t7);
+    			append_hydration_dev(div5, div4);
+    			append_hydration_dev(div4, div3);
+    			if (if_block) if_block.m(div3, null);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*data*/ 1 && t1_value !== (t1_value = (/*data*/ ctx[0].accuracy.scoreAccuracy * 100).toFixed(2) + "")) set_data_dev(t1, t1_value);
+    			if (dirty & /*data*/ 1 && t5_value !== (t5_value = (/*data*/ ctx[0].accuracy.resultAccuracy * 100).toFixed(2) + "")) set_data_dev(t5, t5_value);
+
+    			if (/*data*/ ctx[0].predictions != null) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_1(ctx);
+    					if_block.c();
+    					if_block.m(div3, null);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div5);
+    			if (if_block) if_block.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(97:4) {#if data != undefined}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (116:12) {#if data.predictions != null}
+    function create_if_block_1(ctx) {
+    	let each_1_anchor;
+    	let each_value = /*data*/ ctx[0].predictions;
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(nodes);
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_hydration_dev(target, each_1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*data, toggleDetailsDisplay, datetimeToTime, Math*/ 1) {
+    				each_value = /*data*/ ctx[0].predictions;
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(116:12) {#if data.predictions != null}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (151:20) {:else}
+    function create_else_block(ctx) {
+    	let div;
+    	let t_value = datetimeToTime(/*pred*/ ctx[6].datetime) + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t = text(t_value);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", { class: true });
+    			var div_nodes = children(div);
+    			t = claim_text(div_nodes, t_value);
+    			div_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div, "class", "prediction-time svelte-1qm3m7y");
+    			add_location(div, file$1, 151, 22, 5920);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div, anchor);
+    			append_hydration_dev(div, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*data*/ 1 && t_value !== (t_value = datetimeToTime(/*pred*/ ctx[6].datetime) + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(151:20) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (140:20) {#if pred.actual != null}
+    function create_if_block_3(ctx) {
+    	let div5;
+    	let div0;
+    	let t0;
+    	let t1;
+    	let div4;
+    	let div1;
+    	let t2_value = /*pred*/ ctx[6].home + "";
+    	let t2;
+    	let t3;
+    	let div2;
+    	let t4_value = /*pred*/ ctx[6].actual.homeGoals + "";
+    	let t4;
+    	let t5;
+    	let t6_value = /*pred*/ ctx[6].actual.awayGoals + "";
+    	let t6;
+    	let t7;
+    	let div3;
+    	let t8_value = /*pred*/ ctx[6].away + "";
+    	let t8;
+
+    	const block = {
+    		c: function create() {
+    			div5 = element("div");
+    			div0 = element("div");
+    			t0 = text("Actual:");
+    			t1 = space();
+    			div4 = element("div");
+    			div1 = element("div");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			div2 = element("div");
+    			t4 = text(t4_value);
+    			t5 = text(" - ");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div3 = element("div");
+    			t8 = text(t8_value);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div5 = claim_element(nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div0 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, "Actual:");
+    			div0_nodes.forEach(detach_dev);
+    			t1 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			div1 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t2 = claim_text(div1_nodes, t2_value);
+    			div1_nodes.forEach(detach_dev);
+    			t3 = claim_space(div4_nodes);
+    			div2 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t4 = claim_text(div2_nodes, t4_value);
+    			t5 = claim_text(div2_nodes, " - ");
+    			t6 = claim_text(div2_nodes, t6_value);
+    			div2_nodes.forEach(detach_dev);
+    			t7 = claim_space(div4_nodes);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			t8 = claim_text(div3_nodes, t8_value);
+    			div3_nodes.forEach(detach_dev);
+    			div4_nodes.forEach(detach_dev);
+    			div5_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "prediction-label svelte-1qm3m7y");
+    			add_location(div0, file$1, 141, 24, 5379);
+    			attr_dev(div1, "class", "prediction-initials svelte-1qm3m7y");
+    			add_location(div1, file$1, 143, 26, 5506);
+    			attr_dev(div2, "class", "prediction-score svelte-1qm3m7y");
+    			add_location(div2, file$1, 144, 26, 5584);
+    			attr_dev(div3, "class", "prediction-initials svelte-1qm3m7y");
+    			add_location(div3, file$1, 147, 26, 5755);
+    			attr_dev(div4, "class", "prediction-value svelte-1qm3m7y");
+    			add_location(div4, file$1, 142, 24, 5448);
+    			attr_dev(div5, "class", "actual prediction-item svelte-1qm3m7y");
+    			add_location(div5, file$1, 140, 22, 5317);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div5, anchor);
+    			append_hydration_dev(div5, div0);
+    			append_hydration_dev(div0, t0);
+    			append_hydration_dev(div5, t1);
+    			append_hydration_dev(div5, div4);
+    			append_hydration_dev(div4, div1);
+    			append_hydration_dev(div1, t2);
+    			append_hydration_dev(div4, t3);
+    			append_hydration_dev(div4, div2);
+    			append_hydration_dev(div2, t4);
+    			append_hydration_dev(div2, t5);
+    			append_hydration_dev(div2, t6);
+    			append_hydration_dev(div4, t7);
+    			append_hydration_dev(div4, div3);
+    			append_hydration_dev(div3, t8);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*data*/ 1 && t2_value !== (t2_value = /*pred*/ ctx[6].home + "")) set_data_dev(t2, t2_value);
+    			if (dirty & /*data*/ 1 && t4_value !== (t4_value = /*pred*/ ctx[6].actual.homeGoals + "")) set_data_dev(t4, t4_value);
+    			if (dirty & /*data*/ 1 && t6_value !== (t6_value = /*pred*/ ctx[6].actual.awayGoals + "")) set_data_dev(t6, t6_value);
+    			if (dirty & /*data*/ 1 && t8_value !== (t8_value = /*pred*/ ctx[6].away + "")) set_data_dev(t8, t8_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div5);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3.name,
+    		type: "if",
+    		source: "(140:20) {#if pred.actual != null}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (158:20) {#if pred.prediction != null}
+    function create_if_block_2(ctx) {
+    	let div1;
+    	let div0;
+    	let b;
+    	let t0_value = /*pred*/ ctx[6].prediction.homeGoals + "";
+    	let t0;
+    	let t1;
+    	let t2_value = /*pred*/ ctx[6].prediction.awayGoals + "";
+    	let t2;
+    	let div1_id_value;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			b = element("b");
+    			t0 = text(t0_value);
+    			t1 = text(" - ");
+    			t2 = text(t2_value);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { class: true, id: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			b = claim_element(div0_nodes, "B", {});
+    			var b_nodes = children(b);
+    			t0 = claim_text(b_nodes, t0_value);
+    			t1 = claim_text(b_nodes, " - ");
+    			t2 = claim_text(b_nodes, t2_value);
+    			b_nodes.forEach(detach_dev);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			add_location(b, file$1, 160, 26, 6337);
+    			attr_dev(div0, "class", "detailed-predicted-score svelte-1qm3m7y");
+    			add_location(div0, file$1, 159, 24, 6271);
+    			attr_dev(div1, "class", "prediction-details svelte-1qm3m7y");
+    			attr_dev(div1, "id", div1_id_value = /*pred*/ ctx[6]._id);
+    			add_location(div1, file$1, 158, 22, 6199);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			append_hydration_dev(div0, b);
+    			append_hydration_dev(b, t0);
+    			append_hydration_dev(b, t1);
+    			append_hydration_dev(b, t2);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*data*/ 1 && t0_value !== (t0_value = /*pred*/ ctx[6].prediction.homeGoals + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*data*/ 1 && t2_value !== (t2_value = /*pred*/ ctx[6].prediction.awayGoals + "")) set_data_dev(t2, t2_value);
+
+    			if (dirty & /*data*/ 1 && div1_id_value !== (div1_id_value = /*pred*/ ctx[6]._id)) {
+    				attr_dev(div1, "id", div1_id_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2.name,
+    		type: "if",
+    		source: "(158:20) {#if pred.prediction != null}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (123:16) {#each predictions as pred}
+    function create_each_block_1(ctx) {
+    	let button;
+    	let div5;
+    	let div0;
+    	let t0;
+    	let t1;
+    	let div4;
+    	let div1;
+    	let t2_value = /*pred*/ ctx[6].home + "";
+    	let t2;
+    	let t3;
+    	let div2;
+    	let t4_value = Math.round(/*pred*/ ctx[6].prediction.homeGoals) + "";
+    	let t4;
+    	let t5;
+    	let t6_value = Math.round(/*pred*/ ctx[6].prediction.awayGoals) + "";
+    	let t6;
+    	let t7;
+    	let div3;
+    	let t8_value = /*pred*/ ctx[6].away + "";
+    	let t8;
+    	let t9;
+    	let t10;
+    	let button_class_value;
+    	let mounted;
+    	let dispose;
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*pred*/ ctx[6].actual != null) return create_if_block_3;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type_1(ctx);
+    	let if_block0 = current_block_type(ctx);
+    	let if_block1 = /*pred*/ ctx[6].prediction != null && create_if_block_2(ctx);
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[1](/*pred*/ ctx[6]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			div5 = element("div");
+    			div0 = element("div");
+    			t0 = text("Predicted:");
+    			t1 = space();
+    			div4 = element("div");
+    			div1 = element("div");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			div2 = element("div");
+    			t4 = text(t4_value);
+    			t5 = text(" - ");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div3 = element("div");
+    			t8 = text(t8_value);
+    			t9 = space();
+    			if_block0.c();
+    			t10 = space();
+    			if (if_block1) if_block1.c();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			button = claim_element(nodes, "BUTTON", { class: true });
+    			var button_nodes = children(button);
+    			div5 = claim_element(button_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			div0 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, "Predicted:");
+    			div0_nodes.forEach(detach_dev);
+    			t1 = claim_space(div5_nodes);
+    			div4 = claim_element(div5_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			div1 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			t2 = claim_text(div1_nodes, t2_value);
+    			div1_nodes.forEach(detach_dev);
+    			t3 = claim_space(div4_nodes);
+    			div2 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t4 = claim_text(div2_nodes, t4_value);
+    			t5 = claim_text(div2_nodes, " - ");
+    			t6 = claim_text(div2_nodes, t6_value);
+    			div2_nodes.forEach(detach_dev);
+    			t7 = claim_space(div4_nodes);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			t8 = claim_text(div3_nodes, t8_value);
+    			div3_nodes.forEach(detach_dev);
+    			div4_nodes.forEach(detach_dev);
+    			div5_nodes.forEach(detach_dev);
+    			t9 = claim_space(button_nodes);
+    			if_block0.l(button_nodes);
+    			t10 = claim_space(button_nodes);
+    			if (if_block1) if_block1.l(button_nodes);
+    			button_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "prediction-label svelte-1qm3m7y");
+    			add_location(div0, file$1, 128, 22, 4681);
+    			attr_dev(div1, "class", "prediction-initials svelte-1qm3m7y");
+    			add_location(div1, file$1, 130, 24, 4807);
+    			attr_dev(div2, "class", "prediction-score svelte-1qm3m7y");
+    			add_location(div2, file$1, 131, 24, 4883);
+    			attr_dev(div3, "class", "prediction-initials svelte-1qm3m7y");
+    			add_location(div3, file$1, 136, 24, 5138);
+    			attr_dev(div4, "class", "prediction-value svelte-1qm3m7y");
+    			add_location(div4, file$1, 129, 22, 4751);
+    			attr_dev(div5, "class", "prediction prediction-item svelte-1qm3m7y");
+    			add_location(div5, file$1, 127, 20, 4617);
+    			attr_dev(button, "class", button_class_value = "prediction-container " + /*pred*/ ctx[6].colour + " svelte-1qm3m7y");
+    			add_location(button, file$1, 123, 18, 4434);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, button, anchor);
+    			append_hydration_dev(button, div5);
+    			append_hydration_dev(div5, div0);
+    			append_hydration_dev(div0, t0);
+    			append_hydration_dev(div5, t1);
+    			append_hydration_dev(div5, div4);
+    			append_hydration_dev(div4, div1);
+    			append_hydration_dev(div1, t2);
+    			append_hydration_dev(div4, t3);
+    			append_hydration_dev(div4, div2);
+    			append_hydration_dev(div2, t4);
+    			append_hydration_dev(div2, t5);
+    			append_hydration_dev(div2, t6);
+    			append_hydration_dev(div4, t7);
+    			append_hydration_dev(div4, div3);
+    			append_hydration_dev(div3, t8);
+    			append_hydration_dev(button, t9);
+    			if_block0.m(button, null);
+    			append_hydration_dev(button, t10);
+    			if (if_block1) if_block1.m(button, null);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", click_handler, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*data*/ 1 && t2_value !== (t2_value = /*pred*/ ctx[6].home + "")) set_data_dev(t2, t2_value);
+    			if (dirty & /*data*/ 1 && t4_value !== (t4_value = Math.round(/*pred*/ ctx[6].prediction.homeGoals) + "")) set_data_dev(t4, t4_value);
+    			if (dirty & /*data*/ 1 && t6_value !== (t6_value = Math.round(/*pred*/ ctx[6].prediction.awayGoals) + "")) set_data_dev(t6, t6_value);
+    			if (dirty & /*data*/ 1 && t8_value !== (t8_value = /*pred*/ ctx[6].away + "")) set_data_dev(t8, t8_value);
+
+    			if (current_block_type === (current_block_type = select_block_type_1(ctx)) && if_block0) {
+    				if_block0.p(ctx, dirty);
+    			} else {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(button, t10);
+    				}
+    			}
+
+    			if (/*pred*/ ctx[6].prediction != null) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block_2(ctx);
+    					if_block1.c();
+    					if_block1.m(button, null);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
+
+    			if (dirty & /*data*/ 1 && button_class_value !== (button_class_value = "prediction-container " + /*pred*/ ctx[6].colour + " svelte-1qm3m7y")) {
+    				attr_dev(button, "class", button_class_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			if_block0.d();
+    			if (if_block1) if_block1.d();
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1.name,
+    		type: "each",
+    		source: "(123:16) {#each predictions as pred}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (117:14) {#each data.predictions as { _id, predictions }}
+    function create_each_block(ctx) {
+    	let div0;
+    	let t0_value = /*_id*/ ctx[2] + "";
+    	let t0;
+    	let t1;
+    	let div1;
+    	let t2;
+    	let t3;
+    	let div2;
+    	let each_value_1 = /*predictions*/ ctx[3];
+    	validate_each_argument(each_value_1);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			div1 = element("div");
+    			t2 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t3 = space();
+    			div2 = element("div");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div0 = claim_element(nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t0 = claim_text(div0_nodes, t0_value);
+    			div0_nodes.forEach(detach_dev);
+    			t1 = claim_space(nodes);
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			children(div1).forEach(detach_dev);
+    			t2 = claim_space(nodes);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(nodes);
+    			}
+
+    			t3 = claim_space(nodes);
+    			div2 = claim_element(nodes, "DIV", { class: true });
+    			children(div2).forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "date svelte-1qm3m7y");
+    			add_location(div0, file$1, 117, 16, 4188);
+    			attr_dev(div1, "class", "medium-predictions-divider svelte-1qm3m7y");
+    			add_location(div1, file$1, 120, 16, 4273);
+    			attr_dev(div2, "class", "predictions-gap svelte-1qm3m7y");
+    			add_location(div2, file$1, 169, 16, 6652);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div0, anchor);
+    			append_hydration_dev(div0, t0);
+    			insert_hydration_dev(target, t1, anchor);
+    			insert_hydration_dev(target, div1, anchor);
+    			insert_hydration_dev(target, t2, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_hydration_dev(target, t3, anchor);
+    			insert_hydration_dev(target, div2, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*data*/ 1 && t0_value !== (t0_value = /*_id*/ ctx[2] + "")) set_data_dev(t0, t0_value);
+
+    			if (dirty & /*data, toggleDetailsDisplay, datetimeToTime, Math*/ 1) {
+    				each_value_1 = /*predictions*/ ctx[3];
+    				validate_each_argument(each_value_1);
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block_1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(t3.parentNode, t3);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value_1.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div0);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(t2);
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(div2);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(117:14) {#each data.predictions as { _id, predictions }}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (91:0) <Router>
+    function create_default_slot$2(ctx) {
+    	let div1;
+    	let div0;
+    	let a;
+    	let t0;
+    	let t1;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*data*/ ctx[0] != undefined) return create_if_block;
+    		return create_else_block_1;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			a = element("a");
+    			t0 = text("Predictions");
+    			t1 = space();
+    			if_block.c();
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true, class: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			a = claim_element(div0_nodes, "A", { class: true, href: true });
+    			var a_nodes = children(a);
+    			t0 = claim_text(a_nodes, "Predictions");
+    			a_nodes.forEach(detach_dev);
+    			div0_nodes.forEach(detach_dev);
+    			t1 = claim_space(div1_nodes);
+    			if_block.l(div1_nodes);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(a, "class", "predictions-title svelte-1qm3m7y");
+    			attr_dev(a, "href", "/predictions");
+    			add_location(a, file$1, 93, 6, 3334);
+    			attr_dev(div0, "class", "predictions-header svelte-1qm3m7y");
+    			add_location(div0, file$1, 92, 4, 3294);
+    			attr_dev(div1, "id", "predictions");
+    			attr_dev(div1, "class", "svelte-1qm3m7y");
+    			add_location(div1, file$1, 91, 2, 3266);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			append_hydration_dev(div0, a);
+    			append_hydration_dev(a, t0);
+    			append_hydration_dev(div1, t1);
+    			if_block.m(div1, null);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(div1, null);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			if_block.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$2.name,
+    		type: "slot",
+    		source: "(91:0) <Router>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$2(ctx) {
+    	let meta;
+    	let t;
+    	let router;
+    	let current;
+
+    	router = new Router({
+    			props: {
+    				$$slots: { default: [create_default_slot$2] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			meta = element("meta");
+    			t = space();
+    			create_component(router.$$.fragment);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1w56yuh\"]', document_1.head);
+    			meta = claim_element(head_nodes, "META", { name: true, content: true });
+    			head_nodes.forEach(detach_dev);
+    			t = claim_space(nodes);
+    			claim_component(router.$$.fragment, nodes);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			document_1.title = "Predictions";
+    			attr_dev(meta, "name", "description");
+    			attr_dev(meta, "content", "Premier League Statistics Dashboard");
+    			add_location(meta, file$1, 87, 2, 3161);
+    		},
+    		m: function mount(target, anchor) {
+    			append_hydration_dev(document_1.head, meta);
+    			insert_hydration_dev(target, t, anchor);
+    			mount_component(router, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const router_changes = {};
+
+    			if (dirty & /*$$scope, data*/ 513) {
+    				router_changes.$$scope = { dirty, ctx };
+    			}
+
+    			router.$set(router_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(router.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(router.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			detach_dev(meta);
+    			if (detaching) detach_dev(t);
+    			destroy_component(router, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$2.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    async function fetchData(address) {
+    	const response = await fetch(address);
+    	let json = await response.json();
+    	return json;
+    }
+
+    function toggleDetailsDisplay(id) {
+    	let prediction = document.getElementById(id);
+
+    	if (prediction != null) {
+    		prediction.classList.toggle("expanded");
+    	}
+    }
+
+    function identicalScore(prediction, actual) {
+    	return Math.round(prediction.homeGoals) == actual.homeGoals && Math.round(prediction.awayGoals) == actual.awayGoals;
+    }
+
+    function sameResult(prediction, actual) {
+    	return Math.round(prediction.homeGoals) > Math.round(prediction.awayGoals) && Math.round(actual.homeGoals) > Math.round(actual.awayGoals) || Math.round(prediction.homeGoals) == Math.round(prediction.awayGoals) && Math.round(actual.homeGoals) == Math.round(actual.awayGoals) || Math.round(prediction.homeGoals) < Math.round(prediction.awayGoals) && Math.round(actual.homeGoals) < Math.round(actual.awayGoals);
+    }
+
+    /**
+     * Insert green, yellow or red colour values representing the results of completed
+     * games as well as overall prediction accuracy values for scores and general
+     * match results.
+    */
+    function insertExtras(json) {
+    	let scoreCorrect = 0;
+    	let resultCorrect = 0;
+    	let total = 0;
+
+    	for (let i = 0; i < json.predictions.length; i++) {
+    		for (let j = 0; j < json.predictions[i].predictions.length; j++) {
+    			let prediction = json.predictions[i].predictions[j];
+
+    			if (prediction.actual != null) {
+    				if (identicalScore(prediction.prediction, prediction.actual)) {
+    					prediction.colour = "green";
+    					scoreCorrect += 1;
+    					resultCorrect += 1;
+    				} else if (sameResult(prediction.prediction, prediction.actual)) {
+    					prediction.colour = "yellow";
+    					resultCorrect += 1;
+    				} else {
+    					prediction.colour = "red";
+    				}
+
+    				total += 1;
+    			}
+    		}
+    	}
+
+    	json.accuracy = {
+    		scoreAccuracy: scoreCorrect / total,
+    		resultAccuracy: resultCorrect / total
+    	};
+    }
+
+    function datetimeToTime(datetime) {
+    	let date = new Date(datetime);
+    	return date.toTimeString().slice(0, 5);
+    }
+
+    function sortByDate(json) {
+    	json.predictions.sort((a, b) => {
+    		return new Date(b._id) - new Date(a._id);
+    	});
+
+    	// Sort each day of predictions by time
+    	for (let i = 0; i < json.predictions.length; i++) {
+    		json.predictions[i].predictions.sort((a, b) => {
+    			return new Date(a.datetime) - new Date(b.datetime);
+    		});
+    	}
+    }
+
+    function instance$2($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Predictions', slots, []);
+    	let data;
+
+    	onMount(() => {
+    		fetchData("https://pldashboard-backend.vercel.app/api/predictions").then(json => {
+    			sortByDate(json);
+    			insertExtras(json);
+    			$$invalidate(0, data = json);
+    			console.log(data);
+    		});
+    	});
+
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<Predictions> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = pred => toggleDetailsDisplay(pred._id);
+
+    	$$self.$capture_state = () => ({
+    		Router,
+    		onMount,
+    		fetchData,
+    		toggleDetailsDisplay,
+    		identicalScore,
+    		sameResult,
+    		insertExtras,
+    		datetimeToTime,
+    		sortByDate,
+    		data
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [data, click_handler];
+    }
+
+    class Predictions extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$2, create_fragment$2, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Predictions",
+    			options,
+    			id: create_fragment$2.name
+    		});
+    	}
+    }
+
+    /* src\routes\Error.svelte generated by Svelte v3.49.0 */
+    const file = "src\\routes\\Error.svelte";
+
+    // (9:0) <Router>
+    function create_default_slot$1(ctx) {
+    	let div1;
+    	let div0;
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			t = text("Error: Page not found");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div1 = claim_element(nodes, "DIV", { id: true, class: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			t = claim_text(div0_nodes, "Error: Page not found");
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(div0, "class", "msg-container svelte-17qhtmb");
+    			add_location(div0, file, 10, 4, 250);
+    			attr_dev(div1, "id", "error");
+    			attr_dev(div1, "class", "svelte-17qhtmb");
+    			add_location(div1, file, 9, 2, 228);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_hydration_dev(target, div1, anchor);
+    			append_hydration_dev(div1, div0);
+    			append_hydration_dev(div0, t);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$1.name,
+    		type: "slot",
+    		source: "(9:0) <Router>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$1(ctx) {
+    	let meta;
+    	let t;
+    	let router;
+    	let current;
+
+    	router = new Router({
+    			props: {
+    				$$slots: { default: [create_default_slot$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			meta = element("meta");
+    			t = space();
+    			create_component(router.$$.fragment);
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			const head_nodes = query_selector_all('[data-svelte=\"svelte-1rqatx0\"]', document.head);
+    			meta = claim_element(head_nodes, "META", { name: true, content: true });
+    			head_nodes.forEach(detach_dev);
+    			t = claim_space(nodes);
+    			claim_component(router.$$.fragment, nodes);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			document.title = "Premier League";
+    			attr_dev(meta, "name", "description");
+    			attr_dev(meta, "content", "Premier League Statistics Dashboard");
+    			add_location(meta, file, 5, 2, 123);
+    		},
+    		m: function mount(target, anchor) {
+    			append_hydration_dev(document.head, meta);
+    			insert_hydration_dev(target, t, anchor);
+    			mount_component(router, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const router_changes = {};
+
+    			if (dirty & /*$$scope*/ 1) {
+    				router_changes.$$scope = { dirty, ctx };
+    			}
+
+    			router.$set(router_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(router.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(router.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			detach_dev(meta);
+    			if (detaching) detach_dev(t);
+    			destroy_component(router, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$1.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Error', slots, []);
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Error> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$capture_state = () => ({ Router });
+    	return [];
+    }
+
+    class Error$1 extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Error",
+    			options,
+    			id: create_fragment$1.name
+    		});
+    	}
+    }
+
+    /* src\App.svelte generated by Svelte v3.49.0 */
+
+    const { Error: Error_1 } = globals;
+
+    // (12:2) <Route path="/">
+    function create_default_slot_2(ctx) {
+    	let team;
+    	let current;
+
+    	team = new Team({
+    			props: { hyphenatedTeam: null },
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(team.$$.fragment);
+    		},
+    		l: function claim(nodes) {
+    			claim_component(team.$$.fragment, nodes);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(team, target, anchor);
+    			current = true;
+    		},
+    		p: noop,
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(team.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(team.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(team, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_2.name,
+    		type: "slot",
+    		source: "(12:2) <Route path=\\\"/\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (16:2) <Route path="/:team" let:params>
+    function create_default_slot_1(ctx) {
+    	let team;
+    	let current;
+
+    	team = new Team({
+    			props: { hyphenatedTeam: /*params*/ ctx[1].team },
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(team.$$.fragment);
+    		},
+    		l: function claim(nodes) {
+    			claim_component(team.$$.fragment, nodes);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(team, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const team_changes = {};
+    			if (dirty & /*params*/ 2) team_changes.hyphenatedTeam = /*params*/ ctx[1].team;
+    			team.$set(team_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(team.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(team.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(team, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1.name,
+    		type: "slot",
+    		source: "(16:2) <Route path=\\\"/:team\\\" let:params>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (11:0) <Router {url}>
+    function create_default_slot(ctx) {
+    	let route0;
+    	let t0;
+    	let route1;
+    	let t1;
+    	let route2;
+    	let t2;
+    	let route3;
+    	let t3;
+    	let route4;
+    	let t4;
+    	let route5;
+    	let current;
+
+    	route0 = new Route({
+    			props: {
+    				path: "/",
+    				$$slots: { default: [create_default_slot_2] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	route1 = new Route({
+    			props: {
+    				path: "/predictions",
+    				component: Predictions
+    			},
+    			$$inline: true
+    		});
+
+    	route2 = new Route({
+    			props: {
+    				path: "/:team",
+    				$$slots: {
+    					default: [
+    						create_default_slot_1,
+    						({ params }) => ({ 1: params }),
+    						({ params }) => params ? 2 : 0
+    					]
+    				},
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	route3 = new Route({
+    			props: { path: "/teams", component: Teams },
+    			$$inline: true
+    		});
+
+    	route4 = new Route({
+    			props: { path: "/home", component: Home },
+    			$$inline: true
+    		});
+
+    	route5 = new Route({
+    			props: { path: "/error", component: Error$1 },
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(route0.$$.fragment);
+    			t0 = space();
+    			create_component(route1.$$.fragment);
+    			t1 = space();
+    			create_component(route2.$$.fragment);
+    			t2 = space();
+    			create_component(route3.$$.fragment);
+    			t3 = space();
+    			create_component(route4.$$.fragment);
+    			t4 = space();
+    			create_component(route5.$$.fragment);
+    		},
+    		l: function claim(nodes) {
+    			claim_component(route0.$$.fragment, nodes);
+    			t0 = claim_space(nodes);
+    			claim_component(route1.$$.fragment, nodes);
+    			t1 = claim_space(nodes);
+    			claim_component(route2.$$.fragment, nodes);
+    			t2 = claim_space(nodes);
+    			claim_component(route3.$$.fragment, nodes);
+    			t3 = claim_space(nodes);
+    			claim_component(route4.$$.fragment, nodes);
+    			t4 = claim_space(nodes);
+    			claim_component(route5.$$.fragment, nodes);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(route0, target, anchor);
+    			insert_hydration_dev(target, t0, anchor);
+    			mount_component(route1, target, anchor);
+    			insert_hydration_dev(target, t1, anchor);
+    			mount_component(route2, target, anchor);
+    			insert_hydration_dev(target, t2, anchor);
+    			mount_component(route3, target, anchor);
+    			insert_hydration_dev(target, t3, anchor);
+    			mount_component(route4, target, anchor);
+    			insert_hydration_dev(target, t4, anchor);
+    			mount_component(route5, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const route0_changes = {};
+
+    			if (dirty & /*$$scope*/ 4) {
+    				route0_changes.$$scope = { dirty, ctx };
+    			}
+
+    			route0.$set(route0_changes);
+    			const route2_changes = {};
+
+    			if (dirty & /*$$scope, params*/ 6) {
+    				route2_changes.$$scope = { dirty, ctx };
+    			}
+
+    			route2.$set(route2_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(route0.$$.fragment, local);
+    			transition_in(route1.$$.fragment, local);
+    			transition_in(route2.$$.fragment, local);
+    			transition_in(route3.$$.fragment, local);
+    			transition_in(route4.$$.fragment, local);
+    			transition_in(route5.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(route0.$$.fragment, local);
+    			transition_out(route1.$$.fragment, local);
+    			transition_out(route2.$$.fragment, local);
+    			transition_out(route3.$$.fragment, local);
+    			transition_out(route4.$$.fragment, local);
+    			transition_out(route5.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(route0, detaching);
+    			if (detaching) detach_dev(t0);
+    			destroy_component(route1, detaching);
+    			if (detaching) detach_dev(t1);
+    			destroy_component(route2, detaching);
+    			if (detaching) detach_dev(t2);
+    			destroy_component(route3, detaching);
+    			if (detaching) detach_dev(t3);
+    			destroy_component(route4, detaching);
+    			if (detaching) detach_dev(t4);
+    			destroy_component(route5, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot.name,
+    		type: "slot",
+    		source: "(11:0) <Router {url}>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment(ctx) {
+    	let router;
+    	let current;
+
+    	router = new Router({
+    			props: {
+    				url: /*url*/ ctx[0],
+    				$$slots: { default: [create_default_slot] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(router.$$.fragment);
+    		},
+    		l: function claim(nodes) {
+    			claim_component(router.$$.fragment, nodes);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(router, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const router_changes = {};
+    			if (dirty & /*url*/ 1) router_changes.url = /*url*/ ctx[0];
+
+    			if (dirty & /*$$scope*/ 4) {
+    				router_changes.$$scope = { dirty, ctx };
+    			}
+
+    			router.$set(router_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(router.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(router.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(router, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('App', slots, []);
+    	let { url = "" } = $$props;
+    	const writable_props = ['url'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<App> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('url' in $$props) $$invalidate(0, url = $$props.url);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		Router,
+    		Route,
+    		Teams,
+    		Team,
+    		Home,
+    		Predictions,
+    		Error: Error$1,
+    		url
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('url' in $$props) $$invalidate(0, url = $$props.url);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [url];
+    }
+
+    class App extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance, create_fragment, safe_not_equal, { url: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "App",
+    			options,
+    			id: create_fragment.name
+    		});
+    	}
+
+    	get url() {
+    		throw new Error_1("<App>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set url(value) {
+    		throw new Error_1("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    new App({
+        target: document.getElementById("app"),
+        hydrate: true
+    });
+
+})();
 //# sourceMappingURL=bundle.js.map
