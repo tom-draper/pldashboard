@@ -334,8 +334,8 @@
     color: rgba(0, 0, 0, 0.35);
     border-radius: var(--border-radius);
     /* background: var(--purple); */
-    padding: 100px 0;
-    color: white;
+    padding: 80px 0 100px;
+    /* color: white; */
   }
   .next-game-item {
     border-radius: 9px;
