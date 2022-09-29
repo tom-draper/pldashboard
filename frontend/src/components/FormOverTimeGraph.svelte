@@ -3,11 +3,18 @@
 
   function getFormLine(
     data: TeamData,
-    playedMatchdays: string[],
     team: string,
     isMainTeam: boolean
   ): any {
-    let matchdays = Object.keys(data.form[team][data._id]); // Played matchdays
+    let playedDates = [];
+    let matchdays = [];
+    for (let matchday in data.form[team][data._id]) {
+      if (data.form[team][data._id][matchday].score != null) {
+        matchdays.push(matchday)
+        playedDates.push(new Date(data.form[team][data._id][matchday].date))
+      }
+    }
+
 
     let y = [];
     for (let matchday of matchdays) {
@@ -29,14 +36,14 @@
     }
 
     let line = {
-      x: playedMatchdays,
+      x: playedDates,
       y: y,
       name: team,
       mode: "lines",
       line: lineVal,
       text: matchdays,
       hovertemplate: `<b>${team}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
-      showlegend: false,
+      showlegend: false
     };
     return line;
   }
@@ -44,19 +51,19 @@
   function lines(
     data: TeamData,
     team: string,
-    playedMatchdays: string[]
   ): any[] {
     let lines = [];
     let teams = Object.keys(data.standings)
+
     for (let i = 0; i < teams.length; i++) {
-      if (Object.keys(data.standings)[i] != team) {
-        let line = getFormLine(data, playedMatchdays, Object.keys(data.standings)[i], false);
+      if (teams[i] != team) {
+        let line = getFormLine(data, teams[i], false);
         lines.push(line);
       }
     }
 
     // Add this team last to ensure it overlaps all other lines
-    let line = getFormLine(data, playedMatchdays, team, true);
+    let line = getFormLine(data, team, true);
     lines.push(line);
     return lines;
   }
@@ -123,7 +130,7 @@
 
   function buildPlotData(data: TeamData, team: string): PlotData {
     let plotData = {
-      data: lines(data, team, playedMatchdays),
+      data: lines(data, team),
       layout: defaultLayout(),
       config: {
         responsive: true,
@@ -161,6 +168,10 @@
       for (let i = 0; i < 20; i++) {
         plotData.data[i] = newPlotData.data[i];
       }
+
+      plotData.layout.xaxis.range[0] = playedMatchdays[0] 
+      plotData.layout.xaxis.range[1] = playedMatchdays[playedMatchdays.length-1] 
+
       //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {

@@ -190,7 +190,8 @@
       plotData.data[0] = cleanSheetsBar;
       plotData.data[1] = concededBar;
       plotData.data[2] = line;
-      
+      plotData.layout.shapes[0] = baseLine();
+          
       //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {

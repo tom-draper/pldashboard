@@ -219,7 +219,6 @@
         matchdays
       );
       let line = avgLine(playedMatchdays, avgGoals, matchdays);
-      console.log(playedMatchdays, line)
 
       plotData.data[0] = scoredBar;
       plotData.data[1] = concededBar;
