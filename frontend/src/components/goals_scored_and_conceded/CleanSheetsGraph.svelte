@@ -142,7 +142,8 @@
         line: { color: "#FAFAFA", width: 1 },
         marker: {
           size: 1
-        }
+        },
+        hoverinfo: "skip"
     }
   }
 
