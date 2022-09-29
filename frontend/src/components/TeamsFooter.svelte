@@ -18,7 +18,7 @@
 <style scoped>
   .teams-footer {
     color: rgb(198, 198, 198);
-    padding: 50px 0 4px;
+    padding: 1em 0 0.2em;
     height: auto;
     width: 100%;
     font-size: 13px;
@@ -57,7 +57,7 @@
   }
   @media only screen and (max-width: 1300px) {
     .teams-footer {
-      margin-bottom: 42px;
+      margin-bottom: 46px;
     }
   }
 </style>
