@@ -9,7 +9,7 @@
   import FixturesGraph from "../components/FixturesGraph.svelte";
   import FormOverTimeGraph from "../components/FormOverTimeGraph.svelte";
   import PositionOverTimeGraph from "../components/PositionOverTimeGraph.svelte";
-  import GoalsScoredAndConcededGraph from "../components/goals_scored_and_conceded/GoalsScoredAndConcededGraph.svelte";
+  import GoalsScoredAndConcededGraph from "../components/goals_scored_and_conceded/ScoredAndConcededGraph.svelte";
   import CleanSheetsGraph from "../components/goals_scored_and_conceded/CleanSheetsGraph.svelte";
   import GoalsPerGame from "../components/goals_per_game/GoalsPerGame.svelte";
   import SpiderGraph from "../components/SpiderGraph.svelte";
