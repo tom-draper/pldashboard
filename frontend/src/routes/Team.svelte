@@ -174,6 +174,7 @@
 
   function lazyLoad() {
     load = true;
+    window.dispatchEvent(new Event("resize"));
   }
 
   let y: number;
