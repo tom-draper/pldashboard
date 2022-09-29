@@ -4,7 +4,7 @@
   import CurrentForm from "../components/current_form/CurrentForm.svelte";
   import TableSnippet from "../components/TableSnippet.svelte";
   import NextGame from "../components/NextGame.svelte";
-  import StatsValues from "../components/StatsValues.svelte";
+  import StatsValues from "../components/goals_scored_and_conceded/StatsValues.svelte";
   import TeamsFooter from "../components/TeamsFooter.svelte";
   import FixturesGraph from "../components/FixturesGraph.svelte";
   import FormOverTimeGraph from "../components/FormOverTimeGraph.svelte";
@@ -16,7 +16,7 @@
   import ScorelineFreqGraph from "../components/ScorelineFreqGraph.svelte";
   import Nav from "../components/nav/Nav.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
-  import ExpectedScoredConcededOverTimeGraph from "../components/ExpectedScoredConcededOverTimeGraph.svelte";
+  import ScoredConcededOverTimeGraph from "../components/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
 
   let alias = {
     "Wolverhampton Wanderers": "Wolves",
@@ -366,9 +366,21 @@
                 </div>
               </div>
             </div>
-
+            
             <div class="season-stats-row">
               <StatsValues {data} {team} />
+            </div>
+            
+            <div class="row">
+              <div class="row-graph">
+                <div class="graph full-row-graph">
+                  <ScoredConcededOverTimeGraph
+                    {data}
+                    {team}
+                    {mobileView}
+                  />
+                </div>
+              </div>
             </div>
 
             <div class="row">
@@ -382,18 +394,6 @@
               <div class="row-graph">
                 <div class="score-freq graph">
                   <ScorelineFreqGraph {data} {team} {mobileView} />
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="row-graph">
-                <div class="graph full-row-graph">
-                  <ExpectedScoredConcededOverTimeGraph
-                    {data}
-                    {team}
-                    {mobileView}
-                  />
                 </div>
               </div>
             </div>
