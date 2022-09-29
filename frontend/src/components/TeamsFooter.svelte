@@ -36,7 +36,7 @@
   }
 
   /* Kofi button */
-  .ko-fi {
+  /* .ko-fi {
     width: fit-content;
     background: #ff5f5f;
     padding: 0.8em 1.8em;
@@ -54,7 +54,7 @@
     width: 2.2em;
     height: 2.2em;
     margin-right: 1em;
-  }
+  } */
   @media only screen and (max-width: 1300px) {
     .teams-footer {
       margin-bottom: 46px;
