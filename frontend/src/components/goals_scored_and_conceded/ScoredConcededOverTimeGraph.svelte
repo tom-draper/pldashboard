@@ -121,7 +121,7 @@
     for (let i = 0; i < dates.length; i++) {
       let j = i-1;
       let count = 1;
-      while (j > i-nGames && j > 0) {
+      while (j > i-nGames && j >= 0) {
         scored[i] += scored[j]
         conceded[i] += conceded[j]
         count += 1
@@ -205,6 +205,9 @@
 
   function buildPlotData(data: TeamData, team: string): PlotData {
     let [dates, scored, conceded] = lineData(data, team);
+    console.log(data)
+    console.log(scored)
+    console.log(conceded)
     let maxY = Math.max(Math.max(...scored), Math.max(...conceded));
     let seasonLines = seasonFinishLines(dates, maxY);
     let plotData = {
