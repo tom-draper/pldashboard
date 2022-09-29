@@ -223,6 +223,9 @@
       for (let i = 0; i < 20; i++) {
         plotData.data[i] = newPlotData.data[i];
       }
+      
+      plotData.layout.shapes = positionRangeShapes()
+
       //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {

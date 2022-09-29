@@ -205,9 +205,6 @@
 
   function buildPlotData(data: TeamData, team: string): PlotData {
     let [dates, scored, conceded] = lineData(data, team);
-    console.log(data)
-    console.log(scored)
-    console.log(conceded)
     let maxY = Math.max(Math.max(...scored), Math.max(...conceded));
     let seasonLines = seasonFinishLines(dates, maxY);
     let plotData = {

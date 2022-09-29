@@ -185,8 +185,12 @@
   function refreshPlot() {
     if (setup) {
       let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
+      let line = hiddenLine(cleanSheetsBar.x);
+
       plotData.data[0] = cleanSheetsBar;
       plotData.data[1] = concededBar;
+      plotData.data[2] = line;
+      
       //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {

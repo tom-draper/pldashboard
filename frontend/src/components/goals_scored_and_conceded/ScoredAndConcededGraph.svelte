@@ -218,9 +218,13 @@
         teamConceded,
         matchdays
       );
+      let line = avgLine(playedMatchdays, avgGoals, matchdays);
+      console.log(playedMatchdays, line)
 
       plotData.data[0] = scoredBar;
       plotData.data[1] = concededBar;
+      plotData.data[2] = line;
+      
       //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {
