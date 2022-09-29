@@ -551,7 +551,7 @@
   onMount(() => {
     genPlot();
     setup = true;
-    window.dispatchEvent(new Event("resize"));
+    // window.dispatchEvent(new Event("resize"));
   });
 
   function genPlot() {
