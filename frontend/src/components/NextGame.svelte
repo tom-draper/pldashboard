@@ -370,7 +370,13 @@
     color: #00fe87;
   }
 
-  @media only screen and (max-width: 1100px) {
+  @media only screen and (max-width: 1300px) {
+    .next-game-values {
+      margin-right: 0;
+    }
+  }
+
+  @media only screen and (max-width: 1000px) {
     .next-game-prediction {
       margin: 50px 20px 40px;
     }

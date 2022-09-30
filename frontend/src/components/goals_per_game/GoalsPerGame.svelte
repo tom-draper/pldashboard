@@ -349,7 +349,7 @@
     margin: 0 8%;
   }
 
-  @media only screen and (max-width: 1100px) {
+  @media only screen and (max-width: 1000px) {
     .two-graphs {
       display: flex;
       margin: 0;
