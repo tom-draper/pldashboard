@@ -308,7 +308,7 @@
     margin-left: 0.2em;
   }
   .hidden {
-    color: #fafafa;
+    color: transparent;
   }
 
   .season-stat {
