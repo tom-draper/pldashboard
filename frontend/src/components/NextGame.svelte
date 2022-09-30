@@ -5,6 +5,18 @@
     return ord[a > 20 ? a % 10 : a] || "th";
   }
 
+  function currentMatchday(data: TeamData, team: string): string {
+    let matchday: string;
+    let matchdays = Object.keys(data.form[team][data._id])
+    for (let i = matchdays.length - 1; i >= 0; i--) {
+      if (data.form[team][data._id][matchdays[i]].score != null) {
+        matchday = matchdays[i]
+        break
+      }
+    }
+    return matchday
+  }
+
   function resultColour(prevMatch: any, home: boolean): string {
     if (home) {
       if (prevMatch.homeGoals < prevMatch.awayGoals) {
@@ -22,7 +34,6 @@
   }
 
   export let data: TeamData,
-    currentMatchday: string,
     team: string,
     showBadge: boolean,
     toAlias: Function,
@@ -83,17 +94,13 @@
             </div>
             <div class="next-game-item current-form">
               Current form:
-              {#if currentMatchday != null}
                 <span class="current-form-value"
                   >{(
                     data.form[data.upcoming[team].nextTeam][data._id][
-                      currentMatchday
+                      currentMatchday(data, data.upcoming[team].nextTeam)
                     ].formRating5 * 100
                   ).toFixed(1)}%</span
                 >
-              {:else}
-                None
-              {/if}
             </div>
             <div class="next-game-item">
               Score prediction

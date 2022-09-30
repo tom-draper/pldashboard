@@ -9,9 +9,9 @@ Built with Svelte, TypeScript, FastAPI, Plotly, Pandas, MongoDB and the football
 Hosted at: https://pldashboard.com
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/41476809/192653150-329ab6e4-0ce2-4e30-bb9b-478ac992ba71.png"/>
+  <img src="https://user-images.githubusercontent.com/41476809/193349259-57712d5f-085b-4376-9b67-2e817756772d.png"/>
 </p>
 <br>
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/41476809/192653956-d47a2f3f-ad68-4038-8c9a-8d490600b88a.png"/>
+  <img src="https://user-images.githubusercontent.com/41476809/193349279-d30c308b-d87d-43df-a76f-a23d74725faa.png"/>
 </p>
