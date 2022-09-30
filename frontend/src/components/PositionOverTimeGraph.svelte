@@ -32,7 +32,7 @@
 
   function getLine(
     data: TeamData,
-    x: string[],
+    x: Date[],
     team: string,
     isMainTeam: boolean
   ): any {
@@ -43,13 +43,13 @@
     let lineConfig = getLineConfig(team, isMainTeam);
 
     let line = {
-      x: x,
+      x: matchdays,
       y: y,
       name: team,
       mode: "lines",
       line: lineConfig,
-      text: matchdays,
-      hovertemplate: `<b>${team}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
+      text: x,
+      hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
       showlegend: false,
     };
     return line;
@@ -58,111 +58,110 @@
   function lines(
     data: TeamData,
     team: string,
-    playedMatchdays: string[]
+    playedDates: Date[]
   ): any[] {
     let lines = [];
-    let teams = Object.keys(data.standings)
-    for (let i = 0; i < Object.keys(data.standings).length; i++) {
+    let teams = Object.keys(data.standings);
+    for (let i = 0; i < teams.length; i++) {
       if (teams[i] != team) {
-        let line = getLine(data, playedMatchdays, teams[i], false);
+        let line = getLine(data, playedDates, teams[i], false);
         lines.push(line);
       }
     }
 
     // Add this team last to ensure it overlaps all other lines
-    let line = getLine(data, playedMatchdays, team, true);
+    let line = getLine(data, playedDates, team, true);
     lines.push(line);
     return lines;
   }
 
-  function positionRangeShapes(): Object[] {
+  function positionRangeShapes(): any[] {
+    let matchdays = Object.keys(data.form[team][data._id])
     return [
-          {
-            type: "rect",
-            x0: playedMatchdays[0],
-            y0: 4.5,
-            x1: playedMatchdays[playedMatchdays.length - 1],
-            y1: 0.5,
-            line: {
-              width: 0,
-            },
-            // fillcolor: "#77DD77",
-            fillcolor: "#00fe87",
-            opacity: 0.2,
-            layer: "below",
-          },
-          {
-            type: "rect",
-            x0: playedMatchdays[0],
-            y0: 6.5,
-            x1: playedMatchdays[playedMatchdays.length - 1],
-            y1: 4.5,
-            line: {
-              width: 0,
-            },
-            // fillcolor: "#4CDEEE",
-            fillcolor: "#02efff",
-            opacity: 0.2,
-            layer: "below",
-          },
-          {
-            type: "rect",
-            x0: playedMatchdays[0],
-            y0: 20.5,
-            x1: playedMatchdays[playedMatchdays.length - 1],
-            y1: 17.5,
-            line: {
-              width: 0,
-            },
-            fillcolor: "#f83027",
-            // fillcolor: "#C23B22",
-            opacity: 0.2,
-            layer: "below",
-          },
-        ]
+      {
+        type: "rect",
+        x0: matchdays[0],
+        y0: 4.5,
+        x1: matchdays[matchdays.length - 1],
+        y1: 0.5,
+        line: {
+          width: 0,
+        },
+        fillcolor: "#00fe87",
+        opacity: 0.2,
+        layer: "below",
+      },
+      {
+        type: "rect",
+        x0: matchdays[0],
+        y0: 6.5,
+        x1: matchdays[matchdays.length - 1],
+        y1: 4.5,
+        line: {
+          width: 0,
+        },
+        fillcolor: "#02efff",
+        opacity: 0.2,
+        layer: "below",
+      },
+      {
+        type: "rect",
+        x0: matchdays[0],
+        y0: 20.5,
+        x1: matchdays[matchdays.length - 1],
+        y1: 17.5,
+        line: {
+          width: 0,
+        },
+        fillcolor: "#f83027",
+        opacity: 0.2,
+        layer: "below",
+      },
+    ];
   }
 
   function defaultLayout() {
     let yLabels = Array.from(Array(20), (_, i) => i + 1);
     return {
-        title: false,
-        autosize: true,
-        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
-        hovermode: "closest",
-        plot_bgcolor: "#fafafa",
-        paper_bgcolor: "#fafafa",
-        yaxis: {
-          title: { text: "Position" },
-          gridcolor: "gray",
-          showgrid: false,
-          showline: false,
-          zeroline: false,
-          autorange: "reversed",
-          fixedrange: true,
-          ticktext: yLabels,
-          tickvals: yLabels,
-          visible: true
-        },
-        xaxis: {
-          linecolor: "black",
-          showgrid: false,
-          showline: false,
-          fixedrange: true,
-        },
-        shapes: positionRangeShapes(),
-        dragmode: false,
-      }
+      title: false,
+      autosize: true,
+      margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+      hovermode: "closest",
+      plot_bgcolor: "#fafafa",
+      paper_bgcolor: "#fafafa",
+      yaxis: {
+        title: { text: "Position" },
+        gridcolor: "gray",
+        showgrid: false,
+        showline: false,
+        zeroline: false,
+        autorange: "reversed",
+        fixedrange: true,
+        ticktext: yLabels,
+        tickvals: yLabels,
+        visible: true,
+      },
+      xaxis: {
+        title: { text: "Matchday" },
+        linecolor: "black",
+        showgrid: false,
+        showline: false,
+        fixedrange: true,
+      },
+      shapes: positionRangeShapes(),
+      dragmode: false,
+    };
   }
 
   function setDefaultLayout() {
     if (setup) {
       let layoutUpdate = {
-        'yaxis.title': { text: 'Position'},
-        'yaxis.visible': true,
-        'yaxis.tickvals': Array.from(Array(20), (_, i) => i + 1),
-        'margin.l': 60,
-        'margin.t': 15
-      }
+        "yaxis.title": { text: "Position" },
+        "yaxis.visible": true,
+        "yaxis.tickvals": Array.from(Array(20), (_, i) => i + 1),
+        "margin.l": 60,
+        "margin.t": 15,
+      };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
@@ -171,22 +170,22 @@
   function setMobileLayout() {
     if (setup) {
       let layoutUpdate = {
-        'yaxis.title': null,
-        'yaxis.visible': false,
-        'yaxis.tickvals': Array.from(Array(10), (_, i) => i + 2),
-        'margin.l': 20,
-        'margin.t': 5
-      }
+        "yaxis.title": null,
+        "yaxis.visible": false,
+        "yaxis.tickvals": Array.from(Array(10), (_, i) => i + 2),
+        "xaxis.title": null,
+        "margin.l": 20,
+        "margin.t": 5,
+      };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
 
   function buildPlotData(data: TeamData, team: string): PlotData {
-
     let plotData = {
-      data: lines(data, team, playedMatchdays),
-      layout: defaultLayout(), 
+      data: lines(data, team, playedDates),
+      layout: defaultLayout(),
       config: {
         responsive: true,
         showSendToCloud: false,
@@ -205,7 +204,7 @@
 
   function genPlot() {
     plotData = buildPlotData(data, team);
-      //@ts-ignore
+    //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -223,8 +222,8 @@
       for (let i = 0; i < 20; i++) {
         plotData.data[i] = newPlotData.data[i];
       }
-      
-      plotData.layout.shapes = positionRangeShapes()
+
+      plotData.layout.shapes = positionRangeShapes();
 
       //@ts-ignore
       Plotly.redraw(plotDiv);
@@ -240,7 +239,7 @@
 
   export let data: TeamData,
     team: string,
-    playedMatchdays: string[],
+    playedDates: Date[],
     mobileView: boolean;
 </script>
 

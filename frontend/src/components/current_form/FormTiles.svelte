@@ -117,7 +117,7 @@
     border-radius: 6px 0 0 6px;
   }
 
-  @media only screen and (max-width: 1100px) {
+  @media only screen and (max-width: 1000px) {
     .result {
       font-size: 3em;
     }

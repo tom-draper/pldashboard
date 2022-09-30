@@ -9,7 +9,7 @@
   import FixturesGraph from "../components/FixturesGraph.svelte";
   import FormOverTimeGraph from "../components/FormOverTimeGraph.svelte";
   import PositionOverTimeGraph from "../components/PositionOverTimeGraph.svelte";
-  import GoalsScoredAndConcededGraph from "../components/goals_scored_and_conceded/ScoredAndConcededGraph.svelte";
+  import GoalsScoredAndConcededGraph from "../components/goals_scored_and_conceded/ScoredConcededPerGameGraph.svelte";
   import CleanSheetsGraph from "../components/goals_scored_and_conceded/CleanSheetsGraph.svelte";
   import GoalsPerGame from "../components/goals_per_game/GoalsPerGame.svelte";
   import SpiderGraph from "../components/SpiderGraph.svelte";
@@ -82,13 +82,18 @@
       .replace("And", "and");
   }
 
-  function getPlayedMatchdayDates(data: TeamData, team: string): string[] {
+  function playedMatchdays(data: TeamData, team: string): string[] {
     let matchdays = [];
     for (let matchday in data.form[team][data._id]) {
       if (data.form[team][data._id][matchday].score != null) {
         matchdays.push(matchday);
       }
     }
+    return matchdays
+  }
+
+  function playedMatchdayDates(data: TeamData, team: string): Date[] {
+    let matchdays = playedMatchdays(data, team)
 
     // If played one or no games, take x-axis from whole season dates
     if (matchdays.length == 0) {
@@ -155,7 +160,7 @@
           }
         }
         currentMatchday = getCurrentMatchday(json, team);
-        playedMatchdays = getPlayedMatchdayDates(json, team);
+        playedDates = playedMatchdayDates(json, team);
         data = json;
         console.log(data);
       })
@@ -168,7 +173,7 @@
     hyphenatedTeam = newTeam;
     team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
     currentMatchday = getCurrentMatchday(data, team);
-    playedMatchdays = getPlayedMatchdayDates(data, team);
+    playedDates = playedMatchdayDates(data, team);
     window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
   }
 
@@ -186,7 +191,7 @@
   const showBadge = false;
   let team = "";
   let teams: string[] = []; // Used for nav bar links
-  let currentMatchday: string, playedMatchdays: string[];
+  let currentMatchday: string, playedDates: Date[];
 
   let data: TeamData;
   onMount(() => {
@@ -319,7 +324,7 @@
                 <FormOverTimeGraph
                   {data}
                   {team}
-                  {playedMatchdays}
+                  {playedDates}
                   {mobileView}
                 />
               </div>
@@ -334,7 +339,7 @@
                   <PositionOverTimeGraph
                     {data}
                     {team}
-                    {playedMatchdays}
+                    {playedDates}
                     {mobileView}
                   />
                 </div>
@@ -348,7 +353,7 @@
                   <GoalsScoredAndConcededGraph
                     {data}
                     {team}
-                    {playedMatchdays}
+                    {playedDates}
                     {mobileView}
                   />
                 </div>
@@ -361,7 +366,7 @@
                   <CleanSheetsGraph
                     {data}
                     {team}
-                    {playedMatchdays}
+                    {playedDates}
                     {mobileView}
                   />
                 </div>
@@ -615,7 +620,17 @@
       margin-top: 0.25em;
     }
   }
-  @media only screen and (max-width: 1300px) {
+
+  @media only screen and (min-width: 1200px) {
+    #mobileNavBtn {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 1200px) {
+    .position-central {
+      margin-top: 0.3em;
+    }
     .circles-background {
       transform: scale(0.7);
     }
@@ -626,23 +641,15 @@
       font-size: 24vw;
     }
   }
-  @media only screen and (min-width: 1300px) {
-    #mobileNavBtn {
-      display: none;
-    }
-  }
-
-  @media only screen and (max-width: 1200px) {
-    .position-central {
-      margin-top: 0.3em;
-    }
-  }
-  @media only screen and (min-width: 1100px) {
+  @media only screen and (min-width: 1000px) {
     .full-row-graph {
       margin: 0 1em;
     }
   }
-  @media only screen and (max-width: 1100px) {
+  /* @media only screen and (max-width: 1100px) {
+  } */
+  
+  @media only screen and (max-width: 1000px) {
     .row {
       flex-direction: column;
       margin-bottom: 40px;
@@ -653,7 +660,7 @@
     .score-freq {
       margin: 0 0 10px;
     }
-
+  
     .multi-element-row {
       margin: 0;
     }
@@ -661,7 +668,7 @@
       margin-right: 0;
       align-self: center;
     }
-
+  
     .position-and-badge {
       width: 50%;
       max-width: 400px;
@@ -671,7 +678,7 @@
       height: 400px;
       margin-bottom: -50px;
     }
-
+  
     .position-no-badge {
       height: 400px;
       width: 500px;
@@ -679,19 +686,16 @@
     .position-central {
       margin: auto;
     }
-
+  
     .circles-background {
       transform: scale(0.48);
       margin-top: -100px;
     }
-
+  
     .position-central,
     .circles-background-container {
       align-self: center;
     }
-  }
-
-  @media only screen and (max-width: 1000px) {
     .spider-chart-container {
       flex-direction: column;
       width: 100%;

@@ -154,7 +154,7 @@
     margin-top: 0.6em;
   }
 
-  @media only screen and (max-width: 1100px) {
+  @media only screen and (max-width: 1000px) {
     .current-form-row {
       width: min(80%, 440px);
       /* margin-right: 8px; */

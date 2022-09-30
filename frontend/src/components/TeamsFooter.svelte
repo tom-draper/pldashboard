@@ -31,7 +31,7 @@
     margin-bottom: 1em;
   }
 
-  @media only screen and (max-width: 1300px) {
+  @media only screen and (max-width: 1200px) {
     .teams-footer {
       margin-bottom: 46px;
     }
