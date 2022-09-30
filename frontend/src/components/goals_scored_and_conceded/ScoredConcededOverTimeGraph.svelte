@@ -59,7 +59,7 @@
 
   type GoalsOverTime = {
     date: Date,
-    matchday: number;
+    matchday: string;
     scored: number;
     conceded: number;
   }[];
@@ -90,7 +90,7 @@
           }
           goals.push({
             date: match.date,
-            matchday: parseInt(matchday),
+            matchday: matchday,
             scored: scored,
             conceded: conceded,
           });
@@ -143,7 +143,7 @@
     ];
   }
 
-  function defaultLayout(seasonLines: any[]) {
+  function defaultLayout(seasonLines: any[]): any {
     return {
       title: false,
       autosize: true,
@@ -164,6 +164,7 @@
         showgrid: false,
         showline: false,
         fixedrange: true,
+        tickmode: "array",
       },
       dragmode: false,
       shapes: [

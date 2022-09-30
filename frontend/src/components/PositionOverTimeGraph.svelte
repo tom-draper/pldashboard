@@ -87,7 +87,6 @@
         line: {
           width: 0,
         },
-        // fillcolor: "#77DD77",
         fillcolor: "#00fe87",
         opacity: 0.2,
         layer: "below",
@@ -101,7 +100,6 @@
         line: {
           width: 0,
         },
-        // fillcolor: "#4CDEEE",
         fillcolor: "#02efff",
         opacity: 0.2,
         layer: "below",
@@ -116,7 +114,6 @@
           width: 0,
         },
         fillcolor: "#f83027",
-        // fillcolor: "#C23B22",
         opacity: 0.2,
         layer: "below",
       },
@@ -145,6 +142,7 @@
         visible: true,
       },
       xaxis: {
+        title: { text: "Matchday" },
         linecolor: "black",
         showgrid: false,
         showline: false,
@@ -175,6 +173,7 @@
         "yaxis.title": null,
         "yaxis.visible": false,
         "yaxis.tickvals": Array.from(Array(10), (_, i) => i + 2),
+        "xaxis.title": null,
         "margin.l": 20,
         "margin.t": 5,
       };
