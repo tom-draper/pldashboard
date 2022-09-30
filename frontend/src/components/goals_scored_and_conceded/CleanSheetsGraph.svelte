@@ -205,12 +205,9 @@
       plotData.data[0] = cleanSheetsBar;
       plotData.data[1] = concededBar;
       plotData.data[2] = line;
-      console.log(matchdays)
-      console.log(playedDates)
       for (let i = 0; i < matchdays.length; i++) {
         plotData.layout.xaxis.ticktext[i] = matchdays[i];
       }
-      console.log(plotData.layout.xaxis.ticktext)
       plotData.layout.shapes[0] = baseLine();
           
       //@ts-ignore
