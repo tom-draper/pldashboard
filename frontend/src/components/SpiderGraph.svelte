@@ -379,25 +379,29 @@
     return arr;
   }
 
-  function formWinsVsBig6(form: Form, team: string, season: number, big6: string[]): number {
-    let winsVsBig6 = 0;
+  function formWinsVsBig6(form: Form, team: string, season: number, big6: string[]): [number, number] {
+    let pointsVsBig6 = 0;
+    let numPlayed = 0;
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null && big6.includes(match.team)) {
         let [h, _, a] = match.score.split(" ");
         if ((match.atHome && h > a) || (!match.atHome && h < a)) {
-          winsVsBig6 += 1;
+          pointsVsBig6 += 3;
+        } else if (h == a) {
+          pointsVsBig6 += 1;
         }
+        numPlayed += 1;
       }
     }
 
-    return winsVsBig6;
+    return [pointsVsBig6, numPlayed];
   }
 
   function getVsBig6(data: TeamData): Attribute {
     //@ts-ignore
     let vsBig6: Attribute = {};
-    let maxWinsVsBig6 = Number.NEGATIVE_INFINITY;
+    let maxAvgPointsVsBig6 = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
       let big6 = [
         "Manchester United",
@@ -409,22 +413,28 @@
       ];
       big6 = removeItem(big6, team);
 
-      let winsVsBig6 = formWinsVsBig6(data.form, team, data._id, big6);
+      let [avgPointsVsBig6, numPlayed] = formWinsVsBig6(data.form, team, data._id, big6);
       if (teamInSeason(data.form, team, data._id-1)) {
-        winsVsBig6 += formWinsVsBig6(data.form, team, data._id-1, big6);
+        let [points, played] = formWinsVsBig6(data.form, team, data._id-1, big6);
+        avgPointsVsBig6 += points
+        numPlayed += played
       }
       if (teamInSeason(data.form, team, data._id-2)) {
-        winsVsBig6 += formWinsVsBig6(data.form, team, data._id-2, big6);
+        let [points, played] = formWinsVsBig6(data.form, team, data._id-2, big6);
+        avgPointsVsBig6 += points
+        numPlayed += played
       }
 
-      if (winsVsBig6 > maxWinsVsBig6) {
-        maxWinsVsBig6 = winsVsBig6;
+      avgPointsVsBig6 /= numPlayed
+
+      if (avgPointsVsBig6 > maxAvgPointsVsBig6) {
+        maxAvgPointsVsBig6 = avgPointsVsBig6;
       }
 
-      vsBig6[team] = winsVsBig6;
+      vsBig6[team] = avgPointsVsBig6;
     }
 
-    vsBig6.avg = attributeAvgScaled(vsBig6, maxWinsVsBig6);
+    vsBig6.avg = attributeAvgScaled(vsBig6, maxAvgPointsVsBig6);
 
     return vsBig6;
   }
@@ -539,10 +549,10 @@
   let labels = [
     "Attack",
     "Defence",
-    "Clean Sheets",
+    "Clean sheets",
     "Consistency",
-    "Win Streak",
-    "Vs Big 6",
+    "Win streak",
+    "Vs big 6",
   ];
 
   let plotDiv: HTMLDivElement, plotData: PlotData;
