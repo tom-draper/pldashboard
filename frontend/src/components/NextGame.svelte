@@ -280,21 +280,17 @@
     flex-direction: column;
     padding: 15px 20px 10px;
     border-radius: 6px;
-    /* background: rgba(255, 255, 255, 0.6); */
     margin: auto 0;
-    /* background: var(--purple); */
   }
 
   .next-game-prediction {
     border-radius: var(--border-radius);
     min-height: 97.5%;
     border: 6px solid #38003d;
-    /* background: linear-gradient(45deg, #00fe87, #03efff) */
   }
 
   .next-game-values {
     display: flex;
-    /* margin-top: 1em; */
     margin-right: 2vw;
     min-height: 387px;
   }
@@ -314,7 +310,6 @@
 
   .past-result-date {
     font-size: 13px;
-    /* color: #333; */
     width: 90px;
     margin: 5px auto 2px;
     padding-top: 3px;
@@ -325,7 +320,6 @@
     font-weight: 700;
     padding-top: 0;
     margin: 0 !important;
-    /* color: white; */
   }
   .no-prev-results {
     display: grid;
@@ -333,17 +327,11 @@
     color: rgb(181, 181, 181);
     color: rgba(0, 0, 0, 0.35);
     border-radius: var(--border-radius);
-    /* background: var(--purple); */
     padding: 80px 0 100px;
-    /* color: white; */
   }
   .next-game-item {
     border-radius: 9px;
   }
-
-  /* .result-details {
-    background: #f0fefd;
-  } */
 
   .home-team {
     float: left;
