@@ -54,14 +54,14 @@
   }
 
   function avgLine(
-    playedMatchdays: string[],
+    playedDates: Date[],
     avgGoals: Counter,
     matchdays: string[]
   ): any {
     return {
       name: "Avg",
       type: "line",
-      x: playedMatchdays,
+      x: playedDates,
       y: Object.values(avgGoals),
       text: matchdays,
       hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",
@@ -70,14 +70,14 @@
   }
 
   function teamScoredBar(
-    playedMatchdays: string[],
+    playedDates: Date[],
     teamScored: Counter,
     matchdays: string[]
   ): any {
     return {
       name: "Scored",
       type: "bar",
-      x: playedMatchdays,
+      x: playedDates,
       y: Object.values(teamScored),
       text: matchdays,
       marker: { color: "#00fe87" },
@@ -87,14 +87,14 @@
   }
 
   function teamConcededBar(
-    playedMatchdays: string[],
+    playedDates: Date[],
     teamConceded: Counter,
     matchdays: string[]
   ): any {
     return {
       name: "Conceded",
       type: "bar",
-      x: playedMatchdays,
+      x: playedDates,
       y: Object.values(teamConceded),
       text: matchdays,
       marker: { color: "#f83027" },
@@ -169,9 +169,9 @@
     let avgGoals = getAvgGoalsPerGame(data);
     let matchdays = Object.keys(avgGoals);
 
-    let scoredBar = teamScoredBar(playedMatchdays, teamScored, matchdays);
-    let concededBar = teamConcededBar(playedMatchdays, teamConceded, matchdays);
-    let line = avgLine(playedMatchdays, avgGoals, matchdays);
+    let scoredBar = teamScoredBar(playedDates, teamScored, matchdays);
+    let concededBar = teamConcededBar(playedDates, teamConceded, matchdays);
+    let line = avgLine(playedDates, avgGoals, matchdays);
 
     let plotData = {
       data: [scoredBar, concededBar, line],
@@ -212,13 +212,13 @@
       let avgGoals = getAvgGoalsPerGame(data);
       let matchdays = Object.keys(avgGoals);
 
-      let scoredBar = teamScoredBar(playedMatchdays, teamScored, matchdays);
+      let scoredBar = teamScoredBar(playedDates, teamScored, matchdays);
       let concededBar = teamConcededBar(
-        playedMatchdays,
+        playedDates,
         teamConceded,
         matchdays
       );
-      let line = avgLine(playedMatchdays, avgGoals, matchdays);
+      let line = avgLine(playedDates, avgGoals, matchdays);
 
       plotData.data[0] = scoredBar;
       plotData.data[1] = concededBar;
@@ -238,7 +238,7 @@
 
   export let data: TeamData,
     team: string,
-    playedMatchdays: string[],
+    playedDates: Date[],
     mobileView: boolean;
 </script>
 

@@ -36,19 +36,28 @@
     return [cleanSheets, notCleanSheets];
   }
 
+  function playedMatchdays(data: TeamData, team: string): string[] {
+    let matchdays = [];
+    for (let matchday in data.form[team][data._id]) {
+      if (data.form[team][data._id][matchday].score != null) {
+        matchdays.push(matchday);
+      }
+    }
+    return matchdays
+  }
+
   function bars(
     data: TeamData,
     team: string,
-    playedMatchdays: string[]
-  ): [any, any] {
-    let matchdays = Object.keys(data.form[team][data._id]);
-    
+    playedDates: Date[],
+    matchdays: string[]
+  ): [any, any] {    
     let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, team);
     return [
       {
         name: "Clean sheets",
         type: "bar",
-        x: playedMatchdays,
+        x: playedDates,
         y: cleanSheets,
         text: matchdays,
         marker: { color: "#00fe87" },
@@ -58,7 +67,7 @@
       {
         name: "Conceded",
         type: "bar",
-        x: playedMatchdays,
+        x: playedDates,
         y: notCleanSheets,
         text: matchdays,
         marker: { color: "#f83027" },
@@ -71,9 +80,9 @@
   function baseLine(): Object {
     return {
       type: "line",
-      x0: playedMatchdays[0],
+      x0: playedDates[0],
       y0: 0.5,
-      x1: playedMatchdays[playedMatchdays.length - 1],
+      x1: playedDates[playedDates.length - 1],
       y1: 0.5,
       layer: "below",
       line: {
@@ -83,7 +92,7 @@
     };
   }
 
-  function defaultLayout(): Object {
+  function defaultLayout(matchdays: string[]): Object {
     return {
       title: false,
       autosize: true,
@@ -102,10 +111,14 @@
         fixedrange: true,
       },
       xaxis: {
+        title: { text: "Matchday" },
         linecolor: "black",
         showgrid: false,
         showline: false,
         fixedrange: true,
+        tickmode: "array",
+        tickvals: playedDates,
+        ticktext: matchdays,
       },
       shapes: [baseLine()],
       dragmode: false,
@@ -148,13 +161,14 @@
   }
 
   function buildPlotData(data: TeamData, team: string): PlotData {
-    let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
+    let matchdays = playedMatchdays(data, team)
+    let [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
     // Line required on plot to make match goalsScoredAndConcededGraph
     // TODO: Improve solution
     let line = hiddenLine(cleanSheetsBar.x);
     let plotData = {
       data: [cleanSheetsBar, concededBar, line],
-      layout: defaultLayout(),
+      layout: defaultLayout(matchdays),
       config: {
         responsive: true,
         showSendToCloud: false,
@@ -184,12 +198,19 @@
 
   function refreshPlot() {
     if (setup) {
-      let [cleanSheetsBar, concededBar] = bars(data, team, playedMatchdays);
+      let matchdays = playedMatchdays(data, team)
+      let [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
       let line = hiddenLine(cleanSheetsBar.x);
 
       plotData.data[0] = cleanSheetsBar;
       plotData.data[1] = concededBar;
       plotData.data[2] = line;
+      console.log(matchdays)
+      console.log(playedDates)
+      for (let i = 0; i < matchdays.length; i++) {
+        plotData.layout.xaxis.ticktext[i] = matchdays[i];
+      }
+      console.log(plotData.layout.xaxis.ticktext)
       plotData.layout.shapes[0] = baseLine();
           
       //@ts-ignore
@@ -206,7 +227,7 @@
 
   export let data: TeamData,
     team: string,
-    playedMatchdays: string[],
+    playedDates: Date[],
     mobileView: boolean;
 </script>
 

@@ -36,13 +36,13 @@
     }
 
     let line = {
-      x: playedDates,
+      x: matchdays,
       y: y,
       name: team,
       mode: "lines",
       line: lineVal,
-      text: matchdays,
-      hovertemplate: `<b>${team}</b><br>Matchday %{text}<br>%{x|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
+      text: playedDates,
+      hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
       showlegend: false
     };
     return line;
@@ -89,13 +89,14 @@
         range: [-1, 101],
       },
       xaxis: {
+        title: { text: "Matchday" },
         linecolor: "black",
         showgrid: false,
         showline: false,
         fixedrange: true,
         range: [
-          playedMatchdays[0],
-          playedMatchdays[playedMatchdays.length - 1],
+          playedDates[0],
+          playedDates[playedDates.length - 1],
         ],
       },
       dragmode: false,
@@ -106,6 +107,7 @@
     if (setup) {
       let layoutUpdate = {
         "yaxis.title": { text: "Form rating" },
+        "xaxis.title": { text: "Matchday" },
         "yaxis.visible": true,
         "margin.l": 60,
         "margin.t": 15,
@@ -120,6 +122,7 @@
       let layoutUpdate = {
         "yaxis.title": null,
         "yaxis.visible": false,
+        "xaxis.title": null,
         "margin.l": 20,
         "margin.t": 5,
       };
@@ -169,8 +172,8 @@
         plotData.data[i] = newPlotData.data[i];
       }
 
-      plotData.layout.xaxis.range[0] = playedMatchdays[0] 
-      plotData.layout.xaxis.range[1] = playedMatchdays[playedMatchdays.length-1] 
+      plotData.layout.xaxis.range[0] = playedDates[0] 
+      plotData.layout.xaxis.range[1] = playedDates[playedDates.length-1] 
 
       //@ts-ignore
       Plotly.redraw(plotDiv);
@@ -186,7 +189,7 @@
 
   export let data: TeamData,
     team: string,
-    playedMatchdays: string[],
+    playedDates: Date[],
     mobileView: boolean;
 </script>
 
