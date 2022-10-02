@@ -173,7 +173,6 @@
         "yaxis.title": null,
         "yaxis.visible": false,
         "yaxis.tickvals": Array.from(Array(10), (_, i) => i + 2),
-        "xaxis.title": null,
         "margin.l": 20,
         "margin.t": 5,
       };

@@ -481,6 +481,7 @@
     max-height: 500px;
     margin-left: 0.05em;
     font-size: 20vw;
+    color: #333;
   }
 
   .circles-background-container {
@@ -562,6 +563,7 @@
     position: fixed;
     color: white;
     background: #38003d;
+    background: var(--purple);
     padding: 0.8em 0;
     cursor: pointer;
     font-size: 1.1em;

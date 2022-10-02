@@ -274,6 +274,7 @@
   .predictions-link {
     text-decoration: none;
     color: #333;
+    color: var(--purple)
   }
 
   .predictions-link:hover {

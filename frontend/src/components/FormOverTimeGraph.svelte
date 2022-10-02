@@ -107,7 +107,6 @@
     if (setup) {
       let layoutUpdate = {
         "yaxis.title": { text: "Form rating" },
-        "xaxis.title": { text: "Matchday" },
         "yaxis.visible": true,
         "margin.l": 60,
         "margin.t": 15,
@@ -122,7 +121,6 @@
       let layoutUpdate = {
         "yaxis.title": null,
         "yaxis.visible": false,
-        "xaxis.title": null,
         "margin.l": 20,
         "margin.t": 5,
       };
