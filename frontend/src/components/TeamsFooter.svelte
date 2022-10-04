@@ -7,7 +7,7 @@
     {#if lastUpdated != null}
       <div class="last-updated">Last updated: {new Date(lastUpdated).toLocaleString()} UTC</div>
     {/if}
-    <div class="version"><span style="color:#00ff87">pl</span>dashboard</div>
+    <div class="version"><span class="pl">pl</span>dashboard</div>
   </div>
 </div>
 
@@ -35,6 +35,9 @@
   .last-updated {
     text-align: center;
     margin-bottom: 1em;
+  }
+  .pl {
+    color: #00ff87;
   }
 
   @media only screen and (max-width: 1200px) {
