@@ -7,13 +7,15 @@
     {#if lastUpdated != null}
       <div class="last-updated">Last updated: {new Date(lastUpdated).toLocaleString()} UTC</div>
     {/if}
-    <div class="version">pldashboard v2.0</div>
+    <div class="version"><span style="color:#00ff87">pl</span>dashboard</div>
   </div>
 </div>
 
 <style scoped>
   .teams-footer {
-    color: rgb(198, 198, 198);
+    /* color: rgb(198, 198, 198); */
+    color: var(--purple);
+    opacity: 0.35;
     padding: 1em 0 0.2em;
     height: auto;
     width: 100%;
@@ -24,7 +26,13 @@
     margin: 30px 0;
   }
   .version {
-    margin: 10px 0;
+    margin: 10px auto;
+    color: white;
+    background: var(--purple);
+    /* opacity: 0.5; */
+    padding: 6px 10px;
+    border-radius: 4px;
+    width: fit-content;
   }
   .last-updated {
     text-align: center;
