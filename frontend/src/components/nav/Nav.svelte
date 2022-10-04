@@ -102,13 +102,14 @@
   }
   :hover.team-name {
     background: #2c002f;
+    background: #140921;
   }
   nav {
     position: fixed;
     width: 220px;
     height: 100vh;
     background: #37003c;
-    background: #38003d;
+    background: var(--purple);
   }
   .close-btn {
     position: absolute;

@@ -96,6 +96,11 @@
       display: none;
     }
   }
+  @media only screen and (max-width: 600px) {
+    #home {
+      background-size: 60px 60px;
+    }
+  }
   @media only screen and (max-width: 500px) {
     .links {
       flex-direction: column;

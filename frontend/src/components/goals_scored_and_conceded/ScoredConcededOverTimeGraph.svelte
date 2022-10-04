@@ -89,7 +89,7 @@
             conceded = h;
           }
           goals.push({
-            date: match.date,
+            date: new Date(match.date),
             matchday: matchday,
             scored: scored,
             conceded: conceded,
@@ -107,6 +107,7 @@
       return a.date < b.date ? -1 : a.date == b.date ? 0 : 1;
     });
 
+    // Separate out into lists
     let dates: Date[] = [];
     let scored: number[] = [];
     let conceded: number[] = [];
@@ -244,17 +245,15 @@
   function refreshPlot() {
     if (setup) {
       let newPlotData = buildPlotData(data, team);
-      plotData.data[0] = newPlotData.data[0];
-      plotData.data[1] = newPlotData.data[1];
-      for (let i = 0; i < plotData.layout.shapes.length; i++) {
-        if (i < newPlotData.layout.shapes.length) {
-          plotData.layout.shapes[i] = newPlotData.layout.shapes[i]
-        } else {
-          plotData.layout.shapes[i] = null
-        }
-      }
+
+      // Copy new values into exisitng plotData to be accessed during redraw
+      plotData.data[0] = newPlotData.data[0];  // Copy goals scored line
+      plotData.data[1] = newPlotData.data[1];  // Copy goals conceded line
+
+      plotData.layout.shapes = newPlotData.layout.shapes
+
       //@ts-ignore
-      Plotly.redraw(plotDiv);
+      Plotly.redraw(plotDiv);  // Update plot data
       if (mobileView) {
         setMobileLayout();
       }

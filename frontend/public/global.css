@@ -65,7 +65,7 @@
   --win: #00fe87;
   --draw: #ffdd00;
   --lose: #f83027;
-  --purple: #38003d;
+  --purple: #1c0d2d;
   --pink: #c600d8;
 }
 
@@ -80,7 +80,7 @@
 
 body {
   background: #fafafa;
-  color: #333;
+  color: var(--purple);
   margin: 0;
 }
 
@@ -92,7 +92,7 @@ h1 {
 .main-link {
   font-size: 1.4em;
   font-weight: 600;
-  color: #333;
+  color: var(--purple);
   flex: auto;
   align-self: center;
   text-decoration: none;
