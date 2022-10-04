@@ -38,7 +38,7 @@
    * games as well as overall prediction accuracy values for scores and general 
    * match results.
   */
-  function insertExtras(json: PredictionData) {
+  function insertExtras(json: PredictionsData) {
     let scoreCorrect = 0;
     let resultCorrect = 0;
     let total = 0;
@@ -71,13 +71,14 @@
     return date.toTimeString().slice(0, 5);
   }
 
-  function sortByDate(json: PredictionData) {
-    json.predictions.sort((a: MatchdayPredictions, b: MatchdayPredictions) => {
-      return (new Date(b._id) as any) - (new Date(a._id) as any);
+  function sortByDate(predictions: MatchdayPredictions[]) {
+    predictions.sort((a, b) => {
+      //@ts-ignore
+      return (new Date(b._id) - new Date(a._id));
     });
     // Sort each day of predictions by time
-    for (let i = 0; i < json.predictions.length; i++) {
-      json.predictions[i].predictions.sort((a: Prediction, b: Prediction) => {
+    for (let i = 0; i < predictions.length; i++) {
+      predictions[i].predictions.sort((a: Prediction, b: Prediction) => {
         return (new Date(a.datetime) as any) - (new Date(b.datetime) as any);
       });
     }
@@ -93,28 +94,29 @@
     colour?: string;
   };
 
+  type Accuracy = {
+    scoreAccuracy: number;
+    resultAccuracy: number;
+  }
+
   type MatchdayPredictions = {
     _id: string; // YYYY-MM-DD
     predictions: Prediction[];
   };
 
-  type AccuracyData = {
-    scoreAccuracy: number;
-    resultAccuracy: number;
-  };
-
-  type PredictionData = {
-    accuracy: AccuracyData;
+  type PredictionsData = {
+    accuracy: Accuracy;
     predictions: MatchdayPredictions[];
-  };
+  }
 
-  let data: PredictionData;
+  let data: PredictionsData;
   onMount(() => {
     fetchData("https://pldashboard-backend.vercel.app/api/predictions").then(
-      (json: PredictionData) => {
+      (json: MatchdayPredictions[]) => {
         sortByDate(json);
+        json = {predictions: json} as PredictionsData
         insertExtras(json);
-        data = json as PredictionData;
+        data = json;
         console.log(data);
       }
     );
