@@ -1,5 +1,6 @@
 from collections import defaultdict
 from datetime import datetime
+import logging
 
 import pandas as pd
 from lib.utils.utilities import Utilities
@@ -136,7 +137,7 @@ class Fixtures(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🛠️  Building fixtures dataframe... ')
+        logging.info('🛠️  Building fixtures dataframe... ')
 
         data = json_data['fixtures'][season]
 

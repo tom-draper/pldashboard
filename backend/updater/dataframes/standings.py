@@ -1,7 +1,9 @@
+import logging
 import pandas as pd
 from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
+import logging
 
 from dataframes.df import DF
 
@@ -89,7 +91,7 @@ class Standings(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🛠️  Building standings dataframe...')
+        logging.info('🛠️  Building standings dataframe...')
 
         standings = pd.DataFrame()
         

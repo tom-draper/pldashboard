@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame
 from timebudget import timebudget
+import logging
 
 from dataframes.df import DF
 from dataframes.standings import Standings
@@ -124,7 +125,7 @@ class TeamRatings(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🛠️  Building team ratings dataframe... ')
+        logging.info('🛠️  Building team ratings dataframe... ')
         self._check_dependencies(standings)
 
         # Add current season team names to the object team dataframe

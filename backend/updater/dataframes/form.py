@@ -1,5 +1,6 @@
 from collections import defaultdict
 from typing import Iterable
+import logging
 
 import numpy as np
 import pandas as pd
@@ -434,7 +435,7 @@ class Form(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🛠️  Building form dataframe... ')
+        logging.info('🛠️  Building form dataframe... ')
         teams = set()
         d = {}
         for i in range(n_seasons):

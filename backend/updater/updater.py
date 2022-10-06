@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -49,10 +50,10 @@ class Updater:
             
             code = res.status_code
             if code == 429 or code == 403:
-                print('❌  Status:', code)
+                logging.info(f'❌  Status: {code}')
                 raise ValueError('❌ ERROR: Data request failed')
             else:
-                print('✔️  Status:', code)
+                logging.info(f'✔️  Status: {code}')
 
             return res.json()['matches']
         else:
@@ -67,10 +68,10 @@ class Updater:
 
             code = res.status_code
             if code == 429 or code == 403:
-                print('❌  Status:', code)
+                logging.info(f'❌  Status: {code}')
                 raise ValueError('❌ ERROR: Data request failed')
             else:
-                print('✔️  Status:', code)
+                logging.info(f'✔️  Status: {code}')
 
             return res.json()['standings'][0]['table']
         else:
@@ -184,27 +185,41 @@ class Updater:
         try:
             self.fetch_json_data(n_seasons, request_new)
         except ValueError as e:
-            print(e)
-            print('🔁 Retrying with local backup data...')
+            logging.error(e)
+            logging.info('🔁 Retrying with local backup data...')
             request_new = False
             self.fetch_json_data(n_seasons, request_new)
             
         self.build_dataframes(n_seasons, display_tables)
 
         if request_new:
-            print('💾 Saving new team data to local backup...')
+            logging.info('💾 Saving new team data to local backup...')
             self.save_data_to_json()
             if update_db:
-                print('💾 Saving new team data to database...')
+                logging.info('💾 Saving new team data to database...')
                 self.save_team_data_to_db()
-                print('💾 Saving predictions to database...')
+                logging.info('💾 Saving predictions to database...')
                 self.save_predictions_to_db()
 
-
-if __name__ == "__main__":
+def run():
+    display_tables = False
+    if logging.root.level == logging.DEBUG:
+        # Only display tables if not in production
+        display_tables = True
     updater = Updater(2022)
     updater.build_all(
-        request_new=True, 
-        display_tables=False, 
-        update_db=True,
+        display_tables=display_tables, 
     )
+
+def run_production():
+    timebudget.set_quiet()
+    logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s :: %(levelname)s :: %(message)s')
+    run()
+
+def run_dev():
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s :: %(levelname)s :: %(message)s')
+    run()
+    timebudget.report_at_exit()
+
+if __name__ == "__main__":
+    run_production()

@@ -5,6 +5,7 @@ import pandas as pd
 from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
+import logging
 
 from dataframes.df import DF
 from dataframes.fixtures import Fixtures
@@ -231,7 +232,7 @@ class Upcoming(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🛠️  Building upcoming dataframe... ')
+        logging.info('🛠️  Building upcoming dataframe... ')
 
         d = {}  # type: dict[str, dict[str, Optional[str] | list]]
         team_names = fixtures.df.index.to_list()

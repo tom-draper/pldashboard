@@ -1,4 +1,5 @@
 from collections import defaultdict
+import logging
 
 import pandas as pd
 from lib.utils.utilities import Utilities
@@ -90,7 +91,7 @@ class HomeAdvantages(DF):
             1) == 'homeAdvantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
         if (home_advantages[season]['home']['played'] <= threshold).all():
-            print(f"[NOTICE]: Current season excluded from home advantages calculation, all teams have not played >= {threshold} home games.")
+            logging.info(f"Current season excluded from home advantages calculation, all teams have not played >= {threshold} home games.")
             # Drop this current seasons column (start from previous season)
             home_advantages_cols = home_advantages_cols.drop(
                 season, level=0, axis=1)
@@ -183,7 +184,7 @@ class HomeAdvantages(DF):
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🛠️  Building home advantages dataframe... ')
+        logging.info('🛠️  Building home advantages dataframe... ')
 
         d = defaultdict(lambda: self._row_template(season, no_seasons))
         for i in range(no_seasons):
