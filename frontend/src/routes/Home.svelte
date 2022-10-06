@@ -59,19 +59,19 @@
   }
   .fantasy-link {
     color: #37003d;
-    background: linear-gradient(70deg, #00ff87, #02efff, #5e80ff);
+    background: linear-gradient(70deg, var(--green), #02efff, #5e80ff);
     background: linear-gradient(90deg, #00fbd6, #02efff);
-    background: #00ff87;
+    background: var(--green);
     padding: 18px 0;
   }
   .dashboard-link {
     color: #37003d;
-    background: #00ff87;
-    background: linear-gradient(70deg, #00ff87, #02efff, #5e80ff);
-    background: linear-gradient(30deg, #00ff87, #2bd2ff);
-    background: linear-gradient(70deg, #00ff87, #2bd2ff, #5e80ff);
+    background: var(--green);
+    background: linear-gradient(70deg, var(--green), #02efff, #5e80ff);
+    background: linear-gradient(30deg, var(--green), #2bd2ff);
+    background: linear-gradient(70deg, var(--green), #2bd2ff, #5e80ff);
     background: #fc014e;
-    background: linear-gradient(90deg, #00ff87, #00fbd6);
+    background: linear-gradient(90deg, var(--green), #00fbd6);
     background: rgb(5, 235, 235);
     padding: 18px 0;
   }

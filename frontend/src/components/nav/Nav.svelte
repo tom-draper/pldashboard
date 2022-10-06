@@ -23,7 +23,7 @@
 <nav id="navBar">
   <div class="title no-selection">
     <p>
-      <span style="color: #00fe87">pl</span>dashboard
+      <span style="color: var(--green)">pl</span>dashboard
     </p>
   </div>
   <div class="team-links">

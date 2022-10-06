@@ -562,7 +562,7 @@
   #mobileNavBtn {
     position: fixed;
     color: white;
-    background: #38003d;
+    background: var(--purple);
     background: var(--purple);
     padding: 0.8em 0;
     cursor: pointer;

@@ -3,7 +3,7 @@
     switch (result) {
       case "W":
         if (starTeam) {
-          return "linear-gradient(30deg, #00ff87, #2bd2ff, #fa8bff)";
+          return "linear-gradient(30deg, var(--green), #2bd2ff, #fa8bff)";
         } else {
           return "#00fe87";
         }

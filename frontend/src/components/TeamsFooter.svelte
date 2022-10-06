@@ -37,7 +37,7 @@
     margin-bottom: 1em;
   }
   .pl {
-    color: #00ff87;
+    color: #00ef87;
   }
 
   @media only screen and (max-width: 1200px) {
