@@ -202,7 +202,7 @@
 </script>
 
 <svelte:head>
-  <title>Dashboard</title>
+  <title>Dashboard - {team}</title>
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 

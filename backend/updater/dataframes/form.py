@@ -457,11 +457,11 @@ class Form(DF):
                     self._insert_team_matchday(d, match, team_ratings, season-i, False)
 
         form = pd.DataFrame.from_dict(d, orient='index')
-        
-        self._insert_position_columns_new(form)
-        
+
         # Drop teams not in current season  
         form = form.drop(index=form.index.difference(teams), axis=0)
+        
+        self._insert_position_columns_new(form)
 
         form = form.sort_index(axis=1)
         
