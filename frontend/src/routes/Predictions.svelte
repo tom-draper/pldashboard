@@ -112,7 +112,7 @@
   let data: PredictionsData;
   onMount(() => {
     fetchData("https://pldashboard-backend.vercel.app/api/predictions").then(
-      (json: MatchdayPredictions[]) => {
+      (json: any) => {
         sortByDate(json);
         json = {predictions: json} as PredictionsData
         insertExtras(json);

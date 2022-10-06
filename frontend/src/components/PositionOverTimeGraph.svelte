@@ -87,7 +87,7 @@
         line: {
           width: 0,
         },
-        fillcolor: "#00fe87",
+        fillcolor: "var(--green)",
         opacity: 0.2,
         layer: "below",
       },

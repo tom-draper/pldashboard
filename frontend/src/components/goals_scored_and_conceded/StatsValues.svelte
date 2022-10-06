@@ -225,7 +225,7 @@
 
 <style scoped>
   .ssp-1st {
-    color: #00fe87;
+    color: var(--green);
   }
   .ssp-2nd {
     color: #48f98f;

@@ -226,7 +226,7 @@
     width: max-content;
     padding: 6px 20px;
     border-radius: 0 0 var(--border-radius) 0;
-    background: #38003d;
+    background: var(--purple);
     margin: -1px 0 0 -1px; /* To avoid top and left gap when zooming out */
   }
 
@@ -245,7 +245,7 @@
     display: flex;
   }
   .next-game-team-btn {
-    color: #00fe87 !important;
+    color: var(--green) !important;
   }
   .next-game-logo {
     height: 225px;
@@ -294,7 +294,7 @@
   .next-game-prediction {
     border-radius: var(--border-radius);
     min-height: 97.5%;
-    border: 6px solid #38003d;
+    border: 6px solid var(--purple);
   }
 
   .next-game-values {
@@ -370,12 +370,12 @@
     border-radius: 6px;
     padding: 10px 15px;
     color: white;
-    background: #38003d;
+    background: var(--purple);
     width: fit-content;
     margin: auto auto 10px;
   }
   .current-form-value {
-    color: #00fe87;
+    color: var(--green);
   }
 
   @media only screen and (max-width: 1300px) {

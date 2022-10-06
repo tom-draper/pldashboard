@@ -131,7 +131,7 @@
     font-size: 1.7rem;
     margin: 20px 0;
     padding: 9px 25px;
-    background: #38003d;
+    background: var(--purple);
     color: white;
     border-radius: var(--border-radius);
   }
