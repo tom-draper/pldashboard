@@ -54,21 +54,24 @@ class TeamRatings(DF):
                 rating = self._calc_rating(row[current_season-n]['points'], row[current_season-n]['gD'])
                 team_ratings.at[team_name, f'rating{n}YAgo'] = rating
     
-    def replace_nan(self, team_ratings: DataFrame):
+    @staticmethod
+    def replace_nan(team_ratings: DataFrame):
         # Replace any NaN with the lowest rating in the same column
         for col in team_ratings.columns:
             team_ratings[col] = team_ratings[col].replace(
                 np.nan, team_ratings[col].min())
     
-    def insert_normalised_ratings(self, team_ratings: DataFrame, n_seasons):
+    @staticmethod
+    def normalise_ratings(team_ratings: DataFrame, n_seasons):
         # Create normalised versions of the three ratings columns
         for n in range(0, n_seasons):
-            team_ratings[f'normRating{n}YAgo'] = (team_ratings[f'rating{n}YAgo']
+            team_ratings[f'rating{n}YAgo'] = (team_ratings[f'rating{n}YAgo']
                                                         - team_ratings[f'rating{n}YAgo'].min()) \
                 / (team_ratings[f'rating{n}YAgo'].max()
                    - team_ratings[f'rating{n}YAgo'].min())
     
-    def include_current_season(self, standings: Standings, current_season: int, games_threshold: float) -> bool:
+    @staticmethod
+    def include_current_season(standings: Standings, current_season: int, games_threshold: float) -> bool:
         # Check whether current season data should be included in each team's total rating
         include = True
         # If current season hasn't played enough games
@@ -82,8 +85,7 @@ class TeamRatings(DF):
     def clean_dataframe(team_ratings: DataFrame) -> DataFrame:
         team_ratings = team_ratings.sort_values(
             by="totalRating", ascending=False)
-        team_ratings = team_ratings.rename(columns={'rating0YAgo': 'ratingCurrent',
-                                                    'normRating0YAgo': 'normRatingCurrent'})
+        team_ratings = team_ratings.rename(columns={'rating0YAgo': 'ratingCurrent'})
         return team_ratings
 
     @timebudget
@@ -101,17 +103,13 @@ class TeamRatings(DF):
             Rows: the 20 teams participating in the current season, ordered 
                 descending by the team's rating
             Columns (multi-index):
-            ---------------------------------------------------------------------------------------
-            | ratingCurrent | rating[N]YAgo | rormRatingCurrent | rormRating[N]YAgo | totalRating |
+            -----------------------------------------------
+            | ratingCurrent | rating[N]YAgo | totalRating |
 
-            ratingCurrent: a calculated positive or negative value that represents
-                the team's rating based on the state of the current season's 
-                standings table.
-            rating[N]YAgo: a calculated positive or negative value that represents 
-                the team's rating based on the state of the standings table [N]
-                seasons ago.
-            normRatingCurrent: the Rating Current column value normalised
-            normRating[N]YAgo: the Rating [N]Y Ago column values normalised
+            ratingCurrent: a normalised value that represents the team's rating 
+                based on the state of the current season's standings table.
+            rating[N]YAgo: a normalised value that represents the team's rating 
+                based on the state of the standings table [N] seasons ago.
             totalRating: a final normalised rating value incorporating the values 
                 from all normalised columns.
 
@@ -134,13 +132,9 @@ class TeamRatings(DF):
         team_ratings = pd.DataFrame(index=standings.df.index)
 
         self.init_rating_columns(team_ratings, n_seasons)
-
         self.insert_rating_values(team_ratings, standings, season, n_seasons)
-        
         self.replace_nan(team_ratings)
-        
-        self.insert_normalised_ratings(team_ratings, n_seasons)
-
+        self.normalise_ratings(team_ratings, n_seasons)
         include_cs = self.include_current_season(standings, season, games_threshold)
         self._calc_total_rating_col(team_ratings, n_seasons, include_cs)
 
