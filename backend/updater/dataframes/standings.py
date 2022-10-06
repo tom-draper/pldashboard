@@ -55,11 +55,11 @@ class Standings(DF):
         self,
         json_data: dict,
         season: int,
-        no_seasons: int = 3,
+        num_seasons: int = 3,
         display: bool = False
     ):
         """ Assigns self.df to a dataframe containing all table standings for 
-            each season from current season to season [no_seasons] years ago.
+            each season from current season to season [num_seasons] years ago.
 
             Rows: the 20 teams participating in the current season, ordered ascending 
                 by the team's position in the current season 
@@ -70,7 +70,7 @@ class Standings(DF):
             | position | played | won | draw | lost | gF | gA | gD | points | 
 
             [SEASON YEAR]: 4-digit year values that a season began, from current 
-                season to season no_seasons ago
+                season to season num_seasons ago
             position: unique integer from 1 to 20 depending on the table position 
                 the team holds in the season
             played: the number of games the team has played in the season.
@@ -84,9 +84,8 @@ class Standings(DF):
 
         Args:
             json_data dict: the json data storage used to build the dataframe
-            team_names list: the team names of the teams within the current season
             season: the year of the current season
-            no_seasons (int): number of previous seasons to include. Defaults to 3.
+            num_seasons (int): number of previous seasons to include. Defaults to 3.
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
@@ -97,7 +96,7 @@ class Standings(DF):
         team_names = self.get_team_names(json_data, season)
 
         # Loop from current season to the season 2 years ago
-        for n in range(no_seasons):
+        for n in range(num_seasons):
             season_standings = self._season_standings(
                 json_data, team_names, season - n)
             standings = pd.concat((standings, season_standings), axis=1)
