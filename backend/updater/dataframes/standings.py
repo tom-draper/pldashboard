@@ -12,7 +12,8 @@ class Standings(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'standings')
 
-    def get_team_names(self, json_data: dict, season: int):
+    @staticmethod
+    def get_team_names(json_data: dict, season: int):
         data = json_data['standings'][season]
         team_names = [utils.clean_full_team_name(row['team']['name']) for row in data]
         return team_names
