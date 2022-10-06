@@ -5,16 +5,17 @@
 <div class="teams-footer footer-text-colour">
   <div class="teams-footer-bottom">
     {#if lastUpdated != null}
-      <div class="last-updated">Last updated: {new Date(lastUpdated).toLocaleString()} UTC</div>
+      <div class="last-updated no-select">Last updated: {new Date(lastUpdated).toLocaleString()} UTC</div>
     {/if}
-    <div class="version"><span class="pl">pl</span>dashboard</div>
+    <div class="version no-select"><span class="pl">pl</span>dashboard</div>
   </div>
 </div>
 
 <style scoped>
   .teams-footer {
     color: var(--purple);
-    opacity: 0.35;
+    color: #c6c6c6;
+    /* opacity: 0.35; */
     padding: 1em 0 0.2em;
     height: auto;
     width: 100%;
@@ -34,10 +35,20 @@
   }
   .last-updated {
     text-align: center;
-    margin-bottom: 1em;
+    margin-bottom: 1.5em;
+  }
+  .no-select {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+      -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
   }
   .pl {
     color: #00ef87;
+    
   }
 
   @media only screen and (max-width: 1200px) {

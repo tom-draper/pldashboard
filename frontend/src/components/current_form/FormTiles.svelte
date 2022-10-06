@@ -100,20 +100,20 @@
   }
   
   .pos-3 {
-    opacity: 90%;
+    opacity: 89%;
   }
   
   .pos-2 {
-    opacity: 80%;
+    opacity: 78%;
   }
   
   .pos-1 {
-    opacity: 70%;
+    opacity: 67%;
   }
 
   .pos-0 {
     /* Least recent game */
-    opacity: 60%;
+    opacity: 56%;
     border-radius: 6px 0 0 6px;
   }
 

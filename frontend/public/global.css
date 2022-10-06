@@ -63,11 +63,13 @@
   --border-radius: 6px;
 
   --win: #00fe87;
-  --green: #00fe87;
   --draw: #ffdd00;
   --lose: #f83027;
-  --purple: #1c0d2d;
   --pink: #c600d8;
+  --dark-purple: #1c0d2d;
+  --purple: #280936;
+  --light-purple: #37003c;
+  --green: #00fe87;
 }
 
 @font-face {
@@ -81,7 +83,7 @@
 
 body {
   background: #fafafa;
-  color: var(--purple);
+  color: var(---dark-purple);
   margin: 0;
 }
 

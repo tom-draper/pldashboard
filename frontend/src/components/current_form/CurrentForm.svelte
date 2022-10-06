@@ -145,23 +145,31 @@
     color: var(--win);
   }
 
-  /* .name-row {
-    margin: 0 12px 0 4px;
-  } */
-
   .icon-name {
     position: relative;
     margin-top: 0.6em;
   }
 
+  .pos-4 {
+    opacity: 100%;
+  }
+  .pos-3 {
+    opacity: 89%;
+  }
+  .pos-2 {
+    opacity: 78%
+  }
+  .pos-1 {
+    opacity: 67%;
+  }
+  .pos-0 {
+    opacity: 56%;
+  }
+
   @media only screen and (max-width: 1000px) {
     .current-form-row {
       width: min(80%, 440px);
-      /* margin-right: 8px; */
     }
-    /* .name-row {
-      margin: 0 0 8px
-    } */
   }
   
   @media only screen and (max-width: 700px) {
