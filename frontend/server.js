@@ -19,6 +19,7 @@ server.get("*", function(req, res) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div id="app">${html}</div>
     <script src="/bundle.js"></script>
+    <script src="/plotly.js"></script>
   `);
 
   res.end();
