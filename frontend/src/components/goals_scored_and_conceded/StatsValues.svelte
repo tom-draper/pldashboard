@@ -33,21 +33,6 @@
     return { xG: xGRank, xC: xCRank, cleanSheetRatio: cleanSheetRatioRank };
   }
 
-  // function setPositionalOffset() {
-  //   document.documentElement.style.setProperty(
-  //     "--ssp1-offset",
-  //     -ssp1.clientWidth / 2 + "px"
-  //   );
-  //   document.documentElement.style.setProperty(
-  //     "--ssp2-offset",
-  //     -ssp2.clientWidth / 2 + "px"
-  //   );
-  //   document.documentElement.style.setProperty(
-  //     "--ssp3-offset",
-  //     -ssp3.clientWidth / 2 + "px"
-  //   );
-  // }
-
   function setStatsValues(seasonStats: Stats, team: string) {
     rank = getStatsRankings(seasonStats, team);
 

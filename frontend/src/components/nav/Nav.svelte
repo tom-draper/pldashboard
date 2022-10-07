@@ -111,6 +111,10 @@
     background: #37003c;
     background: var(--purple);
   }
+  img {
+    height: 25px;
+    width: 25px;
+  }
   .close-btn {
     position: absolute;
     right: 0.9em;

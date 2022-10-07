@@ -89,11 +89,11 @@
         matchdays.push(matchday);
       }
     }
-    return matchdays
+    return matchdays;
   }
 
   function playedMatchdayDates(data: TeamData, team: string): Date[] {
-    let matchdays = playedMatchdays(data, team)
+    let matchdays = playedMatchdays(data, team);
 
     // If played one or no games, take x-axis from whole season dates
     if (matchdays.length == 0) {
@@ -202,7 +202,7 @@
 </script>
 
 <svelte:head>
-  <title>Dashboard</title>
+  <title>Dashboard - {team}</title>
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
@@ -220,7 +220,7 @@
     />
     {#if teams.length == 0}
       <!-- Navigation disabled while teams list are loading -->
-      <button id="mobileNavBtn" style="cursor: default"> Select Team </button>
+      <button id="mobileNavBtn" style="cursor: default">Select Team</button>
     {:else}
       <button id="mobileNavBtn" on:click={toggleMobileNav}>
         Select Team
@@ -228,7 +228,6 @@
     {/if}
 
     <div id="dashboard">
-      <!-- {#if teams.length != 0} -->
       <div class="header" style="background-color: var(--{hyphenatedTeam});">
         <a class="main-link no-decoration" href="/{hyphenatedTeam}">
           <div
@@ -239,7 +238,6 @@
           </div>
         </a>
       </div>
-      <!-- {/if} -->
 
       {#if data != undefined}
         <div class="page-content">
@@ -307,7 +305,6 @@
             <div class="row-right">
               <NextGame
                 {data}
-                {currentMatchday}
                 {team}
                 {showBadge}
                 {toAlias}
@@ -321,12 +318,7 @@
             <div class="form-graph row-graph">
               <h1 class="lowered">Form Over Time</h1>
               <div class="graph full-row-graph">
-                <FormOverTimeGraph
-                  {data}
-                  {team}
-                  {playedDates}
-                  {mobileView}
-                />
+                <FormOverTimeGraph {data} {team} {playedDates} {mobileView} />
               </div>
             </div>
           </div>
@@ -363,28 +355,19 @@
             <div class="row">
               <div class="row-graph">
                 <div class="clean-sheets graph full-row-graph">
-                  <CleanSheetsGraph
-                    {data}
-                    {team}
-                    {playedDates}
-                    {mobileView}
-                  />
+                  <CleanSheetsGraph {data} {team} {playedDates} {mobileView} />
                 </div>
               </div>
             </div>
-            
+
             <div class="season-stats-row">
               <StatsValues {data} {team} />
             </div>
-            
+
             <div class="row">
               <div class="row-graph">
                 <div class="graph full-row-graph">
-                  <ScoredConcededOverTimeGraph
-                    {data}
-                    {team}
-                    {mobileView}
-                  />
+                  <ScoredConcededOverTimeGraph {data} {team} {mobileView} />
                 </div>
               </div>
             </div>
@@ -571,9 +554,9 @@
     width: 100%;
     bottom: 0;
     border: none;
-    margin-bottom: -1px;  /* For gap at bottom found in safari */
+    margin-bottom: -1px; /* For gap at bottom found in safari */
   }
-  
+
   @media only screen and (min-width: 2400px) {
     .position-central {
       font-size: 16vw;
@@ -648,9 +631,7 @@
       margin: 0 1em;
     }
   }
-  /* @media only screen and (max-width: 1100px) {
-  } */
-  
+
   @media only screen and (max-width: 1000px) {
     .row {
       flex-direction: column;
@@ -662,7 +643,7 @@
     .score-freq {
       margin: 0 0 10px;
     }
-  
+
     .multi-element-row {
       margin: 0;
     }
@@ -670,7 +651,7 @@
       margin-right: 0;
       align-self: center;
     }
-  
+
     .position-and-badge {
       width: 50%;
       max-width: 400px;
@@ -680,7 +661,7 @@
       height: 400px;
       margin-bottom: -50px;
     }
-  
+
     .position-no-badge {
       height: 400px;
       width: 500px;
@@ -688,12 +669,12 @@
     .position-central {
       margin: auto;
     }
-  
+
     .circles-background {
       transform: scale(0.48);
       margin-top: -100px;
     }
-  
+
     .position-central,
     .circles-background-container {
       align-self: center;

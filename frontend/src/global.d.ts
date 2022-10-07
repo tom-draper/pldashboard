@@ -59,10 +59,6 @@ type Standings = {
 
 type TeamRatings = {
     string: {  // Team name
-        normRatingCurrent: number,
-        normRating1YAgo: number,
-        normRating2YAgo: number,
-        normRating3YAgo: number,
         ratingCurrent: number,
         rating1YAgo: number,
         rating2YAgo: number,
