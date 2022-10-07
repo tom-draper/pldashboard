@@ -19,6 +19,7 @@ server.get("*", function(req, res) {
     <div id="app">${html}</div>
     <script src="/plotly-2.14.0.min.js"></script>
     <script src="/bundle.js"></script>
+    <script src="/plotly.js"></script>
   `);
 
   res.end();
