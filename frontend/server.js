@@ -17,7 +17,6 @@ server.get("*", function(req, res) {
     <link rel='icon' href='img/favicon.ico'> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div id="app">${html}</div>
-    <script src="/plotly-2.14.0.min.js"></script>
     <script src="/bundle.js"></script>
     <script src="/plotly.js"></script>
   `);
