@@ -318,7 +318,13 @@
             <div class="form-graph row-graph">
               <h1 class="lowered">Form Over Time</h1>
               <div class="graph full-row-graph">
-                <FormOverTimeGraph {data} {team} {playedDates} {mobileView} />
+                <FormOverTimeGraph
+                  {data}
+                  {team}
+                  {playedDates}
+                  bind:lazyLoad={load}
+                  {mobileView}
+                />
               </div>
             </div>
           </div>

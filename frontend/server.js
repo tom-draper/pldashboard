@@ -11,14 +11,13 @@ server.get("*", function(req, res) {
 
   res.write(`
     <!DOCTYPE html>
-    
     <link rel='stylesheet' href='/global.css'>
     <link rel='stylesheet' href='/bundle.css'>
     <link rel='icon' href='img/favicon.ico'> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script>
     <div id="app">${html}</div>
     <script src="/bundle.js"></script>
-    <script src="/plotly.js"></script>
   `);
 
   res.end();
