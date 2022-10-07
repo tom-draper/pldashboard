@@ -1,6 +1,6 @@
+import logging
 from collections import defaultdict
 from datetime import datetime
-import logging
 
 import pandas as pd
 from lib.utils.utilities import Utilities
@@ -10,6 +10,7 @@ from timebudget import timebudget
 from dataframes.df import DF
 
 utils = Utilities()
+
 
 class Fixtures(DF):
     def __init__(self, d: DataFrame = DataFrame()):
@@ -62,7 +63,8 @@ class Fixtures(DF):
             if not all(matchday['status'] == 'SCHEDULED'):
                 for team_name, row in matchday.iterrows():
                     if row['status'] == 'FINISHED':
-                        home_goals, away_goals = utils.extract_int_score(row['score'])
+                        home_goals, away_goals = utils.extract_int_score(
+                            row['score'])
 
                         if row['atHome']:
                             home_name = team_name
@@ -70,11 +72,13 @@ class Fixtures(DF):
                         else:
                             home_name = row['team']
                             away_name = team_name
-                        home_initials = utils.convert_team_name_or_initials(home_name)
-                        away_initials = utils.convert_team_name_or_initials(away_name)
+                        home_initials = utils.convert_team_name_or_initials(
+                            home_name)
+                        away_initials = utils.convert_team_name_or_initials(
+                            away_name)
 
                         actual_scores[f'{home_initials} vs {away_initials}'] = {
-                            'homeGoals': home_goals, 
+                            'homeGoals': home_goals,
                             'awayGoals': away_goals
                         }
 
@@ -91,10 +95,12 @@ class Fixtures(DF):
 
         if home_team:
             team_name = utils.clean_full_team_name(match['homeTeam']['name'])
-            opp_team_name = utils.clean_full_team_name(match['awayTeam']['name'])
+            opp_team_name = utils.clean_full_team_name(
+                match['awayTeam']['name'])
         else:
             team_name = utils.clean_full_team_name(match['awayTeam']['name'])
-            opp_team_name = utils.clean_full_team_name(match['homeTeam']['name'])
+            opp_team_name = utils.clean_full_team_name(
+                match['homeTeam']['name'])
 
         score = None
         if match['score']['fullTime']['homeTeam'] is not None:

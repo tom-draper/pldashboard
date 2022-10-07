@@ -1,5 +1,6 @@
 from pandas import DataFrame
 
+
 class DF:
     def __init__(self, d: DataFrame = DataFrame(), name: str = None):
         self.df = DataFrame(d) if not d.empty else None

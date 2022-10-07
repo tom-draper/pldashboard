@@ -1,9 +1,9 @@
 import logging
+
 import pandas as pd
 from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-import logging
 
 from dataframes.df import DF
 
@@ -17,7 +17,8 @@ class Standings(DF):
     @staticmethod
     def get_team_names(json_data: dict, season: int):
         data = json_data['standings'][season]
-        team_names = [utils.clean_full_team_name(row['team']['name']) for row in data]
+        team_names = [utils.clean_full_team_name(
+            row['team']['name']) for row in data]
         return team_names
 
     @staticmethod
@@ -28,9 +29,9 @@ class Standings(DF):
     ) -> DataFrame:
         data = json_data['standings'][season]
         df = pd.DataFrame.from_dict(data)
-        
+
         # Rename teams to their team name
-        team_names = [utils.clean_full_team_name(name) 
+        team_names = [utils.clean_full_team_name(name)
                       for name in [df['team'][x]['name'] for x in range(len(df))]]
         df = df.drop(columns=['form', 'team'])
         df.index = team_names
@@ -38,20 +39,21 @@ class Standings(DF):
         # Move points column to the end
         points_col = df.pop('points')
         df.insert(8, 'points', points_col)
-        col_headings = ['position', 'played', 'won', 'drawn', 'lost', 'gF', 'gA', 'gD', 'points']
+        col_headings = ['position', 'played', 'won',
+                        'drawn', 'lost', 'gF', 'gA', 'gD', 'points']
         df.columns = pd.MultiIndex.from_product([[season], col_headings])
 
         df = df.drop(index=df.index.difference(current_teams))
-        
+
         return df
-    
+
     @staticmethod
     def clean_dataframe(standings: DataFrame) -> DataFrame:
         standings = standings.fillna(0).astype(int)
         standings.index.name = 'team'
         standings.columns.names = ('Season', None)
         return standings
-        
+
     @timebudget
     def build(
         self,
@@ -94,7 +96,7 @@ class Standings(DF):
         logging.info('🛠️  Building standings dataframe...')
 
         standings = pd.DataFrame()
-        
+
         team_names = self.get_team_names(json_data, season)
 
         # Loop from current season to the season 2 years ago

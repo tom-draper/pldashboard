@@ -1,5 +1,5 @@
-from collections import defaultdict
 import logging
+from collections import defaultdict
 
 import pandas as pd
 from lib.utils.utilities import Utilities
@@ -14,27 +14,27 @@ utils = Utilities()
 class HomeAdvantages(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'home_advantages')
-    
+
     @staticmethod
     def _check_init_team_row(d: defaultdict, team: str, season: int):
         if team not in d:
             d[team] = {}
         if (season, 'home', 'wins') not in d[team]:
-            d[team][(season, 'home', 'wins')] = 0 
-            d[team][(season, 'home', 'loses')] = 0 
-            d[team][(season, 'home', 'draws')] = 0 
-            d[team][(season, 'away', 'wins')] = 0 
-            d[team][(season, 'away', 'loses')] = 0 
-            d[team][(season, 'away', 'draws')] = 0 
+            d[team][(season, 'home', 'wins')] = 0
+            d[team][(season, 'home', 'loses')] = 0
+            d[team][(season, 'home', 'draws')] = 0
+            d[team][(season, 'away', 'wins')] = 0
+            d[team][(season, 'away', 'loses')] = 0
+            d[team][(season, 'away', 'draws')] = 0
 
     def _home_advantages_for_season(self, d: defaultdict, data: dict, season: int):
         for match in data:
             home_team = utils.clean_full_team_name(match['homeTeam']['name'])
             away_team = utils.clean_full_team_name(match['awayTeam']['name'])
-            
+
             self._check_init_team_row(d, home_team, season)
             self._check_init_team_row(d, away_team, season)
-                
+
             if match['score']['winner'] is not None:
                 home_goals = match['score']['fullTime']['homeTeam']
                 away_goals = match['score']['fullTime']['awayTeam']
@@ -91,7 +91,8 @@ class HomeAdvantages(DF):
             1) == 'homeAdvantage']
         # Check whether all teams in current season have played enough home games to meet threshold for use
         if (home_advantages[season]['home']['played'] <= threshold).all():
-            logging.info(f"Current season excluded from home advantages calculation, all teams have not played >= {threshold} home games.")
+            logging.info(
+                f"Current season excluded from home advantages calculation, all teams have not played >= {threshold} home games.")
             # Drop this current seasons column (start from previous season)
             home_advantages_cols = home_advantages_cols.drop(
                 season, level=0, axis=1)
@@ -193,7 +194,7 @@ class HomeAdvantages(DF):
 
         home_advantages = pd.DataFrame.from_dict(d, orient='index')
         home_advantages = home_advantages.fillna(0).astype(int)
-        
+
         # Calculate home advantages for each season
         for i in range(no_seasons):
             self._create_season_home_advantage_col(home_advantages, season-i)
@@ -203,8 +204,10 @@ class HomeAdvantages(DF):
             home_advantages, season, threshold)
 
         # Remove working columns
-        current_season_teams = self.get_season_teams(json_data['fixtures'][season])
-        home_advantages = self._clean_dataframe(home_advantages, current_season_teams)
+        current_season_teams = self.get_season_teams(
+            json_data['fixtures'][season])
+        home_advantages = self._clean_dataframe(
+            home_advantages, current_season_teams)
 
         if display:
             print(home_advantages)

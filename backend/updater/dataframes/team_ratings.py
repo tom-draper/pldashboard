@@ -39,37 +39,39 @@ class TeamRatings(DF):
             w = self._get_season_weightings(no_seasons - 1)  # Column weights
 
         for n in range(start_n, no_seasons):
-            team_ratings['totalRating'] += w[n - start_n] * team_ratings[f'rating{n}YAgo']
-    
+            team_ratings['totalRating'] += w[n - start_n] * \
+                team_ratings[f'rating{n}YAgo']
+
     @staticmethod
     def init_rating_columns(team_ratings: DataFrame, num_seasons: int):
         # Create column for each included season
         for n in range(0, num_seasons):
             team_ratings[f'rating{n}YAgo'] = np.nan
-    
-    def insert_rating_values(self, team_ratings: DataFrame, standings: Standings, 
+
+    def insert_rating_values(self, team_ratings: DataFrame, standings: Standings,
                              current_season: int, num_seasons: int):
         for team_name, row in standings.df.iterrows():
             for n in range(num_seasons):
-                rating = self._calc_rating(row[current_season-n]['points'], row[current_season-n]['gD'])
+                rating = self._calc_rating(
+                    row[current_season-n]['points'], row[current_season-n]['gD'])
                 team_ratings.at[team_name, f'rating{n}YAgo'] = rating
-    
+
     @staticmethod
     def replace_nan(team_ratings: DataFrame):
         # Replace any NaN with the lowest rating in the same column
         for col in team_ratings.columns:
             team_ratings[col] = team_ratings[col].replace(
                 np.nan, team_ratings[col].min())
-    
+
     @staticmethod
     def normalise_ratings(team_ratings: DataFrame, num_seasons):
         # Create normalised versions of the three ratings columns
         for n in range(0, num_seasons):
             team_ratings[f'rating{n}YAgo'] = (team_ratings[f'rating{n}YAgo']
-                                                        - team_ratings[f'rating{n}YAgo'].min()) \
+                                              - team_ratings[f'rating{n}YAgo'].min()) \
                 / (team_ratings[f'rating{n}YAgo'].max()
                    - team_ratings[f'rating{n}YAgo'].min())
-    
+
     @staticmethod
     def include_current_season(standings: Standings, current_season: int, games_threshold: float) -> bool:
         # Check whether current season data should be included in each team's total rating
@@ -80,12 +82,13 @@ class TeamRatings(DF):
                 f'Current season excluded from team ratings calculation -> all teams must have played {games_threshold} games.')
             include = False
         return include
-    
+
     @staticmethod
     def clean_dataframe(team_ratings: DataFrame) -> DataFrame:
         team_ratings = team_ratings.sort_values(
             by="totalRating", ascending=False)
-        team_ratings = team_ratings.rename(columns={'rating0YAgo': 'ratingCurrent'})
+        team_ratings = team_ratings.rename(
+            columns={'rating0YAgo': 'ratingCurrent'})
         return team_ratings
 
     @timebudget
@@ -135,7 +138,8 @@ class TeamRatings(DF):
         self.insert_rating_values(team_ratings, standings, season, num_seasons)
         self.replace_nan(team_ratings)
         self.normalise_ratings(team_ratings, num_seasons)
-        include_cs = self.include_current_season(standings, season, games_threshold)
+        include_cs = self.include_current_season(
+            standings, season, games_threshold)
         self._calc_total_rating_col(team_ratings, num_seasons, include_cs)
 
         team_ratings = self.clean_dataframe(team_ratings)

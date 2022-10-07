@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import Optional
 
@@ -5,7 +6,6 @@ import pandas as pd
 from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-import logging
 
 from dataframes.df import DF
 from dataframes.fixtures import Fixtures
@@ -14,9 +14,10 @@ from dataframes.home_advantages import HomeAdvantages
 
 utils = Utilities()
 
+
 class Upcoming(DF):
     def __init__(
-        self, current_season, d: DataFrame = DataFrame()):
+            self, current_season, d: DataFrame = DataFrame()):
         super().__init__(d, 'upcoming')
         from predictions import Predictions
         self.predictions = Predictions(current_season)
@@ -25,7 +26,7 @@ class Upcoming(DF):
     def get_predictions(self) -> dict[str, dict]:
         """ Extracts a predictions dictionary from the dataframe including 
             prediction details for each team about their upcoming game.
-            
+
             predictions = {
                 team_name: {
                     'date': date (datetime)
@@ -46,7 +47,7 @@ class Upcoming(DF):
             else:
                 home_initials = row[('nextTeam', '')]
                 away_initials = team
-                
+
             predictions[team] = {
                 'date': row[('date', '')].to_pydatetime(),
                 'homeInitials': utils.convert_team_name_or_initials(home_initials),
@@ -56,9 +57,9 @@ class Upcoming(DF):
                     'awayGoals': row[('prediction', 'awayGoals')]
                 }
             }
-        
+
         return predictions
-        
+
     @staticmethod
     def _get_next_game(
         team_name: str,
@@ -154,14 +155,17 @@ class Upcoming(DF):
         team_names: list[str]
     ):
         if team_names is None:
-            raise ValueError('❌ [ERROR] Cannot build upcoming dataframe: Teams names list empty')
+            raise ValueError(
+                '❌ [ERROR] Cannot build upcoming dataframe: Teams names list empty')
 
         data = json_data['fixtures'][season]
 
         for match in data:
             if match['status'] == 'FINISHED':
-                home_team = utils.clean_full_team_name(match['homeTeam']['name'])  # type: str
-                away_team = utils.clean_full_team_name(match['awayTeam']['name'])  # type: str
+                home_team = utils.clean_full_team_name(
+                    match['homeTeam']['name'])  # type: str
+                away_team = utils.clean_full_team_name(
+                    match['awayTeam']['name'])  # type: str
 
                 if home_team in team_names and away_team in team_names:
                     home_goals = match['score']['fullTime']['homeTeam']
@@ -177,10 +181,10 @@ class Upcoming(DF):
                         date,
                         result
                     )
-                    
-    def _merge_predictions_into_upcoming(self, upcoming: DataFrame, 
-                                        predictions: DataFrame) -> DataFrame:
-        upcoming = upcoming.rename(columns={column: (column, '') 
+
+    def _merge_predictions_into_upcoming(self, upcoming: DataFrame,
+                                         predictions: DataFrame) -> DataFrame:
+        upcoming = upcoming.rename(columns={column: (column, '')
                                             for column in upcoming.columns.tolist()})
         upcoming.columns = pd.MultiIndex.from_tuples(upcoming.columns)
         upcoming = pd.concat([upcoming, predictions], axis=1)
@@ -246,22 +250,25 @@ class Upcoming(DF):
             }
 
         for i in range(n_seasons):
-            self._append_season_prev_matches(d, json_data, season-i, team_names)
+            self._append_season_prev_matches(
+                d, json_data, season-i, team_names)
 
         # Format previous meeting dates as long, readable str
         self._sort_prev_matches_by_date(d)
 
         upcoming = pd.DataFrame.from_dict(d, orient='index')
-        
-        if form.get_current_matchday() == 38:   
+
+        if form.get_current_matchday() == 38:
             self.finished_season = True
         else:
             # Generate and insert new predictions for upcoming games
-            predictions = self.predictions.build(fixtures, form, upcoming, home_advantages)
-            upcoming = self._merge_predictions_into_upcoming(upcoming, predictions)
+            predictions = self.predictions.build(
+                fixtures, form, upcoming, home_advantages)
+            upcoming = self._merge_predictions_into_upcoming(
+                upcoming, predictions)
 
         upcoming.index.name = 'team'
-        
+
         if display:
             print(upcoming)
 

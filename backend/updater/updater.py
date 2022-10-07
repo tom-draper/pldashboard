@@ -160,7 +160,7 @@ class Updater:
     def save_predictions_to_db(self):
         predictions = self.data.upcoming.get_predictions()
         actual_scores = self.data.fixtures.get_actual_scores_new()
-        self.database.update_predictions_new(predictions, actual_scores)
+        self.database.update_predictions(predictions, actual_scores)
         self.database.update_actual_scores(actual_scores)
         
     def get_logo_urls(self) -> dict[str, str]:

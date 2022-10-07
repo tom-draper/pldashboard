@@ -49,16 +49,17 @@ class Utilities:
         'WHU': 'West Ham United',
         'WOL': 'Wolverhampton Wanderers',
         'NOT': 'Nottingham Forest',
-        
+
     })
 
     def convert_team_name_or_initials(self, team_name: str) -> str:
-        if (team_name in self.names_and_initials or 
-            team_name in self.names_and_initials.values()):
+        if (team_name in self.names_and_initials or
+                team_name in self.names_and_initials.values()):
             return self.names_and_initials[team_name]
         elif len(team_name) == 3:
             # Cannot convert initials to a full team name if not in dict
-            raise KeyError("Team name corresponding to input initials does not exist")
+            raise KeyError(
+                "Team name corresponding to input initials does not exist")
         else:
             # If no match found for a given full team name, shorten name to
             # create initials
@@ -73,17 +74,17 @@ class Utilities:
     def extract_str_score(score: str) -> tuple[str, str]:
         home, _, away = score.split(' ')
         return home, away
-    
+
     @staticmethod
     def extract_int_score_from_scoreline(score: str) -> tuple[int, int]:
         _, home, _, away, _ = score.split(' ')
         return int(home), int(away)
-    
+
     @staticmethod
     def extract_str_score_from_scoreline(score: str) -> tuple[str, str]:
         _, home, _, away, _ = score.split(' ')
         return home, away
-    
+
     @staticmethod
     def identical_fixtures(scoreline1: str, scoreline2: str) -> bool:
         identical = False
@@ -99,10 +100,11 @@ class Utilities:
                (pred_home_goals > pred_away_goals and act_home_goals > act_away_goals) or \
                (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)
 
-    def format_scoreline_str_from_str(self, team_name: str, opp_team_name: str, 
+    def format_scoreline_str_from_str(self, team_name: str, opp_team_name: str,
                                       score: str, at_home: bool) -> str:
         team_name_initials = self.convert_team_name_or_initials(team_name)
-        opp_team_name_initials = self.convert_team_name_or_initials(opp_team_name)
+        opp_team_name_initials = self.convert_team_name_or_initials(
+            opp_team_name)
 
         if at_home:
             scoreline = f'{team_name_initials} {score} {opp_team_name_initials}'
@@ -110,18 +112,19 @@ class Utilities:
             scoreline = f'{opp_team_name_initials} {score} {team_name_initials}'
         return scoreline
 
-    def format_scoreline_str(self, team_name: str, opp_team_name: str, scored: int, 
+    def format_scoreline_str(self, team_name: str, opp_team_name: str, scored: int,
                              conceded: int, at_home: bool) -> str:
         team_name_initials = self.convert_team_name_or_initials(team_name)
-        opp_team_name_initials = self.convert_team_name_or_initials(opp_team_name)
-        
+        opp_team_name_initials = self.convert_team_name_or_initials(
+            opp_team_name)
+
         # Construct prediction string for display...
         if at_home:
             scoreline = f'{team_name_initials} {scored} - {conceded} {opp_team_name_initials}'
         else:
             scoreline = f'{opp_team_name_initials} {conceded} - {scored} {team_name_initials}'
         return scoreline
-    
+
     def clean_full_team_name(self, full_team_name: str) -> str:
         """Remove FC, AFC postfixes and replace ampersand for 'and'."""
         return full_team_name.replace(' FC', '').replace('AFC ', '').replace('&', 'and')
