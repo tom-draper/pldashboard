@@ -75,6 +75,7 @@
 @font-face {
   font-family: "Radikal Medium";
   src: url("/fonts/Radikal-Medium.ttf");
+  font-display: swap;
 }
 
 * {

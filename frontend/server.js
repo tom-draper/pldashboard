@@ -14,9 +14,9 @@ server.get("*", function(req, res) {
     
     <link rel='stylesheet' href='/global.css'>
     <link rel='stylesheet' href='/bundle.css'>
-    <link rel='icon' href='img/favicon.ico'>
+    <link rel='icon' href='img/favicon.ico'> 
+    <script src="plotly-2.14.0.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js" type="text/javascript"></script>
     <div id="app">${html}</div>
     <script src="/bundle.js"></script>
   `);
