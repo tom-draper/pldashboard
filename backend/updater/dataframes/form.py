@@ -368,10 +368,13 @@ class Form(DF):
         else:
             team = utils.clean_full_team_name(match['awayTeam']['name'])
             opp_team = utils.clean_full_team_name(match['homeTeam']['name'])
-
-        matchday = match['matchday']
-
+            
         self.init_dict(d, team)
+        
+        matchday = match['matchday']
+        prev_matchday = matchday - 1
+        while (season, prev_matchday, 'team') not in d[team] and prev_matchday >= 0:
+            prev_matchday -= 1
 
         d[team][(season, matchday, 'team')] = opp_team
         d[team][(season, matchday, 'date')] = match['utcDate']
@@ -381,17 +384,13 @@ class Form(DF):
         d[team][(season, matchday, 'score')] = score
 
         gd = self._get_gd(score, home_team)
+        points = self._get_points(gd)
         d[team][(season, matchday, 'gD')] = gd
         d[team][(season, matchday, 'cumGD')] = gd
-        if matchday > 1 and (season, matchday-1, 'cumGD') in d[team]:
-            d[team][(season, matchday, 'cumGD')
-                    ] += d[team][(season, matchday-1, 'cumGD')]
-
-        points = self._get_points(gd)
         d[team][(season, matchday, 'cumPoints')] = points
-        if matchday > 1 and (season, matchday-1, 'cumPoints') in d[team]:
-            d[team][(season, matchday, 'cumPoints')
-                    ] += d[team][(season, matchday-1, 'cumPoints')]
+        if prev_matchday > 0:
+            d[team][(season, matchday, 'cumGD')] += d[team][(season, prev_matchday, 'cumGD')]
+            d[team][(season, matchday, 'cumPoints')] += d[team][(season, prev_matchday, 'cumPoints')]
 
         self._insert_form_string(d, team, gd, season, matchday, 5)
         self._insert_form_string(d, team, gd, season, matchday, 10)
