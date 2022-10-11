@@ -476,4 +476,5 @@ class Form(DF):
 
         if display:
             print(form)
+
         self.df = form

@@ -222,4 +222,4 @@ def run_dev():
     timebudget.report_at_exit()
 
 if __name__ == "__main__":
-    run_production()
+    run_dev()
