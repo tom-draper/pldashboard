@@ -1,5 +1,6 @@
 import logging
 from collections import defaultdict
+import math
 from typing import Iterable
 
 import numpy as np
@@ -157,7 +158,7 @@ class Form(DF):
         status = status.loc[:, (status == 'FINISHED').any()]
         matchday_nos = sorted(list(status.columns.get_level_values(0)))
         return matchday_nos
-
+    
     def _insert_cum_gd_pts(self, d, gd, pts, matchday_no, teams_matchdays, idx):
         cum_gd = gd
         cum_pts = pts
@@ -199,6 +200,24 @@ class Form(DF):
                                ascending=False,
                                inplace=True)
                 df[(season, matchday, 'position')] = list(range(1, 21))
+    
+    def _fill_teams_missing_matchday(self, form: DataFrame):
+        """Fill in missing essential matchday data with copies from previous matchday."""
+        current_season = max(form.columns.unique(level=0))
+        matchdays = list(sorted(form[current_season].columns.unique(level=0)))
+        teams = form[current_season].index.values
+        essential_cols = ('cumGD', 'cumPoints', 'form5', 'form10', 'formRating5', 'formRating10')
+        for matchday in matchdays:
+            if form[current_season][matchday].isnull().values.any():
+                for team in teams:
+                    value = form.at[team, (current_season, matchday, 'team')]
+                    if type(value) is float and math.isnan(value):
+                        # Team does not have a completed match in this matchday (postponed etc.)
+                        prev_matchday = matchday - 1
+                        while prev_matchday not in matchdays:
+                            prev_matchday -= 1
+                        for col in essential_cols:
+                            form.at[team, (current_season, matchday, col)] = form.at[team, (current_season, prev_matchday, col)]
 
     def _insert_form(self, d, form, team_ratings, team, matchday_no, teams_matchdays, idx, N):
         # Get last idx of matchday that has been played
@@ -295,7 +314,7 @@ class Form(DF):
         return form
 
     @staticmethod
-    def init_dict(d: dict, team: str):
+    def _init_dict(d: dict, team: str):
         if team not in d:
             d[team] = {}
 
@@ -360,6 +379,13 @@ class Form(DF):
             form_str = form_char
 
         d[team][(season, matchday, col_heading)] = form_str
+    
+    @staticmethod
+    def _prev_matchday(d: dict, team: str, matchday: int, season: int) -> int:
+        prev_matchday = matchday - 1
+        while (season, prev_matchday, 'team') not in d[team] and prev_matchday >= 0:
+            prev_matchday -= 1
+        return prev_matchday
 
     def _insert_team_matchday(self, d: dict, match: dict, team_ratings: TeamRatings, season: int, home_team: bool):
         if home_team:
@@ -369,12 +395,10 @@ class Form(DF):
             team = utils.clean_full_team_name(match['awayTeam']['name'])
             opp_team = utils.clean_full_team_name(match['homeTeam']['name'])
             
-        self.init_dict(d, team)
+        self._init_dict(d, team)
         
         matchday = match['matchday']
-        prev_matchday = matchday - 1
-        while (season, prev_matchday, 'team') not in d[team] and prev_matchday >= 0:
-            prev_matchday -= 1
+        prev_matchday = self._prev_matchday(d, team, matchday, season)
 
         d[team][(season, matchday, 'team')] = opp_team
         d[team][(season, matchday, 'date')] = match['utcDate']
@@ -469,6 +493,8 @@ class Form(DF):
 
         # Drop teams not in current season
         form = form.drop(index=form.index.difference(teams), axis=0)
+
+        self._fill_teams_missing_matchday(form)
 
         self._insert_position_columns_new(form)
 

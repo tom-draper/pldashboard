@@ -64,7 +64,7 @@
     for (let i = 0; i < comparisonTeams.length; i++) {
       // Remove spider plot for this teamName
       for (let i = 0; i < plotData.data.length; i++) {
-        if (plotData.data[i].name == comparisonTeams[i]) {
+        if (plotData.data[i].name == comparisonTeams[i] && comparisonTeams[i] != team) {
           plotData.data.splice(i, 1);
           break;
         }

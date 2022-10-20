@@ -226,7 +226,7 @@
     width: max-content;
     padding: 6px 20px;
     border-radius: 0 0 var(--border-radius) 0;
-    background: var(--purple);
+    background: var(--light-purple);
     margin: -1px 0 0 -1px; /* To avoid top and left gap when zooming out */
   }
 
@@ -294,7 +294,7 @@
   .next-game-prediction {
     border-radius: var(--border-radius);
     min-height: 97.5%;
-    border: 6px solid var(--purple);
+    border: 6px solid var(--light-purple);
   }
 
   .next-game-values {
@@ -370,7 +370,7 @@
     border-radius: 6px;
     padding: 10px 15px;
     color: white;
-    background: var(--purple);
+    background: var(--light-purple);
     width: fit-content;
     margin: auto auto 10px;
   }

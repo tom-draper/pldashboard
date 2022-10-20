@@ -163,8 +163,9 @@
   function buildPlotData(data: TeamData, team: string): PlotData {
     let matchdays = playedMatchdays(data, team)
     let [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
-    // Line required on plot to make match goalsScoredAndConcededGraph
-    // TODO: Improve solution
+    // Hidden line required on plot to make x-axis length match goalsScoredAndConcededGraph
+    // Line added to plotly bar chart changes x-axis physical length vs without
+    // TODO: Solution avoiding this hidden line
     let line = hiddenLine(cleanSheetsBar.x);
     let plotData = {
       data: [cleanSheetsBar, concededBar, line],

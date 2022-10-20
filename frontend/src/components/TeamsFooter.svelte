@@ -15,7 +15,6 @@
   .teams-footer {
     color: var(--purple);
     color: #c6c6c6;
-    /* opacity: 0.35; */
     padding: 1em 0 0.2em;
     height: auto;
     width: 100%;
@@ -28,7 +27,7 @@
   .version {
     margin: 10px auto;
     color: white;
-    background: var(--purple);
+    background: var(--light-purple);
     padding: 6px 10px;
     border-radius: 4px;
     width: fit-content;
