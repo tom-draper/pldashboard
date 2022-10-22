@@ -119,11 +119,11 @@
         <div class="past-results">
           {#if data.upcoming[team].prevMatches.length == 0}
             <div class="next-game-item prev-results-title no-prev-results">
-              No Previous Results
+              No previous results
             </div>
           {:else}
             <div class="next-game-item prev-results-title">
-              Previous Results
+              Previous results
             </div>
           {/if}
 
@@ -334,8 +334,9 @@
     place-items: center;
     color: rgb(181, 181, 181);
     color: rgba(0, 0, 0, 0.35);
+    background: rgba(181, 181, 181, 0.3);
     border-radius: var(--border-radius);
-    padding: 80px 0 100px;
+    padding: 100px 0;
   }
   .next-game-item {
     border-radius: 9px;
@@ -426,6 +427,10 @@
 
     .next-game-title {
       padding: 6px 15px;
+    }
+    .no-prev-results {
+      font-size: 0.8em;
+      padding: 3em 0;
     }
   }
   @media only screen and (max-width: 700px) {
