@@ -9,6 +9,7 @@
   import FixturesGraph from "../components/FixturesGraph.svelte";
   import FormOverTimeGraph from "../components/FormOverTimeGraph.svelte";
   import PositionOverTimeGraph from "../components/PositionOverTimeGraph.svelte";
+  import PointsOverTimeGraph from "../components/PointsOverTimeGraph.svelte";
   import GoalsScoredAndConcededGraph from "../components/goals_scored_and_conceded/ScoredConcededPerGameGraph.svelte";
   import CleanSheetsGraph from "../components/goals_scored_and_conceded/CleanSheetsGraph.svelte";
   import GoalsPerGame from "../components/goals_per_game/GoalsPerGame.svelte";
@@ -135,14 +136,18 @@
 
   async function fetchData(address: string): Promise<TeamData> {
     const response = await fetch(address);
-    let json = await response.json();
-    return json;
+    return await response.json();
+  }
+
+  function setTeam() {
+    team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
+    title = `Dashboard | ${team}`
   }
 
   function initDashboard() {
     // Set formatted team name so page header can display while fetching data
     if (hyphenatedTeam != null) {
-      team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
+      setTeam()
     }
     fetchData("https://pldashboard-backend.vercel.app/api/teams")
       .then((json: TeamData) => {
@@ -150,6 +155,7 @@
         if (hyphenatedTeam == null) {
           // If '/' searched, set current team to
           team = teams[0];
+          title = `Dashboard | ${team}`
           hyphenatedTeam = team.toLowerCase().replace(/ /g, "-");
           // Change url to /team-name without reloading page
           history.pushState({}, null, window.location.href + hyphenatedTeam);
@@ -171,7 +177,7 @@
 
   function switchTeam(newTeam: string) {
     hyphenatedTeam = newTeam;
-    team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
+    setTeam()
     currentMatchday = getCurrentMatchday(data, team);
     playedDates = playedMatchdayDates(data, team);
     window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
@@ -189,6 +195,7 @@
   let pageWidth: number;
   $: mobileView = pageWidth <= 700;
   const showBadge = false;
+  let title = "Dashboard"
   let team = "";
   let teams: string[] = []; // Used for nav bar links
   let currentMatchday: string, playedDates: Date[];
@@ -202,7 +209,7 @@
 </script>
 
 <svelte:head>
-  <title>Dashboard | {team}</title>
+  <title>{title}</title>
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
@@ -335,6 +342,20 @@
                 <h1 class="lowered">Position Over Time</h1>
                 <div class="graph full-row-graph">
                   <PositionOverTimeGraph
+                    {data}
+                    {team}
+                    {playedDates}
+                    {mobileView}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="position-over-time-graph row-graph">
+                <h1 class="lowered">Points Over Time</h1>
+                <div class="graph full-row-graph">
+                  <PointsOverTimeGraph
                     {data}
                     {team}
                     {playedDates}

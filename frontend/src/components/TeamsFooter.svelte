@@ -13,7 +13,6 @@
 
 <style scoped>
   .teams-footer {
-    color: var(--purple);
     color: #c6c6c6;
     padding: 1em 0 0.2em;
     height: auto;
@@ -27,7 +26,7 @@
   .version {
     margin: 10px auto;
     color: white;
-    background: var(--light-purple);
+    background: var(--purple);
     padding: 6px 10px;
     border-radius: 4px;
     width: fit-content;
