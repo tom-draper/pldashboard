@@ -10,7 +10,7 @@
   }
 
   let widths = [];
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 21; i++) {
     widths.push(35 + Math.floor(Math.random() * 8) * 5);
   }
 
@@ -32,6 +32,24 @@
         <div class="placeholder" style="width: {width}%" />
       {/each}
     {:else}
+      {#if team == "overview"}
+        <a href="/overview" class="team-link">
+          <div class="overview-selected">
+            <div class="overview">Overview</div>
+          </div>
+        </a>
+      {:else}
+        <button
+          class="team-link"
+          on:click={() => {
+            switchTeam("overview");
+          }}
+        >
+          <div class="overview-container">
+            <div class="overview">Overview</div>
+          </div>
+        </button>
+      {/if}
       {#each teams as _team, _ (_team)}
         {#if _team.toLowerCase().replace(/ /g, "-") == team}
           <a href="/{_team.toLowerCase().replace(/ /g, '-')}" class="team-link">
@@ -88,7 +106,7 @@
   }
   .team-links {
     font-size: 1em;
-    color: white;
+    color: var(--pink);
     display: grid;
   }
   button {
@@ -106,14 +124,26 @@
     padding: 0.4em 1.4em;
     /* width: fit-content; */
   }
-  .team-name {
-    color: #c600d8;
+  .overview {
+    padding: 0.4em 1.4em;
+  }
+  .overview-selected {
+    color: var(--purple) !important;
+    background: var(--green) !important;
+  }
+  /* .all-teams-container { */
+    /* margin-bottom: 1em; */
+    /* background: var(--light-purple) */
+  /* } */
+  /* .team-name { */
+    /* color: #c600d8; */
     /* background: linear-gradient(to right, #c600d8 0%, #bb23d6 100%); */
     /* Mask the color to the text, and remove the rest  */
     /* -webkit-background-clip: text; */
     /* Make the text fill color value transparent so the masked background color comes through */
     /* -webkit-text-fill-color: transparent; */
-  }
+  /* } */
+  :hover.overview-container,
   :hover.team-container {
     background: #2c002f;
     background: #140921;
