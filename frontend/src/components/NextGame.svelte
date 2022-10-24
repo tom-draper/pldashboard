@@ -6,33 +6,24 @@
   }
 
   function currentMatchday(data: TeamData, team: string): string {
-    let matchday: string;
     let matchdays = Object.keys(data.form[team][data._id])
     for (let i = matchdays.length - 1; i >= 0; i--) {
       if (data.form[team][data._id][matchdays[i]].score != null) {
-        matchday = matchdays[i]
-        break
+        return matchdays[i]
+        
       }
     }
-    return matchday
+    return null
   }
 
   function resultColour(prevMatch: any, home: boolean): string {
     if (home) {
-      if (prevMatch.homeGoals < prevMatch.awayGoals) {
-        return prevMatch.awayTeam
-      } else {
-        return prevMatch.homeTeam
-      }
+      return prevMatch.homeGoals < prevMatch.awayGoals ? prevMatch.awayTeam : prevMatch.homeTeam
     } else {
-      if (prevMatch.homeGoals > prevMatch.awayGoals) {
-        return prevMatch.homeTeam
-      } else {
-        return prevMatch.awayTeam
-      }
+      return prevMatch.homeGoals > prevMatch.awayGoals ? prevMatch.homeTeam : prevMatch.awayTeam
     }
   }
-
+  
   export let data: TeamData,
     team: string,
     showBadge: boolean,
@@ -41,7 +32,6 @@
     switchTeam: Function;
 </script>
 
-{#if data != undefined}
   {#if data.upcoming[team].nextTeam == null}
     <div class="next-game-prediction">
       <div class="next-game-season-complete">
@@ -194,7 +184,6 @@
       </div>
     </div>
   {/if}
-{/if}
 
 <style scoped>
   .left-side,
