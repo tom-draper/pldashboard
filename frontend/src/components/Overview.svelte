@@ -1,11 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { get_spread_update } from "svelte/internal";
-
-  function isToday(date: Date) {
-    let now = new Date();
-    return date.getDate() == now.getDate() && date.getMonth() == now.getMonth();
-  }
 
   type UpcomingMatch = {
     time: Date;
@@ -128,9 +122,7 @@
         <div class="standings">
           <div class="row">
             <div class="position"></div>
-            <div class="team-name">
-              
-            </div>
+            <div class="team-name"></div>
             <div class="won bold">W</div>
             <div class="drawn bold">D</div>
             <div class="lost bold">L</div>
