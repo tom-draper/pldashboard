@@ -103,15 +103,12 @@
 
     // Find median matchday date across all teams for each matchday
     let x = [];
-    for (let matchday of matchdays) {
+    for (let i = 0; i < matchdays.length; i++) {
       let matchdayDates = [];
-      Object.keys(data.standings).forEach((team: string) => {
-        matchdayDates.push(data.fixtures[team][matchday].date);
-      });
-      matchdayDates = matchdayDates.map((val) => {
-        return new Date(val);
-      });
-      matchdayDates = matchdayDates.sort();
+      for (let team in data.standings) {
+        matchdayDates.push(new Date(data.fixtures[team][matchdays[i]].date));
+      }
+      matchdayDates.sort();
       x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
     }
     x.sort(function (a, b) {
@@ -121,17 +118,16 @@
   }
 
   function getCurrentMatchday(data: TeamData, team: string): null | string {
-    let currentMatchday = null;
-    if (Object.keys(data.form[team][data._id]).length > 0) {
+    let matchdays = Object.keys(data.form[team][data._id]).reverse()
+    if (matchdays.length > 0) {
       // Largest matchday with score is current matchday
-      for (let matchday of Object.keys(data.form[team][data._id]).reverse()) {
+      for (let matchday of matchdays) {
         if (data.form[team][data._id][matchday].score != null) {
-          currentMatchday = matchday;
-          break;
+          return matchday;
         }
       }
     }
-    return currentMatchday;
+    return null;
   }
 
   async function fetchData(address: string): Promise<TeamData> {
