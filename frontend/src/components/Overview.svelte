@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { get_spread_update } from "svelte/internal";
 
   function isToday(date: Date) {
-    let now = date;
+    let now = new Date();
     return date.getDate() == now.getDate() && date.getMonth() == now.getMonth();
   }
 
@@ -17,7 +18,7 @@
     for (let team in data.upcoming) {
       let date = new Date(data.upcoming[team].date);
       let atHome = data.upcoming[team].atHome;
-      if (isToday(date) && atHome) {
+      if (atHome) {
         upcoming.push({
           time: date,
           home: team,
@@ -45,36 +46,41 @@
   <div class="upcoming-matches-container">
     {#if upcoming != undefined}
       <div class="upcoming-matches">
-        <div class="upcoming-title">Upcoming</div>
-        {#each upcoming as match, _}
-          <div class="upcoming-match">
-            <div class="upcoming-match-time">
-              {match.time.toLocaleTimeString()}
+          <div class="upcoming-title">Upcoming</div>
+          {#each upcoming as match, i}
+          {#if i == 0 || match.time.getDate() != upcoming[i-1].time.getDate()}
+            <div class="upcoming-match-date">
+              {match.time.toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </div>
-            <div class="upcoming-match-teams">
-              <div
-                class="upcoming-match-home"
-                style="background: var(--{match.home
-                          .toLowerCase()
-                          .replace(/ /g, '-')}); color: var(--{match.home
-                  .toLowerCase()
-                  .replace(/ /g, '-')}-secondary)"
-              >
-                {toInitials(match.home)}
+          {/if}
+            <div class="upcoming-match">
+              <div class="upcoming-match-time">
+                {match.time.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
               </div>
-              <div
-                class="upcoming-match-away"
-                style="background: var(--{match.away
-                  .toLowerCase()
-                  .replace(/ /g, '-')}); color: var(--{match.away
-                  .toLowerCase()
-                  .replace(/ /g, '-')}-secondary)"
-              >
-                {toInitials(match.away)}
+              <div class="upcoming-match-teams">
+                <div
+                  class="upcoming-match-home"
+                  style="background: var(--{match.home
+                            .toLowerCase()
+                            .replace(/ /g, '-')}); color: var(--{match.home
+                    .toLowerCase()
+                    .replace(/ /g, '-')}-secondary)"
+                >
+                  {toInitials(match.home)}
+                </div>
+                <div
+                  class="upcoming-match-away"
+                  style="background: var(--{match.away
+                    .toLowerCase()
+                    .replace(/ /g, '-')}); color: var(--{match.away
+                    .toLowerCase()
+                    .replace(/ /g, '-')}-secondary)"
+                >
+                  {toInitials(match.away)}
+                </div>
               </div>
             </div>
-          </div>
-        {/each}
+          {/each}
       </div>
     {/if}
   </div>
@@ -90,7 +96,11 @@
   }
   .upcoming-match {
     display: flex;
-    margin: 10px 0;
+    margin-bottom: 12px;
+  }
+  .upcoming-match-date {
+    text-align: center;
+    margin: 0.9em 0 0.4em 90px;
   }
   .upcoming-title {
     font-size: 2em;
@@ -102,7 +112,7 @@
     font-size: 13px;
     text-align: right;
     margin: auto 10px auto auto;
-    width: 80px;
+    width: 60px;
   }
   .upcoming-match-teams {
     display: flex;
