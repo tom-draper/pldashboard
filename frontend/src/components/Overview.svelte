@@ -351,14 +351,16 @@
       </div>
       <div class="fixtures-table">
           <div class="fixtures-teams-container">
-            {#each fixtures as row, _}
+            {#each fixtures as row, i}
               <div class="fixtures-table-row">
                 <div class="fixtures-team"
                 style="background: var(--{row.team
                       .toLowerCase()
                       .replace(/ /g, '-')}); color: var(--{row.team
                       .toLowerCase()
-                      .replace(/ /g, '-')}-secondary)">
+                      .replace(/ /g, '-')}-secondary);
+                      {i == 0 ? 'border-radius: 4px 4px 0 0' : ''}
+                      {i == fixtures.length-1 ? 'border-radius: 0 0 4px 4px' : ''}">
                   {toInitials(row.team)}
                 </div>
               </div>

@@ -11,7 +11,7 @@
 
 <Router {url}>
   <Route path="/">
-    <Dashboard hyphenatedTeam="overview" />
+    <Dashboard hyphenatedTeam="{null}" />
   </Route>
   <Route path="/:team" let:params>
     <Dashboard hyphenatedTeam={params.team} />

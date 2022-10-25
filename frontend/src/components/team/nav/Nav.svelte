@@ -32,24 +32,7 @@
         <div class="placeholder" style="width: {width}%" />
       {/each}
     {:else}
-      {#if team == "overview"}
-        <a href="/overview" class="team-link">
-          <div class="overview-selected">
-            <div class="overview">Overview</div>
-          </div>
-        </a>
-      {:else}
-        <button
-          class="team-link"
-          on:click={() => {
-            switchTeam("overview");
-          }}
-        >
-          <div class="overview-container">
-            <div class="overview">Overview</div>
-          </div>
-        </button>
-      {/if}
+
       {#each teams as _team, _ (_team)}
         {#if _team.toLowerCase().replace(/ /g, "-") == team}
           <a href="/{_team.toLowerCase().replace(/ /g, '-')}" class="team-link">
@@ -82,6 +65,25 @@
           </button>
         {/if}
       {/each}
+      <div class="divider"></div>
+      {#if team == "overview"}
+        <a href="/overview" class="team-link">
+          <div class="overview-selected">
+            <div class="overview">Overview</div>
+          </div>
+        </a>
+      {:else}
+        <button
+          class="team-link"
+          on:click={() => {
+            switchTeam("overview");
+          }}
+        >
+          <div class="overview-container">
+            <div class="overview">Overview</div>
+          </div>
+        </button>
+      {/if}
     {/if}
   </div>
   <div class="close">
@@ -130,6 +132,14 @@
   .overview-selected {
     color: var(--purple) !important;
     background: var(--green) !important;
+  }
+
+  .divider {
+    height: 15px;
+    border-bottom: 1px solid rgba(198, 0, 216, 0.4);
+    width: 85%;
+    margin: auto;
+    margin-bottom: 15px;
   }
   /* .all-teams-container { */
     /* margin-bottom: 1em; */

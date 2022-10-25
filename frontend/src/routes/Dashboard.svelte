@@ -138,19 +138,27 @@
 
   function initDashboard() {
     // Set formatted team name so page header can display while fetching data
-    if (hyphenatedTeam != 'overview') {
-      team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
-      title = `Dashboard | ${team}`;
-    } else if (hyphenatedTeam == 'overview') {
+    console.log(hyphenatedTeam)
+    if (hyphenatedTeam == 'overview') {
       team = "Overview";
       title = `Dashboard | ${team}`;
       hyphenatedTeam = "overview";
-    } 
+    } else if (hyphenatedTeam != null) {
+      team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
+      title = `Dashboard | ${team}`;
+    }
 
     fetchData("https://pldashboard-backend.vercel.app/api/teams")
       .then((json: TeamData) => {
         teams = Object.keys(json.standings);
-        if (hyphenatedTeam != "overview") {
+        if (hyphenatedTeam == null) {
+          // If '/' searched, set current team to
+          team = teams[0];
+          title = `Dashboard | ${team}`
+          hyphenatedTeam = team.toLowerCase().replace(/ /g, "-");
+          // Change url to /team-name without reloading page
+          history.pushState({}, null, window.location.href + hyphenatedTeam);
+        } else if (team != 'Overview') {
           if (!teams.includes(team)) {
             window.location.href = "/error";
           }
