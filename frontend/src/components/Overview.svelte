@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import FixturesGraph from "./FixturesGraph.svelte";
 
   type UpcomingMatch = {
     time: Date;
@@ -54,13 +53,49 @@
     return standings;
   }
 
+  function applyRatingFixturesScaling() {
+    if (fixturesScaling == 'rating') {
+      return
+    }
+    fixturesScaling = 'rating'
+
+    for (let teamFixtures of fixtures) {
+      for (let match of teamFixtures.matches) {
+        match.colour = fixtureColourSkewed(data.teamRatings[match.team].totalRating);
+      }
+    }
+    fixtures = fixtures
+  }
+  
+  function applyRatingFormScaling() {
+    if (fixturesScaling == 'form') {
+      return
+    }
+    fixturesScaling = 'form'
+    
+    for (let teamFixtures of fixtures) {
+      for (let match of teamFixtures.matches) {
+        let form = 0.5;
+        let matchdays = Object.keys(data.form[teamFixtures.team][data._id]).reverse()
+        for (let matchday of matchdays) {
+          if (data.form[match.team][data._id][matchday].formRating5 != null) {
+            form = data.form[match.team][data._id][matchday].formRating5; 
+          }
+        }
+        match.colour = fixtureColour(form);
+      }
+    }
+    console.log(fixtures)
+    fixtures = fixtures
+  }
+
   type Fixtures = {
     team: string,
     matches: {
       team: string,
       atHome: boolean,
       status: string,
-      rating: number
+      colour: string
     }[]
   }
 
@@ -74,7 +109,7 @@
           team: match.team,
           atHome: match.atHome,
           status: match.status,
-          rating: data.teamRatings[match.team].totalRating
+          colour: fixtureColourSkewed(data.teamRatings[match.team].totalRating)
         })
       }
       fixtures.push({
@@ -85,36 +120,62 @@
     return fixtures
   }
 
-  function fixtureColour(rating: number) {
-    if (rating < 0.05) {
+  function fixtureColourSkewed(scaleVal: number) {
+    if (scaleVal < 0.05) {
       return "#00fe87"
-    } else if (rating < 0.1) {
+    } else if (scaleVal < 0.1) {
       return "#63fb6e"
-    } else if (rating < 0.15) {
+    } else if (scaleVal < 0.15) {
       return "#8df755"
-    } else if (rating < 0.2) {
+    } else if (scaleVal < 0.2) {
       return "#aef23e"
-    } else if (rating < 0.25) {
+    } else if (scaleVal < 0.25) {
       return "#cbec27"
-    } else if (rating < 0.3) {
+    } else if (scaleVal < 0.3) {
       return "#e6e50f"
-    } else if (rating < 0.35) {
+    } else if (scaleVal < 0.35) {
       return "#ffdd00"
-    } else if (rating < 0.4) {
+    } else if (scaleVal < 0.4) {
       return "#ffc400"
-    } else if (rating < 0.45) {
+    } else if (scaleVal < 0.45) {
       return "#ffab00"
-    } else if (rating < 0.5) {
+    } else if (scaleVal < 0.5) {
       return "#ff9000"
-    } else if (rating < 0.55) {
+    } else if (scaleVal < 0.55) {
       return "#ff7400"
-    } else if (rating < 0.6) {
+    } else if (scaleVal < 0.6) {
       return "#ff5618"
-    } else if (rating < 0.65) {
+    } else  {
       return "#f83027"
-    } else if (rating > 0.7) {
-      return "#f83027"
-    } else {
+    }
+  }
+
+  function fixtureColour(scaleVal: number) {
+    if (scaleVal < 0.2) {
+      return "#00fe87"
+    } else if (scaleVal < 0.25) {
+      return "#63fb6e"
+    } else if (scaleVal < 0.35) {
+      return "#8df755"
+    } else if (scaleVal < 0.4) {
+      return "#aef23e"
+    } else if (scaleVal < 0.45) {
+      return "#cbec27"
+    } else if (scaleVal < 0.5) {
+      return "#e6e50f"
+    } else if (scaleVal < 0.55) {
+      return "#ffdd00"
+    } else if (scaleVal < 0.60) {
+      return "#ffc400"
+    } else if (scaleVal < 0.65) {
+      return "#ffab00"
+    } else if (scaleVal < 0.7) {
+      return "#ff9000"
+    } else if (scaleVal < 0.75) {
+      return "#ff7400"
+    } else if (scaleVal < 0.8) {
+      return "#ff5618"
+    } else  {
       return "#f83027"
     }
   }
@@ -134,6 +195,8 @@
   let upcoming: UpcomingMatch[];
   let standings: Standings[];
   let fixtures: Fixtures[];
+  $: fixtures;
+  let fixturesScaling = "rating"
   let currentTime: string;
   onMount(() => {
     upcoming = upcomingMatches();
@@ -149,14 +212,14 @@
 <div id="page-content">
   <div class="row">
     <div class="left">
-      <div class="summary">
+      <!-- <div class="summary">
         <div class="current-date">
           {currentTime}
         </div>
         <div class="matchday">
           Matchday: <span style="color: var(--green)">14</span>
         </div>
-      </div>
+      </div> -->
       <div class="upcoming-matches-container">
         {#if upcoming != undefined}
           <div class="upcoming-matches">
@@ -272,6 +335,20 @@
     <div class="fixtures">
       <div class="fixtures-title">Fixtures</div>
       {#if fixtures != undefined}
+      <div class="scale-btns">
+        <div class="scale-team-ratings">
+          <button id="rating-scale-btn" class="scale-btn {fixturesScaling == 'rating' ? 'scaling-selected' : ''}"
+            on:click={applyRatingFixturesScaling}>
+            Rating
+          </button>
+        </div>
+        <div class="scale-team-form">
+          <button id="form-scale-btn" class="scale-btn {fixturesScaling == 'form' ? 'scaling-selected' : ''}"
+            on:click={applyRatingFormScaling}>
+            Form
+          </button>
+        </div>
+      </div>
       <div class="fixtures-table">
           <div class="fixtures-teams-container">
             {#each fixtures as row, _}
@@ -299,7 +376,7 @@
               <div class="fixtures-table-row">
                 <div class="fixtures-matches">
                   {#each row.matches as match, _}
-                    <div class="match" style="background: {fixtureColour(match.rating)}">{toInitials(match.team)}</div>
+                    <div class="match" style="background: {match.colour}">{toInitials(match.team)}</div>
                   {/each}
                 </div>
               </div>
@@ -312,6 +389,9 @@
 </div>
 
 <style scoped>
+  #page-content {
+    margin-top: 3em;
+  }
   .row {
     display: flex;
     margin-bottom: 2em;
@@ -336,7 +416,7 @@
     margin-top: 10px;
   }
   .left {
-    width: min(40%, 550px);
+    width: min(40%, 500px);
   }
   /* .upcoming-matches {
     width: 90%;
@@ -373,7 +453,7 @@
   .upcoming-match-home,
   .upcoming-match-away {
     flex: 1;
-    padding: 3px 10px;
+    padding: 4px 10px;
   }
   .upcoming-match-home {
     border-radius: 4px 0 0 4px;
@@ -446,13 +526,14 @@
   }
   .fixtures {
     width: calc(100% - 220px);
+    position: relative;
   }
   .fixtures-table {
     display: flex;
     margin: 20px 30px 0 30px;
   }
   .fixtures-matches-container {
-    overflow-y: scroll;
+    overflow-x: scroll;
     display: block;
   }
   .fixtures-teams-container {
@@ -476,5 +557,26 @@
   .match {
     text-align: center;
     width: 40px;
+  }
+  .scale-btns {
+    position: absolute;
+    top: 6px;
+    right: 30px;
+    display: flex;
+  }
+  .scale-team-ratings,
+  .scale-team-form {
+    padding: 5px 0;
+  }
+  .scale-team-ratings {
+    padding-right: 10px;
+  }
+  .scaling-selected {
+    background: var(--purple);
+    color: var(--green);
+  }
+  .scale-btn {
+    border-radius: 4px;
+    cursor: pointer;
   }
 </style>
