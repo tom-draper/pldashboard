@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import OverviewFooter from "../components/OverviewFooter.svelte";
 
   type UpcomingMatch = {
     time: Date;
@@ -212,14 +213,6 @@
 <div id="page-content">
   <div class="row">
     <div class="left">
-      <!-- <div class="summary">
-        <div class="current-date">
-          {currentTime}
-        </div>
-        <div class="matchday">
-          Matchday: <span style="color: var(--green)">14</span>
-        </div>
-      </div> -->
       <div class="upcoming-matches-container">
         {#if upcoming != undefined}
           <div class="upcoming-matches">
@@ -359,8 +352,7 @@
                       .replace(/ /g, '-')}); color: var(--{row.team
                       .toLowerCase()
                       .replace(/ /g, '-')}-secondary);
-                      {i == 0 ? 'border-radius: 4px 4px 0 0' : ''}
-                      {i == fixtures.length-1 ? 'border-radius: 0 0 4px 4px' : ''}">
+                      {i == 0 ? 'border-top: 2px solid black' : ''}">
                   {toInitials(row.team)}
                 </div>
               </div>
@@ -377,8 +369,10 @@
             {#each fixtures as row, _}
               <div class="fixtures-table-row">
                 <div class="fixtures-matches">
-                  {#each row.matches as match, _}
-                    <div class="match" style="background: {match.colour}">{toInitials(match.team)}</div>
+                  {#each row.matches as match, i}
+                    <div 
+                    class="match" 
+                    style="background: {match.colour}; {match.status == 'FINISHED' ? 'filter: grayscale(100%)' : ''} {i == row.matches.length - 1 ? 'border-right: 3px solid black' : ''}">{`${toInitials(match.team)} (${match.atHome ? 'H' : 'A'}`})</div>
                   {/each}
                 </div>
               </div>
@@ -389,6 +383,7 @@
     </div>
   </div>
 </div>
+<OverviewFooter />
 
 <style scoped>
   #page-content {
@@ -401,17 +396,10 @@
   .summary {
     padding: 30px 30px;
     border-radius: 9px;
-    /* border: 5px solid black; */
-    /* position: absolute;
-    top: -75px;
-    left: 30px; */
     margin: 0 0 37px 65px;
-    /* margin: 40px 55px 0 65px; */
     font-size: 1.2em;
     background: var(--purple);
     color: white;
-    /* display: flex; */
-    /* width: 400px; */
   }
   .matchday {
     margin-left: auto;
@@ -420,9 +408,6 @@
   .left {
     width: min(40%, 500px);
   }
-  /* .upcoming-matches {
-    width: 90%;
-  } */
   .upcoming-match {
     display: flex;
     margin-bottom: 12px;
@@ -545,9 +530,10 @@
     display: flex;
   }
   .fixtures-team {
-    min-width: 40px;
+    min-width: 60px;
     text-align: center;
-    margin-right: 20px;
+    border-right: 3px solid black;
+    border-left: 3px solid black;
   }
   .fixtures-matches {
     display: flex;
@@ -558,7 +544,11 @@
   }
   .match {
     text-align: center;
-    width: 40px;
+    width: 60px;
+    border-bottom: 2px solid black;
+  }
+  .fixtures-team {
+    border-bottom: 2px solid black;
   }
   .scale-btns {
     position: absolute;
