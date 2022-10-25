@@ -185,30 +185,15 @@
     }
   }
 
-  function updateClock() {
-    currentTime = new Date().toLocaleDateString("en-GB", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit"
-            })
-    setTimeout(updateClock, 1000)
-  }
-
   let upcoming: UpcomingMatch[];
   let standings: Standings[];
   let fixtures: Fixtures[];
   $: fixtures;
   let fixturesScaling = "rating"
-  let currentTime: string;
   onMount(() => {
     upcoming = upcomingMatches();
     standings = standingsTable();
     fixtures = fixturesTable(standings);
-    updateClock()
-    console.log(upcoming);
   });
 
   export let data: TeamData, toInitials: Function;
@@ -405,24 +390,12 @@
     display: flex;
     margin-bottom: 2em;
   }
-  .summary {
-    padding: 30px 30px;
-    border-radius: 9px;
-    margin: 0 0 37px 65px;
-    font-size: 1.2em;
-    background: var(--purple);
-    color: white;
-  }
-  .matchday {
-    margin-left: auto;
-    margin-top: 10px;
-  }
   .left {
     width: min(40%, 500px);
   }
   .upcoming-match {
     display: flex;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
   .upcoming-match-date {
     text-align: center;
