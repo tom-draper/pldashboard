@@ -62,7 +62,8 @@
 
     for (let teamFixtures of fixtures) {
       for (let match of teamFixtures.matches) {
-        match.colour = fixtureColourSkewed(data.teamRatings[match.team].totalRating);
+        let homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage
+        match.colour = fixtureColourSkewed(data.teamRatings[match.team].totalRating + homeAdvantage);
       }
     }
     fixtures = fixtures
@@ -77,13 +78,15 @@
     for (let teamFixtures of fixtures) {
       for (let match of teamFixtures.matches) {
         let form = 0.5;
-        let matchdays = Object.keys(data.form[teamFixtures.team][data._id]).reverse()
+        let matchdays = Object.keys(data.form[teamFixtures.team][data._id]).reverse();
+        let homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage
         for (let matchday of matchdays) {
           if (data.form[match.team][data._id][matchday].formRating5 != null) {
+
             form = data.form[match.team][data._id][matchday].formRating5; 
           }
         }
-        match.colour = fixtureColour(form);
+        match.colour = fixtureColour(form + homeAdvantage);
       }
     }
     console.log(fixtures)
@@ -106,11 +109,12 @@
       let matches = [];
       for (let matchday in data.fixtures[row.team]) {
         let match = data.fixtures[row.team][matchday]
+        let homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage
         matches.push({
           team: match.team,
           atHome: match.atHome,
           status: match.status,
-          colour: fixtureColourSkewed(data.teamRatings[match.team].totalRating)
+          colour: fixtureColourSkewed(data.teamRatings[match.team].totalRating + homeAdvantage)
         })
       }
       fixtures.push({
@@ -269,16 +273,18 @@
           <div class="standings-title">Standings</div>
           <div class="standings">
             <div class="table-row">
-              <div class="position" />
-              <div class="team-name" />
-              <div class="won bold">W</div>
-              <div class="drawn bold">D</div>
-              <div class="lost bold">L</div>
-              <div class="gf bold">GF</div>
-              <div class="ga bold">GA</div>
-              <div class="gd bold">GD</div>
-              <div class="played bold">Played</div>
-              <div class="points bold">Points</div>
+              <div class="standings-position" />
+              <div class="standings-team-name" />
+              <div class="standings-won bold">W</div>
+              <div class="standings-drawn bold">D</div>
+              <div class="standings-lost bold">L</div>
+              <div class="standings-gf bold">GF</div>
+              <div class="standings-ga bold">GA</div>
+              <div class="standings-gd bold">GD</div>
+              <div class="standings-played bold">Played</div>
+              <div class="standings-points bold">Points</div>
+              <div class="standings-rating bold">Rating</div>
+              <div class="standings-form bold">Form</div>
             </div>
             {#each standings as row, i}
               <div
@@ -287,35 +293,41 @@
                   ? 'el'
                   : ''} {i > 16 ? 'relegation' : ''}"
               >
-                <div class="position">
+                <div class="standings-position">
                   {row.position}
                 </div>
-                <div class="team-name">
+                <div class="standings-team-name">
                   {row.team}
                 </div>
-                <div class="won">
+                <div class="standings-won">
                   {row.won}
                 </div>
-                <div class="drawn">
+                <div class="standings-drawn">
                   {row.drawn}
                 </div>
-                <div class="lost">
+                <div class="standings-lost">
                   {row.lost}
                 </div>
-                <div class="gf">
+                <div class="standings-gf">
                   {row.gF}
                 </div>
-                <div class="ga">
+                <div class="standings-ga">
                   {row.gA}
                 </div>
-                <div class="gd">
+                <div class="standings-gd">
                   {row.gD}
                 </div>
-                <div class="played">
+                <div class="standings-played">
                   {row.played}
                 </div>
-                <div class="points">
+                <div class="standings-points">
                   {row.points}
+                </div>
+                <div class="standings-rating">
+                  {data.teamRatings[row.team].totalRating.toFixed(2)}
+                </div>
+                <div class="standings-form">
+                  {data.form[row.team][data._id][13].formRating5.toFixed(2)}
                 </div>
               </div>
             {/each}
@@ -372,7 +384,7 @@
                   {#each row.matches as match, i}
                     <div 
                     class="match" 
-                    style="background: {match.colour}; {match.status == 'FINISHED' ? 'filter: grayscale(100%)' : ''} {i == row.matches.length - 1 ? 'border-right: 3px solid black' : ''}">{`${toInitials(match.team)} (${match.atHome ? 'H' : 'A'}`})</div>
+                    style="background: {match.colour}; {match.status == 'FINISHED' ? 'filter: grayscale(100%)' : ''} {i == row.matches.length - 1 ? 'border-right: 2px solid black' : ''}">{`${toInitials(match.team)} (${match.atHome ? 'H' : 'A'}`})</div>
                   {/each}
                 </div>
               </div>
@@ -450,66 +462,77 @@
     border-radius: 0 4px 4px 0;
   }
   .standings-container {
-    /* flex-grow: 1; */
-    margin: 0 40px;
+    flex-grow: 1;
+    margin: 0 260px 0 40px;
   }
   .standings {
     margin: 10px auto 0;
-    width: fit-content;
+    /* width: fit-content; */
+    /* flex-grow: 1; */
   }
   .table-row {
     display: flex;
     padding: 4px 20px 4px 10px;
     border-radius: 4px;
   }
-  .position {
+  .standings-position {
     width: 20px;
     margin-right: 15px;
     text-align: right;
   }
-  .team-name {
+  .standings-team-name {
     width: 210px;
   }
   .bold {
     font-weight: 800;
   }
-  .won,
-  .drawn,
-  .lost {
-    width: 30px;
+  .standings-won,
+  .standings-drawn,
+  .standings-lost {
+    /* width: 30px; */
+    flex: 1;
     text-align: right;
   }
-  .gf,
-  .ga,
-  .gd {
-    width: 40px;
+  .standings-gf,
+  .standings-ga,
+  .standings-gd {
+    /* width: 40px; */
+    flex: 1;
     text-align: right;
   }
-  .played,
-  .points {
-    width: 65px;
+  .standings-rating,
+  .standings-form,
+  .standings-played,
+  .standings-points {
+    /* width: 65px; */
+    flex: 1;
     text-align: right;
+  }
+  .standings-points {
+    margin-right: 10%;
   }
   .grey-row {
     background: rgb(236, 236, 236);
   }
   .cl {
-    background: rgba(0, 254, 135, 0.25);
+    background: rgba(0, 254, 135, 0.6);
   }
   .cl.grey-row {
-    background: rgb(0, 254, 135, 0.6);
+    background: rgb(0, 254, 135, 1);
   }
   .el {
-    background: rgba(17, 182, 208, 0.25);
+    background: rgba(17, 182, 208, 0.7);
+    background: rgba(2, 238, 255, 0.6)
   }
   .el.grey-row {
-    background: rgba(17, 182, 208, 0.6);
+    background: rgba(17, 182, 208, 1);
+    background: #02eeff;
   }
   .relegation {
-    background: rgba(248, 48, 39, 0.25);
+    background: rgba(248, 48, 39, 0.7);
   }
   .relegation.grey-row {
-    background: rgb(248, 48, 39, 0.6);
+    background: rgb(248, 48, 39, 1);
   }
   .fixtures {
     width: calc(100% - 220px);
@@ -532,8 +555,8 @@
   .fixtures-team {
     min-width: 60px;
     text-align: center;
-    border-right: 3px solid black;
-    border-left: 3px solid black;
+    border-right: 2px solid black;
+    border-left: 2px solid black;
   }
   .fixtures-matches {
     display: flex;
