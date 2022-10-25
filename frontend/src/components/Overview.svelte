@@ -272,20 +272,39 @@
     <div class="fixtures">
       <div class="fixtures-title">Fixtures</div>
       {#if fixtures != undefined}
-        <div class="fixtures-table">
-          {#each fixtures as row, _}
-            <div class="fixtures-table-row">
-              <div class="fixtures-team">
-                {row.team}
+      <div class="fixtures-table">
+          <div class="fixtures-teams-container">
+            {#each fixtures as row, _}
+              <div class="fixtures-table-row">
+                <div class="fixtures-team"
+                style="background: var(--{row.team
+                      .toLowerCase()
+                      .replace(/ /g, '-')}); color: var(--{row.team
+                      .toLowerCase()
+                      .replace(/ /g, '-')}-secondary)">
+                  {toInitials(row.team)}
+                </div>
               </div>
+            {/each}
+          </div>
+          <div class="fixtures-matches-container">
+            <div class="fixtures-table-row">
               <div class="fixtures-matches">
-
-                {#each row.matches as match, _}
-                  <div class="match" style="background: {fixtureColour(match.rating)}">{toInitials(match.team)}</div>
+                {#each Array(38) as _, i}
+                  <div class="match">{i+1}</div>
                 {/each}
               </div>
             </div>
-          {/each}
+            {#each fixtures as row, _}
+              <div class="fixtures-table-row">
+                <div class="fixtures-matches">
+                  {#each row.matches as match, _}
+                    <div class="match" style="background: {fixtureColour(match.rating)}">{toInitials(match.team)}</div>
+                  {/each}
+                </div>
+              </div>
+            {/each}
+          </div>
         </div>
       {/if}
     </div>
@@ -425,25 +444,37 @@
   .relegation.grey-row {
     background: rgb(248, 48, 39, 0.6);
   }
+  .fixtures {
+    width: calc(100% - 220px);
+  }
   .fixtures-table {
-    width: calc(100vw - 300px);
+    display: flex;
+    margin: 20px 30px 0 30px;
+  }
+  .fixtures-matches-container {
     overflow-y: scroll;
     display: block;
-    margin-left: 30px;
-    margin-top: 20px;
+  }
+  .fixtures-teams-container {
+    margin-top: 25px;
   }
   .fixtures-table-row {
     display: flex;
   }
   .fixtures-team {
-    min-width: 200px;
+    min-width: 40px;
+    text-align: center;
+    margin-right: 20px;
   }
   .fixtures-matches {
     display: flex;
   }
+  .fixtures-team,
   .match {
-    width: 40px;
-    text-align: center;
     padding: 3px 8px;
+  }
+  .match {
+    text-align: center;
+    width: 40px;
   }
 </style>
