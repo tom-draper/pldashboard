@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import FixturesGraph from "./FixturesGraph.svelte";
 
   type UpcomingMatch = {
     time: Date;
@@ -53,6 +54,71 @@
     return standings;
   }
 
+  type Fixtures = {
+    team: string,
+    matches: {
+      team: string,
+      atHome: boolean,
+      status: string,
+      rating: number
+    }[]
+  }
+
+  function fixturesTable(standings: Standings[]): Fixtures[] {
+    let fixtures = [];
+    for (let row of standings) {
+      let matches = [];
+      for (let matchday in data.fixtures[row.team]) {
+        let match = data.fixtures[row.team][matchday]
+        matches.push({
+          team: match.team,
+          atHome: match.atHome,
+          status: match.status,
+          rating: data.teamRatings[match.team].totalRating
+        })
+      }
+      fixtures.push({
+        team: row.team,
+        matches: matches
+      })
+    }
+    return fixtures
+  }
+
+  function fixtureColour(rating: number) {
+    if (rating < 0.05) {
+      return "#00fe87"
+    } else if (rating < 0.1) {
+      return "#63fb6e"
+    } else if (rating < 0.15) {
+      return "#8df755"
+    } else if (rating < 0.2) {
+      return "#aef23e"
+    } else if (rating < 0.25) {
+      return "#cbec27"
+    } else if (rating < 0.3) {
+      return "#e6e50f"
+    } else if (rating < 0.35) {
+      return "#ffdd00"
+    } else if (rating < 0.4) {
+      return "#ffc400"
+    } else if (rating < 0.45) {
+      return "#ffab00"
+    } else if (rating < 0.5) {
+      return "#ff9000"
+    } else if (rating < 0.55) {
+      return "#ff7400"
+    } else if (rating < 0.6) {
+      return "#ff5618"
+    } else if (rating < 0.65) {
+      return "#f83027"
+    } else if (rating > 0.7) {
+      return "#f83027"
+    } else {
+      return "#f83027"
+    }
+  }
+
   function updateClock() {
     currentTime = new Date().toLocaleDateString("en-GB", {
               weekday: "long",
@@ -67,10 +133,12 @@
 
   let upcoming: UpcomingMatch[];
   let standings: Standings[];
+  let fixtures: Fixtures[];
   let currentTime: string;
   onMount(() => {
     upcoming = upcomingMatches();
     standings = standingsTable();
+    fixtures = fixturesTable(standings);
     updateClock()
     console.log(upcoming);
   });
@@ -79,58 +147,142 @@
 </script>
 
 <div id="page-content">
-  <div class="left">
-    <div class="summary">
-      <div class="current-date">
-        {currentTime}
+  <div class="row">
+    <div class="left">
+      <div class="summary">
+        <div class="current-date">
+          {currentTime}
+        </div>
+        <div class="matchday">
+          Matchday: <span style="color: var(--green)">14</span>
+        </div>
       </div>
-      <div class="matchday">
-        Matchday: <span style="color: var(--green)">14</span>
+      <div class="upcoming-matches-container">
+        {#if upcoming != undefined}
+          <div class="upcoming-matches">
+            <div class="upcoming-title">Upcoming</div>
+            {#each upcoming as match, i}
+              {#if i == 0 || match.time.getDate() != upcoming[i - 1].time.getDate()}
+                <div class="upcoming-match-date">
+                  {match.time.toLocaleDateString("en-GB", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </div>
+              {/if}
+              <div class="upcoming-match">
+                <div class="upcoming-match-time">
+                  {match.time.toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </div>
+                <div class="upcoming-match-teams">
+                  <div
+                    class="upcoming-match-home"
+                    style="background: var(--{match.home
+                      .toLowerCase()
+                      .replace(/ /g, '-')}); color: var(--{match.home
+                      .toLowerCase()
+                      .replace(/ /g, '-')}-secondary)"
+                  >
+                    {toInitials(match.home)}
+                  </div>
+                  <div
+                    class="upcoming-match-away"
+                    style="background: var(--{match.away
+                      .toLowerCase()
+                      .replace(/ /g, '-')}); color: var(--{match.away
+                      .toLowerCase()
+                      .replace(/ /g, '-')}-secondary)"
+                  >
+                    {toInitials(match.away)}
+                  </div>
+                </div>
+              </div>
+            {/each}
+          </div>
+        {/if}
       </div>
     </div>
-    <div class="upcoming-matches-container">
-      {#if upcoming != undefined}
-        <div class="upcoming-matches">
-          <div class="upcoming-title">Upcoming</div>
-          {#each upcoming as match, i}
-            {#if i == 0 || match.time.getDate() != upcoming[i - 1].time.getDate()}
-              <div class="upcoming-match-date">
-                {match.time.toLocaleDateString("en-GB", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </div>
-            {/if}
-            <div class="upcoming-match">
-              <div class="upcoming-match-time">
-                {match.time.toLocaleTimeString("en-GB", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </div>
-              <div class="upcoming-match-teams">
-                <div
-                  class="upcoming-match-home"
-                  style="background: var(--{match.home
-                    .toLowerCase()
-                    .replace(/ /g, '-')}); color: var(--{match.home
-                    .toLowerCase()
-                    .replace(/ /g, '-')}-secondary)"
-                >
-                  {toInitials(match.home)}
+    <div class="standings-container">
+      {#if standings != undefined}
+        <div class="standings-table">
+          <div class="standings-title">Standings</div>
+          <div class="standings">
+            <div class="table-row">
+              <div class="position" />
+              <div class="team-name" />
+              <div class="won bold">W</div>
+              <div class="drawn bold">D</div>
+              <div class="lost bold">L</div>
+              <div class="gf bold">GF</div>
+              <div class="ga bold">GA</div>
+              <div class="gd bold">GD</div>
+              <div class="played bold">Played</div>
+              <div class="points bold">Points</div>
+            </div>
+            {#each standings as row, i}
+              <div
+                class="table-row {i % 2 == 0 ? 'grey-row' : ''} {i < 4 ? 'cl' : ''} {i >
+                  3 && i < 6
+                  ? 'el'
+                  : ''} {i > 16 ? 'relegation' : ''}"
+              >
+                <div class="position">
+                  {row.position}
                 </div>
-                <div
-                  class="upcoming-match-away"
-                  style="background: var(--{match.away
-                    .toLowerCase()
-                    .replace(/ /g, '-')}); color: var(--{match.away
-                    .toLowerCase()
-                    .replace(/ /g, '-')}-secondary)"
-                >
-                  {toInitials(match.away)}
+                <div class="team-name">
+                  {row.team}
                 </div>
+                <div class="won">
+                  {row.won}
+                </div>
+                <div class="drawn">
+                  {row.drawn}
+                </div>
+                <div class="lost">
+                  {row.lost}
+                </div>
+                <div class="gf">
+                  {row.gF}
+                </div>
+                <div class="ga">
+                  {row.gA}
+                </div>
+                <div class="gd">
+                  {row.gD}
+                </div>
+                <div class="played">
+                  {row.played}
+                </div>
+                <div class="points">
+                  {row.points}
+                </div>
+              </div>
+            {/each}
+          </div>
+        </div>
+      {/if}
+    </div>
+  </div>
+  <div class="row">
+    <div class="fixtures">
+      <div class="fixtures-title">Fixtures</div>
+      {#if fixtures != undefined}
+        <div class="fixtures-table">
+          {#each fixtures as row, _}
+            <div class="fixtures-table-row">
+              <div class="fixtures-team">
+                {row.team}
+              </div>
+              <div class="fixtures-matches">
+
+                {#each row.matches as match, _}
+                  <div class="match" style="background: {fixtureColour(match.rating)}">{toInitials(match.team)}</div>
+                {/each}
               </div>
             </div>
           {/each}
@@ -138,72 +290,12 @@
       {/if}
     </div>
   </div>
-  <div class="standings-container">
-    {#if standings != undefined}
-      <div class="standings-table">
-        <div class="standings-title">Standings</div>
-        <div class="standings">
-          <div class="row">
-            <div class="position" />
-            <div class="team-name" />
-            <div class="won bold">W</div>
-            <div class="drawn bold">D</div>
-            <div class="lost bold">L</div>
-            <div class="gf bold">GF</div>
-            <div class="ga bold">GA</div>
-            <div class="gd bold">GD</div>
-            <div class="played bold">Played</div>
-            <div class="points bold">Points</div>
-          </div>
-          {#each standings as row, i}
-            <div
-              class="row {i % 2 == 0 ? 'grey-row' : ''} {i < 4 ? 'cl' : ''} {i >
-                3 && i < 6
-                ? 'el'
-                : ''} {i > 16 ? 'relegation' : ''}"
-            >
-              <div class="position">
-                {row.position}
-              </div>
-              <div class="team-name">
-                {row.team}
-              </div>
-              <div class="won">
-                {row.won}
-              </div>
-              <div class="drawn">
-                {row.drawn}
-              </div>
-              <div class="lost">
-                {row.lost}
-              </div>
-              <div class="gf">
-                {row.gF}
-              </div>
-              <div class="ga">
-                {row.gA}
-              </div>
-              <div class="gd">
-                {row.gD}
-              </div>
-              <div class="played">
-                {row.played}
-              </div>
-              <div class="points">
-                {row.points}
-              </div>
-            </div>
-          {/each}
-        </div>
-      </div>
-    {/if}
-  </div>
 </div>
 
 <style scoped>
-  #page-content {
+  .row {
     display: flex;
-    position: relative;
+    margin-bottom: 2em;
   }
   .summary {
     padding: 30px 30px;
@@ -238,6 +330,7 @@
     text-align: center;
     margin: 0.9em 0 0.4em 0;
   }
+  .fixtures-title,
   .standings-title,
   .upcoming-title {
     font-size: 2em;
@@ -278,7 +371,7 @@
     margin: 10px auto 0;
     width: fit-content;
   }
-  .row {
+  .table-row {
     display: flex;
     padding: 4px 20px 4px 10px;
     border-radius: 4px;
@@ -331,5 +424,26 @@
   }
   .relegation.grey-row {
     background: rgb(248, 48, 39, 0.6);
+  }
+  .fixtures-table {
+    width: calc(100vw - 300px);
+    overflow-y: scroll;
+    display: block;
+    margin-left: 30px;
+    margin-top: 20px;
+  }
+  .fixtures-table-row {
+    display: flex;
+  }
+  .fixtures-team {
+    min-width: 200px;
+  }
+  .fixtures-matches {
+    display: flex;
+  }
+  .match {
+    width: 40px;
+    text-align: center;
+    padding: 3px 8px;
   }
 </style>
