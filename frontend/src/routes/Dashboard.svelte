@@ -138,7 +138,6 @@
 
   function initDashboard() {
     // Set formatted team name so page header can display while fetching data
-    console.log(hyphenatedTeam)
     if (hyphenatedTeam == 'overview') {
       team = "Overview";
       title = `Dashboard | ${team}`;
@@ -239,22 +238,20 @@
     {/if}
 
     <div id="dashboard">
-      {#if hyphenatedTeam != 'overview'}
-        <div class="header" style="background-color: var(--{hyphenatedTeam});">
-          <a class="main-link no-decoration" href="/{hyphenatedTeam}">
-            <div
-              class="title"
-              style="color: var(--{hyphenatedTeam + '-secondary'});"
-            >
-              {toAlias(team)}
-            </div>
-          </a>
-        </div>
-      {/if}
+      <div class="header" style="background-color: var(--{hyphenatedTeam});">
+        <a class="main-link no-decoration" href="/{hyphenatedTeam}">
+          <div
+            class="title"
+            style="color: var(--{hyphenatedTeam + '-secondary'});"
+          >
+            {hyphenatedTeam != 'overview' ? toAlias(team): 'Overview'}
+          </div>
+        </a>
+      </div>
 
       {#if data != undefined}
         {#if hyphenatedTeam == "overview"}
-          <Overview {data} {toInitials}/>
+          <Overview {data} {mobileView} {toInitials}/>
         {:else}
           <div class="page-content">
             <div class="row multi-element-row small-bottom-margin">
@@ -332,7 +329,7 @@
 
             <div class="row">
               <div class="form-graph row-graph">
-                <h1 class="lowered">Form Over Time</h1>
+                <h1 class="lowered">Form</h1>
                 <div class="graph full-row-graph">
                   <FormOverTimeGraph
                     {data}
@@ -348,7 +345,7 @@
             {#if load}
               <div class="row">
                 <div class="position-over-time-graph row-graph">
-                  <h1 class="lowered">Position Over Time</h1>
+                  <h1 class="lowered">Position</h1>
                   <div class="graph full-row-graph">
                     <PositionOverTimeGraph
                       {data}
@@ -362,7 +359,7 @@
 
               <div class="row">
                 <div class="position-over-time-graph row-graph">
-                  <h1 class="lowered">Points Over Time</h1>
+                  <h1 class="lowered">Points</h1>
                   <div class="graph full-row-graph">
                     <PointsOverTimeGraph
                       {data}

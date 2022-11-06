@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import OverviewFooter from "../components/OverviewFooter.svelte";
+  import UnexpectedResultsGraph from "../components/UnexpectedResultsGraph.svelte";
 
   type UpcomingMatch = {
     time: Date;
@@ -55,133 +56,143 @@
   }
 
   function applyRatingFixturesScaling() {
-    if (fixturesScaling == 'rating') {
-      return
+    if (fixturesScaling == "rating") {
+      return;
     }
-    fixturesScaling = 'rating'
+    fixturesScaling = "rating";
 
     for (let teamFixtures of fixtures) {
       for (let match of teamFixtures.matches) {
-        let homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage
-        match.colour = fixtureColourSkewed(data.teamRatings[match.team].totalRating + homeAdvantage);
+        let homeAdvantage = match.atHome
+          ? 0
+          : data.homeAdvantages[match.team].totalHomeAdvantage;
+        match.colour = fixtureColourSkewed(
+          data.teamRatings[match.team].totalRating + homeAdvantage
+        );
       }
     }
-    fixtures = fixtures
+    fixtures = fixtures;
   }
-  
+
   function applyRatingFormScaling() {
-    if (fixturesScaling == 'form') {
-      return
+    if (fixturesScaling == "form") {
+      return;
     }
-    fixturesScaling = 'form'
-    
+    fixturesScaling = "form";
+
     for (let teamFixtures of fixtures) {
       for (let match of teamFixtures.matches) {
         let form = 0.5;
-        let matchdays = Object.keys(data.form[teamFixtures.team][data._id]).reverse();
-        let homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage
+        let matchdays = Object.keys(
+          data.form[teamFixtures.team][data._id]
+        ).reverse();
+        let homeAdvantage = match.atHome
+          ? 0
+          : data.homeAdvantages[match.team].totalHomeAdvantage;
         for (let matchday of matchdays) {
           if (data.form[match.team][data._id][matchday].formRating5 != null) {
-
-            form = data.form[match.team][data._id][matchday].formRating5; 
+            form = data.form[match.team][data._id][matchday].formRating5;
           }
         }
         match.colour = fixtureColour(form + homeAdvantage);
       }
     }
-    console.log(fixtures)
-    fixtures = fixtures
+    fixtures = fixtures;
   }
 
   type Fixtures = {
-    team: string,
+    team: string;
     matches: {
-      team: string,
-      atHome: boolean,
-      status: string,
-      colour: string
-    }[]
-  }
+      team: string;
+      atHome: boolean;
+      status: string;
+      colour: string;
+    }[];
+  };
 
   function fixturesTable(standings: Standings[]): Fixtures[] {
     let fixtures = [];
     for (let row of standings) {
       let matches = [];
       for (let matchday in data.fixtures[row.team]) {
-        let match = data.fixtures[row.team][matchday]
-        let homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage
+        let match = data.fixtures[row.team][matchday];
+        let homeAdvantage = match.atHome
+          ? 0
+          : data.homeAdvantages[match.team].totalHomeAdvantage;
         matches.push({
           team: match.team,
           atHome: match.atHome,
           status: match.status,
-          colour: fixtureColourSkewed(data.teamRatings[match.team].totalRating + homeAdvantage)
-        })
+          colour: fixtureColourSkewed(
+            data.teamRatings[match.team].totalRating + homeAdvantage
+          ),
+        });
       }
       fixtures.push({
         team: row.team,
-        matches: matches
-      })
+        matches: matches,
+      });
     }
-    return fixtures
+    return fixtures;
   }
 
   function fixtureColourSkewed(scaleVal: number) {
     if (scaleVal < 0.05) {
-      return "#00fe87"
+      return "#00fe87";
     } else if (scaleVal < 0.1) {
-      return "#63fb6e"
+      return "#63fb6e";
     } else if (scaleVal < 0.15) {
-      return "#8df755"
+      return "#8df755";
     } else if (scaleVal < 0.2) {
-      return "#aef23e"
+      return "#aef23e";
     } else if (scaleVal < 0.25) {
-      return "#cbec27"
+      return "#cbec27";
     } else if (scaleVal < 0.3) {
-      return "#e6e50f"
+      return "#e6e50f";
     } else if (scaleVal < 0.35) {
-      return "#ffdd00"
+      return "#ffdd00";
     } else if (scaleVal < 0.4) {
-      return "#ffc400"
+      return "#ffc400";
     } else if (scaleVal < 0.45) {
-      return "#ffab00"
+      return "#ffab00";
     } else if (scaleVal < 0.5) {
-      return "#ff9000"
+      return "#ff9000";
     } else if (scaleVal < 0.55) {
-      return "#ff7400"
+      return "#ff7400";
     } else if (scaleVal < 0.6) {
-      return "#ff5618"
-    } else  {
-      return "#f83027"
+      return "#ff5618";
+    } else {
+      return "#f83027";
     }
   }
 
   function fixtureColour(scaleVal: number) {
     if (scaleVal < 0.2) {
-      return "#00fe87"
+      return "#00fe87";
     } else if (scaleVal < 0.25) {
-      return "#63fb6e"
+      return "#63fb6e";
     } else if (scaleVal < 0.35) {
-      return "#8df755"
+      return "#8df755";
     } else if (scaleVal < 0.4) {
-      return "#aef23e"
+      return "#aef23e";
     } else if (scaleVal < 0.45) {
-      return "#cbec27"
+      return "#cbec27";
     } else if (scaleVal < 0.5) {
-      return "#e6e50f"
+      return "#e6e50f";
     } else if (scaleVal < 0.55) {
-      return "#ffdd00"
-    } else if (scaleVal < 0.60) {
-      return "#ffc400"
+      return "#ffdd00";
+    } else if (scaleVal < 0.6) {
+      return "#ffc400";
     } else if (scaleVal < 0.65) {
-      return "#ffab00"
+      return "#ffab00";
     } else if (scaleVal < 0.7) {
-      return "#ff9000"
+      return "#ff9000";
     } else if (scaleVal < 0.75) {
-      return "#ff7400"
+      return "#ff7400";
     } else if (scaleVal < 0.8) {
-      return "#ff5618"
-    } else  {
-      return "#f83027"
+      return "#ff5618";
+    } else {
+      return "#f83027";
     }
   }
 
@@ -189,14 +200,16 @@
   let standings: Standings[];
   let fixtures: Fixtures[];
   $: fixtures;
-  let fixturesScaling = "rating"
+  let fixturesScaling = "rating";
   onMount(() => {
     upcoming = upcomingMatches();
     standings = standingsTable();
     fixtures = fixturesTable(standings);
   });
 
-  export let data: TeamData, toInitials: Function;
+  export let data: TeamData,
+    mobileView: boolean,
+    toInitials: Function;
 </script>
 
 <div id="page-content">
@@ -273,10 +286,11 @@
             </div>
             {#each standings as row, i}
               <div
-                class="table-row {i % 2 == 0 ? 'grey-row' : ''} {i < 4 ? 'cl' : ''} {i >
-                  3 && i < 6
-                  ? 'el'
-                  : ''} {i > 16 ? 'relegation' : ''}"
+                class="table-row {i % 2 == 0 ? 'grey-row' : ''} {i < 4
+                  ? 'cl'
+                  : ''} {i > 3 && i < 6 ? 'el' : ''} {i > 16
+                  ? 'relegation'
+                  : ''}"
               >
                 <div class="standings-position">
                   {row.position}
@@ -325,31 +339,48 @@
     <div class="fixtures">
       <div class="fixtures-title">Fixtures</div>
       {#if fixtures != undefined}
-      <div class="scale-btns">
-        <div class="scale-team-ratings">
-          <button id="rating-scale-btn" class="scale-btn {fixturesScaling == 'rating' ? 'scaling-selected' : ''}"
-            on:click={applyRatingFixturesScaling}>
-            Rating
-          </button>
+        <div class="scale-btns">
+          <div class="scale-team-ratings">
+            <button
+              id="rating-scale-btn"
+              class="scale-btn {fixturesScaling == 'rating'
+                ? 'scaling-selected'
+                : ''}"
+              on:click={applyRatingFixturesScaling}
+            >
+              Rating
+            </button>
+          </div>
+          <div class="scale-team-form">
+            <button
+              id="form-scale-btn"
+              class="scale-btn {fixturesScaling == 'form'
+                ? 'scaling-selected'
+                : ''}"
+              on:click={applyRatingFormScaling}
+            >
+              Form
+            </button>
+          </div>
         </div>
-        <div class="scale-team-form">
-          <button id="form-scale-btn" class="scale-btn {fixturesScaling == 'form' ? 'scaling-selected' : ''}"
-            on:click={applyRatingFormScaling}>
-            Form
-          </button>
-        </div>
-      </div>
-      <div class="fixtures-table">
+        <div class="fixtures-table">
           <div class="fixtures-teams-container">
             {#each fixtures as row, i}
               <div class="fixtures-table-row">
-                <div class="fixtures-team"
-                style="background: var(--{row.team
-                      .toLowerCase()
-                      .replace(/ /g, '-')}); color: var(--{row.team
-                      .toLowerCase()
-                      .replace(/ /g, '-')}-secondary);
-                      {i == 0 ? 'border-top: 2px solid black' : ''}">
+                <div
+                  class="fixtures-team"
+                  style="background: var(--{row.team
+                    .toLowerCase()
+                    .replace(/ /g, '-')}); color: var(--{row.team
+                    .toLowerCase()
+                    .replace(/ /g, '-')}-secondary);
+                      {i == 0
+                    ? 'border-top: 2px solid black; border-radius: 4px 0 0'
+                    : ''}
+                      {i == fixtures.length - 1
+                    ? 'border-radius: 0 0 0 4px;'
+                    : ''}"
+                >
                   {toInitials(row.team)}
                 </div>
               </div>
@@ -359,7 +390,7 @@
             <div class="fixtures-table-row">
               <div class="fixtures-matches">
                 {#each Array(38) as _, i}
-                  <div class="match">{i+1}</div>
+                  <div class="match">{i + 1}</div>
                 {/each}
               </div>
             </div>
@@ -367,9 +398,19 @@
               <div class="fixtures-table-row">
                 <div class="fixtures-matches">
                   {#each row.matches as match, i}
-                    <div 
-                    class="match" 
-                    style="background: {match.colour}; {match.status == 'FINISHED' ? 'filter: grayscale(100%)' : ''} {i == row.matches.length - 1 ? 'border-right: 2px solid black' : ''}">{`${toInitials(match.team)} (${match.atHome ? 'H' : 'A'}`})</div>
+                    <div
+                      class="match"
+                      style="background: {match.colour}; {match.status ==
+                      'FINISHED'
+                        ? 'filter: grayscale(100%)'
+                        : ''} {i == row.matches.length - 1
+                        ? 'border-right: 2px solid black'
+                        : ''}"
+                    >
+                      {`${toInitials(match.team)} (${
+                        match.atHome ? "H" : "A"
+                      }`})
+                    </div>
                   {/each}
                 </div>
               </div>
@@ -379,12 +420,21 @@
       {/if}
     </div>
   </div>
+  <div class="row">
+    <div class="unexpected-results">
+      <div class="unexpected-results-title">Unexpected Results</div>
+      <UnexpectedResultsGraph {data} {mobileView} />
+    </div>
+  </div>
 </div>
 <OverviewFooter />
 
 <style scoped>
   #page-content {
     margin-top: 3em;
+    /* margin-left: 270px; */
+    position: relative;
+    width: calc(100% - 220px);
   }
   .row {
     display: flex;
@@ -403,7 +453,8 @@
   }
   .fixtures-title,
   .standings-title,
-  .upcoming-title {
+  .upcoming-title,
+  .unexpected-results-title {
     font-size: 2em;
     font-weight: 800;
     text-align: center;
@@ -436,7 +487,7 @@
   }
   .standings-container {
     flex-grow: 1;
-    margin: 0 260px 0 40px;
+    margin: 0 40px 0 40px;
   }
   .standings {
     margin: 10px auto 0;
@@ -495,7 +546,7 @@
   }
   .el {
     background: rgba(17, 182, 208, 0.7);
-    background: rgba(2, 238, 255, 0.6)
+    background: rgba(2, 238, 255, 0.6);
   }
   .el.grey-row {
     background: rgba(17, 182, 208, 1);
@@ -509,6 +560,7 @@
   }
   .fixtures {
     width: calc(100% - 220px);
+    width: 100%;
     position: relative;
   }
   .fixtures-table {
@@ -566,5 +618,9 @@
   .scale-btn {
     border-radius: 4px;
     cursor: pointer;
+  }
+
+  .unexpected-results {
+    width: 100%;
   }
 </style>
