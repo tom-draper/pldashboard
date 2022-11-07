@@ -432,9 +432,7 @@
 <style scoped>
   #page-content {
     margin-top: 3em;
-    /* margin-left: 270px; */
     position: relative;
-    /* width: calc(100% - 220px); */
   }
   .row {
     display: flex;

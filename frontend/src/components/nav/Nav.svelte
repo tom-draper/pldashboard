@@ -163,7 +163,7 @@
     width: 220px;
     height: 100vh;
     background: #37003c;
-    background: var(--purple);
+    background: var(--dark-purple);
   }
   img {
     height: 25px;
