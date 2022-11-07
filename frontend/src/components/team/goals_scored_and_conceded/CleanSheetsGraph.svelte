@@ -10,11 +10,8 @@
     for (let matchday of Object.keys(data.form[team][data._id])) {
       let score = data.form[team][data._id][matchday].score;
       if (score != null) {
-        let [h, _, a] = score.split(" ");
-        h = parseInt(h);
-        a = parseInt(a);
         if (data.form[team][data._id][matchday].atHome) {
-          if (a > 0) {
+          if (score.awayGoals > 0) {
             notCleanSheets.push(1);
             cleanSheets.push(0);
           } else {
@@ -22,7 +19,7 @@
             notCleanSheets.push(0);
           }
         } else {
-          if (h > 0) {
+          if (score.homeGoals > 0) {
             notCleanSheets.push(1);
             cleanSheets.push(0);
           } else {

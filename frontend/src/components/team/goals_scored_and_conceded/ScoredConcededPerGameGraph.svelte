@@ -8,13 +8,10 @@
       for (let matchday of Object.keys(data.form[team][data._id])) {
         let score = data.form[team][data._id][matchday].score;
         if (score != null) {
-          let [h, _, a] = score.split(" ");
-          h = parseInt(h);
-          a = parseInt(a);
           if (matchday in avgGoals) {
-            avgGoals[matchday] += h + a;
+            avgGoals[matchday] += score.homeGoals + score.awayGoals;
           } else {
-            avgGoals[matchday] = h + a;
+            avgGoals[matchday] = score.homeGoals + score.awayGoals;
           }
         }
       }
@@ -37,15 +34,12 @@
     for (let matchday of Object.keys(data.form[team][data._id])) {
       let score = data.form[team][data._id][matchday].score;
       if (score != null) {
-        let [h, _, a] = score.split(" ");
-        h = parseInt(h);
-        a = parseInt(a);
         if (data.form[team][data._id][matchday].atHome) {
-          scored[matchday] = h;
-          conceded[matchday] = a;
+          scored[matchday] = score.homeGoals;
+          conceded[matchday] = score.awayGoals;
         } else {
-          scored[matchday] = a;
-          conceded[matchday] = h;
+          scored[matchday] = score.awayGoals;
+          conceded[matchday] = score.homeGoals;
         }
       }
     }

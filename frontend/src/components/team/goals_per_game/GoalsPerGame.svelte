@@ -113,20 +113,17 @@
     for (let matchday of Object.keys(data.form[team][season])) {
       let score = data.form[team][season][matchday].score;
       if (score != null) {
-        let [h, _, a] = score.split(" ");
-        h = parseInt(h);
-        a = parseInt(a);
         if (data.form[team][season][matchday].atHome) {
-          if (h in goalFreq) {
-            goalFreq[h] += 1;
+          if (score.homeGoals in goalFreq) {
+            goalFreq[score.homeGoals] += 1;
           } else {
-            goalFreq[h] = 1;
+            goalFreq[score.homeGoals] = 1;
           }
         } else {
-          if (a in goalFreq) {
-            goalFreq[a] += 1;
+          if (score.awayGoals in goalFreq) {
+            goalFreq[score.awayGoals] += 1;
           } else {
-            goalFreq[a] = 1;
+            goalFreq[score.awayGoals] = 1;
           }
         }
       }
@@ -192,20 +189,17 @@
     for (let matchday of Object.keys(data.form[team][season])) {
       let score = data.form[team][season][matchday].score;
       if (score != null) {
-        let [h, _, a] = score.split(" ");
-        h = parseInt(h);
-        a = parseInt(a);
         if (data.form[team][season][matchday].atHome) {
-          if (a in goalFreq) {
-            goalFreq[a] += 1;
+          if (score.awayGoals in goalFreq) {
+            goalFreq[score.awayGoals] += 1;
           } else {
-            goalFreq[a] = 1;
+            goalFreq[score.awayGoals] = 1;
           }
         } else {
-          if (h in goalFreq) {
-            goalFreq[h] += 1;
+          if (score.homeGoals in goalFreq) {
+            goalFreq[score.homeGoals] += 1;
           } else {
-            goalFreq[h] = 1;
+            goalFreq[score.homeGoals] = 1;
           }
         }
       }

@@ -74,19 +74,14 @@
       let teamGames = data.form[team][data._id - i];
       for (let matchday of Object.keys(teamGames)) {
         let match = teamGames[matchday];
-        
         if (match.score != null) {
-          let [h, _, a] = match.score.split(" ");
-          h = parseInt(h);
-          a = parseInt(a);
-
           let scored: number, conceded: number;
           if (match.atHome) {
-            scored = h;
-            conceded = a;
+            scored = match.score.homeGoals;
+            conceded = match.score.awayGoals;
           } else {
-            scored = a;
-            conceded = h;
+            scored = match.score.awayGoals;
+            conceded = match.score.homeGoals;
           }
           goals.push({
             date: new Date(match.date),

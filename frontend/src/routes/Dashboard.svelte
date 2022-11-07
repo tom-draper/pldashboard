@@ -5,7 +5,7 @@
   import TableSnippet from "../components/team/TableSnippet.svelte";
   import NextGame from "../components/team/NextGame.svelte";
   import StatsValues from "../components/team/goals_scored_and_conceded/StatsValues.svelte";
-  import TeamsFooter from "../components/team/TeamsFooter.svelte";
+  import TeamsFooter from "../components/team/Footer.svelte";
   import FixturesGraph from "../components/team/FixturesGraph.svelte";
   import FormOverTimeGraph from "../components/team/FormOverTimeGraph.svelte";
   import PositionOverTimeGraph from "../components/team/PositionOverTimeGraph.svelte";
@@ -15,9 +15,9 @@
   import GoalsPerGame from "../components/team/goals_per_game/GoalsPerGame.svelte";
   import SpiderGraph from "../components/team/SpiderGraph.svelte";
   import ScorelineFreqGraph from "../components/team/ScorelineFreqGraph.svelte";
-  import Nav from "../components/team/nav/Nav.svelte";
-  import Overview from "../components/Overview.svelte";
-  import MobileNav from "../components/team/nav/MobileNav.svelte";
+  import Nav from "../components/nav/Nav.svelte";
+  import Overview from "../components/overview/Overview.svelte";
+  import MobileNav from "../components/nav/MobileNav.svelte";
   import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
 
   let alias = {

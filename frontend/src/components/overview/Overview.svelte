@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import OverviewFooter from "../components/OverviewFooter.svelte";
-  import UnexpectedResultsGraph from "../components/UnexpectedResultsGraph.svelte";
+  import OverviewFooter from "./Footer.svelte";
+  import UnexpectedResultsGraph from "./UnexpectedResultsGraph.svelte";
 
   type UpcomingMatch = {
     time: Date;
@@ -434,7 +434,7 @@
     margin-top: 3em;
     /* margin-left: 270px; */
     position: relative;
-    width: calc(100% - 220px);
+    /* width: calc(100% - 220px); */
   }
   .row {
     display: flex;
@@ -513,14 +513,12 @@
   .standings-won,
   .standings-drawn,
   .standings-lost {
-    /* width: 30px; */
     flex: 1;
     text-align: right;
   }
   .standings-gf,
   .standings-ga,
   .standings-gd {
-    /* width: 40px; */
     flex: 1;
     text-align: right;
   }
@@ -528,7 +526,6 @@
   .standings-form,
   .standings-played,
   .standings-points {
-    /* width: 65px; */
     flex: 1;
     text-align: right;
   }
@@ -559,9 +556,9 @@
     background: rgb(248, 48, 39, 1);
   }
   .fixtures {
-    width: calc(100% - 220px);
-    width: 100%;
     position: relative;
+    /* display: none; */
+    width: calc(100vw - 230px);
   }
   .fixtures-table {
     display: flex;
@@ -622,5 +619,6 @@
 
   .unexpected-results {
     width: 100%;
+    margin: 0 10px;
   }
 </style>

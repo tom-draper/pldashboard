@@ -6,10 +6,6 @@
     if (match.score == null) {
       return false
     }
-
-    let [h, _, a] = match.score.split(' ')
-    h = parseInt(h);
-    a = parseInt(a);
     
     let homeRating: number;
     let awayRating: number;
@@ -23,10 +19,10 @@
 
     let winnerRating: number;
     let loserRating: number;
-    if (h > a) {
+    if (match.score.homeGoals > match.score.awayGoals) {
       winnerRating = homeRating;
       loserRating = awayRating;
-    } else if (h < a) {
+    } else if (match.score.homeGoals < match.score.awayGoals) {
       winnerRating = awayRating;
       loserRating = homeRating;
     } else {
@@ -61,7 +57,7 @@
       name: 'Unexpected Results',
       mode: "lines",
       text: playedDates,
-      hovertemplate: `Matchday %{x}<br>%{text|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
+      hovertemplate: `Matchday %{x}<br>%{text|%d %b %Y}<br>Unexpected results: <b>%{y}</b><extra></extra>`,
       showlegend: false,
     }];
     return line;
@@ -157,7 +153,6 @@
         displayModeBar: false,
       },
     };
-    console.log(plotData);
     return plotData;
   }
 

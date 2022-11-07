@@ -72,46 +72,45 @@ class Form(DF):
     @staticmethod
     def _get_points(gd: int) -> int:
         if gd > 0:
-            pts = 3
+            return 3
         elif gd == 0:
-            pts = 1
+            return 1
         else:
-            pts = 0
-        return pts
+            return 0
 
     @staticmethod
     def _get_gd(score: str, at_home: bool) -> int:
-        home, away = utils.extract_int_score(score)
-        gd = home - away if at_home else away - home
-        return gd
+        if at_home:
+            return score['homeGoals'] - score['awayGoals'] 
+        else: 
+            return score['awayGoals'] - score['homeGoals']
 
     @staticmethod
-    def _append_to_from_str(form_str: list, home: int, away: int, at_home: bool):
-        if home == away:
+    def _append_to_from_str(form_str: list, score: dict, at_home: bool):
+        if score['homeGoals'] == score['awayGoals']:
             result = 'D'
-        elif (at_home and home > away) or (not at_home and home < away):
+        elif ((at_home and score['homeGoals'] > score['awayGoals']) 
+              or (not at_home and score['homeGoals'] < score['awayGoals'])):
             result = 'W'
-        elif (at_home and home < away) or (not at_home and home > away):
+        elif ((at_home and score['homeGoals'] < score['awayGoals']) 
+              or (not at_home and score['homeGoals'] > score['awayGoals'])):
             result = 'L'
         form_str.append(result)
 
     @staticmethod
     def _get_idx(lst: list[any], val: any):
-        idx = None
         for i, v in enumerate(lst):
             if v == val:
-                idx = i
-                break
-        return idx
+                return i
+        return None
 
     def _build_form_str(self, form, team, last_n_matchday_nos):
         form_str = []
         for n in reversed(last_n_matchday_nos):
             score = form.at[team, (n, 'score')]
             if score is not None:
-                home, away = utils.extract_int_score(score)
                 at_home = form.at[team, (n, 'atHome')]
-                self._append_to_from_str(form_str, home, away, at_home)
+                self._append_to_from_str(form_str, score['homeGoals'], away, at_home)
             else:
                 form_str.append('N')
 
@@ -137,7 +136,6 @@ class Form(DF):
                 form_rating += (opp_team_rating / len(form_str)) * gds[i]
 
         form_rating = min(max(0, form_rating), 1)  # Cap rating
-
         return form_rating
 
     def _get_form_matchday_range_values(
@@ -404,7 +402,10 @@ class Form(DF):
         d[team][(season, matchday, 'date')] = match['utcDate']
         d[team][(season, matchday, 'atHome')] = home_team
 
-        score = f'{match["score"]["fullTime"]["homeTeam"]} - {match["score"]["fullTime"]["awayTeam"]}'
+        score = {
+            'homeGoals': match["score"]["fullTime"]["homeTeam"],
+            'awayGoals': match["score"]["fullTime"]["awayTeam"]
+        }
         d[team][(season, matchday, 'score')] = score
 
         gd = self._get_gd(score, home_team)

@@ -7,16 +7,18 @@
 
   function insertSeasonAvgScoreFreq(scoreFreq: ScoreFreq, form: Form, team: string, season: number) {
     for (let matchday in form[team][season]) {
-      let score = data.form[team][season][matchday].score;
+      let score = form[team][season][matchday].score;
       if (score != null) {
-        let [h, _, a] = score.split(" ");
-        if (!data.form[team][season][matchday].atHome) {
-          score = a + " - " + h;
+        if (form[team][season][matchday].atHome) {
+          score = score.homeGoals + " - " + score.awayGoals;
+        } else {
+          score = score.awayGoals + " - " + score.homeGoals;
         }
         if (!(score in scoreFreq)) {
-          scoreFreq[score] = [0];
+          scoreFreq[score] = [1];
+        } else {
+          scoreFreq[score][0] += 1;
         }
-        scoreFreq[score][0] += 1;
       }
     }
   }
@@ -24,12 +26,12 @@
   function getAvgScoreFreq(data: TeamData): ScoreFreq {
     let scoreFreq: ScoreFreq = {};
     for (let team in data.form) {
-      insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id)
-      if (teamInSeason(data.form, team, data._id-1)) {
-        insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id-1)
-      }
-      if (teamInSeason(data.form, team, data._id-2)) {
-        insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id-2)
+      for (let i = 0; i < 3; i++) {
+        if (i == 0) {
+          insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id-i)
+        } else if (teamInSeason(data.form, team, data._id-i)) {
+          insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id-i)
+        }
       }
     }
 
@@ -40,9 +42,10 @@
     for (let matchday in form[team][season]) {
       let score = form[team][season][matchday].score;
       if (score != null) {
-        let [h, _, a] = score.split(" ");
-        if (!form[team][season][matchday].atHome) {
-          score = a + " - " + h;
+        if (form[team][season][matchday].atHome) {
+          score = score.homeGoals + " - " + score.awayGoals;
+        } else {
+          score = score.awayGoals + " - " + score.homeGoals;
         }
         scoreFreq[score][1] += 1;
       }
@@ -71,9 +74,9 @@
   function getColours(scores: string[]): string[] {
     let colours = [];
     for (let score of scores) {
-      let [h, _, a] = score.split(" ");
-      h = parseInt(h) as any;
-      a = parseInt(a) as any;
+      let [hs, _, as] = score.split(' ');
+      let h = parseInt(hs);
+      let a = parseInt(as);
       if (h > a) {
         colours.push("#00fe87");
       } else if (h < a) {
@@ -95,7 +98,6 @@
       avgY.push(sorted[i][1][0]);
       teamY.push(sorted[i][1][1]);
     }
-
     let colours = getColours(x);
 
     return [
@@ -214,10 +216,10 @@
     insertTeamScoreBars(data, team, scoreFreq);
     scaleBars(scoreFreq);
     convertToPercentage(scoreFreq);
-    let [avgBars, teamBars] = separateBars(scoreFreq);
+    let bars = separateBars(scoreFreq);
 
     let plotData = {
-      data: [avgBars, teamBars],
+      data: bars,
       layout: defaultLayout(),
       config: {
         responsive: true,
@@ -242,7 +244,7 @@
     });
   }
 
-  function resetTeamBars(scoreFreq) {
+  function resetTeamBars(scoreFreq: ScoreFreq) {
     for (let score in scoreFreq) {
       scoreFreq[score][1] = 0;
     }
@@ -254,8 +256,8 @@
       insertTeamScoreBars(data, team, scoreFreq);
       scaleBars(scoreFreq);
       convertToPercentage(scoreFreq);
-      let [_, teamBars] = separateBars(scoreFreq);
-      plotData.data[1] = teamBars; // Update team bars
+      let bars = separateBars(scoreFreq);
+      plotData.data[1] = bars[1]; // Update team bars
       //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {

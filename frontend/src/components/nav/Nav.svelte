@@ -28,8 +28,8 @@
   </div>
   <div class="team-links">
     {#if teams.length == 0}
-      {#each widths as width, _}
-        <div class="placeholder" style="width: {width}%" />
+      {#each widths as width, i}
+        <div class="placeholder" style="width: {width}%;{i == widths.length - 1 ? 'margin-top: 38px' : ''}" />
       {/each}
     {:else}
 

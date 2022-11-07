@@ -243,10 +243,9 @@
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null) {
-        let [h, _, a] = match.score.split(" ");
-        if (match.atHome && a == 0) {
+        if (match.atHome && match.score.awayGoals == 0) {
           nCleanSheets += 1;
-        } else if (!match.atHome && h == 0) {
+        } else if (!match.atHome && match.score.homeGoals == 0) {
           nCleanSheets += 1;
         }
       }
@@ -284,11 +283,12 @@
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null) {
-        let [h, _, a] = match.score.split(" ");
         let result: string;
-        if ((match.atHome && h > a) || (!match.atHome && h < a)) {
+        if ((match.atHome && match.score.homeGoals > match.score.awayGoals) 
+            || (!match.atHome && match.score.homeGoals < match.score.awayGoals)) {
           result = "win";
-        } else if ((match.atHome && h < a) || (!match.atHome && h > a)) {
+        } else if ((match.atHome && match.score.homeGoals < match.score.awayGoals) 
+                   || (!match.atHome && match.score.homeGoals > match.score.awayGoals)) {
           result = "lost";
         } else {
           result = "draw";
@@ -333,8 +333,8 @@
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null) {
-        let [h, _, a] = match.score.split(" ");
-        if ((match.atHome && h > a) || (!match.atHome && h < a)) {
+        if ((match.atHome && match.score.homeGoals > match.score.awayGoals) 
+            || (!match.atHome && match.score.homeGoals < match.score.awayGoals)) {
           tempWinStreak += 1;
           if (tempWinStreak > winStreak) {
             winStreak = tempWinStreak;
@@ -385,10 +385,10 @@
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null && big6.includes(match.team)) {
-        let [h, _, a] = match.score.split(" ");
-        if ((match.atHome && h > a) || (!match.atHome && h < a)) {
+        if ((match.atHome && match.score.homeGoals > match.score.awayGoals) 
+            || (!match.atHome && match.score.homeGoals < match.score.awayGoals)) {
           pointsVsBig6 += 3;
-        } else if (h == a) {
+        } else if (match.score.homeGoals == match.score.awayGoals) {
           pointsVsBig6 += 1;
         }
         numPlayed += 1;
