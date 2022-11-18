@@ -31,6 +31,7 @@ class Predictor:
             opp_team_rating = team_ratings.df.at[opp_team, 'totalRating']
         xg *= 1 + team_ratings.df.at[team, 'totalRating'] - opp_team_rating
 
+        # Scale by current form
         # opp_team_form = 0
         # if opp_team in form.df.index:
         #     opp_team_form = form.get_long_term_form_rating(opp_team)

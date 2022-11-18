@@ -1,5 +1,6 @@
-from pandas import DataFrame
 from datetime import datetime
+
+from pandas import DataFrame
 
 
 class DF:

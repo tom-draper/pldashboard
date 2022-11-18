@@ -3,12 +3,11 @@ from datetime import datetime
 from typing import Optional
 
 import pandas as pd
+from data import Fixtures, Form, HomeAdvantages, TeamRatings
+from dataframes.df import DF
 from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-
-from dataframes.df import DF
-from data import Fixtures, Form, HomeAdvantages, TeamRatings
 
 utils = Utilities()
 

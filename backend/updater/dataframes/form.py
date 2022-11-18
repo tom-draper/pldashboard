@@ -1,17 +1,12 @@
 import logging
-from collections import defaultdict
 import math
-from typing import Iterable
 
-import numpy as np
 import pandas as pd
+from data import TeamRatings
+from dataframes.df import DF
 from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-
-from dataframes.df import DF
-from dataframes.fixtures import Fixtures
-from dataframes.team_ratings import TeamRatings
 
 utils = Utilities()
 

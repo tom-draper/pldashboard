@@ -3,11 +3,10 @@ from collections import defaultdict
 from datetime import datetime
 
 import pandas as pd
+from dataframes.df import DF
 from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-
-from dataframes.df import DF
 
 utils = Utilities()
 

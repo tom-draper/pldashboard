@@ -9,12 +9,11 @@ from datetime import datetime
 from os.path import dirname, join
 
 import requests
+from data import Data
 from dotenv import load_dotenv
 from lib.database.database import Database
 from lib.utils.utilities import Utilities
 from timebudget import timebudget
-
-from data import Data
 
 utils = Utilities()
 
