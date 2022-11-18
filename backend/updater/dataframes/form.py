@@ -62,7 +62,7 @@ class Form(DF):
                 self.df.at[team_name, (current_season, matchday, f'formRating{n_games}')] * 100).round(1)
         return rating
 
-    def _get_matchday(self, season, n_back=0):
+    def _get_matchday(self, season: int, n_back: int = 0) -> int:
         current_matchday = 0
         matchdays = self.df[season].columns.unique(level=0)
         if len(matchdays) != 0:
@@ -86,37 +86,6 @@ class Form(DF):
             return score['awayGoals'] - score['homeGoals']
 
     @staticmethod
-    def _append_to_from_str(form_str: list, score: dict, at_home: bool):
-        if score['homeGoals'] == score['awayGoals']:
-            result = 'D'
-        elif ((at_home and score['homeGoals'] > score['awayGoals']) 
-              or (not at_home and score['homeGoals'] < score['awayGoals'])):
-            result = 'W'
-        elif ((at_home and score['homeGoals'] < score['awayGoals']) 
-              or (not at_home and score['homeGoals'] > score['awayGoals'])):
-            result = 'L'
-        form_str.append(result)
-
-    @staticmethod
-    def _get_idx(lst: list[any], val: any):
-        for i, v in enumerate(lst):
-            if v == val:
-                return i
-        return None
-
-    def _build_form_str(self, form, team, last_n_matchday_nos):
-        form_str = []
-        for n in reversed(last_n_matchday_nos):
-            score = form.at[team, (n, 'score')]
-            if score is not None:
-                at_home = form.at[team, (n, 'atHome')]
-                self._append_to_from_str(form_str, score['homeGoals'], away, at_home)
-            else:
-                form_str.append('N')
-
-        return ''.join(form_str)
-
-    @staticmethod
     def _calc_form_rating(
         team_ratings: TeamRatings,
         teams_played: list[str],
@@ -138,57 +107,7 @@ class Form(DF):
         form_rating = min(max(0, form_rating), 1)  # Cap rating
         return form_rating
 
-    def _get_form_matchday_range_values(
-        self,
-        form: DataFrame,
-        team_name: str,
-        column_name: str,
-        matchday_ns: list[int]
-    ) -> list:
-        col_headings = [(matchday, column_name) for matchday in matchday_ns]
-        values = [form.at[team_name, col] for col in col_headings]
-        return values
-
-    @staticmethod
-    def _get_played_matchdays(fixtures: Fixtures) -> list[int]:
-        status = fixtures.df.loc[:, (slice(None), 'status')]
-        # Remove cols for matchdays that haven't played yet
-        status = status.loc[:, (status == 'FINISHED').any()]
-        matchday_nos = sorted(list(status.columns.get_level_values(0)))
-        return matchday_nos
-    
-    def _insert_cum_gd_pts(self, d, gd, pts, matchday_no, teams_matchdays, idx):
-        cum_gd = gd
-        cum_pts = pts
-        if idx > 0:
-            prev_gd = d[(teams_matchdays[idx-1], 'cumGD')][-1]
-            prev_pts = d[(teams_matchdays[idx-1], 'cumPoints')][-1]
-            cum_gd = gd + prev_gd
-            cum_pts = pts + prev_pts
-        d[(matchday_no, 'cumGD')].append(cum_gd)
-        d[(matchday_no, 'cumPoints')].append(cum_pts)
-
-    def _insert_gd_pts(self, d, team, matchday_no, form, teams_matchdays, idx):
-        gd = 0
-        pts = 0
-        if form.at[team, (matchday_no, 'score')] is not None:
-            at_home = form.at[team, (matchday_no, 'atHome')]
-            gd = self._get_gd(form.at[team, (matchday_no, 'score')], at_home)
-            pts = self._get_points(gd)
-        d[(matchday_no, 'gD')].append(gd)
-        d[(matchday_no, 'points')].append(pts)
-
-        self._insert_cum_gd_pts(d, gd, pts, matchday_no, teams_matchdays, idx)
-
-    def _insert_position_columns(self, df, all_matchdays):
-        for matchday_no in all_matchdays:
-            df.sort_values(by=[(matchday_no, 'cumPoints'),
-                               (matchday_no, 'cumGD')],
-                           ascending=False,
-                           inplace=True)
-            df[matchday_no, 'position'] = list(range(1, 21))
-
-    def _insert_position_columns_new(self, df: DataFrame):
+    def _insert_position_columns(self, df: DataFrame):
         seasons = df.columns.unique(level=0).tolist()
         for season in seasons:
             played_matchdays = df[season].columns.unique(level=0).tolist()
@@ -216,92 +135,6 @@ class Form(DF):
                             prev_matchday -= 1
                         for col in essential_cols:
                             form.at[team, (current_season, matchday, col)] = form.at[team, (current_season, prev_matchday, col)]
-
-    def _insert_form(self, d, form, team_ratings, team, matchday_no, teams_matchdays, idx, N):
-        # Get last idx of matchday that has been played
-        while idx >= 0 and form.at[team, (teams_matchdays[idx], 'score')] is None:
-            idx -= 1
-
-        # Insert form string for last N games
-        last_n_matchday_nos = teams_matchdays[max(0, idx-N+1):idx+1]
-        form_str = self._build_form_str(form, team, last_n_matchday_nos)
-        d[(matchday_no, 'form' + str(N))].append(form_str)
-
-        # Insert form rating for last N games
-        gds = [d[(md, 'gD')][-1] for md in last_n_matchday_nos]
-        teams_played = self._get_form_matchday_range_values(
-            form, team, 'team', last_n_matchday_nos)
-        form_rating = self._calc_form_rating(
-            team_ratings, teams_played, form_str, gds)
-        d[(matchday_no, 'formRating' + str(N))].append(form_rating)
-
-    def _form_columns(
-        self,
-        form: DataFrame,
-        team_ratings: TeamRatings,
-    ):
-        all_matchdays = set(form.columns.get_level_values(0).unique())
-        columns = ['gD', 'points', 'cumGD', 'cumPoints', 'starTeam',
-                   'form5', 'formRating5', 'form10', 'formRating10']
-
-        d = defaultdict(lambda: [])
-        for team, row in form.iterrows():
-            teams_matchdays = row[(slice(None), 'date')
-                                  ][row[(slice(None), 'score')] != None]
-            # Matchdays sorted by date played
-            teams_matchdays = teams_matchdays.sort_values(
-                inplace=False).index.values
-
-            for idx, matchday_no in enumerate(teams_matchdays):
-                self._insert_gd_pts(d, team, matchday_no,
-                                    form, teams_matchdays, idx)
-                self._insert_form(d, form, team_ratings, team,
-                                  matchday_no, teams_matchdays, idx, 5)
-                self._insert_form(d, form, team_ratings, team,
-                                  matchday_no, teams_matchdays, idx, 10)
-
-            # Fill in any empty (non-played) matchdays
-            for matchday_no in all_matchdays - set(teams_matchdays):
-                for col in columns:
-                    d[(matchday_no, col)].append(np.nan)
-
-        df = pd.DataFrame.from_dict(d)
-        df.index = form.index
-
-        self._insert_position_columns(df, all_matchdays)
-
-        return df
-
-    def _fill_null_values(self, form: DataFrame) -> DataFrame:
-        return form
-
-    def _prev_none_null_matchday(self, matchday: int, matchdays: Iterable[int]) -> int:
-        prev_matchday = matchday - 1
-        while prev_matchday not in matchdays and prev_matchday > 0:
-            prev_matchday -= 1
-
-        if prev_matchday == 0:
-            prev_matchday = None
-
-        return prev_matchday
-
-    def _fill_null_matchdays(self, form: DataFrame) -> DataFrame:
-        for season in form.columns.unique(level=0):
-            matchdays = set(form[season].columns.unique(level=0))
-            for matchday in range(max(matchdays)):
-                if matchday not in matchdays and matchday > 1:
-                    # Copy over previous matchday values
-                    prev_matchday = self._prev_none_null_matchday(
-                        matchday, matchdays)
-                    for col in form[season][prev_matchday].columns.unique():
-                        form[(season, matchday, col)] = form[(
-                            season, prev_matchday, col)]
-        return form
-
-    def fill_null(self, form: DataFrame):
-        form = self._fill_null_matchdays(form)
-        form = self._fill_null_values(form)
-        return form
 
     def _clean_dataframe(self, form: DataFrame, matchday_nos: list[int]) -> DataFrame:
         # Drop columns used for working
@@ -497,7 +330,7 @@ class Form(DF):
 
         self._fill_teams_missing_matchday(form)
 
-        self._insert_position_columns_new(form)
+        self._insert_position_columns(form)
 
         form = form.sort_index(axis=1)
 
