@@ -141,18 +141,7 @@
     margin: auto;
     margin-bottom: 15px;
   }
-  /* .all-teams-container { */
-    /* margin-bottom: 1em; */
-    /* background: var(--light-purple) */
-  /* } */
-  /* .team-name { */
-    /* color: #c600d8; */
-    /* background: linear-gradient(to right, #c600d8 0%, #bb23d6 100%); */
-    /* Mask the color to the text, and remove the rest  */
-    /* -webkit-background-clip: text; */
-    /* Make the text fill color value transparent so the masked background color comes through */
-    /* -webkit-text-fill-color: transparent; */
-  /* } */
+
   :hover.overview-container,
   :hover.team-container {
     background: #2c002f;
@@ -163,7 +152,7 @@
     width: 220px;
     height: 100vh;
     background: #37003c;
-    background: var(--dark-purple);
+    background: var(--purple);
   }
   img {
     height: 25px;

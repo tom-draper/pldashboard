@@ -55,7 +55,7 @@
       x: playedDates,
       y: y,
       name: 'Unexpected Results',
-      mode: "lines",
+      type: "bar",
       text: playedDates,
       hovertemplate: `Matchday %{x}<br>%{text|%d %b %Y}<br>Unexpected results: <b>%{y}</b><extra></extra>`,
       showlegend: false,
