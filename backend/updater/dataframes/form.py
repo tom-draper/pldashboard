@@ -2,7 +2,7 @@ import logging
 import math
 
 import pandas as pd
-from data import TeamRatings
+from dataframes.team_ratings import TeamRatings
 from dataframes.df import DF
 from lib.utils.utilities import Utilities
 from pandas import DataFrame
