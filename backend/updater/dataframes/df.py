@@ -1,4 +1,5 @@
 from pandas import DataFrame
+from datetime import datetime
 
 
 class DF:
@@ -9,6 +10,9 @@ class DF:
 
     def __str__(self):
         return str(self.df)
+
+    def __getitem__(self, key: str):
+        return self.df[key]
 
     def _check_dependencies(self, *args):
         for arg in args:

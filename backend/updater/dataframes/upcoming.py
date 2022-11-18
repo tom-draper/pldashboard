@@ -8,9 +8,7 @@ from pandas import DataFrame
 from timebudget import timebudget
 
 from dataframes.df import DF
-from dataframes.fixtures import Fixtures
-from dataframes.form import Form
-from dataframes.home_advantages import HomeAdvantages
+from data import Fixtures, Form, HomeAdvantages, TeamRatings
 
 utils = Utilities()
 
@@ -19,9 +17,8 @@ class Upcoming(DF):
     def __init__(
             self, current_season, d: DataFrame = DataFrame()):
         super().__init__(d, 'upcoming')
-        from predictions import Predictions
+        from predict import Predictions
         self.predictions = Predictions(current_season)
-        self.finished_season = False
 
     def get_predictions(self) -> dict[str, dict]:
         """ Extracts a predictions dictionary from the dataframe including 
@@ -83,32 +80,11 @@ class Upcoming(DF):
         home_score = match['score']['fullTime']['homeTeam']
         away_score = match['score']['fullTime']['awayTeam']
         if home_score == away_score:
-            result = ('drew', 'drew')
+            return ('drew', 'drew')
         elif home_score > away_score:
-            result = ('won', 'lost')
+            return ('won', 'lost')
         else:
-            result = ('lost', 'won')
-
-        return result
-
-    def _prev_match(
-        self,
-        date: datetime,
-        home_team: str,
-        away_team: str,
-        home_goals: int,
-        away_goals: int,
-        result: str
-    ) -> dict:
-        readable_date = self._readable_date(date)
-        prev_match = {'date': date,
-                      'readableDate': readable_date,
-                      'homeTeam': home_team,
-                      'awayTeam': away_team,
-                      'homeGoals': home_goals,
-                      'awayGoals': away_goals,
-                      'result': result}
-        return prev_match
+            return ('lost', 'won')
 
     def _append_prev_match(
         self,
@@ -123,13 +99,21 @@ class Upcoming(DF):
         # From the perspective from the home team
         # If this match's home team has their next game against this match's away team
         if next_games[home_team]['nextTeam'] == away_team:
-            prev_match = self._prev_match(
-                date, home_team, away_team, home_goals, away_goals, result[0])
+            prev_match = {'date': date,
+                          'homeTeam': home_team,
+                          'awayTeam': away_team,
+                          'homeGoals': home_goals,
+                          'awayGoals': away_goals,
+                          'result': result[0]}
             next_games[home_team]['prevMatches'].append(prev_match)
 
         if next_games[away_team]['nextTeam'] == home_team:
-            prev_match = self._prev_match(
-                date, home_team, away_team, home_goals, away_goals, result[1])
+            prev_match = {'date': date,
+                          'homeTeam': home_team,
+                          'awayTeam': away_team,
+                          'homeGoals': home_goals,
+                          'awayGoals': away_goals,
+                          'result': result[1]}
             next_games[away_team]['prevMatches'].append(prev_match)
 
     @staticmethod
@@ -196,6 +180,7 @@ class Upcoming(DF):
         json_data: dict,
         fixtures: Fixtures,
         form: Form,
+        team_ratings: TeamRatings,
         home_advantages: HomeAdvantages,
         season: int,
         n_seasons: int = 3,
@@ -250,20 +235,16 @@ class Upcoming(DF):
             }
 
         for i in range(n_seasons):
-            self._append_season_prev_matches(
-                d, json_data, season-i, team_names)
+            self._append_season_prev_matches(d, json_data, season-i, team_names)
 
         # Format previous meeting dates as long, readable str
         self._sort_prev_matches_by_date(d)
 
         upcoming = pd.DataFrame.from_dict(d, orient='index')
 
-        if form.get_current_matchday() == 38:
-            self.finished_season = True
-        else:
+        if form.get_current_matchday() < 38:
             # Generate and insert new predictions for upcoming games
-            predictions = self.predictions.build(
-                fixtures, form, upcoming, home_advantages)
+            predictions = self.predictions.build(form, upcoming, team_ratings, home_advantages)
             upcoming = self._merge_predictions_into_upcoming(
                 upcoming, predictions)
 
