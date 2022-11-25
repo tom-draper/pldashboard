@@ -1,6 +1,6 @@
 # Backend
 
-## Backend Server
+## Server
 
 ```bash
 py server/app.py
