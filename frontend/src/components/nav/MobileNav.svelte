@@ -20,7 +20,7 @@
 
   let hyphenatedTeams: string[];
   //@ts-ignore
-  $: hyphenatedTeam & (teams.length > 0) & getHyphenatedTeamNames();
+  $: hyphenatedTeam && (teams.length > 0) && getHyphenatedTeamNames();
 
   export let hyphenatedTeam: string,
     teams: string[],
