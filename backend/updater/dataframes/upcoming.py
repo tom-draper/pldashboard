@@ -55,22 +55,36 @@ class Upcoming(DF):
             }
 
         return predictions
+    
+    def _next_matchday(
+        self,
+        team_name: str,
+        fixtures: Fixtures
+        ) -> int:
+        """Scan through list of fixtures to find the next game that is scheduled."""
+        matchday = {'date': None, 'matchday': None}
+        for matchday_no in fixtures.df.columns.unique(level=0):
+            date = fixtures.df.at[team_name, (matchday_no, 'date')]
+            scheduled = fixtures.df.at[team_name, (matchday_no, 'status')] == 'SCHEDULED' 
+            if matchday['date'] is None or (scheduled and date < matchday['date']):
+                matchday['date'] = date
+                matchday['matchday'] = matchday_no
+        return matchday['matchday']
 
-    @staticmethod
     def _get_next_game(
+        self,
         team_name: str,
         fixtures: Fixtures
     ) -> tuple[Optional[str], Optional[str], Optional[str]]:
         date = None  # type: Optional[str]
         next_team = None  # type: Optional[str]
         at_home = None  # type: Optional[str]
-        # Scan through list of fixtures to find the first that is 'scheduled'
-        for matchday_no in fixtures.df.columns.unique(level=0):
-            if fixtures.df.at[team_name, (matchday_no, 'status')] == 'SCHEDULED':
-                date = fixtures.df.at[team_name, (matchday_no, 'date')]
-                next_team = fixtures.df.at[team_name, (matchday_no, 'team')]
-                at_home = fixtures.df.at[team_name, (matchday_no, 'atHome')]
-                break
+        
+        next_matchday = self._next_matchday(team_name, fixtures)
+        if next_matchday is not None:
+            date = fixtures.df.at[team_name, (next_matchday, 'date')]
+            next_team = fixtures.df.at[team_name, (next_matchday, 'team')]
+            at_home = fixtures.df.at[team_name, (next_matchday, 'atHome')]
 
         return date, next_team, at_home
 
