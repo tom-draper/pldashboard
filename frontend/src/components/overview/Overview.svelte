@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import OverviewFooter from "./Footer.svelte";
-  import UnexpectedResultsGraph from "./UnexpectedResultsGraph.svelte";
 
   type UpcomingMatch = {
     time: Date;
@@ -420,12 +419,6 @@
       {/if}
     </div>
   </div>
-  <!-- <div class="row">
-    <div class="unexpected-results">
-      <div class="unexpected-results-title">Unexpected Results</div>
-      <UnexpectedResultsGraph {data} {mobileView} />
-    </div>
-  </div> -->
 </div>
 <OverviewFooter />
 
@@ -451,8 +444,7 @@
   }
   .fixtures-title,
   .standings-title,
-  .upcoming-title,
-  .unexpected-results-title {
+  .upcoming-title {
     font-size: 2em;
     font-weight: 800;
     text-align: center;
@@ -489,8 +481,6 @@
   }
   .standings {
     margin: 10px auto 0;
-    /* width: fit-content; */
-    /* flex-grow: 1; */
   }
   .table-row {
     display: flex;
@@ -555,7 +545,6 @@
   }
   .fixtures {
     position: relative;
-    /* display: none; */
     width: calc(100vw - 230px);
   }
   .fixtures-table {
@@ -613,10 +602,5 @@
   .scale-btn {
     border-radius: 4px;
     cursor: pointer;
-  }
-
-  .unexpected-results {
-    width: 100%;
-    margin: 0 10px;
   }
 </style>
