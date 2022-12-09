@@ -35,11 +35,12 @@ def in_last_n_mins(date: datetime, mins: int):
 @app.get('/api/teams')
 async def team() -> str:
     if cache['last_requested'] is not None and in_last_n_mins(cache['last_requested'], 1):
-        return cache['team_data']
+        teams_data = cache['team_data']
     else:
         teams_data = await database.get_teams_data()
         cache['teams_data'] = teams_data
-        return teams_data
+    cache['last_requested'] = datetime.now()
+    return teams_data
 
 
 @app.get('/api/predictions')
