@@ -52,7 +52,6 @@
     avgGoals: Counter,
     matchdays: string[]
   ): any {
-    console.log(Object.values(avgGoals))
     return {
       name: "Avg",
       type: "line",
