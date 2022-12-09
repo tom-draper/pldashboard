@@ -420,12 +420,12 @@
       {/if}
     </div>
   </div>
-  <div class="row">
+  <!-- <div class="row">
     <div class="unexpected-results">
       <div class="unexpected-results-title">Unexpected Results</div>
       <UnexpectedResultsGraph {data} {mobileView} />
     </div>
-  </div>
+  </div> -->
 </div>
 <OverviewFooter />
 

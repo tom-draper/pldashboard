@@ -16,7 +16,7 @@ class Upcoming(DF):
     def __init__(
             self, current_season, d: DataFrame = DataFrame()):
         super().__init__(d, 'upcoming')
-        from predict import Predictions
+        from predictions import Predictions
         self.predictions = Predictions(current_season)
 
     def get_predictions(self) -> dict[str, dict]:
@@ -35,7 +35,7 @@ class Upcoming(DF):
                 }
             }
         """
-        predictions = {}
+        predictions: dict[str, dict[str, datetime|str|dict[str, float]]] = {}
         for team, row in self.df.iterrows():
             if row[('atHome', '')]:
                 home_initials = team
@@ -243,7 +243,8 @@ class Upcoming(DF):
 
         if form.get_current_matchday() < 38:
             # Generate and insert new predictions for upcoming games
-            predictions = self.predictions.build(form, upcoming, team_ratings, home_advantages)
+            # predictions = self.predictions.build(form, upcoming, team_ratings, home_advantages)
+            predictions = self.predictions.build(fixtures, form, upcoming, home_advantages)
             upcoming = self._merge_predictions_into_upcoming(
                 upcoming, predictions)
 

@@ -10,7 +10,7 @@
   }
 
   let widths = [];
-  for (let i = 0; i < 21; i++) {
+  for (let i = 0; i < 20; i++) {
     widths.push(35 + Math.floor(Math.random() * 8) * 5);
   }
 
@@ -28,11 +28,13 @@
   </div>
   <div class="team-links">
     {#if teams.length == 0}
-      {#each widths as width, i}
-        <div class="placeholder" style="width: {width}%;{i == widths.length - 1 ? 'margin-top: 38px' : ''}" />
+      {#each widths as width, _}
+        <div
+          class="placeholder"
+          style="width: {width}%"
+        />
       {/each}
     {:else}
-
       {#each teams as _team, _ (_team)}
         {#if _team.toLowerCase().replace(/ /g, "-") == team}
           <a href="/{_team.toLowerCase().replace(/ /g, '-')}" class="team-link">
@@ -65,7 +67,7 @@
           </button>
         {/if}
       {/each}
-      <div class="divider"></div>
+      <!-- <div class="divider" />
       {#if team == "overview"}
         <a href="/overview" class="team-link">
           <div class="overview-selected">
@@ -83,7 +85,7 @@
             <div class="overview">Overview</div>
           </div>
         </button>
-      {/if}
+      {/if} -->
     {/if}
   </div>
   <div class="close">

@@ -2,7 +2,6 @@ import logging
 import math
 import os
 import sys
-from dataclasses import dataclass
 from datetime import datetime
 from typing import Union
 
@@ -121,7 +120,7 @@ class Predictor:
             f'🔮 Prediction: {home_team} {round(home_goals, 2)} - {round(away_goals, 2)} {away_team}')
 
         return home_goals, away_goals
-
+    
     def score_predictions(
         self,
         form: Form,
@@ -138,10 +137,6 @@ class Predictor:
             if upcoming is not None:
                 home_goals, away_goals = self._score_prediction(
                     team_name, upcoming, form, team_ratings, home_advantages)
-
-                # print(home_team, 'vs', away_team)
-                # print(home_prev_match_xg, away_prev_match_xg)
-                # print(home_total_xg, away_total_xg)
 
                 prediction = {
                     'homeGoals': round(home_goals, 4),
