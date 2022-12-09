@@ -52,15 +52,15 @@
     avgGoals: Counter,
     matchdays: string[]
   ): any {
-    console.log(Object.values(avgGoals))
+    console.log(avgGoals)
     return {
       name: "Avg",
       type: "line",
       x: playedDates,
       y: Object.values(avgGoals),
       text: matchdays,
-      hovertemplate: "<b>Matchday %{text}</b>%{y} goals<extra></extra>",
       line: { color: "#0080FF", width: 2 },
+      hovertemplate: "<b>Matchday %{text}</b<br>%{y} goals<extra></extra>",
     };
   }
 
