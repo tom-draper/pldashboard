@@ -5,7 +5,7 @@
     let matchDetail: string;
     let homeAway = match.atHome ? "Home" : "Away";
     if (match.score != null) {
-      matchDetail = `${match.team} (${homeAway}) ${match.score}`;
+      matchDetail = `${match.team} (${homeAway}) ${match.score.homeGoals} - ${match.score.awayGoals}`;
     } else {
       matchDetail = `${match.team} (${homeAway})`;
     }

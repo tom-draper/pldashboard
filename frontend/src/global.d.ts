@@ -26,7 +26,10 @@ type Form = {
                 team: string,
                 date: string,
                 starTeam: boolean,
-                score: string,
+                score: {
+                    homeGoals: number,
+                    awayGoals: number,
+                },
                 position: number,
                 gD: number,
                 formRating5: number,

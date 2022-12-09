@@ -32,7 +32,6 @@
       name: type,
       marker: { color: color },
       hovertemplate: `${opener} %{x} with probability <b>%{y:.2f}</b><extra></extra>`,
-      // marker: { color: color },
       line: { width: 0 },
       hoverinfo: "x+y",
       opacity: 0.5,
@@ -48,7 +47,6 @@
   }
 
   // Basic colour scale shared between the two bar chars
-  // let colourScale = ["#5df455", "#b2d000", "#dfa700", "#f77a1c", "#f74d4d"];
   let colourScale = ["#00fe87", "#aef23e", "#ffdd00", "#ff9000", "#f83027"];
 
   // Concatenate unique extreme colours, for extreme values that only a few teams achieve
@@ -115,20 +113,17 @@
     for (let matchday of Object.keys(data.form[team][season])) {
       let score = data.form[team][season][matchday].score;
       if (score != null) {
-        let [h, _, a] = score.split(" ");
-        h = parseInt(h);
-        a = parseInt(a);
         if (data.form[team][season][matchday].atHome) {
-          if (h in goalFreq) {
-            goalFreq[h] += 1;
+          if (score.homeGoals in goalFreq) {
+            goalFreq[score.homeGoals] += 1;
           } else {
-            goalFreq[h] = 1;
+            goalFreq[score.homeGoals] = 1;
           }
         } else {
-          if (a in goalFreq) {
-            goalFreq[a] += 1;
+          if (score.awayGoals in goalFreq) {
+            goalFreq[score.awayGoals] += 1;
           } else {
-            goalFreq[a] = 1;
+            goalFreq[score.awayGoals] = 1;
           }
         }
       }
@@ -194,20 +189,17 @@
     for (let matchday of Object.keys(data.form[team][season])) {
       let score = data.form[team][season][matchday].score;
       if (score != null) {
-        let [h, _, a] = score.split(" ");
-        h = parseInt(h);
-        a = parseInt(a);
         if (data.form[team][season][matchday].atHome) {
-          if (a in goalFreq) {
-            goalFreq[a] += 1;
+          if (score.awayGoals in goalFreq) {
+            goalFreq[score.awayGoals] += 1;
           } else {
-            goalFreq[a] = 1;
+            goalFreq[score.awayGoals] = 1;
           }
         } else {
-          if (h in goalFreq) {
-            goalFreq[h] += 1;
+          if (score.homeGoals in goalFreq) {
+            goalFreq[score.homeGoals] += 1;
           } else {
-            goalFreq[h] = 1;
+            goalFreq[score.homeGoals] = 1;
           }
         }
       }

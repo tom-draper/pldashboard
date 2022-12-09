@@ -8,11 +8,13 @@ from datetime import datetime
 from typing import Union
 
 import pandas as pd
+from dataframes.fixtures import Fixtures
+from dataframes.form import Form
+from dataframes.home_advantages import HomeAdvantages
+from dataframes.upcoming import Upcoming
 from lib.database.database import Database
 from lib.utils.utilities import Utilities
 from pandas.core.frame import DataFrame
-
-from data import Fixtures, Form, HomeAdvantages, Upcoming
 
 utils = Utilities()
 
@@ -451,17 +453,6 @@ class Predictions:
             upcoming: Upcoming, 
             home_advantages: HomeAdvantages,
         ) -> DataFrame:
-        # predictions = self.predictor.gen_score_predictions(fixtures, form, upcoming, home_advantages)
         predictions = self.predictor.gen_score_predictions_new(fixtures, form, upcoming, home_advantages)
-        # actual_scores = fixtures.get_actual_scores()
-        
-        # if update_db:
-        #     print('old')
-        #     print(predictions)
-        #     print(actual_scores)
-        #     self.database.update_predictions(predictions, actual_scores)
-        #     self.database.update_actual_scores(actual_scores)
-        
         upcoming_predictions = self._predictions_to_df(predictions)
-        
         return upcoming_predictions

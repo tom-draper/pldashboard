@@ -9,12 +9,11 @@ from datetime import datetime
 from os.path import dirname, join
 
 import requests
+from data import Data
 from dotenv import load_dotenv
 from lib.database.database import Database
 from lib.utils.utilities import Utilities
 from timebudget import timebudget
-
-from data import Data
 
 utils = Utilities()
 
@@ -147,6 +146,7 @@ class Updater:
             self.json_data, 
             self.data.fixtures, 
             self.data.form, 
+            self.data.team_ratings,
             self.data.home_advantages, 
             self.current_season, 
             n_seasons, 
@@ -201,14 +201,12 @@ class Updater:
                 logging.info('💾 Saving predictions to database...')
                 self.save_predictions_to_db()
 
-def run():
-    display_tables = False
-    if logging.root.level == logging.DEBUG:
-        # Only display tables if not in production
-        display_tables = True
+def run(display_tables: bool = False, request_new: bool = True, update_db: bool = True):
     updater = Updater(2022)
     updater.build_all(
-        display_tables=display_tables, 
+        display_tables=display_tables,
+        request_new=request_new,
+        update_db=update_db
     )
 
 def run_production():
@@ -218,8 +216,8 @@ def run_production():
 
 def run_dev():
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s :: %(levelname)s :: %(message)s')
-    run()
-    timebudget.report_at_exit()
+    run(display_tables=True, update_db=False)
+
 
 if __name__ == "__main__":
-    run_dev()
+    run_production()

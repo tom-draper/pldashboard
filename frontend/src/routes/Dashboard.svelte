@@ -1,22 +1,24 @@
 <script lang="ts">
   import { Router } from "svelte-routing";
   import { onMount } from "svelte";
-  import CurrentForm from "../components/current_form/CurrentForm.svelte";
-  import TableSnippet from "../components/TableSnippet.svelte";
-  import NextGame from "../components/NextGame.svelte";
-  import StatsValues from "../components/goals_scored_and_conceded/StatsValues.svelte";
-  import TeamsFooter from "../components/TeamsFooter.svelte";
-  import FixturesGraph from "../components/FixturesGraph.svelte";
-  import FormOverTimeGraph from "../components/FormOverTimeGraph.svelte";
-  import PositionOverTimeGraph from "../components/PositionOverTimeGraph.svelte";
-  import GoalsScoredAndConcededGraph from "../components/goals_scored_and_conceded/ScoredConcededPerGameGraph.svelte";
-  import CleanSheetsGraph from "../components/goals_scored_and_conceded/CleanSheetsGraph.svelte";
-  import GoalsPerGame from "../components/goals_per_game/GoalsPerGame.svelte";
-  import SpiderGraph from "../components/SpiderGraph.svelte";
-  import ScorelineFreqGraph from "../components/ScorelineFreqGraph.svelte";
+  import CurrentForm from "../components/team/current_form/CurrentForm.svelte";
+  import TableSnippet from "../components/team/TableSnippet.svelte";
+  import NextGame from "../components/team/NextGame.svelte";
+  import StatsValues from "../components/team/goals_scored_and_conceded/StatsValues.svelte";
+  import TeamsFooter from "../components/team/Footer.svelte";
+  import FixturesGraph from "../components/team/FixturesGraph.svelte";
+  import FormOverTimeGraph from "../components/team/FormOverTimeGraph.svelte";
+  import PositionOverTimeGraph from "../components/team/PositionOverTimeGraph.svelte";
+  import PointsOverTimeGraph from "../components/team/PointsOverTimeGraph.svelte";
+  import GoalsScoredAndConcededGraph from "../components/team/goals_scored_and_conceded/ScoredConcededPerGameGraph.svelte";
+  import CleanSheetsGraph from "../components/team/goals_scored_and_conceded/CleanSheetsGraph.svelte";
+  import GoalsPerGame from "../components/team/goals_per_game/GoalsPerGame.svelte";
+  import SpiderGraph from "../components/team/SpiderGraph.svelte";
+  import ScorelineFreqGraph from "../components/team/ScorelineFreqGraph.svelte";
   import Nav from "../components/nav/Nav.svelte";
+  import Overview from "../components/overview/Overview.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
-  import ScoredConcededOverTimeGraph from "../components/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
+  import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
 
   let alias = {
     "Wolverhampton Wanderers": "Wolves",
@@ -102,15 +104,12 @@
 
     // Find median matchday date across all teams for each matchday
     let x = [];
-    for (let matchday of matchdays) {
+    for (let i = 0; i < matchdays.length; i++) {
       let matchdayDates = [];
-      Object.keys(data.standings).forEach((team: string) => {
-        matchdayDates.push(data.fixtures[team][matchday].date);
-      });
-      matchdayDates = matchdayDates.map((val) => {
-        return new Date(val);
-      });
-      matchdayDates = matchdayDates.sort();
+      for (let team in data.standings) {
+        matchdayDates.push(new Date(data.fixtures[team][matchdays[i]].date));
+      }
+      matchdayDates.sort();
       x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
     }
     x.sort(function (a, b) {
@@ -120,47 +119,51 @@
   }
 
   function getCurrentMatchday(data: TeamData, team: string): null | string {
-    let currentMatchday = null;
-    if (Object.keys(data.form[team][data._id]).length > 0) {
+    let matchdays = Object.keys(data.form[team][data._id]).reverse();
+    if (matchdays.length > 0) {
       // Largest matchday with score is current matchday
-      for (let matchday of Object.keys(data.form[team][data._id]).reverse()) {
+      for (let matchday of matchdays) {
         if (data.form[team][data._id][matchday].score != null) {
-          currentMatchday = matchday;
-          break;
+          return matchday;
         }
       }
     }
-    return currentMatchday;
+    return null;
   }
 
   async function fetchData(address: string): Promise<TeamData> {
     const response = await fetch(address);
-    let json = await response.json();
-    return json;
+    return await response.json();
   }
 
   function initDashboard() {
     // Set formatted team name so page header can display while fetching data
-    if (hyphenatedTeam != null) {
+    if (hyphenatedTeam == 'overview') {
+      team = "Overview";
+      title = `Dashboard | ${team}`;
+      hyphenatedTeam = "overview";
+    } else if (hyphenatedTeam != null) {
       team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
+      title = `Dashboard | ${team}`;
     }
+
     fetchData("https://pldashboard-backend.vercel.app/api/teams")
       .then((json: TeamData) => {
         teams = Object.keys(json.standings);
         if (hyphenatedTeam == null) {
           // If '/' searched, set current team to
           team = teams[0];
+          title = `Dashboard | ${team}`
           hyphenatedTeam = team.toLowerCase().replace(/ /g, "-");
           // Change url to /team-name without reloading page
           history.pushState({}, null, window.location.href + hyphenatedTeam);
-        } else {
-          // If team from url not in current season teams, 404 redirect
+        } else if (team != 'Overview') {
           if (!teams.includes(team)) {
             window.location.href = "/error";
           }
+          currentMatchday = getCurrentMatchday(json, team);
+          playedDates = playedMatchdayDates(json, team);
         }
-        currentMatchday = getCurrentMatchday(json, team);
-        playedDates = playedMatchdayDates(json, team);
         data = json;
         console.log(data);
       })
@@ -171,9 +174,15 @@
 
   function switchTeam(newTeam: string) {
     hyphenatedTeam = newTeam;
-    team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
-    currentMatchday = getCurrentMatchday(data, team);
-    playedDates = playedMatchdayDates(data, team);
+    if (hyphenatedTeam == "overview") {
+      team = "Overview";
+      title = `Dashboard | ${team}`;
+    } else {
+      team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
+      title = `Dashboard | ${team}`;
+      currentMatchday = getCurrentMatchday(data, team);
+      playedDates = playedMatchdayDates(data, team);
+    }
     window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
   }
 
@@ -189,6 +198,7 @@
   let pageWidth: number;
   $: mobileView = pageWidth <= 700;
   const showBadge = false;
+  let title = "Dashboard";
   let team = "";
   let teams: string[] = []; // Used for nav bar links
   let currentMatchday: string, playedDates: Date[];
@@ -202,7 +212,7 @@
 </script>
 
 <svelte:head>
-  <title>Dashboard - {team}</title>
+  <title>{title}</title>
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
@@ -234,177 +244,195 @@
             class="title"
             style="color: var(--{hyphenatedTeam + '-secondary'});"
           >
-            {toAlias(team)}
+            {hyphenatedTeam != 'overview' ? toAlias(team): 'Overview'}
           </div>
         </a>
       </div>
 
       {#if data != undefined}
-        <div class="page-content">
-          <div class="row multi-element-row small-bottom-margin">
-            {#if showBadge}
-              <div
-                class="row-left position-and-badge"
-                style="background-image: url('{data.logoURLs[team]}')"
-              >
-                <div class="position">
-                  {data.standings[team][data._id].position}
+        {#if hyphenatedTeam == "overview"}
+          <Overview {data} {mobileView} {toInitials}/>
+        {:else}
+          <div class="page-content">
+            <div class="row multi-element-row small-bottom-margin">
+              {#if showBadge}
+                <div
+                  class="row-left position-and-badge"
+                  style="background-image: url('{data.logoURLs[team]}')"
+                >
+                  <div class="position">
+                    {data.standings[team][data._id].position}
+                  </div>
                 </div>
-              </div>
-            {:else}
-              <div class="row-left position-no-badge">
-                <div class="circles-background-container">
-                  <svg class="circles-background">
-                    <circle
-                      cx="300"
-                      cy="150"
-                      r="100"
-                      stroke-width="0"
-                      fill="var(--{hyphenatedTeam}-secondary)"
-                    />
-                    <circle
-                      cx="170"
-                      cy="170"
-                      r="140"
-                      stroke-width="0"
-                      fill="var(--{hyphenatedTeam})"
-                    />
-                    <circle
-                      cx="300"
-                      cy="320"
-                      r="170"
-                      stroke-width="0"
-                      fill="var(--{hyphenatedTeam})"
-                    />
-                  </svg>
+              {:else}
+                <div class="row-left position-no-badge">
+                  <div class="circles-background-container">
+                    <svg class="circles-background">
+                      <circle
+                        cx="300"
+                        cy="150"
+                        r="100"
+                        stroke-width="0"
+                        fill="var(--{hyphenatedTeam}-secondary)"
+                      />
+                      <circle
+                        cx="170"
+                        cy="170"
+                        r="140"
+                        stroke-width="0"
+                        fill="var(--{hyphenatedTeam})"
+                      />
+                      <circle
+                        cx="300"
+                        cy="320"
+                        r="170"
+                        stroke-width="0"
+                        fill="var(--{hyphenatedTeam})"
+                      />
+                    </svg>
+                  </div>
+                  <div class="position-central">
+                    {data.standings[team][data._id].position}
+                  </div>
                 </div>
-                <div class="position-central">
-                  {data.standings[team][data._id].position}
+              {/if}
+              <div class="row-right fixtures-graph row-graph">
+                <h1 class="lowered">Fixtures</h1>
+                <div class="graph mini-graph mobile-margin">
+                  <FixturesGraph {data} {team} {mobileView} />
                 </div>
-              </div>
-            {/if}
-            <div class="row-right fixtures-graph row-graph">
-              <h1 class="lowered">Fixtures</h1>
-              <div class="graph mini-graph mobile-margin">
-                <FixturesGraph {data} {team} {mobileView} />
               </div>
             </div>
-          </div>
 
-          <div class="row multi-element-row">
-            <div class="row-left form-details">
-              <CurrentForm {data} {currentMatchday} {team} {toInitials} />
-              <TableSnippet
-                {data}
-                {hyphenatedTeam}
-                {team}
-                {switchTeam}
-                {toAlias}
-              />
-            </div>
-            <div class="row-right">
-              <NextGame
-                {data}
-                {team}
-                {showBadge}
-                {toAlias}
-                {toInitials}
-                {switchTeam}
-              />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="form-graph row-graph">
-              <h1 class="lowered">Form Over Time</h1>
-              <div class="graph full-row-graph">
-                <FormOverTimeGraph
+            <div class="row multi-element-row">
+              <div class="row-left form-details">
+                <CurrentForm {data} {currentMatchday} {team} {toInitials} />
+                <TableSnippet
+                  {data}
+                  {hyphenatedTeam}
+                  {team}
+                  {switchTeam}
+                  {toAlias}
+                />
+              </div>
+              <div class="row-right">
+                <NextGame
                   {data}
                   {team}
-                  {playedDates}
-                  bind:lazyLoad={load}
-                  {mobileView}
+                  {showBadge}
+                  {toAlias}
+                  {toInitials}
+                  {switchTeam}
                 />
               </div>
             </div>
+
+            <div class="row">
+              <div class="form-graph row-graph">
+                <h1 class="lowered">Form</h1>
+                <div class="graph full-row-graph">
+                  <FormOverTimeGraph
+                    {data}
+                    {team}
+                    {playedDates}
+                    bind:lazyLoad={load}
+                    {mobileView}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {#if load}
+              <div class="row">
+                <div class="position-over-time-graph row-graph">
+                  <h1 class="lowered">Position</h1>
+                  <div class="graph full-row-graph">
+                    <PositionOverTimeGraph
+                      {data}
+                      {team}
+                      {playedDates}
+                      {mobileView}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="position-over-time-graph row-graph">
+                  <h1 class="lowered">Points</h1>
+                  <div class="graph full-row-graph">
+                    <PointsOverTimeGraph
+                      {data}
+                      {team}
+                      {playedDates}
+                      {mobileView}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row no-bottom-margin">
+                <div class="goals-scored-vs-conceded-graph row-graph">
+                  <h1 class="lowered">Goals Scored and Conceded</h1>
+                  <div class="graph full-row-graph">
+                    <GoalsScoredAndConcededGraph
+                      {data}
+                      {team}
+                      {playedDates}
+                      {mobileView}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-graph">
+                  <div class="clean-sheets graph full-row-graph">
+                    <CleanSheetsGraph {data} {team} {playedDates} {mobileView} />
+                  </div>
+                </div>
+              </div>
+
+              <div class="season-stats-row">
+                <StatsValues {data} {team} />
+              </div>
+
+              <div class="row">
+                <div class="row-graph">
+                  <div class="graph full-row-graph">
+                    <ScoredConcededOverTimeGraph {data} {team} {mobileView} />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="goals-freq-row row-graph">
+                  <h1>Goals Per Game</h1>
+                  <GoalsPerGame {data} {team} {mobileView} />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-graph">
+                  <div class="score-freq graph">
+                    <ScorelineFreqGraph {data} {team} {mobileView} />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="spider-chart-row row-graph">
+                  <h1>Team Comparison</h1>
+                  <div class="spider-chart-container">
+                    <SpiderGraph {data} {team} {teams} {toAlias} {toName} />
+                  </div>
+                </div>
+              </div>
+
+              <TeamsFooter lastUpdated={data.lastUpdated} />
+            {/if}
           </div>
-
-          {#if load}
-            <div class="row">
-              <div class="position-over-time-graph row-graph">
-                <h1 class="lowered">Position Over Time</h1>
-                <div class="graph full-row-graph">
-                  <PositionOverTimeGraph
-                    {data}
-                    {team}
-                    {playedDates}
-                    {mobileView}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="row no-bottom-margin">
-              <div class="goals-scored-vs-conceded-graph row-graph">
-                <h1 class="lowered">Goals Scored and Conceded</h1>
-                <div class="graph full-row-graph">
-                  <GoalsScoredAndConcededGraph
-                    {data}
-                    {team}
-                    {playedDates}
-                    {mobileView}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="row-graph">
-                <div class="clean-sheets graph full-row-graph">
-                  <CleanSheetsGraph {data} {team} {playedDates} {mobileView} />
-                </div>
-              </div>
-            </div>
-
-            <div class="season-stats-row">
-              <StatsValues {data} {team} />
-            </div>
-
-            <div class="row">
-              <div class="row-graph">
-                <div class="graph full-row-graph">
-                  <ScoredConcededOverTimeGraph {data} {team} {mobileView} />
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="goals-freq-row row-graph">
-                <h1>Goals Per Game</h1>
-                <GoalsPerGame {data} {team} {mobileView} />
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="row-graph">
-                <div class="score-freq graph">
-                  <ScorelineFreqGraph {data} {team} {mobileView} />
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="spider-chart-row row-graph">
-                <h1>Team Comparison</h1>
-                <div class="spider-chart-container">
-                  <SpiderGraph {data} {team} {teams} {toAlias} {toName} />
-                </div>
-              </div>
-            </div>
-
-            <TeamsFooter lastUpdated={data.lastUpdated} />
-          {/if}
-        </div>
+        {/if}
       {:else}
         <div class="loading-spinner-container">
           <div class="loading-spinner" />

@@ -10,11 +10,8 @@
     for (let matchday of Object.keys(data.form[team][data._id])) {
       let score = data.form[team][data._id][matchday].score;
       if (score != null) {
-        let [h, _, a] = score.split(" ");
-        h = parseInt(h);
-        a = parseInt(a);
         if (data.form[team][data._id][matchday].atHome) {
-          if (a > 0) {
+          if (score.awayGoals > 0) {
             notCleanSheets.push(1);
             cleanSheets.push(0);
           } else {
@@ -22,7 +19,7 @@
             notCleanSheets.push(0);
           }
         } else {
-          if (h > 0) {
+          if (score.homeGoals > 0) {
             notCleanSheets.push(1);
             cleanSheets.push(0);
           } else {
@@ -163,8 +160,9 @@
   function buildPlotData(data: TeamData, team: string): PlotData {
     let matchdays = playedMatchdays(data, team)
     let [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
-    // Line required on plot to make match goalsScoredAndConcededGraph
-    // TODO: Improve solution
+    // Hidden line required on plot to make x-axis length match goalsScoredAndConcededGraph
+    // Line added to plotly bar chart changes x-axis physical length vs without
+    // TODO: Solution avoiding this hidden line
     let line = hiddenLine(cleanSheetsBar.x);
     let plotData = {
       data: [cleanSheetsBar, concededBar, line],

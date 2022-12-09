@@ -78,18 +78,15 @@
     for (let matchday of Object.keys(data.form[team][season])) {
       let score = data.form[team][season][matchday].score;
       if (score != null) {
-        let [h, _, a] = score.split(" ");
-        h = parseInt(h);
-        a = parseInt(a);
         let atHome = data.form[team][season][matchday].atHome;
-        if (isCleanSheet(h, a, atHome)) {
+        if (isCleanSheet(score.homeGoals, score.awayGoals, atHome)) {
           seasonStats[team].cleanSheetRatio += 1;
         }
-        if (notScored(h, a, atHome)) {
+        if (notScored(score.homeGoals, score.awayGoals, atHome)) {
           seasonStats[team].noGoalRatio += 1;
         }
-        seasonStats[team].xG += goalsScored(h, a, atHome);
-        seasonStats[team].xC += goalsConceded(h, a, atHome);
+        seasonStats[team].xG += goalsScored(score.homeGoals, score.awayGoals, atHome);
+        seasonStats[team].xC += goalsConceded(score.homeGoals, score.awayGoals, atHome);
         seasonStats[team].played += 1;
       }
     }

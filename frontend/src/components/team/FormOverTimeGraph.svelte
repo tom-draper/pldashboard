@@ -53,8 +53,8 @@
     team: string,
   ): any[] {
     let lines = [];
-    let teams = Object.keys(data.standings)
 
+    let teams = Object.keys(data.standings)
     for (let i = 0; i < teams.length; i++) {
       if (teams[i] != team) {
         let line = getFormLine(data, teams[i], false);
@@ -163,7 +163,7 @@
     });
     setTimeout(() => {
       lazyLoad = true
-    }, 4000)
+    }, 3000)
   }
 
   function refreshPlot() {

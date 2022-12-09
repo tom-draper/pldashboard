@@ -3,11 +3,10 @@ from collections import defaultdict
 from datetime import datetime
 
 import pandas as pd
+from dataframes.df import DF
 from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-
-from dataframes.df import DF
 
 utils = Utilities()
 
@@ -20,16 +19,15 @@ class Fixtures(DF):
     def _inc_avg_scored_conceded(
         avg_scored: float,
         avg_conceded: float,
-        h: int,
-        a: int,
+        score: dict[str, int], 
         at_home: bool
     ):
         if at_home:
-            avg_scored += h
-            avg_conceded += a
+            avg_scored += score['homeGoals']
+            avg_conceded += score['awayGoals']
         else:
-            avg_conceded += h
-            avg_scored += a
+            avg_scored += score['awayGoals']
+            avg_conceded += score['homeGoals']
 
         return avg_scored, avg_conceded
 
@@ -41,9 +39,8 @@ class Fixtures(DF):
             if self.df.at[team_name, (matchday_no, 'status')] == 'FINISHED':
                 at_home = self.df.at[team_name, (matchday_no, 'atHome')]
                 score = self.df.at[team_name, (matchday_no, 'score')]
-                h, a = utils.extract_int_score(score)
                 avg_scored, avg_conceded = self._inc_avg_scored_conceded(
-                    avg_scored, avg_conceded, h, a, at_home)
+                    avg_scored, avg_conceded, score, at_home)
                 total += 1
 
         if total > 0:
@@ -63,9 +60,6 @@ class Fixtures(DF):
             if not all(matchday['status'] == 'SCHEDULED'):
                 for team_name, row in matchday.iterrows():
                     if row['status'] == 'FINISHED':
-                        home_goals, away_goals = utils.extract_int_score(
-                            row['score'])
-
                         if row['atHome']:
                             home_name = team_name
                             away_name = row['team']
@@ -77,10 +71,7 @@ class Fixtures(DF):
                         away_initials = utils.convert_team_name_or_initials(
                             away_name)
 
-                        actual_scores[f'{home_initials} vs {away_initials}'] = {
-                            'homeGoals': home_goals,
-                            'awayGoals': away_goals
-                        }
+                        actual_scores[f'{home_initials} vs {away_initials}'] = row['score']
 
         return actual_scores
 
@@ -102,9 +93,13 @@ class Fixtures(DF):
             opp_team_name = utils.clean_full_team_name(
                 match['homeTeam']['name'])
 
-        score = None
         if match['score']['fullTime']['homeTeam'] is not None:
-            score = f"{match['score']['fullTime']['homeTeam']} - {match['score']['fullTime']['awayTeam']}"
+            score = {
+                'homeGoals': match['score']['fullTime']['homeTeam'],
+                'awayGoals': match['score']['fullTime']['awayTeam']
+            }
+        else:
+            score = None
 
         matchday[(match['matchday'], 'date')].append(date)
         matchday[(match['matchday'], 'atHome')].append(home_team)
