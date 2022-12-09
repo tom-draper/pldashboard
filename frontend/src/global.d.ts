@@ -26,7 +26,10 @@ type Form = {
                 team: string,
                 date: string,
                 starTeam: boolean,
-                score: string,
+                score: {
+                    homeGoals: number,
+                    awayGoals: number,
+                },
                 position: number,
                 gD: number,
                 formRating5: number,
@@ -59,10 +62,6 @@ type Standings = {
 
 type TeamRatings = {
     string: {  // Team name
-        normRatingCurrent: number,
-        normRating1YAgo: number,
-        normRating2YAgo: number,
-        normRating3YAgo: number,
         ratingCurrent: number,
         rating1YAgo: number,
         rating2YAgo: number,
@@ -125,5 +124,5 @@ type PlotData = {
 }
 
 type Counter = {
-  string: number
+    [key: string]: number
 }

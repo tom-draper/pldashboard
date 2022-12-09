@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -8,12 +9,11 @@ from datetime import datetime
 from os.path import dirname, join
 
 import requests
+from data import Data
 from dotenv import load_dotenv
 from lib.database.database import Database
 from lib.utils.utilities import Utilities
 from timebudget import timebudget
-
-from data import Data
 
 utils = Utilities()
 
@@ -49,10 +49,10 @@ class Updater:
             
             code = res.status_code
             if code == 429 or code == 403:
-                print('❌  Status:', code)
+                logging.info(f'❌  Status: {code}')
                 raise ValueError('❌ ERROR: Data request failed')
             else:
-                print('✔️  Status:', code)
+                logging.info(f'✔️  Status: {code}')
 
             return res.json()['matches']
         else:
@@ -67,10 +67,10 @@ class Updater:
 
             code = res.status_code
             if code == 429 or code == 403:
-                print('❌  Status:', code)
+                logging.info(f'❌  Status: {code}')
                 raise ValueError('❌ ERROR: Data request failed')
             else:
-                print('✔️  Status:', code)
+                logging.info(f'✔️  Status: {code}')
 
             return res.json()['standings'][0]['table']
         else:
@@ -146,6 +146,7 @@ class Updater:
             self.json_data, 
             self.data.fixtures, 
             self.data.form, 
+            self.data.team_ratings,
             self.data.home_advantages, 
             self.current_season, 
             n_seasons, 
@@ -159,7 +160,7 @@ class Updater:
     def save_predictions_to_db(self):
         predictions = self.data.upcoming.get_predictions()
         actual_scores = self.data.fixtures.get_actual_scores_new()
-        self.database.update_predictions_new(predictions, actual_scores)
+        self.database.update_predictions(predictions, actual_scores)
         self.database.update_actual_scores(actual_scores)
         
     def get_logo_urls(self) -> dict[str, str]:
@@ -184,27 +185,39 @@ class Updater:
         try:
             self.fetch_json_data(n_seasons, request_new)
         except ValueError as e:
-            print(e)
-            print('🔁 Retrying with local backup data...')
+            logging.error(e)
+            logging.info('🔁 Retrying with local backup data...')
             request_new = False
             self.fetch_json_data(n_seasons, request_new)
             
         self.build_dataframes(n_seasons, display_tables)
 
         if request_new:
-            print('💾 Saving new team data to local backup...')
+            logging.info('💾 Saving new team data to local backup...')
             self.save_data_to_json()
             if update_db:
-                print('💾 Saving new team data to database...')
+                logging.info('💾 Saving new team data to database...')
                 self.save_team_data_to_db()
-                print('💾 Saving predictions to database...')
+                logging.info('💾 Saving predictions to database...')
                 self.save_predictions_to_db()
+
+def run(display_tables: bool = False, request_new: bool = True, update_db: bool = True):
+    updater = Updater(2022)
+    updater.build_all(
+        display_tables=display_tables,
+        request_new=request_new,
+        update_db=update_db
+    )
+
+def run_production():
+    timebudget.set_quiet()
+    logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s :: %(levelname)s :: %(message)s')
+    run()
+
+def run_dev():
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s :: %(levelname)s :: %(message)s')
+    run(display_tables=True, update_db=False)
 
 
 if __name__ == "__main__":
-    updater = Updater(2022)
-    updater.build_all(
-        request_new=True, 
-        display_tables=True, 
-        update_db=True,
-    )
+    run_production()

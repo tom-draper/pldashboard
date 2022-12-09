@@ -60,19 +60,25 @@
   --nottingham-forest: rgb(229 50 51);
   --nottingham-forest-secondary: rgb(255 255 255);
 
+  --overview: #00fe87;
+  --overview-secondary: #280936;
+
   --border-radius: 6px;
-  --ssp1-offset: 0;
-  --ssp2-offset: 0;
-  --ssp3-offset: 0;
 
   --win: #00fe87;
   --draw: #ffdd00;
   --lose: #f83027;
+  --pink: #c600d8;
+  --dark-purple: #1c0d2d;
+  --purple: #280936;
+  --light-purple: #37003c;
+  --green: #00fe87;
 }
 
 @font-face {
   font-family: "Radikal Medium";
   src: url("/fonts/Radikal-Medium.ttf");
+  font-display: swap;
 }
 
 * {
@@ -81,7 +87,7 @@
 
 body {
   background: #fafafa;
-  color: #333;
+  color: var(--dark-purple);
   margin: 0;
 }
 
@@ -93,7 +99,7 @@ h1 {
 .main-link {
   font-size: 1.4em;
   font-weight: 600;
-  color: #333;
+  color: var(--purple);
   flex: auto;
   align-self: center;
   text-decoration: none;

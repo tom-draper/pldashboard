@@ -1,9 +1,10 @@
+import logging
+
 import pandas as pd
+from dataframes.df import DF
 from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
-
-from dataframes.df import DF
 
 utils = Utilities()
 
@@ -12,9 +13,11 @@ class Standings(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, 'standings')
 
-    def get_team_names(self, json_data: dict, season: int):
+    @staticmethod
+    def get_team_names(json_data: dict, season: int):
         data = json_data['standings'][season]
-        team_names = [utils.clean_full_team_name(row['team']['name']) for row in data]
+        team_names = [utils.clean_full_team_name(
+            row['team']['name']) for row in data]
         return team_names
 
     @staticmethod
@@ -25,9 +28,9 @@ class Standings(DF):
     ) -> DataFrame:
         data = json_data['standings'][season]
         df = pd.DataFrame.from_dict(data)
-        
+
         # Rename teams to their team name
-        team_names = [utils.clean_full_team_name(name) 
+        team_names = [utils.clean_full_team_name(name)
                       for name in [df['team'][x]['name'] for x in range(len(df))]]
         df = df.drop(columns=['form', 'team'])
         df.index = team_names
@@ -35,30 +38,31 @@ class Standings(DF):
         # Move points column to the end
         points_col = df.pop('points')
         df.insert(8, 'points', points_col)
-        col_headings = ['position', 'played', 'won', 'drawn', 'lost', 'gF', 'gA', 'gD', 'points']
+        col_headings = ['position', 'played', 'won',
+                        'drawn', 'lost', 'gF', 'gA', 'gD', 'points']
         df.columns = pd.MultiIndex.from_product([[season], col_headings])
 
         df = df.drop(index=df.index.difference(current_teams))
-        
+
         return df
-    
+
     @staticmethod
     def clean_dataframe(standings: DataFrame) -> DataFrame:
         standings = standings.fillna(0).astype(int)
         standings.index.name = 'team'
         standings.columns.names = ('Season', None)
         return standings
-        
+
     @timebudget
     def build(
         self,
         json_data: dict,
         season: int,
-        no_seasons: int = 3,
+        num_seasons: int = 3,
         display: bool = False
     ):
         """ Assigns self.df to a dataframe containing all table standings for 
-            each season from current season to season [no_seasons] years ago.
+            each season from current season to season [num_seasons] years ago.
 
             Rows: the 20 teams participating in the current season, ordered ascending 
                 by the team's position in the current season 
@@ -69,7 +73,7 @@ class Standings(DF):
             | position | played | won | draw | lost | gF | gA | gD | points | 
 
             [SEASON YEAR]: 4-digit year values that a season began, from current 
-                season to season no_seasons ago
+                season to season num_seasons ago
             position: unique integer from 1 to 20 depending on the table position 
                 the team holds in the season
             played: the number of games the team has played in the season.
@@ -83,20 +87,19 @@ class Standings(DF):
 
         Args:
             json_data dict: the json data storage used to build the dataframe
-            team_names list: the team names of the teams within the current season
             season: the year of the current season
-            no_seasons (int): number of previous seasons to include. Defaults to 3.
+            num_seasons (int): number of previous seasons to include. Defaults to 3.
             display (bool, optional): flag to print the dataframe to console after 
                 creation. Defaults to False.
         """
-        print('🛠️  Building standings dataframe...')
+        logging.info('🛠️  Building standings dataframe...')
 
         standings = pd.DataFrame()
-        
+
         team_names = self.get_team_names(json_data, season)
 
         # Loop from current season to the season 2 years ago
-        for n in range(no_seasons):
+        for n in range(num_seasons):
             season_standings = self._season_standings(
                 json_data, team_names, season - n)
             standings = pd.concat((standings, season_standings), axis=1)

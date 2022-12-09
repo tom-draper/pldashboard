@@ -5,17 +5,26 @@
     return ord[a > 20 ? a % 10 : a] || "th";
   }
 
-  // function setOppTeam() {
-    // if (data.upcoming[team].nextTeam != null) {
-      // oppTeam = data.upcoming[team].nextTeam.toLowerCase().replace(/ /g, "-");
-    // }
-  // }
+  function currentMatchday(data: TeamData, team: string): string {
+    let matchdays = Object.keys(data.form[team][data._id])
+    for (let i = matchdays.length - 1; i >= 0; i--) {
+      if (data.form[team][data._id][matchdays[i]].score != null) {
+        return matchdays[i]
+        
+      }
+    }
+    return null
+  }
 
-  // let oppTeam: string;
-  // $: team && setOppTeam();
-
+  function resultColour(prevMatch: any, home: boolean): string {
+    if (home) {
+      return prevMatch.homeGoals < prevMatch.awayGoals ? prevMatch.awayTeam : prevMatch.homeTeam
+    } else {
+      return prevMatch.homeGoals > prevMatch.awayGoals ? prevMatch.homeTeam : prevMatch.awayTeam
+    }
+  }
+  
   export let data: TeamData,
-    currentMatchday: string,
     team: string,
     showBadge: boolean,
     toAlias: Function,
@@ -23,7 +32,6 @@
     switchTeam: Function;
 </script>
 
-{#if data != undefined}
   {#if data.upcoming[team].nextTeam == null}
     <div class="next-game-prediction">
       <div class="next-game-season-complete">
@@ -33,11 +41,9 @@
       </div>
     </div>
   {:else}
-    <div
-      class="next-game-prediction">
+    <div class="next-game-prediction">
       <div class="next-game-title">
-        <h1
-          class="next-game-title-text">
+        <h1 class="next-game-title-text">
           Next Game:&nbsp
           <button
             on:click={() => {
@@ -78,16 +84,13 @@
             </div>
             <div class="next-game-item current-form">
               Current form:
-              {#if currentMatchday != null}
-                  <span class="current-form-value">{(
+                <span class="current-form-value"
+                  >{(
                     data.form[data.upcoming[team].nextTeam][data._id][
-                      currentMatchday
+                      currentMatchday(data, data.upcoming[team].nextTeam)
                     ].formRating5 * 100
                   ).toFixed(1)}%</span
                 >
-              {:else}
-                None
-              {/if}
             </div>
             <div class="next-game-item">
               Score prediction
@@ -106,11 +109,11 @@
         <div class="past-results">
           {#if data.upcoming[team].prevMatches.length == 0}
             <div class="next-game-item prev-results-title no-prev-results">
-              No Previous Results
+              No previous results
             </div>
           {:else}
             <div class="next-game-item prev-results-title">
-              Previous Results
+              Previous results
             </div>
           {/if}
 
@@ -126,30 +129,51 @@
               </div>
               <div class="next-game-item result-details">
                 <div class="past-result">
-                  <div
-                    class="home-team"
-                    style="background: var(--{prevMatch.homeTeam
-                      .toLowerCase()
-                      .replace(/ /g, '-')}); color: var(--{prevMatch.homeTeam
-                      .toLowerCase()
-                      .replace(/ /g, '-')}-secondary)"
-                  >
-                    {toInitials(prevMatch.homeTeam)}
-                  </div>
-                  <div class="score-container {prevMatch.result}">
-                    <div class="score">
-                      {prevMatch.homeGoals} - {prevMatch.awayGoals}
+                  <div class="left-side">
+                    <div
+                      class="home-team"
+                      style="background: var(--{prevMatch.homeTeam
+                        .toLowerCase()
+                        .replace(/ /g, '-')}); color: var(--{prevMatch.homeTeam
+                        .toLowerCase()
+                        .replace(/ /g, '-')}-secondary)"
+                    >
+                      {toInitials(prevMatch.homeTeam)}
+                    </div>
+                    <div class="goals-container"
+                      style="background: var(--{
+                        resultColour(prevMatch, true)
+                        .toLowerCase()
+                        .replace(/ /g, '-')}); color: var(--{resultColour(prevMatch, true)
+                        .toLowerCase()
+                        .replace(/ /g, '-')}-secondary)">
+                      <div class="home-goals">
+                        {prevMatch.homeGoals}
+                      </div>
                     </div>
                   </div>
-                  <div
-                    class="away-team"
-                    style="background: var(--{prevMatch.awayTeam
-                      .toLowerCase()
-                      .replace(/ /g, '-')}); color: var(--{prevMatch.awayTeam
-                      .toLowerCase()
-                      .replace(/ /g, '-')}-secondary)"
-                  >
-                    {toInitials(prevMatch.awayTeam)}
+                  <div class="right-side">
+                    <div class="goals-container"
+                        style="background: var(--{
+                        resultColour(prevMatch, false)
+                        .toLowerCase()
+                        .replace(/ /g, '-')}); color: var(--{resultColour(prevMatch, false)
+                        .toLowerCase()
+                        .replace(/ /g, '-')}-secondary)">
+                      <div class="away-goals">
+                        {prevMatch.awayGoals}
+                      </div>
+                    </div>
+                    <div
+                      class="away-team"
+                      style="background: var(--{prevMatch.awayTeam
+                        .toLowerCase()
+                        .replace(/ /g, '-')}); color: var(--{prevMatch.awayTeam
+                        .toLowerCase()
+                        .replace(/ /g, '-')}-secondary)"
+                    >
+                      {toInitials(prevMatch.awayTeam)}
+                    </div>
                   </div>
                 </div>
                 <div style="clear: both" />
@@ -160,15 +184,39 @@
       </div>
     </div>
   {/if}
-{/if}
 
 <style scoped>
+  .left-side,
+  .right-side {
+    display: flex;
+    flex: 1;
+  }
+
+  .goals-container {
+    flex-grow: 1;
+  }
+
+  .away-goals,
+  .home-goals {
+    margin: 4px 0;
+  }
+  .home-goals {
+    text-align: right;
+    padding-right: 0.5em;
+    border-right: 1px solid black;
+  }
+  .away-goals {
+    text-align: left;
+    padding-left: 0.5em;
+    border-left: 1px solid black;
+  }
+
   .next-game-title {
     width: max-content;
     padding: 6px 20px;
     border-radius: 0 0 var(--border-radius) 0;
-    background: #38003d;
-    margin: -1px 0 0 -1px;  /* To avoid top and left gap when zooming out */
+    background: var(--purple);
+    margin: -1px 0 0 -1px; /* To avoid top and left gap when zooming out */
   }
 
   .next-game-season-complete {
@@ -186,7 +234,7 @@
     display: flex;
   }
   .next-game-team-btn {
-    color: #00fe87 !important;
+    color: var(--green) !important;
   }
   .next-game-logo {
     height: 225px;
@@ -215,6 +263,7 @@
   .predictions-link {
     text-decoration: none;
     color: #333;
+    color: var(--purple)
   }
 
   .predictions-link:hover {
@@ -226,22 +275,19 @@
     width: 55%;
     display: flex;
     flex-direction: column;
-    padding: 15px 20px 20px;
+    padding: 15px 20px 10px;
     border-radius: 6px;
-    background: rgba(255, 255, 255, 0.6);
     margin: auto 0;
   }
 
   .next-game-prediction {
     border-radius: var(--border-radius);
     min-height: 97.5%;
-    border: 6px solid #38003d;
-    background: linear-gradient(45deg, #00fe87, #03efff)
+    border: 6px solid var(--purple);
   }
 
   .next-game-values {
     display: flex;
-    margin-top: 1em;
     margin-right: 2vw;
     min-height: 387px;
   }
@@ -261,9 +307,8 @@
 
   .past-result-date {
     font-size: 13px;
-    color: #333;
     width: 90px;
-    margin: 8px auto -2px;
+    margin: 5px auto 2px;
     padding-top: 3px;
     border-radius: 4px 4px 0 0;
   }
@@ -278,69 +323,18 @@
     place-items: center;
     color: rgb(181, 181, 181);
     color: rgba(0, 0, 0, 0.35);
+    background: rgba(181, 181, 181, 0.3);
     border-radius: var(--border-radius);
     padding: 100px 0;
   }
   .next-game-item {
-    border-radius: var(--border-radius);
-  }
-
-  .result-details {
-    background: #f0fefd;
-  }
-
-  .won {
-    border-bottom: 6px var(--win) solid;
-  }
-  .drew {
-    border-bottom: 6px var(--draw) solid;
-  }
-  .lost {
-    border-bottom: 6px var(--lose) solid;
-  }
-
-  .accuracy {
-    margin-bottom: 30px;
-  }
-
-  .accuracy-item {
-    font-size: 14px;
-    color: rgb(120 120 120);
-    margin-bottom: 5px;
+    border-radius: 9px;
   }
 
   .home-team {
     float: left;
     text-align: left;
     border-radius: var(--border-radius) 0 0 var(--border-radius);
-  }
-
-  .score-container {
-    float: left;
-    min-width: 44px;
-    text-align: center;
-    font-weight: 800;
-    flex: 3;
-    color: #333;
-    align-self: center;
-    display: flex;
-  }
-  .left-color {
-    background: red;
-  }
-  .right-color {
-    background: red;
-  }
-  .left-color,
-  .right-color {
-    flex-grow: 1;
-    height: 8px;
-    margin: auto;
-  }
-  .score {
-    width: 100%;
-    padding: 3px 0 0;
-    margin: auto;
   }
 
   .away-team {
@@ -354,7 +348,6 @@
     font-size: 15px;
     width: calc(50% - 18px);
     padding: 5px 0 3px;
-    flex: 1;
     text-align: center;
   }
 
@@ -367,15 +360,21 @@
     border-radius: 6px;
     padding: 10px 15px;
     color: white;
-    background: #38003d;
+    background: var(--purple);
     width: fit-content;
     margin: auto auto 10px;
   }
   .current-form-value {
-    color: #00fe87;
+    color: var(--green);
   }
 
-  @media only screen and (max-width: 1100px) {
+  @media only screen and (max-width: 1300px) {
+    .next-game-values {
+      margin-right: 0;
+    }
+  }
+
+  @media only screen and (max-width: 1000px) {
     .next-game-prediction {
       margin: 50px 20px 40px;
     }
@@ -417,6 +416,10 @@
 
     .next-game-title {
       padding: 6px 15px;
+    }
+    .no-prev-results {
+      font-size: 0.8em;
+      padding: 3em 0;
     }
   }
   @media only screen and (max-width: 700px) {

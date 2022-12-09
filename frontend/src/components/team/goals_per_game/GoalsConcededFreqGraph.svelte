@@ -1,43 +1,44 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  function defaultLayout() {
+  function defaultLayout(): Object {
     let xLabels = getXLabels();
     return {
-      title: false,
-      autosize: true,
-      margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
-      hovermode: "closest",
-      barmode: "overlay",
-      bargap: 0,
-      plot_bgcolor: "#fafafa",
-      paper_bgcolor: "#fafafa",
-      yaxis: getYAxisLayout(),
-      xaxis: {
-        title: { text: "Scored" },
-        linecolor: "black",
-        showgrid: false,
-        showline: false,
-        fixedrange: true,
-        ticktext: xLabels,
-        tickvals: xLabels,
-      },
-      legend: {
-        x: 1,
-        xanchor: "right",
-        y: 0.95,
-      },
-      dragmode: false,
-    };
+        title: false,
+        autosize: true,
+        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+        hovermode: "closest",
+        barmode: "overlay",
+        bargap: 0,
+        plot_bgcolor: "#fafafa",
+        paper_bgcolor: "#fafafa",
+        yaxis: getYAxisLayout(),
+        xaxis: {
+          title: { text: "Conceded" },
+          linecolor: "black",
+          showgrid: false,
+          showline: false,
+          fixedrange: true,
+          ticktext: xLabels,
+          tickvals: xLabels,
+        },
+        legend: {
+          x: 1,
+          xanchor: "right",
+          y: 0.95,
+        },
+        dragmode: false,
+      }
   }
-  
+
   function setDefaultLayout() {
     if (setup) {
       let layoutUpdate = {
-        "yaxis.title": { text: "Scored" },
+        "yaxis.title": { text: "Conceded" },
         "yaxis.visible": true,
         "margin.l": 60,
       };
+      //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
@@ -49,13 +50,14 @@
         "yaxis.visible": false,
         "margin.l": 20,
       };
+      //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
 
   function buildPlotData(): PlotData {
     let plotData = {
-      data: getScoredBars(),
+      data: getConcededBars(),
       layout: defaultLayout(),
       config: {
         responsive: true,
@@ -68,6 +70,7 @@
 
   function genPlot() {
     plotData = buildPlotData();
+      //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -81,10 +84,12 @@
 
   function refreshPlot() {
     if (setup) {
-      plotData.data[1] = getScoredTeamBars(); // Update team bars
+      plotData.data[1] = getConcededTeamBars();
+      //@ts-ignore
       Plotly.relayout(plotDiv, {
         yaxis: getYAxisLayout(),
       });
+      //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {
         setMobileLayout();
@@ -104,8 +109,8 @@
   $: setup && mobileView && setMobileLayout();
 
   export let team: string,
-    getScoredBars: Function,
-    getScoredTeamBars: Function,
+    getConcededBars: Function,
+    getConcededTeamBars: Function,
     getXLabels: Function,
     getYAxisLayout: Function,
     mobileView: boolean;

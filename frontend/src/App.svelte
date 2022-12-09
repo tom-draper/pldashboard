@@ -1,9 +1,9 @@
 <script lang="ts">
   import { Router, Route } from "svelte-routing";
-  import Teams from "./routes/Teams.svelte";
-  import Team from "./routes/Team.svelte";
+  import Dashboard from "./routes/Dashboard.svelte";
   import Home from "./routes/Home.svelte";
   import Predictions from "./routes/Predictions.svelte";
+  import Error from "./routes/Error.svelte";
 
   // Used for SSR. A falsy value is ignored by the Router.
   export let url = "";
@@ -11,12 +11,12 @@
 
 <Router {url}>
   <Route path="/">
-    <Team hyphenatedTeam="manchester-city" />
+    <Dashboard hyphenatedTeam="{null}" />
+  </Route>
+  <Route path="/:team" let:params>
+    <Dashboard hyphenatedTeam={params.team} />
   </Route>
   <Route path="/predictions" component={Predictions} />
-  <Route path="/:team" let:params>
-    <Team hyphenatedTeam={params.team} />
-  </Route>
-  <Route path="/teams" component={Teams} />
   <Route path="/home" component={Home} />
+  <Route path="/error" component={Error} />
 </Router>

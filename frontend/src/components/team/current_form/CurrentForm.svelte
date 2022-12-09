@@ -131,7 +131,7 @@
     font-size: 1.7rem;
     margin: 20px 0;
     padding: 9px 25px;
-    background: #38003d;
+    background: var(--purple);
     color: white;
     border-radius: var(--border-radius);
   }
@@ -145,23 +145,31 @@
     color: var(--win);
   }
 
-  /* .name-row {
-    margin: 0 12px 0 4px;
-  } */
-
   .icon-name {
     position: relative;
     margin-top: 0.6em;
   }
 
-  @media only screen and (max-width: 1100px) {
+  .pos-4 {
+    opacity: 100%;
+  }
+  .pos-3 {
+    opacity: 89%;
+  }
+  .pos-2 {
+    opacity: 78%
+  }
+  .pos-1 {
+    opacity: 67%;
+  }
+  .pos-0 {
+    opacity: 56%;
+  }
+
+  @media only screen and (max-width: 1000px) {
     .current-form-row {
       width: min(80%, 440px);
-      /* margin-right: 8px; */
     }
-    /* .name-row {
-      margin: 0 0 8px
-    } */
   }
   
   @media only screen and (max-width: 700px) {

@@ -33,27 +33,12 @@
     return { xG: xGRank, xC: xCRank, cleanSheetRatio: cleanSheetRatioRank };
   }
 
-  function setPositionalOffset() {
-    document.documentElement.style.setProperty(
-      "--ssp1-offset",
-      -ssp1.clientWidth / 2 + "px"
-    );
-    document.documentElement.style.setProperty(
-      "--ssp2-offset",
-      -ssp2.clientWidth / 2 + "px"
-    );
-    document.documentElement.style.setProperty(
-      "--ssp3-offset",
-      -ssp3.clientWidth / 2 + "px"
-    );
-  }
-
   function setStatsValues(seasonStats: Stats, team: string) {
     rank = getStatsRankings(seasonStats, team);
 
     // Keep ordinal values at the correct offset
     // Once rank values have updated, init positional offset for ordinal values
-    window.addEventListener("resize", setPositionalOffset);
+    // window.addEventListener("resize", setPositionalOffset);
   }
 
   function isCleanSheet(h: number, a: number, atHome: boolean): boolean {
@@ -93,18 +78,15 @@
     for (let matchday of Object.keys(data.form[team][season])) {
       let score = data.form[team][season][matchday].score;
       if (score != null) {
-        let [h, _, a] = score.split(" ");
-        h = parseInt(h);
-        a = parseInt(a);
         let atHome = data.form[team][season][matchday].atHome;
-        if (isCleanSheet(h, a, atHome)) {
+        if (isCleanSheet(score.homeGoals, score.awayGoals, atHome)) {
           seasonStats[team].cleanSheetRatio += 1;
         }
-        if (notScored(h, a, atHome)) {
+        if (notScored(score.homeGoals, score.awayGoals, atHome)) {
           seasonStats[team].noGoalRatio += 1;
         }
-        seasonStats[team].xG += goalsScored(h, a, atHome);
-        seasonStats[team].xC += goalsConceded(h, a, atHome);
+        seasonStats[team].xG += goalsScored(score.homeGoals, score.awayGoals, atHome);
+        seasonStats[team].xC += goalsConceded(score.homeGoals, score.awayGoals, atHome);
         seasonStats[team].played += 1;
       }
     }
@@ -112,7 +94,7 @@
 
   function buildStats(data: TeamData): Stats {
     let stats = {};
-    for (let team of data.teamNames) {
+    for (let team of Object.keys(data.standings)) {
       stats[team] = {
         cleanSheetRatio: 0,
         noGoalRatio: 0,
@@ -159,7 +141,6 @@
   };
 
   let stats: Stats;
-  let ssp1: any, ssp2: any, ssp3: any;
   let rank: StatsRank = {
     xG: "",
     xC: "",
@@ -181,12 +162,13 @@
   <div class="season-stats">
     <div class="season-stat goals-per-game">
       <div class="season-stat-value">
-        {stats[team].xG.toFixed(2)}
-        <div
-          class="season-stat-position ssp-{rank.xG}"
-          id="ssp1"
-          bind:this={ssp1}
-        >
+        <div class="season-stat-position hidden">
+          {rank.xG}
+        </div>
+        <div class="season-stat-number">
+          {stats[team].xG.toFixed(2)}
+        </div>
+        <div class="season-stat-position ssp-{rank.xG}">
           {rank.xG}
         </div>
       </div>
@@ -194,12 +176,13 @@
     </div>
     <div class="season-stat conceded-per-game">
       <div class="season-stat-value">
-        {stats[team].xC.toFixed(2)}
-        <div
-          class="season-stat-position ssp-{rank.xC}"
-          id="ssp2"
-          bind:this={ssp2}
-        >
+        <div class="season-stat-position hidden">
+          {rank.xC}
+        </div>
+        <div class="season-stat-number">
+          {stats[team].xC.toFixed(2)}
+        </div>
+        <div class="season-stat-position ssp-{rank.xC}">
           {rank.xC}
         </div>
       </div>
@@ -207,12 +190,13 @@
     </div>
     <div class="season-stat clean-sheet-ratio">
       <div class="season-stat-value">
-        {stats[team].cleanSheetRatio.toFixed(2)}
-        <div
-          class="season-stat-position ssp-{rank.cleanSheetRatio}"
-          id="ssp3"
-          bind:this={ssp3}
-        >
+        <div class="season-stat-position hidden">
+          {rank.cleanSheetRatio}
+        </div>
+        <div class="season-stat-number">
+          {stats[team].cleanSheetRatio.toFixed(2)}
+        </div>
+        <div class="season-stat-position ssp-{rank.cleanSheetRatio}">
           {rank.cleanSheetRatio}
         </div>
       </div>
@@ -222,17 +206,8 @@
 {/if}
 
 <style scoped>
-  #ssp1 {
-    right: calc(var(--ssp1-offset) - 1.2em);
-  }
-  #ssp2 {
-    right: calc(var(--ssp2-offset) - 1.2em);
-  }
-  #ssp3 {
-    right: calc(var(--ssp3-offset) - 1.2em);
-  }
   .ssp-1st {
-    color: #00fe87;
+    color: var(--green);
   }
   .ssp-2nd {
     color: #48f98f;
@@ -306,13 +281,16 @@
     margin: 0 auto;
     position: relative;
     user-select: none;
+    display: flex;
   }
 
   .season-stat-position {
     font-size: 0.3em;
-    position: absolute;
-    top: -1em;
-    letter-spacing: -0.07em;
+    line-height: 0;
+    margin-left: 0.2em;
+  }
+  .hidden {
+    color: transparent;
   }
 
   .season-stat {
@@ -323,10 +301,6 @@
     .season-stat-value {
       font-size: 2.5em;
     }
-
-    /* .season-stat {
-    margin: 0.4em 0 1em 0;
-  } */
 
     .season-stats-row {
       margin: 70px 0 10px;

@@ -3,7 +3,7 @@
     switch (result) {
       case "W":
         if (starTeam) {
-          return "linear-gradient(30deg, #00ff87, #2bd2ff, #fa8bff)";
+          return "linear-gradient(30deg, var(--green), #2bd2ff, #fa8bff)";
         } else {
           return "#00fe87";
         }
@@ -85,7 +85,6 @@
     flex: 1;
   }
 
-  /* .pos-4, */
   .pos-3,
   .pos-4,
   .pos-2,
@@ -100,24 +99,24 @@
   }
   
   .pos-3 {
-    opacity: 90%;
+    opacity: 89%;
   }
   
   .pos-2 {
-    opacity: 80%;
+    opacity: 78%;
   }
   
   .pos-1 {
-    opacity: 70%;
+    opacity: 67%;
   }
 
   .pos-0 {
     /* Least recent game */
-    opacity: 60%;
+    opacity: 56%;
     border-radius: 6px 0 0 6px;
   }
 
-  @media only screen and (max-width: 1100px) {
+  @media only screen and (max-width: 1000px) {
     .result {
       font-size: 3em;
     }
