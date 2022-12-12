@@ -52,7 +52,6 @@
     avgGoals: Counter,
     matchdays: string[]
   ): any {
-    console.log(avgGoals)
     return {
       name: "Avg",
       type: "line",
@@ -159,7 +158,6 @@
   }
 
   function buildPlotData(data: TeamData, team: string): PlotData {
-    // let x = getMatchdayDates(data, fullTeamName);
     let [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
     let avgGoals = getAvgGoalsPerGame(data);
     let matchdays = Object.keys(avgGoals);
