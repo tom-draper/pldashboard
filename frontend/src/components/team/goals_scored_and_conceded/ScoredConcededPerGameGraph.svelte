@@ -58,8 +58,8 @@
       x: playedDates,
       y: Object.values(avgGoals),
       text: matchdays,
-      hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",
       line: { color: "#0080FF", width: 2 },
+      hovertemplate: "<b>Matchday %{text}</b<br>%{y} goals<extra></extra>",
     };
   }
 
@@ -158,7 +158,6 @@
   }
 
   function buildPlotData(data: TeamData, team: string): PlotData {
-    // let x = getMatchdayDates(data, fullTeamName);
     let [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
     let avgGoals = getAvgGoalsPerGame(data);
     let matchdays = Object.keys(avgGoals);
