@@ -88,7 +88,7 @@
 
   function setFormValues() {
     let sortedMatchdays = getSortedMatchdays(data, team);
-
+    
     let matchdays = latestNPlayedMatchdays(data, team, sortedMatchdays, 5);
     
     formIcons = getFormIcons(data, team);
@@ -119,7 +119,7 @@
 {/if}
 <div class="current-form">
   Current form:
-  {#if currentMatchday != null}
+  {#if currentMatchday != undefined}
     <span class="current-form-value">{(data.form[team][data._id][currentMatchday].formRating5 * 100).toFixed(1)}%</span>
   {:else}
     None

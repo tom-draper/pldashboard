@@ -151,16 +151,16 @@
       .then((json: TeamData) => {
         teams = Object.keys(json.standings);
         if (hyphenatedTeam == null) {
-          // If '/' searched, set current team to
+          // If root, set team to current leader
           team = teams[0];
           title = `Dashboard | ${team}`
           hyphenatedTeam = team.toLowerCase().replace(/ /g, "-");
           // Change url to /team-name without reloading page
           history.pushState({}, null, window.location.href + hyphenatedTeam);
-        } else if (team != 'Overview') {
-          if (!teams.includes(team)) {
+        } else if (team != 'Overview' && !teams.includes(team)) {
             window.location.href = "/error";
-          }
+        }
+        if (team != 'Overview') {
           currentMatchday = getCurrentMatchday(json, team);
           playedDates = playedMatchdayDates(json, team);
         }
