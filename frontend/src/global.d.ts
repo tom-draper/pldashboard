@@ -8,7 +8,10 @@ type Scoreline = {
 type Match = {
     team: string,
     date: string,
-    score: string,  // X - Y
+    score: {
+        homeGoals: number,
+        awayGoals: number
+    }
     status: string,  // FINISHED, IN-PLAY or SCHEDULED
     atHome: boolean,
 }

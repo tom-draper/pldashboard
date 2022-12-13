@@ -305,6 +305,8 @@
       plotData.data[1] = newPlotData.data[1]; // Copy goals conceded line
 
       plotData.layout.shapes = newPlotData.layout.shapes;
+      plotData.layout.xaxis.ticktext = newPlotData.layout.xaxis.ticktext;
+      plotData.layout.xaxis.tickvals = newPlotData.layout.xaxis.tickvals;
 
       //@ts-ignore
       Plotly.redraw(plotDiv); // Update plot data
