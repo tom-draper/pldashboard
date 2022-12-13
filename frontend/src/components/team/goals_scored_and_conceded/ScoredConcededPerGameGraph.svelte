@@ -17,7 +17,7 @@
       }
     }
 
-    // Divide by number of teams to get avg goals per gameweek
+    // Divide by number of teams to get avg goals per matchday
     for (let matchday of Object.keys(avgGoals)) {
       avgGoals[matchday] /= 20;
     }
