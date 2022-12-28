@@ -32,14 +32,12 @@
 
   function getLine(
     data: TeamData,
-    x: Date[],
+    playedDates: Date[],
     team: string,
     isMainTeam: boolean
   ): any {
     let matchdays = Object.keys(data.form[team][data._id]);
-
     let y = getLineY(data, team, matchdays);
-
     let lineConfig = getLineConfig(team, isMainTeam);
 
     let line = {
@@ -48,7 +46,7 @@
       name: team,
       mode: "lines",
       line: lineConfig,
-      text: x,
+      text: playedDates,
       hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
       showlegend: false,
     };
