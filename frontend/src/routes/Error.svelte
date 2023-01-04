@@ -21,12 +21,8 @@
     background: #fafafa;
   }
   .msg-container {
-    /* width: 50%; */
-    /* height: 10%; */
-    /* background: blue; */
     background: var(--purple);
     color: var(--green);
-    /* border-bottom: 10px solid blue; */
     border-radius: 6px;
     padding: 0.5em 1em 0.5em 1em;
     font-size: 2em;

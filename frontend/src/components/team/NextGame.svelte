@@ -1,4 +1,6 @@
 <script lang="ts">
+  import {toAlias, toInitials} from "../../lib/team";
+
   function ordinal(n: number): string {
     let ord = [, "st", "nd", "rd"];
     let a = n % 100;
@@ -10,7 +12,6 @@
     for (let i = matchdays.length - 1; i >= 0; i--) {
       if (data.form[team][data._id][matchdays[i]].score != null) {
         return matchdays[i]
-        
       }
     }
     return null
@@ -27,8 +28,6 @@
   export let data: TeamData,
     team: string,
     showBadge: boolean,
-    toAlias: Function,
-    toInitials: Function,
     switchTeam: Function;
 </script>
 
@@ -191,11 +190,9 @@
     display: flex;
     flex: 1;
   }
-
   .goals-container {
     flex-grow: 1;
   }
-
   .away-goals,
   .home-goals {
     margin: 4px 0;
@@ -210,7 +207,6 @@
     padding-left: 0.5em;
     border-left: 1px solid black;
   }
-
   .next-game-title {
     width: max-content;
     padding: 6px 20px;
@@ -218,7 +214,6 @@
     background: var(--purple);
     margin: -1px 0 0 -1px; /* To avoid top and left gap when zooming out */
   }
-
   .next-game-season-complete {
     display: grid;
     place-items: center;
@@ -227,7 +222,6 @@
     border-radius: var(--border-radius);
     height: 98%;
   }
-
   .next-game-title-text {
     margin: 0;
     color: white;
@@ -243,13 +237,11 @@
     background-size: contain;
     background-position: center;
   }
-
   .predictions-and-logo {
     font-size: 1.4em;
     width: 45%;
     margin: auto;
   }
-
   button {
     background: none;
     color: inherit;
@@ -259,17 +251,14 @@
     cursor: pointer;
     outline: inherit;
   }
-
   .predictions-link {
     text-decoration: none;
     color: #333;
     color: var(--purple)
   }
-
   .predictions-link:hover {
     color: rgb(120 120 120);
   }
-
   .past-results {
     font-size: 22px;
     width: 55%;
@@ -279,19 +268,16 @@
     border-radius: 6px;
     margin: auto 0;
   }
-
   .next-game-prediction {
     border-radius: var(--border-radius);
     min-height: 97.5%;
     border: 6px solid var(--purple);
   }
-
   .next-game-values {
     display: flex;
     margin-right: 2vw;
     min-height: 387px;
   }
-
   .next-game-position {
     font-size: 3.3em;
     font-weight: 700;
@@ -299,12 +285,10 @@
   .ordinal-position {
     font-size: 0.6em;
   }
-
   .past-result {
     font-size: 15px;
     display: flex;
   }
-
   .past-result-date {
     font-size: 13px;
     width: 90px;
@@ -312,7 +296,6 @@
     padding-top: 3px;
     border-radius: 4px 4px 0 0;
   }
-
   .prev-results-title {
     font-weight: 700;
     padding-top: 0;
@@ -330,19 +313,16 @@
   .next-game-item {
     border-radius: 9px;
   }
-
   .home-team {
     float: left;
     text-align: left;
     border-radius: var(--border-radius) 0 0 var(--border-radius);
   }
-
   .away-team {
     float: left;
     text-align: right;
     border-radius: 0 var(--border-radius) var(--border-radius) 0;
   }
-
   .home-team,
   .away-team {
     font-size: 15px;
@@ -350,12 +330,10 @@
     padding: 5px 0 3px;
     text-align: center;
   }
-
   .next-game-team-btn {
     color: inherit;
     text-align: left;
   }
-
   .current-form {
     border-radius: 6px;
     padding: 10px 15px;

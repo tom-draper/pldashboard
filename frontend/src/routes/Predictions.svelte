@@ -213,13 +213,6 @@
           </div>
         </div>
       </div>
-
-      <!-- <div class="predictions-footer footer-text-colour">
-      <div class="method-description">
-        Predictions are calculated using previous results and then adjusting by
-        recent form and home advantage.
-      </div>
-    </div> -->
     {:else}
       <div class="loading-spinner-container">
         <div class="loading-spinner" />
@@ -233,7 +226,6 @@
     padding: 40px 40px 0;
     text-align: center;
   }
-
   .predictions-title {
     font-size: 2.6em;
     font-weight: 800;
@@ -244,37 +236,29 @@
     margin: 10px;
     text-decoration: none;
   }
-
   .predictions {
     display: flex;
     flex-direction: column;
   }
-
   .predictions-gap {
     margin: 15px 0;
   }
-
   .page-content {
     font-size: 1.3em;
   }
-
   .green {
     background-color: var(--win);
   }
-
   .yellow {
     background-color: var(--draw);
   }
-
   .red {
     background-color: var(--lose);
   }
-
   .predictions-container {
     width: 50%;
     margin: 0 auto;
   }
-
   .date {
     width: min(90%, 300px);
     align-self: center;
@@ -282,29 +266,24 @@
     margin-bottom: 2px;
     font-size: 1.2rem;
   }
-
   .prediction-item {
     text-align: left;
     margin: 0 8%;
     display: flex;
   }
-
   .prediction-label {
     flex: 5;
   }
-
   .prediction-value {
     flex: 4.5;
     display: flex;
     text-align: right;
   }
-
   .prediction-initials,
   .prediction-score {
     flex: 1;
     text-align: center;
   }
-
   .prediction-container {
     padding: 6px 0 3px;
     margin: 2px 0;
@@ -318,14 +297,12 @@
     outline: inherit;
     position: relative;
   }
-
   .medium-predictions-divider {
     align-self: center;
     border-bottom: 3px solid black;
     width: min(100%, 375px);
     margin-bottom: 2px;
   }
-
   .prediction-details {
     font-size: 0.75em;
     color: black;
@@ -334,7 +311,6 @@
     height: 0;
     display: none;
   }
-
   .prediction-time {
     color: grey;
     font-size: 0.7em;
@@ -342,22 +318,18 @@
     right: -34px;
     top: calc(50% - 7px);
   }
-
   .prediction-detail {
     margin: 3px 0 3px 30px;
   }
-
   .prediction-details.expanded {
     height: auto;
     display: block;
   }
-
   .detailed-predicted-score {
     font-size: 1.2em;
     margin: 10px 0 0;
     text-align: center;
   }
-
   .tabbed {
     padding-left: 2em;
   }
@@ -367,7 +339,6 @@
     margin-top: 30px;
     text-align: center;
   }
-
   .accuracy-display {
     text-align: center;
     font-size: 13px;
@@ -375,7 +346,6 @@
   .accuracy {
     margin: 1em 0 2.5em;
   }
-
   .accuracy-item {
     color: rgb(120 120 120);
     margin-bottom: 5px;
@@ -419,18 +389,11 @@
     .accuracy-display {
       font-size: 0.8rem;
     }
-
-    /* .predictions {
-    font-size: 0.9em;
-  } */
-
-    /* .prev-results-title {
-    font-size: 18px;
-  } */
     .prediction-item {
       margin: 0 6%;
     }
   }
+  
   @media only screen and (max-width: 500px) {
     .prediction-value {
       flex: 4.5;

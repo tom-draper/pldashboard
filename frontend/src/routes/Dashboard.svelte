@@ -19,48 +19,8 @@
   import Overview from "../components/overview/Overview.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
   import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
+  import {toAlias} from "../lib/team";
 
-  let alias = {
-    "Wolverhampton Wanderers": "Wolves",
-    "Tottenham Hotspur": "Spurs",
-    "Leeds United": "Leeds",
-    "West Ham United": "West Ham",
-    "Brighton and Hove Albion": "Brighton",
-  };
-
-  function toInitials(team: string): string {
-    switch (team) {
-      case "Brighton and Hove Albion":
-        return "BHA";
-      case "Manchester City":
-        return "MCI";
-      case "Manchester United":
-        return "MUN";
-      case "Aston Villa":
-        return "AVL";
-      case "Sheffield United":
-        return "SHU";
-      case "West Bromwich Albion":
-        return "WBA";
-      case "West Ham United":
-        return "WHU";
-    }
-    return team.slice(0, 3).toUpperCase();
-  }
-
-  function toAlias(team: string): string {
-    if (team in alias) {
-      return alias[team];
-    }
-    return team;
-  }
-
-  function toName(teamAlias: string): string {
-    if (!Object.values(alias).includes(teamAlias)) {
-      return teamAlias;
-    }
-    return Object.keys(alias).find((key) => alias[key] === teamAlias);
-  }
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
@@ -251,7 +211,7 @@
 
       {#if data != undefined}
         {#if hyphenatedTeam == "overview"}
-          <Overview {data} {mobileView} {toInitials}/>
+          <Overview {data} />
         {:else}
           <div class="page-content">
             <div class="row multi-element-row small-bottom-margin">
@@ -306,13 +266,12 @@
 
             <div class="row multi-element-row">
               <div class="row-left form-details">
-                <CurrentForm {data} {currentMatchday} {team} {toInitials} />
+                <CurrentForm {data} {currentMatchday} {team} />
                 <TableSnippet
                   {data}
                   {hyphenatedTeam}
                   {team}
                   {switchTeam}
-                  {toAlias}
                 />
               </div>
               <div class="row-right">
@@ -320,8 +279,6 @@
                   {data}
                   {team}
                   {showBadge}
-                  {toAlias}
-                  {toInitials}
                   {switchTeam}
                 />
               </div>
@@ -424,7 +381,7 @@
                 <div class="spider-chart-row row-graph">
                   <h1>Team Comparison</h1>
                   <div class="spider-chart-container">
-                    <SpiderGraph {data} {team} {teams} {toAlias} {toName} />
+                    <SpiderGraph {data} {team} {teams} />
                   </div>
                 </div>
               </div>

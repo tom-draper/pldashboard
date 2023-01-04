@@ -1,4 +1,6 @@
 <script lang="ts">
+  import {toAlias} from "../../lib/team";
+
   function tableSnippetRange(sortedTeams: string[], team: string): [number, number] {
     let teamStandingsIdx = sortedTeams.indexOf(team);
 
@@ -61,7 +63,7 @@
   let tableSnippet: TableSnippet;
   $: team && buildTableSnippet()
 
-  export let data: TeamData, hyphenatedTeam: string, team: string, toAlias: Function, switchTeam: Function;
+  export let data: TeamData, hyphenatedTeam: string, team: string, switchTeam: Function;
 </script>
 
 <div class="table-snippet">
@@ -152,37 +154,30 @@
     width: 100%;
     height: auto;
   }
-
   .table-row {
     display: flex;
     padding: 5px 5%;
     border-radius: var(--border-radius);
   }
-
   .table-row.this-team {
     padding: 14px 5%;
     font-size: 20px;
   }
-
   .this-team {
     font-size: 1.1em !important;
   }
-
   #divider {
     align-self: center;
     border-bottom: 1px solid grey;
     width: 90%;
     margin: auto;
   }
-
   .column-title {
     font-weight: 700;
   }
-
   .table-position {
     width: 7%;
   }
-
   button {
     background: none;
     color: inherit;
@@ -192,18 +187,15 @@
     cursor: pointer;
     outline: inherit;
   }
-
   .table-team-name {
     width: 63%;
     text-align: left;
     margin-left: 8px;
     color: #333333;
   }
-
   .table-gd {
     width: 15%;
   }
-
   .table-points {
     width: 15%;
   }
