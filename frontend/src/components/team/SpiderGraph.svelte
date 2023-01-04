@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {toAlias, toName} from "../../lib/team";
+  import {toAlias, toName, teamInSeason} from "../../lib/team";
 
   function getTeamColor(team: string): string {
     let teamKey = team[0].toLowerCase() + team.slice(1);
@@ -9,10 +9,6 @@
       `--${teamKey}`
     );
     return teamColor;
-  }
-
-  function teamInSeason(form: Form, team: string, season: number): boolean {
-    return team in form && form[team][season]['1'] != null
   }
 
   function addTeamComparison(team: string) {

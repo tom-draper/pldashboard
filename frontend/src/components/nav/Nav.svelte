@@ -126,7 +126,6 @@
   .team-name,
   .this-team-name {
     padding: 0.4em 1.4em;
-    /* width: fit-content; */
   }
   .overview {
     padding: 0.4em 1.4em;

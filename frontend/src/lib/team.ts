@@ -40,3 +40,7 @@ export function toName(teamAlias: string): string {
     }
     return Object.keys(alias).find((key) => alias[key] === teamAlias);
 }
+
+export function teamInSeason(form: Form, team: string, season: number): boolean {
+    return team in form && form[team][season]['1'] != null
+  }
