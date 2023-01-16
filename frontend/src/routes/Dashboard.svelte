@@ -131,7 +131,7 @@
         window.dispatchEvent(new Event("resize"));
       });
   }
-
+  
   function switchTeam(newTeam: string) {
     hyphenatedTeam = newTeam;
     if (hyphenatedTeam == "overview") {
@@ -140,6 +140,7 @@
     } else {
       team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
       title = `Dashboard | ${team}`;
+      // Overwrite values from new team's perspective using same data
       currentMatchday = getCurrentMatchday(data, team);
       playedDates = playedMatchdayDates(data, team);
     }
@@ -151,13 +152,15 @@
     window.dispatchEvent(new Event("resize"));
   }
 
+  const showBadge = false;
+
   let y: number;
   let load = false;
   $: y > 30 && lazyLoad();
 
   let pageWidth: number;
   $: mobileView = pageWidth <= 700;
-  const showBadge = false;
+  
   let title = "Dashboard";
   let team = "";
   let teams: string[] = []; // Used for nav bar links
@@ -165,7 +168,7 @@
 
   let data: TeamData;
   onMount(() => {
-    initDashboard();
+    initDashboard()
   });
 
   export let hyphenatedTeam: string;
@@ -176,7 +179,7 @@
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
-<svelte:window bind:innerWidth={pageWidth} bind:scrollY={y} />
+<svelte:window bind:innerWidth={pageWidth} bind:scrollY={y}/>
 
 <Router>
   <div id="team">

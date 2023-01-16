@@ -4,6 +4,7 @@ from fastapi import FastAPI
 import uvicorn
 import os
 import sys
+from datetime import datetime, timedelta
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -21,11 +22,31 @@ app.add_middleware(
 )
 
 database = Database(season)
+cache = {
+    'team': {
+        'time': None, 
+        'data': None
+    }, 
+    'predictions': {
+        'time': None, 
+        'data': None
+    }
+}
+
+
+def recent_cache(date: datetime) -> bool:
+    return (datetime.now() - date).total_seconds() < 30
 
 
 @app.get('/api/teams')
 async def team() -> str:
-    teams_data = await database.get_teams_data()
+    print(cache)
+    if cache['team']['data'] is not None and recent_cache(cache['team']['time']):
+        teams_data = cache['team']['data']
+    else:
+        teams_data = await database.get_teams_data()
+        cache['team']['data'] = teams_data
+        cache['team']['time'] = datetime.now()
     return teams_data
 
 
