@@ -199,4 +199,16 @@
   .table-points {
     width: 15%;
   }
+
+
+  @media only screen and (max-width: 1100px) {
+    .table-snippet {
+      margin-top: 0;
+    }
+  }
+  @media only screen and (max-width: 550px) {
+    .table-snippet {
+      font-size: 14px;
+    }
+  }
 </style>

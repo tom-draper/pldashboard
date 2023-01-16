@@ -330,6 +330,13 @@
     }
   }
 
+  @media only screen and (max-width: 1100px) {
+    .next-game-title {
+      width: auto;
+      border-radius: 0;
+    }
+  }
+
   @media only screen and (max-width: 1000px) {
     .next-game-prediction {
       margin: 50px 20px 40px;
@@ -393,6 +400,9 @@
     }
     .next-game-prediction {
       margin: 40px 14px;
+    }
+    .next-game-logo {
+      height: 190px;
     }
   }
 </style>

@@ -19,8 +19,7 @@
   import Overview from "../components/overview/Overview.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
   import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
-  import {toAlias, toHyphenatedName, playedMatchdays} from "../lib/team";
-
+  import { toAlias, toHyphenatedName, playedMatchdays } from "../lib/team";
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
@@ -43,7 +42,6 @@
       .join(" ")
       .replace("And", "and");
   }
-
 
   function playedMatchdayDates(data: TeamData, team: string): Date[] {
     let matchdays = playedMatchdays(data, team);
@@ -89,7 +87,7 @@
 
   function initDashboard() {
     // Set formatted team name so page header can display while fetching data
-    if (hyphenatedTeam == 'overview') {
+    if (hyphenatedTeam == "overview") {
       team = "Overview";
       title = `Dashboard | ${team}`;
       hyphenatedTeam = "overview";
@@ -104,14 +102,14 @@
         if (hyphenatedTeam == null) {
           // If root, set team to current leader
           team = teams[0];
-          title = `Dashboard | ${team}`
+          title = `Dashboard | ${team}`;
           hyphenatedTeam = toHyphenatedName(team);
           // Change url to /team-name without reloading page
           history.pushState({}, null, window.location.href + hyphenatedTeam);
-        } else if (team != 'Overview' && !teams.includes(team)) {
-            window.location.href = "/error";
+        } else if (team != "Overview" && !teams.includes(team)) {
+          window.location.href = "/error";
         }
-        if (team != 'Overview') {
+        if (team != "Overview") {
           currentMatchday = getCurrentMatchday(json, team);
           playedDates = playedMatchdayDates(json, team);
         }
@@ -122,7 +120,7 @@
         window.dispatchEvent(new Event("resize"));
       });
   }
-  
+
   function switchTeam(newTeam: string) {
     hyphenatedTeam = newTeam;
     if (hyphenatedTeam == "overview") {
@@ -151,7 +149,7 @@
 
   let pageWidth: number;
   $: mobileView = pageWidth <= 700;
-  
+
   let title = "Dashboard";
   let team = "";
   let teams: string[] = []; // Used for nav bar links
@@ -159,7 +157,7 @@
 
   let data: TeamData;
   onMount(() => {
-    initDashboard()
+    initDashboard();
   });
 
   export let hyphenatedTeam: string;
@@ -170,7 +168,7 @@
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
-<svelte:window bind:innerWidth={pageWidth} bind:scrollY={y}/>
+<svelte:window bind:innerWidth={pageWidth} bind:scrollY={y} />
 
 <Router>
   <div id="team">
@@ -198,7 +196,7 @@
             class="title"
             style="color: var(--{hyphenatedTeam + '-secondary'});"
           >
-            {hyphenatedTeam != 'overview' ? toAlias(team): 'Overview'}
+            {hyphenatedTeam != "overview" ? toAlias(team) : "Overview"}
           </div>
         </a>
       </div>
@@ -261,20 +259,10 @@
             <div class="row multi-element-row">
               <div class="row-left form-details">
                 <CurrentForm {data} {currentMatchday} {team} />
-                <TableSnippet
-                  {data}
-                  {hyphenatedTeam}
-                  {team}
-                  {switchTeam}
-                />
+                <TableSnippet {data} {hyphenatedTeam} {team} {switchTeam} />
               </div>
               <div class="row-right">
-                <NextGame
-                  {data}
-                  {team}
-                  {showBadge}
-                  {switchTeam}
-                />
+                <NextGame {data} {team} {showBadge} {switchTeam} />
               </div>
             </div>
 
@@ -339,7 +327,12 @@
               <div class="row">
                 <div class="row-graph">
                   <div class="clean-sheets graph full-row-graph">
-                    <CleanSheetsGraph {data} {team} {playedDates} {mobileView} />
+                    <CleanSheetsGraph
+                      {data}
+                      {team}
+                      {playedDates}
+                      {mobileView}
+                    />
                   </div>
                 </div>
               </div>
@@ -406,6 +399,9 @@
   .title {
     font-size: 2.3rem;
     width: fit-content;
+  }
+  .lowered {
+    margin-bottom: -9px;
   }
   .page-content {
     position: relative;
@@ -542,6 +538,16 @@
     margin-bottom: -1px; /* For gap at bottom found in safari */
   }
 
+  @keyframes appear {
+    from {
+      width: 0px;
+    }
+
+    to {
+      width: 100%;
+    }
+  }
+
   @media only screen and (min-width: 2400px) {
     .position-central {
       font-size: 16vw;
@@ -611,12 +617,14 @@
       font-size: 24vw;
     }
   }
-  @media only screen and (min-width: 1000px) {
-    .full-row-graph {
-      margin: 0 1em;
+
+  @media only screen and (min-width: 1100px) {
+    .form-details {
+      width: 80%;
+      align-items: center;
     }
   }
-
+  
   @media only screen and (max-width: 1000px) {
     .row {
       flex-direction: column;
@@ -635,6 +643,7 @@
     .row-left {
       margin-right: 0;
       align-self: center;
+      width: 80%;
     }
 
     .position-and-badge {
@@ -667,6 +676,9 @@
     .spider-chart-container {
       flex-direction: column;
       width: 100%;
+    }
+    .full-row-graph {
+      margin: 0 1em;
     }
   }
 
@@ -737,7 +749,9 @@
     .season-stats-row {
       margin: 0 1em 1em;
     }
-
+    .form-details {
+      width: 95%;
+    }
     .position-no-badge,
     .position-and-badge {
       padding: 0 !important;
@@ -748,6 +762,10 @@
     .circles-background {
       transform: scale(0.35);
       margin-top: -9.5em;
+    }
+
+    .lowered {
+      margin: 0 30px;
     }
   }
 </style>
