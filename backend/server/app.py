@@ -4,7 +4,7 @@ from fastapi import FastAPI
 import uvicorn
 import os
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
