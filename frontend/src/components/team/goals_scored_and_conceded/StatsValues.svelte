@@ -1,11 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-
-  function ordinal(n: number): string {
-    let ord = [, "st", "nd", "rd"];
-    let a = n % 100;
-    return n + (ord[a > 20 ? a % 10 : a] || "th");
-  }
+  import {ordinal} from "../../../lib/format"
 
   function getStatsRank(
     seasonStats: Stats,
@@ -80,7 +75,7 @@
       if (score != null) {
         let atHome = data.form[team][season][matchday].atHome;
         if (isCleanSheet(score.homeGoals, score.awayGoals, atHome)) {
-          seasonStats[team].cleanSheetsRatio += 1;
+          seasonStats[team].cleanSheetRatio += 1;
         }
         if (notScored(score.homeGoals, score.awayGoals, atHome)) {
           seasonStats[team].noGoalRatio += 1;
@@ -128,7 +123,7 @@
       played: number;
       xG: number;
       xC: number;
-      cleanSheetsRatio: number;
+      cleanSheetRatio: number;
       noGoalRatio: number;
     };
   };

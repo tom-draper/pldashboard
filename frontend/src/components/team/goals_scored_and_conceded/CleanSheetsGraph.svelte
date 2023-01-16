@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { playedMatchdays } from "../../../lib/team";
 
   function getTeamCleanSheets(
     data: TeamData,
@@ -33,22 +34,12 @@
     return [cleanSheets, notCleanSheets];
   }
 
-  function playedMatchdays(data: TeamData, team: string): string[] {
-    let matchdays = [];
-    for (let matchday in data.form[team][data._id]) {
-      if (data.form[team][data._id][matchday].score != null) {
-        matchdays.push(matchday);
-      }
-    }
-    return matchdays
-  }
-
   function bars(
     data: TeamData,
     team: string,
     playedDates: Date[],
     matchdays: string[]
-  ): [any, any] {    
+  ): [any, any] {
     let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, team);
     return [
       {
@@ -142,24 +133,29 @@
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
-  
+
   function hiddenLine(x: Date[]) {
     return {
       name: "Avg",
       type: "line",
-        x: x,
-        y: Array(x.length).fill(1.1),
-        line: { color: "#FAFAFA", width: 1 },
-        marker: {
-          size: 1
-        },
-        hoverinfo: "skip"
-    }
+      x: x,
+      y: Array(x.length).fill(1.1),
+      line: { color: "#FAFAFA", width: 1 },
+      marker: {
+        size: 1,
+      },
+      hoverinfo: "skip",
+    };
   }
 
   function buildPlotData(data: TeamData, team: string): PlotData {
-    let matchdays = playedMatchdays(data, team)
-    let [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
+    let matchdays = playedMatchdays(data, team);
+    let [cleanSheetsBar, concededBar] = bars(
+      data,
+      team,
+      playedDates,
+      matchdays
+    );
     // Hidden line required on plot to make x-axis length match goalsScoredAndConcededGraph
     // Line added to plotly bar chart changes x-axis physical length vs without
     // TODO: Solution avoiding this hidden line
@@ -185,7 +181,7 @@
 
   function genPlot() {
     plotData = buildPlotData(data, team);
-      //@ts-ignore
+    //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -196,8 +192,13 @@
 
   function refreshPlot() {
     if (setup) {
-      let matchdays = playedMatchdays(data, team)
-      let [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
+      let matchdays = playedMatchdays(data, team);
+      let [cleanSheetsBar, concededBar] = bars(
+        data,
+        team,
+        playedDates,
+        matchdays
+      );
       let line = hiddenLine(cleanSheetsBar.x);
 
       plotData.data[0] = cleanSheetsBar;
@@ -207,7 +208,7 @@
         plotData.layout.xaxis.ticktext[i] = matchdays[i];
       }
       plotData.layout.shapes[0] = baseLine();
-          
+
       //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {

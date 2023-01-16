@@ -1,4 +1,6 @@
 <script lang="ts">
+  import {toHyphenatedName} from "../../lib/team";
+
   function switchTeamToTop(team: string) {
     switchTeam(team);
     window.scrollTo(0, 0);
@@ -8,7 +10,7 @@
   function getHyphenatedTeamNames() {
     let hyphenatedTeamNames = [];
     for (let i = 0; i < teams.length; i++) {
-      let teamLink = teams[i].toLowerCase().replace(/ /g, "-");
+      let teamLink = toHyphenatedName(teams[i]);
       if (teamLink != hyphenatedTeam) {
         hyphenatedTeamNames.push(teamLink);
       } else {

@@ -1,12 +1,10 @@
 <script lang="ts">
+  import {toHyphenatedName} from "../../lib/team";
+
   function closeNavBar() {
     document.getElementById("navBar").style.display = "none";
     document.getElementById("dashboard").style.marginLeft = "0";
     window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
-  }
-  function openNavBar() {
-    document.getElementById("navBar").style.display = "block";
-    document.getElementById("dashboard").style.marginLeft = "200px";
   }
 
   let widths = [];
@@ -36,16 +34,12 @@
       {/each}
     {:else}
       {#each teams as _team, _ (_team)}
-        {#if _team.toLowerCase().replace(/ /g, "-") == team}
-          <a href="/{_team.toLowerCase().replace(/ /g, '-')}" class="team-link">
+        {#if toHyphenatedName(_team)== team}
+          <a href="/{toHyphenatedName(_team)}" class="team-link">
             <div
               class="this-team-container"
-              style="color: var(--{_team
-                .toLowerCase()
-                .replace(/ /g, '-')}-secondary);
-                    background-color: var(--{_team
-                .toLowerCase()
-                .replace(/ /g, '-')})"
+              style="color: var(--{toHyphenatedName(_team)}-secondary);
+                    background-color: var(--{toHyphenatedName(_team)})"
             >
               <div class="this-team-name">
                 {toAlias(_team)}
@@ -56,7 +50,7 @@
           <button
             class="team-link"
             on:click={() => {
-              switchTeam(_team.toLowerCase().replace(/ /g, "-"));
+              switchTeam(toHyphenatedName(_team));
             }}
           >
             <div class="team-container">

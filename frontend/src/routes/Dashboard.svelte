@@ -19,7 +19,7 @@
   import Overview from "../components/overview/Overview.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
   import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
-  import {toAlias} from "../lib/team";
+  import {toAlias, toHyphenatedName, playedMatchdays} from "../lib/team";
 
 
   function toggleMobileNav() {
@@ -44,15 +44,6 @@
       .replace("And", "and");
   }
 
-  function playedMatchdays(data: TeamData, team: string): string[] {
-    let matchdays = [];
-    for (let matchday in data.form[team][data._id]) {
-      if (data.form[team][data._id][matchday].score != null) {
-        matchdays.push(matchday);
-      }
-    }
-    return matchdays;
-  }
 
   function playedMatchdayDates(data: TeamData, team: string): Date[] {
     let matchdays = playedMatchdays(data, team);
@@ -114,7 +105,7 @@
           // If root, set team to current leader
           team = teams[0];
           title = `Dashboard | ${team}`
-          hyphenatedTeam = team.toLowerCase().replace(/ /g, "-");
+          hyphenatedTeam = toHyphenatedName(team);
           // Change url to /team-name without reloading page
           history.pushState({}, null, window.location.href + hyphenatedTeam);
         } else if (team != 'Overview' && !teams.includes(team)) {

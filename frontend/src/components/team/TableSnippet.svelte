@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {toAlias} from "../../lib/team";
+  import {toAlias, toHyphenatedName} from "../../lib/team";
 
   function tableSnippetRange(sortedTeams: string[], team: string): [number, number] {
     let teamStandingsIdx = sortedTeams.indexOf(team);
@@ -125,7 +125,7 @@
             {row.position}
           </div>
           <button
-            on:click="{() => {switchTeam(row.name.toLowerCase().replace(/ /g, '-'))}}"
+            on:click="{() => {switchTeam(toHyphenatedName(row.name))}}"
             class="table-element table-team-name"
           >
             {toAlias(row.name)}

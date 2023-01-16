@@ -41,6 +41,28 @@ export function toName(teamAlias: string): string {
     return Object.keys(alias).find((key) => alias[key] === teamAlias);
 }
 
+export function toHyphenatedName(team: string): string {
+    return team.toLowerCase().replace(/ /g, "-")
+}
+
 export function teamInSeason(form: Form, team: string, season: number): boolean {
     return team in form && form[team][season]['1'] != null
-  }
+}
+
+export function teamColor(team: string): string {
+    let teamKey = toHyphenatedName(team)
+    let teamColor = getComputedStyle(document.documentElement).getPropertyValue(
+        `--${teamKey}`
+    );
+    return teamColor;
+}
+
+export function playedMatchdays(data: TeamData, team: string): string[] {
+    let matchdays = [];
+    for (let matchday in data.form[team][data._id]) {
+        if (data.form[team][data._id][matchday].score != null) {
+            matchdays.push(matchday);
+        }
+    }
+    return matchdays;
+}
