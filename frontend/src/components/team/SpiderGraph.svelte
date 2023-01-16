@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import {toAlias, toName, teamInSeason} from "../../lib/team";
 
   function getTeamColor(team: string): string {
     let teamKey = team[0].toLowerCase() + team.slice(1);
@@ -8,10 +9,6 @@
       `--${teamKey}`
     );
     return teamColor;
-  }
-
-  function teamInSeason(form: Form, team: string, season: number): boolean {
-    return team in form && form[team][season]['1'] != null
   }
 
   function addTeamComparison(team: string) {
@@ -618,9 +615,7 @@
 
   export let data: TeamData,
     team: string,
-    teams: string[],
-    toAlias: Function,
-    toName: Function;
+    teams: string[];
 </script>
 
 <div class="spider-chart">
@@ -666,7 +661,6 @@
   .spider-opp-team-btn {
     cursor: pointer;
     color: #333333;
-    /* padding: 4px 10px; */
     border: none;
     font-size: 13px;
     padding: 4px 10px;

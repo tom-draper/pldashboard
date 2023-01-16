@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 import pandas as pd
@@ -62,11 +62,14 @@ class Upcoming(DF):
         fixtures: Fixtures
         ) -> int:
         """Scan through list of fixtures to find the next game that is scheduled."""
-        matchday = {'date': None, 'matchday': None}
+        # Arbitrary initial future date that will always be greater than any possible matchday date
+        future = datetime.now() + timedelta(days=365)
+        matchday = {'date': future, 'matchday': future}
+        now = datetime.now()
         for matchday_no in fixtures.df.columns.unique(level=0):
             date = fixtures.df.at[team_name, (matchday_no, 'date')]
-            scheduled = fixtures.df.at[team_name, (matchday_no, 'status')] == 'SCHEDULED' 
-            if matchday['date'] is None or (scheduled and date < matchday['date']):
+            scheduled = fixtures.df.at[team_name, (matchday_no, 'status')] == 'SCHEDULED'
+            if scheduled and now < date < matchday['date']:
                 matchday['date'] = date
                 matchday['matchday'] = matchday_no
         return matchday['matchday']

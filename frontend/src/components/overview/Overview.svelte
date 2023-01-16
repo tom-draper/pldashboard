@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import OverviewFooter from "./Footer.svelte";
+  import {toInitials} from "../../lib/team";
 
   type UpcomingMatch = {
     time: Date;
@@ -206,9 +207,7 @@
     fixtures = fixturesTable(standings);
   });
 
-  export let data: TeamData,
-    mobileView: boolean,
-    toInitials: Function;
+  export let data: TeamData;
 </script>
 
 <div id="page-content">

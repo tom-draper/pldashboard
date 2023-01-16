@@ -111,7 +111,7 @@
       },
       customdata: matchdays,
       hovertemplate:
-        "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
+        "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
     };
   }
 

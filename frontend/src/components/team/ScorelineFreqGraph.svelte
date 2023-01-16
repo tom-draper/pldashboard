@@ -1,9 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-
-  function teamInSeason(form: Form, team: string, season: number): boolean {
-    return team in form && form[team][season]['1'] != null
-  }
+  import {teamInSeason} from "../../lib/team";
 
   function insertSeasonAvgScoreFreq(scoreFreq: ScoreFreq, form: Form, team: string, season: number) {
     for (let matchday in form[team][season]) {

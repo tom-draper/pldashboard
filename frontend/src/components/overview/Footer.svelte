@@ -1,5 +1,3 @@
-
-
 <div class="teams-footer footer-text-colour">
   <div class="teams-footer-bottom">
     <div class="version no-select"><span class="pl">pl</span>dashboard</div>
@@ -11,7 +9,6 @@
     color: #c6c6c6;
     padding: 1em 0 0.2em;
     height: auto;
-    /* width: calc(100% - 220px); */
     font-size: 13px;
     align-items: center;
   }

@@ -1,32 +1,26 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  function dateDiffInDays(date1: Date, date2: Date) {
-    //@ts-ignore
-    return Math.floor((date1 - date2) / (1000 * 60 * 60 * 24));
-  }
 
-  function seasonFinishLines(x: Date[], maxY: number): any {
+  function seasonFinishLines(seasonBoundaries: number[], maxY: number): any {
     let lines: any[] = [];
-    for (let i = 0; i < x.length-1; i++) {
-      if (dateDiffInDays(new Date(x[i+1]), new Date(x[i])) > 60) {
-          lines.push({
-            type: "line",
-            x0: x[i],
-            y0: 0,
-            x1: x[i],
-            y1: maxY,
-            line: {
-              color: "black",
-              dash: "dot",
-              width: 1,
-            },
-          })
-      }
+    for (let i = 0; i < seasonBoundaries.length; i++) {
+      lines.push({
+        type: "line",
+        x0: seasonBoundaries[i],
+        y0: 0,
+        x1: seasonBoundaries[i],
+        y1: maxY,
+        line: {
+          color: "black",
+          dash: "dot",
+          width: 1,
+        },
+      });
     }
     return lines;
   }
 
-  function goalsScoredLine(x: Date[],  y: any[]) {
+  function goalsScoredLine(x: number[], y: any[], dates: Date[]) {
     return {
       x: x,
       y: y,
@@ -34,14 +28,14 @@
       fill: "tozeroy",
       mode: "lines",
       name: "Scored",
+      text: dates,
       line: {
         color: "#00fe87",
       },
-      hovertemplate:
-        "%{x|%d %b %Y}<br>Avg scored: <b>%{y:.1f}</b><extra></extra>",
+      hovertemplate: "%{text|%d %b %Y}<br>Avg scored: <b>%{y:.1f}</b><extra></extra>",
     };
   }
-  function goalsConcededLine(x: Date[], y: any[]) {
+  function goalsConcededLine(x: number[], y: any[], dates: Date[]) {
     return {
       x: x,
       y: y,
@@ -49,27 +43,46 @@
       fill: "tozeroy",
       mode: "lines",
       name: "Conceded",
+      text: dates,
       line: {
         color: "#f83027",
       },
-      hovertemplate:
-        "%{x|%d %b %Y}<br>Avg conceded: <b>%{y:.1f}</b><extra></extra>",
+      hovertemplate: "%{text|%d %b %Y}<br>Avg conceded: <b>%{y:.1f}</b><extra></extra>",
     };
   }
 
   type GoalsOverTime = {
-    date: Date,
+    date: Date;
+    days: number;
     matchday: string;
     scored: number;
     conceded: number;
   }[];
 
+  function numDays(start: Date, end: Date): number {
+    const date1 = new Date(start);
+    const date2 = new Date(end);
+
+    // One day in milliseconds
+    const oneDay = 1000 * 60 * 60 * 24;
+
+    // Calculating the time difference between two dates
+    const diffInTime = date1.getTime() - date2.getTime();
+
+    // Calculating the no. of days between two dates
+    const diffInDays = Math.round(diffInTime / oneDay);
+
+    return diffInDays;
+  }
+
   function goalsOverTime(
     data: TeamData,
     team: string,
     numSeasons: number
-  ): GoalsOverTime {
+  ): GoalsOverTime{
     let goals: GoalsOverTime = [];
+    let startingDate = data.form[team][data._id - numSeasons][1].date;
+    let dateOffset = 0;
     for (let i = numSeasons - 1; i >= 0; i--) {
       let teamGames = data.form[team][data._id - i];
       for (let matchday of Object.keys(teamGames)) {
@@ -84,30 +97,67 @@
             conceded = match.score.homeGoals;
           }
           goals.push({
-            date: new Date(match.date),
+            date: match.date,
+            days: numDays(match.date, startingDate) - dateOffset,
             matchday: matchday,
             scored: scored,
             conceded: conceded,
           });
         }
       }
+      // If not current season...
+      if (i > 0) {
+        // To remove summer gap between seasons, increase dateOffset by number
+        // of days between current season end and next season start
+        let currentSeasonEndDate = data.form[team][data._id - i][38].date;
+        let nextSeasonStartDate = data.form[team][data._id - i + 1][1].date;
+        dateOffset += numDays(nextSeasonStartDate, currentSeasonEndDate);
+        dateOffset -= 14; // Allow a 2 week gap between seasons for clarity
+      }
     }
     return goals;
   }
 
-  function lineData(data: TeamData, team: string): [Date[], number[], number[]] {
-    let goals = goalsOverTime(data, team, 3);
+  function lineData(
+    data: TeamData,
+    team: string
+  ): [Date[], number[], number[], string[], number[], number[], number[]] {
+    let numSeasons = 3
+    let goals = goalsOverTime(data, team, numSeasons);
     // Sort by game date
     goals.sort(function (a, b) {
-      return a.date < b.date ? -1 : a.date == b.date ? 0 : 1;
+      return a.days < b.days ? -1 : a.days == b.days ? 0 : 1;
     });
 
     // Separate out into lists
     let dates: Date[] = [];
+    let days: number[] = [];
+    let seasonBoundaries: number[] = [];
+    let ticktext: string[] = [];
+    let tickvals: number[] = [];
     let scored: number[] = [];
     let conceded: number[] = [];
     for (let i = 0; i < goals.length; i++) {
       dates.push(goals[i].date);
+      days.push(goals[i].days);
+      if (goals[i].matchday == '38') {
+        // Season boundary line a week after season finish
+        seasonBoundaries.push(goals[i].days + 7);
+        ticktext.push(goals[i].matchday)
+        tickvals.push(goals[i].days)
+      } else if (goals[i].matchday == '1') {
+        ticktext.push(goals[i].matchday)
+        tickvals.push(goals[i].days)
+      } else if (goals[i].matchday == '19' || i == goals.length - 1) {
+        let season = data._id - numSeasons + 1 + Math.floor(i / 38);
+        // If in current season and matchday is 19, wait for until reach final 
+        // matchday in current season instead to place season ticktext label
+        if (season != data._id || goals[i].matchday != '19') {
+          let seasonTag = `${String(season).slice(2)}/${String(season+1).slice(2)}`
+          ticktext.push(seasonTag)
+          tickvals.push(goals[i].days)
+        }
+      }
       scored.push(goals[i].scored);
       conceded.push(goals[i].conceded);
     }
@@ -115,31 +165,37 @@
     let nGames = 5;
     // Smooth goals with last nGames average
     for (let i = 0; i < dates.length; i++) {
-      let j = i-1;
+      let j = i - 1;
       let count = 1;
-      while (j > i-nGames && j >= 0) {
-        scored[i] += scored[j]
-        conceded[i] += conceded[j]
-        count += 1
-        j -= 1
+      while (j > i - nGames && j >= 0) {
+        scored[i] += scored[j];
+        conceded[i] += conceded[j];
+        count += 1;
+        j -= 1;
       }
       if (count > 1) {
-        scored[i] /= count
-        conceded[i] /= count
+        scored[i] /= count;
+        conceded[i] /= count;
       }
     }
 
-    return [dates, scored, conceded]
+    return [dates, days, seasonBoundaries, ticktext, tickvals, scored, conceded];
   }
 
-  function lines(dates: Date[], scored: number[], conceded: number[]): [any, any]{
-    return [
-      goalsScoredLine(dates, scored),
-      goalsConcededLine(dates, conceded),
-    ];
+  function lines(
+    days: number[],
+    scored: number[],
+    conceded: number[],
+    dates: Date[]
+  ): [any, any] {
+    return [goalsScoredLine(days, scored, dates), goalsConcededLine(days, conceded, dates)];
   }
 
-  function defaultLayout(seasonLines: any[]): any {
+  function defaultLayout(
+    ticktext: string[],
+    tickvals: number[],
+    seasonLines: any[]
+  ): any {
     return {
       title: false,
       autosize: true,
@@ -161,11 +217,11 @@
         showline: false,
         fixedrange: true,
         tickmode: "array",
+        tickvals: tickvals,
+        ticktext: ticktext,
       },
       dragmode: false,
-      shapes: [
-        ...seasonLines,
-      ],
+      shapes: [...seasonLines],
       legend: {
         x: 1,
         xanchor: "right",
@@ -201,12 +257,15 @@
   }
 
   function buildPlotData(data: TeamData, team: string): PlotData {
-    let [dates, scored, conceded] = lineData(data, team);
+    let [dates, days, seasonBoundaries, ticktext, tickvals, scored, conceded] = lineData(
+      data,
+      team
+    );
     let maxY = Math.max(Math.max(...scored), Math.max(...conceded));
-    let seasonLines = seasonFinishLines(dates, maxY);
+    let seasonLines = seasonFinishLines(seasonBoundaries, maxY);
     let plotData = {
-      data: [...lines(dates, scored, conceded)],
-      layout: defaultLayout(seasonLines),
+      data: [...lines(days, scored, conceded, dates)],
+      layout: defaultLayout(ticktext, tickvals, seasonLines),
       config: {
         responsive: true,
         showSendToCloud: false,
@@ -242,13 +301,15 @@
       let newPlotData = buildPlotData(data, team);
 
       // Copy new values into exisitng plotData to be accessed during redraw
-      plotData.data[0] = newPlotData.data[0];  // Copy goals scored line
-      plotData.data[1] = newPlotData.data[1];  // Copy goals conceded line
+      plotData.data[0] = newPlotData.data[0]; // Copy goals scored line
+      plotData.data[1] = newPlotData.data[1]; // Copy goals conceded line
 
-      plotData.layout.shapes = newPlotData.layout.shapes
+      plotData.layout.shapes = newPlotData.layout.shapes;
+      plotData.layout.xaxis.ticktext = newPlotData.layout.xaxis.ticktext;
+      plotData.layout.xaxis.tickvals = newPlotData.layout.xaxis.tickvals;
 
       //@ts-ignore
-      Plotly.redraw(plotDiv);  // Update plot data
+      Plotly.redraw(plotDiv); // Update plot data
       if (mobileView) {
         setMobileLayout();
       }

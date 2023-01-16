@@ -19,48 +19,8 @@
   import Overview from "../components/overview/Overview.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
   import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
+  import {toAlias} from "../lib/team";
 
-  let alias = {
-    "Wolverhampton Wanderers": "Wolves",
-    "Tottenham Hotspur": "Spurs",
-    "Leeds United": "Leeds",
-    "West Ham United": "West Ham",
-    "Brighton and Hove Albion": "Brighton",
-  };
-
-  function toInitials(team: string): string {
-    switch (team) {
-      case "Brighton and Hove Albion":
-        return "BHA";
-      case "Manchester City":
-        return "MCI";
-      case "Manchester United":
-        return "MUN";
-      case "Aston Villa":
-        return "AVL";
-      case "Sheffield United":
-        return "SHU";
-      case "West Bromwich Albion":
-        return "WBA";
-      case "West Ham United":
-        return "WHU";
-    }
-    return team.slice(0, 3).toUpperCase();
-  }
-
-  function toAlias(team: string): string {
-    if (team in alias) {
-      return alias[team];
-    }
-    return team;
-  }
-
-  function toName(teamAlias: string): string {
-    if (!Object.values(alias).includes(teamAlias)) {
-      return teamAlias;
-    }
-    return Object.keys(alias).find((key) => alias[key] === teamAlias);
-  }
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
@@ -151,16 +111,16 @@
       .then((json: TeamData) => {
         teams = Object.keys(json.standings);
         if (hyphenatedTeam == null) {
-          // If '/' searched, set current team to
+          // If root, set team to current leader
           team = teams[0];
           title = `Dashboard | ${team}`
           hyphenatedTeam = team.toLowerCase().replace(/ /g, "-");
           // Change url to /team-name without reloading page
           history.pushState({}, null, window.location.href + hyphenatedTeam);
-        } else if (team != 'Overview') {
-          if (!teams.includes(team)) {
+        } else if (team != 'Overview' && !teams.includes(team)) {
             window.location.href = "/error";
-          }
+        }
+        if (team != 'Overview') {
           currentMatchday = getCurrentMatchday(json, team);
           playedDates = playedMatchdayDates(json, team);
         }
@@ -171,7 +131,7 @@
         window.dispatchEvent(new Event("resize"));
       });
   }
-
+  
   function switchTeam(newTeam: string) {
     hyphenatedTeam = newTeam;
     if (hyphenatedTeam == "overview") {
@@ -180,6 +140,7 @@
     } else {
       team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
       title = `Dashboard | ${team}`;
+      // Overwrite values from new team's perspective using same data
       currentMatchday = getCurrentMatchday(data, team);
       playedDates = playedMatchdayDates(data, team);
     }
@@ -191,13 +152,15 @@
     window.dispatchEvent(new Event("resize"));
   }
 
+  const showBadge = false;
+
   let y: number;
   let load = false;
   $: y > 30 && lazyLoad();
 
   let pageWidth: number;
   $: mobileView = pageWidth <= 700;
-  const showBadge = false;
+  
   let title = "Dashboard";
   let team = "";
   let teams: string[] = []; // Used for nav bar links
@@ -205,7 +168,7 @@
 
   let data: TeamData;
   onMount(() => {
-    initDashboard();
+    initDashboard()
   });
 
   export let hyphenatedTeam: string;
@@ -216,7 +179,7 @@
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
-<svelte:window bind:innerWidth={pageWidth} bind:scrollY={y} />
+<svelte:window bind:innerWidth={pageWidth} bind:scrollY={y}/>
 
 <Router>
   <div id="team">
@@ -251,7 +214,7 @@
 
       {#if data != undefined}
         {#if hyphenatedTeam == "overview"}
-          <Overview {data} {mobileView} {toInitials}/>
+          <Overview {data} />
         {:else}
           <div class="page-content">
             <div class="row multi-element-row small-bottom-margin">
@@ -306,13 +269,12 @@
 
             <div class="row multi-element-row">
               <div class="row-left form-details">
-                <CurrentForm {data} {currentMatchday} {team} {toInitials} />
+                <CurrentForm {data} {currentMatchday} {team} />
                 <TableSnippet
                   {data}
                   {hyphenatedTeam}
                   {team}
                   {switchTeam}
-                  {toAlias}
                 />
               </div>
               <div class="row-right">
@@ -320,8 +282,6 @@
                   {data}
                   {team}
                   {showBadge}
-                  {toAlias}
-                  {toInitials}
                   {switchTeam}
                 />
               </div>
@@ -424,7 +384,7 @@
                 <div class="spider-chart-row row-graph">
                   <h1>Team Comparison</h1>
                   <div class="spider-chart-container">
-                    <SpiderGraph {data} {team} {teams} {toAlias} {toName} />
+                    <SpiderGraph {data} {team} {teams} />
                   </div>
                 </div>
               </div>
