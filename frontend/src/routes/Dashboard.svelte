@@ -19,7 +19,7 @@
   import Overview from "../components/overview/Overview.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
   import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
-  import { toAlias, toHyphenatedName, playedMatchdays, currentMatchday} from "../lib/team";
+  import { toAlias, toHyphenatedName, playedMatchdays, currentMatchday } from "../lib/team";
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
@@ -67,12 +67,7 @@
     return x;
   }
 
-  async function fetchData(address: string): Promise<TeamData> {
-    const response = await fetch(address);
-    return await response.json();
-  }
-
-  function initDashboard() {
+  async function initDashboard() {
     // Set formatted team name so page header can display while fetching data
     if (hyphenatedTeam == "overview") {
       team = "Overview";
@@ -83,29 +78,28 @@
       title = `Dashboard | ${team}`;
     }
 
-    fetchData("https://pldashboard-backend.vercel.app/api/teams")
-      .then((json: TeamData) => {
-        teams = Object.keys(json.standings);
-        if (hyphenatedTeam == null) {
-          // If root, set team to current leader
-          team = teams[0];
-          title = `Dashboard | ${team}`;
-          hyphenatedTeam = toHyphenatedName(team);
-          // Change url to /team-name without reloading page
-          history.pushState({}, null, window.location.href + hyphenatedTeam);
-        } else if (team != "Overview" && !teams.includes(team)) {
-          window.location.href = "/error";
-        }
-        if (team != "Overview") {
-          curMatchday = currentMatchday(json, team);
-          playedDates = playedMatchdayDates(json, team);
-        }
-        data = json;
-        console.log(data);
-      })
-      .then(() => {
-        window.dispatchEvent(new Event("resize"));
-      });
+    const response = await fetch("https://pldashboard-backend.vercel.app/api/teams");
+    let json = await response.json();
+
+    teams = Object.keys(json.standings);
+    if (hyphenatedTeam == null) {
+      // If root, set team to current leader
+      team = teams[0];
+      title = `Dashboard | ${team}`;
+      hyphenatedTeam = toHyphenatedName(team);
+      // Change url to /team-name without reloading page
+      history.pushState({}, null, window.location.href + hyphenatedTeam);
+    } else if (team != "Overview" && !teams.includes(team)) {
+      window.location.href = "/error";
+    }
+    if (team != "Overview") {
+      curMatchday = currentMatchday(json, team);
+      playedDates = playedMatchdayDates(json, team);
+    }
+    data = json;
+    console.log(data);
+
+    window.dispatchEvent(new Event("resize"));
   }
 
   function switchTeam(newTeam: string) {
@@ -127,8 +121,6 @@
     load = true;
     window.dispatchEvent(new Event("resize"));
   }
-
-  const showBadge = false;
 
   let y: number;
   let load = false;
@@ -194,47 +186,36 @@
         {:else}
           <div class="page-content">
             <div class="row multi-element-row small-bottom-margin">
-              {#if showBadge}
-                <div
-                  class="row-left position-and-badge"
-                  style="background-image: url('{data.logoURLs[team]}')"
-                >
-                  <div class="position">
-                    {data.standings[team][data._id].position}
-                  </div>
+              <div class="row-left position-no-badge">
+                <div class="circles-background-container">
+                  <svg class="circles-background">
+                    <circle
+                      cx="300"
+                      cy="150"
+                      r="100"
+                      stroke-width="0"
+                      fill="var(--{hyphenatedTeam}-secondary)"
+                    />
+                    <circle
+                      cx="170"
+                      cy="170"
+                      r="140"
+                      stroke-width="0"
+                      fill="var(--{hyphenatedTeam})"
+                    />
+                    <circle
+                      cx="300"
+                      cy="320"
+                      r="170"
+                      stroke-width="0"
+                      fill="var(--{hyphenatedTeam})"
+                    />
+                  </svg>
                 </div>
-              {:else}
-                <div class="row-left position-no-badge">
-                  <div class="circles-background-container">
-                    <svg class="circles-background">
-                      <circle
-                        cx="300"
-                        cy="150"
-                        r="100"
-                        stroke-width="0"
-                        fill="var(--{hyphenatedTeam}-secondary)"
-                      />
-                      <circle
-                        cx="170"
-                        cy="170"
-                        r="140"
-                        stroke-width="0"
-                        fill="var(--{hyphenatedTeam})"
-                      />
-                      <circle
-                        cx="300"
-                        cy="320"
-                        r="170"
-                        stroke-width="0"
-                        fill="var(--{hyphenatedTeam})"
-                      />
-                    </svg>
-                  </div>
-                  <div class="position-central">
-                    {data.standings[team][data._id].position}
-                  </div>
+                <div class="position-central">
+                  {data.standings[team][data._id].position}
                 </div>
-              {/if}
+              </div>
               <div class="row-right fixtures-graph row-graph">
                 <h1 class="lowered">Fixtures</h1>
                 <div class="graph mini-graph mobile-margin">
@@ -249,7 +230,7 @@
                 <TableSnippet {data} {hyphenatedTeam} {team} {switchTeam} />
               </div>
               <div class="row-right">
-                <NextGame {data} {team} {showBadge} {switchTeam} />
+                <NextGame {data} {team} {switchTeam} />
               </div>
             </div>
 

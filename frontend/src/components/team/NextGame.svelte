@@ -12,7 +12,6 @@
   
   export let data: TeamData,
     team: string,
-    showBadge: boolean,
     switchTeam: Function;
 </script>
 
@@ -44,16 +43,7 @@
 
       <div class="next-game-values">
         <div class="predictions-and-logo">
-          {#if showBadge}
-            <div
-              class="next-game-logo opposition-badge"
-              style="background-image: url('{data.logoURLs[
-                data.upcoming[team].nextTeam
-              ]}')"
-            />
-          {:else}
-            <div class="next-game-position" />
-          {/if}
+          <div class="next-game-position" />
           <div class="predictions">
             <div class="next-game-item">
               <div class="next-game-position">

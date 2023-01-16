@@ -1,36 +1,13 @@
 <script lang="ts">
   import { Router } from "svelte-routing";
   import { onMount } from "svelte";
-
-  async function fetchData(address: string): Promise<Object> {
-    const response = await fetch(address);
-    let json = await response.json();
-    return json;
-  }
+  import { identicalScore, sameResult } from "../lib/goals"
 
   function toggleDetailsDisplay(id: string) {
     let prediction = document.getElementById(id);
     if (prediction != null) {
       prediction.classList.toggle("expanded");
     }
-  }
-
-  function identicalScore(prediction: Scoreline, actual: Scoreline): boolean {
-    return (
-      Math.round(prediction.homeGoals) == actual.homeGoals &&
-      Math.round(prediction.awayGoals) == actual.awayGoals
-    );
-  }
-
-  function sameResult(prediction: Scoreline, actual: Scoreline): boolean {
-    return (
-      (Math.round(prediction.homeGoals) > Math.round(prediction.awayGoals) &&
-        Math.round(actual.homeGoals) > Math.round(actual.awayGoals)) ||
-      (Math.round(prediction.homeGoals) == Math.round(prediction.awayGoals) &&
-        Math.round(actual.homeGoals) == Math.round(actual.awayGoals)) ||
-      (Math.round(prediction.homeGoals) < Math.round(prediction.awayGoals) &&
-        Math.round(actual.homeGoals) < Math.round(actual.awayGoals))
-    )
   }
 
   /**
@@ -110,16 +87,14 @@
   }
 
   let data: PredictionsData;
-  onMount(() => {
-    fetchData("https://pldashboard-backend.vercel.app/api/predictions").then(
-      (json: any) => {
-        sortByDate(json);
-        json = {predictions: json} as PredictionsData
-        insertExtras(json);
-        data = json;
-        console.log(data);
-      }
-    );
+  onMount(async () => {
+    const response = await fetch("https://pldashboard-backend.vercel.app/api/predictions");
+    let json = await response.json();
+    sortByDate(json);
+    json = {predictions: json} as PredictionsData
+    insertExtras(json);
+    data = json;
+    console.log(data);
   });
 </script>
 
