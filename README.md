@@ -13,5 +13,5 @@ Hosted at: https://pldashboard.com
 </p>
 <br>
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/41476809/193349279-d30c308b-d87d-43df-a76f-a23d74725faa.png"/>
+  <img src="https://user-images.githubusercontent.com/41476809/207646620-e3b2ab27-879c-4926-b91c-75a7e435be17.png"/>
 </p>

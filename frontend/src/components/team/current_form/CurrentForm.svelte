@@ -1,5 +1,6 @@
 <script lang="ts">
   import FormTiles from "./FormTiles.svelte";
+  import {toInitials} from "../../../lib/team";
 
   function getSortedMatchdays(data: TeamData, team: string): string[] {
     let matchdays = Object.keys(data.form[team][data._id]).sort(function (
@@ -101,8 +102,7 @@
   
   export let data: TeamData,
     currentMatchday: string,
-    team: string,
-    toInitials: Function;
+    team: string;
 </script>
 
 {#if formInitials != undefined}

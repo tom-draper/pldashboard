@@ -83,7 +83,6 @@
 
 
   function defaultLayout() {
-    // let yLabels = Array.from(Array(20), (_, i) => i + 1);
     return {
       title: false,
       autosize: true,
@@ -97,10 +96,7 @@
         showgrid: false,
         showline: false,
         zeroline: false,
-        // autorange: "reversed",
         fixedrange: true,
-        // ticktext: yLabels,
-        // tickvals: yLabels,
         visible: true,
       },
       xaxis: {
