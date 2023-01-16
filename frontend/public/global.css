@@ -94,6 +94,7 @@ body {
 h1 {
   margin: 25px 0 0;
   font-size: 2em;
+  user-select: none;
 }
 
 .main-link {
@@ -104,6 +105,7 @@ h1 {
   align-self: center;
   text-decoration: none;
   letter-spacing: -1px;
+  margin: 10px;
 }
 
 .no-decoration {
@@ -125,10 +127,6 @@ a {
 .title {
   font-size: 2.4em;
   font-weight: 600;
-}
-
-.main-link {
-  margin: 10px;
 }
 
 /* ------------------------------- Teams Page ---------------------------------- */
@@ -176,10 +174,6 @@ a {
 .season-stats-row {
   margin: 40px 100px 60px;
   height: auto;
-}
-
-h1 {
-  user-select: none;
 }
 
 /* Mobile view */
