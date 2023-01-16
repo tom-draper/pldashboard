@@ -80,7 +80,7 @@
       if (score != null) {
         let atHome = data.form[team][season][matchday].atHome;
         if (isCleanSheet(score.homeGoals, score.awayGoals, atHome)) {
-          seasonStats[team].cleanSheetRatio += 1;
+          seasonStats[team].cleanSheetsRatio += 1;
         }
         if (notScored(score.homeGoals, score.awayGoals, atHome)) {
           seasonStats[team].noGoalRatio += 1;
@@ -124,8 +124,7 @@
   }
 
   type Stats = {
-    string: {
-      // Team name
+    [teamName: string]: {
       played: number;
       xG: number;
       xC: number;
