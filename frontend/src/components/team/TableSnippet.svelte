@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {toAlias, toHyphenatedName} from "../../lib/team";
+  import { toAlias, toHyphenatedName } from "../../lib/team";
 
   function tableSnippetRange(sortedTeams: string[], team: string): [number, number] {
     let teamStandingsIdx = sortedTeams.indexOf(team);

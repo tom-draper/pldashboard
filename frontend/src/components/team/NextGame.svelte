@@ -1,16 +1,6 @@
 <script lang="ts">
-  import {toAlias, toInitials, toHyphenatedName} from "../../lib/team";
-  import {ordinal} from "../../lib/format"
-
-  function currentMatchday(team: string): string {
-    let matchdays = Object.keys(data.form[team][data._id])
-    for (let i = matchdays.length - 1; i >= 0; i--) {
-      if (data.form[team][data._id][matchdays[i]].score != null) {
-        return matchdays[i]
-      }
-    }
-    return null
-  }
+  import { toAlias, toInitials, toHyphenatedName, currentMatchday } from "../../lib/team";
+  import { ordinal } from "../../lib/format"
 
   function resultColour(prevMatch: any, home: boolean): string {
     if (home) {
@@ -81,7 +71,7 @@
                 <span class="current-form-value"
                   >{(
                     data.form[data.upcoming[team].nextTeam][data._id][
-                      currentMatchday(data.upcoming[team].nextTeam)
+                      currentMatchday(data, data.upcoming[team].nextTeam)
                     ].formRating5 * 100
                   ).toFixed(1)}%</span
                 >

@@ -66,3 +66,14 @@ export function playedMatchdays(data: TeamData, team: string): string[] {
     }
     return matchdays;
 }
+
+export function currentMatchday(data: TeamData, team: string): string | null {
+    let matchdays = Object.keys(data.form[team][data._id])
+    for (let i = matchdays.length - 1; i >= 0; i--) {
+        if (data.form[team][data._id][matchdays[i]].score != null) {
+            return matchdays[i]
+        }
+    }
+    return null
+}
+

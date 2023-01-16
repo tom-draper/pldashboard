@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {teamInSeason} from "../../lib/team";
+  import { teamInSeason } from "../../lib/team";
 
   function insertSeasonAvgScoreFreq(scoreFreq: ScoreFreq, form: Form, team: string, season: number) {
     for (let matchday in form[team][season]) {

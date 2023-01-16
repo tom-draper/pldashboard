@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {toAlias, toName, teamInSeason, toHyphenatedName, teamColor} from "../../lib/team";
+  import { toAlias, toName, teamInSeason, toHyphenatedName, teamColor } from "../../lib/team";
 
   function addTeamComparison(team: string) {
     let teamData = {

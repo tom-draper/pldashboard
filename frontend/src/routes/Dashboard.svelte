@@ -19,7 +19,7 @@
   import Overview from "../components/overview/Overview.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
   import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
-  import { toAlias, toHyphenatedName, playedMatchdays } from "../lib/team";
+  import { toAlias, toHyphenatedName, playedMatchdays, currentMatchday} from "../lib/team";
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
@@ -67,19 +67,6 @@
     return x;
   }
 
-  function getCurrentMatchday(data: TeamData, team: string): null | string {
-    let matchdays = Object.keys(data.form[team][data._id]).reverse();
-    if (matchdays.length > 0) {
-      // Largest matchday with score is current matchday
-      for (let matchday of matchdays) {
-        if (data.form[team][data._id][matchday].score != null) {
-          return matchday;
-        }
-      }
-    }
-    return null;
-  }
-
   async function fetchData(address: string): Promise<TeamData> {
     const response = await fetch(address);
     return await response.json();
@@ -110,7 +97,7 @@
           window.location.href = "/error";
         }
         if (team != "Overview") {
-          currentMatchday = getCurrentMatchday(json, team);
+          curMatchday = currentMatchday(json, team);
           playedDates = playedMatchdayDates(json, team);
         }
         data = json;
@@ -130,7 +117,7 @@
       team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
       title = `Dashboard | ${team}`;
       // Overwrite values from new team's perspective using same data
-      currentMatchday = getCurrentMatchday(data, team);
+      curMatchday = currentMatchday(data, team);
       playedDates = playedMatchdayDates(data, team);
     }
     window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
@@ -153,7 +140,7 @@
   let title = "Dashboard";
   let team = "";
   let teams: string[] = []; // Used for nav bar links
-  let currentMatchday: string, playedDates: Date[];
+  let curMatchday: string, playedDates: Date[];
 
   let data: TeamData;
   onMount(() => {
@@ -258,7 +245,7 @@
 
             <div class="row multi-element-row">
               <div class="row-left form-details">
-                <CurrentForm {data} {currentMatchday} {team} />
+                <CurrentForm {data} currentMatchday={curMatchday} {team} />
                 <TableSnippet {data} {hyphenatedTeam} {team} {switchTeam} />
               </div>
               <div class="row-right">

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {toHyphenatedName} from "../../lib/team"
+  import { toHyphenatedName } from "../../lib/team"
 
   function getFormLine(
     data: TeamData,
