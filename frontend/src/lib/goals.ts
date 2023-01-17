@@ -15,3 +15,27 @@ export function sameResult(prediction: Scoreline, actual: Scoreline): boolean {
             Math.round(actual.homeGoals) < Math.round(actual.awayGoals))
     )
 }
+
+export function isCleanSheet(h: number, a: number, atHome: boolean): boolean {
+    return (a == 0 && atHome) || (h == 0 && !atHome);
+}
+
+export function goalsScored(h: number, a: number, atHome: boolean): number {
+    if (atHome) {
+        return h;
+    } else {
+        return a;
+    }
+}
+
+export function goalsConceded(h: number, a: number, atHome: boolean): number {
+    if (atHome) {
+        return a;
+    } else {
+        return h;
+    }
+}
+
+export function notScored(h: number, a: number, atHome: boolean): boolean {
+    return (h == 0 && atHome) || (a == 0 && !atHome);
+}
