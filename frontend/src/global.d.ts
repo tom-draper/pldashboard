@@ -12,7 +12,7 @@ type Match = {
         homeGoals: number,
         awayGoals: number
     }
-    status: string,  // FINISHED, IN-PLAY or SCHEDULED
+    status: 'FINISHED' | 'IN-PLAY', 'SCHEDULED',
     atHome: boolean,
 }
 
@@ -24,7 +24,7 @@ type Fixtures = {
 
 type Form = {
     [season: string]: {  // Season start year
-        [teamName: string]: {  // Team name
+        [teamName: string]: {
             [matchday: number]: {  // Matchday number 1 to 38
                 team: string,
                 date: string,
@@ -48,7 +48,7 @@ type Form = {
 }
 
 type Standings = {
-    [teamName: string]: {  // Team name
+    [teamName: string]: {
         [season: number]: {  // Season start year
             won: number,
             drawn: number,
@@ -64,7 +64,7 @@ type Standings = {
 }
 
 type TeamRatings = {
-    [teamName: string]: {  // Team name
+    [teamName: string]: {
         ratingCurrent: number,
         rating1YAgo: number,
         rating2YAgo: number,
@@ -74,12 +74,13 @@ type TeamRatings = {
 }
 
 type HomeAdvantages = {
-    [teamName: string]: {  // Team name
+    [teamName: string]: {
         [season: number]: {  // Season start year
             home: number,
             homeAdvantage: number,
             overall: number,
-        }
+        },
+        totalHomeAdvantage: number,
     }
 }
 
@@ -94,7 +95,7 @@ type PrevMatch = {
 }
 
 type Upcoming = {
-    [teamName: string]: {  // Team name
+    [teamName: string]: {
         nextTeam: string,
         date: string,
         atHome: boolean,

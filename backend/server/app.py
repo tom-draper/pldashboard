@@ -4,7 +4,7 @@ from fastapi import FastAPI
 import uvicorn
 import os
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -40,7 +40,6 @@ def recent_cache(date: datetime) -> bool:
 
 @app.get('/api/teams')
 async def team() -> str:
-    print(cache)
     if cache['team']['data'] is not None and recent_cache(cache['team']['time']):
         teams_data = cache['team']['data']
     else:
@@ -52,8 +51,13 @@ async def team() -> str:
 
 @app.get('/api/predictions')
 async def predictions() -> str:
-    predictions = await database.get_predictions()
-    return predictions
+    if cache['predictions']['data'] is not None and recent_cache(cache['predictions']['time']):
+        predictions_data = cache['predictions']['data']
+    else:
+        predictions_data = await database.get_predictions()
+        cache['predictions']['data'] = predictions_data
+        cache['predictions']['time'] = datetime.now()
+    return predictions_data
 
 
 if __name__ == "__main__":

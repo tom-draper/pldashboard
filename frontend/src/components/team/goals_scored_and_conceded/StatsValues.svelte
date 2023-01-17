@@ -1,11 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-
-  function ordinal(n: number): string {
-    let ord = [, "st", "nd", "rd"];
-    let a = n % 100;
-    return n + (ord[a > 20 ? a % 10 : a] || "th");
-  }
+  import { ordinal } from "../../../lib/format";
+  import CleanSheetsGraph from "./CleanSheetsGraph.svelte";
 
   function getStatsRank(
     seasonStats: Stats,
@@ -24,17 +20,21 @@
   }
 
   function getStatsRankings(seasonStats: Stats, team: string): StatsRank {
-    let xGRank = ordinal(getStatsRank(seasonStats, "xG", team, false));
+    let xGRank = getStatsRank(seasonStats, "xG", team, false);
     // Reverse - lower rank the better
-    let xCRank = ordinal(getStatsRank(seasonStats, "xC", team, true));
-    let cleanSheetRatioRank = ordinal(
-      getStatsRank(seasonStats, "cleanSheetRatio", team, false)
+    let xCRank = getStatsRank(seasonStats, "xC", team, true);
+    let cleanSheetRatioRank = getStatsRank(
+      seasonStats,
+      "cleanSheetRatio",
+      team,
+      false
     );
     return { xG: xGRank, xC: xCRank, cleanSheetRatio: cleanSheetRatioRank };
   }
 
   function setStatsValues(seasonStats: Stats, team: string) {
     rank = getStatsRankings(seasonStats, team);
+    console.log(rank);
 
     // Keep ordinal values at the correct offset
     // Once rank values have updated, init positional offset for ordinal values
@@ -80,13 +80,21 @@
       if (score != null) {
         let atHome = data.form[team][season][matchday].atHome;
         if (isCleanSheet(score.homeGoals, score.awayGoals, atHome)) {
-          seasonStats[team].cleanSheetsRatio += 1;
+          seasonStats[team].cleanSheetRatio += 1;
         }
         if (notScored(score.homeGoals, score.awayGoals, atHome)) {
           seasonStats[team].noGoalRatio += 1;
         }
-        seasonStats[team].xG += goalsScored(score.homeGoals, score.awayGoals, atHome);
-        seasonStats[team].xC += goalsConceded(score.homeGoals, score.awayGoals, atHome);
+        seasonStats[team].xG += goalsScored(
+          score.homeGoals,
+          score.awayGoals,
+          atHome
+        );
+        seasonStats[team].xC += goalsConceded(
+          score.homeGoals,
+          score.awayGoals,
+          atHome
+        );
         seasonStats[team].played += 1;
       }
     }
@@ -128,26 +136,27 @@
       played: number;
       xG: number;
       xC: number;
-      cleanSheetsRatio: number;
+      cleanSheetRatio: number;
       noGoalRatio: number;
     };
   };
 
   type StatsRank = {
-    xG: string;
-    xC: string;
-    cleanSheetRatio: string;
+    xG: number;
+    xC: number;
+    cleanSheetRatio: number;
   };
 
   let stats: Stats;
   let rank: StatsRank = {
-    xG: "",
-    xC: "",
-    cleanSheetRatio: "",
+    xG: 0,
+    xC: 0,
+    cleanSheetRatio: 0,
   };
   let setup = false;
   onMount(() => {
     stats = buildStats(data);
+    console.log(stats);
     setStatsValues(stats, team);
     setup = true;
   });
@@ -167,8 +176,8 @@
         <div class="season-stat-number">
           {stats[team].xG.toFixed(2)}
         </div>
-        <div class="season-stat-position ssp-{rank.xG}">
-          {rank.xG}
+        <div class="season-stat-position ssp-{rank.xG + ordinal(rank.xG)}">
+          {rank.xG + ordinal(rank.xG)}
         </div>
       </div>
       <div class="season-stat-text">goals per game</div>
@@ -181,8 +190,8 @@
         <div class="season-stat-number">
           {stats[team].xC.toFixed(2)}
         </div>
-        <div class="season-stat-position ssp-{rank.xC}">
-          {rank.xC}
+        <div class="season-stat-position ssp-{rank.xC + ordinal(rank.xC)}">
+          {rank.xC + ordinal(rank.xC)}
         </div>
       </div>
       <div class="season-stat-text">conceded per game</div>
@@ -195,8 +204,8 @@
         <div class="season-stat-number">
           {stats[team].cleanSheetRatio.toFixed(2)}
         </div>
-        <div class="season-stat-position ssp-{rank.cleanSheetRatio}">
-          {rank.cleanSheetRatio}
+        <div class="season-stat-position ssp-{rank.cleanSheetRatio + ordinal(rank.cleanSheetRatio)}">
+          {rank.cleanSheetRatio + ordinal(rank.cleanSheetRatio)}
         </div>
       </div>
       <div class="season-stat-text">clean sheets</div>

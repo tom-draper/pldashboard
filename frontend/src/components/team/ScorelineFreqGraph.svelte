@@ -1,20 +1,21 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {teamInSeason} from "../../lib/team";
+  import { teamInSeason } from "../../lib/team";
 
   function insertSeasonAvgScoreFreq(scoreFreq: ScoreFreq, form: Form, team: string, season: number) {
     for (let matchday in form[team][season]) {
       let score = form[team][season][matchday].score;
       if (score != null) {
+        let scoreStr: string;
         if (form[team][season][matchday].atHome) {
-          score = score.homeGoals + " - " + score.awayGoals;
+          scoreStr = score.homeGoals + " - " + score.awayGoals;
         } else {
-          score = score.awayGoals + " - " + score.homeGoals;
+          scoreStr = score.awayGoals + " - " + score.homeGoals;
         }
-        if (!(score in scoreFreq)) {
-          scoreFreq[score] = [1];
+        if (!(scoreStr in scoreFreq)) {
+          scoreFreq[scoreStr] = [1];
         } else {
-          scoreFreq[score][0] += 1;
+          scoreFreq[scoreStr][0] += 1;
         }
       }
     }
@@ -39,12 +40,13 @@
     for (let matchday in form[team][season]) {
       let score = form[team][season][matchday].score;
       if (score != null) {
+        let scoreStr: string;
         if (form[team][season][matchday].atHome) {
-          score = score.homeGoals + " - " + score.awayGoals;
+          scoreStr = score.homeGoals + " - " + score.awayGoals;
         } else {
-          score = score.awayGoals + " - " + score.homeGoals;
+          scoreStr = score.awayGoals + " - " + score.homeGoals;
         }
-        scoreFreq[score][1] += 1;
+        scoreFreq[scoreStr][1] += 1;
       }
     }
   }

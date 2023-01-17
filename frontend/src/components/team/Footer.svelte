@@ -20,6 +20,9 @@
     font-size: 13px;
     align-items: center;
   }
+  .footer-text-colour {
+    color: rgb(0 0 0 / 37%);
+  }
   .teams-footer-bottom {
     margin: 30px 0;
   }

@@ -1,21 +1,6 @@
 <script lang="ts">
-  import {toAlias, toInitials} from "../../lib/team";
-
-  function ordinal(n: number): string {
-    let ord = [, "st", "nd", "rd"];
-    let a = n % 100;
-    return ord[a > 20 ? a % 10 : a] || "th";
-  }
-
-  function currentMatchday(data: TeamData, team: string): string {
-    let matchdays = Object.keys(data.form[team][data._id])
-    for (let i = matchdays.length - 1; i >= 0; i--) {
-      if (data.form[team][data._id][matchdays[i]].score != null) {
-        return matchdays[i]
-      }
-    }
-    return null
-  }
+  import { toAlias, toInitials, toHyphenatedName, currentMatchday } from "../../lib/team";
+  import { ordinal } from "../../lib/format"
 
   function resultColour(prevMatch: any, home: boolean): string {
     if (home) {
@@ -27,7 +12,6 @@
   
   export let data: TeamData,
     team: string,
-    showBadge: boolean,
     switchTeam: Function;
 </script>
 
@@ -47,7 +31,7 @@
           <button
             on:click={() => {
               switchTeam(
-                data.upcoming[team].nextTeam.toLowerCase().replace(/ /g, "-")
+                toHyphenatedName(data.upcoming[team].nextTeam)
               );
             }}
             class="next-game-team-btn"
@@ -59,16 +43,7 @@
 
       <div class="next-game-values">
         <div class="predictions-and-logo">
-          {#if showBadge}
-            <div
-              class="next-game-logo opposition-badge"
-              style="background-image: url('{data.logoURLs[
-                data.upcoming[team].nextTeam
-              ]}')"
-            />
-          {:else}
-            <div class="next-game-position" />
-          {/if}
+          <div class="next-game-position" />
           <div class="predictions">
             <div class="next-game-item">
               <div class="next-game-position">
@@ -131,21 +106,12 @@
                   <div class="left-side">
                     <div
                       class="home-team"
-                      style="background: var(--{prevMatch.homeTeam
-                        .toLowerCase()
-                        .replace(/ /g, '-')}); color: var(--{prevMatch.homeTeam
-                        .toLowerCase()
-                        .replace(/ /g, '-')}-secondary)"
+                      style="background: var(--{toHyphenatedName(prevMatch.homeTeam)}); color: var(--{toHyphenatedName(prevMatch.homeTeam)}-secondary)"
                     >
                       {toInitials(prevMatch.homeTeam)}
                     </div>
                     <div class="goals-container"
-                      style="background: var(--{
-                        resultColour(prevMatch, true)
-                        .toLowerCase()
-                        .replace(/ /g, '-')}); color: var(--{resultColour(prevMatch, true)
-                        .toLowerCase()
-                        .replace(/ /g, '-')}-secondary)">
+                      style="background: var(--{toHyphenatedName(resultColour(prevMatch, true))}); color: var(--{toHyphenatedName(resultColour(prevMatch, true))}-secondary)">
                       <div class="home-goals">
                         {prevMatch.homeGoals}
                       </div>
@@ -154,22 +120,14 @@
                   <div class="right-side">
                     <div class="goals-container"
                         style="background: var(--{
-                        resultColour(prevMatch, false)
-                        .toLowerCase()
-                        .replace(/ /g, '-')}); color: var(--{resultColour(prevMatch, false)
-                        .toLowerCase()
-                        .replace(/ /g, '-')}-secondary)">
+                        toHyphenatedName(resultColour(prevMatch, false))}); color: var(--{toHyphenatedName(resultColour(prevMatch, false))}-secondary)">
                       <div class="away-goals">
                         {prevMatch.awayGoals}
                       </div>
                     </div>
                     <div
                       class="away-team"
-                      style="background: var(--{prevMatch.awayTeam
-                        .toLowerCase()
-                        .replace(/ /g, '-')}); color: var(--{prevMatch.awayTeam
-                        .toLowerCase()
-                        .replace(/ /g, '-')}-secondary)"
+                      style="background: var(--{toHyphenatedName(prevMatch.awayTeam)}); color: var(--{toHyphenatedName(prevMatch.awayTeam)}-secondary)"
                     >
                       {toInitials(prevMatch.awayTeam)}
                     </div>
@@ -352,6 +310,13 @@
     }
   }
 
+  @media only screen and (max-width: 1100px) {
+    .next-game-title {
+      width: auto;
+      border-radius: 0;
+    }
+  }
+
   @media only screen and (max-width: 1000px) {
     .next-game-prediction {
       margin: 50px 20px 40px;
@@ -415,6 +380,9 @@
     }
     .next-game-prediction {
       margin: 40px 14px;
+    }
+    .next-game-logo {
+      height: 190px;
     }
   }
 </style>

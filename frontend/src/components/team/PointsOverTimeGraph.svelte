@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import {toHyphenatedName} from "../../lib/team"
 
   function getLineConfig(team: string, isMainTeam: boolean): any {
     let lineConfig: any;
     if (isMainTeam) {
       // Get team primary colour from css variable
-      let teamKey = team[0].toLowerCase() + team.slice(1);
-      teamKey = teamKey.replace(/ /g, "-").toLowerCase();
+      let teamKey = toHyphenatedName(team);
       let lineColor = getComputedStyle(
         document.documentElement
       ).getPropertyValue(`--${teamKey}`);

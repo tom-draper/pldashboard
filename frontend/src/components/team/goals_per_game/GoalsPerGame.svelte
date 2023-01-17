@@ -340,6 +340,9 @@
     display: flex;
     margin: 0 8%;
   }
+  .freq-graph {
+    width: 50%;
+  }
 
   @media only screen and (max-width: 1000px) {
     .two-graphs {

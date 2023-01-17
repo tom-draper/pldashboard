@@ -169,6 +169,7 @@
   @media only screen and (max-width: 1000px) {
     .current-form-row {
       width: min(80%, 440px);
+      margin: auto;
     }
   }
   

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import OverviewFooter from "./Footer.svelte";
-  import {toInitials} from "../../lib/team";
+  import { toInitials, toHyphenatedName } from "../../lib/team";
 
   type UpcomingMatch = {
     time: Date;
@@ -238,21 +238,13 @@
                 <div class="upcoming-match-teams">
                   <div
                     class="upcoming-match-home"
-                    style="background: var(--{match.home
-                      .toLowerCase()
-                      .replace(/ /g, '-')}); color: var(--{match.home
-                      .toLowerCase()
-                      .replace(/ /g, '-')}-secondary)"
+                    style="background: var(--{toHyphenatedName(match.home)}); color: var(--{toHyphenatedName(match.home)}-secondary)"
                   >
                     {toInitials(match.home)}
                   </div>
                   <div
                     class="upcoming-match-away"
-                    style="background: var(--{match.away
-                      .toLowerCase()
-                      .replace(/ /g, '-')}); color: var(--{match.away
-                      .toLowerCase()
-                      .replace(/ /g, '-')}-secondary)"
+                    style="background: var(--{toHyphenatedName(match.away)}); color: var(--{toHyphenatedName(match.away)}-secondary)"
                   >
                     {toInitials(match.away)}
                   </div>
@@ -367,17 +359,9 @@
               <div class="fixtures-table-row">
                 <div
                   class="fixtures-team"
-                  style="background: var(--{row.team
-                    .toLowerCase()
-                    .replace(/ /g, '-')}); color: var(--{row.team
-                    .toLowerCase()
-                    .replace(/ /g, '-')}-secondary);
-                      {i == 0
-                    ? 'border-top: 2px solid black; border-radius: 4px 0 0'
-                    : ''}
-                      {i == fixtures.length - 1
-                    ? 'border-radius: 0 0 0 4px;'
-                    : ''}"
+                  style="background: var(--{toHyphenatedName(row.team)}); color: var(--{toHyphenatedName(row.team)}-secondary);
+                      {i == 0 ? 'border-top: 2px solid black; border-radius: 4px 0 0' : ''}
+                      {i == fixtures.length - 1 ? 'border-radius: 0 0 0 4px;' : ''}"
                 >
                   {toInitials(row.team)}
                 </div>
@@ -399,11 +383,7 @@
                     <div
                       class="match"
                       style="background: {match.colour}; {match.status ==
-                      'FINISHED'
-                        ? 'filter: grayscale(100%)'
-                        : ''} {i == row.matches.length - 1
-                        ? 'border-right: 2px solid black'
-                        : ''}"
+                      'FINISHED' ? 'filter: grayscale(100%)': ''} {i == row.matches.length - 1 ? 'border-right: 2px solid black' : ''}"
                     >
                       {`${toInitials(match.team)} (${
                         match.atHome ? "H" : "A"

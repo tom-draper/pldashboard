@@ -1,19 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {toAlias, toName, teamInSeason} from "../../lib/team";
-
-  function getTeamColor(team: string): string {
-    let teamKey = team[0].toLowerCase() + team.slice(1);
-    teamKey = teamKey.replace(/ /g, "-").toLowerCase();
-    let teamColor = getComputedStyle(document.documentElement).getPropertyValue(
-      `--${teamKey}`
-    );
-    return teamColor;
-  }
+  import { toAlias, toName, teamInSeason, toHyphenatedName, teamColor } from "../../lib/team";
 
   function addTeamComparison(team: string) {
-    let teamColor = getTeamColor(team);
-
     let teamData = {
       name: team,
       type: "scatterpolar",
@@ -27,7 +16,7 @@
       ],
       theta: labels,
       fill: "toself",
-      marker: { color: teamColor },
+      marker: { color: teamColor(team) },
     };
     plotData.data.push(teamData);
     //@ts-ignore
@@ -93,7 +82,7 @@
   function spiderBtnClick(btn: HTMLButtonElement) {
     let team = toName(btn.innerHTML);
     if (btn.style.background == "") {
-      let teamKey = team.toLowerCase().replace(/ /g, "-");
+      let teamKey = toHyphenatedName(team);
       btn.style.background = `var(--${teamKey})`;
       btn.style.color = `var(--${teamKey}-secondary)`;
     } else {
@@ -280,7 +269,7 @@
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null) {
-        let result: string;
+        let result: 'win' | 'lost' | 'draw';
         if ((match.atHome && match.score.homeGoals > match.score.awayGoals) 
             || (!match.atHome && match.score.homeGoals < match.score.awayGoals)) {
           result = "win";
@@ -465,7 +454,6 @@
   }
 
   function getTeamData(team: string): any {
-    let teamColor = getTeamColor(team);
     let teamData = scatterPlot(
       team,
       [
@@ -476,7 +464,7 @@
         winStreaks[team],
         vsBig6[team],
       ],
-      teamColor
+      teamColor(team)
     );
     return teamData;
   }

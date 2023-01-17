@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { toHyphenatedName } from "../../lib/team"
 
   function getFormLine(
     data: TeamData,
@@ -15,7 +16,6 @@
       }
     }
 
-
     let y = [];
     for (let matchday of matchdays) {
       let form = data.form[team][data._id][matchday].formRating5;
@@ -25,8 +25,7 @@
     let lineVal: { color: string; width?: number };
     if (isMainTeam) {
       // Get team primary colour from css variable
-      let teamKey = team[0].toLowerCase() + team.slice(1);
-      teamKey = teamKey.replace(/ /g, "-").toLowerCase();
+      let teamKey = toHyphenatedName(team)
       let lineColor = getComputedStyle(
         document.documentElement
       ).getPropertyValue(`--${teamKey}`);
