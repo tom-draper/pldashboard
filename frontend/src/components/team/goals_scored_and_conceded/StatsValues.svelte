@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { ordinal } from "../../../lib/format";
-  import CleanSheetsGraph from "./CleanSheetsGraph.svelte";
 
   function getStatsRank(
     seasonStats: Stats,
@@ -29,7 +28,11 @@
       team,
       false
     );
-    return { xG: xGRank, xC: xCRank, cleanSheetRatio: cleanSheetRatioRank };
+    return { 
+      xG: `${xGRank}${ordinal(xGRank)}`, 
+      xC: `${xCRank}${ordinal(xCRank)}`, 
+      cleanSheetRatio: `${cleanSheetRatioRank}${ordinal(cleanSheetRatioRank)}`
+    };
   }
 
   function setStatsValues(seasonStats: Stats, team: string) {
@@ -142,16 +145,16 @@
   };
 
   type StatsRank = {
-    xG: number;
-    xC: number;
-    cleanSheetRatio: number;
+    xG: string;
+    xC: string;
+    cleanSheetRatio: string;
   };
 
   let stats: Stats;
   let rank: StatsRank = {
-    xG: 0,
-    xC: 0,
-    cleanSheetRatio: 0,
+    xG: '',
+    xC: '',
+    cleanSheetRatio: '',
   };
   let setup = false;
   onMount(() => {
@@ -176,8 +179,8 @@
         <div class="season-stat-number">
           {stats[team].xG.toFixed(2)}
         </div>
-        <div class="season-stat-position ssp-{rank.xG + ordinal(rank.xG)}">
-          {rank.xG + ordinal(rank.xG)}
+        <div class="season-stat-position ssp-{rank.xG}">
+          {rank.xG}
         </div>
       </div>
       <div class="season-stat-text">goals per game</div>
@@ -190,8 +193,8 @@
         <div class="season-stat-number">
           {stats[team].xC.toFixed(2)}
         </div>
-        <div class="season-stat-position ssp-{rank.xC + ordinal(rank.xC)}">
-          {rank.xC + ordinal(rank.xC)}
+        <div class="season-stat-position ssp-{rank.xC}">
+          {rank.xC}
         </div>
       </div>
       <div class="season-stat-text">conceded per game</div>
@@ -204,8 +207,8 @@
         <div class="season-stat-number">
           {stats[team].cleanSheetRatio.toFixed(2)}
         </div>
-        <div class="season-stat-position ssp-{rank.cleanSheetRatio + ordinal(rank.cleanSheetRatio)}">
-          {rank.cleanSheetRatio + ordinal(rank.cleanSheetRatio)}
+        <div class="season-stat-position ssp-{rank.cleanSheetRatio}">
+          {rank.cleanSheetRatio}
         </div>
       </div>
       <div class="season-stat-text">clean sheets</div>
