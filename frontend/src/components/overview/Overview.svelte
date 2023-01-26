@@ -105,6 +105,7 @@
     team: string;
     matches: {
       team: string;
+      date: string;
       atHome: boolean;
       status: string;
       colour: string;
@@ -122,6 +123,7 @@
           : data.homeAdvantages[match.team].totalHomeAdvantage;
         matches.push({
           team: match.team,
+          date: match.date,
           atHome: match.atHome,
           status: match.status,
           colour: fixtureColourSkewed(
@@ -395,6 +397,7 @@
                         : ''} {i == row.matches.length - 1
                         ? 'border-right: 2px solid black'
                         : ''}"
+                      title={match.date}
                     >
                       {`${toInitials(match.team)} (${
                         match.atHome ? "H" : "A"
