@@ -608,10 +608,12 @@
     cursor: pointer;
   }
 
-
   @media only screen and (max-width: 1200px) {
     .fixtures {
       width: 100vw;
+    }
+    .standings-points {
+      margin: 0;
     }
   }
 </style>
