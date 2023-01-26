@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { teamStyle } from "../../lib/format";
   import {toHyphenatedName} from "../../lib/team";
 
   function closeNavBar() {
@@ -34,13 +35,9 @@
       {/each}
     {:else}
       {#each teams as _team, _ (_team)}
-        {#if toHyphenatedName(_team)== team}
+        {#if toHyphenatedName(_team) == team}
           <a href="/{toHyphenatedName(_team)}" class="team-link">
-            <div
-              class="this-team-container"
-              style="color: var(--{toHyphenatedName(_team)}-secondary);
-                    background-color: var(--{toHyphenatedName(_team)})"
-            >
+            <div class="this-team-container" style={teamStyle(_team)}>
               <div class="this-team-name">
                 {toAlias(_team)}
               </div>

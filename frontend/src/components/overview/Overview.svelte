@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { toInitials, toHyphenatedName } from "../../lib/team";
+  import { toInitials } from "../../lib/team";
+  import { teamStyle } from "../../lib/format";
   import OverviewFooter from "./Footer.svelte";
 
   type UpcomingMatch = {
@@ -232,17 +233,13 @@
                 <div class="upcoming-match-teams">
                   <div
                     class="upcoming-match-home"
-                    style="background: var(--{toHyphenatedName(
-                      match.home
-                    )}); color: var(--{toHyphenatedName(match.home)}-secondary)"
+                    style={teamStyle(match.home)}
                   >
                     {toInitials(match.home)}
                   </div>
                   <div
                     class="upcoming-match-away"
-                    style="background: var(--{toHyphenatedName(
-                      match.away
-                    )}); color: var(--{toHyphenatedName(match.away)}-secondary)"
+                    style={teamStyle(match.away)}
                   >
                     {toInitials(match.away)}
                   </div>
@@ -365,9 +362,7 @@
               <div class="fixtures-table-row">
                 <div
                   class="fixtures-team"
-                  style="background: var(--{toHyphenatedName(
-                    row.team
-                  )}); color: var(--{toHyphenatedName(row.team)}-secondary);
+                  style="{teamStyle(row.team)}
                       {i == 0
                     ? 'border-top: 2px solid black; border-radius: 4px 0 0'
                     : ''}
