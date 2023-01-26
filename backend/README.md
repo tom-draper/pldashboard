@@ -1,19 +1,19 @@
 # Backend
 
-## Server
+## FastAPI Server
 
 ```bash
-py server/app.py
+python server/app.py
 ```
 
 ## Data Updater
 
 ```bash
-py updater/updater.py
+python updater/updater.py
 ```
 
 ### Tests
 
 ```bash
-py -m pytest updater/tests/tests.py
+python -m pytest updater/tests/tests.py
 ```
