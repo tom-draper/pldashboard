@@ -19,15 +19,13 @@
   import Overview from "../components/overview/Overview.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
   import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
-  import { toAlias, toHyphenatedName, playedMatchdays, currentMatchday } from "../lib/team";
+  import { toAlias, toHyphenatedName, playedMatchdays, currentMatchday as getCurrentMatchday } from "../lib/team";
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
     if (mobileNav.style.width == "0px") {
-      mobileNav.style.animation = "appear 0.1s ease-in 1";
       mobileNav.style.width = "100%";
     } else {
-      mobileNav.style.animation = null;
       mobileNav.style.width = "0px";
     }
   }
@@ -93,13 +91,13 @@
       window.location.href = "/error";
     }
     if (team != "Overview") {
-      curMatchday = currentMatchday(json, team);
+      currentMatchday = getCurrentMatchday(json, team);
       playedDates = playedMatchdayDates(json, team);
     }
     data = json;
     console.log(data);
 
-    window.dispatchEvent(new Event("resize"));
+    window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
   }
 
   function switchTeam(newTeam: string) {
@@ -111,7 +109,7 @@
       team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
       title = `Dashboard | ${team}`;
       // Overwrite values from new team's perspective using same data
-      curMatchday = currentMatchday(data, team);
+      currentMatchday = getCurrentMatchday(data, team);
       playedDates = playedMatchdayDates(data, team);
     }
     window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
@@ -119,7 +117,7 @@
 
   function lazyLoad() {
     load = true;
-    window.dispatchEvent(new Event("resize"));
+    window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
   }
 
   let y: number;
@@ -132,7 +130,7 @@
   let title = "Dashboard";
   let team = "";
   let teams: string[] = []; // Used for nav bar links
-  let curMatchday: string, playedDates: Date[];
+  let currentMatchday: string, playedDates: Date[];
 
   let data: TeamData;
   onMount(() => {
@@ -226,7 +224,7 @@
 
             <div class="row multi-element-row">
               <div class="row-left form-details">
-                <CurrentForm {data} currentMatchday={curMatchday} {team} />
+                <CurrentForm {data} currentMatchday={currentMatchday} {team} />
                 <TableSnippet {data} {hyphenatedTeam} {team} {switchTeam} />
               </div>
               <div class="row-right">
@@ -257,7 +255,6 @@
                     <PositionOverTimeGraph
                       {data}
                       {team}
-                      {playedDates}
                       {mobileView}
                     />
                   </div>
@@ -271,7 +268,6 @@
                     <PointsOverTimeGraph
                       {data}
                       {team}
-                      {playedDates}
                       {mobileView}
                     />
                   </div>
@@ -471,7 +467,7 @@
     display: flex;
     flex-direction: column;
     padding-right: auto;
-    margin-right: 1.4em;
+    margin-right: 1.5em;
     text-justify: center;
     flex: 4;
   }
@@ -495,7 +491,6 @@
     position: fixed;
     color: white;
     background: var(--purple);
-    background: var(--purple);
     padding: 0.8em 0;
     cursor: pointer;
     font-size: 1.1em;
@@ -504,16 +499,6 @@
     bottom: 0;
     border: none;
     margin-bottom: -1px; /* For gap at bottom found in safari */
-  }
-
-  @keyframes appear {
-    from {
-      width: 0px;
-    }
-
-    to {
-      width: 100%;
-    }
   }
 
   @media only screen and (min-width: 2400px) {

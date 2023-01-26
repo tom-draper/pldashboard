@@ -38,7 +38,6 @@
 
   function setStatsValues(seasonStats: Stats, team: string) {
     rank = getStatsRankings(seasonStats, team);
-    console.log(rank);
 
     // Keep ordinal values at the correct offset
     // Once rank values have updated, init positional offset for ordinal values
@@ -136,7 +135,7 @@
   let setup = false;
   onMount(() => {
     stats = buildStats(data);
-    console.log(stats);
+    (stats);
     setStatsValues(stats, team);
     setup = true;
   });

@@ -17,7 +17,7 @@
     return lineConfig;
   }
 
-  function getLineY(
+  function getCumulativePoints(
     data: TeamData,
     team: string,
     matchdays: string[]
@@ -30,14 +30,27 @@
     return y;
   }
 
+  function getMatchdayDates(
+    data: TeamData,
+    team: string,
+    matchdays: string[]
+  ): Date[] {
+    let dates = [];
+    for (let i = 0; i < matchdays.length; i++) {
+      let date = data.form[team][data._id][matchdays[i]].date;
+      dates.push(date);
+    }
+    return dates;
+  }
+
   function getLine(
     data: TeamData,
-    playedDates: Date[],
     team: string,
     isMainTeam: boolean
   ): any {
     let matchdays = Object.keys(data.form[team][data._id]);
-    let y = getLineY(data, team, matchdays);
+    let dates = getMatchdayDates(data, team, matchdays);
+    let y = getCumulativePoints(data, team, matchdays);
     let lineConfig = getLineConfig(team, isMainTeam);
 
     let line = {
@@ -46,7 +59,7 @@
       name: team,
       mode: "lines",
       line: lineConfig,
-      text: playedDates,
+      text: dates,
       hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
       showlegend: false,
     };
@@ -56,19 +69,18 @@
   function lines(
     data: TeamData,
     team: string,
-    playedDates: Date[]
   ): any[] {
     let lines = [];
     let teams = Object.keys(data.standings);
     for (let i = 0; i < teams.length; i++) {
       if (teams[i] != team) {
-        let line = getLine(data, playedDates, teams[i], false);
+        let line = getLine(data, teams[i], false);
         lines.push(line);
       }
     }
 
     // Add this team last to ensure it overlaps all other lines
-    let line = getLine(data, playedDates, team, true);
+    let line = getLine(data, team, true);
     lines.push(line);
     return lines;
   }
@@ -131,7 +143,7 @@
 
   function buildPlotData(data: TeamData, team: string): PlotData {
     let plotData = {
-      data: lines(data, team, playedDates),
+      data: lines(data, team),
       layout: defaultLayout(),
       config: {
         responsive: true,
@@ -184,7 +196,6 @@
 
   export let data: TeamData,
     team: string,
-    playedDates: Date[],
     mobileView: boolean;
 </script>
 

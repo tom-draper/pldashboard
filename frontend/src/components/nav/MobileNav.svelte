@@ -31,7 +31,7 @@
     toggleMobileNav: Function;
 </script>
 
-<nav id="mobileNav" style="width: 0px;">
+<nav id="mobileNav" style="width: 0px">
   {#if hyphenatedTeams != undefined}
     <div class="team-links">
       {#each hyphenatedTeams as team, i}
@@ -78,7 +78,7 @@
     z-index: 2;
     overflow: hidden;
     height: 100vh;
-    width: 0;
+    animation: appear 0.1s ease-in 1;
   }
   .team-links {
     display: flex;
@@ -93,5 +93,14 @@
     font-size: 1em;
     padding: 0.4em;
     flex: 1;
+  }
+  @keyframes appear {
+    from {
+      width: 0px;
+    }
+
+    to {
+      width: 100%;
+    }
   }
 </style>

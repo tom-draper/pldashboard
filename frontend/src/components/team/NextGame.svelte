@@ -188,13 +188,6 @@
   .next-game-team-btn {
     color: var(--green) !important;
   }
-  .next-game-logo {
-    height: 225px;
-    margin: 10px;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-  }
   .predictions-and-logo {
     font-size: 1.4em;
     width: 45%;
