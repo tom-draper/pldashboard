@@ -130,7 +130,8 @@
   .current-form {
     font-size: 1.7rem;
     margin: 20px 0;
-    padding: 9px 25px;
+    width: 100%;
+    padding: 9px 0;
     background: var(--purple);
     color: white;
     border-radius: var(--border-radius);

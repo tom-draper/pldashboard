@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { ordinal } from "../../../lib/format";
+  import { isCleanSheet, notScored, goalsScored, goalsConceded } from "../../../lib/goals";
 
   function getStatsRank(
     seasonStats: Stats,
@@ -37,35 +38,10 @@
 
   function setStatsValues(seasonStats: Stats, team: string) {
     rank = getStatsRankings(seasonStats, team);
-    console.log(rank);
 
     // Keep ordinal values at the correct offset
     // Once rank values have updated, init positional offset for ordinal values
     // window.addEventListener("resize", setPositionalOffset);
-  }
-
-  function isCleanSheet(h: number, a: number, atHome: boolean): boolean {
-    return (a == 0 && atHome) || (h == 0 && !atHome);
-  }
-
-  function goalsScored(h: number, a: number, atHome: boolean): number {
-    if (atHome) {
-      return h;
-    } else {
-      return a;
-    }
-  }
-
-  function goalsConceded(h: number, a: number, atHome: boolean): number {
-    if (atHome) {
-      return a;
-    } else {
-      return h;
-    }
-  }
-
-  function notScored(h: number, a: number, atHome: boolean): boolean {
-    return (h == 0 && atHome) || (a == 0 && !atHome);
   }
 
   function countOccurances(
@@ -159,7 +135,7 @@
   let setup = false;
   onMount(() => {
     stats = buildStats(data);
-    console.log(stats);
+    (stats);
     setStatsValues(stats, team);
     setup = true;
   });

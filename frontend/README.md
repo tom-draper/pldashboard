@@ -1,4 +1,4 @@
-# PL Dashboard Svelte Frontend
+# Frontend
 
 Uses SSR (server-side rendering) with svelte-routing.
 
