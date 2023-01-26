@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { toInitials } from "../../lib/team";
+  import { teamStyle } from "../../lib/format";
   import OverviewFooter from "./Footer.svelte";
-  import { toInitials, toHyphenatedName } from "../../lib/team";
 
   type UpcomingMatch = {
     time: Date;
@@ -229,25 +230,27 @@
                 </div>
               {/if}
               <div class="upcoming-match">
-                <div class="upcoming-match-time">
-                  {match.time.toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </div>
                 <div class="upcoming-match-teams">
                   <div
                     class="upcoming-match-home"
-                    style="background: var(--{toHyphenatedName(match.home)}); color: var(--{toHyphenatedName(match.home)}-secondary)"
+                    style={teamStyle(match.home)}
                   >
                     {toInitials(match.home)}
                   </div>
                   <div
                     class="upcoming-match-away"
-                    style="background: var(--{toHyphenatedName(match.away)}); color: var(--{toHyphenatedName(match.away)}-secondary)"
+                    style={teamStyle(match.away)}
                   >
                     {toInitials(match.away)}
                   </div>
+                </div>
+              </div>
+              <div class="upcoming-match-time-container">
+                <div class="upcoming-match-time">
+                  {match.time.toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </div>
               </div>
             {/each}
@@ -359,9 +362,13 @@
               <div class="fixtures-table-row">
                 <div
                   class="fixtures-team"
-                  style="background: var(--{toHyphenatedName(row.team)}); color: var(--{toHyphenatedName(row.team)}-secondary);
-                      {i == 0 ? 'border-top: 2px solid black; border-radius: 4px 0 0' : ''}
-                      {i == fixtures.length - 1 ? 'border-radius: 0 0 0 4px;' : ''}"
+                  style="{teamStyle(row.team)}
+                      {i == 0
+                    ? 'border-top: 2px solid black; border-radius: 4px 0 0'
+                    : ''}
+                      {i == fixtures.length - 1
+                    ? 'border-radius: 0 0 0 4px;'
+                    : ''}"
                 >
                   {toInitials(row.team)}
                 </div>
@@ -383,7 +390,11 @@
                     <div
                       class="match"
                       style="background: {match.colour}; {match.status ==
-                      'FINISHED' ? 'filter: grayscale(100%)': ''} {i == row.matches.length - 1 ? 'border-right: 2px solid black' : ''}"
+                      'FINISHED'
+                        ? 'filter: grayscale(100%)'
+                        : ''} {i == row.matches.length - 1
+                        ? 'border-right: 2px solid black'
+                        : ''}"
                     >
                       {`${toInitials(match.team)} (${
                         match.atHome ? "H" : "A"
@@ -413,6 +424,10 @@
   .left {
     width: min(40%, 500px);
   }
+  .upcoming-matches {
+    position: relative;
+    margin-left: 40px;
+  }
   .upcoming-match {
     display: flex;
     margin-bottom: 8px;
@@ -428,15 +443,20 @@
     font-weight: 800;
     text-align: center;
   }
-  .upcoming-match-date,
-  .upcoming-title {
-    margin-left: 90px;
+
+  .upcoming-match-time-container {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    margin-top: -31px;
+    width: 100%;
   }
   .upcoming-match-time {
+    background: #ffffffa1;
+    padding: 1px 4px;
+    border-radius: 2px;
     font-size: 13px;
     text-align: right;
-    margin: auto 10px auto auto;
-    width: 60px;
   }
   .upcoming-match-teams {
     display: flex;
@@ -581,5 +601,14 @@
   .scale-btn {
     border-radius: 4px;
     cursor: pointer;
+  }
+
+  @media only screen and (max-width: 1200px) {
+    .fixtures {
+      width: 100vw;
+    }
+    .standings-points {
+      margin: 0;
+    }
   }
 </style>

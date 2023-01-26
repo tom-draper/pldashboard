@@ -1,6 +1,6 @@
 <script lang="ts">
   import { toAlias, toInitials, toHyphenatedName, currentMatchday } from "../../lib/team";
-  import { ordinal } from "../../lib/format"
+  import { ordinal, teamStyle } from "../../lib/format"
 
   function resultColour(prevMatch: any, home: boolean): string {
     if (home) {
@@ -30,9 +30,7 @@
           Next Game:&nbsp
           <button
             on:click={() => {
-              switchTeam(
-                toHyphenatedName(data.upcoming[team].nextTeam)
-              );
+              switchTeam(toHyphenatedName(data.upcoming[team].nextTeam));
             }}
             class="next-game-team-btn"
             >{toAlias(data.upcoming[team].nextTeam)}&nbsp</button
@@ -104,31 +102,22 @@
               <div class="next-game-item result-details">
                 <div class="past-result">
                   <div class="left-side">
-                    <div
-                      class="home-team"
-                      style="background: var(--{toHyphenatedName(prevMatch.homeTeam)}); color: var(--{toHyphenatedName(prevMatch.homeTeam)}-secondary)"
-                    >
+                    <div class="home-team" style={teamStyle(prevMatch.homeTeam)}>
                       {toInitials(prevMatch.homeTeam)}
                     </div>
-                    <div class="goals-container"
-                      style="background: var(--{toHyphenatedName(resultColour(prevMatch, true))}); color: var(--{toHyphenatedName(resultColour(prevMatch, true))}-secondary)">
+                    <div class="goals-container" style={teamStyle(resultColour(prevMatch, true))}>
                       <div class="home-goals">
                         {prevMatch.homeGoals}
                       </div>
                     </div>
                   </div>
                   <div class="right-side">
-                    <div class="goals-container"
-                        style="background: var(--{
-                        toHyphenatedName(resultColour(prevMatch, false))}); color: var(--{toHyphenatedName(resultColour(prevMatch, false))}-secondary)">
+                    <div class="goals-container" style={teamStyle(resultColour(prevMatch, false))}>
                       <div class="away-goals">
                         {prevMatch.awayGoals}
                       </div>
                     </div>
-                    <div
-                      class="away-team"
-                      style="background: var(--{toHyphenatedName(prevMatch.awayTeam)}); color: var(--{toHyphenatedName(prevMatch.awayTeam)}-secondary)"
-                    >
+                    <div class="away-team" style={teamStyle(prevMatch.awayTeam)}>
                       {toInitials(prevMatch.awayTeam)}
                     </div>
                   </div>
