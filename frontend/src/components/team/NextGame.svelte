@@ -232,7 +232,7 @@
   .past-result-date {
     font-size: 13px;
     width: 90px;
-    margin: 5px auto 2px;
+    margin: 3px auto 1px;
     padding-top: 3px;
     border-radius: 4px 4px 0 0;
   }

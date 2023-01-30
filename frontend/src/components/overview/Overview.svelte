@@ -14,8 +14,7 @@
     let upcoming: UpcomingMatch[] = [];
     for (let team in data.upcoming) {
       let date = new Date(data.upcoming[team].date);
-      let atHome = data.upcoming[team].atHome;
-      if (atHome) {
+      if (data.upcoming[team].atHome) {
         upcoming.push({
           time: date,
           home: team,
@@ -105,6 +104,7 @@
     team: string;
     matches: {
       team: string;
+      date: string;
       atHome: boolean;
       status: string;
       colour: string;
@@ -122,6 +122,7 @@
           : data.homeAdvantages[match.team].totalHomeAdvantage;
         matches.push({
           team: match.team,
+          date: match.date,
           atHome: match.atHome,
           status: match.status,
           colour: fixtureColourSkewed(
@@ -395,6 +396,7 @@
                         : ''} {i == row.matches.length - 1
                         ? 'border-right: 2px solid black'
                         : ''}"
+                      title={match.date}
                     >
                       {`${toInitials(match.team)} (${
                         match.atHome ? "H" : "A"
