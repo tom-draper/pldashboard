@@ -59,7 +59,7 @@
       y: Object.values(avgGoals),
       text: matchdays,
       line: { color: "#0080FF", width: 2 },
-      hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",
+      hovertemplate: "<b>Matchday %{text}</b><br>%{y:.1f} goals<extra></extra>",
     };
   }
 

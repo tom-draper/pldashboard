@@ -14,8 +14,7 @@
     let upcoming: UpcomingMatch[] = [];
     for (let team in data.upcoming) {
       let date = new Date(data.upcoming[team].date);
-      let atHome = data.upcoming[team].atHome;
-      if (atHome) {
+      if (data.upcoming[team].atHome) {
         upcoming.push({
           time: date,
           home: team,
