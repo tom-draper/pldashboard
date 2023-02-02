@@ -1,7 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { ordinal } from "../../../lib/format";
-  import { isCleanSheet, notScored, goalsScored, goalsConceded } from "../../../lib/goals";
+  import {
+    isCleanSheet,
+    notScored,
+    goalsScored,
+    goalsConceded,
+  } from "../../../lib/goals";
 
   function getStatsRank(
     seasonStats: Stats,
@@ -29,10 +34,10 @@
       team,
       false
     );
-    return { 
-      xG: `${xGRank}${ordinal(xGRank)}`, 
-      xC: `${xCRank}${ordinal(xCRank)}`, 
-      cleanSheetRatio: `${cleanSheetRatioRank}${ordinal(cleanSheetRatioRank)}`
+    return {
+      xG: `${xGRank}${ordinal(xGRank)}`,
+      xC: `${xCRank}${ordinal(xCRank)}`,
+      cleanSheetRatio: `${cleanSheetRatioRank}${ordinal(cleanSheetRatioRank)}`,
     };
   }
 
@@ -128,14 +133,14 @@
 
   let stats: Stats;
   let rank: StatsRank = {
-    xG: '',
-    xC: '',
-    cleanSheetRatio: '',
+    xG: "",
+    xC: "",
+    cleanSheetRatio: "",
   };
   let setup = false;
   onMount(() => {
     stats = buildStats(data);
-    (stats);
+    stats;
     setStatsValues(stats, team);
     setup = true;
   });

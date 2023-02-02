@@ -148,32 +148,32 @@
 
     let [minX, maxX] = xRange(x);
     return {
-        title: false,
-        autosize: true,
-        margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
-        hovermode: "closest",
-        plot_bgcolor: "#fafafa",
-        paper_bgcolor: "#fafafa",
-        yaxis: {
-          title: { text: "Team rating" },
-          gridcolor: "#d6d6d6",
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          ticktext: yLabels,
-          tickvals: yLabels,
-        },
-        xaxis: {
-          linecolor: "black",
-          showgrid: false,
-          showline: false,
-          range: [minX, maxX],
-          fixedrange: true,
-        },
-        //@ts-ignore
-        shapes: [nowLine(now, maxX)],
-        dragmode: false,
-      }
+      title: false,
+      autosize: true,
+      margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
+      hovermode: "closest",
+      plot_bgcolor: "#fafafa",
+      paper_bgcolor: "#fafafa",
+      yaxis: {
+        title: { text: "Team rating" },
+        gridcolor: "#d6d6d6",
+        showline: false,
+        zeroline: false,
+        fixedrange: true,
+        ticktext: yLabels,
+        tickvals: yLabels,
+      },
+      xaxis: {
+        linecolor: "black",
+        showgrid: false,
+        showline: false,
+        range: [minX, maxX],
+        fixedrange: true,
+      },
+      //@ts-ignore
+      shapes: [nowLine(now, maxX)],
+      dragmode: false,
+    };
   }
 
   function setDefaultLayout() {
@@ -248,7 +248,7 @@
 
     let plotData = {
       data: [l],
-      layout: defaultLayout(l.x, now), 
+      layout: defaultLayout(l.x, now),
       config: {
         responsive: true,
         showSendToCloud: false,

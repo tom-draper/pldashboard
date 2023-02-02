@@ -1,6 +1,6 @@
 <script lang="ts">
   import FormTiles from "./FormTiles.svelte";
-  import {toInitials} from "../../../lib/team";
+  import { toInitials } from "../../../lib/team";
 
   function getSortedMatchdays(data: TeamData, team: string): string[] {
     let matchdays = Object.keys(data.form[team][data._id]).sort(function (
@@ -44,7 +44,7 @@
     for (let i = formIcons.length; i < 5; i++) {
       formIcons.unshift("N");
     }
-    return formIcons.join('');
+    return formIcons.join("");
   }
 
   function getFormInitials(
@@ -55,7 +55,8 @@
     let formInitials = [];
 
     for (let matchday of matchdays) {
-      formInitials.unshift(toInitials(data.form[team][data._id][matchday].team)
+      formInitials.unshift(
+        toInitials(data.form[team][data._id][matchday].team)
       );
     }
 
@@ -89,25 +90,23 @@
 
   function setFormValues() {
     let sortedMatchdays = getSortedMatchdays(data, team);
-    
+
     let matchdays = latestNPlayedMatchdays(data, team, sortedMatchdays, 5);
-    
+
     formIcons = getFormIcons(data, team);
     formStarTeams = getFormStarTeams(data, team, matchdays);
     formInitials = getFormInitials(data, team, matchdays);
   }
-  
+
   let formIcons: string, formStarTeams: boolean[], formInitials: string[];
   $: team && setFormValues();
-  
-  export let data: TeamData,
-    currentMatchday: string,
-    team: string;
+
+  export let data: TeamData, currentMatchday: string, team: string;
 </script>
 
 {#if formInitials != undefined}
   <div class="current-form-row icon-row">
-    <FormTiles form={formIcons}, starTeams={formStarTeams} />
+    <FormTiles form="{formIcons}," starTeams={formStarTeams} />
   </div>
   <div class="current-form-row name-row">
     <div class="icon-name pos-0">{formInitials[0]}</div>
@@ -120,7 +119,11 @@
 <div class="current-form">
   Current form:
   {#if currentMatchday != undefined}
-    <span class="current-form-value">{(data.form[team][data._id][currentMatchday].formRating5 * 100).toFixed(1)}%</span>
+    <span class="current-form-value"
+      >{(data.form[team][data._id][currentMatchday].formRating5 * 100).toFixed(
+        1
+      )}%</span
+    >
   {:else}
     None
   {/if}
@@ -158,7 +161,7 @@
     opacity: 89%;
   }
   .pos-2 {
-    opacity: 78%
+    opacity: 78%;
   }
   .pos-1 {
     opacity: 67%;
@@ -173,16 +176,15 @@
       margin: auto;
     }
   }
-  
+
   @media only screen and (max-width: 700px) {
     .current-form-row {
       width: 95%;
     }
   }
   @media only screen and (max-width: 550px) {
-
-  .current-form {
-    font-size: 1.5rem !important;
-  }
+    .current-form {
+      font-size: 1.5rem !important;
+    }
   }
 </style>

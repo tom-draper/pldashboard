@@ -30,7 +30,7 @@
       dragmode: false,
     };
   }
-  
+
   function setDefaultLayout() {
     if (setup) {
       let layoutUpdate = {
@@ -70,7 +70,7 @@
 
   function genPlot() {
     plotData = buildPlotData();
-      //@ts-ignore
+    //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,

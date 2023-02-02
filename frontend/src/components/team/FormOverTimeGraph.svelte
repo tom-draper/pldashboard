@@ -1,18 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { toHyphenatedName } from "../../lib/team"
+  import { toHyphenatedName } from "../../lib/team";
 
-  function getFormLine(
-    data: TeamData,
-    team: string,
-    isMainTeam: boolean
-  ): any {
+  function getFormLine(data: TeamData, team: string, isMainTeam: boolean): any {
     let playedDates = [];
     let matchdays = [];
     for (let matchday in data.form[team][data._id]) {
       if (data.form[team][data._id][matchday].score != null) {
-        matchdays.push(matchday)
-        playedDates.push(new Date(data.form[team][data._id][matchday].date))
+        matchdays.push(matchday);
+        playedDates.push(new Date(data.form[team][data._id][matchday].date));
       }
     }
 
@@ -25,7 +21,7 @@
     let lineVal: { color: string; width?: number };
     if (isMainTeam) {
       // Get team primary colour from css variable
-      let teamKey = toHyphenatedName(team)
+      let teamKey = toHyphenatedName(team);
       let lineColor = getComputedStyle(
         document.documentElement
       ).getPropertyValue(`--${teamKey}`);
@@ -42,18 +38,15 @@
       line: lineVal,
       text: playedDates,
       hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
-      showlegend: false
+      showlegend: false,
     };
     return line;
   }
 
-  function lines(
-    data: TeamData,
-    team: string,
-  ): any[] {
+  function lines(data: TeamData, team: string): any[] {
     let lines = [];
 
-    let teams = Object.keys(data.standings)
+    let teams = Object.keys(data.standings);
     for (let i = 0; i < teams.length; i++) {
       if (teams[i] != team) {
         let line = getFormLine(data, teams[i], false);
@@ -93,10 +86,7 @@
         showgrid: false,
         showline: false,
         fixedrange: true,
-        range: [
-          playedDates[0],
-          playedDates[playedDates.length - 1],
-        ],
+        range: [playedDates[0], playedDates[playedDates.length - 1]],
       },
       dragmode: false,
     };
@@ -150,7 +140,7 @@
 
   function genPlot() {
     plotData = buildPlotData(data, team);
-      //@ts-ignore
+    //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,
@@ -161,8 +151,8 @@
       plot.children[0].children[0].classList.add("resizable-graph");
     });
     setTimeout(() => {
-      lazyLoad = true
-    }, 3000)
+      lazyLoad = true;
+    }, 3000);
   }
 
   function refreshPlot() {
@@ -172,8 +162,8 @@
         plotData.data[i] = newPlotData.data[i];
       }
 
-      plotData.layout.xaxis.range[0] = playedDates[0] 
-      plotData.layout.xaxis.range[1] = playedDates[playedDates.length-1] 
+      plotData.layout.xaxis.range[0] = playedDates[0];
+      plotData.layout.xaxis.range[1] = playedDates[playedDates.length - 1];
 
       //@ts-ignore
       Plotly.redraw(plotDiv);

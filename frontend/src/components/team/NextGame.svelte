@@ -1,135 +1,146 @@
 <script lang="ts">
-  import { toAlias, toInitials, toHyphenatedName, currentMatchday } from "../../lib/team";
-  import { ordinal, teamStyle } from "../../lib/format"
+  import {
+    toAlias,
+    toInitials,
+    toHyphenatedName,
+    currentMatchday,
+  } from "../../lib/team";
+  import { ordinal, teamStyle } from "../../lib/format";
 
   function resultColour(prevMatch: any, home: boolean): string {
     if (home) {
-      return prevMatch.homeGoals < prevMatch.awayGoals ? prevMatch.awayTeam : prevMatch.homeTeam
+      return prevMatch.homeGoals < prevMatch.awayGoals
+        ? prevMatch.awayTeam
+        : prevMatch.homeTeam;
     } else {
-      return prevMatch.homeGoals > prevMatch.awayGoals ? prevMatch.homeTeam : prevMatch.awayTeam
+      return prevMatch.homeGoals > prevMatch.awayGoals
+        ? prevMatch.homeTeam
+        : prevMatch.awayTeam;
     }
   }
-  
-  export let data: TeamData,
-    team: string,
-    switchTeam: Function;
+
+  export let data: TeamData, team: string, switchTeam: Function;
 </script>
 
-  {#if data.upcoming[team].nextTeam == null}
-    <div class="next-game-prediction">
-      <div class="next-game-season-complete">
-        <h1 class="next-game-title-text">
-          {data._id}/{data._id + 1} SEASON COMPLETE
-        </h1>
-      </div>
+{#if data.upcoming[team].nextTeam == null}
+  <div class="next-game-prediction">
+    <div class="next-game-season-complete">
+      <h1 class="next-game-title-text">
+        {data._id}/{data._id + 1} SEASON COMPLETE
+      </h1>
     </div>
-  {:else}
-    <div class="next-game-prediction">
-      <div class="next-game-title">
-        <h1 class="next-game-title-text">
-          Next Game:&nbsp
-          <button
-            on:click={() => {
-              switchTeam(toHyphenatedName(data.upcoming[team].nextTeam));
-            }}
-            class="next-game-team-btn"
-            >{toAlias(data.upcoming[team].nextTeam)}&nbsp</button
-          >
-          ({data.upcoming[team].atHome ? "Home" : "Away"})
-        </h1>
-      </div>
+  </div>
+{:else}
+  <div class="next-game-prediction">
+    <div class="next-game-title">
+      <h1 class="next-game-title-text">
+        Next Game:&nbsp
+        <button
+          on:click={() => {
+            switchTeam(toHyphenatedName(data.upcoming[team].nextTeam));
+          }}
+          class="next-game-team-btn"
+          >{toAlias(data.upcoming[team].nextTeam)}&nbsp</button
+        >
+        ({data.upcoming[team].atHome ? "Home" : "Away"})
+      </h1>
+    </div>
 
-      <div class="next-game-values">
-        <div class="predictions-and-logo">
-          <div class="next-game-position" />
-          <div class="predictions">
-            <div class="next-game-item">
-              <div class="next-game-position">
-                {data.standings[data.upcoming[team].nextTeam][data._id]
-                  .position}<span class="ordinal-position"
-                  >{ordinal(
-                    data.standings[data.upcoming[team].nextTeam][data._id]
-                      .position
-                  )}</span
-                >
-              </div>
-            </div>
-            <div class="next-game-item current-form">
-              Current form:
-                <span class="current-form-value"
-                  >{(
-                    data.form[data.upcoming[team].nextTeam][data._id][
-                      currentMatchday(data, data.upcoming[team].nextTeam)
-                    ].formRating5 * 100
-                  ).toFixed(1)}%</span
-                >
-            </div>
-            <div class="next-game-item">
-              Score prediction
-              <br />
-              <a class="predictions-link" href="/predictions">
-                <b
-                  >{Math.round(data.upcoming[team].prediction.homeGoals)} - {Math.round(
-                    data.upcoming[team].prediction.awayGoals
-                  )}</b
-                >
-              </a>
-              <br />
+    <div class="next-game-values">
+      <div class="predictions-and-logo">
+        <div class="next-game-position" />
+        <div class="predictions">
+          <div class="next-game-item">
+            <div class="next-game-position">
+              {data.standings[data.upcoming[team].nextTeam][data._id]
+                .position}<span class="ordinal-position"
+                >{ordinal(
+                  data.standings[data.upcoming[team].nextTeam][data._id]
+                    .position
+                )}</span
+              >
             </div>
           </div>
+          <div class="next-game-item current-form">
+            Current form:
+            <span class="current-form-value"
+              >{(
+                data.form[data.upcoming[team].nextTeam][data._id][
+                  currentMatchday(data, data.upcoming[team].nextTeam)
+                ].formRating5 * 100
+              ).toFixed(1)}%</span
+            >
+          </div>
+          <div class="next-game-item">
+            Score prediction
+            <br />
+            <a class="predictions-link" href="/predictions">
+              <b
+                >{Math.round(data.upcoming[team].prediction.homeGoals)} - {Math.round(
+                  data.upcoming[team].prediction.awayGoals
+                )}</b
+              >
+            </a>
+            <br />
+          </div>
         </div>
-        <div class="past-results">
-          {#if data.upcoming[team].prevMatches.length == 0}
-            <div class="next-game-item prev-results-title no-prev-results">
-              No previous results
-            </div>
-          {:else}
-            <div class="next-game-item prev-results-title">
-              Previous results
-            </div>
-          {/if}
+      </div>
+      <div class="past-results">
+        {#if data.upcoming[team].prevMatches.length == 0}
+          <div class="next-game-item prev-results-title no-prev-results">
+            No previous results
+          </div>
+        {:else}
+          <div class="next-game-item prev-results-title">Previous results</div>
+        {/if}
 
-          <!-- Display table of previous results against the next team this team is playing -->
-          {#each data.upcoming[team].prevMatches as prevMatch}
-            <div class="next-game-item-container">
-              <div class="past-result-date result-details">
-                {new Date(prevMatch.date).toLocaleDateString("en-GB", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
-              </div>
-              <div class="next-game-item result-details">
-                <div class="past-result">
-                  <div class="left-side">
-                    <div class="home-team" style={teamStyle(prevMatch.homeTeam)}>
-                      {toInitials(prevMatch.homeTeam)}
-                    </div>
-                    <div class="goals-container" style={teamStyle(resultColour(prevMatch, true))}>
-                      <div class="home-goals">
-                        {prevMatch.homeGoals}
-                      </div>
-                    </div>
+        <!-- Display table of previous results against the next team this team is playing -->
+        {#each data.upcoming[team].prevMatches as prevMatch}
+          <div class="next-game-item-container">
+            <div class="past-result-date result-details">
+              {new Date(prevMatch.date).toLocaleDateString("en-GB", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </div>
+            <div class="next-game-item result-details">
+              <div class="past-result">
+                <div class="left-side">
+                  <div class="home-team" style={teamStyle(prevMatch.homeTeam)}>
+                    {toInitials(prevMatch.homeTeam)}
                   </div>
-                  <div class="right-side">
-                    <div class="goals-container" style={teamStyle(resultColour(prevMatch, false))}>
-                      <div class="away-goals">
-                        {prevMatch.awayGoals}
-                      </div>
-                    </div>
-                    <div class="away-team" style={teamStyle(prevMatch.awayTeam)}>
-                      {toInitials(prevMatch.awayTeam)}
+                  <div
+                    class="goals-container"
+                    style={teamStyle(resultColour(prevMatch, true))}
+                  >
+                    <div class="home-goals">
+                      {prevMatch.homeGoals}
                     </div>
                   </div>
                 </div>
-                <div style="clear: both" />
+                <div class="right-side">
+                  <div
+                    class="goals-container"
+                    style={teamStyle(resultColour(prevMatch, false))}
+                  >
+                    <div class="away-goals">
+                      {prevMatch.awayGoals}
+                    </div>
+                  </div>
+                  <div class="away-team" style={teamStyle(prevMatch.awayTeam)}>
+                    {toInitials(prevMatch.awayTeam)}
+                  </div>
+                </div>
               </div>
+              <div style="clear: both" />
             </div>
-          {/each}
-        </div>
+          </div>
+        {/each}
       </div>
     </div>
-  {/if}
+  </div>
+{/if}
 
 <style scoped>
   .left-side,
@@ -194,7 +205,7 @@
   .predictions-link {
     text-decoration: none;
     color: #333;
-    color: var(--purple)
+    color: var(--purple);
   }
   .predictions-link:hover {
     color: rgb(120 120 120);
