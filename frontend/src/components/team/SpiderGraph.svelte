@@ -1,6 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { toAlias, toName, teamInSeason, toHyphenatedName, teamColor } from "../../lib/team";
+  import {
+    toAlias,
+    toName,
+    teamInSeason,
+    toHyphenatedName,
+    teamColor,
+  } from "../../lib/team";
 
   function addTeamComparison(team: string) {
     let teamData = {
@@ -50,7 +56,10 @@
     for (let i = 0; i < comparisonTeams.length; i++) {
       // Remove spider plot for this teamName
       for (let i = 0; i < plotData.data.length; i++) {
-        if (plotData.data[i].name == comparisonTeams[i] && comparisonTeams[i] != team) {
+        if (
+          plotData.data[i].name == comparisonTeams[i] &&
+          comparisonTeams[i] != team
+        ) {
           plotData.data.splice(i, 1);
           break;
         }
@@ -117,7 +126,7 @@
           gamesPlayed += data.standings[team][season].played;
         }
       }
-      
+
       let goalsPerGame = null;
       if (gamesPlayed > 0) {
         goalsPerGame = totalGoals / gamesPlayed;
@@ -192,8 +201,8 @@
       if (gamesPlayed > 0) {
         goalsPerGame = totalConceded / gamesPlayed;
       }
-      maxConceded = Math.max(maxConceded, goalsPerGame)
-      minConceded = Math.min(minConceded, goalsPerGame)
+      maxConceded = Math.max(maxConceded, goalsPerGame);
+      minConceded = Math.min(minConceded, goalsPerGame);
 
       defence[team] = goalsPerGame;
     }
@@ -245,11 +254,11 @@
     let maxCleanSheets = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
       let nCleanSheets = formCleanSheets(data.form, team, data._id);
-      if (teamInSeason(data.form, team, data._id-1)) {
-        nCleanSheets += formCleanSheets(data.form, team, data._id-1);
+      if (teamInSeason(data.form, team, data._id - 1)) {
+        nCleanSheets += formCleanSheets(data.form, team, data._id - 1);
       }
-      if (teamInSeason(data.form, team, data._id-2)) {
-        nCleanSheets += formCleanSheets(data.form, team, data._id-2);
+      if (teamInSeason(data.form, team, data._id - 2)) {
+        nCleanSheets += formCleanSheets(data.form, team, data._id - 2);
       }
 
       if (nCleanSheets > maxCleanSheets) {
@@ -269,12 +278,16 @@
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null) {
-        let result: 'win' | 'lost' | 'draw';
-        if ((match.atHome && match.score.homeGoals > match.score.awayGoals) 
-            || (!match.atHome && match.score.homeGoals < match.score.awayGoals)) {
+        let result: "win" | "lost" | "draw";
+        if (
+          (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
+          (!match.atHome && match.score.homeGoals < match.score.awayGoals)
+        ) {
           result = "win";
-        } else if ((match.atHome && match.score.homeGoals < match.score.awayGoals) 
-                   || (!match.atHome && match.score.homeGoals > match.score.awayGoals)) {
+        } else if (
+          (match.atHome && match.score.homeGoals < match.score.awayGoals) ||
+          (!match.atHome && match.score.homeGoals > match.score.awayGoals)
+        ) {
           result = "lost";
         } else {
           result = "draw";
@@ -294,10 +307,10 @@
     let maxConsistency = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
       let backToBack = formConsistency(data.form, team, data._id);
-      if (teamInSeason(data.form, team, data._id-1)) {
+      if (teamInSeason(data.form, team, data._id - 1)) {
         backToBack += formConsistency(data.form, team, data._id - 1);
       }
-      if (teamInSeason(data.form, team, data._id-2)) {
+      if (teamInSeason(data.form, team, data._id - 2)) {
         backToBack += formConsistency(data.form, team, data._id - 2);
       }
 
@@ -319,8 +332,10 @@
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null) {
-        if ((match.atHome && match.score.homeGoals > match.score.awayGoals) 
-            || (!match.atHome && match.score.homeGoals < match.score.awayGoals)) {
+        if (
+          (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
+          (!match.atHome && match.score.homeGoals < match.score.awayGoals)
+        ) {
           tempWinStreak += 1;
           if (tempWinStreak > winStreak) {
             winStreak = tempWinStreak;
@@ -339,11 +354,11 @@
     let maxWinStreaks = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
       let winStreak = formWinStreak(data.form, team, data._id);
-      if (teamInSeason(data.form, team, data._id-1)) {
-        winStreak += formWinStreak(data.form, team, data._id-1);
+      if (teamInSeason(data.form, team, data._id - 1)) {
+        winStreak += formWinStreak(data.form, team, data._id - 1);
       }
-      if (teamInSeason(data.form, team, data._id-2)) {
-        winStreak += formWinStreak(data.form, team, data._id-2);
+      if (teamInSeason(data.form, team, data._id - 2)) {
+        winStreak += formWinStreak(data.form, team, data._id - 2);
       }
 
       if (winStreak > maxWinStreaks) {
@@ -365,14 +380,21 @@
     return arr;
   }
 
-  function formWinsVsBig6(form: Form, team: string, season: number, big6: string[]): [number, number] {
+  function formWinsVsBig6(
+    form: Form,
+    team: string,
+    season: number,
+    big6: string[]
+  ): [number, number] {
     let pointsVsBig6 = 0;
     let numPlayed = 0;
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null && big6.includes(match.team)) {
-        if ((match.atHome && match.score.homeGoals > match.score.awayGoals) 
-            || (!match.atHome && match.score.homeGoals < match.score.awayGoals)) {
+        if (
+          (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
+          (!match.atHome && match.score.homeGoals < match.score.awayGoals)
+        ) {
           pointsVsBig6 += 3;
         } else if (match.score.homeGoals == match.score.awayGoals) {
           pointsVsBig6 += 1;
@@ -399,19 +421,34 @@
       ];
       big6 = removeItem(big6, team);
 
-      let [avgPointsVsBig6, numPlayed] = formWinsVsBig6(data.form, team, data._id, big6);
-      if (teamInSeason(data.form, team, data._id-1)) {
-        let [points, played] = formWinsVsBig6(data.form, team, data._id-1, big6);
-        avgPointsVsBig6 += points
-        numPlayed += played
+      let [avgPointsVsBig6, numPlayed] = formWinsVsBig6(
+        data.form,
+        team,
+        data._id,
+        big6
+      );
+      if (teamInSeason(data.form, team, data._id - 1)) {
+        let [points, played] = formWinsVsBig6(
+          data.form,
+          team,
+          data._id - 1,
+          big6
+        );
+        avgPointsVsBig6 += points;
+        numPlayed += played;
       }
-      if (teamInSeason(data.form, team, data._id-2)) {
-        let [points, played] = formWinsVsBig6(data.form, team, data._id-2, big6);
-        avgPointsVsBig6 += points
-        numPlayed += played
+      if (teamInSeason(data.form, team, data._id - 2)) {
+        let [points, played] = formWinsVsBig6(
+          data.form,
+          team,
+          data._id - 2,
+          big6
+        );
+        avgPointsVsBig6 += points;
+        numPlayed += played;
       }
 
-      avgPointsVsBig6 /= numPlayed
+      avgPointsVsBig6 /= numPlayed;
 
       if (avgPointsVsBig6 > maxAvgPointsVsBig6) {
         maxAvgPointsVsBig6 = avgPointsVsBig6;
@@ -601,9 +638,7 @@
 
   $: team && refreshPlot();
 
-  export let data: TeamData,
-    team: string,
-    teams: string[];
+  export let data: TeamData, team: string, teams: string[];
 </script>
 
 <div class="spider-chart">

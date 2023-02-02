@@ -43,11 +43,7 @@
     return dates;
   }
 
-  function getLine(
-    data: TeamData,
-    team: string,
-    isMainTeam: boolean
-  ): any {
+  function getLine(data: TeamData, team: string, isMainTeam: boolean): any {
     let matchdays = Object.keys(data.form[team][data._id]);
     let dates = getMatchdayDates(data, team, matchdays);
     let y = getPositions(data, team, matchdays);
@@ -67,10 +63,7 @@
     return line;
   }
 
-  function lines(
-    data: TeamData,
-    team: string,
-  ): any[] {
+  function lines(data: TeamData, team: string): any[] {
     let lines = [];
     let teams = Object.keys(data.standings);
     for (let i = 0; i < teams.length; i++) {
@@ -87,7 +80,7 @@
   }
 
   function positionRangeShapes(): any[] {
-    let matchdays = Object.keys(data.form[team][data._id])
+    let matchdays = Object.keys(data.form[team][data._id]);
     return [
       {
         type: "rect",
@@ -247,9 +240,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: TeamData,
-    team: string,
-    mobileView: boolean;
+  export let data: TeamData, team: string, mobileView: boolean;
 </script>
 
 <div id="plotly">

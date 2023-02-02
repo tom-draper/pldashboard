@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {toHyphenatedName} from "../../lib/team"
+  import { toHyphenatedName } from "../../lib/team";
 
   function getLineConfig(team: string, isMainTeam: boolean): any {
     let lineConfig: any;
@@ -43,11 +43,7 @@
     return dates;
   }
 
-  function getLine(
-    data: TeamData,
-    team: string,
-    isMainTeam: boolean
-  ): any {
+  function getLine(data: TeamData, team: string, isMainTeam: boolean): any {
     let matchdays = Object.keys(data.form[team][data._id]);
     let dates = getMatchdayDates(data, team, matchdays);
     let y = getCumulativePoints(data, team, matchdays);
@@ -66,10 +62,7 @@
     return line;
   }
 
-  function lines(
-    data: TeamData,
-    team: string,
-  ): any[] {
+  function lines(data: TeamData, team: string): any[] {
     let lines = [];
     let teams = Object.keys(data.standings);
     for (let i = 0; i < teams.length; i++) {
@@ -194,9 +187,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: TeamData,
-    team: string,
-    mobileView: boolean;
+  export let data: TeamData, team: string, mobileView: boolean;
 </script>
 
 <div id="plotly">

@@ -1,7 +1,10 @@
 <script lang="ts">
   import { toAlias, toHyphenatedName } from "../../lib/team";
 
-  function tableSnippetRange(sortedTeams: string[], team: string): [number, number] {
+  function tableSnippetRange(
+    sortedTeams: string[],
+    team: string
+  ): [number, number] {
     let teamStandingsIdx = sortedTeams.indexOf(team);
 
     let low = teamStandingsIdx - 3;
@@ -51,19 +54,22 @@
   }
 
   type TableSnippet = {
-    teamTableIdx: number,
+    teamTableIdx: number;
     rows: {
-      name: string,
-      position: number,
-      points: number,
-      gd: number,
-    }[]
-  }
+      name: string;
+      position: number;
+      points: number;
+      gd: number;
+    }[];
+  };
 
   let tableSnippet: TableSnippet;
-  $: team && buildTableSnippet()
+  $: team && buildTableSnippet();
 
-  export let data: TeamData, hyphenatedTeam: string, team: string, switchTeam: Function;
+  export let data: TeamData,
+    hyphenatedTeam: string,
+    team: string,
+    switchTeam: Function;
 </script>
 
 <div class="table-snippet">
@@ -125,7 +131,9 @@
             {row.position}
           </div>
           <button
-            on:click="{() => {switchTeam(toHyphenatedName(row.name))}}"
+            on:click={() => {
+              switchTeam(toHyphenatedName(row.name));
+            }}
             class="table-element table-team-name"
           >
             {toAlias(row.name)}
@@ -199,7 +207,6 @@
   .table-points {
     width: 15%;
   }
-
 
   @media only screen and (max-width: 1100px) {
     .table-snippet {

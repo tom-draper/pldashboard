@@ -32,7 +32,8 @@
       line: {
         color: "#00fe87",
       },
-      hovertemplate: "%{text|%d %b %Y}<br>Avg scored: <b>%{y:.1f}</b><extra></extra>",
+      hovertemplate:
+        "%{text|%d %b %Y}<br>Avg scored: <b>%{y:.1f}</b><extra></extra>",
     };
   }
   function goalsConcededLine(x: number[], y: any[], dates: Date[]) {
@@ -47,7 +48,8 @@
       line: {
         color: "#f83027",
       },
-      hovertemplate: "%{text|%d %b %Y}<br>Avg conceded: <b>%{y:.1f}</b><extra></extra>",
+      hovertemplate:
+        "%{text|%d %b %Y}<br>Avg conceded: <b>%{y:.1f}</b><extra></extra>",
     };
   }
 
@@ -79,7 +81,7 @@
     data: TeamData,
     team: string,
     numSeasons: number
-  ): GoalsOverTime{
+  ): GoalsOverTime {
     let goals: GoalsOverTime = [];
     let startingDate = data.form[team][data._id - numSeasons][1].date;
     let dateOffset = 0;
@@ -122,7 +124,7 @@
     data: TeamData,
     team: string
   ): [Date[], number[], number[], string[], number[], number[], number[]] {
-    let numSeasons = 3
+    let numSeasons = 3;
     let goals = goalsOverTime(data, team, numSeasons);
     // Sort by game date
     goals.sort(function (a, b) {
@@ -140,22 +142,24 @@
     for (let i = 0; i < goals.length; i++) {
       dates.push(goals[i].date);
       days.push(goals[i].days);
-      if (goals[i].matchday == '38') {
+      if (goals[i].matchday == "38") {
         // Season boundary line a week after season finish
         seasonBoundaries.push(goals[i].days + 7);
-        ticktext.push(goals[i].matchday)
-        tickvals.push(goals[i].days)
-      } else if (goals[i].matchday == '1') {
-        ticktext.push(goals[i].matchday)
-        tickvals.push(goals[i].days)
-      } else if (goals[i].matchday == '19' || i == goals.length - 1) {
+        ticktext.push(goals[i].matchday);
+        tickvals.push(goals[i].days);
+      } else if (goals[i].matchday == "1") {
+        ticktext.push(goals[i].matchday);
+        tickvals.push(goals[i].days);
+      } else if (goals[i].matchday == "19" || i == goals.length - 1) {
         let season = data._id - numSeasons + 1 + Math.floor(i / 38);
-        // If in current season and matchday is 19, wait for until reach final 
+        // If in current season and matchday is 19, wait for until reach final
         // matchday in current season instead to place season ticktext label
-        if (season != data._id || goals[i].matchday != '19') {
-          let seasonTag = `${String(season).slice(2)}/${String(season+1).slice(2)}`
-          ticktext.push(seasonTag)
-          tickvals.push(goals[i].days)
+        if (season != data._id || goals[i].matchday != "19") {
+          let seasonTag = `${String(season).slice(2)}/${String(
+            season + 1
+          ).slice(2)}`;
+          ticktext.push(seasonTag);
+          tickvals.push(goals[i].days);
         }
       }
       scored.push(goals[i].scored);
@@ -179,7 +183,15 @@
       }
     }
 
-    return [dates, days, seasonBoundaries, ticktext, tickvals, scored, conceded];
+    return [
+      dates,
+      days,
+      seasonBoundaries,
+      ticktext,
+      tickvals,
+      scored,
+      conceded,
+    ];
   }
 
   function lines(
@@ -188,7 +200,10 @@
     conceded: number[],
     dates: Date[]
   ): [any, any] {
-    return [goalsScoredLine(days, scored, dates), goalsConcededLine(days, conceded, dates)];
+    return [
+      goalsScoredLine(days, scored, dates),
+      goalsConcededLine(days, conceded, dates),
+    ];
   }
 
   function defaultLayout(
@@ -257,10 +272,8 @@
   }
 
   function buildPlotData(data: TeamData, team: string): PlotData {
-    let [dates, days, seasonBoundaries, ticktext, tickvals, scored, conceded] = lineData(
-      data,
-      team
-    );
+    let [dates, days, seasonBoundaries, ticktext, tickvals, scored, conceded] =
+      lineData(data, team);
     let maxY = Math.max(Math.max(...scored), Math.max(...conceded));
     let seasonLines = seasonFinishLines(seasonBoundaries, maxY);
     let plotData = {

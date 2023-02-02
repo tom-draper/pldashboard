@@ -4,31 +4,31 @@
   function defaultLayout(): Object {
     let xLabels = getXLabels();
     return {
-        title: false,
-        autosize: true,
-        margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
-        hovermode: "closest",
-        barmode: "overlay",
-        bargap: 0,
-        plot_bgcolor: "#fafafa",
-        paper_bgcolor: "#fafafa",
-        yaxis: getYAxisLayout(),
-        xaxis: {
-          title: { text: "Conceded" },
-          linecolor: "black",
-          showgrid: false,
-          showline: false,
-          fixedrange: true,
-          ticktext: xLabels,
-          tickvals: xLabels,
-        },
-        legend: {
-          x: 1,
-          xanchor: "right",
-          y: 0.95,
-        },
-        dragmode: false,
-      }
+      title: false,
+      autosize: true,
+      margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+      hovermode: "closest",
+      barmode: "overlay",
+      bargap: 0,
+      plot_bgcolor: "#fafafa",
+      paper_bgcolor: "#fafafa",
+      yaxis: getYAxisLayout(),
+      xaxis: {
+        title: { text: "Conceded" },
+        linecolor: "black",
+        showgrid: false,
+        showline: false,
+        fixedrange: true,
+        ticktext: xLabels,
+        tickvals: xLabels,
+      },
+      legend: {
+        x: 1,
+        xanchor: "right",
+        y: 0.95,
+      },
+      dragmode: false,
+    };
   }
 
   function setDefaultLayout() {
@@ -70,7 +70,7 @@
 
   function genPlot() {
     plotData = buildPlotData();
-      //@ts-ignore
+    //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,

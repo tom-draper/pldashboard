@@ -97,15 +97,15 @@
     opacity: 100%;
     border-radius: 0 6px 6px 0;
   }
-  
+
   .pos-3 {
     opacity: 89%;
   }
-  
+
   .pos-2 {
     opacity: 78%;
   }
-  
+
   .pos-1 {
     opacity: 67%;
   }
@@ -120,8 +120,6 @@
     .result {
       font-size: 3em;
     }
-
-
   }
   @media only screen and (max-width: 600px) {
     .result {
