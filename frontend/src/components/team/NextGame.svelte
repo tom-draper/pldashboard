@@ -23,7 +23,7 @@
 </script>
 
 {#if data.upcoming[team].nextTeam == null}
-  <div class="next-game-prediction">
+  <div class="next-game-prediction-complete">
     <div class="next-game-season-complete">
       <h1 class="next-game-title-text">
         {data._id}/{data._id + 1} SEASON COMPLETE
@@ -175,10 +175,8 @@
   .next-game-season-complete {
     display: grid;
     place-items: center;
-    background: #f3f3f3;
-    border: rgb(181, 181, 181) solid 5px;
-    border-radius: var(--border-radius);
-    height: 98%;
+    background: #f0f0f0;
+    flex: 1;
   }
   .next-game-title-text {
     margin: 0;
@@ -219,10 +217,14 @@
     border-radius: 6px;
     margin: auto 0;
   }
+  .next-game-prediction-complete,
   .next-game-prediction {
     border-radius: var(--border-radius);
     min-height: 97.5%;
     border: 6px solid var(--purple);
+  }
+  .next-game-prediction-complete {
+    display: flex;
   }
   .next-game-values {
     display: flex;

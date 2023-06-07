@@ -76,8 +76,8 @@ class Form(DF):
     @staticmethod
     def _get_gd(score: str, at_home: bool) -> int:
         if at_home:
-            return score['homeGoals'] - score['awayGoals'] 
-        else: 
+            return score['homeGoals'] - score['awayGoals']
+        else:
             return score['awayGoals'] - score['homeGoals']
 
     @staticmethod
@@ -112,13 +112,14 @@ class Form(DF):
                                ascending=False,
                                inplace=True)
                 df[(season, matchday, 'position')] = list(range(1, 21))
-    
+
     def _fill_teams_missing_matchday(self, form: DataFrame):
         """Fill in missing essential matchday data with copies from previous matchday."""
         current_season = max(form.columns.unique(level=0))
         matchdays = list(sorted(form[current_season].columns.unique(level=0)))
         teams = form[current_season].index.values
-        essential_cols = ('cumGD', 'cumPoints', 'form5', 'form10', 'formRating5', 'formRating10')
+        essential_cols = ('cumGD', 'cumPoints', 'form5',
+                          'form10', 'formRating5', 'formRating10')
         for matchday in matchdays:
             if form[current_season][matchday].isnull().values.any():
                 for team in teams:
@@ -129,7 +130,8 @@ class Form(DF):
                         while prev_matchday not in matchdays:
                             prev_matchday -= 1
                         for col in essential_cols:
-                            form.at[team, (current_season, matchday, col)] = form.at[team, (current_season, prev_matchday, col)]
+                            form.at[team, (current_season, matchday, col)
+                                    ] = form.at[team, (current_season, prev_matchday, col)]
 
     def _clean_dataframe(self, form: DataFrame, matchday_nos: list[int]) -> DataFrame:
         # Drop columns used for working
@@ -205,7 +207,7 @@ class Form(DF):
             form_str = form_char
 
         d[team][(season, matchday, col_heading)] = form_str
-    
+
     @staticmethod
     def _prev_matchday(d: dict, team: str, matchday: int, season: int) -> int:
         prev_matchday = matchday - 1
@@ -220,9 +222,9 @@ class Form(DF):
         else:
             team = utils.clean_full_team_name(match['awayTeam']['name'])
             opp_team = utils.clean_full_team_name(match['homeTeam']['name'])
-            
+
         self._init_dict(d, team)
-        
+
         matchday = match['matchday']
         prev_matchday = self._prev_matchday(d, team, matchday, season)
 
@@ -242,8 +244,10 @@ class Form(DF):
         d[team][(season, matchday, 'cumGD')] = gd
         d[team][(season, matchday, 'cumPoints')] = points
         if prev_matchday > 0:
-            d[team][(season, matchday, 'cumGD')] += d[team][(season, prev_matchday, 'cumGD')]
-            d[team][(season, matchday, 'cumPoints')] += d[team][(season, prev_matchday, 'cumPoints')]
+            d[team][(season, matchday, 'cumGD')
+                    ] += d[team][(season, prev_matchday, 'cumGD')]
+            d[team][(season, matchday, 'cumPoints')
+                    ] += d[team][(season, prev_matchday, 'cumPoints')]
 
         self._insert_form_string(d, team, gd, season, matchday, 5)
         self._insert_form_string(d, team, gd, season, matchday, 10)

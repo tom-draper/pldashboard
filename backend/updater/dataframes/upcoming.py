@@ -35,7 +35,12 @@ class Upcoming(DF):
                 }
             }
         """
-        predictions: dict[str, dict[str, datetime|str|dict[str, float]]] = {}
+        # If predictions haven't been added to dataframe, skip (season is over)
+        if ('predictions', 'homeGoals') not in self.df:
+            return {}
+
+        predictions: dict[str, dict[str, datetime |
+                                    str | dict[str, float]]] = {}
         for team, row in self.df.iterrows():
             if row[('atHome', '')]:
                 home_initials = team
@@ -55,20 +60,21 @@ class Upcoming(DF):
             }
 
         return predictions
-    
+
     def _next_matchday(
         self,
         team_name: str,
         fixtures: Fixtures
-        ) -> int:
+    ) -> int:
         """Scan through list of fixtures to find the next game that is scheduled."""
         # Arbitrary initial future date that will always be greater than any possible matchday date
         future = datetime.now() + timedelta(days=365)
-        matchday = {'date': future, 'matchday': future}
+        matchday = {'date': future, 'matchday': None}
         now = datetime.now()
         for matchday_no in fixtures.df.columns.unique(level=0):
             date = fixtures.df.at[team_name, (matchday_no, 'date')]
-            scheduled = fixtures.df.at[team_name, (matchday_no, 'status')] == 'SCHEDULED'
+            scheduled = fixtures.df.at[team_name,
+                                       (matchday_no, 'status')] == 'SCHEDULED'
             if scheduled and now < date < matchday['date']:
                 matchday['date'] = date
                 matchday['matchday'] = matchday_no
@@ -82,7 +88,7 @@ class Upcoming(DF):
         date = None  # type: Optional[str]
         next_team = None  # type: Optional[str]
         at_home = None  # type: Optional[str]
-        
+
         next_matchday = self._next_matchday(team_name, fixtures)
         if next_matchday is not None:
             date = fixtures.df.at[team_name, (next_matchday, 'date')]
@@ -251,7 +257,8 @@ class Upcoming(DF):
             }
 
         for i in range(n_seasons):
-            self._append_season_prev_matches(d, json_data, season-i, team_names)
+            self._append_season_prev_matches(
+                d, json_data, season-i, team_names)
 
         # Format previous meeting dates as long, readable str
         self._sort_prev_matches_by_date(d)
@@ -261,7 +268,8 @@ class Upcoming(DF):
         if form.get_current_matchday() < 38:
             # Generate and insert new predictions for upcoming games
             # predictions = self.predictions.build(form, upcoming, team_ratings, home_advantages)
-            predictions = self.predictions.build(fixtures, form, upcoming, home_advantages)
+            predictions = self.predictions.build(
+                fixtures, form, upcoming, home_advantages)
             upcoming = self._merge_predictions_into_upcoming(
                 upcoming, predictions)
 
