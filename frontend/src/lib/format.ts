@@ -10,3 +10,7 @@ export function teamStyle(team: string): string {
     let hyphenatedName = toHyphenatedName(team);
     return `background: var(--${hyphenatedName}); color: var(--${hyphenatedName}-secondary);`
 }
+
+export function scoreline(homeTeam: string, awayTeam: string, homeGoals: number, awayGoals: number): string {
+    return `${homeTeam} ${homeGoals} - ${awayGoals} ${awayTeam}`
+}
