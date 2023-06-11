@@ -1,21 +1,23 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  function seasonFinishLines(seasonBoundaries: number[], maxY: number): any {
+  function seasonFinishLines(seasonBoundaries: number[], maxX: number, maxY: number): any {
     let lines: any[] = [];
     for (let i = 0; i < seasonBoundaries.length; i++) {
-      lines.push({
-        type: "line",
-        x0: seasonBoundaries[i],
-        y0: 0,
-        x1: seasonBoundaries[i],
-        y1: maxY,
-        line: {
-          color: "black",
-          dash: "dot",
-          width: 1,
-        },
-      });
+      if (seasonBoundaries[i] < maxX) {
+        lines.push({
+          type: "line",
+          x0: seasonBoundaries[i],
+          y0: 0,
+          x1: seasonBoundaries[i],
+          y1: maxY,
+          line: {
+            color: "black",
+            dash: "dot",
+            width: 1,
+          },
+        });
+      }
     }
     return lines;
   }
@@ -100,6 +102,7 @@
           }
           goals.push({
             date: match.date,
+            // @ts-ignore
             days: numDays(match.date, startingDate) - dateOffset,
             matchday: matchday,
             scored: scored,
@@ -113,6 +116,7 @@
         // of days between current season end and next season start
         let currentSeasonEndDate = data.form[team][data._id - i][38].date;
         let nextSeasonStartDate = data.form[team][data._id - i + 1][1].date;
+        // @ts-ignore
         dateOffset += numDays(nextSeasonStartDate, currentSeasonEndDate);
         dateOffset -= 14; // Allow a 2 week gap between seasons for clarity
       }
@@ -142,15 +146,15 @@
     for (let i = 0; i < goals.length; i++) {
       dates.push(goals[i].date);
       days.push(goals[i].days);
-      if (goals[i].matchday == "38") {
+      if (i % 38 === 37) {
         // Season boundary line a week after season finish
         seasonBoundaries.push(goals[i].days + 7);
-        ticktext.push(goals[i].matchday);
+        ticktext.push(((i%38)+1).toString());
         tickvals.push(goals[i].days);
-      } else if (goals[i].matchday == "1") {
-        ticktext.push(goals[i].matchday);
+      } else if (i % 38 === 0) {
+        ticktext.push(((i % 38)+1).toString());
         tickvals.push(goals[i].days);
-      } else if (goals[i].matchday == "19" || i == goals.length - 1) {
+      } else if ((i % 38) === 19 || i == goals.length - 1) {
         let season = data._id - numSeasons + 1 + Math.floor(i / 38);
         // If in current season and matchday is 19, wait for until reach final
         // matchday in current season instead to place season ticktext label
@@ -275,7 +279,7 @@
     let [dates, days, seasonBoundaries, ticktext, tickvals, scored, conceded] =
       lineData(data, team);
     let maxY = Math.max(Math.max(...scored), Math.max(...conceded));
-    let seasonLines = seasonFinishLines(seasonBoundaries, maxY);
+    let seasonLines = seasonFinishLines(seasonBoundaries, days[days.length-1], maxY);
     let plotData = {
       data: [...lines(days, scored, conceded, dates)],
       layout: defaultLayout(ticktext, tickvals, seasonLines),
