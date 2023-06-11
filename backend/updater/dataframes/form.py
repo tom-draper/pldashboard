@@ -169,9 +169,11 @@ class Form(DF):
         return played_matchdays
 
     def calc_form_rating(self, d: dict, team_ratings: TeamRatings, team: str,
-                         current_season: int, length: int) -> float:
-        played_matchdays = self._last_n_played_matchdays(
-            d, team, current_season, length)
+                         current_season: int, matchdays: list[int], length: int) -> float:
+        # played_matchdays = self._last_n_played_matchdays(
+            # d, team, current_season, length)
+        played_matchdays = matchdays[-min(length, len(matchdays)):]
+        played_matchdays
         teams_played = [d[team][(current_season, matchday, 'team')]
                         for matchday in played_matchdays]
         gds = [d[team][(current_season, matchday, 'gD')]
@@ -183,21 +185,19 @@ class Form(DF):
         return form_rating
 
     def _insert_form_rating(self, d: dict, team_ratings: TeamRatings, team: str,
-                            season: int, matchday: int, length: int):
+                            season: int, matchdays: list[int], length: int):
         form_rating = self.calc_form_rating(
-            d, team_ratings, team, season, length)
+            d, team_ratings, team, season, matchdays, length)
+        matchday = matchdays[-1]
         d[team][(season, matchday, f'formRating{length}')] = form_rating
 
     def _insert_form_string(self, d: dict, team: str, gd: int, season: int,
-                            matchday: int, length: int):
+                            matchdays: list[int], length: int):
         col_heading = f'form{length}'
         form_char = self._get_form_char(gd)  # W, L or D for matchday
 
-        prev_matchday = matchday - 1
-        while prev_matchday > 0 and (season, prev_matchday, col_heading) not in d[team]:
-            prev_matchday -= 1
-
-        if prev_matchday > 0:
+        if len(matchdays) > 1:
+            prev_matchday = matchdays[-2]
             form_str = d[team][(season, prev_matchday,
                                 col_heading)] + form_char
             if len(form_str) > length:
@@ -206,6 +206,7 @@ class Form(DF):
         else:
             form_str = form_char
 
+        matchday = matchdays[-1]
         d[team][(season, matchday, col_heading)] = form_str
 
     @staticmethod
@@ -214,6 +215,21 @@ class Form(DF):
         while (season, prev_matchday, 'team') not in d[team] and prev_matchday >= 0:
             prev_matchday -= 1
         return prev_matchday
+    
+    def _sorted_played_matchdays(self, d: dict, team: str, season: int) -> list[int]:
+        played_matchdays = [] # type: list[tuple[int, str]]
+        for matchday in range(1, 39):
+            if (season, matchday, 'date') in d[team]:
+                played_matchdays.append((matchday, d[team][(season, matchday, 'date')]))
+        
+        # Sort by date
+        played_matchdays.sort(key=lambda x: x[1])
+
+        # Collect ordered matchday numbers to return
+        sorted_matchdays = [] # type: list[int]
+        for matchday in played_matchdays:
+            sorted_matchdays.append(matchday[0])
+        return sorted_matchdays
 
     def _insert_team_matchday(self, d: dict, match: dict, team_ratings: TeamRatings, season: int, home_team: bool):
         if home_team:
@@ -226,7 +242,6 @@ class Form(DF):
         self._init_dict(d, team)
 
         matchday = match['matchday']
-        prev_matchday = self._prev_matchday(d, team, matchday, season)
 
         d[team][(season, matchday, 'team')] = opp_team
         d[team][(season, matchday, 'date')] = match['utcDate']
@@ -243,17 +258,23 @@ class Form(DF):
         d[team][(season, matchday, 'gD')] = gd
         d[team][(season, matchday, 'cumGD')] = gd
         d[team][(season, matchday, 'cumPoints')] = points
-        if prev_matchday > 0:
+
+        sorted_matchdays = self._sorted_played_matchdays(d, team, season)
+        prev_matchday = None
+        if len(sorted_matchdays) > 1:
+            prev_matchday = sorted_matchdays[-2]
+        
+        if prev_matchday is not None:
             d[team][(season, matchday, 'cumGD')
                     ] += d[team][(season, prev_matchday, 'cumGD')]
             d[team][(season, matchday, 'cumPoints')
                     ] += d[team][(season, prev_matchday, 'cumPoints')]
 
-        self._insert_form_string(d, team, gd, season, matchday, 5)
-        self._insert_form_string(d, team, gd, season, matchday, 10)
+        self._insert_form_string(d, team, gd, season, sorted_matchdays, 5)
+        self._insert_form_string(d, team, gd, season, sorted_matchdays, 10)
 
-        self._insert_form_rating(d, team_ratings, team, season, matchday, 5)
-        self._insert_form_rating(d, team_ratings, team, season, matchday, 10)
+        self._insert_form_rating(d, team_ratings, team, season, sorted_matchdays, 5)
+        self._insert_form_rating(d, team_ratings, team, season, sorted_matchdays, 10)
 
     @timebudget
     def build(
