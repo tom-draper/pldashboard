@@ -3,20 +3,18 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 import pandas as pd
-from data import Fixtures, Form, HomeAdvantages, TeamRatings
-from dataframes.df import DF
-from lib.utils.utilities import Utilities
 from pandas import DataFrame
+from src.data import Fixtures, Form, HomeAdvantages, TeamRatings
+from src.dataframes.df import DF
+from src.fmt import clean_full_team_name, convert_team_name_or_initials
 from timebudget import timebudget
-
-utils = Utilities()
 
 
 class Upcoming(DF):
     def __init__(
             self, current_season, d: DataFrame = DataFrame()):
         super().__init__(d, 'upcoming')
-        from predictions import Predictions
+        from src.predictions.predictions import Predictions
         self.predictions = Predictions(current_season)
 
     def get_predictions(self) -> dict[str, dict]:
@@ -51,8 +49,8 @@ class Upcoming(DF):
 
             predictions[team] = {
                 'date': row[('date', '')].to_pydatetime(),
-                'homeInitials': utils.convert_team_name_or_initials(home_initials),
-                'awayInitials': utils.convert_team_name_or_initials(away_initials),
+                'homeInitials': convert_team_name_or_initials(home_initials),
+                'awayInitials': convert_team_name_or_initials(away_initials),
                 'prediction': {
                     'homeGoals': row[('prediction', 'homeGoals')],
                     'awayGoals': row[('prediction', 'awayGoals')]
@@ -168,9 +166,9 @@ class Upcoming(DF):
 
         for match in data:
             if match['status'] == 'FINISHED':
-                home_team = utils.clean_full_team_name(
+                home_team = clean_full_team_name(
                     match['homeTeam']['name'])  # type: str
-                away_team = utils.clean_full_team_name(
+                away_team = clean_full_team_name(
                     match['awayTeam']['name'])  # type: str
 
                 if home_team in team_names and away_team in team_names:

@@ -1,12 +1,10 @@
 import logging
 
 import pandas as pd
-from dataframes.df import DF
-from lib.utils.utilities import Utilities
 from pandas import DataFrame
+from src.dataframes.df import DF
+from src.fmt import clean_full_team_name
 from timebudget import timebudget
-
-utils = Utilities()
 
 
 class Standings(DF):
@@ -16,7 +14,7 @@ class Standings(DF):
     @staticmethod
     def get_team_names(json_data: dict, season: int):
         data = json_data['standings'][season]
-        team_names = [utils.clean_full_team_name(
+        team_names = [clean_full_team_name(
             row['team']['name']) for row in data]
         return team_names
 
@@ -30,7 +28,7 @@ class Standings(DF):
         df = pd.DataFrame.from_dict(data)
 
         # Rename teams to their team name
-        team_names = [utils.clean_full_team_name(name)
+        team_names = [clean_full_team_name(name)
                       for name in [df['team'][x]['name'] for x in range(len(df))]]
         df = df.drop(columns=['form', 'team'])
         df.index = team_names

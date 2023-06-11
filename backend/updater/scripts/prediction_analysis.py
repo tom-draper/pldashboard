@@ -5,10 +5,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import matplotlib.pyplot as plt
 import numpy as np
-from lib.database.database import Database
-from lib.utils.utilities import Utilities
-
-util = Utilities()
+from db.database import Database
+from updater.src.fmt import identical_result, extract_int_score_from_scoreline
 
 
 class PredictionsAnalysis:
@@ -22,9 +20,9 @@ class PredictionsAnalysis:
         return data
     
     def by_form(self, actual_scoreline, home_form_rating, away_form_rating):
-        act_home_goals, act_away_goals = util.extract_int_score_from_scoreline(actual_scoreline)
+        act_home_goals, act_away_goals = extract_int_score_from_scoreline(actual_scoreline)
         # Compare whether comparison in goals scored by each team matches comparison in their form rating
-        return util.identical_result(act_home_goals, act_away_goals, home_form_rating, away_form_rating)
+        return identical_result(act_home_goals, act_away_goals, home_form_rating, away_form_rating)
 
     def if_predicted_by_form(self, predictions):
         total = 0
@@ -38,9 +36,9 @@ class PredictionsAnalysis:
         return count / total
     
     def by_prev_matches(self, actual_scoreline, home_goals, away_goals):
-        act_home_goals, act_away_goals = util.extract_int_score_from_scoreline(actual_scoreline)
+        act_home_goals, act_away_goals = extract_int_score_from_scoreline(actual_scoreline)
         # Compare whether comparison in goals scored by each team matches comparison in the average of their previous matches
-        return util.identical_result(act_home_goals, act_away_goals, home_goals, away_goals)
+        return identical_result(act_home_goals, act_away_goals, home_goals, away_goals)
 
     def if_predicted_by_prev_matches(self, predictions):
         total = 0

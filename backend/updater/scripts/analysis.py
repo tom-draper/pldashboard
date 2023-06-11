@@ -3,11 +3,8 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from lib.utils.utilities import Utilities
-
 from updater import Updater
-
-util = Utilities()
+from updater.src.fmt import extract_int_score
 
 
 class Analysis:
@@ -23,7 +20,7 @@ class Analysis:
         
     def _result(self, match):
         at_home = match['AtHome']
-        h, a = util.extract_int_score(match['Score'])
+        h, a = extract_int_score(match['Score'])
         if at_home:
             if h > a:
                 return 1

@@ -2,13 +2,11 @@ import logging
 import math
 
 import pandas as pd
-from dataframes.team_ratings import TeamRatings
-from dataframes.df import DF
-from lib.utils.utilities import Utilities
 from pandas import DataFrame
+from src.dataframes.df import DF
+from src.dataframes.team_ratings import TeamRatings
+from src.fmt import clean_full_team_name
 from timebudget import timebudget
-
-utils = Utilities()
 
 
 class Form(DF):
@@ -229,11 +227,11 @@ class Form(DF):
 
     def _insert_team_matchday(self, d: dict, match: dict, team_ratings: TeamRatings, season: int, home_team: bool):
         if home_team:
-            team = utils.clean_full_team_name(match['homeTeam']['name'])
-            opp_team = utils.clean_full_team_name(match['awayTeam']['name'])
+            team = clean_full_team_name(match['homeTeam']['name'])
+            opp_team = clean_full_team_name(match['awayTeam']['name'])
         else:
-            team = utils.clean_full_team_name(match['awayTeam']['name'])
-            opp_team = utils.clean_full_team_name(match['homeTeam']['name'])
+            team = clean_full_team_name(match['awayTeam']['name'])
+            opp_team = clean_full_team_name(match['homeTeam']['name'])
 
         if team not in d:
             d[team] = {}
@@ -343,9 +341,9 @@ class Form(DF):
         for i in range(n_seasons):
             for match in json_data['fixtures'][season-i]:
                 if i == 0:
-                    teams.add(utils.clean_full_team_name(
+                    teams.add(clean_full_team_name(
                         match['homeTeam']['name']))
-                    teams.add(utils.clean_full_team_name(
+                    teams.add(clean_full_team_name(
                         match['awayTeam']['name']))
                 if match['status'] == 'FINISHED':
                     self._insert_team_matchday(
