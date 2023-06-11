@@ -210,10 +210,12 @@ class Form(DF):
         d[team][(season, matchday, col_heading)] = form_str
 
     @staticmethod
-    def _prev_matchday(d: dict, team: str, matchday: int, season: int) -> int:
+    def _prev_matchday(d: dict, team: str, matchday: int, season: int) -> int | None:
         prev_matchday = matchday - 1
         while (season, prev_matchday, 'team') not in d[team] and prev_matchday >= 0:
             prev_matchday -= 1
+        if prev_matchday < 0:
+            return None
         return prev_matchday
     
     def _sorted_played_matchdays(self, d: dict, team: str, season: int) -> list[int]:
@@ -256,19 +258,19 @@ class Form(DF):
         gd = self._get_gd(score, home_team)
         points = self._get_points(gd)
         d[team][(season, matchday, 'gD')] = gd
+        d[team][(season, matchday, 'points')] = points
         d[team][(season, matchday, 'cumGD')] = gd
         d[team][(season, matchday, 'cumPoints')] = points
 
         sorted_matchdays = self._sorted_played_matchdays(d, team, season)
-        prev_matchday = None
-        if len(sorted_matchdays) > 1:
-            prev_matchday = sorted_matchdays[-2]
+        # prev_matchday_by_date = None
+        # if len(sorted_matchdays) > 1:
+        #     prev_matchday_by_date = sorted_matchdays[-2]
         
-        if prev_matchday is not None:
-            d[team][(season, matchday, 'cumGD')
-                    ] += d[team][(season, prev_matchday, 'cumGD')]
-            d[team][(season, matchday, 'cumPoints')
-                    ] += d[team][(season, prev_matchday, 'cumPoints')]
+        prev_matchday_by_num = self._prev_matchday(d, team, matchday, season)
+        if prev_matchday_by_num is not None:
+            d[team][(season, matchday, 'cumGD')] += d[team][(season, prev_matchday_by_num, 'cumPoints')]
+            d[team][(season, matchday, 'cumPoints')] += d[team][(season, prev_matchday_by_num, 'cumPoints')]
 
         self._insert_form_string(d, team, gd, season, sorted_matchdays, 5)
         self._insert_form_string(d, team, gd, season, sorted_matchdays, 10)
