@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { toAlias } from "../../lib/team";
+  import { scoreline } from "../../lib/format";
 
   function matchDescription(team: string, match: Match): string {
     let description: string;
@@ -14,7 +15,12 @@
       awayTeam = toAlias(team);
     }
     if (match.score != null) {
-      description = `${homeTeam} ${match.score.homeGoals} - ${match.score.awayGoals} ${awayTeam}`;
+      description = scoreline(
+        homeTeam,
+        awayTeam,
+        match.score.homeGoals,
+        match.score.awayGoals
+      );
     } else {
       description = `${homeTeam} vs ${awayTeam}`;
     }

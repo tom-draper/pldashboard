@@ -3,12 +3,10 @@ from collections import defaultdict
 from datetime import datetime
 
 import pandas as pd
-from dataframes.df import DF
-from lib.utils.utilities import Utilities
 from pandas import DataFrame
+from src.dataframes.df import DF
+from src.fmt import clean_full_team_name, convert_team_name_or_initials
 from timebudget import timebudget
-
-utils = Utilities()
 
 
 class Fixtures(DF):
@@ -66,9 +64,9 @@ class Fixtures(DF):
                         else:
                             home_name = row['team']
                             away_name = team_name
-                        home_initials = utils.convert_team_name_or_initials(
+                        home_initials = convert_team_name_or_initials(
                             home_name)
-                        away_initials = utils.convert_team_name_or_initials(
+                        away_initials = convert_team_name_or_initials(
                             away_name)
 
                         actual_scores[f'{home_initials} vs {away_initials}'] = row['score']
@@ -85,12 +83,12 @@ class Fixtures(DF):
         date = datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ")
 
         if home_team:
-            team_name = utils.clean_full_team_name(match['homeTeam']['name'])
-            opp_team_name = utils.clean_full_team_name(
+            team_name = clean_full_team_name(match['homeTeam']['name'])
+            opp_team_name = clean_full_team_name(
                 match['awayTeam']['name'])
         else:
-            team_name = utils.clean_full_team_name(match['awayTeam']['name'])
-            opp_team_name = utils.clean_full_team_name(
+            team_name = clean_full_team_name(match['awayTeam']['name'])
+            opp_team_name = clean_full_team_name(
                 match['homeTeam']['name'])
 
         if match['score']['fullTime']['homeTeam'] is not None:

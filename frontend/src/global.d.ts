@@ -130,3 +130,8 @@ type PlotData = {
 type Counter = {
     [key: string]: number
 }
+
+type SpiderAttribute = {
+    [team: string]: number;
+    avg: number;
+};

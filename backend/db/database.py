@@ -5,10 +5,6 @@ from typing import Optional
 import pymongo
 from dotenv import load_dotenv
 
-from lib.utils.utilities import Utilities
-
-util = Utilities()
-
 
 class Database:
     def __init__(self, current_season):

@@ -2,9 +2,9 @@ import logging
 
 import numpy as np
 import pandas as pd
-from dataframes.df import DF
-from dataframes.standings import Standings
 from pandas import DataFrame
+from src.dataframes.df import DF
+from src.dataframes.standings import Standings
 from timebudget import timebudget
 
 
