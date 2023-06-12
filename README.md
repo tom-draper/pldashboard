@@ -2,7 +2,7 @@
   <img width="830" src="https://user-images.githubusercontent.com/41476809/227160125-c2fdc601-9e32-431c-9ecf-fb0046041c4f.png" />
 </p>
 
-A Premier League statistics dashboard presenting a comprehensive and relative outlook of the current performance of each Premier League team. The dashboard includes interactive visualisations, carefully chosen metrics and score predictions for upcoming games.
+A Premier League statistics dashboard presenting a relative outlook for the current performance of each Premier League team. The dashboard includes interactive visualisations, curated metrics and score predictions for upcoming games. Across the dashboard, long-term performance and short-term form have been carefully blended where appropriate, aiming to give a balanced and accurate view of each team's current state.
 
 Built with Svelte, TypeScript, FastAPI, Plotly, Pandas, MongoDB and <a href="https://www.football-data.org/">football-data.org</a> API for the data. 
 
