@@ -189,6 +189,8 @@ class Updater:
             
         self.build_dataframes(n_seasons, display_tables)
 
+        return
+
         if request_new:
             logging.info('💾 Saving new team data to local backup...')
             self.save_data_to_json()
@@ -213,8 +215,8 @@ def run_production():
 
 def run_dev():
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s :: %(levelname)s :: %(message)s')
-    run(display_tables=True, update_db=False)
+    run(display_tables=True, update_db=False, request_new=False)
 
 
 if __name__ == "__main__":
-    run_production()
+    run_dev()

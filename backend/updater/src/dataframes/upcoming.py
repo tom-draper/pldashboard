@@ -194,7 +194,6 @@ class Upcoming(DF):
         upcoming = pd.concat([upcoming, predictions], axis=1)
         return upcoming
 
-    @timebudget
     def build(
         self,
         json_data: dict,
@@ -269,9 +268,13 @@ class Upcoming(DF):
             predictions = self.predictions.build(
                 fixtures, form, upcoming, home_advantages)
             upcoming = self._merge_predictions_into_upcoming(
-                upcoming, predictions)
+                upcoming, predictions) 
 
         upcoming.index.name = 'team'
+        
+        from src.predictions.predict_v2 import Predictor
+        predictor = Predictor(json_data, fixtures, form, team_ratings, home_advantages, season, n_seasons)
+        predictor.predict_score("Manchester City", "Liverpool")
 
         if display:
             print(upcoming)
