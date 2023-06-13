@@ -58,9 +58,10 @@ class Predictor:
                 freq[scoreline] += 1
             else:
                 freq[scoreline] = 1
+
         return freq
 
-    def _fixture_scoreline_freq(self, team1: str, team2: str) -> dict[str, int]:
+    def _fixture_scoreline_freq(self, team1: str, team2: str, home_away: bool = True) -> dict[str, int]:
         freq = {}
 
         team1_initials = convert_team_name_or_initials(team1)
@@ -73,17 +74,63 @@ class Predictor:
                 at_home = team1_row[(season, matchday, 'atHome')]
                 score = team1_row[(season, matchday, 'score')]
 
-                if at_home:
-                    scoreline = f'{team1_initials} {score["homeGoals"]} - {score["awayGoals"]} {team2_initials}'
+                if home_away:
+                    if at_home:
+                        scoreline = f'{team1_initials} {score["homeGoals"]} - {score["awayGoals"]} {team2_initials}'
+                    else:
+                        scoreline = f'{team2_initials} {score["homeGoals"]} - {score["awayGoals"]} {team1_initials}'
                 else:
-                    scoreline = f'{team2_initials} {score["homeGoals"]} - {score["awayGoals"]} {team1_initials}'
+                    scoreline = f'{score["homeGoals"]} - {score["awayGoals"]}'
                 
                 if scoreline in freq:
                     freq[scoreline] += 1
                 else:
                     freq[scoreline] = 1
-        return freq
 
+        return freq
+    
+    @staticmethod
+    def _separate_scoreline_freq_by_home_away(team: str, freq: dict[str, int], at_home: bool) -> dict[str, int]:
+        separated_freq = {}
+
+        team_initials = convert_team_name_or_initials(team)
+        for scoreline in freq:
+            if (at_home and scoreline[:3] == team_initials) or (not at_home and scoreline[-3:] == team_initials):
+                separated_freq[scoreline] = freq[scoreline]
+
+        return separated_freq
+    
+    @staticmethod
+    def _display_scoreline_freq(freq: dict[str, int | float]):
+        sorted_freq = []
+        for scoreline, count in freq.items():
+            sorted_freq.append((scoreline, count))
+        
+        # Sort by frequency count descending
+        sorted_freq.sort(key=lambda x: x[1], reverse=True)
+
+        for scoreline, count in sorted_freq:
+            print(scoreline, count)
+    
+    @staticmethod
+    def _scoreline_freq_probability(freq: dict[str, int]) -> dict[str, float]:
+        total_scorelines = sum(freq.values())
+
+        probabilities = {}
+        for scoreline in freq:
+            probabilities[scoreline] = freq[scoreline] / total_scorelines
+        
+        return probabilities
+    
+    @staticmethod
+    def _remove_scoreline_freq_teams(freq: dict[str, int | float]) -> dict[str, int | float]:
+        new_freq = {}
+        for scoreline, count in freq.items():
+            # Remove team initials and space on either side
+            new_scoreline = scoreline[4:-4]
+            new_freq[new_scoreline] = count
+
+        return new_freq
 
     def predict_score(
         self,
@@ -94,8 +141,12 @@ class Predictor:
         away_scoreline_freq = self._team_scoreline_freq(away_team)
         fixture_scoreline_freq = self._fixture_scoreline_freq(home_team, away_team)
 
-        print(home_scoreline_freq)
-        print(fixture_scoreline_freq)
+        home_scoreline_freq_home = self._separate_scoreline_freq_by_home_away(home_team, home_scoreline_freq, True)
+        away_scoreline_freq_away = self._separate_scoreline_freq_by_home_away(away_team, away_scoreline_freq, False)
+
+        home_scoreline_probabilities_home = self._scoreline_freq_probability(home_scoreline_freq_home)
+        away_scoreline_probabilities_away = self._scoreline_freq_probability(away_scoreline_freq_away)
+        self._display_scoreline_freq(home_scoreline_probabilities_home | away_scoreline_probabilities_away)
 
         prediction = None
         return prediction
