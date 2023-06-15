@@ -26,6 +26,8 @@ class Predictor:
         self.form = form
         self.team_ratings = team_ratings
         self.home_advantages = home_advantages
+        self.HOME_AWAY_WEIGHTING = 0.2
+        self.FIXTURE_WEIGHTING = 0.4
 
     @staticmethod
     def _build_long_term_fixtures(
@@ -346,8 +348,7 @@ class Predictor:
         home_team: str,
         away_team: str
     ) -> dict[Scoreline, float]:
-        HOME_AWAY_WEIGHTING = 0.2
-        FIXTURE_WEIGHTING = 0.4
+
 
         # All multi-season scorelines available for each team
         home_scoreline_freq = self._team_scoreline_freq(home_team)
@@ -407,20 +408,20 @@ class Predictor:
         self._insert_scaled_into_freq(
             scoreline_freq,
             self._remove_scoreline_freq_teams(home_scoreline_freq_home),
-            HOME_AWAY_WEIGHTING
+            self.HOME_AWAY_WEIGHTING
         )
         # Re-insert away scorelines for away team (scaled down)
         self._insert_scaled_into_freq(
             scoreline_freq,
             self._remove_scoreline_freq_teams(away_scoreline_freq_away),
-            HOME_AWAY_WEIGHTING
+            self.HOME_AWAY_WEIGHTING
         )
         # After the subtracting earlier, we can now fully control any additional
         # weighting for fixture scorelines
         self._insert_scaled_into_freq(
             scoreline_freq,
             self._remove_scoreline_freq_teams(fixture_scoreline_freq),
-            FIXTURE_WEIGHTING
+            self.FIXTURE_WEIGHTING
         )
 
         home_team_recent_scorelines = self.get_recent_scorelines(home_team, 20)
