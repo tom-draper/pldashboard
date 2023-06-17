@@ -4,6 +4,8 @@ import pandas as pd
 from pandas.core.frame import DataFrame
 from src.data import Fixtures, Form, HomeAdvantages, TeamRatings
 import numpy as np
+from src.predictions.market import fetch_odds
+from src.predictions.odds import scale_by_odds
 
 
 class Predictor:
@@ -28,6 +30,7 @@ class Predictor:
         self.home_advantages = home_advantages
         self.HOME_AWAY_WEIGHTING = 0.2
         self.FIXTURE_WEIGHTING = 0.4
+        self.MARKET_URL = "https://www.betfair.com/exchange/plus/en/football/english-premier-league-betting-10932509"
 
     @staticmethod
     def _build_long_term_fixtures(
@@ -424,6 +427,7 @@ class Predictor:
             self.FIXTURE_WEIGHTING
         )
 
+        # Insert recent scorelines for each team weighted by recency
         home_team_recent_scorelines = self.get_recent_scorelines(home_team, 20)
         away_team_recent_scorelines = self.get_recent_scorelines(away_team, 20)
         home_team_recent_scorelines = self._remove_recent_scorelines_home_away(
@@ -447,6 +451,15 @@ class Predictor:
             np.linspace(0.2, 1, len(away_team_recent_scorelines))
         )
 
+        # Scale all home win probabilities by home odds, draw probabilities by 
+        # draw odds and away win probabilities by away odds with the current 
+        # odds for this match
+        odds = fetch_odds(self.MARKET_URL)
+        if (home_team, away_team) in odds:
+            fixture_odds = odds[(home_team, away_team)]
+            scale_by_odds(scoreline_freq, fixture_odds)
+
+        # Convert frequency counts into probability values
         scoreline_probabilities = self._scoreline_freq_probability(scoreline_freq)
         return scoreline_probabilities
 

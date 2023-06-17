@@ -274,7 +274,7 @@ class Upcoming(DF):
         
         from src.predictions.predict_v2 import Predictor
         predictor = Predictor(json_data, fixtures, form, team_ratings, home_advantages, season, n_seasons)
-        predictor.predict_score("Liverpool", "Manchester United")
+        predictor.predict_score("Arsenal", "Nottingham Forest")
 
         if display:
             print(upcoming)
