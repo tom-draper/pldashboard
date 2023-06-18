@@ -34,7 +34,6 @@ class Odds:
             self._toggle_reciprocal()
             self.representation = 'odds'
 
-@staticmethod
 def scale_by_odds(freq: dict[str, int | float], odds: Odds):
     odds.convert_to_probabilities()
     for scoreline in freq:
