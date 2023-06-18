@@ -469,7 +469,7 @@ class Predictor:
         # Convert frequency counts into probability values
         scoreline_probabilities = self._scoreline_freq_probability(
             scoreline_freq)
-        self._display_scoreline_freq(scoreline_probabilities)
+        # self._display_scoreline_freq(scoreline_probabilities)
         return scoreline_probabilities
 
     @staticmethod
@@ -490,6 +490,8 @@ class Predictor:
         scoreline_probabilities = self.scoreline_probabilities(
             home_team, away_team)
         predicted = self.maximum_likelihood(scoreline_probabilities)
+        predicted.home_team = home_team
+        predicted.away_team = away_team
         predicted.show_team = True
         print(str(predicted))
         return predicted

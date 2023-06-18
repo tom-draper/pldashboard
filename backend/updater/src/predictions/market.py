@@ -13,7 +13,6 @@ def fetch_odds(url: str) -> dict[tuple[str, str], Odds]:
     time.sleep(5)  # Allows webpage to load
     tables = driver.find_elements(By.CLASS_NAME, 'coupon-table')
     odds = _extract_odds(tables)
-    print(odds)
     return odds
 
 def _fetch_webpage(url: str) -> webdriver:
@@ -29,7 +28,6 @@ def _extract_odds(tables: list[WebElement]) -> dict[tuple[str, str], Odds]:
         cells = list(filter(lambda x: x[0] != '£', cells))
         table_odds = _extract_table_odds(cells)
         odds = {**odds, **table_odds}
-
     return odds
 
 def _extract_table_odds(cells: list[str]) -> dict[tuple[str, str], Odds]:
@@ -37,21 +35,22 @@ def _extract_table_odds(cells: list[str]) -> dict[tuple[str, str], Odds]:
     i = 0
     while i < len(cells):
         date, home_team, away_team = cells[i:i+3]
-        home_team = team_alias[home_team] if home_team in team_alias else home_team
-        away_team = team_alias[away_team] if away_team in team_alias else away_team
+        home_team = _team_alias[home_team] if home_team in _team_alias else home_team
+        away_team = _team_alias[away_team] if away_team in _team_alias else away_team
         i += 3
 
         odds_values = _extract_match_odds(cells, i)
         i += len(odds_values)
 
         home, draw, away = _extract_standard_odds(odds_values)
+        if home is None or draw is None or away is None:
+            continue
 
         _odds = Odds(home, draw, away, home_team, away_team, date)
         odds[(home_team, away_team)] = _odds
-
     return odds
 
-team_alias = {
+_team_alias = {
     'Man City': 'Manchester City',
     'Nottm Forest': 'Nottingham Forest',
     'Sheff Utd': 'Sheffield United',
@@ -65,9 +64,12 @@ team_alias = {
     'Leicester': 'Leicester City',
 }
 
+def _is_odds_value(cell_value: str) -> bool:
+    return "." in cell_value or cell_value.isnumeric()
+
 def _extract_match_odds(cells: list[str], cur_idx: int) -> list[float]:
     odds = []
-    while cur_idx < len(cells) and ("." in cells[cur_idx] or cells[cur_idx].isnumeric()):
+    while cur_idx < len(cells) and _is_odds_value(cells[cur_idx]):
         odds.append(float(cells[cur_idx]))
         cur_idx += 1
     return odds
