@@ -5,7 +5,7 @@ import numpy as np
 def calc_form(team: str, recent_matches: list[Scoreline], weightings: list[float], team_ratings: TeamRatings) -> float:
     weightings /= np.sum(weightings)
 
-    form = 0.0
+    form = 0.5
     for scoreline, weight in zip(recent_matches, weightings):
         if scoreline.home_team == team:
             scored = scoreline.home_goals

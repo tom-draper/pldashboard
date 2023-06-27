@@ -435,7 +435,8 @@ class Predictor:
         away_team_recent_scorelines = self.get_recent_scorelines(away_team, 20)
         home_team_form = calc_form(home_team, home_team_recent_scorelines, np.linspace(0.2, 1, len(away_team_recent_scorelines)), self.team_ratings)
         away_team_form = calc_form(away_team, away_team_recent_scorelines, np.linspace(0.2, 1, len(away_team_recent_scorelines)), self.team_ratings)
-        scale_by_form(scoreline_freq, home_team_form, away_team_form)
+        # scale_by_form(scoreline_freq, home_team_form, away_team_form)
+        form_scale = (home_team_form, 0.5, away_team_form)
 
         # home_team_recent_scorelines = self._remove_recent_scorelines_home_away(
         #     home_team_recent_scorelines,
@@ -464,13 +465,30 @@ class Predictor:
         odds = fetch_odds(self.MARKET_URL)
         if (home_team, away_team) in odds:
             fixture_odds = odds[(home_team, away_team)]
-            scale_by_odds(scoreline_freq, fixture_odds)
+            fixture_odds.convert_to_probabilities()
+            # scale_by_odds(scoreline_freq, fixture_odds)
+            odds_scale = (fixture_odds.home, fixture_odds.draw, fixture_odds.away)
+        else:
+            odds_scale = (1, 1, 1)
+        
+        scale = tuple(f/2 + o/2 for f, o in zip(form_scale, odds_scale))
+        self.scale_results(scoreline_freq, scale)
 
         # Convert frequency counts into probability values
-        scoreline_probabilities = self._scoreline_freq_probability(
-            scoreline_freq)
+        scoreline_probabilities = self._scoreline_freq_probability(scoreline_freq)
         # self._display_scoreline_freq(scoreline_probabilities)
         return scoreline_probabilities
+    
+    @staticmethod
+    def scale_results(scoreline_freq: dict[Scoreline, float], scale: tuple[float, float, float]):
+        home, draw, away = scale
+        for scoreline in scoreline_freq:
+            if scoreline.home_goals > scoreline.away_goals:
+                scoreline_freq[scoreline] *= home
+            elif scoreline.home_goals < scoreline.away_goals:
+                scoreline_freq[scoreline] *= away
+            elif scoreline.home_goals == scoreline.away_goals:
+                scoreline_freq[scoreline] *= draw
 
     @staticmethod
     def maximum_likelihood(scoreline_probabilities: dict[Scoreline, float]) -> Scoreline | None:
@@ -490,8 +508,7 @@ class Predictor:
         scoreline_probabilities = self.scoreline_probabilities(
             home_team, away_team)
         predicted = self.maximum_likelihood(scoreline_probabilities)
-        predicted.home_team = home_team
-        predicted.away_team = away_team
-        predicted.show_team = True
+        # Overwrite predicted scoreline teams with fixture
+        predicted = Scoreline(predicted.home_goals, predicted.away_goals, home_team, away_team)
         print(str(predicted))
         return predicted
