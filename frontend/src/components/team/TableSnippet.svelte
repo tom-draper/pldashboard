@@ -36,7 +36,7 @@
     let teamTableIdx: number;
     let rows = [];
     for (let i = low; i < high; i++) {
-      if (sortedTeams[i] == team) {
+      if (sortedTeams[i] === team) {
         teamTableIdx = i - low;
       }
       rows.push({
@@ -84,7 +84,7 @@
 
     {#each tableSnippet.rows as row, i}
       <!-- Divider -->
-      {#if i == 0}
+      {#if i === 0}
         {#if i != tableSnippet.teamTableIdx}
           <div id="divider" />
         {/if}
@@ -92,7 +92,7 @@
         <div id="divider" />
       {/if}
       <!-- Row of table -->
-      {#if i == tableSnippet.teamTableIdx}
+      {#if i === tableSnippet.teamTableIdx}
         <!-- Highlighted row for the team of the current page -->
         <div
           class="table-row this-team"

@@ -152,7 +152,7 @@
     });
     setTimeout(() => {
       lazyLoad = true;
-    }, 3000);
+    }, 2500);
   }
 
   function refreshPlot() {

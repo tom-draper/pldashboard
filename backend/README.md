@@ -9,7 +9,7 @@ python server/app.py
 ## Data Updater
 
 ```bash
-python updater/updater.py
+python updater/main.py
 ```
 
 ### Tests

@@ -18,7 +18,7 @@
 
   function teamBars(data: Object, type: string, color: string | string[]): any {
     let opener = "Score";
-    if (type == "Conceded") {
+    if (type === "Conceded") {
       opener = "Concede";
     }
     return {

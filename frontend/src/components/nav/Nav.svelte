@@ -26,7 +26,7 @@
     </p>
   </div>
   <div class="team-links">
-    {#if teams.length == 0}
+    {#if teams.length === 0}
       {#each widths as width, _}
         <div
           class="placeholder"
@@ -35,7 +35,7 @@
       {/each}
     {:else}
       {#each teams as _team, _ (_team)}
-        {#if toHyphenatedName(_team) == team}
+        {#if toHyphenatedName(_team) === team}
           <a href="/{toHyphenatedName(_team)}" class="team-link">
             <div class="this-team-container" style={teamStyle(_team)}>
               <div class="this-team-name">
@@ -59,7 +59,7 @@
         {/if}
       {/each}
       <!-- <div class="divider" />
-      {#if team == "overview"}
+      {#if team === "overview"}
         <a href="/overview" class="team-link">
           <div class="overview-selected">
             <div class="overview">Overview</div>

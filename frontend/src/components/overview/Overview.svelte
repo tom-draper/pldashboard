@@ -56,7 +56,7 @@
   }
 
   function applyRatingFixturesScaling() {
-    if (fixturesScaling == "rating") {
+    if (fixturesScaling === "rating") {
       return;
     }
     fixturesScaling = "rating";
@@ -75,7 +75,7 @@
   }
 
   function applyRatingFormScaling() {
-    if (fixturesScaling == "form") {
+    if (fixturesScaling === "form") {
       return;
     }
     fixturesScaling = "form";
@@ -220,7 +220,7 @@
           <div class="upcoming-matches">
             <div class="upcoming-title">Upcoming</div>
             {#each upcoming as match, i}
-              {#if i == 0 || match.time.getDate() != upcoming[i - 1].time.getDate()}
+              {#if i === 0 || match.time.getDate() != upcoming[i - 1].time.getDate()}
                 <div class="upcoming-match-date">
                   {match.time.toLocaleDateString("en-GB", {
                     weekday: "long",
@@ -280,7 +280,7 @@
             </div>
             {#each standings as row, i}
               <div
-                class="table-row {i % 2 == 0 ? 'grey-row' : ''} {i < 4
+                class="table-row {i % 2 === 0 ? 'grey-row' : ''} {i < 4
                   ? 'cl'
                   : ''} {i > 3 && i < 6 ? 'el' : ''} {i > 16
                   ? 'relegation'
@@ -337,7 +337,7 @@
           <div class="scale-team-ratings">
             <button
               id="rating-scale-btn"
-              class="scale-btn {fixturesScaling == 'rating'
+              class="scale-btn {fixturesScaling === 'rating'
                 ? 'scaling-selected'
                 : ''}"
               on:click={applyRatingFixturesScaling}
@@ -348,7 +348,7 @@
           <div class="scale-team-form">
             <button
               id="form-scale-btn"
-              class="scale-btn {fixturesScaling == 'form'
+              class="scale-btn {fixturesScaling === 'form'
                 ? 'scaling-selected'
                 : ''}"
               on:click={applyRatingFormScaling}
@@ -364,10 +364,10 @@
                 <div
                   class="fixtures-team"
                   style="{teamStyle(row.team)}
-                      {i == 0
+                      {i === 0
                     ? 'border-top: 2px solid black; border-radius: 4px 0 0'
                     : ''}
-                      {i == fixtures.length - 1
+                      {i === fixtures.length - 1
                     ? 'border-radius: 0 0 0 4px;'
                     : ''}"
                 >
@@ -393,7 +393,7 @@
                       style="background: {match.colour}; {match.status ==
                       'FINISHED'
                         ? 'filter: grayscale(100%)'
-                        : ''} {i == row.matches.length - 1
+                        : ''} {i === row.matches.length - 1
                         ? 'border-right: 2px solid black'
                         : ''}"
                       title={match.date}
