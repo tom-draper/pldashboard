@@ -22,7 +22,7 @@
   export let data: TeamData, team: string, switchTeam: Function;
 </script>
 
-{#if data.upcoming[team].nextTeam == null}
+{#if data.upcoming[team].nextTeam === null}
   <div class="next-game-prediction-complete">
     <div class="next-game-season-complete">
       <h1 class="next-game-title-text">
@@ -86,7 +86,7 @@
         </div>
       </div>
       <div class="past-results">
-        {#if data.upcoming[team].prevMatches.length == 0}
+        {#if data.upcoming[team].prevMatches.length === 0}
           <div class="next-game-item prev-results-title no-prev-results">
             No previous results
           </div>
@@ -313,8 +313,15 @@
   }
 
   @media only screen and (max-width: 1000px) {
+    .next-game-prediction-complete {
+      margin: 50px 20px 40px;
+    }
+    .next-game-season-complete {
+      padding: 50px 10px;
+    }
     .next-game-prediction {
       margin: 50px 20px 40px;
+      
     }
     .next-game-values {
       margin: 2% 3vw 2% 0;

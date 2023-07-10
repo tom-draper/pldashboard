@@ -36,7 +36,7 @@
     <div class="team-links">
       {#each hyphenatedTeams as team, i}
         {#if team != null}
-          {#if i == 0 || (i == 1 && hyphenatedTeams[0] == null)}
+          {#if i === 0 || (i === 1 && hyphenatedTeams[0] === null)}
             <!-- Button with first-team class -->
             <button
               on:click={() => {
@@ -46,7 +46,7 @@
             background-color: var(--{hyphenatedTeams[i]})"
               class="team-link first-team">{toAlias(teams[i])}</button
             >
-          {:else if i == hyphenatedTeams.length - 1 || (i == hyphenatedTeams.length - 2 && hyphenatedTeams[hyphenatedTeams.length - 1] == null)}
+          {:else if i === hyphenatedTeams.length - 1 || (i === hyphenatedTeams.length - 2 && hyphenatedTeams[hyphenatedTeams.length - 1] === null)}
             <!-- Button with last-team class -->
             <button
               on:click={() => {

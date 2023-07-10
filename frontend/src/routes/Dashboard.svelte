@@ -23,7 +23,7 @@
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
-    if (mobileNav.style.width == "0px") {
+    if (mobileNav.style.width === "0px") {
       mobileNav.style.width = "100%";
     } else {
       mobileNav.style.width = "0px";
@@ -45,7 +45,7 @@
     let matchdays = playedMatchdays(data, team);
 
     // If played one or no games, take x-axis from whole season dates
-    if (matchdays.length == 0) {
+    if (matchdays.length === 0) {
       matchdays = Object.keys(data.fixtures[team]);
     }
 
@@ -67,7 +67,7 @@
 
   async function initDashboard() {
     // Set formatted team name so page header can display while fetching data
-    if (hyphenatedTeam == "overview") {
+    if (hyphenatedTeam === "overview") {
       team = "Overview";
       title = `Dashboard | ${team}`;
       hyphenatedTeam = "overview";
@@ -80,7 +80,7 @@
     let json = await response.json();
 
     teams = Object.keys(json.standings);
-    if (hyphenatedTeam == null) {
+    if (hyphenatedTeam === null) {
       // If root, set team to current leader
       team = teams[0];
       title = `Dashboard | ${team}`;
@@ -102,7 +102,7 @@
 
   function switchTeam(newTeam: string) {
     hyphenatedTeam = newTeam;
-    if (hyphenatedTeam == "overview") {
+    if (hyphenatedTeam === "overview") {
       team = "Overview";
       title = `Dashboard | ${team}`;
     } else {
@@ -130,7 +130,8 @@
   let title = "Dashboard";
   let team = "";
   let teams: string[] = []; // Used for nav bar links
-  let currentMatchday: string, playedDates: Date[];
+  let currentMatchday: string
+  let playedDates: Date[];
 
   let data: TeamData;
   onMount(() => {
@@ -157,7 +158,7 @@
       {switchTeam}
       {toggleMobileNav}
     />
-    {#if teams.length == 0}
+    {#if teams.length === 0}
       <!-- Navigation disabled while teams list are loading -->
       <button id="mobileNavBtn" style="cursor: default">Select Team</button>
     {:else}
@@ -179,7 +180,7 @@
       </div>
 
       {#if data != undefined}
-        {#if hyphenatedTeam == "overview"}
+        {#if hyphenatedTeam === "overview"}
           <Overview {data} />
         {:else}
           <div class="page-content">
@@ -276,7 +277,7 @@
 
               <div class="row no-bottom-margin">
                 <div class="goals-scored-vs-conceded-graph row-graph">
-                  <h1 class="lowered">Goals Scored and Conceded</h1>
+                  <h1 class="lowered">Goals Per Game</h1>
                   <div class="graph full-row-graph">
                     <GoalsScoredAndConcededGraph
                       {data}
@@ -315,7 +316,7 @@
 
               <div class="row">
                 <div class="goals-freq-row row-graph">
-                  <h1>Goals Per Game</h1>
+                  <h1>Scorelines</h1>
                   <GoalsPerGame {data} {team} {mobileView} />
                 </div>
               </div>

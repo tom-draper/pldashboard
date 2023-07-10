@@ -30,7 +30,7 @@
     let scoreFreq: ScoreFreq = {};
     for (let team in data.form) {
       for (let i = 0; i < 3; i++) {
-        if (i == 0) {
+        if (i === 0) {
           insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id - i);
         } else if (teamInSeason(data.form, team, data._id - i)) {
           insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id - i);
@@ -67,7 +67,7 @@
     scoreFreq: ScoreFreq
   ) {
     for (let score in scoreFreq) {
-      if (scoreFreq[score].length == 1) {
+      if (scoreFreq[score].length === 1) {
         scoreFreq[score].push(0);
       }
     }

@@ -37,14 +37,14 @@
   function removeTeamComparison(team: string) {
     // Remove spider plot for this teamName
     for (let i = 0; i < plotData.data.length; i++) {
-      if (plotData.data[i].name == team) {
+      if (plotData.data[i].name === team) {
         plotData.data.splice(i, 1);
         break;
       }
     }
 
     // If removing only comparison teamName, re-insert the initial avg spider plot
-    if (comparisonTeams.length == 1) {
+    if (comparisonTeams.length === 1) {
       addAvg();
     }
 
@@ -57,7 +57,7 @@
       // Remove spider plot for this teamName
       for (let i = 0; i < plotData.data.length; i++) {
         if (
-          plotData.data[i].name == comparisonTeams[i] &&
+          plotData.data[i].name === comparisonTeams[i] &&
           comparisonTeams[i] != team
         ) {
           plotData.data.splice(i, 1);
@@ -66,7 +66,7 @@
       }
 
       // If removing only comparison teamName, re-insert the initial avg spider plot
-      if (comparisonTeams.length == 1) {
+      if (comparisonTeams.length === 1) {
         addAvg();
       }
       removeItem(comparisonTeams, comparisonTeams[i]); // Remove from comparison teams
@@ -90,7 +90,7 @@
 
   function spiderBtnClick(btn: HTMLButtonElement) {
     let team = toName(btn.innerHTML);
-    if (btn.style.background == "") {
+    if (btn.style.background === "") {
       let teamKey = toHyphenatedName(team);
       btn.style.background = `var(--${teamKey})`;
       btn.style.color = `var(--${teamKey}-secondary)`;
@@ -99,7 +99,7 @@
       btn.style.color = "black";
     }
 
-    if (comparisonTeams.length == 0) {
+    if (comparisonTeams.length === 0) {
       plotData.data.splice(0, 1); // Remove avg
     }
 
@@ -127,7 +127,7 @@
           gamesPlayed += played;
         }
         // If season completed, check if team's attacking performance is most extreme yet
-        if (played == 38) {
+        if (played === 38) {
           let seasonGoalsPerGame = goals / played;
           if (seasonGoalsPerGame > maxGoalsPerSeason) {
             maxGoalsPerSeason = seasonGoalsPerGame;
@@ -153,7 +153,7 @@
   ): SpiderAttribute {
     let [lower, upper] = range;
     for (let team in attack) {
-      if (attack[team] == null) {
+      if (attack[team] === null) {
         attack[team] = 0;
       } else {
         attack[team] = ((attack[team] - lower) / (upper - lower)) * 100;
@@ -207,7 +207,7 @@
           gamesPlayed += played;
         }
         // If season completed, check if team's defensive performance is most extreme yet
-        if (played == 38) {
+        if (played === 38) {
           let seasonConcededPerGame = conceded / played;
           if (seasonConcededPerGame > maxConcededPerSeason) {
             maxConcededPerSeason = seasonConcededPerGame;
@@ -236,7 +236,7 @@
   ): SpiderAttribute {
     let [lower, upper] = range;
     for (let team in defence) {
-      if (defence[team] == null) {
+      if (defence[team] === null) {
         defence[team] = 0;
       } else {
         defence[team] = 100 - ((defence[team] - lower) / (upper - lower)) * 100;
@@ -258,9 +258,9 @@
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null) {
-        if (match.atHome && match.score.awayGoals == 0) {
+        if (match.atHome && match.score.awayGoals === 0) {
           nCleanSheets += 1;
-        } else if (!match.atHome && match.score.homeGoals == 0) {
+        } else if (!match.atHome && match.score.homeGoals === 0) {
           nCleanSheets += 1;
         }
       }
@@ -315,7 +315,7 @@
         } else {
           result = "draw";
         }
-        if (prevResult != null && prevResult == result) {
+        if (prevResult != null && prevResult === result) {
           backToBack += 1;
         }
         prevResult = result;
@@ -405,7 +405,7 @@
     team: string,
     season: number
   ): boolean {
-    return data.standings[team][season].played == 38;
+    return data.standings[team][season].played === 38;
   }
 
   function removeItem(arr: any[], value: any): any[] {
@@ -432,7 +432,7 @@
           (!match.atHome && match.score.homeGoals < match.score.awayGoals)
         ) {
           pointsVsBig6 += 3;
-        } else if (match.score.homeGoals == match.score.awayGoals) {
+        } else if (match.score.homeGoals === match.score.awayGoals) {
           pointsVsBig6 += 1;
         }
         numPlayed += 1;

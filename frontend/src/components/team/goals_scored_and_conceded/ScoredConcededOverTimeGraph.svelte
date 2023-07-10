@@ -132,7 +132,7 @@
     let goals = goalsOverTime(data, team, numSeasons);
     // Sort by game date
     goals.sort(function (a, b) {
-      return a.days < b.days ? -1 : a.days == b.days ? 0 : 1;
+      return a.days < b.days ? -1 : a.days === b.days ? 0 : 1;
     });
 
     // Separate out into lists
@@ -154,7 +154,7 @@
       } else if (i % 38 === 0) {
         ticktext.push(((i % 38)+1).toString());
         tickvals.push(goals[i].days);
-      } else if ((i % 38) === 19 || i == goals.length - 1) {
+      } else if ((i % 38) === 19 || i === goals.length - 1) {
         let season = data._id - numSeasons + 1 + Math.floor(i / 38);
         // If in current season and matchday is 19, wait for until reach final
         // matchday in current season instead to place season ticktext label
