@@ -30,7 +30,7 @@ Team ratings are used as the y-axis for the fixtures graph (adjusted slightly by
 
 ## Form
 
-A form value is calculated to give a short-term indication of a team's performance. Two form values are used in the dashboard, one based on the last 5 games, and another based on the last 10 games.
+A form rating is calculated to give a short-term indication of a team's performance. Two form rating values are used in the dashboard, one based on the last 5 games, and another based on the last 10 games.
 
 A team's 5-game current form value is calculated by taking the last 5 matches played and summing each game's goal difference multiplied by the opposition team's rating. The average of these 5 values is taken to give the final result. A team's 10-game current form value is calculated similarly but with the previous 10 matches.
 
