@@ -176,11 +176,12 @@
     display: grid;
     place-items: center;
     background: #f0f0f0;
+    background: linear-gradient(45deg, #c600d839, rgb(2 239 255 / 25%), #00fe873e);
     flex: 1;
   }
   .next-game-title-text {
     margin: 0;
-    color: white;
+    color: var(--purple);
     display: flex;
   }
   .next-game-team-btn {
