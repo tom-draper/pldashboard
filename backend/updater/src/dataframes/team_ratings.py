@@ -3,9 +3,10 @@ import logging
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from src.dataframes.df import DF
-from src.dataframes.standings import Standings
 from timebudget import timebudget
+
+from .df import DF
+from .standings import Standings
 
 
 class TeamRatings(DF):

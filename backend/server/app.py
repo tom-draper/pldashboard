@@ -9,7 +9,7 @@ import uvicorn
 from datetime import datetime
 
 
-season = 2022
+season = 2023
 
 app = FastAPI()
 

@@ -3,12 +3,9 @@ from datetime import datetime
 from typing import Union
 
 import pandas as pd
-from src.dataframes.fixtures import Fixtures
-from src.dataframes.form import Form
-from src.dataframes.home_advantages import HomeAdvantages
-from src.dataframes.upcoming import Upcoming
 from db.database import Database
 from pandas.core.frame import DataFrame
+from src.dataframes import Fixtures, Form, HomeAdvantages, Upcoming
 from src.fmt import convert_team_name_or_initials, identical_fixtures
 
 

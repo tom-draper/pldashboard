@@ -21,7 +21,7 @@ class Database:
     async def get_predictions(self) -> list[dict]:
         predictions = None
         with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Predictions2022
+            collection = client.PremierLeague.Predictions2023
             predictions = list(collection.aggregate(
                 [{
                     "$group": {"_id": {"$dateToString": {"format": "%Y-%m-%d", "date": "$datetime"}},
@@ -90,7 +90,7 @@ class Database:
 
     def _save_predictions(self, predictions: list):
         with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Predictions2022
+            collection = client.PremierLeague.Predictions2023
 
             for prediction in predictions:
                 collection.replace_one(
@@ -128,7 +128,7 @@ class Database:
 
     def update_actual_scores(self, actual_scores: dict[tuple[str, str], dict[str, int]]):
         with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Predictions2022
+            collection = client.PremierLeague.Predictions2023
 
             # Get the id of all prediction objects that have no value for actual score
             no_actual_scores = collection.find(
@@ -141,7 +141,7 @@ class Database:
                     collection.update_one({'_id': d['_id']}, {
                         '$set': {'actual': actual}})
 
-    def update_team_data(self, team_data: dict):
+    def update_team_data(self, team_data: dict, season: int):
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData
-            collection.replace_one({'_id': 2022}, team_data)
+            collection.replace_one({'_id': season}, team_data)

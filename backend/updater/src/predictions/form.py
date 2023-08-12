@@ -1,6 +1,8 @@
-from src.predictions.scoreline import Scoreline
-from src.data import TeamRatings
 import numpy as np
+from src.data import TeamRatings
+
+from .scoreline import Scoreline
+
 
 def calc_form(team: str, recent_matches: list[Scoreline], weightings: list[float], team_ratings: TeamRatings) -> float:
     weightings /= np.sum(weightings)

@@ -1,12 +1,14 @@
 import logging
 import math
 
+import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from src.dataframes.df import DF
-from src.dataframes.team_ratings import TeamRatings
-from src.fmt import clean_full_team_name
 from timebudget import timebudget
+
+from ..fmt import clean_full_team_name
+from .df import DF
+from .team_ratings import TeamRatings
 
 
 class Form(DF):
@@ -127,8 +129,10 @@ class Form(DF):
                     continue
                 # Team does not have a completed match in this matchday (postponed etc.)
                 prev_matchday = matchday - 1
-                while prev_matchday not in matchdays:
+                while prev_matchday > 0 and prev_matchday not in matchdays:
                     prev_matchday -= 1
+                if prev_matchday == 0:
+                    continue
                 for col in essential_cols:
                     form.at[team, (current_season, matchday, col)] = form.at[team, (current_season, prev_matchday, col)]
 
@@ -282,6 +286,12 @@ class Form(DF):
                 
                 d[team][(season, matchday, 'cumPoints')] = prev_cum_points + points
                 d[team][(season, matchday, 'cumGD')] = prev_cum_gd + gd
+    
+    @staticmethod
+    def _init_missing_teams(d: dict, teams: list[str]):
+        for team in teams:
+            if team not in d:
+                d[team] = {(2023, 1, 'team'): np.nan}
 
     @timebudget
     def build(
@@ -355,10 +365,16 @@ class Form(DF):
             # all matchdays entered
             self._insert_cumulative(d, season-i)
         
+        self._init_missing_teams(d, teams)
+        
         form = pd.DataFrame.from_dict(d, orient='index')
+
+        print(form)
 
         # Drop teams not in current season
         form = form.drop(index=form.index.difference(teams), axis=0)
+
+        print(form)
 
         self._fill_teams_missing_matchday(form)
 

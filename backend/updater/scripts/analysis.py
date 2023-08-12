@@ -4,7 +4,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from updater import Updater
-from updater.src.fmt import extract_int_score
+from src.fmt import extract_int_score
 
 
 class Analysis:

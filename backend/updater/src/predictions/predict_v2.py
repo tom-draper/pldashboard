@@ -1,12 +1,13 @@
 from datetime import datetime
-from src.predictions.scoreline import Scoreline
+
+import numpy as np
 import pandas as pd
 from pandas.core.frame import DataFrame
-from src.data import Fixtures, Form, HomeAdvantages, TeamRatings
-import numpy as np
-from src.predictions.market import fetch_odds
-from src.predictions.odds import scale_by_odds
-from src.predictions.form import calc_form, scale_by_form
+from src.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
+
+from .form import calc_form
+from .market import fetch_odds
+from .scoreline import Scoreline
 
 
 class Predictor:
@@ -32,6 +33,8 @@ class Predictor:
         self.HOME_AWAY_WEIGHTING = 0.2
         self.FIXTURE_WEIGHTING = 0.4
         self.MARKET_URL = "https://www.betfair.com/exchange/plus/en/football/english-premier-league-betting-10932509"
+
+        self.odds = fetch_odds(self.MARKET_URL)
 
     @staticmethod
     def _build_long_term_fixtures(
@@ -462,9 +465,8 @@ class Predictor:
         # Scale all home win probabilities by home odds, draw probabilities by
         # draw odds and away win probabilities by away odds with the current
         # odds for this match
-        odds = fetch_odds(self.MARKET_URL)
-        if (home_team, away_team) in odds:
-            fixture_odds = odds[(home_team, away_team)]
+        if (home_team, away_team) in self.odds:
+            fixture_odds = self.odds[(home_team, away_team)]
             fixture_odds.convert_to_probabilities()
             # scale_by_odds(scoreline_freq, fixture_odds)
             odds_scale = (fixture_odds.home, fixture_odds.draw, fixture_odds.away)
@@ -505,10 +507,8 @@ class Predictor:
             home_team: str,
             away_team: str,
     ) -> Scoreline:
-        scoreline_probabilities = self.scoreline_probabilities(
-            home_team, away_team)
+        scoreline_probabilities = self.scoreline_probabilities(home_team, away_team)
         predicted = self.maximum_likelihood(scoreline_probabilities)
         # Overwrite predicted scoreline teams with fixture
         predicted = Scoreline(predicted.home_goals, predicted.away_goals, home_team, away_team)
-        print(str(predicted))
         return predicted

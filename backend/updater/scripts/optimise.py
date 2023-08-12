@@ -3,9 +3,9 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from db.database import Database
-from updater.src.fmt import convert_team_name_or_initials
+from src.fmt import convert_team_name_or_initials
 from updater import Updater
-from updater.src.predictions.predictions import Predictor
+from src.predictions.predictions import Predictor
 import numpy as np
 
 

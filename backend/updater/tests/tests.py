@@ -6,9 +6,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pytest
 
-from updater.updater import Updater
+from updater import Updater
 
-current_season = 2022
+current_season = 2023
 
 updater_old = Updater(current_season)
 updater_old.build_all(request_new=False, display_tables=False, update_db=False)
