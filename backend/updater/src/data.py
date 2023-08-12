@@ -12,14 +12,14 @@ from pandas.core.frame import DataFrame
 
 
 class Data:
-    def __init__(self, current_season: int):
+    def __init__(self):
         self.last_updated = None
         self.fixtures: Fixtures = Fixtures()
         self.standings: Standings = Standings()
         self.team_ratings: TeamRatings = TeamRatings()
         self.home_advantages: HomeAdvantages = HomeAdvantages()
         self.form: Form = Form()
-        self.upcoming: Upcoming = Upcoming(current_season)
+        self.upcoming: Upcoming = Upcoming()
     
     def built_all_dataframes(self) -> bool:
         return (self.fixtures.df is not None

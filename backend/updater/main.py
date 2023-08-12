@@ -18,7 +18,7 @@ from src.fmt import clean_full_team_name
 class Updater:
     def __init__(self, current_season: int):
         self.current_season = current_season
-        self.data = Data(current_season)
+        self.data = Data()
         self.database = Database(current_season)
 
         # Import environment variables
@@ -217,4 +217,4 @@ def run_development():
 
 
 if __name__ == "__main__":
-    run_production()
+    run_development()
