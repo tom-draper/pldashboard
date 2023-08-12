@@ -204,6 +204,7 @@ class Upcoming(DF):
                 prediction = predictor.predict_score(home_team, away_team)
                 next_game_predictions_cache[(home_team, away_team)] = prediction
             next_game_predictions.append(str(prediction))
+        return next_game_predictions
 
     def build(
         self,

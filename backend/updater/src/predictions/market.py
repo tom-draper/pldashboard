@@ -13,6 +13,7 @@ def fetch_odds(url: str, js_rendered: bool = False) -> dict[tuple[str, str], Odd
     driver = _fetch_webpage(url, js_rendered)
     time.sleep(5)  # Allows webpage to load
     tables = driver.find_elements(By.CLASS_NAME, 'coupon-table')
+    print(tables)
     odds = _extract_odds(tables)
     return odds
 
@@ -32,8 +33,10 @@ def _fetch_webpage(url: str, js_rendered: bool = False) -> webdriver:
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     else:
         options = _chrome_options_headless()
-        driver = webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'),
-                                    options=options)
+
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        # driver = webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'),
+                                #   options=options)
     driver.get(url)
     return driver
 
