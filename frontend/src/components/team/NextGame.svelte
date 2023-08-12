@@ -76,9 +76,7 @@
             <br />
             <a class="predictions-link" href="/predictions">
               <b
-                >{Math.round(data.upcoming[team].prediction.homeGoals)} - {Math.round(
-                  data.upcoming[team].prediction.awayGoals
-                )}</b
+                >{data.upcoming[team].prediction}</b
               >
             </a>
             <br />
@@ -181,7 +179,7 @@
   }
   .next-game-title-text {
     margin: 0;
-    color: var(--purple);
+    color: white;
     display: flex;
   }
   .next-game-team-btn {
