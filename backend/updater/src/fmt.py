@@ -81,7 +81,7 @@ def extract_str_score_from_scoreline(score: str) -> tuple[str, str]:
 
 def extract_scoreline(score: str) -> tuple[str, int, int, str]:
     home_initials, home_goals, _, away_goals, away_initials = score.split(' ')
-    return home_initials, home_goals, away_goals, away_initials
+    return home_initials, int(home_goals), int(away_goals), away_initials
 
 def identical_fixtures(scoreline1: str, scoreline2: str) -> bool:
     identical = False
