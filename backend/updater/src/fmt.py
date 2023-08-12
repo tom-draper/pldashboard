@@ -35,6 +35,7 @@ names_and_initials = TwoWayDict({
     'LEE': 'Leeds United',
     'LEI': 'Leicester City',
     'LIV': 'Liverpool',
+    'LUT': 'Luton Town',
     'MCI': 'Manchester City',
     'MUN': 'Manchester United',
     'NOR': 'Norwich City',
@@ -62,27 +63,26 @@ def convert_team_name_or_initials(team_name: str) -> str:
         # create initials
         return team_name[:3].upper()
 
-@staticmethod
 def extract_int_score(score: str) -> tuple[int, int]:
     home, _, away = score.split(' ')
     return int(home), int(away)
 
-@staticmethod
 def extract_str_score(score: str) -> tuple[str, str]:
     home, _, away = score.split(' ')
     return home, away
 
-@staticmethod
 def extract_int_score_from_scoreline(score: str) -> tuple[int, int]:
     _, home, _, away, _ = score.split(' ')
     return int(home), int(away)
 
-@staticmethod
 def extract_str_score_from_scoreline(score: str) -> tuple[str, str]:
     _, home, _, away, _ = score.split(' ')
     return home, away
 
-@staticmethod
+def extract_scoreline(score: str) -> tuple[str, int, int, str]:
+    home_initials, home_goals, _, away_goals, away_initials = score.split(' ')
+    return home_initials, home_goals, away_goals, away_initials
+
 def identical_fixtures(scoreline1: str, scoreline2: str) -> bool:
     identical = False
     if scoreline1 is not None and scoreline2 is not None:
@@ -91,7 +91,6 @@ def identical_fixtures(scoreline1: str, scoreline2: str) -> bool:
         identical = (home_p == home_s) and (away_p == away_s)
     return identical
 
-@staticmethod
 def identical_result(pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
     return (pred_home_goals == pred_away_goals and act_home_goals == act_away_goals) or \
             (pred_home_goals > pred_away_goals and act_home_goals > act_away_goals) or \

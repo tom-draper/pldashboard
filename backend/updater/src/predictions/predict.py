@@ -5,9 +5,9 @@ from typing import Union
 
 import numpy as np
 import pandas as pd
-from src.data import Form, HomeAdvantages, TeamRatings, Upcoming
 from db.database import Database
 from pandas.core.frame import DataFrame
+from src.dataframes import Form, HomeAdvantages, TeamRatings, Upcoming
 
 
 class Predictor:

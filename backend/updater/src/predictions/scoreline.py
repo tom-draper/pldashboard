@@ -1,5 +1,6 @@
 from src.fmt import convert_team_name_or_initials
 
+
 class Scoreline:
     BLANK_TEAM = '___'
 

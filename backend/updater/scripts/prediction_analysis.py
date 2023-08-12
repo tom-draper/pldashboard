@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import matplotlib.pyplot as plt
 import numpy as np
 from db.database import Database
-from updater.src.fmt import identical_result, extract_int_score_from_scoreline
+from src.fmt import identical_result, extract_int_score_from_scoreline
 
 
 class PredictionsAnalysis:

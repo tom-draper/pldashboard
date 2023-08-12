@@ -2,9 +2,10 @@ import logging
 
 import pandas as pd
 from pandas import DataFrame
-from src.dataframes.df import DF
-from src.fmt import clean_full_team_name
 from timebudget import timebudget
+
+from src.fmt import clean_full_team_name
+from .df import DF
 
 
 class Standings(DF):

@@ -3,9 +3,10 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from src.predictions.odds import Odds
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.remote.webelement import WebElement
+from webdriver_manager.chrome import ChromeDriverManager
+
+from .odds import Odds
 
 
 def fetch_odds(url: str) -> dict[tuple[str, str], Odds]:

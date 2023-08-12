@@ -1,5 +1,6 @@
-from typing import Literal
 from datetime import datetime
+from typing import Literal
+
 
 class Odds:
     def __init__(self, home: float, draw: float, away: float, home_team: str = None, away_team: str = None, match_date: datetime = None):
