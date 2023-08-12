@@ -217,4 +217,4 @@ def run_development():
 
 
 if __name__ == "__main__":
-    run_development()
+    run_production()
