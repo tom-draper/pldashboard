@@ -34,7 +34,7 @@ class Predictor:
         self.FIXTURE_WEIGHTING = 0.4
         self.MARKET_URL = "https://www.betfair.com/exchange/plus/en/football/english-premier-league-betting-10932509"
 
-        self.odds = fetch_odds(self.MARKET_URL)
+        self.odds = fetch_odds(self.MARKET_URL, js_rendered=False)
 
     @staticmethod
     def _build_long_term_fixtures(

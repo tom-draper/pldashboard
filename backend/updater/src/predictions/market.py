@@ -9,16 +9,31 @@ from webdriver_manager.chrome import ChromeDriverManager
 from .odds import Odds
 
 
-def fetch_odds(url: str) -> dict[tuple[str, str], Odds]:
-    driver = _fetch_webpage(url)
+def fetch_odds(url: str, js_rendered: bool = False) -> dict[tuple[str, str], Odds]:
+    driver = _fetch_webpage(url, js_rendered)
     time.sleep(5)  # Allows webpage to load
     tables = driver.find_elements(By.CLASS_NAME, 'coupon-table')
     odds = _extract_odds(tables)
     return odds
 
-def _fetch_webpage(url: str) -> webdriver:
+def _chrome_options_headless():
     options = webdriver.ChromeOptions()
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    options.add_argument("no-sandbox")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920,1080")
+    # options.add_argument("--disable-dev-shm-usage")
+    options.add_argument('--headless')
+    # options.add_argument("--disable-extensions")
+    return options
+
+def _fetch_webpage(url: str, js_rendered: bool = False) -> webdriver:
+    if js_rendered:
+        options = webdriver.ChromeOptions()
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    else:
+        options = _chrome_options_headless()
+        driver = webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'),
+                                    options=options)
     driver.get(url)
     return driver
 
