@@ -5,6 +5,9 @@
 </div>
 
 <style scoped>
+  .footer-text-colour {
+    color: rgb(0 0 0 / 37%);
+  }
   .teams-footer {
     color: #c6c6c6;
     padding: 1em 0 0.2em;

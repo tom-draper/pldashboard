@@ -59,7 +59,7 @@
       y: Object.values(avgGoals),
       text: matchdays,
       line: { color: "#0080FF", width: 2 },
-      hovertemplate: "<b>Matchday %{text}</b><br>%{y} goals<extra></extra>",
+      hovertemplate: "<b>Matchday %{text}</b><br>%{y:.1f} goals<extra></extra>",
     };
   }
 
@@ -115,7 +115,7 @@
         fixedrange: true,
         rangemode: "nonnegative",
         visible: true,
-        tickformat: 'd',
+        tickformat: "d",
       },
       xaxis: {
         linecolor: "black",
@@ -206,17 +206,13 @@
       let matchdays = Object.keys(avgGoals);
 
       let scoredBar = teamScoredBar(playedDates, teamScored, matchdays);
-      let concededBar = teamConcededBar(
-        playedDates,
-        teamConceded,
-        matchdays
-      );
+      let concededBar = teamConcededBar(playedDates, teamConceded, matchdays);
       let line = avgLine(playedDates, avgGoals, matchdays);
 
       plotData.data[0] = scoredBar;
       plotData.data[1] = concededBar;
       plotData.data[2] = line;
-      
+
       //@ts-ignore
       Plotly.redraw(plotDiv);
       if (mobileView) {

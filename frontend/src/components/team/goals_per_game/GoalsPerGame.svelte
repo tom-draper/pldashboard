@@ -16,13 +16,9 @@
     };
   }
 
-  function teamBars(
-    data: Object,
-    type: string,
-    color: string | string[]
-  ): any {
+  function teamBars(data: Object, type: string, color: string | string[]): any {
     let opener = "Score";
-    if (type == "Conceded") {
+    if (type === "Conceded") {
       opener = "Concede";
     }
     return {
@@ -105,7 +101,12 @@
     };
   }
 
-  function countScored(data: TeamData, goalFreq: Object, season: number, team: string) {
+  function countScored(
+    data: TeamData,
+    goalFreq: Object,
+    season: number,
+    team: string
+  ) {
     if (!(team in data.form)) {
       return;
     }
@@ -138,14 +139,14 @@
         max = g;
       }
     }
-    return max
+    return max;
   }
 
   function fillGoalFreqBlanks(goalFreq: Object) {
     let max = maxObjKey(goalFreq);
     for (let i = 1; i < max; i++) {
       if (!(i in goalFreq)) {
-        goalFreq[i] = 0
+        goalFreq[i] = 0;
       }
     }
   }
@@ -157,8 +158,8 @@
       countScored(data, goalFreq, data._id - 1, team);
     }
 
-    fillGoalFreqBlanks(goalFreq)
-    
+    fillGoalFreqBlanks(goalFreq);
+
     // Divide by number of teams to get avg
     for (let goals of Object.keys(goalFreq)) {
       goalFreq[goals] /= 20;
@@ -171,8 +172,8 @@
     let goalFreq: Object = {};
     countScored(data, goalFreq, data._id, team);
     countScored(data, goalFreq, data._id - 1, team);
-    fillGoalFreqBlanks(goalFreq)
-    
+    fillGoalFreqBlanks(goalFreq);
+
     return goalFreq;
   }
 
@@ -205,12 +206,12 @@
       }
     }
   }
-  
+
   function teamConcededFrequencies(data: TeamData, team: string): Object {
     let goalFreq: Object = {};
     countConceded(data, goalFreq, data._id, team);
     countConceded(data, goalFreq, data._id - 1, team);
-    fillGoalFreqBlanks(goalFreq)
+    fillGoalFreqBlanks(goalFreq);
 
     return goalFreq;
   }
@@ -339,6 +340,9 @@
   .two-graphs {
     display: flex;
     margin: 0 8%;
+  }
+  .freq-graph {
+    width: 50%;
   }
 
   @media only screen and (max-width: 1000px) {

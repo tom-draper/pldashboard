@@ -1,22 +1,12 @@
-import os
-import sys
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Union
 
 import pandas as pd
-from dataframes.fixtures import Fixtures
-from dataframes.form import Form
-from dataframes.home_advantages import HomeAdvantages
-from dataframes.upcoming import Upcoming
-from lib.database.database import Database
-from lib.utils.utilities import Utilities
+from db.database import Database
 from pandas.core.frame import DataFrame
-
-utils = Utilities()
+from src.dataframes import Fixtures, Form, HomeAdvantages, Upcoming
+from src.fmt import convert_team_name_or_initials, identical_fixtures
 
 
 class Predictor:
@@ -36,7 +26,7 @@ class Predictor:
                 predicted_score = prediction['prediction']
                 actual_score = prediction['actual']
                 if predicted_score is not None:
-                    if utils.identical_fixtures(predicted_score, new_prediction):
+                    if identical_fixtures(predicted_score, new_prediction):
                         # If fixture match perfectly but predicted scoreline different (outdated)
                         if (predicted_score != new_prediction) and (actual_score is None):
                             already_made = True
@@ -296,8 +286,8 @@ class Predictor:
             pred_conceded: float,
             at_home: bool
         ) -> tuple[str, str, dict[str, int], dict[str, float]]:
-        team_name_initials = utils.convert_team_name_or_initials(team_name)
-        opp_team_name_initials = utils.convert_team_name_or_initials(opp_team_name)
+        team_name_initials = convert_team_name_or_initials(team_name)
+        opp_team_name_initials = convert_team_name_or_initials(opp_team_name)
         
         # Construct prediction string for display
         if at_home:

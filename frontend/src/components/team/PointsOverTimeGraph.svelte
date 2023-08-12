@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { toHyphenatedName } from "../../lib/team";
 
   function getLineConfig(team: string, isMainTeam: boolean): any {
     let lineConfig: any;
     if (isMainTeam) {
       // Get team primary colour from css variable
-      let teamKey = team[0].toLowerCase() + team.slice(1);
-      teamKey = teamKey.replace(/ /g, "-").toLowerCase();
+      let teamKey = toHyphenatedName(team);
       let lineColor = getComputedStyle(
         document.documentElement
       ).getPropertyValue(`--${teamKey}`);
@@ -17,7 +17,7 @@
     return lineConfig;
   }
 
-  function getLineY(
+  function getCumulativePoints(
     data: TeamData,
     team: string,
     matchdays: string[]
@@ -30,14 +30,23 @@
     return y;
   }
 
-  function getLine(
+  function getMatchdayDates(
     data: TeamData,
-    playedDates: Date[],
     team: string,
-    isMainTeam: boolean
-  ): any {
+    matchdays: string[]
+  ): Date[] {
+    let dates = [];
+    for (let i = 0; i < matchdays.length; i++) {
+      let date = data.form[team][data._id][matchdays[i]].date;
+      dates.push(date);
+    }
+    return dates;
+  }
+
+  function getLine(data: TeamData, team: string, isMainTeam: boolean): any {
     let matchdays = Object.keys(data.form[team][data._id]);
-    let y = getLineY(data, team, matchdays);
+    let dates = getMatchdayDates(data, team, matchdays);
+    let y = getCumulativePoints(data, team, matchdays);
     let lineConfig = getLineConfig(team, isMainTeam);
 
     let line = {
@@ -46,29 +55,25 @@
       name: team,
       mode: "lines",
       line: lineConfig,
-      text: playedDates,
+      text: dates,
       hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
       showlegend: false,
     };
     return line;
   }
 
-  function lines(
-    data: TeamData,
-    team: string,
-    playedDates: Date[]
-  ): any[] {
+  function lines(data: TeamData, team: string): any[] {
     let lines = [];
     let teams = Object.keys(data.standings);
     for (let i = 0; i < teams.length; i++) {
       if (teams[i] != team) {
-        let line = getLine(data, playedDates, teams[i], false);
+        let line = getLine(data, teams[i], false);
         lines.push(line);
       }
     }
 
     // Add this team last to ensure it overlaps all other lines
-    let line = getLine(data, playedDates, team, true);
+    let line = getLine(data, team, true);
     lines.push(line);
     return lines;
   }
@@ -131,7 +136,7 @@
 
   function buildPlotData(data: TeamData, team: string): PlotData {
     let plotData = {
-      data: lines(data, team, playedDates),
+      data: lines(data, team),
       layout: defaultLayout(),
       config: {
         responsive: true,
@@ -182,10 +187,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: TeamData,
-    team: string,
-    playedDates: Date[],
-    mobileView: boolean;
+  export let data: TeamData, team: string, mobileView: boolean;
 </script>
 
 <div id="plotly">

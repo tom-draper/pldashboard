@@ -1,12 +1,11 @@
 <script lang="ts">
+  import { teamStyle } from "../../lib/format";
+  import {toHyphenatedName} from "../../lib/team";
+
   function closeNavBar() {
     document.getElementById("navBar").style.display = "none";
     document.getElementById("dashboard").style.marginLeft = "0";
     window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
-  }
-  function openNavBar() {
-    document.getElementById("navBar").style.display = "block";
-    document.getElementById("dashboard").style.marginLeft = "200px";
   }
 
   let widths = [];
@@ -27,7 +26,7 @@
     </p>
   </div>
   <div class="team-links">
-    {#if teams.length == 0}
+    {#if teams.length === 0}
       {#each widths as width, _}
         <div
           class="placeholder"
@@ -36,17 +35,9 @@
       {/each}
     {:else}
       {#each teams as _team, _ (_team)}
-        {#if _team.toLowerCase().replace(/ /g, "-") == team}
-          <a href="/{_team.toLowerCase().replace(/ /g, '-')}" class="team-link">
-            <div
-              class="this-team-container"
-              style="color: var(--{_team
-                .toLowerCase()
-                .replace(/ /g, '-')}-secondary);
-                    background-color: var(--{_team
-                .toLowerCase()
-                .replace(/ /g, '-')})"
-            >
+        {#if toHyphenatedName(_team) === team}
+          <a href="/{toHyphenatedName(_team)}" class="team-link">
+            <div class="this-team-container" style={teamStyle(_team)}>
               <div class="this-team-name">
                 {toAlias(_team)}
               </div>
@@ -56,7 +47,7 @@
           <button
             class="team-link"
             on:click={() => {
-              switchTeam(_team.toLowerCase().replace(/ /g, "-"));
+              switchTeam(toHyphenatedName(_team));
             }}
           >
             <div class="team-container">
@@ -68,7 +59,7 @@
         {/if}
       {/each}
       <!-- <div class="divider" />
-      {#if team == "overview"}
+      {#if team === "overview"}
         <a href="/overview" class="team-link">
           <div class="overview-selected">
             <div class="overview">Overview</div>

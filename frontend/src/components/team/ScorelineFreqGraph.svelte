@@ -1,20 +1,26 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {teamInSeason} from "../../lib/team";
+  import { teamInSeason } from "../../lib/team";
 
-  function insertSeasonAvgScoreFreq(scoreFreq: ScoreFreq, form: Form, team: string, season: number) {
+  function insertSeasonAvgScoreFreq(
+    scoreFreq: ScoreFreq,
+    form: Form,
+    team: string,
+    season: number
+  ) {
     for (let matchday in form[team][season]) {
       let score = form[team][season][matchday].score;
       if (score != null) {
+        let scoreStr: string;
         if (form[team][season][matchday].atHome) {
-          score = score.homeGoals + " - " + score.awayGoals;
+          scoreStr = score.homeGoals + " - " + score.awayGoals;
         } else {
-          score = score.awayGoals + " - " + score.homeGoals;
+          scoreStr = score.awayGoals + " - " + score.homeGoals;
         }
-        if (!(score in scoreFreq)) {
-          scoreFreq[score] = [1];
+        if (!(scoreStr in scoreFreq)) {
+          scoreFreq[scoreStr] = [1];
         } else {
-          scoreFreq[score][0] += 1;
+          scoreFreq[scoreStr][0] += 1;
         }
       }
     }
@@ -24,10 +30,10 @@
     let scoreFreq: ScoreFreq = {};
     for (let team in data.form) {
       for (let i = 0; i < 3; i++) {
-        if (i == 0) {
-          insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id-i)
-        } else if (teamInSeason(data.form, team, data._id-i)) {
-          insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id-i)
+        if (i === 0) {
+          insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id - i);
+        } else if (teamInSeason(data.form, team, data._id - i)) {
+          insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id - i);
         }
       }
     }
@@ -35,16 +41,22 @@
     return scoreFreq;
   }
 
-  function insertSeasonTeamScoreBars(scoreFreq: ScoreFreq, form: Form, team: string, season: number) {
+  function insertSeasonTeamScoreBars(
+    scoreFreq: ScoreFreq,
+    form: Form,
+    team: string,
+    season: number
+  ) {
     for (let matchday in form[team][season]) {
       let score = form[team][season][matchday].score;
       if (score != null) {
+        let scoreStr: string;
         if (form[team][season][matchday].atHome) {
-          score = score.homeGoals + " - " + score.awayGoals;
+          scoreStr = score.homeGoals + " - " + score.awayGoals;
         } else {
-          score = score.awayGoals + " - " + score.homeGoals;
+          scoreStr = score.awayGoals + " - " + score.homeGoals;
         }
-        scoreFreq[score][1] += 1;
+        scoreFreq[scoreStr][1] += 1;
       }
     }
   }
@@ -55,23 +67,23 @@
     scoreFreq: ScoreFreq
   ) {
     for (let score in scoreFreq) {
-      if (scoreFreq[score].length == 1) {
+      if (scoreFreq[score].length === 1) {
         scoreFreq[score].push(0);
       }
     }
-    insertSeasonTeamScoreBars(scoreFreq, data.form, team, data._id)
-    if (teamInSeason(data.form, team, data._id-1)) {
-      insertSeasonTeamScoreBars(scoreFreq, data.form, team, data._id-1)
+    insertSeasonTeamScoreBars(scoreFreq, data.form, team, data._id);
+    if (teamInSeason(data.form, team, data._id - 1)) {
+      insertSeasonTeamScoreBars(scoreFreq, data.form, team, data._id - 1);
     }
-    if (teamInSeason(data.form, team, data._id-2)) {
-      insertSeasonTeamScoreBars(scoreFreq, data.form, team, data._id-2)
+    if (teamInSeason(data.form, team, data._id - 2)) {
+      insertSeasonTeamScoreBars(scoreFreq, data.form, team, data._id - 2);
     }
   }
 
   function getColours(scores: string[]): string[] {
     let colours = [];
     for (let score of scores) {
-      let [hs, _, as] = score.split(' ');
+      let [hs, _, as] = score.split(" ");
       let h = parseInt(hs);
       let a = parseInt(as);
       if (h > a) {
@@ -229,7 +241,7 @@
 
   function genPlot() {
     plotData = buildPlotData(data, team);
-      //@ts-ignore
+    //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,

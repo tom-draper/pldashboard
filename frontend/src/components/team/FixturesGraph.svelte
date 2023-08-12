@@ -1,39 +1,56 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { toAlias } from "../../lib/team";
+  import { scoreline } from "../../lib/format";
 
-  function getMatchDetail(match: Match): string {
-    let matchDetail: string;
-    let homeAway = match.atHome ? "Home" : "Away";
-    if (match.score != null) {
-      matchDetail = `${match.team} (${homeAway}) ${match.score.homeGoals} - ${match.score.awayGoals}`;
+  function matchDescription(team: string, match: Match): string {
+    let description: string;
+    let homeTeam: string;
+    let awayTeam: string;
+    if (match.atHome) {
+      homeTeam = toAlias(team);
+      awayTeam = toAlias(match.team);
     } else {
-      matchDetail = `${match.team} (${homeAway})`;
+      homeTeam = toAlias(match.team);
+      awayTeam = toAlias(team);
     }
-    return matchDetail;
+    if (match.score != null) {
+      description = scoreline(
+        homeTeam,
+        awayTeam,
+        match.score.homeGoals,
+        match.score.awayGoals
+      );
+    } else {
+      description = `${homeTeam} vs ${awayTeam}`;
+    }
+    return description;
   }
 
   function sortByMatchDate(x: Date[], y: number[], details: string[]) {
-    let list = [];
+    let temp = [];
     for (let i = 0; i < x.length; i++) {
-      list.push({ x: x[i], y: y[i], details: details[i] });
+      temp.push({ x: x[i], y: y[i], details: details[i] });
     }
 
-    list.sort(function (a, b) {
+    // Sort by x-value (match date)
+    temp.sort(function (a, b) {
       return a.x < b.x ? -1 : a.x == b.x ? 0 : 1;
     });
 
-    for (let i = 0; i < list.length; i++) {
-      x[i] = list[i].x;
-      y[i] = list[i].y;
-      details[i] = list[i].details;
+    // Unpack back into original arrays
+    for (let i = 0; i < temp.length; i++) {
+      x[i] = temp[i].x;
+      y[i] = temp[i].y;
+      details[i] = temp[i].details;
     }
   }
 
-  function increaseNextGameMarker(
+  function highlightNextGameMarker(
     sizes: number[],
     x: Date[],
     now: number,
-    bigMarkerSize: number
+    highlightSize: number
   ): number[] {
     // Get matchday date with smallest time difference to now
     let nextGameIdx: number;
@@ -49,7 +66,7 @@
 
     // Increase marker size of next game
     if (nextGameIdx != undefined) {
-      sizes[nextGameIdx] = bigMarkerSize;
+      sizes[nextGameIdx] = highlightSize;
     }
 
     return sizes;
@@ -61,7 +78,7 @@
   ): [Date[], number[], string[]] {
     let x: Date[] = [];
     let y: number[] = [];
-    let details: string[] = [];
+    let descriptions: string[] = [];
     for (let matchday = 1; matchday <= 38; matchday++) {
       let match = data.fixtures[team][matchday];
       x.push(new Date(match.date));
@@ -73,28 +90,28 @@
       }
       y.push(oppTeamRating * 100);
 
-      let matchDetail = getMatchDetail(match);
-      details.push(matchDetail);
+      let description = matchDescription(team, match);
+      descriptions.push(description);
     }
-    return [x, y, details];
+    return [x, y, descriptions];
   }
 
   function line(data: TeamData, team: string, now: number): any {
-    let [x, y, details] = linePoints(data, team);
+    let [x, y, description] = linePoints(data, team);
 
-    sortByMatchDate(x, y, details);
+    sortByMatchDate(x, y, description);
 
     let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
 
     let sizes = Array(x.length).fill(13);
-    sizes = increaseNextGameMarker(sizes, x, now, 26);
+    sizes = highlightNextGameMarker(sizes, x, now, 26);
 
     return {
       x: x,
       y: y,
       type: "scatter",
       mode: "lines+markers",
-      text: details,
+      text: description,
       line: {
         color: "#737373",
       },
@@ -115,8 +132,8 @@
     };
   }
 
-  function nowLine(now: number, maxX: number): Object {
-    let nowLine = {};
+  function currentDateLine(now: number, maxX: number): Object {
+    let nowLine = null;
     if (now <= maxX) {
       // Vertical line shapw marking current day
       nowLine = {
@@ -147,33 +164,34 @@
     let yLabels = Array.from(Array(11), (_, i) => i * 10);
 
     let [minX, maxX] = xRange(x);
+    // @ts-ignore
+    let currentDate = currentDateLine(now, maxX);
     return {
-        title: false,
-        autosize: true,
-        margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
-        hovermode: "closest",
-        plot_bgcolor: "#fafafa",
-        paper_bgcolor: "#fafafa",
-        yaxis: {
-          title: { text: "Team rating" },
-          gridcolor: "#d6d6d6",
-          showline: false,
-          zeroline: false,
-          fixedrange: true,
-          ticktext: yLabels,
-          tickvals: yLabels,
-        },
-        xaxis: {
-          linecolor: "black",
-          showgrid: false,
-          showline: false,
-          range: [minX, maxX],
-          fixedrange: true,
-        },
-        //@ts-ignore
-        shapes: [nowLine(now, maxX)],
-        dragmode: false,
-      }
+      title: false,
+      autosize: true,
+      margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
+      hovermode: "closest",
+      plot_bgcolor: "#fafafa",
+      paper_bgcolor: "#fafafa",
+      yaxis: {
+        title: { text: "Team rating" },
+        gridcolor: "#d6d6d6",
+        showline: false,
+        zeroline: false,
+        fixedrange: true,
+        ticktext: yLabels,
+        tickvals: yLabels,
+      },
+      xaxis: {
+        linecolor: "black",
+        showgrid: false,
+        showline: false,
+        range: [minX, maxX],
+        fixedrange: true,
+      },
+      shapes: [currentDate],
+      dragmode: false,
+    };
   }
 
   function setDefaultLayout() {
@@ -248,7 +266,7 @@
 
     let plotData = {
       data: [l],
-      layout: defaultLayout(l.x, now), 
+      layout: defaultLayout(l.x, now),
       config: {
         responsive: true,
         showSendToCloud: false,

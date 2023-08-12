@@ -5,7 +5,9 @@
 <div class="teams-footer footer-text-colour">
   <div class="teams-footer-bottom">
     {#if lastUpdated != null}
-      <div class="last-updated no-select">Last updated: {new Date(lastUpdated).toLocaleString()} UTC</div>
+      <div class="last-updated no-select">
+        Last updated: {new Date(lastUpdated).toLocaleString()} UTC
+      </div>
     {/if}
     <div class="version no-select"><span class="pl">pl</span>dashboard</div>
   </div>
@@ -19,6 +21,9 @@
     width: 100%;
     font-size: 13px;
     align-items: center;
+  }
+  .footer-text-colour {
+    color: rgb(0 0 0 / 37%);
   }
   .teams-footer-bottom {
     margin: 30px 0;
@@ -37,16 +42,15 @@
   }
   .no-select {
     -webkit-touch-callout: none; /* iOS Safari */
-      -webkit-user-select: none; /* Safari */
-      -khtml-user-select: none; /* Konqueror HTML */
-        -moz-user-select: none; /* Old versions of Firefox */
-          -ms-user-select: none; /* Internet Explorer/Edge */
-              user-select: none; /* Non-prefixed version, currently
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
   }
   .pl {
     color: #00ef87;
-    
   }
 
   @media only screen and (max-width: 1200px) {

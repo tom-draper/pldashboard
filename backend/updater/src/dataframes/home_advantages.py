@@ -2,12 +2,11 @@ import logging
 from collections import defaultdict
 
 import pandas as pd
-from dataframes.df import DF
-from lib.utils.utilities import Utilities
 from pandas import DataFrame
 from timebudget import timebudget
 
-utils = Utilities()
+from ..fmt import clean_full_team_name
+from .df import DF
 
 
 class HomeAdvantages(DF):
@@ -28,8 +27,8 @@ class HomeAdvantages(DF):
 
     def _home_advantages_for_season(self, d: defaultdict, data: dict, season: int):
         for match in data:
-            home_team = utils.clean_full_team_name(match['homeTeam']['name'])
-            away_team = utils.clean_full_team_name(match['awayTeam']['name'])
+            home_team = clean_full_team_name(match['homeTeam']['name'])
+            away_team = clean_full_team_name(match['awayTeam']['name'])
 
             self._check_init_team_row(d, home_team, season)
             self._check_init_team_row(d, away_team, season)
@@ -137,8 +136,8 @@ class HomeAdvantages(DF):
     def get_season_teams(season_fixtures_data: dict) -> list[str]:
         current_season_teams = set()
         for match in season_fixtures_data:
-            home_team = utils.clean_full_team_name(match['homeTeam']['name'])
-            away_team = utils.clean_full_team_name(match['awayTeam']['name'])
+            home_team = clean_full_team_name(match['homeTeam']['name'])
+            away_team = clean_full_team_name(match['awayTeam']['name'])
             current_season_teams.add(home_team)
             current_season_teams.add(away_team)
         return list(current_season_teams)

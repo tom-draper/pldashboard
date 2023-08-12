@@ -1,11 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-
-  function ordinal(n: number): string {
-    let ord = [, "st", "nd", "rd"];
-    let a = n % 100;
-    return n + (ord[a > 20 ? a % 10 : a] || "th");
-  }
+  import { ordinal } from "../../../lib/format";
+  import {
+    isCleanSheet,
+    notScored,
+    goalsScored,
+    goalsConceded,
+  } from "../../../lib/goals";
 
   function getStatsRank(
     seasonStats: Stats,
@@ -24,13 +25,20 @@
   }
 
   function getStatsRankings(seasonStats: Stats, team: string): StatsRank {
-    let xGRank = ordinal(getStatsRank(seasonStats, "xG", team, false));
+    let xGRank = getStatsRank(seasonStats, "xG", team, false);
     // Reverse - lower rank the better
-    let xCRank = ordinal(getStatsRank(seasonStats, "xC", team, true));
-    let cleanSheetRatioRank = ordinal(
-      getStatsRank(seasonStats, "cleanSheetRatio", team, false)
+    let xCRank = getStatsRank(seasonStats, "xC", team, true);
+    let cleanSheetRatioRank = getStatsRank(
+      seasonStats,
+      "cleanSheetRatio",
+      team,
+      false
     );
-    return { xG: xGRank, xC: xCRank, cleanSheetRatio: cleanSheetRatioRank };
+    return {
+      xG: `${xGRank}${ordinal(xGRank)}`,
+      xC: `${xCRank}${ordinal(xCRank)}`,
+      cleanSheetRatio: `${cleanSheetRatioRank}${ordinal(cleanSheetRatioRank)}`,
+    };
   }
 
   function setStatsValues(seasonStats: Stats, team: string) {
@@ -39,30 +47,6 @@
     // Keep ordinal values at the correct offset
     // Once rank values have updated, init positional offset for ordinal values
     // window.addEventListener("resize", setPositionalOffset);
-  }
-
-  function isCleanSheet(h: number, a: number, atHome: boolean): boolean {
-    return (a == 0 && atHome) || (h == 0 && !atHome);
-  }
-
-  function goalsScored(h: number, a: number, atHome: boolean): number {
-    if (atHome) {
-      return h;
-    } else {
-      return a;
-    }
-  }
-
-  function goalsConceded(h: number, a: number, atHome: boolean): number {
-    if (atHome) {
-      return a;
-    } else {
-      return h;
-    }
-  }
-
-  function notScored(h: number, a: number, atHome: boolean): boolean {
-    return (h == 0 && atHome) || (a == 0 && !atHome);
   }
 
   function countOccurances(
@@ -80,13 +64,21 @@
       if (score != null) {
         let atHome = data.form[team][season][matchday].atHome;
         if (isCleanSheet(score.homeGoals, score.awayGoals, atHome)) {
-          seasonStats[team].cleanSheetsRatio += 1;
+          seasonStats[team].cleanSheetRatio += 1;
         }
         if (notScored(score.homeGoals, score.awayGoals, atHome)) {
           seasonStats[team].noGoalRatio += 1;
         }
-        seasonStats[team].xG += goalsScored(score.homeGoals, score.awayGoals, atHome);
-        seasonStats[team].xC += goalsConceded(score.homeGoals, score.awayGoals, atHome);
+        seasonStats[team].xG += goalsScored(
+          score.homeGoals,
+          score.awayGoals,
+          atHome
+        );
+        seasonStats[team].xC += goalsConceded(
+          score.homeGoals,
+          score.awayGoals,
+          atHome
+        );
         seasonStats[team].played += 1;
       }
     }
@@ -128,7 +120,7 @@
       played: number;
       xG: number;
       xC: number;
-      cleanSheetsRatio: number;
+      cleanSheetRatio: number;
       noGoalRatio: number;
     };
   };
@@ -148,6 +140,7 @@
   let setup = false;
   onMount(() => {
     stats = buildStats(data);
+    stats;
     setStatsValues(stats, team);
     setup = true;
   });

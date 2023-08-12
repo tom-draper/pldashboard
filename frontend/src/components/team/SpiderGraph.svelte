@@ -1,19 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {toAlias, toName, teamInSeason} from "../../lib/team";
-
-  function getTeamColor(team: string): string {
-    let teamKey = team[0].toLowerCase() + team.slice(1);
-    teamKey = teamKey.replace(/ /g, "-").toLowerCase();
-    let teamColor = getComputedStyle(document.documentElement).getPropertyValue(
-      `--${teamKey}`
-    );
-    return teamColor;
-  }
+  import {
+    toAlias,
+    toName,
+    teamInSeason,
+    toHyphenatedName,
+    teamColor,
+  } from "../../lib/team";
 
   function addTeamComparison(team: string) {
-    let teamColor = getTeamColor(team);
-
     let teamData = {
       name: team,
       type: "scatterpolar",
@@ -27,7 +22,7 @@
       ],
       theta: labels,
       fill: "toself",
-      marker: { color: teamColor },
+      marker: { color: teamColor(team) },
     };
     plotData.data.push(teamData);
     //@ts-ignore
@@ -42,14 +37,14 @@
   function removeTeamComparison(team: string) {
     // Remove spider plot for this teamName
     for (let i = 0; i < plotData.data.length; i++) {
-      if (plotData.data[i].name == team) {
+      if (plotData.data[i].name === team) {
         plotData.data.splice(i, 1);
         break;
       }
     }
 
     // If removing only comparison teamName, re-insert the initial avg spider plot
-    if (comparisonTeams.length == 1) {
+    if (comparisonTeams.length === 1) {
       addAvg();
     }
 
@@ -61,14 +56,17 @@
     for (let i = 0; i < comparisonTeams.length; i++) {
       // Remove spider plot for this teamName
       for (let i = 0; i < plotData.data.length; i++) {
-        if (plotData.data[i].name == comparisonTeams[i] && comparisonTeams[i] != team) {
+        if (
+          plotData.data[i].name === comparisonTeams[i] &&
+          comparisonTeams[i] != team
+        ) {
           plotData.data.splice(i, 1);
           break;
         }
       }
 
       // If removing only comparison teamName, re-insert the initial avg spider plot
-      if (comparisonTeams.length == 1) {
+      if (comparisonTeams.length === 1) {
         addAvg();
       }
       removeItem(comparisonTeams, comparisonTeams[i]); // Remove from comparison teams
@@ -92,8 +90,8 @@
 
   function spiderBtnClick(btn: HTMLButtonElement) {
     let team = toName(btn.innerHTML);
-    if (btn.style.background == "") {
-      let teamKey = team.toLowerCase().replace(/ /g, "-");
+    if (btn.style.background === "") {
+      let teamKey = toHyphenatedName(team);
       btn.style.background = `var(--${teamKey})`;
       btn.style.color = `var(--${teamKey}-secondary)`;
     } else {
@@ -101,7 +99,7 @@
       btn.style.color = "black";
     }
 
-    if (comparisonTeams.length == 0) {
+    if (comparisonTeams.length === 0) {
       plotData.data.splice(0, 1); // Remove avg
     }
 
@@ -114,40 +112,48 @@
     }
   }
 
-  function goalsPerSeason(data: TeamData): [Attribute, [number, number]] {
+  function goalsPerGame(data: TeamData): [SpiderAttribute, [number, number]] {
     let attack = {};
-    let maxGoals = Number.NEGATIVE_INFINITY;
-    let minGoals = Number.POSITIVE_INFINITY;
+    let maxGoalsPerSeason = Number.NEGATIVE_INFINITY;
+    let minGoalsPerSeason = Number.POSITIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
       let totalGoals = 0;
       let gamesPlayed = 0;
       for (let season in data.standings[team]) {
         let goals = data.standings[team][season].gF;
+        let played = data.standings[team][season].played;
         if (goals > 0) {
           totalGoals += goals;
-          gamesPlayed += data.standings[team][season].played;
+          gamesPlayed += played;
+        }
+        // If season completed, check if team's attacking performance is most extreme yet
+        if (played === 38) {
+          let seasonGoalsPerGame = goals / played;
+          if (seasonGoalsPerGame > maxGoalsPerSeason) {
+            maxGoalsPerSeason = seasonGoalsPerGame;
+          } else if (seasonGoalsPerGame < minGoalsPerSeason) {
+            minGoalsPerSeason = seasonGoalsPerGame;
+          }
         }
       }
-      
+
+      // Get team's overall goals per game across multiple seasons
       let goalsPerGame = null;
       if (gamesPlayed > 0) {
         goalsPerGame = totalGoals / gamesPlayed;
       }
-      if (goalsPerGame > maxGoals) {
-        maxGoals = goalsPerGame;
-      } else if (goalsPerGame < minGoals) {
-        minGoals = goalsPerGame;
-      }
-
       attack[team] = goalsPerGame;
     }
-    return [attack as Attribute, [minGoals, maxGoals]];
+    return [attack as SpiderAttribute, [minGoalsPerSeason, maxGoalsPerSeason]];
   }
 
-  function scaleAttack(attack: Attribute, range: [number, number]): Attribute {
+  function scaleAttack(
+    attack: SpiderAttribute,
+    range: [number, number]
+  ): SpiderAttribute {
     let [lower, upper] = range;
     for (let team in attack) {
-      if (attack[team] == null) {
+      if (attack[team] === null) {
         attack[team] = 0;
       } else {
         attack[team] = ((attack[team] - lower) / (upper - lower)) * 100;
@@ -156,7 +162,7 @@
     return attack;
   }
 
-  function attributeAvgScaled(attribute: Attribute, max: number): number {
+  function attributeAvgScaled(attribute: SpiderAttribute, max: number): number {
     let total = 0;
     for (let team in attribute) {
       attribute[team] = (attribute[team] / max) * 100;
@@ -167,7 +173,7 @@
     return avg;
   }
 
-  function attributeAvg(attribute: Attribute): number {
+  function attributeAvg(attribute: SpiderAttribute): number {
     let total = 0;
     for (let team in attribute) {
       total += attribute[team];
@@ -177,25 +183,37 @@
     return avg;
   }
 
-  function getAttack(data: TeamData): Attribute {
-    let [attack, extremes] = goalsPerSeason(data);
+  function getAttack(data: TeamData): SpiderAttribute {
+    let [attack, extremes] = goalsPerGame(data);
     attack = scaleAttack(attack, extremes);
     attack.avg = attributeAvg(attack);
     return attack;
   }
 
-  function concededPerSeason(data: TeamData): [Attribute, [number, number]] {
+  function concededPerSeason(
+    data: TeamData
+  ): [SpiderAttribute, [number, number]] {
     let defence = {};
-    let maxConceded = Number.NEGATIVE_INFINITY;
-    let minConceded = Number.POSITIVE_INFINITY;
+    let maxConcededPerSeason = Number.NEGATIVE_INFINITY;
+    let minConcededPerSeason = Number.POSITIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
       let totalConceded = 0;
       let gamesPlayed = 0;
       for (let season in data.standings[team]) {
-        let goals = data.standings[team][season].gA;
-        if (goals > 0) {
-          totalConceded += goals;
-          gamesPlayed += data.standings[team][season].played;
+        let conceded = data.standings[team][season].gA;
+        let played = data.standings[team][season].played;
+        if (conceded > 0) {
+          totalConceded += conceded;
+          gamesPlayed += played;
+        }
+        // If season completed, check if team's defensive performance is most extreme yet
+        if (played === 38) {
+          let seasonConcededPerGame = conceded / played;
+          if (seasonConcededPerGame > maxConcededPerSeason) {
+            maxConcededPerSeason = seasonConcededPerGame;
+          } else if (seasonConcededPerGame < minConcededPerSeason) {
+            minConcededPerSeason = seasonConcededPerGame;
+          }
         }
       }
 
@@ -203,22 +221,22 @@
       if (gamesPlayed > 0) {
         goalsPerGame = totalConceded / gamesPlayed;
       }
-      maxConceded = Math.max(maxConceded, goalsPerGame)
-      minConceded = Math.min(minConceded, goalsPerGame)
-
       defence[team] = goalsPerGame;
     }
 
-    return [defence as Attribute, [minConceded, maxConceded]];
+    return [
+      defence as SpiderAttribute,
+      [minConcededPerSeason, maxConcededPerSeason],
+    ];
   }
 
   function scaleDefence(
-    defence: Attribute,
+    defence: SpiderAttribute,
     range: [number, number]
-  ): Attribute {
+  ): SpiderAttribute {
     let [lower, upper] = range;
     for (let team in defence) {
-      if (defence[team] == null) {
+      if (defence[team] === null) {
         defence[team] = 0;
       } else {
         defence[team] = 100 - ((defence[team] - lower) / (upper - lower)) * 100;
@@ -240,9 +258,9 @@
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null) {
-        if (match.atHome && match.score.awayGoals == 0) {
+        if (match.atHome && match.score.awayGoals === 0) {
           nCleanSheets += 1;
-        } else if (!match.atHome && match.score.homeGoals == 0) {
+        } else if (!match.atHome && match.score.homeGoals === 0) {
           nCleanSheets += 1;
         }
       }
@@ -250,26 +268,29 @@
     return nCleanSheets;
   }
 
-  function getCleanSheets(data: TeamData): Attribute {
-    //@ts-ignore
-    let cleanSheets: Attribute = {};
-    let maxCleanSheets = Number.NEGATIVE_INFINITY;
+  function getCleanSheets(data: TeamData): SpiderAttribute {
+    let cleanSheets = {} as SpiderAttribute;
+    let maxSeasonCleanSheets = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
-      let nCleanSheets = formCleanSheets(data.form, team, data._id);
-      if (teamInSeason(data.form, team, data._id-1)) {
-        nCleanSheets += formCleanSheets(data.form, team, data._id-1);
+      let totalCleanSheetsCount = 0;
+      for (let i = 0; i < numSeasons; i++) {
+        let seasonCleanSheets = formCleanSheets(data.form, team, data._id - i);
+        // If season completed, check if season clean sheets is highest yet
+        if (
+          seasonComplete(data, team, data._id - i) &&
+          seasonCleanSheets > maxSeasonCleanSheets
+        ) {
+          maxSeasonCleanSheets = seasonCleanSheets;
+        }
+        totalCleanSheetsCount += seasonCleanSheets;
       }
-      if (teamInSeason(data.form, team, data._id-2)) {
-        nCleanSheets += formCleanSheets(data.form, team, data._id-2);
-      }
-
-      if (nCleanSheets > maxCleanSheets) {
-        maxCleanSheets = nCleanSheets;
-      }
-      cleanSheets[team] = nCleanSheets;
+      cleanSheets[team] = totalCleanSheetsCount;
     }
 
-    cleanSheets.avg = attributeAvgScaled(cleanSheets, maxCleanSheets);
+    cleanSheets.avg = attributeAvgScaled(
+      cleanSheets,
+      maxSeasonCleanSheets * numSeasons
+    );
 
     return cleanSheets;
   }
@@ -280,17 +301,21 @@
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null) {
-        let result: string;
-        if ((match.atHome && match.score.homeGoals > match.score.awayGoals) 
-            || (!match.atHome && match.score.homeGoals < match.score.awayGoals)) {
+        let result: "win" | "lost" | "draw";
+        if (
+          (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
+          (!match.atHome && match.score.homeGoals < match.score.awayGoals)
+        ) {
           result = "win";
-        } else if ((match.atHome && match.score.homeGoals < match.score.awayGoals) 
-                   || (!match.atHome && match.score.homeGoals > match.score.awayGoals)) {
+        } else if (
+          (match.atHome && match.score.homeGoals < match.score.awayGoals) ||
+          (!match.atHome && match.score.homeGoals > match.score.awayGoals)
+        ) {
           result = "lost";
         } else {
           result = "draw";
         }
-        if (prevResult != null && prevResult == result) {
+        if (prevResult != null && prevResult === result) {
           backToBack += 1;
         }
         prevResult = result;
@@ -299,28 +324,30 @@
     return backToBack;
   }
 
-  function getConsistency(data: TeamData): Attribute {
-    //@ts-ignore
-    let consistency: Attribute = {};
-    let maxConsistency = Number.NEGATIVE_INFINITY;
+  function getConsistency(data: TeamData): SpiderAttribute {
+    let consistency = {} as SpiderAttribute;
+    let maxSeasonBackToBack = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
-      let backToBack = formConsistency(data.form, team, data._id);
-      if (teamInSeason(data.form, team, data._id-1)) {
-        backToBack += formConsistency(data.form, team, data._id - 1);
-      }
-      if (teamInSeason(data.form, team, data._id-2)) {
-        backToBack += formConsistency(data.form, team, data._id - 2);
+      let totalBackToBack = 0;
+      for (let i = 0; i < numSeasons; i++) {
+        let seasonBackToBack = formConsistency(data.form, team, data._id - i);
+        // If season completed, check if season consistency is highest yet
+        if (
+          seasonComplete(data, team, data._id - i) &&
+          seasonBackToBack > maxSeasonBackToBack
+        ) {
+          maxSeasonBackToBack = seasonBackToBack;
+        }
+        totalBackToBack += seasonBackToBack;
       }
 
-      if (backToBack > maxConsistency) {
-        maxConsistency = backToBack;
-      }
-
-      consistency[team] = backToBack;
+      consistency[team] = totalBackToBack;
     }
 
-    consistency.avg = attributeAvgScaled(consistency, maxConsistency);
-
+    consistency.avg = attributeAvgScaled(
+      consistency,
+      maxSeasonBackToBack * numSeasons
+    );
     return consistency;
   }
 
@@ -330,8 +357,10 @@
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null) {
-        if ((match.atHome && match.score.homeGoals > match.score.awayGoals) 
-            || (!match.atHome && match.score.homeGoals < match.score.awayGoals)) {
+        if (
+          (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
+          (!match.atHome && match.score.homeGoals < match.score.awayGoals)
+        ) {
           tempWinStreak += 1;
           if (tempWinStreak > winStreak) {
             winStreak = tempWinStreak;
@@ -344,28 +373,39 @@
     return winStreak;
   }
 
-  function getWinStreak(data: TeamData): Attribute {
-    //@ts-ignore
-    let winStreaks: Attribute = {};
-    let maxWinStreaks = Number.NEGATIVE_INFINITY;
+  function getWinStreak(data: TeamData): SpiderAttribute {
+    let winStreaks = {} as SpiderAttribute;
+    let maxSeasonWinStreak = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
-      let winStreak = formWinStreak(data.form, team, data._id);
-      if (teamInSeason(data.form, team, data._id-1)) {
-        winStreak += formWinStreak(data.form, team, data._id-1);
-      }
-      if (teamInSeason(data.form, team, data._id-2)) {
-        winStreak += formWinStreak(data.form, team, data._id-2);
+      let totalWinStreak = 0;
+      for (let i = 0; i < numSeasons; i++) {
+        let seasonWinSteak = formWinStreak(data.form, team, data._id - i);
+        // If season completed, check if season consistency is highest yet
+        if (
+          seasonComplete(data, team, data._id - i) &&
+          seasonWinSteak > maxSeasonWinStreak
+        ) {
+          maxSeasonWinStreak = seasonWinSteak;
+        }
+        totalWinStreak += seasonWinSteak;
       }
 
-      if (winStreak > maxWinStreaks) {
-        maxWinStreaks = winStreak;
-      }
-      winStreaks[team] = winStreak;
+      winStreaks[team] = totalWinStreak;
     }
 
-    winStreaks.avg = attributeAvgScaled(winStreaks, maxWinStreaks);
-
+    winStreaks.avg = attributeAvgScaled(
+      winStreaks,
+      maxSeasonWinStreak * numSeasons
+    );
     return winStreaks;
+  }
+
+  function seasonComplete(
+    data: TeamData,
+    team: string,
+    season: number
+  ): boolean {
+    return data.standings[team][season].played === 38;
   }
 
   function removeItem(arr: any[], value: any): any[] {
@@ -376,16 +416,23 @@
     return arr;
   }
 
-  function formWinsVsBig6(form: Form, team: string, season: number, big6: string[]): [number, number] {
+  function formWinsVsBig6(
+    form: Form,
+    team: string,
+    season: number,
+    big6: string[]
+  ): [number, number] {
     let pointsVsBig6 = 0;
     let numPlayed = 0;
     for (let matchday in form[team][season]) {
       let match = form[team][season][matchday];
       if (match.score != null && big6.includes(match.team)) {
-        if ((match.atHome && match.score.homeGoals > match.score.awayGoals) 
-            || (!match.atHome && match.score.homeGoals < match.score.awayGoals)) {
+        if (
+          (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
+          (!match.atHome && match.score.homeGoals < match.score.awayGoals)
+        ) {
           pointsVsBig6 += 3;
-        } else if (match.score.homeGoals == match.score.awayGoals) {
+        } else if (match.score.homeGoals === match.score.awayGoals) {
           pointsVsBig6 += 1;
         }
         numPlayed += 1;
@@ -395,44 +442,43 @@
     return [pointsVsBig6, numPlayed];
   }
 
-  function getVsBig6(data: TeamData): Attribute {
+  function getVsBig6(data: TeamData): SpiderAttribute {
     //@ts-ignore
-    let vsBig6: Attribute = {};
-    let maxAvgPointsVsBig6 = Number.NEGATIVE_INFINITY;
+    let vsBig6: SpiderAttribute = {};
+    let maxAvgSeasonPointsVsBig6 = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
-      let big6 = [
-        "Manchester United",
-        "Liverpool",
-        "Manchester City",
-        "Arsenal",
-        "Chelsea",
-        "Tottenham Hotspur",
-      ];
-      big6 = removeItem(big6, team);
-
-      let [avgPointsVsBig6, numPlayed] = formWinsVsBig6(data.form, team, data._id, big6);
-      if (teamInSeason(data.form, team, data._id-1)) {
-        let [points, played] = formWinsVsBig6(data.form, team, data._id-1, big6);
-        avgPointsVsBig6 += points
-        numPlayed += played
-      }
-      if (teamInSeason(data.form, team, data._id-2)) {
-        let [points, played] = formWinsVsBig6(data.form, team, data._id-2, big6);
-        avgPointsVsBig6 += points
-        numPlayed += played
-      }
-
-      avgPointsVsBig6 /= numPlayed
-
-      if (avgPointsVsBig6 > maxAvgPointsVsBig6) {
-        maxAvgPointsVsBig6 = avgPointsVsBig6;
+      let totalPointsVsBig6 = 0;
+      let totalPlayedVsBig6 = 0;
+      for (let i = 0; i < numSeasons; i++) {
+        let [seasonPointsVsBig6, seasonPlayedVsBig6] = formWinsVsBig6(
+          data.form,
+          team,
+          data._id - i,
+          removeItem(big6, team)
+        );
+        if (seasonPlayedVsBig6 === 0) {
+          continue;
+        }
+        let avgSeasonPointsVsBig6 = seasonPlayedVsBig6 / seasonPlayedVsBig6;
+        // If season completed, check if season consistency is highest yet
+        if (
+          seasonComplete(data, team, data._id - i) &&
+          avgSeasonPointsVsBig6 > maxAvgSeasonPointsVsBig6
+        ) {
+          maxAvgSeasonPointsVsBig6 = avgSeasonPointsVsBig6;
+        }
+        totalPointsVsBig6 += seasonPointsVsBig6;
+        totalPlayedVsBig6 += seasonPlayedVsBig6;
       }
 
-      vsBig6[team] = avgPointsVsBig6;
+      let totalAvgPointsVsBig = totalPointsVsBig6 / totalPlayedVsBig6;
+      vsBig6[team] = totalAvgPointsVsBig;
     }
 
-    vsBig6.avg = attributeAvgScaled(vsBig6, maxAvgPointsVsBig6);
-
+    vsBig6.avg = attributeAvgScaled(
+      vsBig6,
+      maxAvgSeasonPointsVsBig6 * numSeasons
+    );
     return vsBig6;
   }
 
@@ -465,7 +511,6 @@
   }
 
   function getTeamData(team: string): any {
-    let teamColor = getTeamColor(team);
     let teamData = scatterPlot(
       team,
       [
@@ -476,15 +521,14 @@
         winStreaks[team],
         vsBig6[team],
       ],
-      teamColor
+      teamColor(team)
     );
     return teamData;
   }
 
-  function initSpiderPlots(team: string): [Attribute, Attribute] {
+  function initSpiderPlots(team: string): [SpiderAttribute, SpiderAttribute] {
     let avgData = avgScatterPlot();
     let teamData = getTeamData(team);
-
     return [avgData, teamData];
   }
 
@@ -532,17 +576,13 @@
     return plotData;
   }
 
-  type Attribute = {
-    [team: string]: number;
-    avg: number;
-  };
-
-  let attack: Attribute,
-    defence: Attribute,
-    cleanSheets: Attribute,
-    consistency: Attribute,
-    winStreaks: Attribute,
-    vsBig6: Attribute;
+  const numSeasons = 3;
+  let attack: SpiderAttribute,
+    defence: SpiderAttribute,
+    cleanSheets: SpiderAttribute,
+    consistency: SpiderAttribute,
+    winStreaks: SpiderAttribute,
+    vsBig6: SpiderAttribute;
   let labels = [
     "Attack",
     "Defence",
@@ -550,6 +590,14 @@
     "Consistency",
     "Win streak",
     "Vs big 6",
+  ];
+  let big6 = [
+    "Manchester United",
+    "Liverpool",
+    "Manchester City",
+    "Arsenal",
+    "Chelsea",
+    "Tottenham Hotspur",
   ];
 
   let plotDiv: HTMLDivElement, plotData: PlotData;
@@ -613,9 +661,7 @@
 
   $: team && refreshPlot();
 
-  export let data: TeamData,
-    team: string,
-    teams: string[];
+  export let data: TeamData, team: string, teams: string[];
 </script>
 
 <div class="spider-chart">

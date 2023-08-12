@@ -1,21 +1,18 @@
+import json
 import logging
 import os
 import sys
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-import json
 from datetime import datetime
 from os.path import dirname, join
 
 import requests
-from data import Data
 from dotenv import load_dotenv
-from lib.database.database import Database
-from lib.utils.utilities import Utilities
 from timebudget import timebudget
 
-utils = Utilities()
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from db.database import Database
+from src.data import Data
+from src.fmt import clean_full_team_name
 
 
 class Updater:
@@ -44,17 +41,17 @@ class Updater:
 
     def fixtures_data(self, season: int, request_new: bool = True) -> dict:
         if request_new and self.url is not None:
-            res = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(season),
+            response = requests.get(self.url + 'competitions/PL/matches/?season={}'.format(season),
                                     headers=self.headers)
             
-            code = res.status_code
+            code = response.status_code
             if code == 429 or code == 403:
                 logging.info(f'❌  Status: {code}')
                 raise ValueError('❌ ERROR: Data request failed')
             else:
                 logging.info(f'✔️  Status: {code}')
 
-            return res.json()['matches']
+            return response.json()['matches']
         else:
             # Read saved fixtures data
             with open(f'data/fixtures_{season}.json', 'r') as json_file:
@@ -62,17 +59,17 @@ class Updater:
 
     def standings_data(self, season: int, request_new: bool = True) -> dict:
         if request_new and self.url is not None:
-            res = requests.get(self.url + 'competitions/PL/standings/?season={}'.format(season),
+            response = requests.get(self.url.replace('/v2', '/v4') + 'competitions/PL/standings/?season={}'.format(season),
                                     headers=self.headers)
 
-            code = res.status_code
+            code = response.status_code
             if code == 429 or code == 403:
                 logging.info(f'❌  Status: {code}')
                 raise ValueError('❌ ERROR: Data request failed')
             else:
                 logging.info(f'✔️  Status: {code}')
 
-            return res.json()['standings'][0]['table']
+            return response.json()['standings'][0]['table']
         else:
             # Read standings data
             with open(f'data/standings_{season}.json', 'r') as json_file:
@@ -104,7 +101,7 @@ class Updater:
                 json.dump(self.json_data[type][self.current_season], f)
 
 
-    def build_dataframes(self, n_seasons: int, display_tables: bool = False):        
+    def build_dataframes(self, n_seasons: int, display_tables: bool = False):
         # Standings for the last [n_seasons] seasons
         self.data.standings.build(
             self.json_data, 
@@ -155,7 +152,7 @@ class Updater:
     
     def save_team_data_to_db(self):
         team_data = self.data.to_dict()
-        self.database.update_team_data(team_data)
+        self.database.update_team_data(team_data, self.current_season)
     
     def save_predictions_to_db(self):
         predictions = self.data.upcoming.get_predictions()
@@ -168,7 +165,7 @@ class Updater:
 
         logo_urls = {}
         for standings_row in data:
-            team_name = utils.clean_full_team_name(standings_row['team']['name'])
+            team_name = clean_full_team_name(standings_row['team']['name'])
             crest_url = standings_row['team']['crestUrl']
             logo_urls[team_name] = crest_url
 
@@ -202,7 +199,7 @@ class Updater:
                 self.save_predictions_to_db()
 
 def run(display_tables: bool = False, request_new: bool = True, update_db: bool = True):
-    updater = Updater(2022)
+    updater = Updater(2023)
     updater.build_all(
         display_tables=display_tables,
         request_new=request_new,
@@ -214,9 +211,9 @@ def run_production():
     logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s :: %(levelname)s :: %(message)s')
     run()
 
-def run_dev():
+def run_development():
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s :: %(levelname)s :: %(message)s')
-    run(display_tables=True, update_db=False)
+    run(display_tables=True, update_db=False, request_new=True)
 
 
 if __name__ == "__main__":

@@ -1,188 +1,146 @@
 <script lang="ts">
-  import {toAlias, toInitials} from "../../lib/team";
-
-  function ordinal(n: number): string {
-    let ord = [, "st", "nd", "rd"];
-    let a = n % 100;
-    return ord[a > 20 ? a % 10 : a] || "th";
-  }
-
-  function currentMatchday(data: TeamData, team: string): string {
-    let matchdays = Object.keys(data.form[team][data._id])
-    for (let i = matchdays.length - 1; i >= 0; i--) {
-      if (data.form[team][data._id][matchdays[i]].score != null) {
-        return matchdays[i]
-      }
-    }
-    return null
-  }
+  import {
+    toAlias,
+    toInitials,
+    toHyphenatedName,
+    currentMatchday,
+  } from "../../lib/team";
+  import { ordinal, teamStyle } from "../../lib/format";
 
   function resultColour(prevMatch: any, home: boolean): string {
     if (home) {
-      return prevMatch.homeGoals < prevMatch.awayGoals ? prevMatch.awayTeam : prevMatch.homeTeam
+      return prevMatch.homeGoals < prevMatch.awayGoals
+        ? prevMatch.awayTeam
+        : prevMatch.homeTeam;
     } else {
-      return prevMatch.homeGoals > prevMatch.awayGoals ? prevMatch.homeTeam : prevMatch.awayTeam
+      return prevMatch.homeGoals > prevMatch.awayGoals
+        ? prevMatch.homeTeam
+        : prevMatch.awayTeam;
     }
   }
-  
-  export let data: TeamData,
-    team: string,
-    showBadge: boolean,
-    switchTeam: Function;
+
+  export let data: TeamData, team: string, switchTeam: Function;
 </script>
 
-  {#if data.upcoming[team].nextTeam == null}
-    <div class="next-game-prediction">
-      <div class="next-game-season-complete">
-        <h1 class="next-game-title-text">
-          {data._id}/{data._id + 1} SEASON COMPLETE
-        </h1>
-      </div>
+{#if data.upcoming[team].nextTeam === null}
+  <div class="next-game-prediction-complete">
+    <div class="next-game-season-complete">
+      <h1 class="next-game-title-text">
+        {data._id}/{data._id + 1} SEASON COMPLETE
+      </h1>
     </div>
-  {:else}
-    <div class="next-game-prediction">
-      <div class="next-game-title">
-        <h1 class="next-game-title-text">
-          Next Game:&nbsp
-          <button
-            on:click={() => {
-              switchTeam(
-                data.upcoming[team].nextTeam.toLowerCase().replace(/ /g, "-")
-              );
-            }}
-            class="next-game-team-btn"
-            >{toAlias(data.upcoming[team].nextTeam)}&nbsp</button
-          >
-          ({data.upcoming[team].atHome ? "Home" : "Away"})
-        </h1>
-      </div>
+  </div>
+{:else}
+  <div class="next-game-prediction">
+    <div class="next-game-title">
+      <h1 class="next-game-title-text">
+        Next Game:&nbsp
+        <button
+          on:click={() => {
+            switchTeam(toHyphenatedName(data.upcoming[team].nextTeam));
+          }}
+          class="next-game-team-btn"
+          >{toAlias(data.upcoming[team].nextTeam)}&nbsp</button
+        >
+        ({data.upcoming[team].atHome ? "Home" : "Away"})
+      </h1>
+    </div>
 
-      <div class="next-game-values">
-        <div class="predictions-and-logo">
-          {#if showBadge}
-            <div
-              class="next-game-logo opposition-badge"
-              style="background-image: url('{data.logoURLs[
-                data.upcoming[team].nextTeam
-              ]}')"
-            />
-          {:else}
-            <div class="next-game-position" />
-          {/if}
-          <div class="predictions">
-            <div class="next-game-item">
-              <div class="next-game-position">
-                {data.standings[data.upcoming[team].nextTeam][data._id]
-                  .position}<span class="ordinal-position"
-                  >{ordinal(
-                    data.standings[data.upcoming[team].nextTeam][data._id]
-                      .position
-                  )}</span
-                >
-              </div>
-            </div>
-            <div class="next-game-item current-form">
-              Current form:
-                <span class="current-form-value"
-                  >{(
-                    data.form[data.upcoming[team].nextTeam][data._id][
-                      currentMatchday(data, data.upcoming[team].nextTeam)
-                    ].formRating5 * 100
-                  ).toFixed(1)}%</span
-                >
-            </div>
-            <div class="next-game-item">
-              Score prediction
-              <br />
-              <a class="predictions-link" href="/predictions">
-                <b
-                  >{Math.round(data.upcoming[team].prediction.homeGoals)} - {Math.round(
-                    data.upcoming[team].prediction.awayGoals
-                  )}</b
-                >
-              </a>
-              <br />
+    <div class="next-game-values">
+      <div class="predictions-and-logo">
+        <div class="next-game-position" />
+        <div class="predictions">
+          <div class="next-game-item">
+            <div class="next-game-position">
+              {data.standings[data.upcoming[team].nextTeam][data._id]
+                .position}<span class="ordinal-position"
+                >{ordinal(
+                  data.standings[data.upcoming[team].nextTeam][data._id]
+                    .position
+                )}</span
+              >
             </div>
           </div>
+          <div class="next-game-item current-form">
+            Current form:
+            <span class="current-form-value"
+              >{(
+                data.form[data.upcoming[team].nextTeam][data._id][
+                  currentMatchday(data, data.upcoming[team].nextTeam)
+                ].formRating5 * 100
+              ).toFixed(1)}%</span
+            >
+          </div>
+          <div class="next-game-item">
+            Score prediction
+            <br />
+            <a class="predictions-link" href="/predictions">
+              <b
+                >{Math.round(data.upcoming[team].prediction.homeGoals)} - {Math.round(
+                  data.upcoming[team].prediction.awayGoals
+                )}</b
+              >
+            </a>
+            <br />
+          </div>
         </div>
-        <div class="past-results">
-          {#if data.upcoming[team].prevMatches.length == 0}
-            <div class="next-game-item prev-results-title no-prev-results">
-              No previous results
-            </div>
-          {:else}
-            <div class="next-game-item prev-results-title">
-              Previous results
-            </div>
-          {/if}
+      </div>
+      <div class="past-results">
+        {#if data.upcoming[team].prevMatches.length === 0}
+          <div class="next-game-item prev-results-title no-prev-results">
+            No previous results
+          </div>
+        {:else}
+          <div class="next-game-item prev-results-title">Previous results</div>
+        {/if}
 
-          <!-- Display table of previous results against the next team this team is playing -->
-          {#each data.upcoming[team].prevMatches as prevMatch}
-            <div class="next-game-item-container">
-              <div class="past-result-date result-details">
-                {new Date(prevMatch.date).toLocaleDateString("en-GB", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
-              </div>
-              <div class="next-game-item result-details">
-                <div class="past-result">
-                  <div class="left-side">
-                    <div
-                      class="home-team"
-                      style="background: var(--{prevMatch.homeTeam
-                        .toLowerCase()
-                        .replace(/ /g, '-')}); color: var(--{prevMatch.homeTeam
-                        .toLowerCase()
-                        .replace(/ /g, '-')}-secondary)"
-                    >
-                      {toInitials(prevMatch.homeTeam)}
-                    </div>
-                    <div class="goals-container"
-                      style="background: var(--{
-                        resultColour(prevMatch, true)
-                        .toLowerCase()
-                        .replace(/ /g, '-')}); color: var(--{resultColour(prevMatch, true)
-                        .toLowerCase()
-                        .replace(/ /g, '-')}-secondary)">
-                      <div class="home-goals">
-                        {prevMatch.homeGoals}
-                      </div>
-                    </div>
+        <!-- Display table of previous results against the next team this team is playing -->
+        {#each data.upcoming[team].prevMatches as prevMatch}
+          <div class="next-game-item-container">
+            <div class="past-result-date result-details">
+              {new Date(prevMatch.date).toLocaleDateString("en-GB", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </div>
+            <div class="next-game-item result-details">
+              <div class="past-result">
+                <div class="left-side">
+                  <div class="home-team" style={teamStyle(prevMatch.homeTeam)}>
+                    {toInitials(prevMatch.homeTeam)}
                   </div>
-                  <div class="right-side">
-                    <div class="goals-container"
-                        style="background: var(--{
-                        resultColour(prevMatch, false)
-                        .toLowerCase()
-                        .replace(/ /g, '-')}); color: var(--{resultColour(prevMatch, false)
-                        .toLowerCase()
-                        .replace(/ /g, '-')}-secondary)">
-                      <div class="away-goals">
-                        {prevMatch.awayGoals}
-                      </div>
-                    </div>
-                    <div
-                      class="away-team"
-                      style="background: var(--{prevMatch.awayTeam
-                        .toLowerCase()
-                        .replace(/ /g, '-')}); color: var(--{prevMatch.awayTeam
-                        .toLowerCase()
-                        .replace(/ /g, '-')}-secondary)"
-                    >
-                      {toInitials(prevMatch.awayTeam)}
+                  <div
+                    class="goals-container"
+                    style={teamStyle(resultColour(prevMatch, true))}
+                  >
+                    <div class="home-goals">
+                      {prevMatch.homeGoals}
                     </div>
                   </div>
                 </div>
-                <div style="clear: both" />
+                <div class="right-side">
+                  <div
+                    class="goals-container"
+                    style={teamStyle(resultColour(prevMatch, false))}
+                  >
+                    <div class="away-goals">
+                      {prevMatch.awayGoals}
+                    </div>
+                  </div>
+                  <div class="away-team" style={teamStyle(prevMatch.awayTeam)}>
+                    {toInitials(prevMatch.awayTeam)}
+                  </div>
+                </div>
               </div>
+              <div style="clear: both" />
             </div>
-          {/each}
-        </div>
+          </div>
+        {/each}
       </div>
     </div>
-  {/if}
+  </div>
+{/if}
 
 <style scoped>
   .left-side,
@@ -217,25 +175,17 @@
   .next-game-season-complete {
     display: grid;
     place-items: center;
-    background: #f3f3f3;
-    border: rgb(181, 181, 181) solid 5px;
-    border-radius: var(--border-radius);
-    height: 98%;
+    background: #f0f0f0;
+    background: linear-gradient(45deg, #c600d839, rgb(2 239 255 / 25%), #00fe873e);
+    flex: 1;
   }
   .next-game-title-text {
     margin: 0;
-    color: white;
+    color: var(--purple);
     display: flex;
   }
   .next-game-team-btn {
     color: var(--green) !important;
-  }
-  .next-game-logo {
-    height: 225px;
-    margin: 10px;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
   }
   .predictions-and-logo {
     font-size: 1.4em;
@@ -254,7 +204,7 @@
   .predictions-link {
     text-decoration: none;
     color: #333;
-    color: var(--purple)
+    color: var(--purple);
   }
   .predictions-link:hover {
     color: rgb(120 120 120);
@@ -268,10 +218,14 @@
     border-radius: 6px;
     margin: auto 0;
   }
+  .next-game-prediction-complete,
   .next-game-prediction {
     border-radius: var(--border-radius);
     min-height: 97.5%;
     border: 6px solid var(--purple);
+  }
+  .next-game-prediction-complete {
+    display: flex;
   }
   .next-game-values {
     display: flex;
@@ -292,7 +246,7 @@
   .past-result-date {
     font-size: 13px;
     width: 90px;
-    margin: 5px auto 2px;
+    margin: 3px auto 1px;
     padding-top: 3px;
     border-radius: 4px 4px 0 0;
   }
@@ -352,9 +306,23 @@
     }
   }
 
+  @media only screen and (max-width: 1100px) {
+    .next-game-title {
+      width: auto;
+      border-radius: 0;
+    }
+  }
+
   @media only screen and (max-width: 1000px) {
+    .next-game-prediction-complete {
+      margin: 50px 20px 40px;
+    }
+    .next-game-season-complete {
+      padding: 50px 10px;
+    }
     .next-game-prediction {
       margin: 50px 20px 40px;
+      
     }
     .next-game-values {
       margin: 2% 3vw 2% 0;
@@ -415,6 +383,9 @@
     }
     .next-game-prediction {
       margin: 40px 14px;
+    }
+    .next-game-logo {
+      height: 190px;
     }
   }
 </style>

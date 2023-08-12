@@ -2,10 +2,11 @@ import logging
 
 import numpy as np
 import pandas as pd
-from dataframes.df import DF
-from dataframes.standings import Standings
 from pandas import DataFrame
 from timebudget import timebudget
+
+from .df import DF
+from .standings import Standings
 
 
 class TeamRatings(DF):

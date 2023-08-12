@@ -19,16 +19,13 @@
   import Overview from "../components/overview/Overview.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
   import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
-  import {toAlias} from "../lib/team";
-
+  import { toAlias, toHyphenatedName, playedMatchdays, currentMatchday as getCurrentMatchday } from "../lib/team";
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
-    if (mobileNav.style.width == "0px") {
-      mobileNav.style.animation = "appear 0.1s ease-in 1";
+    if (mobileNav.style.width === "0px") {
       mobileNav.style.width = "100%";
     } else {
-      mobileNav.style.animation = null;
       mobileNav.style.width = "0px";
     }
   }
@@ -44,21 +41,11 @@
       .replace("And", "and");
   }
 
-  function playedMatchdays(data: TeamData, team: string): string[] {
-    let matchdays = [];
-    for (let matchday in data.form[team][data._id]) {
-      if (data.form[team][data._id][matchday].score != null) {
-        matchdays.push(matchday);
-      }
-    }
-    return matchdays;
-  }
-
   function playedMatchdayDates(data: TeamData, team: string): Date[] {
     let matchdays = playedMatchdays(data, team);
 
     // If played one or no games, take x-axis from whole season dates
-    if (matchdays.length == 0) {
+    if (matchdays.length === 0) {
       matchdays = Object.keys(data.fixtures[team]);
     }
 
@@ -78,27 +65,9 @@
     return x;
   }
 
-  function getCurrentMatchday(data: TeamData, team: string): null | string {
-    let matchdays = Object.keys(data.form[team][data._id]).reverse();
-    if (matchdays.length > 0) {
-      // Largest matchday with score is current matchday
-      for (let matchday of matchdays) {
-        if (data.form[team][data._id][matchday].score != null) {
-          return matchday;
-        }
-      }
-    }
-    return null;
-  }
-
-  async function fetchData(address: string): Promise<TeamData> {
-    const response = await fetch(address);
-    return await response.json();
-  }
-
-  function initDashboard() {
+  async function initDashboard() {
     // Set formatted team name so page header can display while fetching data
-    if (hyphenatedTeam == 'overview') {
+    if (hyphenatedTeam === "overview") {
       team = "Overview";
       title = `Dashboard | ${team}`;
       hyphenatedTeam = "overview";
@@ -107,34 +76,33 @@
       title = `Dashboard | ${team}`;
     }
 
-    fetchData("https://pldashboard-backend.vercel.app/api/teams")
-      .then((json: TeamData) => {
-        teams = Object.keys(json.standings);
-        if (hyphenatedTeam == null) {
-          // If root, set team to current leader
-          team = teams[0];
-          title = `Dashboard | ${team}`
-          hyphenatedTeam = team.toLowerCase().replace(/ /g, "-");
-          // Change url to /team-name without reloading page
-          history.pushState({}, null, window.location.href + hyphenatedTeam);
-        } else if (team != 'Overview' && !teams.includes(team)) {
-            window.location.href = "/error";
-        }
-        if (team != 'Overview') {
-          currentMatchday = getCurrentMatchday(json, team);
-          playedDates = playedMatchdayDates(json, team);
-        }
-        data = json;
-        console.log(data);
-      })
-      .then(() => {
-        window.dispatchEvent(new Event("resize"));
-      });
+    const response = await fetch("https://pldashboard-backend.vercel.app/api/teams");
+    let json = await response.json();
+
+    teams = Object.keys(json.standings);
+    if (hyphenatedTeam === null) {
+      // If root, set team to current leader
+      team = teams[0];
+      title = `Dashboard | ${team}`;
+      hyphenatedTeam = toHyphenatedName(team);
+      // Change url to /team-name without reloading page
+      history.pushState({}, null, window.location.href + hyphenatedTeam);
+    } else if (team != "Overview" && !teams.includes(team)) {
+      window.location.href = "/error";
+    }
+    if (team != "Overview") {
+      currentMatchday = getCurrentMatchday(json, team);
+      playedDates = playedMatchdayDates(json, team);
+    }
+    data = json;
+    console.log(data);
+
+    window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
   }
-  
+
   function switchTeam(newTeam: string) {
     hyphenatedTeam = newTeam;
-    if (hyphenatedTeam == "overview") {
+    if (hyphenatedTeam === "overview") {
       team = "Overview";
       title = `Dashboard | ${team}`;
     } else {
@@ -149,10 +117,8 @@
 
   function lazyLoad() {
     load = true;
-    window.dispatchEvent(new Event("resize"));
+    window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
   }
-
-  const showBadge = false;
 
   let y: number;
   let load = false;
@@ -160,15 +126,16 @@
 
   let pageWidth: number;
   $: mobileView = pageWidth <= 700;
-  
+
   let title = "Dashboard";
   let team = "";
   let teams: string[] = []; // Used for nav bar links
-  let currentMatchday: string, playedDates: Date[];
+  let currentMatchday: string
+  let playedDates: Date[];
 
   let data: TeamData;
   onMount(() => {
-    initDashboard()
+    initDashboard();
   });
 
   export let hyphenatedTeam: string;
@@ -179,7 +146,7 @@
   <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
-<svelte:window bind:innerWidth={pageWidth} bind:scrollY={y}/>
+<svelte:window bind:innerWidth={pageWidth} bind:scrollY={y} />
 
 <Router>
   <div id="team">
@@ -191,7 +158,7 @@
       {switchTeam}
       {toggleMobileNav}
     />
-    {#if teams.length == 0}
+    {#if teams.length === 0}
       <!-- Navigation disabled while teams list are loading -->
       <button id="mobileNavBtn" style="cursor: default">Select Team</button>
     {:else}
@@ -207,58 +174,47 @@
             class="title"
             style="color: var(--{hyphenatedTeam + '-secondary'});"
           >
-            {hyphenatedTeam != 'overview' ? toAlias(team): 'Overview'}
+            {hyphenatedTeam != "overview" ? toAlias(team) : "Overview"}
           </div>
         </a>
       </div>
 
       {#if data != undefined}
-        {#if hyphenatedTeam == "overview"}
+        {#if hyphenatedTeam === "overview"}
           <Overview {data} />
         {:else}
           <div class="page-content">
             <div class="row multi-element-row small-bottom-margin">
-              {#if showBadge}
-                <div
-                  class="row-left position-and-badge"
-                  style="background-image: url('{data.logoURLs[team]}')"
-                >
-                  <div class="position">
-                    {data.standings[team][data._id].position}
-                  </div>
+              <div class="row-left position-no-badge">
+                <div class="circles-background-container">
+                  <svg class="circles-background">
+                    <circle
+                      cx="300"
+                      cy="150"
+                      r="100"
+                      stroke-width="0"
+                      fill="var(--{hyphenatedTeam}-secondary)"
+                    />
+                    <circle
+                      cx="170"
+                      cy="170"
+                      r="140"
+                      stroke-width="0"
+                      fill="var(--{hyphenatedTeam})"
+                    />
+                    <circle
+                      cx="300"
+                      cy="320"
+                      r="170"
+                      stroke-width="0"
+                      fill="var(--{hyphenatedTeam})"
+                    />
+                  </svg>
                 </div>
-              {:else}
-                <div class="row-left position-no-badge">
-                  <div class="circles-background-container">
-                    <svg class="circles-background">
-                      <circle
-                        cx="300"
-                        cy="150"
-                        r="100"
-                        stroke-width="0"
-                        fill="var(--{hyphenatedTeam}-secondary)"
-                      />
-                      <circle
-                        cx="170"
-                        cy="170"
-                        r="140"
-                        stroke-width="0"
-                        fill="var(--{hyphenatedTeam})"
-                      />
-                      <circle
-                        cx="300"
-                        cy="320"
-                        r="170"
-                        stroke-width="0"
-                        fill="var(--{hyphenatedTeam})"
-                      />
-                    </svg>
-                  </div>
-                  <div class="position-central">
-                    {data.standings[team][data._id].position}
-                  </div>
+                <div class="position-central">
+                  {data.standings[team][data._id].position}
                 </div>
-              {/if}
+              </div>
               <div class="row-right fixtures-graph row-graph">
                 <h1 class="lowered">Fixtures</h1>
                 <div class="graph mini-graph mobile-margin">
@@ -269,21 +225,11 @@
 
             <div class="row multi-element-row">
               <div class="row-left form-details">
-                <CurrentForm {data} {currentMatchday} {team} />
-                <TableSnippet
-                  {data}
-                  {hyphenatedTeam}
-                  {team}
-                  {switchTeam}
-                />
+                <CurrentForm {data} currentMatchday={currentMatchday} {team} />
+                <TableSnippet {data} {hyphenatedTeam} {team} {switchTeam} />
               </div>
               <div class="row-right">
-                <NextGame
-                  {data}
-                  {team}
-                  {showBadge}
-                  {switchTeam}
-                />
+                <NextGame {data} {team} {switchTeam} />
               </div>
             </div>
 
@@ -310,7 +256,6 @@
                     <PositionOverTimeGraph
                       {data}
                       {team}
-                      {playedDates}
                       {mobileView}
                     />
                   </div>
@@ -324,7 +269,6 @@
                     <PointsOverTimeGraph
                       {data}
                       {team}
-                      {playedDates}
                       {mobileView}
                     />
                   </div>
@@ -333,7 +277,7 @@
 
               <div class="row no-bottom-margin">
                 <div class="goals-scored-vs-conceded-graph row-graph">
-                  <h1 class="lowered">Goals Scored and Conceded</h1>
+                  <h1 class="lowered">Goals Per Game</h1>
                   <div class="graph full-row-graph">
                     <GoalsScoredAndConcededGraph
                       {data}
@@ -348,7 +292,12 @@
               <div class="row">
                 <div class="row-graph">
                   <div class="clean-sheets graph full-row-graph">
-                    <CleanSheetsGraph {data} {team} {playedDates} {mobileView} />
+                    <CleanSheetsGraph
+                      {data}
+                      {team}
+                      {playedDates}
+                      {mobileView}
+                    />
                   </div>
                 </div>
               </div>
@@ -367,7 +316,7 @@
 
               <div class="row">
                 <div class="goals-freq-row row-graph">
-                  <h1>Goals Per Game</h1>
+                  <h1>Scorelines</h1>
                   <GoalsPerGame {data} {team} {mobileView} />
                 </div>
               </div>
@@ -415,6 +364,9 @@
   .title {
     font-size: 2.3rem;
     width: fit-content;
+  }
+  .lowered {
+    margin-bottom: -9px;
   }
   .page-content {
     position: relative;
@@ -516,7 +468,7 @@
     display: flex;
     flex-direction: column;
     padding-right: auto;
-    margin-right: 1.4em;
+    margin-right: 1.5em;
     text-justify: center;
     flex: 4;
   }
@@ -539,7 +491,6 @@
   #mobileNavBtn {
     position: fixed;
     color: white;
-    background: var(--purple);
     background: var(--purple);
     padding: 0.8em 0;
     cursor: pointer;
@@ -620,12 +571,14 @@
       font-size: 24vw;
     }
   }
-  @media only screen and (min-width: 1000px) {
-    .full-row-graph {
-      margin: 0 1em;
+
+  @media only screen and (min-width: 1100px) {
+    .form-details {
+      width: 80%;
+      align-items: center;
     }
   }
-
+  
   @media only screen and (max-width: 1000px) {
     .row {
       flex-direction: column;
@@ -644,6 +597,7 @@
     .row-left {
       margin-right: 0;
       align-self: center;
+      width: 80%;
     }
 
     .position-and-badge {
@@ -676,6 +630,9 @@
     .spider-chart-container {
       flex-direction: column;
       width: 100%;
+    }
+    .full-row-graph {
+      margin: 0 1em;
     }
   }
 
@@ -746,7 +703,9 @@
     .season-stats-row {
       margin: 0 1em 1em;
     }
-
+    .form-details {
+      width: 95%;
+    }
     .position-no-badge,
     .position-and-badge {
       padding: 0 !important;
@@ -757,6 +716,10 @@
     .circles-background {
       transform: scale(0.35);
       margin-top: -9.5em;
+    }
+
+    .lowered {
+      margin: 0 30px;
     }
   }
 </style>

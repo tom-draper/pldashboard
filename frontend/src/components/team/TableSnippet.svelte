@@ -1,7 +1,10 @@
 <script lang="ts">
-  import {toAlias} from "../../lib/team";
+  import { toAlias, toHyphenatedName } from "../../lib/team";
 
-  function tableSnippetRange(sortedTeams: string[], team: string): [number, number] {
+  function tableSnippetRange(
+    sortedTeams: string[],
+    team: string
+  ): [number, number] {
     let teamStandingsIdx = sortedTeams.indexOf(team);
 
     let low = teamStandingsIdx - 3;
@@ -33,7 +36,7 @@
     let teamTableIdx: number;
     let rows = [];
     for (let i = low; i < high; i++) {
-      if (sortedTeams[i] == team) {
+      if (sortedTeams[i] === team) {
         teamTableIdx = i - low;
       }
       rows.push({
@@ -51,19 +54,22 @@
   }
 
   type TableSnippet = {
-    teamTableIdx: number,
+    teamTableIdx: number;
     rows: {
-      name: string,
-      position: number,
-      points: number,
-      gd: number,
-    }[]
-  }
+      name: string;
+      position: number;
+      points: number;
+      gd: number;
+    }[];
+  };
 
   let tableSnippet: TableSnippet;
-  $: team && buildTableSnippet()
+  $: team && buildTableSnippet();
 
-  export let data: TeamData, hyphenatedTeam: string, team: string, switchTeam: Function;
+  export let data: TeamData,
+    hyphenatedTeam: string,
+    team: string,
+    switchTeam: Function;
 </script>
 
 <div class="table-snippet">
@@ -78,7 +84,7 @@
 
     {#each tableSnippet.rows as row, i}
       <!-- Divider -->
-      {#if i == 0}
+      {#if i === 0}
         {#if i != tableSnippet.teamTableIdx}
           <div id="divider" />
         {/if}
@@ -86,7 +92,7 @@
         <div id="divider" />
       {/if}
       <!-- Row of table -->
-      {#if i == tableSnippet.teamTableIdx}
+      {#if i === tableSnippet.teamTableIdx}
         <!-- Highlighted row for the team of the current page -->
         <div
           class="table-row this-team"
@@ -125,7 +131,9 @@
             {row.position}
           </div>
           <button
-            on:click="{() => {switchTeam(row.name.toLowerCase().replace(/ /g, '-'))}}"
+            on:click={() => {
+              switchTeam(toHyphenatedName(row.name));
+            }}
             class="table-element table-team-name"
           >
             {toAlias(row.name)}
@@ -198,5 +206,16 @@
   }
   .table-points {
     width: 15%;
+  }
+
+  @media only screen and (max-width: 1100px) {
+    .table-snippet {
+      margin-top: 0;
+    }
+  }
+  @media only screen and (max-width: 550px) {
+    .table-snippet {
+      font-size: 14px;
+    }
   }
 </style>

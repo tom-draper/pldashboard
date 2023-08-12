@@ -1,20 +1,13 @@
 import logging
 import math
-import os
-import sys
 from datetime import datetime
 from typing import Union
 
 import numpy as np
 import pandas as pd
-from data import Form, HomeAdvantages, TeamRatings, Upcoming
-from lib.database.database import Database
-from lib.utils.utilities import Utilities
+from db.database import Database
 from pandas.core.frame import DataFrame
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-utils = Utilities()
+from src.dataframes import Form, HomeAdvantages, TeamRatings, Upcoming
 
 
 class Predictor:

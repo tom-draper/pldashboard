@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { toInitials } from "../../lib/team";
+  import { teamStyle } from "../../lib/format";
   import OverviewFooter from "./Footer.svelte";
-  import {toInitials} from "../../lib/team";
 
   type UpcomingMatch = {
     time: Date;
@@ -13,8 +14,7 @@
     let upcoming: UpcomingMatch[] = [];
     for (let team in data.upcoming) {
       let date = new Date(data.upcoming[team].date);
-      let atHome = data.upcoming[team].atHome;
-      if (atHome) {
+      if (data.upcoming[team].atHome) {
         upcoming.push({
           time: date,
           home: team,
@@ -56,7 +56,7 @@
   }
 
   function applyRatingFixturesScaling() {
-    if (fixturesScaling == "rating") {
+    if (fixturesScaling === "rating") {
       return;
     }
     fixturesScaling = "rating";
@@ -75,7 +75,7 @@
   }
 
   function applyRatingFormScaling() {
-    if (fixturesScaling == "form") {
+    if (fixturesScaling === "form") {
       return;
     }
     fixturesScaling = "form";
@@ -104,6 +104,7 @@
     team: string;
     matches: {
       team: string;
+      date: string;
       atHome: boolean;
       status: string;
       colour: string;
@@ -121,6 +122,7 @@
           : data.homeAdvantages[match.team].totalHomeAdvantage;
         matches.push({
           team: match.team,
+          date: match.date,
           atHome: match.atHome,
           status: match.status,
           colour: fixtureColourSkewed(
@@ -218,7 +220,7 @@
           <div class="upcoming-matches">
             <div class="upcoming-title">Upcoming</div>
             {#each upcoming as match, i}
-              {#if i == 0 || match.time.getDate() != upcoming[i - 1].time.getDate()}
+              {#if i === 0 || match.time.getDate() != upcoming[i - 1].time.getDate()}
                 <div class="upcoming-match-date">
                   {match.time.toLocaleDateString("en-GB", {
                     weekday: "long",
@@ -229,33 +231,27 @@
                 </div>
               {/if}
               <div class="upcoming-match">
-                <div class="upcoming-match-time">
-                  {match.time.toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </div>
                 <div class="upcoming-match-teams">
                   <div
                     class="upcoming-match-home"
-                    style="background: var(--{match.home
-                      .toLowerCase()
-                      .replace(/ /g, '-')}); color: var(--{match.home
-                      .toLowerCase()
-                      .replace(/ /g, '-')}-secondary)"
+                    style={teamStyle(match.home)}
                   >
                     {toInitials(match.home)}
                   </div>
                   <div
                     class="upcoming-match-away"
-                    style="background: var(--{match.away
-                      .toLowerCase()
-                      .replace(/ /g, '-')}); color: var(--{match.away
-                      .toLowerCase()
-                      .replace(/ /g, '-')}-secondary)"
+                    style={teamStyle(match.away)}
                   >
                     {toInitials(match.away)}
                   </div>
+                </div>
+              </div>
+              <div class="upcoming-match-time-container">
+                <div class="upcoming-match-time">
+                  {match.time.toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </div>
               </div>
             {/each}
@@ -284,7 +280,7 @@
             </div>
             {#each standings as row, i}
               <div
-                class="table-row {i % 2 == 0 ? 'grey-row' : ''} {i < 4
+                class="table-row {i % 2 === 0 ? 'grey-row' : ''} {i < 4
                   ? 'cl'
                   : ''} {i > 3 && i < 6 ? 'el' : ''} {i > 16
                   ? 'relegation'
@@ -341,7 +337,7 @@
           <div class="scale-team-ratings">
             <button
               id="rating-scale-btn"
-              class="scale-btn {fixturesScaling == 'rating'
+              class="scale-btn {fixturesScaling === 'rating'
                 ? 'scaling-selected'
                 : ''}"
               on:click={applyRatingFixturesScaling}
@@ -352,7 +348,7 @@
           <div class="scale-team-form">
             <button
               id="form-scale-btn"
-              class="scale-btn {fixturesScaling == 'form'
+              class="scale-btn {fixturesScaling === 'form'
                 ? 'scaling-selected'
                 : ''}"
               on:click={applyRatingFormScaling}
@@ -367,15 +363,11 @@
               <div class="fixtures-table-row">
                 <div
                   class="fixtures-team"
-                  style="background: var(--{row.team
-                    .toLowerCase()
-                    .replace(/ /g, '-')}); color: var(--{row.team
-                    .toLowerCase()
-                    .replace(/ /g, '-')}-secondary);
-                      {i == 0
+                  style="{teamStyle(row.team)}
+                      {i === 0
                     ? 'border-top: 2px solid black; border-radius: 4px 0 0'
                     : ''}
-                      {i == fixtures.length - 1
+                      {i === fixtures.length - 1
                     ? 'border-radius: 0 0 0 4px;'
                     : ''}"
                 >
@@ -401,9 +393,10 @@
                       style="background: {match.colour}; {match.status ==
                       'FINISHED'
                         ? 'filter: grayscale(100%)'
-                        : ''} {i == row.matches.length - 1
+                        : ''} {i === row.matches.length - 1
                         ? 'border-right: 2px solid black'
                         : ''}"
+                      title={match.date}
                     >
                       {`${toInitials(match.team)} (${
                         match.atHome ? "H" : "A"
@@ -433,6 +426,10 @@
   .left {
     width: min(40%, 500px);
   }
+  .upcoming-matches {
+    position: relative;
+    margin-left: 40px;
+  }
   .upcoming-match {
     display: flex;
     margin-bottom: 8px;
@@ -448,15 +445,20 @@
     font-weight: 800;
     text-align: center;
   }
-  .upcoming-match-date,
-  .upcoming-title {
-    margin-left: 90px;
+
+  .upcoming-match-time-container {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    margin-top: -31px;
+    width: 100%;
   }
   .upcoming-match-time {
+    background: #ffffffa1;
+    padding: 1px 4px;
+    border-radius: 2px;
     font-size: 13px;
     text-align: right;
-    margin: auto 10px auto auto;
-    width: 60px;
   }
   .upcoming-match-teams {
     display: flex;
@@ -601,5 +603,14 @@
   .scale-btn {
     border-radius: 4px;
     cursor: pointer;
+  }
+
+  @media only screen and (max-width: 1200px) {
+    .fixtures {
+      width: 100vw;
+    }
+    .standings-points {
+      margin: 0;
+    }
   }
 </style>
