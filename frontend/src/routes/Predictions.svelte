@@ -37,9 +37,15 @@
         }
       }
     }
+    
+    let scoreAccuracy = 0
+    let resultAccuracy = 0
+    if (total > 0) {
+      scoreAccuracy = scoreCorrect / total;
+      resultAccuracy = resultCorrect / total;
+    }
     json.accuracy = {
-      scoreAccuracy: scoreCorrect / total,
-      resultAccuracy: resultCorrect / total,
+      scoreAccuracy, resultAccuracy
     }
   }
 

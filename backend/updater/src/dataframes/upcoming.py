@@ -37,7 +37,7 @@ class Upcoming(DF):
             }
         """
         # If predictions haven't been added to dataframe, skip (season is over)
-        if 'predictions' not in self.df:
+        if 'prediction' not in self.df:
             return {}
 
         predictions: dict[str, dict[str, datetime | str | dict[str, float]]] = {}
@@ -45,9 +45,9 @@ class Upcoming(DF):
             home_initials, home_goals, away_goals, away_initials = extract_scoreline(row['prediction'])
 
             predictions[team] = {
-                'date': row[('date', '')].to_pydatetime(),
-                'homeInitials': convert_team_name_or_initials(home_initials),
-                'awayInitials': convert_team_name_or_initials(away_initials),
+                'date': row['date'].to_pydatetime(),
+                'homeInitials': home_initials,
+                'awayInitials': away_initials,
                 'prediction': {
                     'homeGoals': home_goals,
                     'awayGoals': away_goals

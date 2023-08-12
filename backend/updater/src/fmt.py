@@ -28,6 +28,7 @@ names_and_initials = TwoWayDict({
     'BHA': 'Brighton and Hove Albion',
     'BUR': 'Burnley',
     'BRE': 'Brentford',
+    'BOU': 'Bournemouth',
     'CHE': 'Chelsea',
     'CRY': 'Crystal Palace',
     'EVE': 'Everton',
@@ -48,7 +49,6 @@ names_and_initials = TwoWayDict({
     'WHU': 'West Ham United',
     'WOL': 'Wolverhampton Wanderers',
     'NOT': 'Nottingham Forest',
-
 })
 
 def convert_team_name_or_initials(team_name: str) -> str:
@@ -57,7 +57,7 @@ def convert_team_name_or_initials(team_name: str) -> str:
     elif len(team_name) == 3:
         # Cannot convert initials to a full team name if not in dict
         raise KeyError(
-            "Team name corresponding to input initials does not exist")
+            f"Team name {team_name} corresponding to input initials does not exist")
     else:
         # If no match found for a given full team name, shorten name to
         # create initials
