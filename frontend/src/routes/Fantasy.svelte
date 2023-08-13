@@ -27,6 +27,7 @@
     let json = await response.json();
 
     console.log(json)
+    data = json
 
     window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
   }
@@ -49,7 +50,7 @@
   }
 
   let pages = ["Attack", "Midfield", "Defence", "Goalkeeper"]
-
+  let data;
   onMount(() => {
     initFantasy()
   });
