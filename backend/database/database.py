@@ -43,7 +43,6 @@ class Database:
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.Fantasy
             fantasy_data = dict(collection.find_one({'_id': 'fantasy'}))
-        print(fantasy_data)
         return fantasy_data
 
     @staticmethod

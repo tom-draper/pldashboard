@@ -68,6 +68,7 @@ class Fantasy(DF):
             }
         
         fantasy = pd.DataFrame.from_dict(d, orient='index')
+        fantasy.fillna(0, inplace=True)
 
         if display:
             print(fantasy)
