@@ -7,13 +7,13 @@ class Odds:
         self.home = home
         self.draw = draw
         self.away = away
-        
+
         self.home_team = home_team
         self.away_team = away_team
         self.match_date = match_date
 
         self.representation: Literal['odds', 'probabilities'] = 'odds'
-    
+
     def __str__(self):
         return f'{self.home_team} vs {self.away_team} [{self.home}] [{self.draw}] [{self.away}]'
 
@@ -34,6 +34,7 @@ class Odds:
         if self.representation == 'probabilities':
             self._toggle_reciprocal()
             self.representation = 'odds'
+
 
 def scale_by_odds(freq: dict[str, int | float], odds: Odds):
     odds.convert_to_probabilities()

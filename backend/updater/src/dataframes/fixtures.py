@@ -6,7 +6,7 @@ import pandas as pd
 from pandas import DataFrame
 from timebudget import timebudget
 
-from ..fmt import clean_full_team_name, convert_team_name_or_initials
+from src.fmt import clean_full_team_name, convert_team_name_or_initials
 from .df import DF
 
 
@@ -18,7 +18,7 @@ class Fixtures(DF):
     def _inc_avg_scored_conceded(
         avg_scored: float,
         avg_conceded: float,
-        score: dict[str, int], 
+        score: dict[str, int],
         at_home: bool
     ):
         if at_home:

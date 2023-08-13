@@ -1,5 +1,5 @@
 import numpy as np
-from src.data import TeamRatings
+from src.dataframes import TeamRatings
 
 from .scoreline import Scoreline
 
@@ -29,6 +29,7 @@ def calc_form(team: str, recent_matches: list[Scoreline], weightings: list[float
 
     form = min(max(0, form), 1)  # Cap rating
     return form
+
 
 def scale_by_form(freq: dict[str, int | float], home_form: float, away_form: float):
     home_form += 1

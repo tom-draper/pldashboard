@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import matplotlib.pyplot as plt
 import numpy as np
-from db.database import Database
+from database.database import Database
 from src.fmt import identical_result, extract_int_score_from_scoreline
 
 

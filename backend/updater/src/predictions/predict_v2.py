@@ -34,7 +34,7 @@ class Predictor:
         self.FIXTURE_WEIGHTING = 0.4
         self.MARKET_URL = "https://www.betfair.com/exchange/plus/en/football/english-premier-league-betting-10932509"
 
-        self.odds = fetch_odds(self.MARKET_URL)
+        self.odds = fetch_odds(self.MARKET_URL, js_rendered=False)
 
     @staticmethod
     def _build_long_term_fixtures(
@@ -440,27 +440,6 @@ class Predictor:
         away_team_form = calc_form(away_team, away_team_recent_scorelines, np.linspace(0.2, 1, len(away_team_recent_scorelines)), self.team_ratings)
         # scale_by_form(scoreline_freq, home_team_form, away_team_form)
         form_scale = (home_team_form, 0.5, away_team_form)
-
-        # home_team_recent_scorelines = self._remove_recent_scorelines_home_away(
-        #     home_team_recent_scorelines,
-        #     home_team,
-        #     away_team
-        # )
-        # away_team_recent_scorelines = self._remove_recent_scorelines_home_away(
-        #     away_team_recent_scorelines,
-        #     home_team,
-        #     away_team
-        # )
-        # self._inserted_weighted_recent_scorelines(
-        #     scoreline_freq,
-        #     self._remove_recent_scorelines_teams(home_team_recent_scorelines),
-        #     np.linspace(0.2, 1, len(home_team_recent_scorelines))
-        # )
-        # self._inserted_weighted_recent_scorelines(
-        #     scoreline_freq,
-        #     self._remove_recent_scorelines_teams(away_team_recent_scorelines),
-        #     np.linspace(0.2, 1, len(away_team_recent_scorelines))
-        # )
 
         # Scale all home win probabilities by home odds, draw probabilities by
         # draw odds and away win probabilities by away odds with the current

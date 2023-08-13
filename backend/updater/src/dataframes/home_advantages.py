@@ -90,7 +90,7 @@ class HomeAdvantages(DF):
         # Check whether all teams in current season have played enough home games to meet threshold for use
         if (home_advantages[season]['home']['played'] <= threshold).all():
             logging.info(
-                f"Current season excluded from home advantages calculation, all teams have not played >= {threshold} home games.")
+                f"Home Advantages: Current season excluded from calculation; all teams have not played >= {threshold} home games.")
             # Drop this current seasons column (start from previous season)
             home_advantages_cols = home_advantages_cols.drop(
                 season, level=0, axis=1)

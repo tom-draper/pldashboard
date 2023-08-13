@@ -9,18 +9,38 @@ from webdriver_manager.chrome import ChromeDriverManager
 from .odds import Odds
 
 
-def fetch_odds(url: str) -> dict[tuple[str, str], Odds]:
-    driver = _fetch_webpage(url)
+def fetch_odds(url: str, js_rendered: bool = False) -> dict[tuple[str, str], Odds]:
+    driver = _fetch_webpage(url, js_rendered)
     time.sleep(5)  # Allows webpage to load
     tables = driver.find_elements(By.CLASS_NAME, 'coupon-table')
     odds = _extract_odds(tables)
     return odds
 
-def _fetch_webpage(url: str) -> webdriver:
+
+def _chrome_options_headless():
     options = webdriver.ChromeOptions()
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    options.add_argument("no-sandbox")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920,1080")
+    # options.add_argument("--disable-dev-shm-usage")
+    options.add_argument('--headless')
+    # options.add_argument("--disable-extensions")
+    return options
+
+
+def _fetch_webpage(url: str, js_rendered: bool = False) -> webdriver:
+    if js_rendered:
+        options = webdriver.ChromeOptions()
+        driver = webdriver.Chrome(service=Service(
+            ChromeDriverManager().install()), options=options)
+    else:
+        options = _chrome_options_headless()
+        driver = webdriver.Chrome(service=Service(
+            ChromeDriverManager().install()), options=options)
+        # driver = webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'), options=options)
     driver.get(url)
     return driver
+
 
 def _extract_odds(tables: list[WebElement]) -> dict[tuple[str, str], Odds]:
     odds = {}
@@ -31,14 +51,22 @@ def _extract_odds(tables: list[WebElement]) -> dict[tuple[str, str], Odds]:
         odds = {**odds, **table_odds}
     return odds
 
+
 def _extract_table_odds(cells: list[str]) -> dict[tuple[str, str], Odds]:
     odds = {}
     i = 0
     while i < len(cells):
-        date, home_team, away_team = cells[i:i+3]
-        home_team = _team_alias[home_team] if home_team in _team_alias else home_team
-        away_team = _team_alias[away_team] if away_team in _team_alias else away_team
-        i += 3
+        # Move to next odds value
+        while i < len(cells) and not _is_odds_value(cells[i]):
+            i += 1
+
+        if i-3 < 0:
+            continue
+
+        # Previous 3 values before odds will be date and team names
+        date, home_team, away_team = cells[i-3:i]
+        home_team = _betfair_team_alias[home_team] if home_team in _betfair_team_alias else home_team
+        away_team = _betfair_team_alias[away_team] if away_team in _betfair_team_alias else away_team
 
         odds_values = _extract_match_odds(cells, i)
         i += len(odds_values)
@@ -47,11 +75,12 @@ def _extract_table_odds(cells: list[str]) -> dict[tuple[str, str], Odds]:
         if home is None or draw is None or away is None:
             continue
 
-        _odds = Odds(home, draw, away, home_team, away_team, date)
-        odds[(home_team, away_team)] = _odds
+        odds[(home_team, away_team)] = Odds(
+            home, draw, away, home_team, away_team, date)
     return odds
 
-_team_alias = {
+
+_betfair_team_alias = {
     'Man City': 'Manchester City',
     'Nottm Forest': 'Nottingham Forest',
     'Sheff Utd': 'Sheffield United',
@@ -65,18 +94,25 @@ _team_alias = {
     'Leicester': 'Leicester City',
 }
 
+
 def _is_odds_value(cell_value: str) -> bool:
-    return "." in cell_value or cell_value.isnumeric()
+    return ("." in cell_value or cell_value.isnumeric()) and not _has_alpha(cell_value)
+
+
+def _has_alpha(value: str) -> bool:
+    return value.upper().isupper()
+
 
 def _extract_match_odds(cells: list[str], cur_idx: int) -> list[float]:
     odds = []
     while cur_idx < len(cells) and _is_odds_value(cells[cur_idx]):
-        odds.append(float(cells[cur_idx]))
+        cell_value = cells[cur_idx]
+        odds.append(float(cell_value))
         cur_idx += 1
     return odds
+
 
 def _extract_standard_odds(odds: list[float]) -> tuple[float, float, float]:
     if len(odds) == 6:
         return odds[0], odds[2], odds[4]
     return None, None, None
-
