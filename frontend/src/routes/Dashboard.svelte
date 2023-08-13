@@ -77,6 +77,9 @@
     }
 
     const response = await fetch("https://pldashboard-backend.vercel.app/api/teams");
+    if (!response.ok) {
+      return
+    }
     let json = await response.json();
 
     teams = Object.keys(json.standings);

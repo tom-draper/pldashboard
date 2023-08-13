@@ -20,9 +20,12 @@
       page = pages[0].toLowerCase()
     }
 
-    // const response = await fetch("https://fantasy.premierleague.com/api/bootstrap-static/");
-    // let json = await response.json();
-    let json = {}
+    const response = await fetch("https://pldashboard-backend.vercel.app/api/fantasy");
+    if (!response.ok) {
+      return
+    }
+    let json = await response.json();
+
     console.log(json)
 
     window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
@@ -53,7 +56,6 @@
 
   let pageWidth: number;
   $: mobileView = pageWidth <= 700;
-
 
   export let page: string;
 </script>
