@@ -145,3 +145,8 @@ class Database:
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData
             collection.replace_one({'_id': season}, team_data)
+
+    def update_fantasy_data(self, fantasy_data: dict):
+        with pymongo.MongoClient(self.connection_string) as client:
+            collection = client.PremierLeague.Fantasy
+            collection.replace_one({'_id': 'fantasy'}, fantasy_data)
