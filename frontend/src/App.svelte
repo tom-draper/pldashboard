@@ -19,9 +19,9 @@
     <Dashboard hyphenatedTeam={params.team} />
   </Route>
   <Route path="/home" component={Home} />
-  <!-- <Route path="/fantasy/:page" let:params>
+  <Route path="/fantasy/:page" let:params>
     <Fantasy page={params.page} />
   </Route>
-  <Route path="/fantasy" component={Fantasy} /> -->
+  <Route path="/fantasy" component={Fantasy} />
   <Route path="/error" component={Error} />
 </Router>
