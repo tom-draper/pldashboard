@@ -112,7 +112,7 @@
     }
   }
 
-  function goalsPerGame(data: TeamData): [SpiderAttribute, [number, number]] {
+  function goalsPerGame(data: any): [SpiderAttribute, [number, number]] {
     let attack = {};
     let maxGoalsPerSeason = Number.NEGATIVE_INFINITY;
     let minGoalsPerSeason = Number.POSITIVE_INFINITY;
@@ -183,7 +183,7 @@
     return avg;
   }
 
-  function getAttack(data: TeamData): SpiderAttribute {
+  function getAttack(data: any): SpiderAttribute {
     let [attack, extremes] = goalsPerGame(data);
     attack = scaleAttack(attack, extremes);
     attack.avg = attributeAvg(attack);
@@ -191,7 +191,7 @@
   }
 
   function concededPerSeason(
-    data: TeamData
+    data: any
   ): [SpiderAttribute, [number, number]] {
     let defence = {};
     let maxConcededPerSeason = Number.NEGATIVE_INFINITY;
@@ -245,7 +245,7 @@
     return defence;
   }
 
-  function getDefence(data: TeamData) {
+  function getDefence(data: any) {
     let [defence, range] = concededPerSeason(data);
     defence = scaleDefence(defence, range);
     defence.avg = attributeAvg(defence);
@@ -268,7 +268,7 @@
     return nCleanSheets;
   }
 
-  function getCleanSheets(data: TeamData): SpiderAttribute {
+  function getCleanSheets(data: any): SpiderAttribute {
     let cleanSheets = {} as SpiderAttribute;
     let maxSeasonCleanSheets = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
@@ -324,7 +324,7 @@
     return backToBack;
   }
 
-  function getConsistency(data: TeamData): SpiderAttribute {
+  function getConsistency(data: any): SpiderAttribute {
     let consistency = {} as SpiderAttribute;
     let maxSeasonBackToBack = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
@@ -373,7 +373,7 @@
     return winStreak;
   }
 
-  function getWinStreak(data: TeamData): SpiderAttribute {
+  function getWinStreak(data: any): SpiderAttribute {
     let winStreaks = {} as SpiderAttribute;
     let maxSeasonWinStreak = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
@@ -401,7 +401,7 @@
   }
 
   function seasonComplete(
-    data: TeamData,
+    data: any,
     team: string,
     season: number
   ): boolean {
@@ -442,7 +442,7 @@
     return [pointsVsBig6, numPlayed];
   }
 
-  function getVsBig6(data: TeamData): SpiderAttribute {
+  function getVsBig6(data: any): SpiderAttribute {
     //@ts-ignore
     let vsBig6: SpiderAttribute = {};
     let maxAvgSeasonPointsVsBig6 = Number.NEGATIVE_INFINITY;
@@ -532,7 +532,7 @@
     return [avgData, teamData];
   }
 
-  function computePlotData(data: TeamData) {
+  function computePlotData(data: any) {
     attack = getAttack(data);
     defence = getDefence(data);
     cleanSheets = getCleanSheets(data);
@@ -559,7 +559,7 @@
     };
   }
 
-  function buildPlotData(data: TeamData, team: string): PlotData {
+  function buildPlotData(data: any, team: string): PlotData {
     computePlotData(data);
 
     let spiderPlots = initSpiderPlots(team);
@@ -661,7 +661,7 @@
 
   $: team && refreshPlot();
 
-  export let data: TeamData, team: string, teams: string[];
+  export let data: any, team: string, teams: string[];
 </script>
 
 <div class="spider-chart">

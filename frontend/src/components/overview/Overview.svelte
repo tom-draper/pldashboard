@@ -209,7 +209,7 @@
     fixtures = fixturesTable(standings);
   });
 
-  export let data: TeamData;
+  export let data: any;
 </script>
 
 <div id="page-content">

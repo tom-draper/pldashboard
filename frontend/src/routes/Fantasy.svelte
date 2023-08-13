@@ -1,10 +1,12 @@
 <script lang="ts">
   import { Router } from "svelte-routing";
   import { onMount } from "svelte";
-  import Nav from "../components/nav/Nav.svelte";
-  import MobileNav from "../components/nav/MobileNav.svelte";
+  import FantasyNav from "../components/nav/FantasyNav.svelte";
+  import FantasyMobileNav from "../components/nav/FantasyMobileNav.svelte";
+  import PointsVsPrice from "../components/fantasy/PointsVsPrice.svelte";
 
-  import { toAlias } from "../lib/team";
+
+  let pages = ["All", "Attack", "Midfield", "Defence", "Goalkeeper"]
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
@@ -28,6 +30,7 @@
 
     console.log(json)
     data = json
+    pageData = json
 
     window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
   }
@@ -36,21 +39,35 @@
 
   function switchPage(newPage: string) {
     page = newPage;
-    if (page === "overview") {
-      title = `Fantasy | ${page}`;
+    if (page === "all") {
+      title = "Fantasy"
     } else {
-      title = `Fantasy | ${page}`;
+      title = `Fantasy | ${page[0].toUpperCase + page.substring(1)}`;
     }
 
+    let newData = {}
+    for (let team of Object.keys(data)) {
+      if (team === "_id" || page === "all" ||
+        page === "attack" && data[team].position === "Forward" ||
+        page === "midfield" && data[team].position === "Midfielder" ||
+        page === "defence" && data[team].position === "Defender" ||
+        page === "goalkeeper" && data[team].position === "Goalkeeper"
+        )
+        newData[team] = data[team]
+    }
+    pageData = newData
+
     let nextPage = page
-    if (!window.location.href.endsWith("/")) {
+    if (nextPage === "all") {
+      nextPage = "/fantasy"
+    } else if (!window.location.href.endsWith("/")) {
       nextPage = "/fantasy/" + nextPage
     }
     window.history.pushState(null, null, nextPage); // Change current url without reloading
   }
 
-  let pages = ["Attack", "Midfield", "Defence", "Goalkeeper"]
   let data;
+  let pageData;
   onMount(() => {
     initFantasy()
   });
@@ -70,12 +87,11 @@
 
 <Router>
   <div id="team">
-    <Nav team={page} teams={pages} {toAlias} switchTeam={switchPage} />
-    <MobileNav
-      hyphenatedTeam={page}
-      teams={pages}
-      {toAlias}
-      switchTeam={switchPage}
+    <FantasyNav current_page={page} {pages} {switchPage} />
+    <FantasyMobileNav
+      current_page={page}
+      {pages}
+      {switchPage}
       {toggleMobileNav}
     />
     {#if pages.length === 0}
@@ -88,12 +104,17 @@
     {/if}
 
     <div id="dashboard">
-      
+      {#if pageData != undefined}
+      <div class="first-graph">
+        <PointsVsPrice data={pageData} {page} {mobileView} />
+      </div>
+      {/if}
     </div>
   </div>
 </Router>
 
 <style scoped>
+
   #team {
     display: flex;
     overflow-x: hidden;
@@ -103,5 +124,24 @@
     margin-left: 220px;
     width: 100%;
   }
+  #mobileNavBtn {
+    position: fixed;
+    color: white;
+    background: var(--purple);
+    padding: 0.8em 0;
+    cursor: pointer;
+    font-size: 1.1em;
+    z-index: 1;
+    width: 100%;
+    bottom: 0;
+    border: none;
+    margin-bottom: -1px; /* For gap at bottom found in safari */
+  }
+  @media only screen and (min-width: 1200px) {
+    #mobileNavBtn {
+      display: none;
+    }
+  }
+
 
 </style>

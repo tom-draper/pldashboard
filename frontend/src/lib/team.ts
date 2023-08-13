@@ -57,7 +57,7 @@ export function teamColor(team: string): string {
     return teamColor;
 }
 
-export function playedMatchdays(data: TeamData, team: string): string[] {
+export function playedMatchdays(data: any, team: string): string[] {
     let matchdays = [];
     for (let matchday in data.form[team][data._id]) {
         if (data.form[team][data._id][matchday].score != null) {
@@ -67,7 +67,7 @@ export function playedMatchdays(data: TeamData, team: string): string[] {
     return matchdays;
 }
 
-export function currentMatchday(data: TeamData, team: string): string {
+export function currentMatchday(data: any, team: string): string {
     let matchdays = Object.keys(data.form[team][data._id])
     for (let i = matchdays.length - 1; i >= 0; i--) {
         if (data.form[team][data._id][matchdays[i]].score != null) {

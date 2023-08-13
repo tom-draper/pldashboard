@@ -50,7 +50,7 @@
   }
 
   function countOccurances(
-    data: TeamData,
+    data: any,
     seasonStats: Stats,
     team: string,
     season: number
@@ -84,7 +84,7 @@
     }
   }
 
-  function buildStats(data: TeamData): Stats {
+  function buildStats(data: any): Stats {
     let stats = {};
     for (let team of Object.keys(data.standings)) {
       stats[team] = {
@@ -147,7 +147,7 @@
 
   $: team && refreshStatsValues();
 
-  export let data: TeamData, team: string;
+  export let data: any, team: string;
 </script>
 
 {#if stats != undefined}

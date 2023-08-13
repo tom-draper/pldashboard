@@ -18,7 +18,7 @@
   }
 
   function getCumulativePoints(
-    data: TeamData,
+    data: any,
     team: string,
     matchdays: string[]
   ): number[] {
@@ -31,7 +31,7 @@
   }
 
   function getMatchdayDates(
-    data: TeamData,
+    data: any,
     team: string,
     matchdays: string[]
   ): Date[] {
@@ -43,7 +43,7 @@
     return dates;
   }
 
-  function getLine(data: TeamData, team: string, isMainTeam: boolean): any {
+  function getLine(data: any, team: string, isMainTeam: boolean): any {
     let matchdays = Object.keys(data.form[team][data._id]);
     let dates = getMatchdayDates(data, team, matchdays);
     let y = getCumulativePoints(data, team, matchdays);
@@ -62,7 +62,7 @@
     return line;
   }
 
-  function lines(data: TeamData, team: string): any[] {
+  function lines(data: any, team: string): any[] {
     let lines = [];
     let teams = Object.keys(data.standings);
     for (let i = 0; i < teams.length; i++) {
@@ -134,7 +134,7 @@
     }
   }
 
-  function buildPlotData(data: TeamData, team: string): PlotData {
+  function buildPlotData(data: any, team: string): PlotData {
     let plotData = {
       data: lines(data, team),
       layout: defaultLayout(),
@@ -187,7 +187,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: TeamData, team: string, mobileView: boolean;
+  export let data: any, team: string, mobileView: boolean;
 </script>
 
 <div id="plotly">

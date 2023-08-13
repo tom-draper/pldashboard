@@ -41,7 +41,7 @@
       .replace("And", "and");
   }
 
-  function playedMatchdayDates(data: TeamData, team: string): Date[] {
+  function playedMatchdayDates(data: any, team: string): Date[] {
     let matchdays = playedMatchdays(data, team);
 
     // If played one or no games, take x-axis from whole season dates
@@ -107,7 +107,7 @@
     hyphenatedTeam = newTeam;
     if (hyphenatedTeam === "overview") {
       team = "Overview";
-      title = `Dashboard | ${team}`;
+      title = "Dashboard | Overview";
     } else {
       team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
       title = `Dashboard | ${team}`;
@@ -136,7 +136,7 @@
   let currentMatchday: string
   let playedDates: Date[];
 
-  let data: TeamData;
+  let data: any;
   onMount(() => {
     initDashboard();
   });

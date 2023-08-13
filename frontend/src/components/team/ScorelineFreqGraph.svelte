@@ -26,7 +26,7 @@
     }
   }
 
-  function getAvgScoreFreq(data: TeamData): ScoreFreq {
+  function getAvgScoreFreq(data: any): ScoreFreq {
     let scoreFreq: ScoreFreq = {};
     for (let team in data.form) {
       for (let i = 0; i < 3; i++) {
@@ -62,7 +62,7 @@
   }
 
   function insertTeamScoreBars(
-    data: TeamData,
+    data: any,
     team: string,
     scoreFreq: ScoreFreq
   ) {
@@ -219,7 +219,7 @@
     }
   }
 
-  function buildPlotData(data: TeamData, team: string): PlotData {
+  function buildPlotData(data: any, team: string): PlotData {
     scoreFreq = getAvgScoreFreq(data);
 
     insertTeamScoreBars(data, team, scoreFreq);
@@ -291,7 +291,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: TeamData, team: string, mobileView: boolean;
+  export let data: any, team: string, mobileView: boolean;
 </script>
 
 <div id="plotly">

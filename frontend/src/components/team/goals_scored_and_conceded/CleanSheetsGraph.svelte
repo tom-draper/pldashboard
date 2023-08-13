@@ -3,7 +3,7 @@
   import { playedMatchdays } from "../../../lib/team";
 
   function getTeamCleanSheets(
-    data: TeamData,
+    data: any,
     team: string
   ): [number[], number[]] {
     let notCleanSheets = [];
@@ -35,7 +35,7 @@
   }
 
   function bars(
-    data: TeamData,
+    data: any,
     team: string,
     playedDates: Date[],
     matchdays: string[]
@@ -148,7 +148,7 @@
     };
   }
 
-  function buildPlotData(data: TeamData, team: string): PlotData {
+  function buildPlotData(data: any, team: string): PlotData {
     let matchdays = playedMatchdays(data, team);
     let [cleanSheetsBar, concededBar] = bars(
       data,
@@ -221,7 +221,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: TeamData,
+  export let data: any,
     team: string,
     playedDates: Date[],
     mobileView: boolean;

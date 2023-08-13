@@ -19,7 +19,7 @@
     }
   }
 
-  export let data: TeamData, team: string, switchTeam: Function;
+  export let data: any, team: string, switchTeam: Function;
 </script>
 
 {#if data.upcoming[team].nextTeam === null}

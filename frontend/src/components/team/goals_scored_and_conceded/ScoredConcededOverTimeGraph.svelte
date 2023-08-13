@@ -80,7 +80,7 @@
   }
 
   function goalsOverTime(
-    data: TeamData,
+    data: any,
     team: string,
     numSeasons: number
   ): GoalsOverTime {
@@ -125,7 +125,7 @@
   }
 
   function lineData(
-    data: TeamData,
+    data: any,
     team: string
   ): [Date[], number[], number[], string[], number[], number[], number[]] {
     let numSeasons = 3;
@@ -275,7 +275,7 @@
     }
   }
 
-  function buildPlotData(data: TeamData, team: string): PlotData {
+  function buildPlotData(data: any, team: string): PlotData {
     let [dates, days, seasonBoundaries, ticktext, tickvals, scored, conceded] =
       lineData(data, team);
     let maxY = Math.max(Math.max(...scored), Math.max(...conceded));
@@ -337,7 +337,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: TeamData, team: string, mobileView: boolean;
+  export let data: any, team: string, mobileView: boolean;
 </script>
 
 <div id="plotly">

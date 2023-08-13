@@ -73,7 +73,7 @@
   }
 
   function linePoints(
-    data: TeamData,
+    data: any,
     team: string
   ): [Date[], number[], string[]] {
     let x: Date[] = [];
@@ -96,7 +96,7 @@
     return [x, y, descriptions];
   }
 
-  function line(data: TeamData, team: string, now: number): any {
+  function line(data: any, team: string, now: number): any {
     let [x, y, description] = linePoints(data, team);
 
     sortByMatchDate(x, y, description);
@@ -258,7 +258,7 @@
     }
   }
 
-  function buildPlotData(data: TeamData, team: string): PlotData {
+  function buildPlotData(data: any, team: string): PlotData {
     // Build data to create a fixtures line graph displaying the date along the
     // x-axis and opponent strength along the y-axis
     let now = Date.now();
@@ -313,7 +313,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: TeamData, team: string, mobileView: boolean;
+  export let data: any, team: string, mobileView: boolean;
 </script>
 
 <div id="plotly">
