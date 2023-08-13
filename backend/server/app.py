@@ -27,6 +27,10 @@ cache = {
         'time': None, 
         'data': None
     }, 
+    'fantasy': {
+        'time': None, 
+        'data': None
+    }, 
     'predictions': {
         'time': None, 
         'data': None
@@ -40,6 +44,7 @@ def recent_cache(date: datetime) -> bool:
 
 @app.get('/api/teams')
 async def team() -> str:
+    teams_data = None
     if cache['team']['data'] is not None and recent_cache(cache['team']['time']):
         teams_data = cache['team']['data']
     else:
@@ -49,8 +54,21 @@ async def team() -> str:
     return teams_data
 
 
+@app.get('/api/fantasy')
+async def team() -> str:
+    fantasy_data = None
+    if cache['fantasy']['data'] is not None and recent_cache(cache['fantasy']['time']):
+        fantasy_data = cache['fantasy']['data']
+    else:
+        fantasy_data = await database.get_fantasy_data()
+        cache['fantasy']['data'] = fantasy_data
+        cache['fantasy']['time'] = datetime.now()
+    return fantasy_data
+
+
 @app.get('/api/predictions')
 async def predictions() -> str:
+    predictions_data = None
     if cache['predictions']['data'] is not None and recent_cache(cache['predictions']['time']):
         predictions_data = cache['predictions']['data']
     else:

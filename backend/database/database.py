@@ -36,8 +36,14 @@ class Database:
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData
             team_data = dict(collection.find_one({'_id': self.current_season}))
-
         return team_data
+
+    async def get_fantasy_data(self) -> dict:
+        fantasy_data = None
+        with pymongo.MongoClient(self.connection_string) as client:
+            collection = client.PremierLeague.Fantasy
+            fantasy_data = dict(collection.find_one({'_id': 'fantasy'}))
+        return fantasy_data
 
     @staticmethod
     def _get_actual_score(
