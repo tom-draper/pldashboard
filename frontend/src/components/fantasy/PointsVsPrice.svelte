@@ -186,7 +186,7 @@ function getColours(position: string) {
   let plotDiv: HTMLDivElement, plotData: PlotData;
   let setup = false;
   onMount(() => {
-      document.documentElement.style.setProperty('--graph-height', '700px');
+    //   document.documentElement.style.setProperty('--graph-height', '700px');
       genPlot();
     setup = true;
   });
@@ -201,7 +201,8 @@ function getColours(position: string) {
       plotData.config
     ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
-      plot.children[0].children[0].classList.add("resizable-graph");
+      plot.children[0].children[0].classList.add("resizable-graph")
+      plot.children[0].children[0].classList.add("tall-graph");
     });
   }
 

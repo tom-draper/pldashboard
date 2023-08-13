@@ -167,7 +167,11 @@ a {
 
 .resizable-graph {
   width: 100% !important;
-  height: var(--graph-height) !important;
+  height: 450px !important;
+}
+
+.tall-graph {
+  height: 700px !important;
 }
 
 .resizable-spider-chart {

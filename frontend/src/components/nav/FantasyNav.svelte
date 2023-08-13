@@ -20,6 +20,7 @@
     <p>
       <span style="color: var(--green)">pl</span>dashboard
     </p>
+    <div class="fantasy-logo">Fantasy</div>
   </div>
   <div class="team-links">
     {#if pages.length === 0}
@@ -70,6 +71,13 @@
     height: 96px;
     display: grid;
     place-items: center;
+  }
+  .fantasy-logo {
+    color: white;
+    position: absolute;
+    font-size: 0.67em;
+    top: 59px;
+    right: 40px;
   }
   .no-selection {
     user-select: none;
