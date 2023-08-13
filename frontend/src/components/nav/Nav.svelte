@@ -134,6 +134,10 @@
     margin-bottom: 15px;
   }
 
+  .this-team-container {
+    color: var(--pink);
+  }
+
   :hover.overview-container,
   :hover.team-container {
     background: #2c002f;

@@ -59,9 +59,20 @@
   --brentford-secondary: rgb(255 255 255);
   --nottingham-forest: rgb(229 50 51);
   --nottingham-forest-secondary: rgb(255 255 255);
+  --luton-town: rgb(232, 68, 34);
+  --luton-town-secondary: rgb(27, 27, 56);
 
   --overview: #00fe87;
   --overview-secondary: #280936;
+
+  --attack: #00fe87;
+  --attack-secondary: #1c0d2d;
+  --midfield: #00fe87;
+  --midfield-secondary: #1c0d2d;
+  --defence: #00fe87;
+  --defence-secondary: #1c0d2d;
+  --goalkeeper: #00fe87;
+  --goalkeeper-secondary: #1c0d2d;
 
   --border-radius: 6px;
 
