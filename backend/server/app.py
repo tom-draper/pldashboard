@@ -56,7 +56,6 @@ async def team() -> str:
 
 @app.get('/api/fantasy')
 async def fantasy() -> str:
-    print("test")
     fantasy_data = None
     if cache['fantasy']['data'] is not None and recent_cache(cache['fantasy']['time']):
         fantasy_data = cache['fantasy']['data']

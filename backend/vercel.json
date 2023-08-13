@@ -15,6 +15,10 @@
             "dest": "/server/app.py"
         },
         {
+            "src": "/api/fantasy",
+            "dest": "/server/app.py"
+        },
+        {
             "src": "/api/predictions",
             "dest": "/server/app.py"
         }
