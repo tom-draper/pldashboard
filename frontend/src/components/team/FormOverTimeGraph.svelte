@@ -151,8 +151,9 @@
       plot.children[0].children[0].classList.add("resizable-graph");
     });
     setTimeout(() => {
+      // Render the bottom half of the page now the visible parts have been rendered
       lazyLoad = true;
-    }, 2500);
+    }, 100);
   }
 
   function refreshPlot() {

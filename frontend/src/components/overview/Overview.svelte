@@ -320,7 +320,10 @@
                   {data.teamRatings[row.team].totalRating.toFixed(2)}
                 </div>
                 <div class="standings-form">
-                  {data.form[row.team][data._id][13].formRating5.toFixed(2)}
+                  {Object.keys(data.form[row.team][data._id]).length > 0 &&
+                   data.form[row.team][data._id][Math.max(...Object.keys(data.form[row.team][data._id]).map((x) => parseInt(x)))] != undefined && 
+                   data.form[row.team][data._id][Math.max(...Object.keys(data.form[row.team][data._id]).map((x) => parseInt(x)))].formRating5 != null ? 
+                   data.form[row.team][data._id][Math.max(...Object.keys(data.form[row.team][data._id]).map((x) => parseInt(x)))].formRating5.toFixed(2) : ''}
                 </div>
               </div>
             {/each}
