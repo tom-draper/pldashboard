@@ -14,10 +14,10 @@
   <Route path="/">
     <Dashboard hyphenatedTeam="{null}" />
   </Route>
-  <Route path="/predictions" component={Predictions} />
   <Route path="/:team" let:params>
     <Dashboard hyphenatedTeam={params.team} />
   </Route>
+  <Route path="/predictions" component={Predictions} />
   <Route path="/home" component={Home} />
   <Route path="/fantasy/:page" let:params>
     <Fantasy page={params.page} />
