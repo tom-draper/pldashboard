@@ -2,7 +2,7 @@
   import FormTiles from "./FormTiles.svelte";
   import { toInitials } from "../../../lib/team";
 
-  function getSortedMatchdays(data: TeamData, team: string): string[] {
+  function getSortedMatchdays(data: any, team: string): string[] {
     let matchdays = Object.keys(data.form[team][data._id]).sort(function (
       matchday1,
       matchday2
@@ -16,7 +16,7 @@
   }
 
   function getFormStarTeams(
-    data: TeamData,
+    data: any,
     team: string,
     matchdays: string[]
   ): boolean[] {
@@ -34,7 +34,7 @@
     return formStarTeams;
   }
 
-  function getFormIcons(data: TeamData, team: string): string {
+  function getFormIcons(data: any, team: string): string {
     let formIcons: string[] = [];
     if (
       Object.keys(data.form[team][data._id][currentMatchday]).length > 0 &&
@@ -51,7 +51,7 @@
   }
 
   function getFormInitials(
-    data: TeamData,
+    data: any,
     team: string,
     matchdays: string[]
   ): string[] {
@@ -72,7 +72,7 @@
   }
 
   function latestNPlayedMatchdays(
-    data: TeamData,
+    data: any,
     team: string,
     matchdays: string[],
     N: number
@@ -104,7 +104,7 @@
   let formIcons: string, formStarTeams: boolean[], formInitials: string[];
   $: team && setFormValues();
 
-  export let data: TeamData, currentMatchday: string, team: string;
+  export let data: any, currentMatchday: string, team: string;
 </script>
 
 {#if formInitials != undefined}

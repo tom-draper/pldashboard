@@ -17,15 +17,15 @@
     return lineConfig;
   }
 
-  function getPositions(
+  function getCumulativePoints(
     data: any,
     team: string,
     matchdays: string[]
   ): number[] {
     let y = [];
-    for (let i = 0; i < matchdays.length; i++) {
-      let position = data.form[team][data._id][matchdays[i]].position;
-      y.push(position);
+    for (let matchday of matchdays) {
+      let points = data.form[team][data._id][matchday].cumPoints;
+      y.push(points);
     }
     return y;
   }
@@ -44,115 +44,100 @@
   }
 
   function getLine(data: any, team: string, isMainTeam: boolean): any {
-    let matchdays = Object.keys(data.form[team][data._id]);
-    let dates = getMatchdayDates(data, team, matchdays);
-    let y = getPositions(data, team, matchdays);
+    // let matchdays = Object.keys(data.form[team][data._id]);
+    // let dates = getMatchdayDates(data, team, matchdays);
+    // let y = getCumulativePoints(data, team, matchdays);
+    // let lineConfig = getLineConfig(team, isMainTeam);
 
-    let lineConfig = getLineConfig(team, isMainTeam);
+    // return line;
+}
 
-    let line = {
-      x: matchdays,
-      y: y,
-      name: team,
-      mode: "lines",
-      line: lineConfig,
-      text: dates,
-      hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
-      showlegend: false,
-    };
-    return line;
-  }
+function getColours(position: string) {
+    switch (position) {
+        case "Forward":
+            return "#c600d8"
+        case "Midfielder":
+            return "#00fe87"
+        case "Defender":
+            return "#2dbaff"
+        case "Goalkeeper":
+            return "#280936"
+    }
+}
 
-  function lines(data: any, team: string): any[] {
-    let lines = [];
-    let teams = Object.keys(data.standings);
-    for (let i = 0; i < teams.length; i++) {
-      if (teams[i] != team) {
-        let line = getLine(data, teams[i], false);
-        lines.push(line);
-      }
+  function lines(data: any, page: string): any[] {
+    let teams = []
+    let points = []
+    let price = []
+    let minutes = []
+    let colours = []
+    let maxMinutes = 0
+    for (let team of Object.keys(data)) {
+        if (team != "_id") {
+            teams.push(team)
+            points.push(data[team].points === null ? 0 : data[team].points)
+            price.push(data[team].price == null ? 0 : data[team].price/10)
+            minutes.push(data[team].minutes == null ? 0 : data[team].minutes / 2) 
+            if (minutes[minutes.length-1] > maxMinutes) {
+                maxMinutes = minutes[minutes.length-1]
+            }
+            colours.push(getColours(data[team].position))      
+          }
     }
 
-    // Add this team last to ensure it overlaps all other lines
-    let line = getLine(data, team, true);
-    lines.push(line);
-    return lines;
-  }
+    let playtimes = minutes.map((x) => ((x/maxMinutes) * 100).toFixed(1))
 
-  function positionRangeShapes(): any[] {
-    let matchdays = Object.keys(data.form[team][data._id]);
-    return [
-      {
-        type: "rect",
-        x0: matchdays[0],
-        y0: 4.5,
-        x1: matchdays[matchdays.length - 1],
-        y1: 0.5,
-        line: {
-          width: 0,
-        },
-        fillcolor: "#00fe87",
-        opacity: 0.2,
-        layer: "below",
+    let markers = {
+      x: points,
+      y: price,
+      name: "test",
+      mode: "markers",
+      type: "scatter",
+      marker: {
+        size: minutes,
+        colorscale: [
+          [0, "#00fe87"],
+          [0.5, "#f3f3f3"],
+          [1, "#f83027"],
+        ],
+        opacity: 0.75,
+        color: colours,
       },
-      {
-        type: "rect",
-        x0: matchdays[0],
-        y0: 6.5,
-        x1: matchdays[matchdays.length - 1],
-        y1: 4.5,
-        line: {
-          width: 0,
-        },
-        fillcolor: "#02efff",
-        opacity: 0.2,
-        layer: "below",
-      },
-      {
-        type: "rect",
-        x0: matchdays[0],
-        y0: 20.5,
-        x1: matchdays[matchdays.length - 1],
-        y1: 17.5,
-        line: {
-          width: 0,
-        },
-        fillcolor: "#f83027",
-        opacity: 0.2,
-        layer: "below",
-      },
-    ];
+      customdata: playtimes,
+      text: teams,
+      hovertemplate: `<b>%{text}</b><br><b>£%{y}m</b><br><b>%{x} points</b><br>%{customdata}% playtime<extra></extra>`,
+      showlegend: false,
+    };
+
+    // Add this team last to ensure it overlaps all other lines
+    return [markers]
   }
 
   function defaultLayout() {
-    let yLabels = Array.from(Array(20), (_, i) => i + 1);
     return {
       title: false,
       autosize: true,
-      margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
+      margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
       hovermode: "closest",
-      plot_bgcolor: "#fafafa",
-      paper_bgcolor: "#fafafa",
+      plot_bgcolor: "transparent",
+      paper_bgcolor: "transparent",
+      height: 700,
       yaxis: {
-        title: { text: "Position" },
+        title: { text: "Price" },
         gridcolor: "gray",
         showgrid: false,
         showline: false,
         zeroline: false,
-        autorange: "reversed",
         fixedrange: true,
-        ticktext: yLabels,
-        tickvals: yLabels,
         visible: true,
       },
       xaxis: {
-        title: { text: "Matchday" },
+        title: { text: "Points" },
         linecolor: "black",
         showgrid: false,
         showline: false,
         fixedrange: true,
       },
-      shapes: positionRangeShapes(),
       dragmode: false,
     };
   }
@@ -201,12 +186,13 @@
   let plotDiv: HTMLDivElement, plotData: PlotData;
   let setup = false;
   onMount(() => {
-    genPlot();
+      document.documentElement.style.setProperty('--graph-height', '700px');
+      genPlot();
     setup = true;
   });
 
   function genPlot() {
-    plotData = buildPlotData(data, team);
+    plotData = buildPlotData(data, page);
     //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
@@ -221,12 +207,8 @@
 
   function refreshPlot() {
     if (setup) {
-      let newPlotData = buildPlotData(data, team);
-      for (let i = 0; i < 20; i++) {
-        plotData.data[i] = newPlotData.data[i];
-      }
-
-      plotData.layout.shapes = positionRangeShapes();
+      let newPlotData = buildPlotData(data, page);
+     plotData.data[0] = newPlotData.data[0];
 
       //@ts-ignore
       Plotly.redraw(plotDiv);
@@ -236,11 +218,11 @@
     }
   }
 
-  $: team && refreshPlot();
+  $: page && refreshPlot();
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: any, team: string, mobileView: boolean;
+  export let data: any, page: string, mobileView: boolean;
 </script>
 
 <div id="plotly">
@@ -248,3 +230,4 @@
     <!-- Plotly chart will be drawn inside this DIV -->
   </div>
 </div>
+

@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { toHyphenatedName } from "../../lib/team";
 
-  function getFormLine(data: TeamData, team: string, isMainTeam: boolean): any {
+  function getFormLine(data: any, team: string, isMainTeam: boolean): any {
     let playedDates = [];
     let matchdays = [];
     for (let matchday in data.form[team][data._id]) {
@@ -43,7 +43,7 @@
     return line;
   }
 
-  function lines(data: TeamData, team: string): any[] {
+  function lines(data: any, team: string): any[] {
     let lines = [];
 
     let teams = Object.keys(data.standings);
@@ -118,7 +118,7 @@
     }
   }
 
-  function buildPlotData(data: TeamData, team: string): PlotData {
+  function buildPlotData(data: any, team: string): PlotData {
     let plotData = {
       data: lines(data, team),
       layout: defaultLayout(),
@@ -177,7 +177,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: TeamData,
+  export let data: any,
     team: string,
     playedDates: Date[],
     lazyLoad: boolean,

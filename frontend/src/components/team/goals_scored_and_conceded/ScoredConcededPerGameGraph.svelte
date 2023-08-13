@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  function getAvgGoalsPerGame(data: TeamData): Counter {
+  function getAvgGoalsPerGame(data: any): Counter {
     let avgGoals: Counter = {};
 
     for (let team of Object.keys(data.standings)) {
@@ -26,7 +26,7 @@
   }
 
   function getTeamGoalsPerGame(
-    data: TeamData,
+    data: any,
     team: string
   ): [Counter, Counter] {
     let scored: Counter = {};
@@ -157,7 +157,7 @@
     }
   }
 
-  function buildPlotData(data: TeamData, team: string): PlotData {
+  function buildPlotData(data: any, team: string): PlotData {
     let [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
     let avgGoals = getAvgGoalsPerGame(data);
     let matchdays = Object.keys(avgGoals);
@@ -225,7 +225,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: TeamData,
+  export let data: any,
     team: string,
     playedDates: Date[],
     mobileView: boolean;

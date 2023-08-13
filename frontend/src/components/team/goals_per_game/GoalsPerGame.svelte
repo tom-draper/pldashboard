@@ -102,7 +102,7 @@
   }
 
   function countScored(
-    data: TeamData,
+    data: any,
     goalFreq: Object,
     season: number,
     team: string
@@ -151,7 +151,7 @@
     }
   }
 
-  function avgGoalFrequencies(data: TeamData): Object {
+  function avgGoalFrequencies(data: any): Object {
     let goalFreq: Object = {};
     for (let team of Object.keys(data.standings)) {
       countScored(data, goalFreq, data._id, team);
@@ -168,7 +168,7 @@
     return goalFreq;
   }
 
-  function teamScoredFrequencies(data: TeamData, team: string): Object {
+  function teamScoredFrequencies(data: any, team: string): Object {
     let goalFreq: Object = {};
     countScored(data, goalFreq, data._id, team);
     countScored(data, goalFreq, data._id - 1, team);
@@ -178,7 +178,7 @@
   }
 
   function countConceded(
-    data: TeamData,
+    data: any,
     goalFreq: Object,
     season: number,
     team: string
@@ -207,7 +207,7 @@
     }
   }
 
-  function teamConcededFrequencies(data: TeamData, team: string): Object {
+  function teamConcededFrequencies(data: any, team: string): Object {
     let goalFreq: Object = {};
     countConceded(data, goalFreq, data._id, team);
     countConceded(data, goalFreq, data._id - 1, team);
@@ -308,7 +308,7 @@
 
   $: team && refreshTeamData();
 
-  export let data: TeamData, team: string, mobileView: boolean;
+  export let data: any, team: string, mobileView: boolean;
 </script>
 
 <div class="two-graphs">

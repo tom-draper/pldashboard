@@ -14,7 +14,7 @@
       <img src="img/pldashboard5.png" alt="pldashboard" />
       <div class="links">
         <a class="dashboard-link" href="/">Dashboard</a>
-        <a class="fantasy-link" href="/">Fantasy</a>
+        <a class="fantasy-link" href="/fantasy">Fantasy</a>
       </div>
     </div>
   </div>

@@ -108,7 +108,7 @@ type LogoURLs = {
     [teamName: string]: string
 }
 
-type TeamData = {
+type any = {
     _id: number,  // Season start year
     teamNames: string[],
     lastUpdated: string,

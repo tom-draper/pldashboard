@@ -65,6 +65,8 @@
   --overview: #00fe87;
   --overview-secondary: #280936;
 
+  --all: #00fe87;
+  --all-secondary: #1c0d2d;
   --attack: #00fe87;
   --attack-secondary: #1c0d2d;
   --midfield: #00fe87;
@@ -84,6 +86,7 @@
   --purple: #280936;
   --light-purple: #37003c;
   --green: #00fe87;
+  --graph-height: "450px"
 }
 
 @font-face {
@@ -164,7 +167,7 @@ a {
 
 .resizable-graph {
   width: 100% !important;
-  height: 450px !important;
+  height: var(--graph-height) !important;
 }
 
 .resizable-spider-chart {

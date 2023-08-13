@@ -66,7 +66,7 @@
   let tableSnippet: TableSnippet;
   $: team && buildTableSnippet();
 
-  export let data: TeamData,
+  export let data: any,
     hyphenatedTeam: string,
     team: string,
     switchTeam: Function;
