@@ -635,7 +635,7 @@
       width: 100%;
     }
     .full-row-graph {
-      margin: 0 1em;
+      margin: 0;
     }
   }
 

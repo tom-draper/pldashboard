@@ -36,7 +36,10 @@
 
   function getFormIcons(data: TeamData, team: string): string {
     let formIcons: string[] = [];
-    if (Object.keys(data.form[team][data._id][currentMatchday]).length > 0) {
+    if (
+      Object.keys(data.form[team][data._id][currentMatchday]).length > 0 &&
+      data.form[team][data._id][currentMatchday].form5 != null
+    ) {
       formIcons = data.form[team][data._id][currentMatchday].form5.split("");
     }
 
