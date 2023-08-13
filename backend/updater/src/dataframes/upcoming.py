@@ -40,9 +40,11 @@ class Upcoming(DF):
         if 'prediction' not in self.df:
             return {}
 
-        predictions: dict[str, dict[str, datetime | str | dict[str, float]]] = {}
+        predictions: dict[str, dict[str, datetime |
+                                    str | dict[str, float]]] = {}
         for team, row in self.df.iterrows():
-            home_initials, home_goals, away_goals, away_initials = extract_scoreline(row['prediction'])
+            home_initials, home_goals, away_goals, away_initials = extract_scoreline(
+                row['prediction'])
 
             predictions[team] = {
                 'date': row['date'].to_pydatetime(),
@@ -199,10 +201,12 @@ class Upcoming(DF):
             home_team = team if row['atHome'] else opponent
             away_team = opponent if row['atHome'] else team
             if (home_team, away_team) in next_game_predictions:
-                prediction = next_game_predictions_cache[(home_team, away_team)]
+                prediction = next_game_predictions_cache[(
+                    home_team, away_team)]
             else:
                 prediction = predictor.predict_score(home_team, away_team)
-                next_game_predictions_cache[(home_team, away_team)] = prediction
+                next_game_predictions_cache[(
+                    home_team, away_team)] = prediction
             next_game_predictions.append(str(prediction))
         return next_game_predictions
 
@@ -274,9 +278,11 @@ class Upcoming(DF):
 
         upcoming = pd.DataFrame.from_dict(d, orient='index')
         upcoming.index.name = 'team'
-        
-        predictor = Predictor(json_data, fixtures, form, team_ratings, home_advantages, season, n_seasons)
-        next_game_predictions = self.calc_next_game_predictions(predictor, upcoming)
+
+        predictor = Predictor(json_data, fixtures, form,
+                              team_ratings, home_advantages, season, n_seasons)
+        next_game_predictions = self.calc_next_game_predictions(
+            predictor, upcoming)
         upcoming['prediction'] = next_game_predictions
 
         if display:

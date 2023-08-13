@@ -22,6 +22,7 @@ class TwoWayDict(dict):
         """Returns the number of connections"""
         return dict.__len__(self) // 2
 
+
 names_and_initials = TwoWayDict({
     'ARS': 'Arsenal',
     'AVL': 'Aston Villa',
@@ -51,6 +52,7 @@ names_and_initials = TwoWayDict({
     'NOT': 'Nottingham Forest',
 })
 
+
 def convert_team_name_or_initials(team_name: str) -> str:
     if (team_name in names_and_initials or team_name in names_and_initials.values()):
         return names_and_initials[team_name]
@@ -63,25 +65,31 @@ def convert_team_name_or_initials(team_name: str) -> str:
         # create initials
         return team_name[:3].upper()
 
+
 def extract_int_score(score: str) -> tuple[int, int]:
     home, _, away = score.split(' ')
     return int(home), int(away)
+
 
 def extract_str_score(score: str) -> tuple[str, str]:
     home, _, away = score.split(' ')
     return home, away
 
+
 def extract_int_score_from_scoreline(score: str) -> tuple[int, int]:
     _, home, _, away, _ = score.split(' ')
     return int(home), int(away)
+
 
 def extract_str_score_from_scoreline(score: str) -> tuple[str, str]:
     _, home, _, away, _ = score.split(' ')
     return home, away
 
+
 def extract_scoreline(score: str) -> tuple[str, int, int, str]:
     home_initials, home_goals, _, away_goals, away_initials = score.split(' ')
     return home_initials, int(home_goals), int(away_goals), away_initials
+
 
 def identical_fixtures(scoreline1: str, scoreline2: str) -> bool:
     identical = False
@@ -91,13 +99,15 @@ def identical_fixtures(scoreline1: str, scoreline2: str) -> bool:
         identical = (home_p == home_s) and (away_p == away_s)
     return identical
 
+
 def identical_result(pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
     return (pred_home_goals == pred_away_goals and act_home_goals == act_away_goals) or \
-            (pred_home_goals > pred_away_goals and act_home_goals > act_away_goals) or \
-            (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)
+        (pred_home_goals > pred_away_goals and act_home_goals > act_away_goals) or \
+        (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)
+
 
 def format_scoreline_str_from_str(team_name: str, opp_team_name: str,
-                                    score: str, at_home: bool) -> str:
+                                  score: str, at_home: bool) -> str:
     team_name_initials = convert_team_name_or_initials(team_name)
     opp_team_name_initials = convert_team_name_or_initials(
         opp_team_name)
@@ -108,8 +118,9 @@ def format_scoreline_str_from_str(team_name: str, opp_team_name: str,
         scoreline = f'{opp_team_name_initials} {score} {team_name_initials}'
     return scoreline
 
+
 def format_scoreline_str(team_name: str, opp_team_name: str, scored: int,
-                            conceded: int, at_home: bool) -> str:
+                         conceded: int, at_home: bool) -> str:
     team_name_initials = convert_team_name_or_initials(team_name)
     opp_team_name_initials = convert_team_name_or_initials(
         opp_team_name)
@@ -120,6 +131,7 @@ def format_scoreline_str(team_name: str, opp_team_name: str, scored: int,
     else:
         scoreline = f'{opp_team_name_initials} {conceded} - {scored} {team_name_initials}'
     return scoreline
+
 
 def clean_full_team_name(full_team_name: str) -> str:
     """Remove FC, AFC postfixes and replace ampersand for 'and'."""

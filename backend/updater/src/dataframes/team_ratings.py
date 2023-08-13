@@ -79,8 +79,8 @@ class TeamRatings(DF):
         include = True
         # If current season hasn't played enough games
         if (standings.df[current_season]['played'] <= games_threshold).all():
-            print(
-                f'Current season excluded from team ratings calculation -> all teams must have played {games_threshold} games.')
+            logging.info(
+                f'Team Ratings: Current season excluded from calculation; all teams must have played {games_threshold} games.')
             include = False
         return include
 
@@ -139,8 +139,7 @@ class TeamRatings(DF):
         self.insert_rating_values(team_ratings, standings, season, num_seasons)
         self.replace_nan(team_ratings)
         self.normalise_ratings(team_ratings, num_seasons)
-        include_cs = self.include_current_season(
-            standings, season, games_threshold)
+        include_cs = self.include_current_season(standings, season, games_threshold)
         self._calc_total_rating_col(team_ratings, num_seasons, include_cs)
 
         team_ratings = self.clean_dataframe(team_ratings)
