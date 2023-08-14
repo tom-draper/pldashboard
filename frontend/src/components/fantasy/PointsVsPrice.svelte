@@ -1,56 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { toHyphenatedName } from "../../lib/team";
-
-  function getLineConfig(team: string, isMainTeam: boolean): any {
-    let lineConfig: any;
-    if (isMainTeam) {
-      // Get team primary colour from css variable
-      let teamKey = toHyphenatedName(team);
-      let lineColor = getComputedStyle(
-        document.documentElement
-      ).getPropertyValue(`--${teamKey}`);
-      lineConfig = { color: lineColor, width: 4 };
-    } else {
-      lineConfig = { color: "#d3d3d3" };
-    }
-    return lineConfig;
-  }
-
-  function getCumulativePoints(
-    data: any,
-    team: string,
-    matchdays: string[]
-  ): number[] {
-    let y = [];
-    for (let matchday of matchdays) {
-      let points = data.form[team][data._id][matchday].cumPoints;
-      y.push(points);
-    }
-    return y;
-  }
-
-  function getMatchdayDates(
-    data: any,
-    team: string,
-    matchdays: string[]
-  ): Date[] {
-    let dates = [];
-    for (let i = 0; i < matchdays.length; i++) {
-      let date = data.form[team][data._id][matchdays[i]].date;
-      dates.push(date);
-    }
-    return dates;
-  }
-
-  function getLine(data: any, team: string, isMainTeam: boolean): any {
-    // let matchdays = Object.keys(data.form[team][data._id]);
-    // let dates = getMatchdayDates(data, team, matchdays);
-    // let y = getCumulativePoints(data, team, matchdays);
-    // let lineConfig = getLineConfig(team, isMainTeam);
-
-    // return line;
-}
 
 function getColours(position: string) {
     switch (position) {
@@ -152,7 +101,7 @@ function getColours(position: string) {
         "margin.t": 15,
       };
       //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate);
+      Plotly.update(plotDiv, {}, layoutUpdate, 0);
     }
   }
 
@@ -165,8 +114,24 @@ function getColours(position: string) {
         "margin.l": 20,
         "margin.t": 5,
       };
+
+      let sizes = plotData.data[0].marker.size;
+      console.log
+      for (let i = 0; i < sizes.length; i++) {
+        sizes[i] = Math.round(sizes[i] / 2);
+      }
+      let dataUpdate = {
+        marker: {
+          size: sizes,
+          color: plotData.data[0].marker.color,
+          opacity: 0.75,
+        },
+      };
+
+      plotData.data[0].marker.size = sizes;
+
       //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate);
+      Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
     }
   }
 
@@ -186,8 +151,7 @@ function getColours(position: string) {
   let plotDiv: HTMLDivElement, plotData: PlotData;
   let setup = false;
   onMount(() => {
-    //   document.documentElement.style.setProperty('--graph-height', '700px');
-      genPlot();
+    genPlot();
     setup = true;
   });
 
