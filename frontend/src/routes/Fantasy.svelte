@@ -42,7 +42,7 @@
     if (page === "all") {
       title = "Fantasy"
     } else {
-      title = `Fantasy | ${page[0].toUpperCase + page.substring(1)}`;
+      title = `Fantasy | ${page[0].toUpperCase() + page.substring(1)}`;
     }
 
     let newData = {}
