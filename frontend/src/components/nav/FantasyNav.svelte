@@ -5,14 +5,7 @@
     window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
   }
 
-  let widths = [];
-  for (let i = 0; i < 4; i++) {
-    widths.push(35 + Math.floor(Math.random() * 8) * 5);
-  }
-
-  export let current_page: string,
-    pages: string[],
-    switchPage: Function;
+  export let current_page: string, pages: string[], switchPage: Function;
 </script>
 
 <nav id="navBar">
@@ -23,39 +16,33 @@
     <div class="fantasy-logo">Fantasy</div>
   </div>
   <div class="team-links">
-    {#if pages.length === 0}
-      {#each widths as width, _}
-        <div
-          class="placeholder"
-          style="width: {width}%"
-        />
-      {/each}
-    {:else}
-      {#each pages as _page, _ (_page)}
-        {#if _page.toLowerCase() === current_page}
-          <a href="/fantasy{_page === "All" ? '' : '/' + _page.toLowerCase()}" class="team-link">
-            <div class="this-team-container">
-              <div class="this-team-name">
-                {_page}
-              </div>
+    {#each pages as _page, _ (_page)}
+      {#if _page.toLowerCase() === current_page}
+        <a
+          href="/fantasy{_page === 'All' ? '' : '/' + _page.toLowerCase()}"
+          class="team-link"
+        >
+          <div class="this-team-container">
+            <div class="this-team-name">
+              {_page}
             </div>
-          </a>
-        {:else}
-          <button
-            class="team-link"
-            on:click={() => {
-              switchPage(_page.toLowerCase());
-            }}
-          >
-            <div class="team-container">
-              <div class="team-name">
-                {_page}
-              </div>
+          </div>
+        </a>
+      {:else}
+        <button
+          class="team-link"
+          on:click={() => {
+            switchPage(_page.toLowerCase());
+          }}
+        >
+          <div class="team-container">
+            <div class="team-name">
+              {_page}
             </div>
-          </button>
-        {/if}
-      {/each}
-    {/if}
+          </div>
+        </button>
+      {/if}
+    {/each}
   </div>
   <div class="close">
     <button class="close-btn" on:click={closeNavBar}>
@@ -135,39 +122,6 @@
     cursor: pointer;
   }
 
-  .placeholder {
-    height: 19px;
-    margin: 6px 21px;
-    width: 40px;
-    background: #c600d8;
-    border-radius: 4px;
-    opacity: 0.25;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .placeholder::before {
-    content: "";
-    display: block;
-    position: absolute;
-    left: -100px;
-    top: 0;
-    height: 100%;
-    width: 150px;
-    background: linear-gradient(
-      to right,
-      transparent 0%,
-      #e8e8e8 50%,
-      transparent 100%
-    );
-    background: linear-gradient(
-      to right,
-      transparent 0%,
-      #eea7f4 50%,
-      transparent 100%
-    );
-    animation: load 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  }
   @keyframes load {
     from {
       left: -100px;
