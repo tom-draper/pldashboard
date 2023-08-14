@@ -28,9 +28,9 @@
     }
     let json = await response.json();
 
-    console.log(json)
     data = json
     pageData = json
+    console.log(data)
 
     window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
   }
@@ -70,6 +70,9 @@
   let pageData;
   onMount(() => {
     initFantasy()
+    setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
+    }, 500)
   });
 
   let pageWidth: number;
@@ -142,6 +145,9 @@
       display: none;
     }
   }
-
-
+  @media only screen and (max-width: 1200px) {
+    #dashboard {
+      margin-left: 0;
+    }
+  }
 </style>

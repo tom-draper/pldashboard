@@ -209,6 +209,9 @@ a {
     height: 500px !important;
     width: 650px !important;
   }
+  .tall-graph {
+    height: 700px !important;
+  }
 }
 
 @media only screen and (max-width: 1000px) {
@@ -226,6 +229,9 @@ a {
     height: 300px !important;
   }
 
+  .tall-graph {
+    height: 500px !important;
+  }
   .resizable-spider-chart {
     height: 350px !important;
   }
@@ -266,6 +272,10 @@ a {
 
   .resizable-graph {
     height: 250px !important;
+  }
+
+  .tall-graph {
+    height: 400px !important;
   }
 
   .resizable-spider-chart {

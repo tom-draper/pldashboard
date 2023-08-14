@@ -153,7 +153,8 @@
     setTimeout(() => {
       // Render the bottom half of the page now the visible parts have been rendered
       lazyLoad = true;
-    }, 100);
+      window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
+    }, 50);
   }
 
   function refreshPlot() {
