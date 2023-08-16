@@ -5,7 +5,7 @@
     window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
   }
 
-  export let current_page: string, pages: string[], switchPage: Function;
+  export let currentPage: string, pages: string[], switchPage: Function;
 </script>
 
 <nav id="navBar">
@@ -17,7 +17,7 @@
   </div>
   <div class="team-links">
     {#each pages as _page, _ (_page)}
-      {#if _page.toLowerCase() === current_page}
+      {#if _page.toLowerCase() === currentPage}
         <a
           href="/fantasy{_page === 'All' ? '' : '/' + _page.toLowerCase()}"
           class="team-link"

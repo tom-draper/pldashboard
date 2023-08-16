@@ -10,10 +10,12 @@
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
-    if (mobileNav.style.width === "0px") {
+    if (mobileNav.style.width === "0%") {
+      mobileNav.style.display = "block";
       mobileNav.style.width = "100%";
     } else {
-      mobileNav.style.width = "0px";
+      mobileNav.style.display = "none";
+      mobileNav.style.width = "0%";
     }
   }
 
@@ -39,6 +41,7 @@
 
   function switchPage(newPage: string) {
     page = newPage;
+    console.log(newPage)
     if (page === "all") {
       title = "Fantasy"
     } else {
@@ -90,9 +93,9 @@
 
 <Router>
   <div id="team">
-    <FantasyNav current_page={page} {pages} {switchPage} />
+    <FantasyNav currentPage={page} {pages} {switchPage} />
     <FantasyMobileNav
-      current_page={page}
+      currentPage={page}
       {pages}
       {switchPage}
       {toggleMobileNav}

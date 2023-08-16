@@ -19,26 +19,18 @@
   import Overview from "../components/overview/Overview.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
   import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
-  import { toAlias, toHyphenatedName, playedMatchdays, currentMatchday as getCurrentMatchday } from "../lib/team";
+  import { toAlias, toHyphenatedName, playedMatchdays, currentMatchday as getCurrentMatchday} from "../lib/team";
+  import { toTitleCase } from "../lib/format"
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
-    if (mobileNav.style.width === "0px") {
+    if (mobileNav.style.width === "0%") {
+      mobileNav.style.display = "block";
       mobileNav.style.width = "100%";
     } else {
-      mobileNav.style.width = "0px";
+      mobileNav.style.display = "none";
+      mobileNav.style.width = "0%";
     }
-  }
-
-  function toTitleCase(str: string): string {
-    return str
-      .toLowerCase()
-      .split(" ")
-      .map(function (word) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      })
-      .join(" ")
-      .replace("And", "and");
   }
 
   function playedMatchdayDates(data: any, team: string): Date[] {
@@ -379,12 +371,6 @@
     overflow-x: hidden;
     font-size: 15px;
   }
-  .position-and-badge {
-    height: 500px;
-    background-repeat: no-repeat;
-    background-size: auto 450px;
-    background-position: right center;
-  }
 
   .position-no-badge {
     padding-left: 0;
@@ -392,19 +378,12 @@
     height: 500px;
   }
 
-  .position-central,
-  .position {
+  .position-central {
     text-shadow: 9px 9px #000;
     font-weight: 800;
     font-size: 430px;
     user-select: none;
     max-width: 500px;
-  }
-
-  .position {
-    text-align: left;
-    margin-top: 0.02em;
-    margin-left: 30px;
   }
 
   .position-central {
@@ -603,16 +582,6 @@
       width: 80%;
     }
 
-    .position-and-badge {
-      width: 50%;
-      max-width: 400px;
-      min-width: 150px;
-      padding-right: 3% !important;
-      background-size: auto 330px !important;
-      height: 400px;
-      margin-bottom: -50px;
-    }
-
     .position-no-badge {
       height: 400px;
       width: 500px;
@@ -650,10 +619,6 @@
   }
 
   @media only screen and (max-width: 700px) {
-    .position-and-badge {
-      width: 70%;
-    }
-
     .circles-background {
       transform: scale(0.55);
       margin-top: -5em;
@@ -686,7 +651,6 @@
   }
 
   @media only screen and (max-width: 550px) {
-    .position,
     .position-central {
       font-size: 10em;
       text-align: center;
@@ -699,18 +663,13 @@
       margin: 0;
     }
 
-    .position-and-badge {
-      background-size: auto 210px !important;
-      background-position: center !important;
-    }
     .season-stats-row {
       margin: 0 1em 1em;
     }
     .form-details {
       width: 95%;
     }
-    .position-no-badge,
-    .position-and-badge {
+    .position-no-badge {
       padding: 0 !important;
       margin: 0 !important;
       width: 100%;

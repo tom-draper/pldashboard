@@ -14,3 +14,15 @@ export function teamStyle(team: string): string {
 export function scoreline(homeTeam: string, awayTeam: string, homeGoals: number, awayGoals: number): string {
     return `${homeTeam} ${homeGoals} - ${awayGoals} ${awayTeam}`
 }
+
+
+export function toTitleCase(str: string): string {
+    return str
+        .toLowerCase()
+        .split(" ")
+        .map(function (word) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        })
+        .join(" ")
+        .replace("And", "and");
+}
