@@ -82,5 +82,5 @@ Consistency is a measure of the frequency of the games that have back-to-back id
 
 If you find value in my work consider supporting me.
 
-Buy Me a Coffee: https://www.buymeacoffee.com/tomdraper
+Buy Me a Coffee: https://www.buymeacoffee.com/tomdraper<br>
 PayPal: https://www.paypal.com/paypalme/tomdraper
