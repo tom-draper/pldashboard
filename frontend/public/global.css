@@ -186,6 +186,16 @@ a {
 .bottom-spider-opp-team-btn {
   border-radius: 0 0 3px 3px;
 }
+  .dataTables_wrapper .dataTables_filter {
+    float: left !important;
+    text-align: left !important;
+  }
+  .dataTables_filter > label {
+    padding-left: 10px !important;
+  }
+  .dataTables_filter > label > input {
+    margin-left: 10px !important;
+  }
 
 /* Teams page footer */
 
