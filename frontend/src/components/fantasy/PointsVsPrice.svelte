@@ -1,40 +1,40 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-function getColours(position: string) {
+  function getColours(position: string) {
     switch (position) {
-        case "Forward":
-            return "#c600d8"
-        case "Midfielder":
-            return "#00fe87"
-        case "Defender":
-            return "#2dbaff"
-        case "Goalkeeper":
-            return "#280936"
+      case "Forward":
+        return "#c600d8";
+      case "Midfielder":
+        return "#00fe87";
+      case "Defender":
+        return "#2dbaff";
+      case "Goalkeeper":
+        return "#280936";
     }
-}
+  }
 
   function lines(data: any, page: string): any[] {
-    let teams = []
-    let points = []
-    let price = []
-    let minutes = []
-    let colours = []
-    let maxMinutes = 0
+    let teams = [];
+    let points = [];
+    let price = [];
+    let minutes = [];
+    let colours = [];
+    let maxMinutes = 0;
     for (let team of Object.keys(data)) {
-        if (team != "_id") {
-            teams.push(team)
-            points.push(data[team].points === null ? 0 : data[team].points)
-            price.push(data[team].price == null ? 0 : data[team].price/10)
-            minutes.push(data[team].minutes == null ? 0 : data[team].minutes / 2) 
-            if (minutes[minutes.length-1] > maxMinutes) {
-                maxMinutes = minutes[minutes.length-1]
-            }
-            colours.push(getColours(data[team].position))      
-          }
+      if (team != "_id") {
+        teams.push(team);
+        points.push(data[team].points === null ? 0 : data[team].points);
+        price.push(data[team].price == null ? 0 : data[team].price / 10);
+        minutes.push(data[team].minutes == null ? 0 : data[team].minutes / 2);
+        if (minutes[minutes.length - 1] > maxMinutes) {
+          maxMinutes = minutes[minutes.length - 1];
+        }
+        colours.push(getColours(data[team].position));
+      }
     }
 
-    let playtimes = minutes.map((x) => ((x/maxMinutes) * 100).toFixed(1))
+    let playtimes = minutes.map((x) => ((x / maxMinutes) * 100).toFixed(1));
 
     let markers = {
       x: points,
@@ -59,7 +59,7 @@ function getColours(position: string) {
     };
 
     // Add this team last to ensure it overlaps all other lines
-    return [markers]
+    return [markers];
   }
 
   function defaultLayout() {
@@ -116,7 +116,7 @@ function getColours(position: string) {
       };
 
       let sizes = plotData.data[0].marker.size;
-      console.log
+      console.log;
       for (let i = 0; i < sizes.length; i++) {
         sizes[i] = Math.round(sizes[i] / 2);
       }
@@ -165,7 +165,7 @@ function getColours(position: string) {
       plotData.config
     ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
-      plot.children[0].children[0].classList.add("resizable-graph")
+      plot.children[0].children[0].classList.add("resizable-graph");
       plot.children[0].children[0].classList.add("tall-graph");
     });
   }
@@ -173,7 +173,7 @@ function getColours(position: string) {
   function refreshPlot() {
     if (setup) {
       let newPlotData = buildPlotData(data, page);
-     plotData.data[0] = newPlotData.data[0];
+      plotData.data[0] = newPlotData.data[0];
 
       //@ts-ignore
       Plotly.redraw(plotDiv);
@@ -195,4 +195,3 @@ function getColours(position: string) {
     <!-- Plotly chart will be drawn inside this DIV -->
   </div>
 </div>
-

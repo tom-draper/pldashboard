@@ -15,7 +15,6 @@ export function scoreline(homeTeam: string, awayTeam: string, homeGoals: number,
     return `${homeTeam} ${homeGoals} - ${awayGoals} ${awayTeam}`
 }
 
-
 export function toTitleCase(str: string): string {
     return str
         .toLowerCase()

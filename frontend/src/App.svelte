@@ -12,10 +12,10 @@
 
 <Router {url}>
   <Route path="/">
-    <Dashboard hyphenatedTeam="{null}" />
+    <Dashboard slug="{null}" />
   </Route>
   <Route path="/:team" let:params>
-    <Dashboard hyphenatedTeam={params.team} />
+    <Dashboard slug={params.team} />
   </Route>
   <Route path="/predictions" component={Predictions} />
   <Route path="/home" component={Home} />

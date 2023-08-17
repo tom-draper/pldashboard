@@ -30,10 +30,10 @@
 
   @media only screen and (max-width: 600px) {
     #error {
-        height: 85vh;
+      height: 85vh;
     }
     .msg-container {
-        font-size: 1.5em;
+      font-size: 1.5em;
     }
   }
 </style>

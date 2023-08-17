@@ -17,10 +17,10 @@
       {#each pages as page, i}
         <button
           on:click={() => {
-            switchTeamToTop(page.toLowerCase());
+            switchTeamToTop(page);
           }}
           class="team-link"
-          class:active={page.toLowerCase() === currentPage}>{pages[i]}</button
+          class:active={page.toLowerCase() === currentPage}>{pages[i][0].toUpperCase() + pages[i].slice(1)}</button>
         >
       {/each}
     </div>

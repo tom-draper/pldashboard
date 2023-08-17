@@ -17,14 +17,14 @@
   </div>
   <div class="team-links">
     {#each pages as _page, _ (_page)}
-      {#if _page.toLowerCase() === currentPage}
+      {#if _page === currentPage}
         <a
-          href="/fantasy{_page === 'All' ? '' : '/' + _page.toLowerCase()}"
+          href="/fantasy{_page === 'all' ? '' : '/' + _page}"
           class="team-link"
         >
           <div class="this-team-container">
             <div class="this-team-name">
-              {_page}
+              {_page[0].toUpperCase() + _page.slice(1)}
             </div>
           </div>
         </a>
@@ -32,12 +32,12 @@
         <button
           class="team-link"
           on:click={() => {
-            switchPage(_page.toLowerCase());
+            switchPage(_page);
           }}
         >
           <div class="team-container">
             <div class="team-name">
-              {_page}
+              {_page[0].toUpperCase() + _page.slice(1)}
             </div>
           </div>
         </button>

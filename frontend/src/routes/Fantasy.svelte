@@ -4,9 +4,8 @@
   import FantasyNav from "../components/nav/FantasyNav.svelte";
   import FantasyMobileNav from "../components/nav/FantasyMobileNav.svelte";
   import PointsVsPrice from "../components/fantasy/PointsVsPrice.svelte";
+  import Table from "../components/fantasy/Table.svelte";
 
-
-  let pages = ["All", "Attack", "Midfield", "Defence", "Goalkeeper"]
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
@@ -21,61 +20,66 @@
 
   async function initFantasy() {
     if (page === undefined) {
-      page = pages[0].toLowerCase()
+      page = pages[0];
     }
 
-    const response = await fetch("https://pldashboard-backend.vercel.app/api/fantasy");
+    const response = await fetch(
+      "https://pldashboard-backend.vercel.app/api/fantasy"
+    );
     if (!response.ok) {
-      return
+      return;
     }
     let json = await response.json();
 
-    data = json
-    pageData = json
-    console.log(data)
+    data = json;
+    pageData = json;
+    console.log(data);
 
-    window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
+    window.dispatchEvent(new Event("resize")); // Snap plots to currently set size
   }
 
-  let title = "Fantasy"
 
   function switchPage(newPage: string) {
     page = newPage;
-    console.log(newPage)
+    console.log(newPage);
     if (page === "all") {
-      title = "Fantasy"
+      title = "Fantasy";
     } else {
-      title = `Fantasy | ${page[0].toUpperCase() + page.substring(1)}`;
+      title = `Fantasy | ${page[0].toUpperCase() + page.slice(1)}`;
     }
 
-    let newData = {}
+    let newData = {};
     for (let team of Object.keys(data)) {
-      if (team === "_id" || page === "all" ||
-        page === "attack" && data[team].position === "Forward" ||
-        page === "midfield" && data[team].position === "Midfielder" ||
-        page === "defence" && data[team].position === "Defender" ||
-        page === "goalkeeper" && data[team].position === "Goalkeeper"
-        )
-        newData[team] = data[team]
+      if (
+        team === "_id" ||
+        page === "all" ||
+        (page === "attack" && data[team].position === "Forward") ||
+        (page === "midfield" && data[team].position === "Midfielder") ||
+        (page === "defence" && data[team].position === "Defender") ||
+        (page === "goalkeeper" && data[team].position === "Goalkeeper")
+      )
+        newData[team] = data[team];
     }
-    pageData = newData
+    pageData = newData;
 
-    let nextPage = page
+    let nextPage = page;
     if (nextPage === "all") {
-      nextPage = "/fantasy"
+      nextPage = "/fantasy";
     } else if (!window.location.href.endsWith("/")) {
-      nextPage = "/fantasy/" + nextPage
+      nextPage = "/fantasy/" + nextPage;
     }
     window.history.pushState(null, null, nextPage); // Change current url without reloading
   }
 
-  let data;
-  let pageData;
+  let pages = ["all", "attack", "midfield", "defence", "goalkeeper"];
+  let title = "Fantasy";
+  let data: any;
+  let pageData: any;
   onMount(() => {
-    initFantasy()
+    initFantasy();
     setTimeout(() => {
-      window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
-    }, 500)
+      window.dispatchEvent(new Event("resize")); // Snap plots to currently set size
+    }, 500);
   });
 
   let pageWidth: number;
@@ -86,7 +90,10 @@
 
 <svelte:head>
   <title>{title}</title>
-  <meta name="description" content="Fantasy Premier League Statistics Dashboard" />
+  <meta
+    name="description"
+    content="Fantasy Premier League Statistics Dashboard"
+  />
 </svelte:head>
 
 <svelte:window bind:innerWidth={pageWidth} />
@@ -111,16 +118,23 @@
 
     <div id="dashboard">
       {#if pageData != undefined}
-      <div class="first-graph">
-        <PointsVsPrice data={pageData} {page} {mobileView} />
-      </div>
+        <div class="first-graph">
+          <PointsVsPrice data={pageData} {page} {mobileView} />
+        </div>
+
+        <div class="table">
+          <Table data={pageData} {page} {mobileView} />
+        </div>
+      {:else}
+        <div class="loading-spinner-container">
+          <div class="loading-spinner" />
+        </div>
       {/if}
     </div>
   </div>
 </Router>
 
 <style scoped>
-
   #team {
     display: flex;
     overflow-x: hidden;
