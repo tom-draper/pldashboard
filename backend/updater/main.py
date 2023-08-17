@@ -247,8 +247,8 @@ def run_production():
 def run_development():
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s :: %(levelname)s :: %(message)s')
-    run(display_tables=True, update_db=True, request_new=True)
+    run(display_tables=True, update_db=False, request_new=True)
 
 
 if __name__ == "__main__":
-    run_development()
+    run_production()

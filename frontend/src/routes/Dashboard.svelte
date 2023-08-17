@@ -19,26 +19,23 @@
   import Overview from "../components/overview/Overview.svelte";
   import MobileNav from "../components/nav/MobileNav.svelte";
   import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
-  import { toAlias, toHyphenatedName, playedMatchdays, currentMatchday as getCurrentMatchday } from "../lib/team";
+  import {
+    toAlias,
+    toHyphenatedName,
+    playedMatchdays,
+    currentMatchday as getCurrentMatchday,
+  } from "../lib/team";
+  import { toTitleCase } from "../lib/format";
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
-    if (mobileNav.style.width === "0px") {
+    if (mobileNav.style.width === "0%") {
+      mobileNav.style.display = "block";
       mobileNav.style.width = "100%";
     } else {
-      mobileNav.style.width = "0px";
+      mobileNav.style.display = "none";
+      mobileNav.style.width = "0%";
     }
-  }
-
-  function toTitleCase(str: string): string {
-    return str
-      .toLowerCase()
-      .split(" ")
-      .map(function (word) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      })
-      .join(" ")
-      .replace("And", "and");
   }
 
   function playedMatchdayDates(data: any, team: string): Date[] {
@@ -67,29 +64,30 @@
 
   async function initDashboard() {
     // Set formatted team name so page header can display while fetching data
-    if (hyphenatedTeam === "overview") {
+    if (slug === "overview") {
       team = "Overview";
-      title = `Dashboard | ${team}`;
-      hyphenatedTeam = "overview";
-    } else if (hyphenatedTeam != null) {
-      team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
-      title = `Dashboard | ${team}`;
+    } else if (slug != null) {
+      slug = slugAlias(slug)
+      team = toTitleCase(slug.replace(/\-/g, " "));
     }
+    title = `Dashboard | ${team}`;
 
-    const response = await fetch("https://pldashboard-backend.vercel.app/api/teams");
+    const response = await fetch(
+      "https://pldashboard-backend.vercel.app/api/teams"
+    );
     if (!response.ok) {
-      return
+      return;
     }
     let json = await response.json();
 
     teams = Object.keys(json.standings);
-    if (hyphenatedTeam === null) {
+    if (slug === null) {
       // If root, set team to current leader
       team = teams[0];
       title = `Dashboard | ${team}`;
-      hyphenatedTeam = toHyphenatedName(team);
+      slug = toHyphenatedName(team);
       // Change url to /team-name without reloading page
-      history.pushState({}, null, window.location.href + hyphenatedTeam);
+      history.pushState({}, null, window.location.href + slug);
     } else if (team != "Overview" && !teams.includes(team)) {
       window.location.href = "/error";
     }
@@ -100,27 +98,56 @@
     data = json;
     console.log(data);
 
-    window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
+    window.dispatchEvent(new Event("resize")); // Snap plots to currently set size
+  }
+
+  function slugAlias(slug: string): string {
+    switch (slug) {
+      case "brighton":
+        return "brighton-and-hove-albion"
+      case "palace":
+        return "crystal-palace"
+      case "united":
+        return "manchester-united"
+      case "city":
+        return "city"
+      case "nottingham":
+        return "nottingham-forest"
+      case "luton":
+        return "luton-town"
+      case "sheffield":
+        return "sheffield-united"
+      case "villa":
+        return "aston-villa"
+      case "spurs":
+        return "tottenham-hotspur"
+      case "wolves":
+        return "wolverhampton-wanderers"
+      default:
+          return slug // No alias found
+    }
   }
 
   function switchTeam(newTeam: string) {
-    hyphenatedTeam = newTeam;
-    if (hyphenatedTeam === "overview") {
+    slug = newTeam;
+    if (slug === "overview") {
       team = "Overview";
       title = "Dashboard | Overview";
+
     } else {
-      team = toTitleCase(hyphenatedTeam.replace(/\-/g, " "));
+      slug = slugAlias(slug)
+      team = toTitleCase(slug.replace(/\-/g, " "));
       title = `Dashboard | ${team}`;
       // Overwrite values from new team's perspective using same data
       currentMatchday = getCurrentMatchday(data, team);
       playedDates = playedMatchdayDates(data, team);
     }
-    window.history.pushState(null, null, hyphenatedTeam); // Change current url without reloading
+    window.history.pushState(null, null, slug); // Change current url without reloading
   }
 
   function lazyLoad() {
     load = true;
-    window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
+    window.dispatchEvent(new Event("resize")); // Snap plots to currently set size
   }
 
   let y: number;
@@ -133,7 +160,7 @@
   let title = "Dashboard";
   let team = "";
   let teams: string[] = []; // Used for nav bar links
-  let currentMatchday: string
+  let currentMatchday: string;
   let playedDates: Date[];
 
   let data: any;
@@ -141,7 +168,7 @@
     initDashboard();
   });
 
-  export let hyphenatedTeam: string;
+  export let slug: string;
 </script>
 
 <svelte:head>
@@ -153,9 +180,9 @@
 
 <Router>
   <div id="team">
-    <Nav team={hyphenatedTeam} {teams} {toAlias} {switchTeam} />
+    <Nav team={slug} {teams} {toAlias} {switchTeam} />
     <MobileNav
-      {hyphenatedTeam}
+      hyphenatedTeam={slug}
       {teams}
       {toAlias}
       {switchTeam}
@@ -171,19 +198,19 @@
     {/if}
 
     <div id="dashboard">
-      <div class="header" style="background-color: var(--{hyphenatedTeam});">
-        <a class="main-link no-decoration" href="/{hyphenatedTeam}">
+      <div class="header" style="background-color: var(--{slug});">
+        <a class="main-link no-decoration" href="/{slug}">
           <div
             class="title"
-            style="color: var(--{hyphenatedTeam + '-secondary'});"
+            style="color: var(--{slug + '-secondary'});"
           >
-            {hyphenatedTeam != "overview" ? toAlias(team) : "Overview"}
+            {slug != "overview" ? toAlias(team) : "Overview"}
           </div>
         </a>
       </div>
 
       {#if data != undefined}
-        {#if hyphenatedTeam === "overview"}
+        {#if slug === "overview"}
           <Overview {data} />
         {:else}
           <div class="page-content">
@@ -196,21 +223,21 @@
                       cy="150"
                       r="100"
                       stroke-width="0"
-                      fill="var(--{hyphenatedTeam}-secondary)"
+                      fill="var(--{slug}-secondary)"
                     />
                     <circle
                       cx="170"
                       cy="170"
                       r="140"
                       stroke-width="0"
-                      fill="var(--{hyphenatedTeam})"
+                      fill="var(--{slug})"
                     />
                     <circle
                       cx="300"
                       cy="320"
                       r="170"
                       stroke-width="0"
-                      fill="var(--{hyphenatedTeam})"
+                      fill="var(--{slug})"
                     />
                   </svg>
                 </div>
@@ -228,8 +255,8 @@
 
             <div class="row multi-element-row">
               <div class="row-left form-details">
-                <CurrentForm {data} currentMatchday={currentMatchday} {team} />
-                <TableSnippet {data} {hyphenatedTeam} {team} {switchTeam} />
+                <CurrentForm {data} {currentMatchday} {team} />
+                <TableSnippet {data} hyphenatedTeam={slug} {team} {switchTeam} />
               </div>
               <div class="row-right">
                 <NextGame {data} {team} {switchTeam} />
@@ -256,11 +283,7 @@
                 <div class="position-over-time-graph row-graph">
                   <h1 class="lowered">Position</h1>
                   <div class="graph full-row-graph">
-                    <PositionOverTimeGraph
-                      {data}
-                      {team}
-                      {mobileView}
-                    />
+                    <PositionOverTimeGraph {data} {team} {mobileView} />
                   </div>
                 </div>
               </div>
@@ -269,11 +292,7 @@
                 <div class="position-over-time-graph row-graph">
                   <h1 class="lowered">Points</h1>
                   <div class="graph full-row-graph">
-                    <PointsOverTimeGraph
-                      {data}
-                      {team}
-                      {mobileView}
-                    />
+                    <PointsOverTimeGraph {data} {team} {mobileView} />
                   </div>
                 </div>
               </div>
@@ -340,11 +359,10 @@
                   </div>
                 </div>
               </div>
-
-              <TeamsFooter lastUpdated={data.lastUpdated} />
             {/if}
           </div>
         {/if}
+        <TeamsFooter lastUpdated={data.lastUpdated} />
       {:else}
         <div class="loading-spinner-container">
           <div class="loading-spinner" />
@@ -379,12 +397,6 @@
     overflow-x: hidden;
     font-size: 15px;
   }
-  .position-and-badge {
-    height: 500px;
-    background-repeat: no-repeat;
-    background-size: auto 450px;
-    background-position: right center;
-  }
 
   .position-no-badge {
     padding-left: 0;
@@ -392,19 +404,12 @@
     height: 500px;
   }
 
-  .position-central,
-  .position {
+  .position-central {
     text-shadow: 9px 9px #000;
     font-weight: 800;
     font-size: 430px;
     user-select: none;
     max-width: 500px;
-  }
-
-  .position {
-    text-align: left;
-    margin-top: 0.02em;
-    margin-left: 30px;
   }
 
   .position-central {
@@ -581,7 +586,7 @@
       align-items: center;
     }
   }
-  
+
   @media only screen and (max-width: 1000px) {
     .row {
       flex-direction: column;
@@ -601,16 +606,6 @@
       margin-right: 0;
       align-self: center;
       width: 80%;
-    }
-
-    .position-and-badge {
-      width: 50%;
-      max-width: 400px;
-      min-width: 150px;
-      padding-right: 3% !important;
-      background-size: auto 330px !important;
-      height: 400px;
-      margin-bottom: -50px;
     }
 
     .position-no-badge {
@@ -650,10 +645,6 @@
   }
 
   @media only screen and (max-width: 700px) {
-    .position-and-badge {
-      width: 70%;
-    }
-
     .circles-background {
       transform: scale(0.55);
       margin-top: -5em;
@@ -686,7 +677,6 @@
   }
 
   @media only screen and (max-width: 550px) {
-    .position,
     .position-central {
       font-size: 10em;
       text-align: center;
@@ -699,18 +689,13 @@
       margin: 0;
     }
 
-    .position-and-badge {
-      background-size: auto 210px !important;
-      background-position: center !important;
-    }
     .season-stats-row {
       margin: 0 1em 1em;
     }
     .form-details {
       width: 95%;
     }
-    .position-no-badge,
-    .position-and-badge {
+    .position-no-badge {
       padding: 0 !important;
       margin: 0 !important;
       width: 100%;

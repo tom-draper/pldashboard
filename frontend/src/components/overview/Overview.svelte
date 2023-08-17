@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { toInitials } from "../../lib/team";
   import { teamStyle } from "../../lib/format";
-  import OverviewFooter from "./Footer.svelte";
+  // import OverviewFooter from "./Footer.svelte";
 
   type UpcomingMatch = {
     time: Date;
@@ -415,7 +415,6 @@
     </div>
   </div>
 </div>
-<OverviewFooter />
 
 <style scoped>
   #page-content {

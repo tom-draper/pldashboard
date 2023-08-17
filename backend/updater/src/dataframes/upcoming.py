@@ -200,13 +200,11 @@ class Upcoming(DF):
             opponent = row['nextTeam']
             home_team = team if row['atHome'] else opponent
             away_team = opponent if row['atHome'] else team
-            if (home_team, away_team) in next_game_predictions:
-                prediction = next_game_predictions_cache[(
-                    home_team, away_team)]
+            if (home_team, away_team) in next_game_predictions_cache:
+                prediction = next_game_predictions_cache[(home_team, away_team)]
             else:
                 prediction = predictor.predict_score(home_team, away_team)
-                next_game_predictions_cache[(
-                    home_team, away_team)] = prediction
+                next_game_predictions_cache[(home_team, away_team)] = prediction
             next_game_predictions.append(str(prediction))
         return next_game_predictions
 

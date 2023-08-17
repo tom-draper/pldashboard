@@ -35,9 +35,7 @@ def _fetch_webpage(url: str, js_rendered: bool = False) -> webdriver:
             ChromeDriverManager().install()), options=options)
     else:
         options = _chrome_options_headless()
-        driver = webdriver.Chrome(service=Service(
-            ChromeDriverManager().install()), options=options)
-        # driver = webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'), options=options)
+        driver = webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'), options=options)
     driver.get(url)
     return driver
 

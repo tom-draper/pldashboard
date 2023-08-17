@@ -78,3 +78,9 @@ Win streak measures the longest win streak achieved by the team.
 
 Consistency is a measure of the frequency of the games that have back-to-back identical results. Notably this means the consistency metric could be the maximum even if the team consistently loses every game. 
 
+# Contributions
+
+If you find value in my work consider supporting me.
+
+Buy Me a Coffee: https://www.buymeacoffee.com/tomdraper<br>
+PayPal: https://www.paypal.com/paypalme/tomdraper

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Router } from "svelte-routing";
   import { onMount } from "svelte";
-  import { identicalScore, sameResult } from "../lib/goals"
+  import { identicalScore, sameResult } from "../lib/goals";
 
   function toggleDetailsDisplay(id: string) {
     let prediction = document.getElementById(id);
@@ -11,10 +11,10 @@
   }
 
   /**
-   * Insert green, yellow or red colour values representing the results of completed 
-   * games as well as overall prediction accuracy values for scores and general 
+   * Insert green, yellow or red colour values representing the results of completed
+   * games as well as overall prediction accuracy values for scores and general
    * match results.
-  */
+   */
   function insertExtras(json: PredictionsData) {
     let scoreCorrect = 0;
     let resultCorrect = 0;
@@ -37,16 +37,17 @@
         }
       }
     }
-    
-    let scoreAccuracy = 0
-    let resultAccuracy = 0
+
+    let scoreAccuracy = 0;
+    let resultAccuracy = 0;
     if (total > 0) {
       scoreAccuracy = scoreCorrect / total;
       resultAccuracy = resultCorrect / total;
     }
     json.accuracy = {
-      scoreAccuracy, resultAccuracy
-    }
+      scoreAccuracy,
+      resultAccuracy,
+    };
   }
 
   function datetimeToTime(datetime: string): string {
@@ -57,7 +58,7 @@
   function sortByDate(predictions: MatchdayPredictions[]) {
     predictions.sort((a, b) => {
       //@ts-ignore
-      return (new Date(b._id) - new Date(a._id));
+      return new Date(b._id) - new Date(a._id);
     });
     // Sort each day of predictions by time
     for (let i = 0; i < predictions.length; i++) {
@@ -80,7 +81,7 @@
   type Accuracy = {
     scoreAccuracy: number;
     resultAccuracy: number;
-  }
+  };
 
   type MatchdayPredictions = {
     _id: string; // YYYY-MM-DD
@@ -90,14 +91,16 @@
   type PredictionsData = {
     accuracy: Accuracy;
     predictions: MatchdayPredictions[];
-  }
+  };
 
   let data: PredictionsData;
   onMount(async () => {
-    const response = await fetch("https://pldashboard-backend.vercel.app/api/predictions");
+    const response = await fetch(
+      "https://pldashboard-backend.vercel.app/api/predictions"
+    );
     let json = await response.json();
     sortByDate(json);
-    json = {predictions: json} as PredictionsData
+    json = { predictions: json } as PredictionsData;
     insertExtras(json);
     data = json;
     console.log(data);
@@ -374,7 +377,7 @@
       margin: 0 6%;
     }
   }
-  
+
   @media only screen and (max-width: 500px) {
     .prediction-value {
       flex: 4.5;
