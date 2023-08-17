@@ -1,24 +1,62 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  function buildTable(data) {
-    let headings = ["Player"];
+  function getTableRows(data) {
+    let tableRows = [];
+    for (let team of Object.keys(data)) {
+      if (team === "_id") {
+        continue;
+      }
+      let player = [
+        team,
+        data[team].points,
+        data[team].minutes,
+        data[team].goals,
+        data[team].assists.toString(),
+        data[team].cleanSheets.toString(),
+        data[team].saves.toString(),
+      ];
+      tableRows.push(player);
+    }
+
+    return tableRows;
   }
 
-  function clearTable() {}
+  function buildTable(data) {
+    // Find a <table> element with id="myTable":
+    let tableRows = getTableRows(data);
+
+    table = new DataTable("#myTable", {
+      responsive: true,
+      data: tableRows,
+      paging: false,
+    });
+
+    console.log(tableRows);
+  }
 
   function refreshTable(data) {
-    clearTable();
-    buildTable(data);
+    if (setup) {
+      // clearTable();
+      // buildTable(data);
+      let tableRows = getTableRows(data);
+
+      table.clear();
+      table.rows.add(tableRows);
+      table.draw();
+    }
   }
 
+  let tableDiv: HTMLTableElement;
+  let table;
   let setup = false;
   onMount(() => {
     buildTable(data);
 
-    let table = new DataTable("#myTable", {
-      responsive: true,
-    });
+    // let table = new DataTable("#myTable", {
+    //   responsive: true,
+    //   data:
+    // });
 
     setup = true;
   });
@@ -31,43 +69,24 @@
 </script>
 
 <div class="table">
-    <table id="myTable" class="display">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Points</th>
-          <th>Minutes</th>
-          <th>Goals</th>
-          <th>Assists</th>
-          <th>Clean Sheets</th>
-          <th>Saves</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Row 1 Data 1</td>
-          <td>Row 1 Data 2</td>
-          <td>Row 1 Data 2</td>
-          <td>Row 1 Data 2</td>
-          <td>Row 1 Data 2</td>
-          <td>Row 1 Data 2</td>
-          <td>Row 1 Data 2</td>
-        </tr>
-        <tr>
-          <td>Row 2 Data 1</td>
-          <td>Row 2 Data 2</td>
-          <td>Row 2 Data 2</td>
-          <td>Row 2 Data 2</td>
-          <td>Row 2 Data 2</td>
-          <td>Row 2 Data 2</td>
-          <td>Row 2 Data 2</td>
-        </tr>
-      </tbody>
-    </table>
+  <table id="myTable" class="display">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Points</th>
+        <th>Minutes</th>
+        <th>Goals</th>
+        <th>Assists</th>
+        <th>Clean Sheets</th>
+        <th>Saves</th>
+      </tr>
+    </thead>
+    <tbody />
+  </table>
 </div>
 
 <style scoped>
-    .table {
-        padding: 80px 50px;
-    }
+  .table {
+    padding: 80px 50px;
+  }
 </style>

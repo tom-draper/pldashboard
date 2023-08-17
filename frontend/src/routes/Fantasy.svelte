@@ -32,22 +32,13 @@
     let json = await response.json();
 
     data = json;
-    pageData = json;
+    pageData = filterDataByPosition(data);
     console.log(data);
 
     window.dispatchEvent(new Event("resize")); // Snap plots to currently set size
   }
 
-
-  function switchPage(newPage: string) {
-    page = newPage;
-    console.log(newPage);
-    if (page === "all") {
-      title = "Fantasy";
-    } else {
-      title = `Fantasy | ${page[0].toUpperCase() + page.slice(1)}`;
-    }
-
+  function filterDataByPosition(data) {
     let newData = {};
     for (let team of Object.keys(data)) {
       if (
@@ -60,7 +51,19 @@
       )
         newData[team] = data[team];
     }
-    pageData = newData;
+    return newData;
+  }
+
+  function switchPage(newPage: string) {
+    page = newPage;
+    console.log(newPage);
+    if (page === "all") {
+      title = "Fantasy";
+    } else {
+      title = `Fantasy | ${page[0].toUpperCase() + page.slice(1)}`;
+    }
+
+    pageData = filterDataByPosition(data);
 
     let nextPage = page;
     if (nextPage === "all") {
