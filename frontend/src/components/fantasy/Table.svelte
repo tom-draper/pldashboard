@@ -1,8 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import type { FantasyData, Page } from "../../lib/fantasy.types"
 
-  function getTableRows(data) {
-    let tableRows = [];
+  type TableRow = (string | number)[]
+
+  function getTableRows(data: FantasyData): TableRow[] {
+    let tableRows: TableRow[] = [];
     for (let team of Object.keys(data)) {
       if (team === "_id") {
         continue;
@@ -21,7 +24,7 @@
         // data[team].yellowCards,
         // data[team].redCards,
         data[team].pointsPerGame,
-        data[team].points / (data[team].minutes/90),
+        data[team].minutes > 0 ? +((data[team].points / (data[team].minutes/90)).toFixed(1)) : 0,
         data[team].transferIn,
         data[team].transferOut
       ];
@@ -31,9 +34,10 @@
     return tableRows;
   }
 
-  function buildTable(data) {
+  function buildTable(data: FantasyData) {
     let tableRows = getTableRows(data);
 
+    // @ts-ignore
     table = new DataTable("#myTable", {
       responsive: true,
       data: tableRows,
@@ -43,7 +47,7 @@
     table.order([2, 'desc']).draw();
   }
 
-  function refreshTable(data) {
+  function refreshTable(data: FantasyData) {
     if (setup) {
       let tableRows = getTableRows(data);
 
@@ -53,7 +57,7 @@
     }
   }
 
-  let table;
+  let table: any;
   let setup = false;
   onMount(() => {
     buildTable(data);
@@ -64,7 +68,7 @@
   //   $: !mobileView && setDefaultLayout();
   //   $: setup && mobileView && setMobileLayout();
 
-  export let data: any, page: string, mobileView: boolean;
+  export let data: FantasyData, page: Page, mobileView: boolean;
 </script>
 
 <div class="table">
