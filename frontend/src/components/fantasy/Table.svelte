@@ -24,7 +24,7 @@
         // data[team].yellowCards,
         // data[team].redCards,
         data[team].pointsPerGame,
-        data[team].points / (data[team].minutes/90),
+        data[team].minutes > 0 ? +((data[team].points / (data[team].minutes/90)).toFixed(1)) : 0,
         data[team].transferIn,
         data[team].transferOut
       ];
