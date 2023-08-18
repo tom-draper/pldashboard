@@ -55,7 +55,7 @@ export enum Team {
     WestBromwichAlbion = "West Bromwich Albion",
     WestHamUnited = "West Ham United",
     WolverhamptonWanderers = "Wolverhampton Wanderers",
-}
+};
 
 export type Form = {
     atHome:       boolean | null;

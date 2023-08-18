@@ -5,6 +5,8 @@
   import FantasyMobileNav from "../components/nav/FantasyMobileNav.svelte";
   import PointsVsPrice from "../components/fantasy/PointsVsPrice.svelte";
   import Table from "../components/fantasy/Table.svelte";
+  import {url} from "../lib/const"
+  import type { FantasyData, Page } from "../lib/fantasy.types"
 
 
   function toggleMobileNav() {
@@ -24,7 +26,7 @@
     }
 
     const response = await fetch(
-      "https://pldashboard-backend.vercel.app/api/fantasy"
+      `${url}/fantasy`
     );
     if (!response.ok) {
       return;
@@ -38,7 +40,7 @@
     window.dispatchEvent(new Event("resize")); // Snap plots to currently set size
   }
 
-  function filterDataByPosition(data) {
+  function filterDataByPosition(data: FantasyData) {
     let newData = {};
     for (let team of Object.keys(data)) {
       if (
@@ -54,9 +56,8 @@
     return newData;
   }
 
-  function switchPage(newPage: string) {
+  function switchPage(newPage: Page) {
     page = newPage;
-    console.log(newPage);
     if (page === "all") {
       title = "Fantasy";
     } else {
@@ -65,7 +66,7 @@
 
     pageData = filterDataByPosition(data);
 
-    let nextPage = page;
+    let nextPage: string = page;
     if (nextPage === "all") {
       nextPage = "/fantasy";
     } else if (!window.location.href.endsWith("/")) {
@@ -74,10 +75,10 @@
     window.history.pushState(null, null, nextPage); // Change current url without reloading
   }
 
-  let pages = ["all", "attack", "midfield", "defence", "goalkeeper"];
+  let pages: Page[] = ["all", "attack", "midfield", "defence", "goalkeeper"];
   let title = "Fantasy";
-  let data: any;
-  let pageData: any;
+  let data: FantasyData;
+  let pageData: FantasyData;
   onMount(() => {
     initFantasy();
     setTimeout(() => {
@@ -88,7 +89,7 @@
   let pageWidth: number;
   $: mobileView = pageWidth <= 700;
 
-  export let page: string;
+  export let page: Page;
 </script>
 
 <svelte:head>

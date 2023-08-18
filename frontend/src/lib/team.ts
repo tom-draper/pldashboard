@@ -1,4 +1,6 @@
-export function toInitials(team: string): string {
+import type { DashboardData, Team } from "./dashboard.types";
+
+export function toInitials(team: Team): string {
     switch (team) {
         case "Brighton and Hove Albion":
             return "BHA";
@@ -27,7 +29,7 @@ let alias = {
     "Brighton and Hove Albion": "Brighton",
 };
 
-export function toAlias(team: string): string {
+export function toAlias(team: Team): string {
     if (team in alias) {
         return alias[team];
     }
@@ -45,7 +47,7 @@ export function toHyphenatedName(team: string): string {
     return team.toLowerCase().replace(/ /g, "-")
 }
 
-export function teamInSeason(form: Form, team: string, season: number): boolean {
+export function teamInSeason(form: Form, team: Team, season: number): boolean {
     return team in form && form[team][season]['1'] != null
 }
 
@@ -67,7 +69,7 @@ export function playedMatchdays(data: any, team: string): string[] {
     return matchdays;
 }
 
-export function currentMatchday(data: any, team: string): string {
+export function currentMatchday(data: DashboardData, team: Team): string {
     let matchdays = Object.keys(data.form[team][data._id])
     for (let i = matchdays.length - 1; i >= 0; i--) {
         if (data.form[team][data._id][matchdays[i]].score != null) {

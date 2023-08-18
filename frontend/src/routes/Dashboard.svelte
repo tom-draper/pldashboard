@@ -26,6 +26,7 @@
     currentMatchday as getCurrentMatchday,
   } from "../lib/team";
   import { toTitleCase } from "../lib/format";
+  import { url } from "../lib/const"
   import type { DashboardData, Team  } from "../lib/dashboard.types";
 
   function toggleMobileNav() {
@@ -39,7 +40,7 @@
     }
   }
 
-  function playedMatchdayDates(data: any, team: string): Date[] {
+  function playedMatchdayDates(data: DashboardData, team: Team): Date[] {
     let matchdays = playedMatchdays(data, team);
 
     // If played one or no games, take x-axis from whole season dates
@@ -73,9 +74,7 @@
     }
     title = `Dashboard | ${team}`;
 
-    const response = await fetch(
-      "https://pldashboard-backend.vercel.app/api/teams"
-    );
+    const response = await fetch(`${url}/teams`);
     if (!response.ok) {
       return;
     }
@@ -89,10 +88,10 @@
       slug = toHyphenatedName(team);
       // Change url to /team-name without reloading page
       history.pushState({}, null, window.location.href + slug);
-    } else if (team != "Overview" && !teams.includes(team as Team)) {
+    } else if (team != "Overview" && team != "" && !teams.includes(team)) {
       window.location.href = "/error";
     }
-    if (team != "Overview") {
+    if (team != "Overview" && team != "") {
       currentMatchday = getCurrentMatchday(json, team);
       playedDates = playedMatchdayDates(json, team);
     }
@@ -129,7 +128,7 @@
     }
   }
 
-  function switchTeam(newTeam: string) {
+  function switchTeam(newTeam: Team) {
     slug = newTeam;
     if (slug === "overview") {
       team = "Overview";
@@ -205,7 +204,7 @@
             class="title"
             style="color: var(--{slug + '-secondary'});"
           >
-            {slug != "overview" ? toAlias(team) : "Overview"}
+            {team != "Overview" && team != "" ? toAlias(team) : "Overview"}
           </div>
         </a>
       </div>

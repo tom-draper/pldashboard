@@ -2,8 +2,9 @@
   import { onMount } from "svelte";
   import { toAlias } from "../../lib/team";
   import { scoreline } from "../../lib/format";
+  import type { DashboardData, Team } from "../../lib/dashboard.types";
 
-  function matchDescription(team: string, match: Match): string {
+  function matchDescription(team: Team, match: Match): string {
     let description: string;
     let homeTeam: string;
     let awayTeam: string;
@@ -74,7 +75,7 @@
 
   function linePoints(
     data: any,
-    team: string
+    team: Team
   ): [Date[], number[], string[]] {
     let x: Date[] = [];
     let y: number[] = [];
@@ -96,7 +97,7 @@
     return [x, y, descriptions];
   }
 
-  function line(data: any, team: string, now: number): any {
+  function line(data: DashboardData, team: Team, now: number): any {
     let [x, y, description] = linePoints(data, team);
 
     sortByMatchDate(x, y, description);
@@ -258,7 +259,7 @@
     }
   }
 
-  function buildPlotData(data: any, team: string): PlotData {
+  function buildPlotData(data: DashboardData, team: Team): PlotData {
     // Build data to create a fixtures line graph displaying the date along the
     // x-axis and opponent strength along the y-axis
     let now = Date.now();
@@ -313,7 +314,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: any, team: string, mobileView: boolean;
+  export let data: DashboardData, team: Team, mobileView: boolean;
 </script>
 
 <div id="plotly">
