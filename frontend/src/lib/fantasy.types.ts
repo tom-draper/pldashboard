@@ -2,7 +2,7 @@ export type FantasyData = {
     [player: string]: PlayerData
 }
 
-export interface PlayerData {
+export type PlayerData = {
     firstName:                string;
     surname:                  string;
     form:                     string;
@@ -59,5 +59,3 @@ export enum Team {
     WestHam = "West Ham",
     Wolves = "Wolves",
 }
-
-export type Page = "all" | "attack" | "midfield" | "defence"
