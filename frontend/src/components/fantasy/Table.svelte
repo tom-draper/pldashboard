@@ -37,6 +37,7 @@
   function buildTable(data: FantasyData) {
     let tableRows = getTableRows(data);
 
+    // @ts-ignore
     table = new DataTable("#myTable", {
       responsive: true,
       data: tableRows,
@@ -56,7 +57,7 @@
     }
   }
 
-  let table;
+  let table: any;
   let setup = false;
   onMount(() => {
     buildTable(data);

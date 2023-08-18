@@ -26,6 +26,7 @@
     currentMatchday as getCurrentMatchday,
   } from "../lib/team";
   import { toTitleCase } from "../lib/format";
+  import type { DashboardData, Team  } from "../lib/dashboard.types";
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
@@ -68,7 +69,7 @@
       team = "Overview";
     } else if (slug != null) {
       slug = slugAlias(slug)
-      team = toTitleCase(slug.replace(/\-/g, " "));
+      team = toTitleCase(slug.replace(/\-/g, " ")) as Team;
     }
     title = `Dashboard | ${team}`;
 
@@ -78,9 +79,9 @@
     if (!response.ok) {
       return;
     }
-    let json = await response.json();
+    let json = await response.json() as DashboardData;
 
-    teams = Object.keys(json.standings);
+    teams = Object.keys(json.standings) as Team[];
     if (slug === null) {
       // If root, set team to current leader
       team = teams[0];
@@ -88,7 +89,7 @@
       slug = toHyphenatedName(team);
       // Change url to /team-name without reloading page
       history.pushState({}, null, window.location.href + slug);
-    } else if (team != "Overview" && !teams.includes(team)) {
+    } else if (team != "Overview" && !teams.includes(team as Team)) {
       window.location.href = "/error";
     }
     if (team != "Overview") {
@@ -136,7 +137,7 @@
 
     } else {
       slug = slugAlias(slug)
-      team = toTitleCase(slug.replace(/\-/g, " "));
+      team = toTitleCase(slug.replace(/\-/g, " ")) as Team;
       title = `Dashboard | ${team}`;
       // Overwrite values from new team's perspective using same data
       currentMatchday = getCurrentMatchday(data, team);
@@ -158,12 +159,12 @@
   $: mobileView = pageWidth <= 700;
 
   let title = "Dashboard";
-  let team = "";
-  let teams: string[] = []; // Used for nav bar links
+  let team: Team | "" | "Overview" = "";
+  let teams: Team[] = []; // Used for nav bar links
   let currentMatchday: string;
   let playedDates: Date[];
 
-  let data: any;
+  let data: DashboardData;
   onMount(() => {
     initDashboard();
   });

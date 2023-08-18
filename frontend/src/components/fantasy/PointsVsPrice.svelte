@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { FantasyData, Page } from "../../lib/fantasy.types"
+  import type { FantasyData, Page, Position } from "../../lib/fantasy.types"
 
-  function getColours(position: string) {
+  function getColours(position: Position) {
     switch (position) {
       case "Forward":
         return "#c600d8";
@@ -136,7 +136,7 @@
     }
   }
 
-  function buildPlotData(data: any): PlotData {
+  function buildPlotData(data: FantasyData): PlotData {
     let plotData = {
       data: lines(data),
       layout: defaultLayout(),

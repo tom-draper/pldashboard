@@ -1,6 +1,6 @@
 export type DashboardData = {
     _id:            number;
-    lastUpdated:    Date;
+    lastUpdated:    string;
     fixtures:       { [key: string]: { [key: string]: Fixture } };
     standings:      { [key: string]: { [key: string]: Standing } };
     teamRatings:    { [key: string]: TeamRating };

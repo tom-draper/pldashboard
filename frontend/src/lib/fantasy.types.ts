@@ -59,3 +59,5 @@ export enum Team {
     WestHam = "West Ham",
     Wolves = "Wolves",
 }
+
+export type Page = "all" | "attack" | "midfield" | "defence" | "goalkeeper"
