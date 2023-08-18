@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import type { FantasyData, Page } from "../../lib/fantasy.types"
 
   function getColours(position: string) {
     switch (position) {
@@ -14,7 +15,7 @@
     }
   }
 
-  function lines(data: any, page: string): any[] {
+  function lines(data: FantasyData): any[] {
     let teams = [];
     let points = [];
     let price = [];
@@ -135,9 +136,9 @@
     }
   }
 
-  function buildPlotData(data: any, team: string): PlotData {
+  function buildPlotData(data: any): PlotData {
     let plotData = {
-      data: lines(data, team),
+      data: lines(data),
       layout: defaultLayout(),
       config: {
         responsive: true,
@@ -156,7 +157,7 @@
   });
 
   function genPlot() {
-    plotData = buildPlotData(data, page);
+    plotData = buildPlotData(data);
     //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
@@ -172,7 +173,7 @@
 
   function refreshPlot() {
     if (setup) {
-      let newPlotData = buildPlotData(data, page);
+      let newPlotData = buildPlotData(data);
       plotData.data[0] = newPlotData.data[0];
 
       //@ts-ignore
@@ -187,7 +188,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: any, page: string, mobileView: boolean;
+  export let data: FantasyData, page: Page, mobileView: boolean;
 </script>
 
 <div id="plotly">

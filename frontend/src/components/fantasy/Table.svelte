@@ -1,8 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import type { FantasyData, Page } from "../../lib/fantasy.types"
 
-  function getTableRows(data) {
-    let tableRows = [];
+  type TableRow = (string | number)[]
+
+  function getTableRows(data: FantasyData): TableRow[] {
+    let tableRows: TableRow[] = [];
     for (let team of Object.keys(data)) {
       if (team === "_id") {
         continue;
@@ -31,7 +34,7 @@
     return tableRows;
   }
 
-  function buildTable(data) {
+  function buildTable(data: FantasyData) {
     let tableRows = getTableRows(data);
 
     table = new DataTable("#myTable", {
@@ -43,7 +46,7 @@
     table.order([2, 'desc']).draw();
   }
 
-  function refreshTable(data) {
+  function refreshTable(data: FantasyData) {
     if (setup) {
       let tableRows = getTableRows(data);
 
@@ -64,7 +67,7 @@
   //   $: !mobileView && setDefaultLayout();
   //   $: setup && mobileView && setMobileLayout();
 
-  export let data: any, page: string, mobileView: boolean;
+  export let data: FantasyData, page: Page, mobileView: boolean;
 </script>
 
 <div class="table">
