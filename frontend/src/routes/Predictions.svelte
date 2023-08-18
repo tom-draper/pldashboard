@@ -2,6 +2,7 @@
   import { Router } from "svelte-routing";
   import { onMount } from "svelte";
   import { identicalScore, sameResult } from "../lib/goals";
+  import { url } from "../lib/consts";
 
   function toggleDetailsDisplay(id: string) {
     let prediction = document.getElementById(id);
@@ -95,9 +96,10 @@
 
   let data: PredictionsData;
   onMount(async () => {
-    const response = await fetch(
-      "https://pldashboard-backend.vercel.app/api/predictions"
-    );
+    const response = await fetch(`${url}/predictions`);
+    if (!response.ok) {
+      return
+    }
     let json = await response.json();
     sortByDate(json);
     json = { predictions: json } as PredictionsData;

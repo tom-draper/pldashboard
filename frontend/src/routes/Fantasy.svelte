@@ -5,7 +5,7 @@
   import FantasyMobileNav from "../components/nav/FantasyMobileNav.svelte";
   import PointsVsPrice from "../components/fantasy/PointsVsPrice.svelte";
   import Table from "../components/fantasy/Table.svelte";
-  import {url} from "../lib/const"
+  import {url} from "../lib/consts"
   import type { FantasyData, Page } from "../lib/fantasy.types"
 
 

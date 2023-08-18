@@ -26,7 +26,7 @@
     currentMatchday as getCurrentMatchday,
   } from "../lib/team";
   import { toTitleCase } from "../lib/format";
-  import { url } from "../lib/const"
+  import { url } from "../lib/consts"
   import type { DashboardData, Team  } from "../lib/dashboard.types";
 
   function toggleMobileNav() {
