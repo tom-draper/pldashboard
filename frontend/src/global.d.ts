@@ -6,7 +6,7 @@ type Scoreline = {
 }
 
 type Match = {
-    team: string,
+    team: Team,
     date: string,
     score: {
         homeGoals: number,
@@ -17,14 +17,14 @@ type Match = {
 }
 
 type Fixtures = {
-    [teamName: string]: {  // Team name
+    [teamName: Team]: {  // Team name
         number: Match  // Matchday number 1 to 38
     }
 }
 
 type Form = {
     [season: string]: {  // Season start year
-        [teamName: string]: {
+        [teamName: Team]: {
             [matchday: number]: {  // Matchday number 1 to 38
                 team: string,
                 date: string,
@@ -48,7 +48,7 @@ type Form = {
 }
 
 type Standings = {
-    [teamName: string]: {
+    [teamName: Team]: {
         [season: number]: {  // Season start year
             won: number,
             drawn: number,
@@ -64,7 +64,7 @@ type Standings = {
 }
 
 type TeamRatings = {
-    [teamName: string]: {
+    [teamName: Team]: {
         ratingCurrent: number,
         rating1YAgo: number,
         rating2YAgo: number,
@@ -74,7 +74,7 @@ type TeamRatings = {
 }
 
 type HomeAdvantages = {
-    [teamName: string]: {
+    [teamName: Team]: {
         [season: number]: {  // Season start year
             home: number,
             homeAdvantage: number,

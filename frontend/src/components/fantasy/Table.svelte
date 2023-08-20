@@ -4,29 +4,74 @@
 
   type TableRow = (string | number)[]
 
-  function getTableRows(data: FantasyData): TableRow[] {
-    let tableRows: TableRow[] = [];
-    for (let team of Object.keys(data)) {
-      if (team === "_id") {
+  function teamToCSS(team: string) {
+    switch (team) {
+      case "Spurs":
+        return "tottenham-hotspur"
+      case 'Nott\'m Forest':
+        return "nottingham-forest"
+      case 'Man Utd':
+        return "manchester-united"
+      case 'Man City':
+        return "manchester-city"
+      case 'Brighton':
+        return 'brighton-and-hove-albion'
+      case 'Luton':
+        return 'luton-town'
+      case 'West Ham':
+        return 'west-ham-united'
+      case 'Sheffield Utd':
+        return 'sheffield-united'
+        case 'Wolves':
+          return 'wolverhampton-wanderers'
+        case 'Newcastle':
+          return 'newcastle-united'
+    }
+    return team.toLowerCase().replace(' ', '-')
+  }
+
+  function buildTeamColourCSSTags() {
+    const playerTeams = {}
+    const teamCSS = {}
+    for (const name of Object.keys(data)) {
+      if (name === "_id") {
         continue;
       }
-      let player = [
-       `${data[team].firstName} ${data[team].surname}`,
-        `£${data[team].price/10}`,
-        data[team].points,
-        data[team].minutes,
-        data[team].goals,
-        data[team].assists,
-        data[team].cleanSheets,
-        data[team].saves,
-        data[team].form,
-        data[team].bonusPoints,
+      const team = data[name].team
+      const fullName = `${data[name].firstName} ${data[name].surname}`
+      playerTeams[fullName] = team
+      teamCSS[team] = teamToCSS(team)
+
+    }
+    playerToTeam = playerTeams
+    teamCSSTag = teamCSS
+  }
+
+
+  function getTableRows(data: FantasyData): TableRow[] {
+    const tableRows: TableRow[] = [];
+    for (const name of Object.keys(data)) {
+      if (name === "_id") {
+        continue;
+      }
+      console.log(name, data[name].points, data[name].minutes, data[name].minutes/90, data[name].points / (data[name].minutes/90))
+      const player = [
+       `${data[name].firstName} ${data[name].surname}`,
+        `£${data[name].price/10}`,
+        data[name].points,
+        data[name].minutes,
+        data[name].pointsPerGame,
+        data[name].minutes > 0 ? parseFloat((data[name].points / (data[name].minutes/90)).toFixed(1)) : 0,
+        data[name].form,
+        data[name].goals,
+        data[name].assists,
+        data[name].cleanSheets,
+        data[name].saves,
+        data[name].bonusPoints,
         // data[team].yellowCards,
         // data[team].redCards,
-        data[team].pointsPerGame,
-        data[team].minutes > 0 ? +((data[team].points / (data[team].minutes/90)).toFixed(1)) : 0,
-        data[team].transferIn,
-        data[team].transferOut
+        data[name].transferIn,
+        data[name].transferOut
       ];
       tableRows.push(player);
     }
@@ -42,6 +87,15 @@
       responsive: true,
       data: tableRows,
       paging: false,
+      columnDefs: [ {
+        targets: 0,
+        createdCell: function (td: HTMLTableCellElement, cellData: any, rowData: any[], row: number, col: number) {
+          const team = playerToTeam[cellData]
+          td.style.background = `var(--${teamCSSTag[team]})`
+          td.style.color = `var(--${teamCSSTag[team]}-secondary)`
+          td.title = team
+        }
+    } ]
     });
 
     table.order([2, 'desc']).draw();
@@ -58,8 +112,11 @@
   }
 
   let table: any;
+  let playerToTeam: any;
+  let teamCSSTag: any;
   let setup = false;
   onMount(() => {
+    buildTeamColourCSSTags()
     buildTable(data);
     setup = true;
   });
@@ -79,16 +136,16 @@
         <th>Price</th>
         <th>Points</th>
         <th>Minutes</th>
+        <th>Points per Game</th>
+        <th>Points per 90</th>
+        <th>Form</th>
         <th>Goals</th>
         <th>Assists</th>
         <th>Clean Sheets</th>
         <th>Saves</th>
-        <th>Form</th>
         <th>Bonus</th>
         <!-- <th>Yellow Cards</th>
         <th>Red Cards</th> -->
-        <th>Points per Game</th>
-        <th>Points per 90</th>
         <th>Transfers In</th>
         <th>Transfers Out</th>
       </tr>
@@ -98,13 +155,19 @@
 </div>
 
 <style scoped>
-  .table {
-    padding: 80px 50px;
+   .table {
+    padding: 70px 30px;
     overflow-x: auto;
   }
+  /*
   #myTable {
     width: 100% !important;
     min-width: 2000px;
-  }
+  } */
 
+  @media only screen and (max-width: 700px) {
+    .table {
+      padding: 0;
+    }
+  }
 </style>

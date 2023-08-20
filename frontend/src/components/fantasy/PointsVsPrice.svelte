@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { FantasyData, Page, Position } from "../../lib/fantasy.types"
+  import type { FantasyData, Page, Position } from "../../lib/fantasy.types";
 
   function getColours(position: Position) {
     switch (position) {
@@ -16,13 +16,13 @@
   }
 
   function lines(data: FantasyData): any[] {
-    let teams = [];
-    let points = [];
-    let price = [];
-    let minutes = [];
-    let colours = [];
+    const teams: string[] = [];
+    const points: number[] = [];
+    const price: number[] = [];
+    const minutes: number[] = [];
+    const colours: string[] = [];
     let maxMinutes = 0;
-    for (let team of Object.keys(data)) {
+    for (const team of Object.keys(data)) {
       if (team != "_id") {
         teams.push(team);
         points.push(data[team].points === null ? 0 : data[team].points);
@@ -35,21 +35,28 @@
       }
     }
 
-    let playtimes = minutes.map((x) => ((x / maxMinutes) * 100).toFixed(1));
+    let sizes = minutes.slice(0);
+    for (let i = 0; i < sizes.length; i++) {
+      sizes[i] /= maxMinutes * 0.02
+    }
+    // sizes.map((x) => {
+    //   return (x / maxMinutes) * sizeScale;
+    // });
+    const playtimes = minutes.map((x) => ((x / maxMinutes) * 100).toFixed(1));
 
-    let markers = {
+    const markers = {
       x: points,
       y: price,
       name: "test",
       mode: "markers",
       type: "scatter",
       marker: {
-        size: minutes,
-        colorscale: [
-          [0, "#00fe87"],
-          [0.5, "#f3f3f3"],
-          [1, "#f83027"],
-        ],
+        size: sizes,
+        // colorscale: [
+        //   [0, "#00fe87"],
+        //   [0.5, "#f3f3f3"],
+        //   [1, "#f83027"],
+        // ],
         opacity: 0.75,
         color: colours,
       },
@@ -94,7 +101,7 @@
 
   function setDefaultLayout() {
     if (setup) {
-      let layoutUpdate = {
+      const layoutUpdate = {
         "yaxis.title": { text: "Position" },
         "yaxis.visible": true,
         "yaxis.tickvals": Array.from(Array(20), (_, i) => i + 1),
@@ -108,7 +115,7 @@
 
   function setMobileLayout() {
     if (setup) {
-      let layoutUpdate = {
+      const layoutUpdate = {
         "yaxis.title": null,
         "yaxis.visible": false,
         "yaxis.tickvals": Array.from(Array(10), (_, i) => i + 2),
@@ -116,12 +123,11 @@
         "margin.t": 5,
       };
 
-      let sizes = plotData.data[0].marker.size;
-      console.log;
+      const sizes = plotData.data[0].marker.size;
       for (let i = 0; i < sizes.length; i++) {
         sizes[i] = Math.round(sizes[i] / 2);
       }
-      let dataUpdate = {
+      const dataUpdate = {
         marker: {
           size: sizes,
           color: plotData.data[0].marker.color,
@@ -164,7 +170,7 @@
       plotData.data,
       plotData.layout,
       plotData.config
-    ).then((plot) => {
+    ).then((plot: HTMLDivElement) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
       plot.children[0].children[0].classList.add("resizable-graph");
       plot.children[0].children[0].classList.add("tall-graph");

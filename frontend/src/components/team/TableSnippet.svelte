@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { DashboardData, Team } from "../../lib/dashboard.types";
   import { toAlias, toHyphenatedName } from "../../lib/team";
 
   function tableSnippetRange(
@@ -56,7 +57,7 @@
   type TableSnippet = {
     teamTableIdx: number;
     rows: {
-      name: string;
+      name: Team;
       position: number;
       points: number;
       gd: number;
@@ -66,9 +67,9 @@
   let tableSnippet: TableSnippet;
   $: team && buildTableSnippet();
 
-  export let data: any,
+  export let data: DashboardData,
     hyphenatedTeam: string,
-    team: string,
+    team: Team,
     switchTeam: Function;
 </script>
 
