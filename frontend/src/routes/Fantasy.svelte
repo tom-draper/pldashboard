@@ -113,10 +113,10 @@
     />
     {#if pages.length === 0}
       <!-- Navigation disabled while teams list are loading -->
-      <button id="mobileNavBtn" style="cursor: default">Select Team</button>
+      <button id="mobileNavBtn" style="cursor: default">Menu</button>
     {:else}
       <button id="mobileNavBtn" on:click={toggleMobileNav}>
-        Select Team
+        Menu
       </button>
     {/if}
 

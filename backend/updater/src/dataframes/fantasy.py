@@ -26,6 +26,7 @@ class Fantasy(DF):
         """
         logging.info('🛠️  Building fantasy dataframe... ')
 
+        # Get first and only key as the current season
         current_season = next(iter(json_data['fantasy'].keys()))
         fantasy_data = json_data['fantasy'][current_season]
 
