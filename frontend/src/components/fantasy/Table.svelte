@@ -70,8 +70,8 @@
         data[name].bonusPoints,
         // data[team].yellowCards,
         // data[team].redCards,
-        data[name].transferIn,
-        data[name].transferOut
+        data[name].transferIn.toLocaleString(),
+        data[name].transferOut.toLocaleString()
       ];
       tableRows.push(player);
     }
@@ -103,6 +103,7 @@
 
   function refreshTable(data: FantasyData) {
     if (setup) {
+      buildTeamColourCSSTags()
       let tableRows = getTableRows(data);
 
       table.clear();
@@ -156,14 +157,14 @@
 
 <style scoped>
    .table {
-    padding: 70px 30px;
+    padding: 50px 30px;
     overflow-x: auto;
   }
-  /*
+  
   #myTable {
     width: 100% !important;
-    min-width: 2000px;
-  } */
+    /* min-width: 2000px; */
+  }
 
   @media only screen and (max-width: 700px) {
     .table {
