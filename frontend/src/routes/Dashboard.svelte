@@ -204,7 +204,7 @@
             class="title"
             style="color: var(--{slug + '-secondary'});"
           >
-            {team != "Overview" && team != "" ? toAlias(team) : "Overview"}
+            {team == "" || team == "Overview" ? team : toAlias(team)}
           </div>
         </a>
       </div>
