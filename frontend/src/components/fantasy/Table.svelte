@@ -54,7 +54,7 @@
       if (name === "_id") {
         continue;
       }
-      console.log(name, data[name].points, data[name].minutes, data[name].minutes/90, data[name].points / (data[name].minutes/90))
+      // console.log(name, data[name].points, data[name].minutes, data[name].minutes/90, data[name].points / (data[name].minutes/90))
       const player = [
        `${data[name].firstName} ${data[name].surname}`,
         `£${data[name].price/10}`,
@@ -164,6 +164,10 @@
   #myTable {
     width: 100% !important;
     /* min-width: 2000px; */
+  }
+
+  :global(tr.even) {
+    background: rgb(239, 239, 239) !important;
   }
 
   @media only screen and (max-width: 700px) {
