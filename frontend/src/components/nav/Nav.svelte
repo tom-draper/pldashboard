@@ -21,9 +21,9 @@
 
 <nav id="navBar">
   <div class="title no-selection">
-    <p>
+    <a href="/home">
       <span style="color: var(--green)">pl</span>dashboard
-    </p>
+    </a>
   </div>
   <div class="team-links">
     {#if teams.length === 0}
@@ -93,6 +93,9 @@
     height: 96px;
     display: grid;
     place-items: center;
+  }
+  .title a {
+    color: white;
   }
   .no-selection {
     user-select: none;
