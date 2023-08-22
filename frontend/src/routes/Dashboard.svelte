@@ -68,11 +68,12 @@
     // Set formatted team name so page header can display while fetching data
     if (slug === "overview") {
       team = "Overview";
+      title = "Dashboard | Overview";
     } else if (slug != null) {
       slug = slugAlias(slug)
       team = toTitleCase(slug.replace(/\-/g, " ")) as Team;
+      title = `Dashboard | ${team}`;
     }
-    title = `Dashboard | ${team}`;
 
     const response = await fetch(`${url}/teams`);
     if (!response.ok) {
@@ -133,7 +134,6 @@
     if (slug === "overview") {
       team = "Overview";
       title = "Dashboard | Overview";
-
     } else {
       slug = slugAlias(slug)
       team = toTitleCase(slug.replace(/\-/g, " ")) as Team;
