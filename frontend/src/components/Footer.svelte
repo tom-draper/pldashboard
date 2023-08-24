@@ -4,16 +4,28 @@
 
 <div class="teams-footer footer-text-colour">
   <div class="teams-footer-bottom">
+    <a href="https://github.com/tom-draper/pldashboard" target="_blank" class="github">
+      <img src="/img/github.png" alt="GitHub" class="github-img">
+    </a>
     {#if lastUpdated != null}
       <div class="last-updated no-select">
         Last updated: {new Date(lastUpdated).toLocaleString()} UTC
       </div>
     {/if}
-    <div class="version no-select"><span class="pl">pl</span>dashboard</div>
+    <a href="https://pldashboard.com/home" class="version no-select"><span class="pl">pl</span>dashboard</a>
   </div>
 </div>
 
 <style scoped>
+  .github {
+    opacity: 0.3;
+    margin-bottom: 1.5em;
+    width: fit-content;
+    place-self: center;
+  }
+  .github-img {
+    width: 30px;
+  }
   .teams-footer {
     color: #c6c6c6;
     padding: 1em 0 0.2em;
@@ -27,6 +39,7 @@
   }
   .teams-footer-bottom {
     margin: 30px 0;
+    display: grid;
   }
   .version {
     margin: 10px auto;
