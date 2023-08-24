@@ -4,6 +4,7 @@
   import FantasyNav from "../components/nav/FantasyNav.svelte";
   import FantasyMobileNav from "../components/nav/FantasyMobileNav.svelte";
   import PointsVsPrice from "../components/fantasy/PointsVsPrice.svelte";
+  import Footer from "../components/Footer.svelte";
   import Table from "../components/fantasy/Table.svelte";
   import {url} from "../lib/consts"
   import type { FantasyData, Page } from "../lib/fantasy.types"
@@ -129,6 +130,7 @@
         <div class="table">
           <Table data={pageData} {page} {mobileView} />
         </div>
+        <Footer lastUpdated={null} />
       {:else}
         <div class="loading-spinner-container">
           <div class="loading-spinner" />
