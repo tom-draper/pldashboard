@@ -58,7 +58,7 @@
       const player = [
        `${data[name].firstName} ${data[name].surname}`,
         `£${data[name].price/10}`,
-        data[name].points,
+        data[name].totalPoints,
         data[name].minutes,
         data[name].pointsPerGame,
         data[name].minutes > 0 ? parseFloat((data[name].points / (data[name].minutes/90)).toFixed(1)) : 0,

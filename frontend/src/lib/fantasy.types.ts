@@ -13,6 +13,7 @@ export type PlayerData = {
     position:                 Position;
     selectedBy:               string;
     points:                   number;
+    totalPoints:              number;
     bonusPoints:              number;
     transferIn:               number;
     transferOut:              number;
