@@ -51,6 +51,7 @@ class Fantasy(DF):
                 'position': player_types[player['element_type']],
                 'selectedBy': player['selected_by_percent'],
                 'points': player['event_points'],
+                'totalPoints': player['total_points'],
                 'bonusPoints': player['bonus'],
                 'transferIn': player['transfers_in'],
                 'transferOut': player['transfers_out'],
