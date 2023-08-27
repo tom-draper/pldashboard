@@ -25,7 +25,7 @@
     for (const team of Object.keys(data)) {
       if (team != "_id") {
         teams.push(team);
-        points.push(data[team].points === null ? 0 : data[team].points);
+        points.push(data[team].totalPoints === null ? 0 : data[team].totalPoints);
         price.push(data[team].price == null ? 0 : data[team].price / 10);
         minutes.push(data[team].minutes == null ? 0 : data[team].minutes / 2);
         if (minutes[minutes.length - 1] > maxMinutes) {
