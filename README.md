@@ -24,15 +24,15 @@ The dashboard features statistics and metrics that have been designed to better 
 
 Each team is assigned an overall team rating that represents their long-term (multi-season) performance. This is the single most reliable indicator for predicted result when comparing teams.
 
-It is calculated by summing the points and goal difference for each of the last 4 seasons (including the current season) for each team. This gives each team 4 team rating values for the last 4 seasons (if the team was present in the season). For each season, the team rating values for all teams in that season are normalised between 0 and 1, with the best team that season achieving a team rating of 1. To give an overall team rating, a weighted average of each team's 4 team rating values is taken, with the more recent seasons holding a heavier weight. Exponential weightings are used, with each season weighted 2.5X more than the previous season. The value of 2.5 was chosen based on intuition. Due to the per-season normalisation, a team's overall rating could only ever be 1 if they are consistently the best team in each of the previous 4 seasons. Newly promoted sides often have no previous data to work with, and will start with a team rating of 0 until they play their first game of the season.
+Team ratings are calculated by summing the points and goal difference for each of the last 4 seasons (including the current season) for each team. This gives each team 4 team rating values for the last 4 seasons (if the team was present in the season). For each season, the team rating values for all teams in that season are normalised between 0 and 1, with the best team for each season achieving a team rating of 1. To create an overall team rating, a weighted average of each team's 4 team rating values is taken, with the more recent seasons holding a heavier weight. Exponential weightings are used, with each season weighted 2.5X more than the previous season. Due to the per-season normalisation, a team's overall rating could only ever be 1 if they are consistently the best team in every season included. It's a similar case for a team rating of 0, although newly promoted sides often have no previous data to work with, and will start with a team rating of 0 until they play their first game of the season.
 
-Team ratings are used as the y-axis for the fixtures graph (adjusted slightly by home advantage). It is also used as a foundation for calculating each score prediction.
+Team ratings are used as the y-axis for the fixtures graph (adjusted slightly by home advantage).
 
 ## Form
 
-A form rating is calculated to give a short-term indication of a team's performance. Two form rating values are used in the dashboard, one based on the last 5 games, and another based on the last 10 games.
+A team's form rating is calculated to give a short-term indication of performance. Two form rating values of different timescales are used in the dashboard, one based on the last 5 games, and another based on the last 10 games.
 
-A team's 5-game current form value is calculated by taking the last 5 matches played and summing each game's goal difference multiplied by the opposition team's rating. The average of these 5 values is taken to give the final result. A team's 10-game current form value is calculated similarly but with the previous 10 matches.
+A 5-game current form value is calculated by taking the last 5 matches played and summing each game's goal difference multiplied by the opposition team's rating. The average of these 5 values is taken to give the final result. A team's 10-game current form value is calculated similarly but with the previous 10 matches.
 
 The raw value for 5-game current form of the team is displayed on the dashboard, as well as the opposition team for that team's next game. The form graph displays the historical 10-game form at the point of each matchday a team has played.
 
