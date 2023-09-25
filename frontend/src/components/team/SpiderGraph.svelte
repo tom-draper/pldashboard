@@ -471,7 +471,10 @@
         totalPlayedVsBig6 += seasonPlayedVsBig6;
       }
 
-      let totalAvgPointsVsBig = totalPointsVsBig6 / totalPlayedVsBig6;
+      let totalAvgPointsVsBig = 0
+      if (totalPlayedVsBig6 > 0) {
+        totalAvgPointsVsBig = totalPointsVsBig6 / totalPlayedVsBig6;
+      }
       vsBig6[team] = totalAvgPointsVsBig;
     }
 
