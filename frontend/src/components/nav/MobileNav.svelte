@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {toHyphenatedName} from "../../lib/team";
+  import { toHyphenatedName } from "../../lib/team";
 
   function switchTeamToTop(team: string) {
     switchTeam(team);
@@ -22,7 +22,7 @@
 
   let hyphenatedTeams: string[];
   //@ts-ignore
-  $: hyphenatedTeam && (teams.length > 0) && getHyphenatedTeamNames();
+  $: hyphenatedTeam && teams.length > 0 && getHyphenatedTeamNames();
 
   export let hyphenatedTeam: string,
     teams: string[],

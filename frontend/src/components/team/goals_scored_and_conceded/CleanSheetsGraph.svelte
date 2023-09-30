@@ -2,10 +2,7 @@
   import { onMount } from "svelte";
   import { playedMatchdays } from "../../../lib/team";
 
-  function getTeamCleanSheets(
-    data: any,
-    team: string
-  ): [number[], number[]] {
+  function getTeamCleanSheets(data: any, team: string): [number[], number[]] {
     let notCleanSheets = [];
     let cleanSheets = [];
     for (let matchday of Object.keys(data.form[team][data._id])) {
@@ -221,10 +218,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: any,
-    team: string,
-    playedDates: Date[],
-    mobileView: boolean;
+  export let data: any, team: string, playedDates: Date[], mobileView: boolean;
 </script>
 
 <div id="plotly">

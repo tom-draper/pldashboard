@@ -98,7 +98,7 @@
   onMount(async () => {
     const response = await fetch(`${url}/predictions`);
     if (!response.ok) {
-      return
+      return;
     }
     let json = await response.json();
     sortByDate(json);

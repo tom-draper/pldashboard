@@ -1,7 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  function seasonFinishLines(seasonBoundaries: number[], maxX: number, maxY: number): any {
+  function seasonFinishLines(
+    seasonBoundaries: number[],
+    maxX: number,
+    maxY: number
+  ): any {
     let lines: any[] = [];
     for (let i = 0; i < seasonBoundaries.length; i++) {
       if (seasonBoundaries[i] < maxX) {
@@ -149,12 +153,12 @@
       if (i % 38 === 37) {
         // Season boundary line a week after season finish
         seasonBoundaries.push(goals[i].days + 7);
-        ticktext.push(((i%38)+1).toString());
+        ticktext.push(((i % 38) + 1).toString());
         tickvals.push(goals[i].days);
       } else if (i % 38 === 0) {
-        ticktext.push(((i % 38)+1).toString());
+        ticktext.push(((i % 38) + 1).toString());
         tickvals.push(goals[i].days);
-      } else if ((i % 38) === 19 || i === goals.length - 1) {
+      } else if (i % 38 === 19 || i === goals.length - 1) {
         let season = data._id - numSeasons + 1 + Math.floor(i / 38);
         // If in current season and matchday is 19, wait for until reach final
         // matchday in current season instead to place season ticktext label
@@ -279,7 +283,11 @@
     let [dates, days, seasonBoundaries, ticktext, tickvals, scored, conceded] =
       lineData(data, team);
     let maxY = Math.max(Math.max(...scored), Math.max(...conceded));
-    let seasonLines = seasonFinishLines(seasonBoundaries, days[days.length-1], maxY);
+    let seasonLines = seasonFinishLines(
+      seasonBoundaries,
+      days[days.length - 1],
+      maxY
+    );
     let plotData = {
       data: [...lines(days, scored, conceded, dates)],
       layout: defaultLayout(ticktext, tickvals, seasonLines),

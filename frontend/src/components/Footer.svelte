@@ -4,15 +4,21 @@
 
 <div class="teams-footer footer-text-colour">
   <div class="teams-footer-bottom">
-    <a href="https://github.com/tom-draper/pldashboard" target="_blank" class="github">
-      <img src="/img/github.png" alt="GitHub" class="github-img">
+    <a
+      href="https://github.com/tom-draper/pldashboard"
+      target="_blank"
+      class="github"
+    >
+      <img src="/img/github.png" alt="GitHub" class="github-img" />
     </a>
     {#if lastUpdated != null}
       <div class="last-updated no-select">
         Last updated: {new Date(lastUpdated).toLocaleString()} UTC
       </div>
     {/if}
-    <a href="https://pldashboard.com/home" class="version no-select"><span class="pl">pl</span>dashboard</a>
+    <a href="https://pldashboard.com/home" class="version no-select"
+      ><span class="pl">pl</span>dashboard</a
+    >
   </div>
 </div>
 

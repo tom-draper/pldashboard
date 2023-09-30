@@ -25,7 +25,9 @@
     for (const team of Object.keys(data)) {
       if (team != "_id") {
         teams.push(team);
-        points.push(data[team].totalPoints === null ? 0 : data[team].totalPoints);
+        points.push(
+          data[team].totalPoints === null ? 0 : data[team].totalPoints
+        );
         price.push(data[team].price == null ? 0 : data[team].price / 10);
         minutes.push(data[team].minutes == null ? 0 : data[team].minutes / 2);
         if (minutes[minutes.length - 1] > maxMinutes) {
@@ -37,7 +39,7 @@
 
     let sizes = minutes.slice(0);
     for (let i = 0; i < sizes.length; i++) {
-      sizes[i] /= maxMinutes * 0.02
+      sizes[i] /= maxMinutes * 0.02;
     }
     // sizes.map((x) => {
     //   return (x / maxMinutes) * sizeScale;

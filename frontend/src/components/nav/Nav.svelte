@@ -1,6 +1,6 @@
 <script lang="ts">
   import { teamStyle } from "../../lib/format";
-  import {toHyphenatedName} from "../../lib/team";
+  import { toHyphenatedName } from "../../lib/team";
 
   function closeNavBar() {
     document.getElementById("navBar").style.display = "none";
@@ -28,10 +28,7 @@
   <div class="team-links">
     {#if teams.length === 0}
       {#each widths as width, _}
-        <div
-          class="placeholder"
-          style="width: {width}%"
-        />
+        <div class="placeholder" style="width: {width}%" />
       {/each}
     {:else}
       {#each teams as _team, _ (_team)}
