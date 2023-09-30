@@ -1,12 +1,16 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { playedMatchdays } from "../../../lib/team";
+  import { onMount } from 'svelte';
+  import { playedMatchdays } from '../../../lib/team';
+  import type { DashboardData, Team } from '../../../lib/dashboard.types';
 
-  function getTeamCleanSheets(data: any, team: string): [number[], number[]] {
-    let notCleanSheets = [];
-    let cleanSheets = [];
-    for (let matchday of Object.keys(data.form[team][data._id])) {
-      let score = data.form[team][data._id][matchday].score;
+  function getTeamCleanSheets(
+    data: DashboardData,
+    team: Team
+  ): [number[], number[]] {
+    const notCleanSheets = [];
+    const cleanSheets = [];
+    for (const matchday of Object.keys(data.form[team][data._id])) {
+      const score = data.form[team][data._id][matchday].score;
       if (score != null) {
         if (data.form[team][data._id][matchday].atHome) {
           if (score.awayGoals > 0) {
@@ -32,76 +36,76 @@
   }
 
   function bars(
-    data: any,
-    team: string,
+    data: DashboardData,
+    team: Team,
     playedDates: Date[],
     matchdays: string[]
-  ): [any, any] {
-    let [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, team);
+  ) {
+    const [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, team);
     return [
       {
-        name: "Clean sheets",
-        type: "bar",
+        name: 'Clean sheets',
+        type: 'bar',
         x: playedDates,
         y: cleanSheets,
         text: matchdays,
-        marker: { color: "#00fe87" },
-        hovertemplate: "<b>Clean sheet<extra></extra>",
+        marker: { color: '#00fe87' },
+        hovertemplate: '<b>Clean sheet<extra></extra>',
         showlegend: false,
       },
       {
-        name: "Conceded",
-        type: "bar",
+        name: 'Conceded',
+        type: 'bar',
         x: playedDates,
         y: notCleanSheets,
         text: matchdays,
-        marker: { color: "#f83027" },
-        hovertemplate: "<b>Goals conceded<extra></extra>",
+        marker: { color: '#f83027' },
+        hovertemplate: '<b>Goals conceded<extra></extra>',
         showlegend: false,
       },
     ];
   }
 
-  function baseLine(): Object {
+  function baseLine() {
     return {
-      type: "line",
+      type: 'line',
       x0: playedDates[0],
       y0: 0.5,
       x1: playedDates[playedDates.length - 1],
       y1: 0.5,
-      layer: "below",
+      layer: 'below',
       line: {
-        color: "#d3d3d3",
+        color: '#d3d3d3',
         width: 2,
       },
     };
   }
 
-  function defaultLayout(matchdays: string[]): Object {
+  function defaultLayout(matchdays: string[]) {
     return {
       title: false,
       autosize: true,
       height: 60,
       margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
-      barmode: "stack",
-      hovermode: "closest",
-      plot_bgcolor: "#fafafa",
-      paper_bgcolor: "#fafafa",
+      barmode: 'stack',
+      hovermode: 'closest',
+      plot_bgcolor: '#fafafa',
+      paper_bgcolor: '#fafafa',
       yaxis: {
         showticklabels: false,
-        gridcolor: "gray",
+        gridcolor: 'gray',
         showgrid: false,
         showline: false,
         zeroline: false,
         fixedrange: true,
       },
       xaxis: {
-        title: { text: "Matchday" },
-        linecolor: "black",
+        title: { text: 'Matchday' },
+        linecolor: 'black',
         showgrid: false,
         showline: false,
         fixedrange: true,
-        tickmode: "array",
+        tickmode: 'array',
         tickvals: playedDates,
         ticktext: matchdays,
       },
@@ -113,8 +117,8 @@
 
   function setDefaultLayout() {
     if (setup) {
-      let layoutUpdate = {
-        "margin.l": 60,
+      const layoutUpdate = {
+        'margin.l': 60,
       };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
@@ -123,8 +127,8 @@
 
   function setMobileLayout() {
     if (setup) {
-      let layoutUpdate = {
-        "margin.l": 20,
+      const layoutUpdate = {
+        'margin.l': 20,
       };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
@@ -133,21 +137,21 @@
 
   function hiddenLine(x: Date[]) {
     return {
-      name: "Avg",
-      type: "line",
+      name: 'Avg',
+      type: 'line',
       x: x,
       y: Array(x.length).fill(1.1),
-      line: { color: "#FAFAFA", width: 1 },
+      line: { color: '#FAFAFA', width: 1 },
       marker: {
         size: 1,
       },
-      hoverinfo: "skip",
+      hoverinfo: 'skip',
     };
   }
 
-  function buildPlotData(data: any, team: string): PlotData {
-    let matchdays = playedMatchdays(data, team);
-    let [cleanSheetsBar, concededBar] = bars(
+  function buildPlotData(data: DashboardData, team: Team): PlotData {
+    const matchdays = playedMatchdays(data, team);
+    const [cleanSheetsBar, concededBar] = bars(
       data,
       team,
       playedDates,
@@ -156,8 +160,8 @@
     // Hidden line required on plot to make x-axis length match goalsScoredAndConcededGraph
     // Line added to plotly bar chart changes x-axis physical length vs without
     // TODO: Solution avoiding this hidden line
-    let line = hiddenLine(cleanSheetsBar.x);
-    let plotData = {
+    const line = hiddenLine(cleanSheetsBar.x);
+    const plotData = {
       data: [cleanSheetsBar, concededBar, line],
       layout: defaultLayout(matchdays),
       config: {
@@ -189,14 +193,14 @@
 
   function refreshPlot() {
     if (setup) {
-      let matchdays = playedMatchdays(data, team);
-      let [cleanSheetsBar, concededBar] = bars(
+      const matchdays = playedMatchdays(data, team);
+      const [cleanSheetsBar, concededBar] = bars(
         data,
         team,
         playedDates,
         matchdays
       );
-      let line = hiddenLine(cleanSheetsBar.x);
+      const line = hiddenLine(cleanSheetsBar.x);
 
       plotData.data[0] = cleanSheetsBar;
       plotData.data[1] = concededBar;
@@ -218,7 +222,10 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: any, team: string, playedDates: Date[], mobileView: boolean;
+  export let data: DashboardData,
+    team: Team,
+    playedDates: Date[],
+    mobileView: boolean;
 </script>
 
 <div id="plotly">

@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { ordinal } from "../../../lib/format";
+  import { onMount } from 'svelte';
+  import { ordinal } from '../../../lib/format';
   import {
     isCleanSheet,
     notScored,
     goalsScored,
     goalsConceded,
-  } from "../../../lib/goals";
+  } from '../../../lib/goals';
+  import type { DashboardData } from '../../../lib/dashboard.types';
 
   function getStatsRank(
     seasonStats: Stats,
@@ -14,7 +15,7 @@
     team: string,
     reverse: boolean
   ): number {
-    let sorted = Object.keys(seasonStats).sort(function (team1, team2) {
+    const sorted = Object.keys(seasonStats).sort(function (team1, team2) {
       return seasonStats[team2][attribute] - seasonStats[team1][attribute];
     });
     let rank = sorted.indexOf(team) + 1;
@@ -25,12 +26,12 @@
   }
 
   function getStatsRankings(seasonStats: Stats, team: string): StatsRank {
-    let xGRank = getStatsRank(seasonStats, "xG", team, false);
+    const xGRank = getStatsRank(seasonStats, 'xG', team, false);
     // Reverse - lower rank the better
-    let xCRank = getStatsRank(seasonStats, "xC", team, true);
-    let cleanSheetRatioRank = getStatsRank(
+    const xCRank = getStatsRank(seasonStats, 'xC', team, true);
+    const cleanSheetRatioRank = getStatsRank(
       seasonStats,
-      "cleanSheetRatio",
+      'cleanSheetRatio',
       team,
       false
     );
@@ -50,7 +51,7 @@
   }
 
   function countOccurances(
-    data: any,
+    data: DashboardData,
     seasonStats: Stats,
     team: string,
     season: number
@@ -59,10 +60,10 @@
       return;
     }
 
-    for (let matchday of Object.keys(data.form[team][season])) {
-      let score = data.form[team][season][matchday].score;
+    for (const matchday of Object.keys(data.form[team][season])) {
+      const score = data.form[team][season][matchday].score;
       if (score != null) {
-        let atHome = data.form[team][season][matchday].atHome;
+        const atHome = data.form[team][season][matchday].atHome;
         if (isCleanSheet(score.homeGoals, score.awayGoals, atHome)) {
           seasonStats[team].cleanSheetRatio += 1;
         }
@@ -84,9 +85,9 @@
     }
   }
 
-  function buildStats(data: any): Stats {
-    let stats = {};
-    for (let team of Object.keys(data.standings)) {
+  function buildStats(data: DashboardData): Stats {
+    const stats = {};
+    for (const team of Object.keys(data.standings)) {
       stats[team] = {
         cleanSheetRatio: 0,
         noGoalRatio: 0,
@@ -133,9 +134,9 @@
 
   let stats: Stats;
   let rank: StatsRank = {
-    xG: "",
-    xC: "",
-    cleanSheetRatio: "",
+    xG: '',
+    xC: '',
+    cleanSheetRatio: '',
   };
   let setup = false;
   onMount(() => {
@@ -147,7 +148,7 @@
 
   $: team && refreshStatsValues();
 
-  export let data: any, team: string;
+  export let data: DashboardData, team: string;
 </script>
 
 {#if stats != undefined}

@@ -1,59 +1,60 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { toHyphenatedName } from "../../lib/team";
+  import { onMount } from 'svelte';
+  import { toHyphenatedName } from '../../lib/team';
+  import type { DashboardData, Team } from '../../lib/dashboard.types';
 
-  function getLineConfig(team: string, isMainTeam: boolean): any {
-    let lineConfig: any;
+  function getLineConfig(team: string, isMainTeam: boolean) {
+    let lineConfig;
     if (isMainTeam) {
       // Get team primary colour from css variable
-      let teamKey = toHyphenatedName(team);
-      let lineColor = getComputedStyle(
+      const teamKey = toHyphenatedName(team);
+      const lineColor = getComputedStyle(
         document.documentElement
       ).getPropertyValue(`--${teamKey}`);
       lineConfig = { color: lineColor, width: 4 };
     } else {
-      lineConfig = { color: "#d3d3d3" };
+      lineConfig = { color: '#d3d3d3' };
     }
     return lineConfig;
   }
 
   function getCumulativePoints(
-    data: any,
-    team: string,
+    data: DashboardData,
+    team: Team,
     matchdays: string[]
   ): number[] {
-    let y = [];
-    for (let matchday of matchdays) {
-      let points = data.form[team][data._id][matchday].cumPoints;
+    const y = [];
+    for (const matchday of matchdays) {
+      const points = data.form[team][data._id][matchday].cumPoints;
       y.push(points);
     }
     return y;
   }
 
   function getMatchdayDates(
-    data: any,
-    team: string,
+    data: DashboardData,
+    team: Team,
     matchdays: string[]
   ): Date[] {
-    let dates = [];
+    const dates = [];
     for (let i = 0; i < matchdays.length; i++) {
-      let date = data.form[team][data._id][matchdays[i]].date;
+      const date = data.form[team][data._id][matchdays[i]].date;
       dates.push(date);
     }
     return dates;
   }
 
-  function getLine(data: any, team: string, isMainTeam: boolean): any {
-    let matchdays = Object.keys(data.form[team][data._id]);
-    let dates = getMatchdayDates(data, team, matchdays);
-    let y = getCumulativePoints(data, team, matchdays);
-    let lineConfig = getLineConfig(team, isMainTeam);
+  function getLine(data: DashboardData, team: Team, isMainTeam: boolean) {
+    const matchdays = Object.keys(data.form[team][data._id]);
+    const dates = getMatchdayDates(data, team, matchdays);
+    const y = getCumulativePoints(data, team, matchdays);
+    const lineConfig = getLineConfig(team, isMainTeam);
 
-    let line = {
+    const line = {
       x: matchdays,
       y: y,
       name: team,
-      mode: "lines",
+      mode: 'lines',
       line: lineConfig,
       text: dates,
       hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
@@ -62,18 +63,18 @@
     return line;
   }
 
-  function lines(data: any, team: string): any[] {
-    let lines = [];
-    let teams = Object.keys(data.standings);
+  function lines(data: DashboardData, team: Team) {
+    const lines = [];
+    const teams = Object.keys(data.standings) as Team[];
     for (let i = 0; i < teams.length; i++) {
       if (teams[i] != team) {
-        let line = getLine(data, teams[i], false);
+        const line = getLine(data, teams[i], false);
         lines.push(line);
       }
     }
 
     // Add this team last to ensure it overlaps all other lines
-    let line = getLine(data, team, true);
+    const line = getLine(data, team, true);
     lines.push(line);
     return lines;
   }
@@ -83,12 +84,12 @@
       title: false,
       autosize: true,
       margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
-      hovermode: "closest",
-      plot_bgcolor: "#fafafa",
-      paper_bgcolor: "#fafafa",
+      hovermode: 'closest',
+      plot_bgcolor: '#fafafa',
+      paper_bgcolor: '#fafafa',
       yaxis: {
-        title: { text: "Points" },
-        gridcolor: "gray",
+        title: { text: 'Points' },
+        gridcolor: 'gray',
         showgrid: false,
         showline: false,
         zeroline: false,
@@ -96,8 +97,8 @@
         visible: true,
       },
       xaxis: {
-        title: { text: "Matchday" },
-        linecolor: "black",
+        title: { text: 'Matchday' },
+        linecolor: 'black',
         showgrid: false,
         showline: false,
         fixedrange: true,
@@ -108,12 +109,12 @@
 
   function setDefaultLayout() {
     if (setup) {
-      let layoutUpdate = {
-        "yaxis.title": { text: "Position" },
-        "yaxis.visible": true,
-        "yaxis.tickvals": Array.from(Array(20), (_, i) => i + 1),
-        "margin.l": 60,
-        "margin.t": 15,
+      const layoutUpdate = {
+        'yaxis.title': { text: 'Position' },
+        'yaxis.visible': true,
+        'yaxis.tickvals': Array.from(Array(20), (_, i) => i + 1),
+        'margin.l': 60,
+        'margin.t': 15,
       };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
@@ -122,20 +123,20 @@
 
   function setMobileLayout() {
     if (setup) {
-      let layoutUpdate = {
-        "yaxis.title": null,
-        "yaxis.visible": false,
-        "yaxis.tickvals": Array.from(Array(10), (_, i) => i + 2),
-        "margin.l": 20,
-        "margin.t": 5,
+      const layoutUpdate = {
+        'yaxis.title': null,
+        'yaxis.visible': false,
+        'yaxis.tickvals': Array.from(Array(10), (_, i) => i + 2),
+        'margin.l': 20,
+        'margin.t': 5,
       };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
 
-  function buildPlotData(data: any, team: string): PlotData {
-    let plotData = {
+  function buildPlotData(data: DashboardData, team: Team): PlotData {
+    const plotData = {
       data: lines(data, team),
       layout: defaultLayout(),
       config: {
@@ -164,13 +165,13 @@
       plotData.config
     ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
-      plot.children[0].children[0].classList.add("resizable-graph");
+      plot.children[0].children[0].classList.add('resizable-graph');
     });
   }
 
   function refreshPlot() {
     if (setup) {
-      let newPlotData = buildPlotData(data, team);
+      const newPlotData = buildPlotData(data, team);
       for (let i = 0; i < 20; i++) {
         plotData.data[i] = newPlotData.data[i];
       }
@@ -187,7 +188,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: any, team: string, mobileView: boolean;
+  export let data: DashboardData, team: Team, mobileView: boolean;
 </script>
 
 <div id="plotly">

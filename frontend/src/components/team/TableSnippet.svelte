@@ -6,17 +6,17 @@
     sortedTeams: string[],
     team: string
   ): [number, number] {
-    let teamStandingsIdx = sortedTeams.indexOf(team);
+    const teamStandingsIdx = sortedTeams.indexOf(team);
 
     let low = teamStandingsIdx - 3;
     let high = teamStandingsIdx + 4;
     if (low < 0) {
-      let overflow = low;
+      const overflow = low;
       high -= overflow;
       low = 0;
     }
     if (high > sortedTeams.length - 1) {
-      let overflow = high - sortedTeams.length;
+      const overflow = high - sortedTeams.length;
       low -= overflow;
       high = sortedTeams.length;
     }
@@ -25,17 +25,20 @@
   }
 
   function buildTableSnippet() {
-    let sortedTeams = Object.keys(data.standings).sort(function (teamA, teamB) {
+    const sortedTeams = Object.keys(data.standings).sort(function (
+      teamA,
+      teamB
+    ) {
       return (
         data.standings[teamA][data._id].position -
         data.standings[teamB][data._id].position
       );
     });
 
-    let [low, high] = tableSnippetRange(sortedTeams, team);
+    const [low, high] = tableSnippetRange(sortedTeams, team);
 
     let teamTableIdx: number;
-    let rows = [];
+    const rows = [];
     for (let i = low; i < high; i++) {
       if (sortedTeams[i] === team) {
         teamTableIdx = i - low;
@@ -70,7 +73,7 @@
   export let data: DashboardData,
     hyphenatedTeam: string,
     team: Team,
-    switchTeam: Function;
+    switchTeam: (newTeam: string) => void;
 </script>
 
 <div class="table-snippet">

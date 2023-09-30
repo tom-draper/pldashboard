@@ -1,29 +1,29 @@
 <script lang="ts">
   function background(result: string, starTeam: boolean): string {
     switch (result) {
-      case "W":
+      case 'W':
         if (starTeam) {
-          return "linear-gradient(30deg, var(--green), #2bd2ff, #fa8bff)";
+          return 'linear-gradient(30deg, var(--green), #2bd2ff, #fa8bff)';
         } else {
-          return "#00fe87";
+          return '#00fe87';
         }
-      case "D":
-        return "#ffdd00";
-      case "L":
-        return "#f83027";
+      case 'D':
+        return '#ffdd00';
+      case 'L':
+        return '#f83027';
       default:
-        return "#d6d6d6";
+        return '#d6d6d6';
     }
   }
 
   function formatResult(result: string): string {
     switch (result) {
-      case "W":
-      case "D":
-      case "L":
+      case 'W':
+      case 'D':
+      case 'L':
         return result;
       default:
-        return "";
+        return '';
     }
   }
 

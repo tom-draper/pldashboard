@@ -1,23 +1,24 @@
 <script lang="ts">
-  import FormTiles from "./FormTiles.svelte";
-  import { toInitials } from "../../../lib/team";
+  import FormTiles from './FormTiles.svelte';
+  import { toInitials } from '../../../lib/team';
+  import type { DashboardData, Team } from '../../../lib/dashboard.types';
 
-  function getSortedMatchdays(data: any, team: string): string[] {
+  function getSortedMatchdays(data: DashboardData, team: Team): string[] {
     let matchdays = Object.keys(data.form[team][data._id]).sort(function (
       matchday1,
       matchday2
     ) {
       return (
-        (new Date(data.form[team][data._id][matchday1].date) as any) -
-        (new Date(data.form[team][data._id][matchday2].date) as any)
+        new Date(data.form[team][data._id][matchday1].date) -
+        new Date(data.form[team][data._id][matchday2].date)
       );
     });
     return matchdays;
   }
 
   function getFormStarTeams(
-    data: any,
-    team: string,
+    data: DashboardData,
+    team: Team,
     matchdays: string[]
   ): boolean[] {
     let formStarTeams = [];
@@ -34,25 +35,25 @@
     return formStarTeams;
   }
 
-  function getFormIcons(data: any, team: string): string {
+  function getFormIcons(data: DashboardData, team: Team): string {
     let formIcons: string[] = [];
     if (
       Object.keys(data.form[team][data._id][currentMatchday]).length > 0 &&
       data.form[team][data._id][currentMatchday].form5 != null
     ) {
-      formIcons = data.form[team][data._id][currentMatchday].form5.split("");
+      formIcons = data.form[team][data._id][currentMatchday].form5.split('');
     }
 
     // Fill in blanks with None icons
     for (let i = formIcons.length; i < 5; i++) {
-      formIcons.unshift("N");
+      formIcons.unshift('N');
     }
-    return formIcons.join("");
+    return formIcons.join('');
   }
 
   function getFormInitials(
-    data: any,
-    team: string,
+    data: DashboardData,
+    team: Team,
     matchdays: string[]
   ): string[] {
     let formInitials = [];
@@ -65,15 +66,15 @@
 
     // Fill in blanks with None icons
     for (let i = formInitials.length; i < 5; i++) {
-      formInitials.unshift("");
+      formInitials.unshift('');
     }
 
     return formInitials;
   }
 
   function latestNPlayedMatchdays(
-    data: any,
-    team: string,
+    data: DashboardData,
+    team: Team,
     matchdays: string[],
     N: number
   ): string[] {
@@ -104,7 +105,7 @@
   let formIcons: string, formStarTeams: boolean[], formInitials: string[];
   $: team && setFormValues();
 
-  export let data: any, currentMatchday: string, team: string;
+  export let data: DashboardData, currentMatchday: string, team: Team;
 </script>
 
 {#if formInitials != undefined}

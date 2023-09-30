@@ -1,22 +1,22 @@
 <script lang="ts">
-  import { Router } from "svelte-routing";
-  import { onMount } from "svelte";
-  import FantasyNav from "../components/nav/FantasyNav.svelte";
-  import FantasyMobileNav from "../components/nav/FantasyMobileNav.svelte";
-  import PointsVsPrice from "../components/fantasy/PointsVsPrice.svelte";
-  import Footer from "../components/Footer.svelte";
-  import Table from "../components/fantasy/Table.svelte";
-  import { url } from "../lib/consts";
-  import type { FantasyData, Page } from "../lib/fantasy.types";
+  import { Router } from 'svelte-routing';
+  import { onMount } from 'svelte';
+  import FantasyNav from '../components/nav/FantasyNav.svelte';
+  import FantasyMobileNav from '../components/nav/FantasyMobileNav.svelte';
+  import PointsVsPrice from '../components/fantasy/PointsVsPrice.svelte';
+  import Footer from '../components/Footer.svelte';
+  import Table from '../components/fantasy/Table.svelte';
+  import { url } from '../lib/consts';
+  import type { FantasyData, Page } from '../lib/fantasy.types';
 
   function toggleMobileNav() {
-    let mobileNav = document.getElementById("mobileNav");
-    if (mobileNav.style.width === "0%") {
-      mobileNav.style.display = "block";
-      mobileNav.style.width = "100%";
+    const mobileNav = document.getElementById('mobileNav');
+    if (mobileNav.style.width === '0%') {
+      mobileNav.style.display = 'block';
+      mobileNav.style.width = '100%';
     } else {
-      mobileNav.style.display = "none";
-      mobileNav.style.width = "0%";
+      mobileNav.style.display = 'none';
+      mobileNav.style.width = '0%';
     }
   }
 
@@ -29,7 +29,7 @@
     if (!response.ok) {
       return;
     }
-    let json = await response.json();
+    const json = await response.json();
 
     data = json;
     pageData = filterDataByPosition(data);
@@ -37,15 +37,15 @@
   }
 
   function filterDataByPosition(data: FantasyData) {
-    let newData = {};
-    for (let team of Object.keys(data)) {
+    const newData = {};
+    for (const team of Object.keys(data)) {
       if (
-        team === "_id" ||
-        page === "all" ||
-        (page === "attack" && data[team].position === "Forward") ||
-        (page === "midfield" && data[team].position === "Midfielder") ||
-        (page === "defence" && data[team].position === "Defender") ||
-        (page === "goalkeeper" && data[team].position === "Goalkeeper")
+        team === '_id' ||
+        page === 'all' ||
+        (page === 'attack' && data[team].position === 'Forward') ||
+        (page === 'midfield' && data[team].position === 'Midfielder') ||
+        (page === 'defence' && data[team].position === 'Defender') ||
+        (page === 'goalkeeper' && data[team].position === 'Goalkeeper')
       )
         newData[team] = data[team];
     }
@@ -57,12 +57,12 @@
     decPlaces = Math.pow(10, decPlaces);
 
     // Enumerate number abbreviations
-    var abbrev = ["k", "m", "b", "t"];
+    const abbrev = ['k', 'm', 'b', 't'];
 
     // Go through the array backwards, so we do the largest first
-    for (var i = abbrev.length - 1; i >= 0; i--) {
+    for (let i = abbrev.length - 1; i >= 0; i--) {
       // Convert array index to "1000", "1000000", etc
-      var size = Math.pow(10, (i + 1) * 3);
+      const size = Math.pow(10, (i + 1) * 3);
 
       // If the number is bigger or equal do the abbreviation
       if (size <= number) {
@@ -89,8 +89,8 @@
 
   function switchPage(newPage: Page) {
     page = newPage;
-    if (page === "all") {
-      title = "Fantasy";
+    if (page === 'all') {
+      title = 'Fantasy';
     } else {
       title = `Fantasy | ${page[0].toUpperCase() + page.slice(1)}`;
     }
@@ -98,22 +98,22 @@
     pageData = filterDataByPosition(data);
 
     let nextPage: string = page;
-    if (nextPage === "all") {
-      nextPage = "/fantasy";
-    } else if (!window.location.href.endsWith("/")) {
-      nextPage = "/fantasy/" + nextPage;
+    if (nextPage === 'all') {
+      nextPage = '/fantasy';
+    } else if (!window.location.href.endsWith('/')) {
+      nextPage = '/fantasy/' + nextPage;
     }
     window.history.pushState(null, null, nextPage); // Change current url without reloading
   }
 
-  let pages: Page[] = ["all", "attack", "midfield", "defence", "goalkeeper"];
-  let title = "Fantasy";
+  const pages: Page[] = ['all', 'attack', 'midfield', 'defence', 'goalkeeper'];
+  let title = 'Fantasy';
   let data: FantasyData;
   let pageData: FantasyData;
   onMount(() => {
     initFantasy();
     setTimeout(() => {
-      window.dispatchEvent(new Event("resize")); // Snap plots to currently set size
+      window.dispatchEvent(new Event('resize')); // Snap plots to currently set size
     }, 1000);
   });
 
@@ -137,7 +137,6 @@
   <div id="team">
     <FantasyNav currentPage={page} {pages} {switchPage} />
     <FantasyMobileNav
-      currentPage={page}
       {pages}
       {switchPage}
       {toggleMobileNav}

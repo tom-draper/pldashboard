@@ -1,11 +1,13 @@
 <script lang="ts">
   function closeNavBar() {
-    document.getElementById("navBar").style.display = "none";
-    document.getElementById("dashboard").style.marginLeft = "0";
-    window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
+    document.getElementById('navBar').style.display = 'none';
+    document.getElementById('dashboard').style.marginLeft = '0';
+    window.dispatchEvent(new Event('resize')); // Snap plotly graphs to new width
   }
 
-  export let currentPage: string, pages: string[], switchPage: Function;
+  export let currentPage: string,
+    pages: string[],
+    switchPage: (page: string) => void;
 </script>
 
 <nav id="navBar">

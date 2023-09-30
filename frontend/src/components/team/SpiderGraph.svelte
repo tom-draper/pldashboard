@@ -3,10 +3,10 @@
   import {
     toAlias,
     toName,
-    teamInSeason,
     toHyphenatedName,
     teamColor,
   } from "../../lib/team";
+  import type { DashboardData } from "../../lib/dashboard.types";
 
   function addTeamComparison(team: string) {
     let teamData = {
@@ -112,7 +112,7 @@
     }
   }
 
-  function goalsPerGame(data: any): [SpiderAttribute, [number, number]] {
+  function goalsPerGame(data: DashboardData): [SpiderAttribute, [number, number]] {
     let attack = {};
     let maxGoalsPerSeason = Number.NEGATIVE_INFINITY;
     let minGoalsPerSeason = Number.POSITIVE_INFINITY;
@@ -183,7 +183,7 @@
     return avg;
   }
 
-  function getAttack(data: any): SpiderAttribute {
+  function getAttack(data: DashboardData): SpiderAttribute {
     let [attack, extremes] = goalsPerGame(data);
     attack = scaleAttack(attack, extremes);
     attack.avg = attributeAvg(attack);
@@ -191,7 +191,7 @@
   }
 
   function concededPerSeason(
-    data: any
+    data: DashboardData
   ): [SpiderAttribute, [number, number]] {
     let defence = {};
     let maxConcededPerSeason = Number.NEGATIVE_INFINITY;
@@ -245,7 +245,7 @@
     return defence;
   }
 
-  function getDefence(data: any) {
+  function getDefence(data: DashboardData) {
     let [defence, range] = concededPerSeason(data);
     defence = scaleDefence(defence, range);
     defence.avg = attributeAvg(defence);
@@ -268,7 +268,7 @@
     return nCleanSheets;
   }
 
-  function getCleanSheets(data: any): SpiderAttribute {
+  function getCleanSheets(data: DashboardData): SpiderAttribute {
     let cleanSheets = {} as SpiderAttribute;
     let maxSeasonCleanSheets = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
@@ -324,7 +324,7 @@
     return backToBack;
   }
 
-  function getConsistency(data: any): SpiderAttribute {
+  function getConsistency(data: DashboardData): SpiderAttribute {
     let consistency = {} as SpiderAttribute;
     let maxSeasonBackToBack = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
@@ -373,7 +373,7 @@
     return winStreak;
   }
 
-  function getWinStreak(data: any): SpiderAttribute {
+  function getWinStreak(data: DashboardData): SpiderAttribute {
     let winStreaks = {} as SpiderAttribute;
     let maxSeasonWinStreak = Number.NEGATIVE_INFINITY;
     for (let team of Object.keys(data.standings)) {
@@ -401,7 +401,7 @@
   }
 
   function seasonComplete(
-    data: any,
+    data: DashboardData,
     team: string,
     season: number
   ): boolean {

@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { toAlias } from "../../lib/team";
-  import { scoreline } from "../../lib/format";
-  import type { DashboardData, Team } from "../../lib/dashboard.types";
+  import { onMount } from 'svelte';
+  import { toAlias } from '../../lib/team';
+  import { scoreline } from '../../lib/format';
+  import type { DashboardData, Fixture, Team } from '../../lib/dashboard.types';
 
-  function matchDescription(team: Team, match: Match): string {
+  function matchDescription(team: Team, match: Fixture): string {
     let description: string;
     let homeTeam: string;
     let awayTeam: string;
@@ -29,7 +29,7 @@
   }
 
   function sortByMatchDate(x: Date[], y: number[], details: string[]) {
-    let temp = [];
+    const temp = [];
     for (let i = 0; i < x.length; i++) {
       temp.push({ x: x[i], y: y[i], details: details[i] });
     }
@@ -58,7 +58,7 @@
     let minDiff = Number.POSITIVE_INFINITY;
     for (let i = 0; i < x.length; i++) {
       //@ts-ignore
-      let diff = x[i] - now;
+      const diff = x[i] - now;
       if (0 < diff && diff < minDiff) {
         minDiff = diff;
         nextGameIdx = i;
@@ -73,12 +73,15 @@
     return sizes;
   }
 
-  function linePoints(data: any, team: Team): [Date[], number[], string[]] {
-    let x: Date[] = [];
-    let y: number[] = [];
-    let descriptions: string[] = [];
+  function linePoints(
+    data: DashboardData,
+    team: Team
+  ): [Date[], number[], string[]] {
+    const x: Date[] = [];
+    const y: number[] = [];
+    const descriptions: string[] = [];
     for (let matchday = 1; matchday <= 38; matchday++) {
-      let match = data.fixtures[team][matchday];
+      const match = data.fixtures[team][matchday];
       x.push(new Date(match.date));
 
       let oppTeamRating = data.teamRatings[match.team].totalRating;
@@ -88,18 +91,18 @@
       }
       y.push(oppTeamRating * 100);
 
-      let description = matchDescription(team, match);
+      const description = matchDescription(team, match);
       descriptions.push(description);
     }
     return [x, y, descriptions];
   }
 
-  function line(data: DashboardData, team: Team, now: number): any {
-    let [x, y, description] = linePoints(data, team);
+  function line(data: DashboardData, team: Team, now: number) {
+    const [x, y, description] = linePoints(data, team);
 
     sortByMatchDate(x, y, description);
 
-    let matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
+    const matchdays = Array.from({ length: 38 }, (_, index) => index + 1);
 
     let sizes = Array(x.length).fill(13);
     sizes = highlightNextGameMarker(sizes, x, now, 26);
@@ -107,18 +110,18 @@
     return {
       x: x,
       y: y,
-      type: "scatter",
-      mode: "lines+markers",
+      type: 'scatter',
+      mode: 'lines+markers',
       text: description,
       line: {
-        color: "#737373",
+        color: '#737373',
       },
       marker: {
         size: sizes,
         colorscale: [
-          [0, "#00fe87"],
-          [0.5, "#f3f3f3"],
-          [1, "#f83027"],
+          [0, '#00fe87'],
+          [0.5, '#f3f3f3'],
+          [1, '#f83027'],
         ],
         color: y,
         opacity: 1,
@@ -126,23 +129,23 @@
       },
       customdata: matchdays,
       hovertemplate:
-        "<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>",
+        '<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>',
     };
   }
 
-  function currentDateLine(now: number, maxX: number): Object {
+  function currentDateLine(now: number, maxX: number) {
     let nowLine = null;
     if (now <= maxX) {
       // Vertical line shapw marking current day
       nowLine = {
-        type: "line",
+        type: 'line',
         x0: now,
         y0: -4,
         x1: now,
         y1: 104,
         line: {
-          color: "black",
-          dash: "dot",
+          color: 'black',
+          dash: 'dot',
           width: 1,
         },
       };
@@ -151,29 +154,29 @@
   }
 
   function xRange(x: Date[]): [Date, Date] {
-    let minX = new Date(x[0]);
+    const minX = new Date(x[0]);
     minX.setDate(minX.getDate() - 7);
-    let maxX = new Date(x[x.length - 1]);
+    const maxX = new Date(x[x.length - 1]);
     maxX.setDate(maxX.getDate() + 7);
     return [minX, maxX];
   }
 
-  function defaultLayout(x: Date[], now: number): Object {
-    let yLabels = Array.from(Array(11), (_, i) => i * 10);
+  function defaultLayout(x: Date[], now: number) {
+    const yLabels = Array.from(Array(11), (_, i) => i * 10);
 
-    let [minX, maxX] = xRange(x);
+    const [minX, maxX] = xRange(x);
     // @ts-ignore
-    let currentDate = currentDateLine(now, maxX);
+    const currentDate = currentDateLine(now, maxX);
     return {
       title: false,
       autosize: true,
       margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
-      hovermode: "closest",
-      plot_bgcolor: "#fafafa",
-      paper_bgcolor: "#fafafa",
+      hovermode: 'closest',
+      plot_bgcolor: '#fafafa',
+      paper_bgcolor: '#fafafa',
       yaxis: {
-        title: { text: "Team rating" },
-        gridcolor: "#d6d6d6",
+        title: { text: 'Team rating' },
+        gridcolor: '#d6d6d6',
         showline: false,
         zeroline: false,
         fixedrange: true,
@@ -181,7 +184,7 @@
         tickvals: yLabels,
       },
       xaxis: {
-        linecolor: "black",
+        linecolor: 'black',
         showgrid: false,
         showline: false,
         range: [minX, maxX],
@@ -194,23 +197,23 @@
 
   function setDefaultLayout() {
     if (setup) {
-      let layoutUpdate = {
-        "yaxis.title": { text: "Team rating" },
-        "margin.l": 60,
-        "yaxis.color": "black",
+      const layoutUpdate = {
+        'yaxis.title': { text: 'Team rating' },
+        'margin.l': 60,
+        'yaxis.color': 'black',
       };
 
-      let sizes = plotData.data[0].marker.size;
+      const sizes = plotData.data[0].marker.size;
       for (let i = 0; i < sizes.length; i++) {
         sizes[i] = Math.round(sizes[i] * 1.7);
       }
-      let dataUpdate = {
+      const dataUpdate = {
         marker: {
           size: sizes,
           colorscale: [
-            [0, "#00fe87"],
-            [0.5, "#f3f3f3"],
-            [1, "#f83027"],
+            [0, '#00fe87'],
+            [0.5, '#f3f3f3'],
+            [1, '#f83027'],
           ],
           color: plotData.data[0].y,
           opacity: 1,
@@ -226,23 +229,23 @@
 
   function setMobileLayout() {
     if (setup) {
-      let layoutUpdate = {
-        "yaxis.title": null,
-        "margin.l": 20,
-        "yaxis.color": "#fafafa",
+      const layoutUpdate = {
+        'yaxis.title': null,
+        'margin.l': 20,
+        'yaxis.color': '#fafafa',
       };
 
-      let sizes = plotData.data[0].marker.size;
+      const sizes = plotData.data[0].marker.size;
       for (let i = 0; i < sizes.length; i++) {
         sizes[i] = Math.round(sizes[i] / 1.7);
       }
-      let dataUpdate = {
+      const dataUpdate = {
         marker: {
           size: sizes,
           colorscale: [
-            [0, "#00fe87"],
-            [0.5, "#f3f3f3"],
-            [1, "#f83027"],
+            [0, '#00fe87'],
+            [0.5, '#f3f3f3'],
+            [1, '#f83027'],
           ],
           color: plotData.data[0].y,
           opacity: 1,
@@ -259,10 +262,10 @@
   function buildPlotData(data: DashboardData, team: Team): PlotData {
     // Build data to create a fixtures line graph displaying the date along the
     // x-axis and opponent strength along the y-axis
-    let now = Date.now();
-    let l = line(data, team, now);
+    const now = Date.now();
+    const l = line(data, team, now);
 
-    let plotData = {
+    const plotData = {
       data: [l],
       layout: defaultLayout(l.x, now),
       config: {
@@ -284,13 +287,13 @@
       plotData.config
     ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
-      plot.children[0].children[0].classList.add("resizable-graph");
+      plot.children[0].children[0].classList.add('resizable-graph');
     });
   }
 
   function refreshPlot() {
     if (setup) {
-      let l = line(data, team, Date.now());
+      const l = line(data, team, Date.now());
       plotData.data[0] = l; // Overwrite plot data
       //@ts-ignore
       Plotly.redraw(plotDiv);

@@ -5,7 +5,7 @@
   import { url } from '../lib/consts';
 
   function toggleDetailsDisplay(id: string) {
-    let prediction = document.getElementById(id);
+    const prediction = document.getElementById(id);
     if (prediction != null) {
       prediction.classList.toggle('expanded');
     }
@@ -22,7 +22,7 @@
     let total = 0;
     for (let i = 0; i < json.predictions.length; i++) {
       for (let j = 0; j < json.predictions[i].predictions.length; j++) {
-        let prediction = json.predictions[i].predictions[j];
+        const prediction = json.predictions[i].predictions[j];
         if (prediction.actual != null) {
           if (identicalScore(prediction.prediction, prediction.actual)) {
             prediction.colour = 'green';
@@ -52,7 +52,7 @@
   }
 
   function datetimeToTime(datetime: string): string {
-    let date = new Date(datetime);
+    const date = new Date(datetime);
     return date.toTimeString().slice(0, 5);
   }
 
@@ -64,7 +64,7 @@
     // Sort each day of predictions by time
     for (let i = 0; i < predictions.length; i++) {
       predictions[i].predictions.sort((a: Prediction, b: Prediction) => {
-        return (new Date(a.datetime) as any) - (new Date(b.datetime) as any);
+        return (new Date(a.datetime)) - (new Date(b.datetime));
       });
     }
   }

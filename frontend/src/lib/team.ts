@@ -21,7 +21,7 @@ export function toInitials(team: Team): string {
 }
 
 
-let alias = {
+const alias = {
     "Wolverhampton Wanderers": "Wolves",
     "Tottenham Hotspur": "Spurs",
     "Leeds United": "Leeds",
@@ -52,16 +52,16 @@ export function teamInSeason(form: Form, team: Team, season: number): boolean {
 }
 
 export function teamColor(team: string): string {
-    let teamKey = toHyphenatedName(team)
-    let teamColor = getComputedStyle(document.documentElement).getPropertyValue(
+    const teamKey = toHyphenatedName(team)
+    const teamColor = getComputedStyle(document.documentElement).getPropertyValue(
         `--${teamKey}`
     );
     return teamColor;
 }
 
-export function playedMatchdays(data: any, team: string): string[] {
-    let matchdays = [];
-    for (let matchday in data.form[team][data._id]) {
+export function playedMatchdays(data: DashboardData, team: string): string[] {
+    const matchdays = [];
+    for (const matchday in data.form[team][data._id]) {
         if (data.form[team][data._id][matchday].score != null) {
             matchdays.push(matchday);
         }
@@ -70,7 +70,7 @@ export function playedMatchdays(data: any, team: string): string[] {
 }
 
 export function currentMatchday(data: DashboardData, team: Team): string {
-    let matchdays = Object.keys(data.form[team][data._id])
+    const matchdays = Object.keys(data.form[team][data._id])
     for (let i = matchdays.length - 1; i >= 0; i--) {
         if (data.form[team][data._id][matchdays[i]].score != null) {
             return matchdays[i]

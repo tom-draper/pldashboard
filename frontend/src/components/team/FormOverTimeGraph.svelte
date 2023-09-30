@@ -1,40 +1,41 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { toHyphenatedName } from "../../lib/team";
+  import { onMount } from 'svelte';
+  import { toHyphenatedName } from '../../lib/team';
+  import type { DashboardData, Team } from '../../lib/dashboard.types';
 
-  function getFormLine(data: any, team: string, isMainTeam: boolean): any {
-    let playedDates = [];
-    let matchdays = [];
-    for (let matchday in data.form[team][data._id]) {
+  function getFormLine(data: DashboardData, team: Team, isMainTeam: boolean) {
+    const playedDates = [];
+    const matchdays = [];
+    for (const matchday in data.form[team][data._id]) {
       if (data.form[team][data._id][matchday].score != null) {
         matchdays.push(matchday);
         playedDates.push(new Date(data.form[team][data._id][matchday].date));
       }
     }
 
-    let y = [];
-    for (let matchday of matchdays) {
-      let form = data.form[team][data._id][matchday].formRating5;
+    const y = [];
+    for (const matchday of matchdays) {
+      const form = data.form[team][data._id][matchday].formRating5;
       y.push(form * 100);
     }
 
     let lineVal: { color: string; width?: number };
     if (isMainTeam) {
       // Get team primary colour from css variable
-      let teamKey = toHyphenatedName(team);
-      let lineColor = getComputedStyle(
+      const teamKey = toHyphenatedName(team);
+      const lineColor = getComputedStyle(
         document.documentElement
       ).getPropertyValue(`--${teamKey}`);
       lineVal = { color: lineColor, width: 4 };
     } else {
-      lineVal = { color: "#d3d3d3" };
+      lineVal = { color: '#d3d3d3' };
     }
 
-    let line = {
+    const line = {
       x: matchdays,
       y: y,
       name: team,
-      mode: "lines",
+      mode: 'lines',
       line: lineVal,
       text: playedDates,
       hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
@@ -43,35 +44,35 @@
     return line;
   }
 
-  function lines(data: any, team: string): any[] {
-    let lines = [];
+  function lines(data: DashboardData, team: Team) {
+    const lines = [];
 
-    let teams = Object.keys(data.standings);
+    const teams = Object.keys(data.standings) as Team[];
     for (let i = 0; i < teams.length; i++) {
       if (teams[i] != team) {
-        let line = getFormLine(data, teams[i], false);
+        const line = getFormLine(data, teams[i], false);
         lines.push(line);
       }
     }
 
     // Add this team last to ensure it overlaps all other lines
-    let line = getFormLine(data, team, true);
+    const line = getFormLine(data, team, true);
     lines.push(line);
     return lines;
   }
 
   function defaultLayout() {
-    let yLabels = Array.from(Array(11), (_, i) => i * 10);
+    const yLabels = Array.from(Array(11), (_, i) => i * 10);
     return {
       title: false,
       autosize: true,
       margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
-      hovermode: "closest",
-      plot_bgcolor: "#fafafa",
-      paper_bgcolor: "#fafafa",
+      hovermode: 'closest',
+      plot_bgcolor: '#fafafa',
+      paper_bgcolor: '#fafafa',
       yaxis: {
-        title: { text: "Form rating" },
-        gridcolor: "gray",
+        title: { text: 'Form rating' },
+        gridcolor: 'gray',
         showgrid: false,
         showline: false,
         zeroline: false,
@@ -81,8 +82,8 @@
         range: [-1, 101],
       },
       xaxis: {
-        title: { text: "Matchday" },
-        linecolor: "black",
+        title: { text: 'Matchday' },
+        linecolor: 'black',
         showgrid: false,
         showline: false,
         fixedrange: true,
@@ -94,11 +95,11 @@
 
   function setDefaultLayout() {
     if (setup) {
-      let layoutUpdate = {
-        "yaxis.title": { text: "Form rating" },
-        "yaxis.visible": true,
-        "margin.l": 60,
-        "margin.t": 15,
+      const layoutUpdate = {
+        'yaxis.title': { text: 'Form rating' },
+        'yaxis.visible': true,
+        'margin.l': 60,
+        'margin.t': 15,
       };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
@@ -107,19 +108,19 @@
 
   function setMobileLayout() {
     if (setup) {
-      let layoutUpdate = {
-        "yaxis.title": null,
-        "yaxis.visible": false,
-        "margin.l": 20,
-        "margin.t": 5,
+      const layoutUpdate = {
+        'yaxis.title': null,
+        'yaxis.visible': false,
+        'margin.l': 20,
+        'margin.t': 5,
       };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
 
-  function buildPlotData(data: any, team: string): PlotData {
-    let plotData = {
+  function buildPlotData(data: DashboardData, team: Team): PlotData {
+    const plotData = {
       data: lines(data, team),
       layout: defaultLayout(),
       config: {
@@ -148,18 +149,18 @@
       plotData.config
     ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
-      plot.children[0].children[0].classList.add("resizable-graph");
+      plot.children[0].children[0].classList.add('resizable-graph');
     });
     setTimeout(() => {
       // Render the bottom half of the page now the visible parts have been rendered
       lazyLoad = true;
-      window.dispatchEvent(new Event("resize"));  // Snap plots to currently set size
+      window.dispatchEvent(new Event('resize')); // Snap plots to currently set size
     }, 50);
   }
 
   function refreshPlot() {
     if (setup) {
-      let newPlotData = buildPlotData(data, team);
+      const newPlotData = buildPlotData(data, team);
       for (let i = 0; i < 20; i++) {
         plotData.data[i] = newPlotData.data[i];
       }
@@ -179,8 +180,8 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: any,
-    team: string,
+  export let data: DashboardData,
+    team: Team,
     playedDates: Date[],
     lazyLoad: boolean,
     mobileView: boolean;

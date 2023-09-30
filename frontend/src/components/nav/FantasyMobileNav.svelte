@@ -5,10 +5,9 @@
     toggleMobileNav();
   }
 
-  export let currentPage: string,
-    pages: string[],
-    switchPage: Function,
-    toggleMobileNav: Function;
+  export let pages: string[],
+    switchPage: (page: string) => void,
+    toggleMobileNav: () => void;
 </script>
 
 <nav id="mobileNav" style="width: 0%;">

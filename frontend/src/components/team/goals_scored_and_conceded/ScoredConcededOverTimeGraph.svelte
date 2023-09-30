@@ -1,23 +1,24 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount } from 'svelte';
+  import type { DashboardData, Team } from '../../../lib/dashboard.types';
 
   function seasonFinishLines(
     seasonBoundaries: number[],
     maxX: number,
     maxY: number
-  ): any {
-    let lines: any[] = [];
+  ) {
+    const lines = [];
     for (let i = 0; i < seasonBoundaries.length; i++) {
       if (seasonBoundaries[i] < maxX) {
         lines.push({
-          type: "line",
+          type: 'line',
           x0: seasonBoundaries[i],
           y0: 0,
           x1: seasonBoundaries[i],
           y1: maxY,
           line: {
-            color: "black",
-            dash: "dot",
+            color: 'black',
+            dash: 'dot',
             width: 1,
           },
         });
@@ -26,36 +27,36 @@
     return lines;
   }
 
-  function goalsScoredLine(x: number[], y: any[], dates: Date[]) {
+  function goalsScoredLine(x: number[], y: number[], dates: Date[]) {
     return {
       x: x,
       y: y,
-      type: "scatter",
-      fill: "tozeroy",
-      mode: "lines",
-      name: "Scored",
+      type: 'scatter',
+      fill: 'tozeroy',
+      mode: 'lines',
+      name: 'Scored',
       text: dates,
       line: {
-        color: "#00fe87",
+        color: '#00fe87',
       },
       hovertemplate:
-        "%{text|%d %b %Y}<br>Avg scored: <b>%{y:.1f}</b><extra></extra>",
+        '%{text|%d %b %Y}<br>Avg scored: <b>%{y:.1f}</b><extra></extra>',
     };
   }
-  function goalsConcededLine(x: number[], y: any[], dates: Date[]) {
+  function goalsConcededLine(x: number[], y: number[], dates: Date[]) {
     return {
       x: x,
       y: y,
-      type: "scatter",
-      fill: "tozeroy",
-      mode: "lines",
-      name: "Conceded",
+      type: 'scatter',
+      fill: 'tozeroy',
+      mode: 'lines',
+      name: 'Conceded',
       text: dates,
       line: {
-        color: "#f83027",
+        color: '#f83027',
       },
       hovertemplate:
-        "%{text|%d %b %Y}<br>Avg conceded: <b>%{y:.1f}</b><extra></extra>",
+        '%{text|%d %b %Y}<br>Avg conceded: <b>%{y:.1f}</b><extra></extra>',
     };
   }
 
@@ -84,17 +85,17 @@
   }
 
   function goalsOverTime(
-    data: any,
-    team: string,
+    data: DashboardData,
+    team: Team,
     numSeasons: number
   ): GoalsOverTime {
-    let goals: GoalsOverTime = [];
-    let startingDate = data.form[team][data._id - numSeasons][1].date;
+    const goals: GoalsOverTime = [];
+    const startingDate = data.form[team][data._id - numSeasons][1].date;
     let dateOffset = 0;
     for (let i = numSeasons - 1; i >= 0; i--) {
-      let teamGames = data.form[team][data._id - i];
-      for (let matchday of Object.keys(teamGames)) {
-        let match = teamGames[matchday];
+      const teamGames = data.form[team][data._id - i];
+      for (const matchday of Object.keys(teamGames)) {
+        const match = teamGames[matchday];
         if (match.score != null) {
           let scored: number, conceded: number;
           if (match.atHome) {
@@ -118,8 +119,8 @@
       if (i > 0) {
         // To remove summer gap between seasons, increase dateOffset by number
         // of days between current season end and next season start
-        let currentSeasonEndDate = data.form[team][data._id - i][38].date;
-        let nextSeasonStartDate = data.form[team][data._id - i + 1][1].date;
+        const currentSeasonEndDate = data.form[team][data._id - i][38].date;
+        const nextSeasonStartDate = data.form[team][data._id - i + 1][1].date;
         // @ts-ignore
         dateOffset += numDays(nextSeasonStartDate, currentSeasonEndDate);
         dateOffset -= 14; // Allow a 2 week gap between seasons for clarity
@@ -129,24 +130,24 @@
   }
 
   function lineData(
-    data: any,
-    team: string
+    data: DashboardData,
+    team: Team
   ): [Date[], number[], number[], string[], number[], number[], number[]] {
-    let numSeasons = 3;
-    let goals = goalsOverTime(data, team, numSeasons);
+    const numSeasons = 3;
+    const goals = goalsOverTime(data, team, numSeasons);
     // Sort by game date
     goals.sort(function (a, b) {
       return a.days < b.days ? -1 : a.days === b.days ? 0 : 1;
     });
 
     // Separate out into lists
-    let dates: Date[] = [];
-    let days: number[] = [];
-    let seasonBoundaries: number[] = [];
-    let ticktext: string[] = [];
-    let tickvals: number[] = [];
-    let scored: number[] = [];
-    let conceded: number[] = [];
+    const dates: Date[] = [];
+    const days: number[] = [];
+    const seasonBoundaries: number[] = [];
+    const ticktext: string[] = [];
+    const tickvals: number[] = [];
+    const scored: number[] = [];
+    const conceded: number[] = [];
     for (let i = 0; i < goals.length; i++) {
       dates.push(goals[i].date);
       days.push(goals[i].days);
@@ -159,11 +160,11 @@
         ticktext.push(((i % 38) + 1).toString());
         tickvals.push(goals[i].days);
       } else if (i % 38 === 19 || i === goals.length - 1) {
-        let season = data._id - numSeasons + 1 + Math.floor(i / 38);
+        const season = data._id - numSeasons + 1 + Math.floor(i / 38);
         // If in current season and matchday is 19, wait for until reach final
         // matchday in current season instead to place season ticktext label
-        if (season != data._id || goals[i].matchday != "19") {
-          let seasonTag = `${String(season).slice(2)}/${String(
+        if (season != data._id || goals[i].matchday != '19') {
+          const seasonTag = `${String(season).slice(2)}/${String(
             season + 1
           ).slice(2)}`;
           ticktext.push(seasonTag);
@@ -174,7 +175,7 @@
       conceded.push(goals[i].conceded);
     }
 
-    let nGames = 5;
+    const nGames = 5;
     // Smooth goals with last nGames average
     for (let i = 0; i < dates.length; i++) {
       let j = i - 1;
@@ -207,39 +208,35 @@
     scored: number[],
     conceded: number[],
     dates: Date[]
-  ): [any, any] {
+  ) {
     return [
       goalsScoredLine(days, scored, dates),
       goalsConcededLine(days, conceded, dates),
     ];
   }
 
-  function defaultLayout(
-    ticktext: string[],
-    tickvals: number[],
-    seasonLines: any[]
-  ): any {
+  function defaultLayout(ticktext: string[], tickvals: number[], seasonLines) {
     return {
       title: false,
       autosize: true,
       margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
-      hovermode: "closest",
-      plot_bgcolor: "#fafafa",
-      paper_bgcolor: "#fafafa",
+      hovermode: 'closest',
+      plot_bgcolor: '#fafafa',
+      paper_bgcolor: '#fafafa',
       yaxis: {
-        title: { text: "Goals (5-game avg)" },
-        gridcolor: "gray",
+        title: { text: 'Goals (5-game avg)' },
+        gridcolor: 'gray',
         showgrid: false,
         showline: false,
         zeroline: false,
         fixedrange: true,
       },
       xaxis: {
-        linecolor: "black",
+        linecolor: 'black',
         showgrid: false,
         showline: false,
         fixedrange: true,
-        tickmode: "array",
+        tickmode: 'array',
         tickvals: tickvals,
         ticktext: ticktext,
       },
@@ -247,7 +244,7 @@
       shapes: [...seasonLines],
       legend: {
         x: 1,
-        xanchor: "right",
+        xanchor: 'right',
         y: 0.95,
       },
     };
@@ -255,11 +252,11 @@
 
   function setDefaultLayout() {
     if (setup) {
-      let layoutUpdate = {
-        "yaxis.title": { text: "Goals (5-game avg)" },
-        "yaxis.visible": true,
-        "margin.l": 60,
-        "margin.t": 15,
+      const layoutUpdate = {
+        'yaxis.title': { text: 'Goals (5-game avg)' },
+        'yaxis.visible': true,
+        'margin.l': 60,
+        'margin.t': 15,
       };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
@@ -268,27 +265,34 @@
 
   function setMobileLayout() {
     if (setup) {
-      let layoutUpdate = {
-        "yaxis.title": null,
-        "yaxis.visible": false,
-        "margin.l": 20,
-        "margin.t": 5,
+      const layoutUpdate = {
+        'yaxis.title': null,
+        'yaxis.visible': false,
+        'margin.l': 20,
+        'margin.t': 5,
       };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
     }
   }
 
-  function buildPlotData(data: any, team: string): PlotData {
-    let [dates, days, seasonBoundaries, ticktext, tickvals, scored, conceded] =
-      lineData(data, team);
-    let maxY = Math.max(Math.max(...scored), Math.max(...conceded));
-    let seasonLines = seasonFinishLines(
+  function buildPlotData(data: DashboardData, team: Team): PlotData {
+    const [
+      dates,
+      days,
+      seasonBoundaries,
+      ticktext,
+      tickvals,
+      scored,
+      conceded,
+    ] = lineData(data, team);
+    const maxY = Math.max(Math.max(...scored), Math.max(...conceded));
+    const seasonLines = seasonFinishLines(
       seasonBoundaries,
       days[days.length - 1],
       maxY
     );
-    let plotData = {
+    const plotData = {
       data: [...lines(days, scored, conceded, dates)],
       layout: defaultLayout(ticktext, tickvals, seasonLines),
       config: {
@@ -317,13 +321,13 @@
       plotData.config
     ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
-      plot.children[0].children[0].classList.add("resizable-graph");
+      plot.children[0].children[0].classList.add('resizable-graph');
     });
   }
 
   function refreshPlot() {
     if (setup) {
-      let newPlotData = buildPlotData(data, team);
+      const newPlotData = buildPlotData(data, team);
 
       // Copy new values into exisitng plotData to be accessed during redraw
       plotData.data[0] = newPlotData.data[0]; // Copy goals scored line
@@ -345,7 +349,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: any, team: string, mobileView: boolean;
+  export let data: DashboardData, team: Team, mobileView: boolean;
 </script>
 
 <div id="plotly">

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { toInitials } from "../../lib/team";
-  import { teamStyle } from "../../lib/format";
+  import { onMount } from 'svelte';
+  import { toInitials } from '../../lib/team';
+  import { teamStyle } from '../../lib/format';
   // import OverviewFooter from "./Footer.svelte";
 
   type UpcomingMatch = {
@@ -56,10 +56,10 @@
   }
 
   function applyRatingFixturesScaling() {
-    if (fixturesScaling === "rating") {
+    if (fixturesScaling === 'rating') {
       return;
     }
-    fixturesScaling = "rating";
+    fixturesScaling = 'rating';
 
     for (let teamFixtures of fixtures) {
       for (let match of teamFixtures.matches) {
@@ -75,10 +75,10 @@
   }
 
   function applyRatingFormScaling() {
-    if (fixturesScaling === "form") {
+    if (fixturesScaling === 'form') {
       return;
     }
-    fixturesScaling = "form";
+    fixturesScaling = 'form';
 
     for (let teamFixtures of fixtures) {
       for (let match of teamFixtures.matches) {
@@ -140,61 +140,61 @@
 
   function fixtureColourSkewed(scaleVal: number) {
     if (scaleVal < 0.05) {
-      return "#00fe87";
+      return '#00fe87';
     } else if (scaleVal < 0.1) {
-      return "#63fb6e";
+      return '#63fb6e';
     } else if (scaleVal < 0.15) {
-      return "#8df755";
+      return '#8df755';
     } else if (scaleVal < 0.2) {
-      return "#aef23e";
+      return '#aef23e';
     } else if (scaleVal < 0.25) {
-      return "#cbec27";
+      return '#cbec27';
     } else if (scaleVal < 0.3) {
-      return "#e6e50f";
+      return '#e6e50f';
     } else if (scaleVal < 0.35) {
-      return "#ffdd00";
+      return '#ffdd00';
     } else if (scaleVal < 0.4) {
-      return "#ffc400";
+      return '#ffc400';
     } else if (scaleVal < 0.45) {
-      return "#ffab00";
+      return '#ffab00';
     } else if (scaleVal < 0.5) {
-      return "#ff9000";
+      return '#ff9000';
     } else if (scaleVal < 0.55) {
-      return "#ff7400";
+      return '#ff7400';
     } else if (scaleVal < 0.6) {
-      return "#ff5618";
+      return '#ff5618';
     } else {
-      return "#f83027";
+      return '#f83027';
     }
   }
 
   function fixtureColour(scaleVal: number) {
     if (scaleVal < 0.2) {
-      return "#00fe87";
+      return '#00fe87';
     } else if (scaleVal < 0.25) {
-      return "#63fb6e";
+      return '#63fb6e';
     } else if (scaleVal < 0.35) {
-      return "#8df755";
+      return '#8df755';
     } else if (scaleVal < 0.4) {
-      return "#aef23e";
+      return '#aef23e';
     } else if (scaleVal < 0.45) {
-      return "#cbec27";
+      return '#cbec27';
     } else if (scaleVal < 0.5) {
-      return "#e6e50f";
+      return '#e6e50f';
     } else if (scaleVal < 0.55) {
-      return "#ffdd00";
+      return '#ffdd00';
     } else if (scaleVal < 0.6) {
-      return "#ffc400";
+      return '#ffc400';
     } else if (scaleVal < 0.65) {
-      return "#ffab00";
+      return '#ffab00';
     } else if (scaleVal < 0.7) {
-      return "#ff9000";
+      return '#ff9000';
     } else if (scaleVal < 0.75) {
-      return "#ff7400";
+      return '#ff7400';
     } else if (scaleVal < 0.8) {
-      return "#ff5618";
+      return '#ff5618';
     } else {
-      return "#f83027";
+      return '#f83027';
     }
   }
 
@@ -202,7 +202,7 @@
   let standings: Standings[];
   let fixtures: Fixtures[];
   $: fixtures;
-  let fixturesScaling = "rating";
+  let fixturesScaling = 'rating';
   onMount(() => {
     upcoming = upcomingMatches();
     standings = standingsTable();
@@ -222,11 +222,11 @@
             {#each upcoming as match, i}
               {#if i === 0 || match.time.getDate() != upcoming[i - 1].time.getDate()}
                 <div class="upcoming-match-date">
-                  {match.time.toLocaleDateString("en-GB", {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
+                  {match.time.toLocaleDateString('en-GB', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
                   })}
                 </div>
               {/if}
@@ -248,9 +248,9 @@
               </div>
               <div class="upcoming-match-time-container">
                 <div class="upcoming-match-time">
-                  {match.time.toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
+                  {match.time.toLocaleTimeString('en-GB', {
+                    hour: '2-digit',
+                    minute: '2-digit',
                   })}
                 </div>
               </div>
@@ -342,7 +342,7 @@
                           )
                         )
                       ].formRating5.toFixed(2)
-                    : ""}
+                    : ''}
                 </div>
               </div>
             {/each}
@@ -421,7 +421,7 @@
                       title={match.date}
                     >
                       {`${toInitials(match.team)} (${
-                        match.atHome ? "H" : "A"
+                        match.atHome ? 'H' : 'A'
                       }`})
                     </div>
                   {/each}

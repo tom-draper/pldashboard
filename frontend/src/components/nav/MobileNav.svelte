@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { toHyphenatedName } from "../../lib/team";
+  import { toHyphenatedName } from '../../lib/team';
 
   function switchTeamToTop(team: string) {
     switchTeam(team);
@@ -8,9 +8,9 @@
   }
 
   function getHyphenatedTeamNames() {
-    let hyphenatedTeamNames = [];
+    const hyphenatedTeamNames = [];
     for (let i = 0; i < teams.length; i++) {
-      let teamLink = toHyphenatedName(teams[i]);
+      const teamLink = toHyphenatedName(teams[i]);
       if (teamLink != hyphenatedTeam) {
         hyphenatedTeamNames.push(teamLink);
       } else {
@@ -26,9 +26,9 @@
 
   export let hyphenatedTeam: string,
     teams: string[],
-    toAlias: Function,
-    switchTeam: Function,
-    toggleMobileNav: Function;
+    toAlias: (team: string) => void,
+    switchTeam: (newTeam: string) => void,
+    toggleMobileNav: () => void;
 </script>
 
 <nav id="mobileNav" style="width: 0%;">

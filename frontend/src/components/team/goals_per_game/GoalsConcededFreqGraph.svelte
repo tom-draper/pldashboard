@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount } from 'svelte';
 
-  function defaultLayout(): Object {
-    let xLabels = getXLabels();
+  function defaultLayout() {
+    const xLabels = getXLabels();
     return {
       title: false,
       autosize: true,
       margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
-      hovermode: "closest",
-      barmode: "overlay",
+      hovermode: 'closest',
+      barmode: 'overlay',
       bargap: 0,
-      plot_bgcolor: "#fafafa",
-      paper_bgcolor: "#fafafa",
+      plot_bgcolor: '#fafafa',
+      paper_bgcolor: '#fafafa',
       yaxis: getYAxisLayout(),
       xaxis: {
-        title: { text: "Conceded" },
-        linecolor: "black",
+        title: { text: 'Conceded' },
+        linecolor: 'black',
         showgrid: false,
         showline: false,
         fixedrange: true,
@@ -24,7 +24,7 @@
       },
       legend: {
         x: 1,
-        xanchor: "right",
+        xanchor: 'right',
         y: 0.95,
       },
       dragmode: false,
@@ -33,10 +33,10 @@
 
   function setDefaultLayout() {
     if (setup) {
-      let layoutUpdate = {
-        "yaxis.title": { text: "Conceded" },
-        "yaxis.visible": true,
-        "margin.l": 60,
+      const layoutUpdate = {
+        'yaxis.title': { text: 'Conceded' },
+        'yaxis.visible': true,
+        'margin.l': 60,
       };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
@@ -45,10 +45,10 @@
 
   function setMobileLayout() {
     if (setup) {
-      let layoutUpdate = {
-        "yaxis.title": null,
-        "yaxis.visible": false,
-        "margin.l": 20,
+      const layoutUpdate = {
+        'yaxis.title': null,
+        'yaxis.visible': false,
+        'margin.l': 20,
       };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate);
@@ -56,7 +56,7 @@
   }
 
   function buildPlotData(): PlotData {
-    let plotData = {
+    const plotData = {
       data: getConcededBars(),
       layout: defaultLayout(),
       config: {
@@ -78,7 +78,7 @@
       plotData.config
     ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
-      plot.children[0].children[0].classList.add("resizable-graph");
+      plot.children[0].children[0].classList.add('resizable-graph');
     });
   }
 

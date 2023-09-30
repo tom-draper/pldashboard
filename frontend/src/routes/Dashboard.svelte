@@ -30,7 +30,7 @@
   import type { DashboardData, Team } from '../lib/dashboard.types';
 
   function toggleMobileNav() {
-    let mobileNav = document.getElementById('mobileNav');
+    const mobileNav = document.getElementById('mobileNav');
     if (mobileNav.style.width === '0%') {
       mobileNav.style.display = 'block';
       mobileNav.style.width = '100%';
@@ -49,10 +49,10 @@
     }
 
     // Find median matchday date across all teams for each matchday
-    let x = [];
+    const x = [];
     for (let i = 0; i < matchdays.length; i++) {
-      let matchdayDates = [];
-      for (let team in data.standings) {
+      const matchdayDates = [];
+      for (const team in data.standings) {
         matchdayDates.push(new Date(data.fixtures[team][matchdays[i]].date));
       }
       matchdayDates.sort();
@@ -71,7 +71,7 @@
       title = 'Dashboard | Overview';
     } else if (slug != null) {
       slug = slugAlias(slug);
-      team = toTitleCase(slug.replace(/\-/g, ' ')) as Team;
+      team = toTitleCase(slug.replace(/-/g, ' ')) as Team;
       title = `Dashboard | ${team}`;
     }
 
@@ -79,7 +79,7 @@
     if (!response.ok) {
       return;
     }
-    let json = (await response.json()) as DashboardData;
+    const json = (await response.json()) as DashboardData;
 
     teams = Object.keys(json.standings) as Team[];
     if (slug === null) {
@@ -136,7 +136,7 @@
       title = 'Dashboard | Overview';
     } else {
       slug = slugAlias(slug);
-      team = toTitleCase(slug.replace(/\-/g, ' ')) as Team;
+      team = toTitleCase(slug.replace(/-/g, ' ')) as Team;
       title = `Dashboard | ${team}`;
       // Overwrite values from new team's perspective using same data
       currentMatchday = getCurrentMatchday(data, team);

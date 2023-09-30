@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { teamStyle } from "../../lib/format";
-  import { toHyphenatedName } from "../../lib/team";
+  import { teamStyle } from '../../lib/format';
+  import { toHyphenatedName } from '../../lib/team';
 
   function closeNavBar() {
-    document.getElementById("navBar").style.display = "none";
-    document.getElementById("dashboard").style.marginLeft = "0";
-    window.dispatchEvent(new Event("resize")); // Snap plotly graphs to new width
+    document.getElementById('navBar').style.display = 'none';
+    document.getElementById('dashboard').style.marginLeft = '0';
+    window.dispatchEvent(new Event('resize')); // Snap plotly graphs to new width
   }
 
   let widths = [];
@@ -15,8 +15,8 @@
 
   export let team: string,
     teams: string[],
-    toAlias: Function,
-    switchTeam: Function;
+    toAlias: (team: string) => void,
+    switchTeam: (newTeam: string) => void;
 </script>
 
 <nav id="navBar">
@@ -177,7 +177,7 @@
   }
 
   .placeholder::before {
-    content: "";
+    content: '';
     display: block;
     position: absolute;
     left: -100px;

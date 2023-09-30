@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { Router, Route } from "svelte-routing";
-  import Dashboard from "./routes/Dashboard.svelte";
-  import Home from "./routes/Home.svelte";
-  import Predictions from "./routes/Predictions.svelte";
-  import Fantasy from "./routes/Fantasy.svelte";
-  import Error from "./routes/Error.svelte";
+  import { Router, Route } from 'svelte-routing';
+  import Dashboard from './routes/Dashboard.svelte';
+  import Home from './routes/Home.svelte';
+  import Predictions from './routes/Predictions.svelte';
+  import Fantasy from './routes/Fantasy.svelte';
+  import Error from './routes/Error.svelte';
 
   // Used for SSR. A falsy value is ignored by the Router.
-  export let url = "";
+  export let url = '';
 </script>
 
 <Router {url}>
   <Route path="/">
-    <Dashboard slug="{null}" />
+    <Dashboard slug={null} />
   </Route>
   <Route path="/:team" let:params>
     <Dashboard slug={params.team} />

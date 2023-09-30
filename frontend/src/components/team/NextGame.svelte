@@ -4,10 +4,11 @@
     toInitials,
     toHyphenatedName,
     currentMatchday,
-  } from "../../lib/team";
-  import { ordinal, teamStyle } from "../../lib/format";
+  } from '../../lib/team';
+  import { ordinal, teamStyle } from '../../lib/format';
+  import type { DashboardData, Team } from '../../lib/dashboard.types';
 
-  function resultColour(prevMatch: any, home: boolean): string {
+  function resultColour(prevMatch, home: boolean): string {
     if (home) {
       return prevMatch.homeGoals < prevMatch.awayGoals
         ? prevMatch.awayTeam
@@ -19,7 +20,9 @@
     }
   }
 
-  export let data: any, team: string, switchTeam: Function;
+  export let data: DashboardData,
+    team: Team,
+    switchTeam: (newTeam: string) => void;
 </script>
 
 {#if data.upcoming[team].nextTeam === null}
@@ -42,7 +45,7 @@
           class="next-game-team-btn"
           >{toAlias(data.upcoming[team].nextTeam)}&nbsp</button
         >
-        ({data.upcoming[team].atHome ? "Home" : "Away"})
+        ({data.upcoming[team].atHome ? 'Home' : 'Away'})
       </h1>
     </div>
 
@@ -75,9 +78,7 @@
             Score prediction
             <br />
             <a class="predictions-link" href="/predictions">
-              <b
-                >{data.upcoming[team].prediction}</b
-              >
+              <b>{data.upcoming[team].prediction}</b>
             </a>
             <br />
           </div>
@@ -96,10 +97,10 @@
         {#each data.upcoming[team].prevMatches as prevMatch}
           <div class="next-game-item-container">
             <div class="past-result-date result-details">
-              {new Date(prevMatch.date).toLocaleDateString("en-GB", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
+              {new Date(prevMatch.date).toLocaleDateString('en-GB', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
               })}
             </div>
             <div class="next-game-item result-details">
@@ -174,7 +175,12 @@
     display: grid;
     place-items: center;
     background: #f0f0f0;
-    background: linear-gradient(45deg, #c600d839, rgb(2 239 255 / 25%), #00fe873e);
+    background: linear-gradient(
+      45deg,
+      #c600d839,
+      rgb(2 239 255 / 25%),
+      #00fe873e
+    );
     flex: 1;
   }
   .next-game-title-text {
@@ -320,7 +326,6 @@
     }
     .next-game-prediction {
       margin: 50px 20px 40px;
-      
     }
     .next-game-values {
       margin: 2% 3vw 2% 0;
@@ -381,9 +386,6 @@
     }
     .next-game-prediction {
       margin: 40px 14px;
-    }
-    .next-game-logo {
-      height: 190px;
     }
   }
 </style>

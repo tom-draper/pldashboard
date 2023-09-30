@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import type { FantasyData, Page, Position } from "../../lib/fantasy.types";
+  import { onMount } from 'svelte';
+  import type { FantasyData, Page, Position } from '../../lib/fantasy.types';
 
   function getColours(position: Position) {
     switch (position) {
-      case "Forward":
-        return "#c600d8";
-      case "Midfielder":
-        return "#00fe87";
-      case "Defender":
-        return "#2dbaff";
-      case "Goalkeeper":
-        return "#280936";
+      case 'Forward':
+        return '#c600d8';
+      case 'Midfielder':
+        return '#00fe87';
+      case 'Defender':
+        return '#2dbaff';
+      case 'Goalkeeper':
+        return '#280936';
     }
   }
 
-  function lines(data: FantasyData): any[] {
+  function lines(data: FantasyData) {
     const teams: string[] = [];
     const points: number[] = [];
     const price: number[] = [];
@@ -23,7 +23,7 @@
     const colours: string[] = [];
     let maxMinutes = 0;
     for (const team of Object.keys(data)) {
-      if (team != "_id") {
+      if (team != '_id') {
         teams.push(team);
         points.push(
           data[team].totalPoints === null ? 0 : data[team].totalPoints
@@ -37,7 +37,7 @@
       }
     }
 
-    let sizes = minutes.slice(0);
+    const sizes = minutes.slice(0);
     for (let i = 0; i < sizes.length; i++) {
       sizes[i] /= maxMinutes * 0.02;
     }
@@ -49,9 +49,9 @@
     const markers = {
       x: points,
       y: price,
-      name: "test",
-      mode: "markers",
-      type: "scatter",
+      name: 'test',
+      mode: 'markers',
+      type: 'scatter',
       marker: {
         size: sizes,
         // colorscale: [
@@ -77,13 +77,13 @@
       title: false,
       autosize: true,
       margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
-      hovermode: "closest",
-      plot_bgcolor: "transparent",
-      paper_bgcolor: "transparent",
+      hovermode: 'closest',
+      plot_bgcolor: 'transparent',
+      paper_bgcolor: 'transparent',
       height: 700,
       yaxis: {
-        title: { text: "Price" },
-        gridcolor: "gray",
+        title: { text: 'Price' },
+        gridcolor: 'gray',
         showgrid: false,
         showline: false,
         zeroline: false,
@@ -91,8 +91,8 @@
         visible: true,
       },
       xaxis: {
-        title: { text: "Points" },
-        linecolor: "black",
+        title: { text: 'Points' },
+        linecolor: 'black',
         showgrid: false,
         showline: false,
         fixedrange: true,
@@ -104,11 +104,11 @@
   function setDefaultLayout() {
     if (setup) {
       const layoutUpdate = {
-        "yaxis.title": { text: "Position" },
-        "yaxis.visible": true,
-        "yaxis.tickvals": Array.from(Array(20), (_, i) => i + 1),
-        "margin.l": 60,
-        "margin.t": 15,
+        'yaxis.title': { text: 'Position' },
+        'yaxis.visible': true,
+        'yaxis.tickvals': Array.from(Array(20), (_, i) => i + 1),
+        'margin.l': 60,
+        'margin.t': 15,
       };
       //@ts-ignore
       Plotly.update(plotDiv, {}, layoutUpdate, 0);
@@ -118,11 +118,11 @@
   function setMobileLayout() {
     if (setup) {
       const layoutUpdate = {
-        "yaxis.title": null,
-        "yaxis.visible": false,
-        "yaxis.tickvals": Array.from(Array(10), (_, i) => i + 2),
-        "margin.l": 20,
-        "margin.t": 5,
+        'yaxis.title': null,
+        'yaxis.visible': false,
+        'yaxis.tickvals': Array.from(Array(10), (_, i) => i + 2),
+        'margin.l': 20,
+        'margin.t': 5,
       };
 
       const sizes = plotData.data[0].marker.size;
@@ -145,7 +145,7 @@
   }
 
   function buildPlotData(data: FantasyData): PlotData {
-    let plotData = {
+    const plotData = {
       data: lines(data),
       layout: defaultLayout(),
       config: {
@@ -174,14 +174,14 @@
       plotData.config
     ).then((plot: HTMLDivElement) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
-      plot.children[0].children[0].classList.add("resizable-graph");
-      plot.children[0].children[0].classList.add("tall-graph");
+      plot.children[0].children[0].classList.add('resizable-graph');
+      plot.children[0].children[0].classList.add('tall-graph');
     });
   }
 
   function refreshPlot() {
     if (setup) {
-      let newPlotData = buildPlotData(data);
+      const newPlotData = buildPlotData(data);
       plotData.data[0] = newPlotData.data[0];
 
       //@ts-ignore
