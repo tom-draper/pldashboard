@@ -11,9 +11,11 @@
 </script>
 
 <Router {url}>
+  <!-- Dashboard with null team - team currently at top of standings is taken -->
   <Route path="/">
     <Dashboard slug={null} />
   </Route>
+  <!-- Named team dashboard -->
   <Route path="/:team" let:params>
     <Dashboard slug={params.team} />
   </Route>

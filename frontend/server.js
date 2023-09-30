@@ -21,8 +21,7 @@ server.get('*', function (req, res) {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="google-site-verification" content="qYIoNrgrvCixUb5A9kCDDt8jvrz7N0x64vPaEgw-Txs" />
       <meta name="keywords" content="football, premier league, dashboard, fantasy, stats, statistics, analysis"/>
-      <title>pldashboard</title>
-      <meta name="description" content="A football dashboard presenting the current performance of each Premier League team."/>
+      <meta name="description" content="Premier League Dashboard - A football dashboard presenting the current performance of each Premier League team."/>
       <link rel='stylesheet' href='/global.css'>
       <link rel='stylesheet' href='/bundle.css'>
       <link rel='icon' href='img/favicon.ico'> 

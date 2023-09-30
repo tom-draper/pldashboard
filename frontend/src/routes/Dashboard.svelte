@@ -165,6 +165,7 @@
 
   let data: DashboardData;
   onMount(() => {
+    console.log("hi")
     initDashboard();
   });
 
@@ -173,7 +174,6 @@
 
 <svelte:head>
   <title>{title}</title>
-  <meta name="description" content="Premier League Statistics Dashboard" />
 </svelte:head>
 
 <svelte:window bind:innerWidth={pageWidth} bind:scrollY={y} />
