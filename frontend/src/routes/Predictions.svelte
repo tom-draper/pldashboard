@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { Router } from "svelte-routing";
-  import { onMount } from "svelte";
-  import { identicalScore, sameResult } from "../lib/goals";
-  import { url } from "../lib/consts";
+  import { Router } from 'svelte-routing';
+  import { onMount } from 'svelte';
+  import { identicalScore, sameResult } from '../lib/goals';
+  import { url } from '../lib/consts';
 
   function toggleDetailsDisplay(id: string) {
     let prediction = document.getElementById(id);
     if (prediction != null) {
-      prediction.classList.toggle("expanded");
+      prediction.classList.toggle('expanded');
     }
   }
 
@@ -25,14 +25,14 @@
         let prediction = json.predictions[i].predictions[j];
         if (prediction.actual != null) {
           if (identicalScore(prediction.prediction, prediction.actual)) {
-            prediction.colour = "green";
+            prediction.colour = 'green';
             scoreCorrect += 1;
             resultCorrect += 1;
           } else if (sameResult(prediction.prediction, prediction.actual)) {
-            prediction.colour = "yellow";
+            prediction.colour = 'yellow';
             resultCorrect += 1;
           } else {
-            prediction.colour = "red";
+            prediction.colour = 'red';
           }
           total += 1;
         }

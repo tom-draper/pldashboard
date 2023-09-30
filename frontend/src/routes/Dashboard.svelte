@@ -1,42 +1,42 @@
 <script lang="ts">
-  import { Router } from "svelte-routing";
-  import { onMount } from "svelte";
-  import CurrentForm from "../components/team/current_form/CurrentForm.svelte";
-  import TableSnippet from "../components/team/TableSnippet.svelte";
-  import NextGame from "../components/team/NextGame.svelte";
-  import StatsValues from "../components/team/goals_scored_and_conceded/StatsValues.svelte";
-  import Footer from "../components/Footer.svelte";
-  import FixturesGraph from "../components/team/FixturesGraph.svelte";
-  import FormOverTimeGraph from "../components/team/FormOverTimeGraph.svelte";
-  import PositionOverTimeGraph from "../components/team/PositionOverTimeGraph.svelte";
-  import PointsOverTimeGraph from "../components/team/PointsOverTimeGraph.svelte";
-  import GoalsScoredAndConcededGraph from "../components/team/goals_scored_and_conceded/ScoredConcededPerGameGraph.svelte";
-  import CleanSheetsGraph from "../components/team/goals_scored_and_conceded/CleanSheetsGraph.svelte";
-  import GoalsPerGame from "../components/team/goals_per_game/GoalsPerGame.svelte";
-  import SpiderGraph from "../components/team/SpiderGraph.svelte";
-  import ScorelineFreqGraph from "../components/team/ScorelineFreqGraph.svelte";
-  import Nav from "../components/nav/Nav.svelte";
-  import Overview from "../components/overview/Overview.svelte";
-  import MobileNav from "../components/nav/MobileNav.svelte";
-  import ScoredConcededOverTimeGraph from "../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte";
+  import { Router } from 'svelte-routing';
+  import { onMount } from 'svelte';
+  import CurrentForm from '../components/team/current_form/CurrentForm.svelte';
+  import TableSnippet from '../components/team/TableSnippet.svelte';
+  import NextGame from '../components/team/NextGame.svelte';
+  import StatsValues from '../components/team/goals_scored_and_conceded/StatsValues.svelte';
+  import Footer from '../components/Footer.svelte';
+  import FixturesGraph from '../components/team/FixturesGraph.svelte';
+  import FormOverTimeGraph from '../components/team/FormOverTimeGraph.svelte';
+  import PositionOverTimeGraph from '../components/team/PositionOverTimeGraph.svelte';
+  import PointsOverTimeGraph from '../components/team/PointsOverTimeGraph.svelte';
+  import GoalsScoredAndConcededGraph from '../components/team/goals_scored_and_conceded/ScoredConcededPerGameGraph.svelte';
+  import CleanSheetsGraph from '../components/team/goals_scored_and_conceded/CleanSheetsGraph.svelte';
+  import GoalsPerGame from '../components/team/goals_per_game/GoalsPerGame.svelte';
+  import SpiderGraph from '../components/team/SpiderGraph.svelte';
+  import ScorelineFreqGraph from '../components/team/ScorelineFreqGraph.svelte';
+  import Nav from '../components/nav/Nav.svelte';
+  import Overview from '../components/overview/Overview.svelte';
+  import MobileNav from '../components/nav/MobileNav.svelte';
+  import ScoredConcededOverTimeGraph from '../components/team/goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte';
   import {
     toAlias,
     toHyphenatedName,
     playedMatchdays,
     currentMatchday as getCurrentMatchday,
-  } from "../lib/team";
-  import { toTitleCase } from "../lib/format";
-  import { url } from "../lib/consts";
-  import type { DashboardData, Team } from "../lib/dashboard.types";
+  } from '../lib/team';
+  import { toTitleCase } from '../lib/format';
+  import { url } from '../lib/consts';
+  import type { DashboardData, Team } from '../lib/dashboard.types';
 
   function toggleMobileNav() {
-    let mobileNav = document.getElementById("mobileNav");
-    if (mobileNav.style.width === "0%") {
-      mobileNav.style.display = "block";
-      mobileNav.style.width = "100%";
+    let mobileNav = document.getElementById('mobileNav');
+    if (mobileNav.style.width === '0%') {
+      mobileNav.style.display = 'block';
+      mobileNav.style.width = '100%';
     } else {
-      mobileNav.style.display = "none";
-      mobileNav.style.width = "0%";
+      mobileNav.style.display = 'none';
+      mobileNav.style.width = '0%';
     }
   }
 
@@ -66,12 +66,12 @@
 
   async function initDashboard() {
     // Set formatted team name so page header can display while fetching data
-    if (slug === "overview") {
-      team = "Overview";
-      title = "Dashboard | Overview";
+    if (slug === 'overview') {
+      team = 'Overview';
+      title = 'Dashboard | Overview';
     } else if (slug != null) {
       slug = slugAlias(slug);
-      team = toTitleCase(slug.replace(/\-/g, " ")) as Team;
+      team = toTitleCase(slug.replace(/\-/g, ' ')) as Team;
       title = `Dashboard | ${team}`;
     }
 
@@ -89,41 +89,41 @@
       slug = toHyphenatedName(team);
       // Change url to /team-name without reloading page
       history.pushState({}, null, window.location.href + slug);
-    } else if (team != "Overview" && team != "" && !teams.includes(team)) {
-      window.location.href = "/error";
+    } else if (team != 'Overview' && team != '' && !teams.includes(team)) {
+      window.location.href = '/error';
     }
-    if (team != "Overview" && team != "") {
+    if (team != 'Overview' && team != '') {
       currentMatchday = getCurrentMatchday(json, team);
       playedDates = playedMatchdayDates(json, team);
     }
     data = json;
     console.log(data);
 
-    window.dispatchEvent(new Event("resize")); // Snap plots to currently set size
+    window.dispatchEvent(new Event('resize')); // Snap plots to currently set size
   }
 
   function slugAlias(slug: string): string {
     switch (slug) {
-      case "brighton":
-        return "brighton-and-hove-albion";
-      case "palace":
-        return "crystal-palace";
-      case "united":
-        return "manchester-united";
-      case "city":
-        return "city";
-      case "nottingham":
-        return "nottingham-forest";
-      case "luton":
-        return "luton-town";
-      case "sheffield":
-        return "sheffield-united";
-      case "villa":
-        return "aston-villa";
-      case "spurs":
-        return "tottenham-hotspur";
-      case "wolves":
-        return "wolverhampton-wanderers";
+      case 'brighton':
+        return 'brighton-and-hove-albion';
+      case 'palace':
+        return 'crystal-palace';
+      case 'united':
+        return 'manchester-united';
+      case 'city':
+        return 'city';
+      case 'nottingham':
+        return 'nottingham-forest';
+      case 'luton':
+        return 'luton-town';
+      case 'sheffield':
+        return 'sheffield-united';
+      case 'villa':
+        return 'aston-villa';
+      case 'spurs':
+        return 'tottenham-hotspur';
+      case 'wolves':
+        return 'wolverhampton-wanderers';
       default:
         return slug; // No alias found
     }
@@ -131,12 +131,12 @@
 
   function switchTeam(newTeam: Team) {
     slug = newTeam;
-    if (slug === "overview") {
-      team = "Overview";
-      title = "Dashboard | Overview";
+    if (slug === 'overview') {
+      team = 'Overview';
+      title = 'Dashboard | Overview';
     } else {
       slug = slugAlias(slug);
-      team = toTitleCase(slug.replace(/\-/g, " ")) as Team;
+      team = toTitleCase(slug.replace(/\-/g, ' ')) as Team;
       title = `Dashboard | ${team}`;
       // Overwrite values from new team's perspective using same data
       currentMatchday = getCurrentMatchday(data, team);
@@ -147,7 +147,7 @@
 
   function lazyLoad() {
     load = true;
-    window.dispatchEvent(new Event("resize")); // Snap plots to currently set size
+    window.dispatchEvent(new Event('resize')); // Snap plots to currently set size
   }
 
   let y: number;
@@ -157,8 +157,8 @@
   let pageWidth: number;
   $: mobileView = pageWidth <= 700;
 
-  let title = "Dashboard";
-  let team: Team | "" | "Overview" = "";
+  let title = 'Dashboard';
+  let team: Team | '' | 'Overview' = '';
   let teams: Team[] = []; // Used for nav bar links
   let currentMatchday: string;
   let playedDates: Date[];
@@ -201,13 +201,13 @@
       <div class="header" style="background-color: var(--{slug});">
         <a class="main-link no-decoration" href="/{slug}">
           <div class="title" style="color: var(--{slug + '-secondary'});">
-            {team == "" || team == "Overview" ? team : toAlias(team)}
+            {team == '' || team == 'Overview' ? team : toAlias(team)}
           </div>
         </a>
       </div>
 
       {#if data != undefined}
-        {#if slug === "overview"}
+        {#if slug === 'overview'}
           <Overview {data} />
         {:else}
           <div class="page-content">

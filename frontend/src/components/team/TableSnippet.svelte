@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { DashboardData, Team } from "../../lib/dashboard.types";
-  import { toAlias, toHyphenatedName } from "../../lib/team";
+  import type { DashboardData, Team } from '../../lib/dashboard.types';
+  import { toAlias, toHyphenatedName } from '../../lib/team';
 
   function tableSnippetRange(
     sortedTeams: string[],
