@@ -61,11 +61,7 @@
     }
   }
 
-  function insertTeamScoreBars(
-    data: any,
-    team: string,
-    scoreFreq: ScoreFreq
-  ) {
+  function insertTeamScoreBars(data: any, team: string, scoreFreq: ScoreFreq) {
     for (let score in scoreFreq) {
       if (scoreFreq[score].length === 1) {
         scoreFreq[score].push(0);

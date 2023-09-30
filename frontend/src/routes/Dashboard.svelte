@@ -26,8 +26,8 @@
     currentMatchday as getCurrentMatchday,
   } from "../lib/team";
   import { toTitleCase } from "../lib/format";
-  import { url } from "../lib/consts"
-  import type { DashboardData, Team  } from "../lib/dashboard.types";
+  import { url } from "../lib/consts";
+  import type { DashboardData, Team } from "../lib/dashboard.types";
 
   function toggleMobileNav() {
     let mobileNav = document.getElementById("mobileNav");
@@ -70,7 +70,7 @@
       team = "Overview";
       title = "Dashboard | Overview";
     } else if (slug != null) {
-      slug = slugAlias(slug)
+      slug = slugAlias(slug);
       team = toTitleCase(slug.replace(/\-/g, " ")) as Team;
       title = `Dashboard | ${team}`;
     }
@@ -79,7 +79,7 @@
     if (!response.ok) {
       return;
     }
-    let json = await response.json() as DashboardData;
+    let json = (await response.json()) as DashboardData;
 
     teams = Object.keys(json.standings) as Team[];
     if (slug === null) {
@@ -105,27 +105,27 @@
   function slugAlias(slug: string): string {
     switch (slug) {
       case "brighton":
-        return "brighton-and-hove-albion"
+        return "brighton-and-hove-albion";
       case "palace":
-        return "crystal-palace"
+        return "crystal-palace";
       case "united":
-        return "manchester-united"
+        return "manchester-united";
       case "city":
-        return "city"
+        return "city";
       case "nottingham":
-        return "nottingham-forest"
+        return "nottingham-forest";
       case "luton":
-        return "luton-town"
+        return "luton-town";
       case "sheffield":
-        return "sheffield-united"
+        return "sheffield-united";
       case "villa":
-        return "aston-villa"
+        return "aston-villa";
       case "spurs":
-        return "tottenham-hotspur"
+        return "tottenham-hotspur";
       case "wolves":
-        return "wolverhampton-wanderers"
+        return "wolverhampton-wanderers";
       default:
-          return slug // No alias found
+        return slug; // No alias found
     }
   }
 
@@ -135,7 +135,7 @@
       team = "Overview";
       title = "Dashboard | Overview";
     } else {
-      slug = slugAlias(slug)
+      slug = slugAlias(slug);
       team = toTitleCase(slug.replace(/\-/g, " ")) as Team;
       title = `Dashboard | ${team}`;
       // Overwrite values from new team's perspective using same data
@@ -200,10 +200,7 @@
     <div id="dashboard">
       <div class="header" style="background-color: var(--{slug});">
         <a class="main-link no-decoration" href="/{slug}">
-          <div
-            class="title"
-            style="color: var(--{slug + '-secondary'});"
-          >
+          <div class="title" style="color: var(--{slug + '-secondary'});">
             {team == "" || team == "Overview" ? team : toAlias(team)}
           </div>
         </a>
@@ -256,7 +253,12 @@
             <div class="row multi-element-row">
               <div class="row-left form-details">
                 <CurrentForm {data} {currentMatchday} {team} />
-                <TableSnippet {data} hyphenatedTeam={slug} {team} {switchTeam} />
+                <TableSnippet
+                  {data}
+                  hyphenatedTeam={slug}
+                  {team}
+                  {switchTeam}
+                />
               </div>
               <div class="row-right">
                 <NextGame {data} {team} {switchTeam} />

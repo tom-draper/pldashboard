@@ -73,10 +73,7 @@
     return sizes;
   }
 
-  function linePoints(
-    data: any,
-    team: Team
-  ): [Date[], number[], string[]] {
+  function linePoints(data: any, team: Team): [Date[], number[], string[]] {
     let x: Date[] = [];
     let y: number[] = [];
     let descriptions: string[] = [];

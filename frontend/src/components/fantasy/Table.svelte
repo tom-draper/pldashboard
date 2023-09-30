@@ -156,7 +156,7 @@
 </div>
 
 <style scoped>
-   .table {
+  .table {
     padding: 50px 30px;
     overflow-x: auto;
   }
@@ -173,6 +173,7 @@
   @media only screen and (max-width: 700px) {
     .table {
       padding: 0;
+      font-size: 0.85em;
     }
   }
 </style>

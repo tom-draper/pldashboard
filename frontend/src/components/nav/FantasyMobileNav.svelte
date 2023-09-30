@@ -19,9 +19,9 @@
           on:click={() => {
             switchTeamToTop(page);
           }}
-          class="team-link"
-          class:active={page.toLowerCase() === currentPage}>{pages[i][0].toUpperCase() + pages[i].slice(1)}</button>
-        
+          class="team-link {page.toLowerCase()}"
+          >{pages[i][0].toUpperCase() + pages[i].slice(1)}</button
+        >
       {/each}
     </div>
   {/if}
@@ -51,7 +51,16 @@
     flex: 1;
     color: #1c0d2d;
     background: #00fe87;
-    border: 2px solid #1c0d2d;
+  }
+  .attack {
+    background: var(--pink);
+  }
+  .defence {
+    background: #2dbaff;
+  }
+  .goalkeeper {
+    background: #280936;
+    color: white;
   }
   @keyframes appear {
     from {

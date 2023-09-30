@@ -25,10 +25,7 @@
     return avgGoals;
   }
 
-  function getTeamGoalsPerGame(
-    data: any,
-    team: string
-  ): [Counter, Counter] {
+  function getTeamGoalsPerGame(data: any, team: string): [Counter, Counter] {
     let scored: Counter = {};
     let conceded: Counter = {};
     for (let matchday of Object.keys(data.form[team][data._id])) {
@@ -225,10 +222,7 @@
   $: !mobileView && setDefaultLayout();
   $: setup && mobileView && setMobileLayout();
 
-  export let data: any,
-    team: string,
-    playedDates: Date[],
-    mobileView: boolean;
+  export let data: any, team: string, playedDates: Date[], mobileView: boolean;
 </script>
 
 <div id="plotly">
