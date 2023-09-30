@@ -165,7 +165,7 @@
 
   let data: DashboardData;
   onMount(() => {
-    console.log("hi")
+    console.log('hi');
     initDashboard();
   });
 

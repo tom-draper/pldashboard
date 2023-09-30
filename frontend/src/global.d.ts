@@ -1,5 +1,3 @@
-/// <reference types="svelte" />
-
 type Scoreline = {
     homeGoals: number,
     awayGoals: number,
@@ -122,9 +120,9 @@ type any = {
 }
 
 type PlotData = {
-    data: any[],
-    layout: any,
-    config: any,
+    data,
+    layout,
+    config,
 }
 
 type Counter = {
