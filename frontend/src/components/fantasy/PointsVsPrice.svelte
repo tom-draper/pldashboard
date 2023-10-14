@@ -2,18 +2,12 @@
   import { onMount } from 'svelte';
   import type { FantasyData, Page, Position } from '../../lib/fantasy.types';
 
-  function getColours(position: Position) {
-    switch (position) {
-      case 'Forward':
-        return '#c600d8';
-      case 'Midfielder':
-        return '#00fe87';
-      case 'Defender':
-        return '#2dbaff';
-      case 'Goalkeeper':
-        return '#280936';
-    }
-  }
+  const positionColours: { [position: Position]: string } = {
+    Forward: '#c600d8',
+    Midfielder: '#00fe87',
+    Defender: '#2dbaff',
+    Goalkeeper: '#280936',
+  } as const;
 
   function lines(data: FantasyData) {
     const teams: string[] = [];
@@ -23,18 +17,17 @@
     const colours: string[] = [];
     let maxMinutes = 0;
     for (const team of Object.keys(data)) {
-      if (team != '_id') {
-        teams.push(team);
-        points.push(
-          data[team].totalPoints === null ? 0 : data[team].totalPoints
-        );
-        price.push(data[team].price == null ? 0 : data[team].price / 10);
-        minutes.push(data[team].minutes == null ? 0 : data[team].minutes / 2);
-        if (minutes[minutes.length - 1] > maxMinutes) {
-          maxMinutes = minutes[minutes.length - 1];
-        }
-        colours.push(getColours(data[team].position));
+      if (team === '_id') {
+        continue;
       }
+      teams.push(team);
+      points.push(data[team].totalPoints === null ? 0 : data[team].totalPoints);
+      price.push(data[team].price == null ? 0 : data[team].price / 10);
+      minutes.push(data[team].minutes == null ? 0 : data[team].minutes / 2);
+      if (minutes[minutes.length - 1] > maxMinutes) {
+        maxMinutes = minutes[minutes.length - 1];
+      }
+      colours.push(positionColours[data[team].position]);
     }
 
     const sizes = minutes.slice(0);
@@ -95,46 +88,48 @@
   }
 
   function setDefaultLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': { text: 'Position' },
-        'yaxis.visible': true,
-        'yaxis.tickvals': Array.from(Array(20), (_, i) => i + 1),
-        'margin.l': 60,
-        'margin.t': 15,
-      };
-      //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate, 0);
+    if (!setup) {
+      return;
     }
+    const layoutUpdate = {
+      'yaxis.title': { text: 'Position' },
+      'yaxis.visible': true,
+      'yaxis.tickvals': Array.from(Array(20), (_, i) => i + 1),
+      'margin.l': 60,
+      'margin.t': 15,
+    };
+    //@ts-ignore
+    Plotly.update(plotDiv, {}, layoutUpdate, 0);
   }
 
   function setMobileLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': null,
-        'yaxis.visible': false,
-        'yaxis.tickvals': Array.from(Array(10), (_, i) => i + 2),
-        'margin.l': 20,
-        'margin.t': 5,
-      };
-
-      const sizes = plotData.data[0].marker.size;
-      for (let i = 0; i < sizes.length; i++) {
-        sizes[i] = Math.round(sizes[i] / 2);
-      }
-      const dataUpdate = {
-        marker: {
-          size: sizes,
-          color: plotData.data[0].marker.color,
-          opacity: 0.75,
-        },
-      };
-
-      plotData.data[0].marker.size = sizes;
-
-      //@ts-ignore
-      Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+    if (!setup) {
+      return;
     }
+    const layoutUpdate = {
+      'yaxis.title': null,
+      'yaxis.visible': false,
+      'yaxis.tickvals': Array.from(Array(10), (_, i) => i + 2),
+      'margin.l': 20,
+      'margin.t': 5,
+    };
+
+    const sizes = plotData.data[0].marker.size;
+    for (let i = 0; i < sizes.length; i++) {
+      sizes[i] = Math.round(sizes[i] / 2);
+    }
+    const dataUpdate = {
+      marker: {
+        size: sizes,
+        color: plotData.data[0].marker.color,
+        opacity: 0.75,
+      },
+    };
+
+    plotData.data[0].marker.size = sizes;
+
+    //@ts-ignore
+    Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
   }
 
   function buildPlotData(data: FantasyData): PlotData {
@@ -173,15 +168,16 @@
   }
 
   function refreshPlot() {
-    if (setup) {
-      const newPlotData = buildPlotData(data);
-      plotData.data[0] = newPlotData.data[0];
+    if (!setup) {
+      return;
+    }
+    const newPlotData = buildPlotData(data);
+    plotData.data[0] = newPlotData.data[0];
 
-      //@ts-ignore
-      Plotly.redraw(plotDiv);
-      if (mobileView) {
-        setMobileLayout();
-      }
+    //@ts-ignore
+    Plotly.redraw(plotDiv);
+    if (mobileView) {
+      setMobileLayout();
     }
   }
 

@@ -114,19 +114,20 @@
 
     for (const matchday of Object.keys(data.form[team][season])) {
       const score = data.form[team][season][matchday].score;
-      if (score != null) {
-        if (data.form[team][season][matchday].atHome) {
-          if (score.homeGoals in goalFreq) {
-            goalFreq[score.homeGoals] += 1;
-          } else {
-            goalFreq[score.homeGoals] = 1;
-          }
+      if (score == null) {
+        continue;
+      }
+      if (data.form[team][season][matchday].atHome) {
+        if (score.homeGoals in goalFreq) {
+          goalFreq[score.homeGoals] += 1;
         } else {
-          if (score.awayGoals in goalFreq) {
-            goalFreq[score.awayGoals] += 1;
-          } else {
-            goalFreq[score.awayGoals] = 1;
-          }
+          goalFreq[score.homeGoals] = 1;
+        }
+      } else {
+        if (score.awayGoals in goalFreq) {
+          goalFreq[score.awayGoals] += 1;
+        } else {
+          goalFreq[score.awayGoals] = 1;
         }
       }
     }
@@ -190,19 +191,20 @@
 
     for (const matchday of Object.keys(data.form[team][season])) {
       const score = data.form[team][season][matchday].score;
-      if (score != null) {
-        if (data.form[team][season][matchday].atHome) {
-          if (score.awayGoals in goalFreq) {
-            goalFreq[score.awayGoals] += 1;
-          } else {
-            goalFreq[score.awayGoals] = 1;
-          }
+      if (score == null) {
+        continue;
+      }
+      if (data.form[team][season][matchday].atHome) {
+        if (score.awayGoals in goalFreq) {
+          goalFreq[score.awayGoals] += 1;
         } else {
-          if (score.homeGoals in goalFreq) {
-            goalFreq[score.homeGoals] += 1;
-          } else {
-            goalFreq[score.homeGoals] = 1;
-          }
+          goalFreq[score.awayGoals] = 1;
+        }
+      } else {
+        if (score.homeGoals in goalFreq) {
+          goalFreq[score.homeGoals] += 1;
+        } else {
+          goalFreq[score.homeGoals] = 1;
         }
       }
     }

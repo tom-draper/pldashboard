@@ -136,19 +136,18 @@
             td.style.color = `var(--${teamCSSTag[team]}-secondary)`;
             td.title = team;
           },
-
         },
         {
           targets: 12,
           render: function (data, type, row, meta) {
             // If render is just displaying value to user, format as abbreviated number
             if (type === 'display') {
-              return data ? abbrNum(data, 1) : 0
+              return data ? abbrNum(data, 1) : 0;
             }
             // Otherwise return raw data so that sort and filter still works
             return data;
           },
-        }
+        },
       ],
     });
 

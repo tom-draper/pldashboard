@@ -11,18 +11,19 @@
   ) {
     for (const matchday in form[team][season]) {
       const score = form[team][season][matchday].score;
-      if (score != null) {
-        let scoreStr: string;
-        if (form[team][season][matchday].atHome) {
-          scoreStr = score.homeGoals + ' - ' + score.awayGoals;
-        } else {
-          scoreStr = score.awayGoals + ' - ' + score.homeGoals;
-        }
-        if (!(scoreStr in scoreFreq)) {
-          scoreFreq[scoreStr] = [1];
-        } else {
-          scoreFreq[scoreStr][0] += 1;
-        }
+      if (score == null) {
+        continue;
+      }
+      let scoreStr: string;
+      if (form[team][season][matchday].atHome) {
+        scoreStr = score.homeGoals + ' - ' + score.awayGoals;
+      } else {
+        scoreStr = score.awayGoals + ' - ' + score.homeGoals;
+      }
+      if (!(scoreStr in scoreFreq)) {
+        scoreFreq[scoreStr] = [1];
+      } else {
+        scoreFreq[scoreStr][0] += 1;
       }
     }
   }
@@ -50,15 +51,16 @@
   ) {
     for (const matchday in form[team][season]) {
       const score = form[team][season][matchday].score;
-      if (score != null) {
-        let scoreStr: string;
-        if (form[team][season][matchday].atHome) {
-          scoreStr = score.homeGoals + ' - ' + score.awayGoals;
-        } else {
-          scoreStr = score.awayGoals + ' - ' + score.homeGoals;
-        }
-        scoreFreq[scoreStr][1] += 1;
+      if (score == null) {
+        continue;
       }
+      let scoreStr: string;
+      if (form[team][season][matchday].atHome) {
+        scoreStr = score.homeGoals + ' - ' + score.awayGoals;
+      } else {
+        scoreStr = score.awayGoals + ' - ' + score.homeGoals;
+      }
+      scoreFreq[scoreStr][1] += 1;
     }
   }
 
@@ -195,29 +197,31 @@
   }
 
   function setDefaultLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': { text: 'Probability' },
-        'yaxis.visible': true,
-        'xaxis.tickfont.size': 12,
-        'margin.l': 65,
-      };
-      //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate);
+    if (!setup) {
+      return;
     }
+    const layoutUpdate = {
+      'yaxis.title': { text: 'Probability' },
+      'yaxis.visible': true,
+      'xaxis.tickfont.size': 12,
+      'margin.l': 65,
+    };
+    //@ts-ignore
+    Plotly.update(plotDiv, {}, layoutUpdate);
   }
 
   function setMobileLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': null,
-        'yaxis.visible': false,
-        'xaxis.tickfont.size': 5,
-        'margin.l': 20,
-      };
-      //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate);
+    if (!setup) {
+      return;
     }
+    const layoutUpdate = {
+      'yaxis.title': null,
+      'yaxis.visible': false,
+      'xaxis.tickfont.size': 5,
+      'margin.l': 20,
+    };
+    //@ts-ignore
+    Plotly.update(plotDiv, {}, layoutUpdate);
   }
 
   function buildPlotData(data: DashboardData, team: Team): PlotData {
@@ -261,18 +265,19 @@
   }
 
   function refreshPlot() {
-    if (setup) {
-      resetTeamBars(scoreFreq);
-      insertTeamScoreBars(data, team, scoreFreq);
-      scaleBars(scoreFreq);
-      convertToPercentage(scoreFreq);
-      const bars = separateBars(scoreFreq);
-      plotData.data[1] = bars[1]; // Update team bars
-      //@ts-ignore
-      Plotly.redraw(plotDiv);
-      if (mobileView) {
-        setMobileLayout();
-      }
+    if (!setup) {
+      return;
+    }
+    resetTeamBars(scoreFreq);
+    insertTeamScoreBars(data, team, scoreFreq);
+    scaleBars(scoreFreq);
+    convertToPercentage(scoreFreq);
+    const bars = separateBars(scoreFreq);
+    plotData.data[1] = bars[1]; // Update team bars
+    //@ts-ignore
+    Plotly.redraw(plotDiv);
+    if (mobileView) {
+      setMobileLayout();
     }
   }
 

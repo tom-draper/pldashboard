@@ -14,13 +14,14 @@
     const upcoming: UpcomingMatch[] = [];
     for (const team in data.upcoming) {
       const date = new Date(data.upcoming[team].date);
-      if (data.upcoming[team].atHome) {
-        upcoming.push({
-          time: date,
-          home: team,
-          away: data.upcoming[team].nextTeam,
-        });
+      if (!data.upcoming[team].atHome) {
+        continue;
       }
+      upcoming.push({
+        time: date,
+        home: team,
+        away: data.upcoming[team].nextTeam,
+      });
     }
     upcoming.sort((a: UpcomingMatch, b: UpcomingMatch) => {
       //@ts-ignore
@@ -209,7 +210,7 @@
     fixtures = fixturesTable(standings);
   });
 
-  export let data: any;
+  export let data;
 </script>
 
 <div id="page-content">
@@ -385,14 +386,7 @@
               <div class="fixtures-table-row">
                 <div
                   class="fixtures-team"
-                  style="{teamStyle(row.team)}
-                      {i === 0
-                    ? 'border-top: 2px solid black; border-radius: 4px 0 0'
-                    : ''}
-                      {i === fixtures.length - 1
-                    ? 'border-radius: 0 0 0 4px;'
-                    : ''}"
-                >
+                  style="{teamStyle(row.team)} {i === 0 ? 'border-top: 2px solid black; border-radius: 4px 0 0' : i === fixtures.length - 1 ? 'border-radius: 0 0 0 4px;' : ''}">
                   {toInitials(row.team)}
                 </div>
               </div>

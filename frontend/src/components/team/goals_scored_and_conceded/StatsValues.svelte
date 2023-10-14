@@ -62,26 +62,27 @@
 
     for (const matchday of Object.keys(data.form[team][season])) {
       const score = data.form[team][season][matchday].score;
-      if (score != null) {
-        const atHome = data.form[team][season][matchday].atHome;
-        if (isCleanSheet(score.homeGoals, score.awayGoals, atHome)) {
-          seasonStats[team].cleanSheetRatio += 1;
-        }
-        if (notScored(score.homeGoals, score.awayGoals, atHome)) {
-          seasonStats[team].noGoalRatio += 1;
-        }
-        seasonStats[team].xG += goalsScored(
-          score.homeGoals,
-          score.awayGoals,
-          atHome
-        );
-        seasonStats[team].xC += goalsConceded(
-          score.homeGoals,
-          score.awayGoals,
-          atHome
-        );
-        seasonStats[team].played += 1;
+      if (score == null) {
+        continue
       }
+      const atHome = data.form[team][season][matchday].atHome;
+      if (isCleanSheet(score.homeGoals, score.awayGoals, atHome)) {
+        seasonStats[team].cleanSheetRatio += 1;
+      }
+      if (notScored(score.homeGoals, score.awayGoals, atHome)) {
+        seasonStats[team].noGoalRatio += 1;
+      }
+      seasonStats[team].xG += goalsScored(
+        score.homeGoals,
+        score.awayGoals,
+        atHome
+      );
+      seasonStats[team].xC += goalsConceded(
+        score.homeGoals,
+        score.awayGoals,
+        atHome
+      );
+      seasonStats[team].played += 1;
     }
   }
 
@@ -99,21 +100,23 @@
       countOccurances(data, stats as Stats, team, data._id);
       countOccurances(data, stats as Stats, team, data._id - 1);
 
-      if (stats[team].played > 0) {
-        stats[team].xG /= stats[team].played;
-        stats[team].xC /= stats[team].played;
-        stats[team].cleanSheetRatio /= stats[team].played;
-        stats[team].noGoalRatio /= stats[team].played;
+      if (stats[team].played === 0) {
+        continue;
       }
+      stats[team].xG /= stats[team].played;
+      stats[team].xC /= stats[team].played;
+      stats[team].cleanSheetRatio /= stats[team].played;
+      stats[team].noGoalRatio /= stats[team].played;
     }
 
     return stats as Stats;
   }
 
   function refreshStatsValues() {
-    if (setup) {
-      setStatsValues(stats, team);
+    if (!setup) {
+      return
     }
+    setStatsValues(stats, team);
   }
 
   type Stats = {

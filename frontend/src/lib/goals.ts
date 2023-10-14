@@ -23,17 +23,15 @@ export function isCleanSheet(h: number, a: number, atHome: boolean): boolean {
 export function goalsScored(h: number, a: number, atHome: boolean): number {
     if (atHome) {
         return h;
-    } else {
-        return a;
     }
+    return a;
 }
 
 export function goalsConceded(h: number, a: number, atHome: boolean): number {
     if (atHome) {
         return a;
-    } else {
-        return h;
     }
+    return h;
 }
 
 export function notScored(h: number, a: number, atHome: boolean): boolean {

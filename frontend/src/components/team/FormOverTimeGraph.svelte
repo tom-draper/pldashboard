@@ -7,10 +7,11 @@
     const playedDates = [];
     const matchdays = [];
     for (const matchday in data.form[team][data._id]) {
-      if (data.form[team][data._id][matchday].score != null) {
-        matchdays.push(matchday);
-        playedDates.push(new Date(data.form[team][data._id][matchday].date));
+      if (data.form[team][data._id][matchday].score == null) {
+        continue;
       }
+      matchdays.push(matchday);
+      playedDates.push(new Date(data.form[team][data._id][matchday].date));
     }
 
     const y = [];
@@ -49,10 +50,11 @@
 
     const teams = Object.keys(data.standings) as Team[];
     for (let i = 0; i < teams.length; i++) {
-      if (teams[i] != team) {
-        const line = getFormLine(data, teams[i], false);
-        lines.push(line);
+      if (teams[i] === team) {
+        continue;
       }
+      const line = getFormLine(data, teams[i], false);
+      lines.push(line);
     }
 
     // Add this team last to ensure it overlaps all other lines
@@ -94,29 +96,31 @@
   }
 
   function setDefaultLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': { text: 'Form rating' },
-        'yaxis.visible': true,
-        'margin.l': 60,
-        'margin.t': 15,
-      };
-      //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate);
+    if (!setup) {
+      return;
     }
+    const layoutUpdate = {
+      'yaxis.title': { text: 'Form rating' },
+      'yaxis.visible': true,
+      'margin.l': 60,
+      'margin.t': 15,
+    };
+    //@ts-ignore
+    Plotly.update(plotDiv, {}, layoutUpdate);
   }
 
   function setMobileLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': null,
-        'yaxis.visible': false,
-        'margin.l': 20,
-        'margin.t': 5,
-      };
-      //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate);
+    if (!setup) {
+      return;
     }
+    const layoutUpdate = {
+      'yaxis.title': null,
+      'yaxis.visible': false,
+      'margin.l': 20,
+      'margin.t': 5,
+    };
+    //@ts-ignore
+    Plotly.update(plotDiv, {}, layoutUpdate);
   }
 
   function buildPlotData(data: DashboardData, team: Team): PlotData {
@@ -159,20 +163,21 @@
   }
 
   function refreshPlot() {
-    if (setup) {
-      const newPlotData = buildPlotData(data, team);
-      for (let i = 0; i < 20; i++) {
-        plotData.data[i] = newPlotData.data[i];
-      }
+    if (!setup) {
+      return;
+    }
+    const newPlotData = buildPlotData(data, team);
+    for (let i = 0; i < 20; i++) {
+      plotData.data[i] = newPlotData.data[i];
+    }
 
-      plotData.layout.xaxis.range[0] = playedDates[0];
-      plotData.layout.xaxis.range[1] = playedDates[playedDates.length - 1];
+    plotData.layout.xaxis.range[0] = playedDates[0];
+    plotData.layout.xaxis.range[1] = playedDates[playedDates.length - 1];
 
-      //@ts-ignore
-      Plotly.redraw(plotDiv);
-      if (mobileView) {
-        setMobileLayout();
-      }
+    //@ts-ignore
+    Plotly.redraw(plotDiv);
+    if (mobileView) {
+      setMobileLayout();
     }
   }
 

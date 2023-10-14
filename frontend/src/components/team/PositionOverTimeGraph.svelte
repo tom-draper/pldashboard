@@ -68,10 +68,12 @@
     const lines = [];
     const teams = Object.keys(data.standings) as Team[];
     for (let i = 0; i < teams.length; i++) {
-      if (teams[i] != team) {
-        const line = getLine(data, teams[i], false);
-        lines.push(line);
+      if (teams[i] === team) {
+        continue;
       }
+
+      const line = getLine(data, teams[i], false);
+      lines.push(line);
     }
 
     // Add this team last to ensure it overlaps all other lines
@@ -159,31 +161,33 @@
   }
 
   function setDefaultLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': { text: 'Position' },
-        'yaxis.visible': true,
-        'yaxis.tickvals': Array.from(Array(20), (_, i) => i + 1),
-        'margin.l': 60,
-        'margin.t': 15,
-      };
-      //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate);
+    if (!setup) {
+      return;
     }
+    const layoutUpdate = {
+      'yaxis.title': { text: 'Position' },
+      'yaxis.visible': true,
+      'yaxis.tickvals': Array.from(Array(20), (_, i) => i + 1),
+      'margin.l': 60,
+      'margin.t': 15,
+    };
+    //@ts-ignore
+    Plotly.update(plotDiv, {}, layoutUpdate);
   }
 
   function setMobileLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': null,
-        'yaxis.visible': false,
-        'yaxis.tickvals': Array.from(Array(10), (_, i) => i + 2),
-        'margin.l': 20,
-        'margin.t': 5,
-      };
-      //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate);
+    if (!setup) {
+      return;
     }
+    const layoutUpdate = {
+      'yaxis.title': null,
+      'yaxis.visible': false,
+      'yaxis.tickvals': Array.from(Array(10), (_, i) => i + 2),
+      'margin.l': 20,
+      'margin.t': 5,
+    };
+    //@ts-ignore
+    Plotly.update(plotDiv, {}, layoutUpdate);
   }
 
   function buildPlotData(data: DashboardData, team: Team): PlotData {
@@ -221,19 +225,20 @@
   }
 
   function refreshPlot() {
-    if (setup) {
-      const newPlotData = buildPlotData(data, team);
-      for (let i = 0; i < 20; i++) {
-        plotData.data[i] = newPlotData.data[i];
-      }
+    if (!setup) {
+      return;
+    }
+    const newPlotData = buildPlotData(data, team);
+    for (let i = 0; i < 20; i++) {
+      plotData.data[i] = newPlotData.data[i];
+    }
 
-      plotData.layout.shapes = positionRangeShapes();
+    plotData.layout.shapes = positionRangeShapes();
 
-      //@ts-ignore
-      Plotly.redraw(plotDiv);
-      if (mobileView) {
-        setMobileLayout();
-      }
+    //@ts-ignore
+    Plotly.redraw(plotDiv);
+    if (mobileView) {
+      setMobileLayout();
     }
   }
 

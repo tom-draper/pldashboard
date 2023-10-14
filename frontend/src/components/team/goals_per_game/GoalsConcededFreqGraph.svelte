@@ -32,27 +32,29 @@
   }
 
   function setDefaultLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': { text: 'Conceded' },
-        'yaxis.visible': true,
-        'margin.l': 60,
-      };
-      //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate);
+    if (!setup) {
+      return;
     }
+    const layoutUpdate = {
+      'yaxis.title': { text: 'Conceded' },
+      'yaxis.visible': true,
+      'margin.l': 60,
+    };
+    //@ts-ignore
+    Plotly.update(plotDiv, {}, layoutUpdate);
   }
 
   function setMobileLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': null,
-        'yaxis.visible': false,
-        'margin.l': 20,
-      };
-      //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate);
+    if (!setup) {
+      return;
     }
+    const layoutUpdate = {
+      'yaxis.title': null,
+      'yaxis.visible': false,
+      'margin.l': 20,
+    };
+    //@ts-ignore
+    Plotly.update(plotDiv, {}, layoutUpdate);
   }
 
   function buildPlotData(): PlotData {
@@ -83,17 +85,18 @@
   }
 
   function refreshPlot() {
-    if (setup) {
-      plotData.data[1] = getConcededTeamBars();
-      //@ts-ignore
-      Plotly.relayout(plotDiv, {
-        yaxis: getYAxisLayout(),
-      });
-      //@ts-ignore
-      Plotly.redraw(plotDiv);
-      if (mobileView) {
-        setMobileLayout();
-      }
+    if (!setup) {
+      return;
+    }
+    plotData.data[1] = getConcededTeamBars();
+    //@ts-ignore
+    Plotly.relayout(plotDiv, {
+      yaxis: getYAxisLayout(),
+    });
+    //@ts-ignore
+    Plotly.redraw(plotDiv);
+    if (mobileView) {
+      setMobileLayout();
     }
   }
 

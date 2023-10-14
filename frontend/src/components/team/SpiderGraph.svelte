@@ -1,17 +1,12 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import {
-    toAlias,
-    toName,
-    toHyphenatedName,
-    teamColor,
-  } from "../../lib/team";
-  import type { DashboardData } from "../../lib/dashboard.types";
+  import { onMount } from 'svelte';
+  import { toAlias, toName, toHyphenatedName, teamColor } from '../../lib/team';
+  import type { DashboardData } from '../../lib/dashboard.types';
 
   function addTeamComparison(team: string) {
     const teamData = {
       name: team,
-      type: "scatterpolar",
+      type: 'scatterpolar',
       r: [
         attack[team],
         defence[team],
@@ -21,7 +16,7 @@
         vsBig6[team],
       ],
       theta: labels,
-      fill: "toself",
+      fill: 'toself',
       marker: { color: teamColor(team) },
     };
     plotData.data.push(teamData);
@@ -77,26 +72,27 @@
   }
 
   function resetTeamComparisonBtns() {
-    const btns = document.getElementById("spider-opp-teams");
+    const btns = document.getElementById('spider-opp-teams');
     for (let i = 0; i < btns.children.length; i++) {
       //@ts-ignore
       const btn: HTMLButtonElement = btns.children[i];
-      if (btn.style.background != "") {
-        btn.style.background = "";
-        btn.style.color = "black";
+      if (btn.style.background === '') {
+        continue;
       }
+      btn.style.background = '';
+      btn.style.color = 'black';
     }
   }
 
   function spiderBtnClick(btn: HTMLButtonElement) {
     const team = toName(btn.innerHTML);
-    if (btn.style.background === "") {
+    if (btn.style.background === '') {
       const teamKey = toHyphenatedName(team);
       btn.style.background = `var(--${teamKey})`;
       btn.style.color = `var(--${teamKey}-secondary)`;
     } else {
-      btn.style.background = "";
-      btn.style.color = "black";
+      btn.style.background = '';
+      btn.style.color = 'black';
     }
 
     if (comparisonTeams.length === 0) {
@@ -112,7 +108,9 @@
     }
   }
 
-  function goalsPerGame(data: DashboardData): [SpiderAttribute, [number, number]] {
+  function goalsPerGame(
+    data: DashboardData
+  ): [SpiderAttribute, [number, number]] {
     const attack = {};
     let maxGoalsPerSeason = Number.NEGATIVE_INFINITY;
     let minGoalsPerSeason = Number.POSITIVE_INFINITY;
@@ -127,13 +125,14 @@
           gamesPlayed += played;
         }
         // If season completed, check if team's attacking performance is most extreme yet
-        if (played === 38) {
-          const seasonGoalsPerGame = goals / played;
-          if (seasonGoalsPerGame > maxGoalsPerSeason) {
-            maxGoalsPerSeason = seasonGoalsPerGame;
-          } else if (seasonGoalsPerGame < minGoalsPerSeason) {
-            minGoalsPerSeason = seasonGoalsPerGame;
-          }
+        if (played < 38) {
+          continue;
+        }
+        const seasonGoalsPerGame = goals / played;
+        if (seasonGoalsPerGame > maxGoalsPerSeason) {
+          maxGoalsPerSeason = seasonGoalsPerGame;
+        } else if (seasonGoalsPerGame < minGoalsPerSeason) {
+          minGoalsPerSeason = seasonGoalsPerGame;
         }
       }
 
@@ -207,13 +206,14 @@
           gamesPlayed += played;
         }
         // If season completed, check if team's defensive performance is most extreme yet
-        if (played === 38) {
-          const seasonConcededPerGame = conceded / played;
-          if (seasonConcededPerGame > maxConcededPerSeason) {
-            maxConcededPerSeason = seasonConcededPerGame;
-          } else if (seasonConcededPerGame < minConcededPerSeason) {
-            minConcededPerSeason = seasonConcededPerGame;
-          }
+        if (played < 38) {
+          continue;
+        }
+        const seasonConcededPerGame = conceded / played;
+        if (seasonConcededPerGame > maxConcededPerSeason) {
+          maxConcededPerSeason = seasonConcededPerGame;
+        } else if (seasonConcededPerGame < minConcededPerSeason) {
+          minConcededPerSeason = seasonConcededPerGame;
         }
       }
 
@@ -257,12 +257,13 @@
     let nCleanSheets = 0;
     for (const matchday in form[team][season]) {
       const match = form[team][season][matchday];
-      if (match.score != null) {
-        if (match.atHome && match.score.awayGoals === 0) {
-          nCleanSheets += 1;
-        } else if (!match.atHome && match.score.homeGoals === 0) {
-          nCleanSheets += 1;
-        }
+      if (match.score == null) {
+        continue;
+      }
+      if (match.atHome && match.score.awayGoals === 0) {
+        nCleanSheets += 1;
+      } else if (!match.atHome && match.score.homeGoals === 0) {
+        nCleanSheets += 1;
       }
     }
     return nCleanSheets;
@@ -274,7 +275,11 @@
     for (const team of Object.keys(data.standings)) {
       let totalCleanSheetsCount = 0;
       for (let i = 0; i < numSeasons; i++) {
-        const seasonCleanSheets = formCleanSheets(data.form, team, data._id - i);
+        const seasonCleanSheets = formCleanSheets(
+          data.form,
+          team,
+          data._id - i
+        );
         // If season completed, check if season clean sheets is highest yet
         if (
           seasonComplete(data, team, data._id - i) &&
@@ -300,26 +305,27 @@
     let prevResult = null;
     for (const matchday in form[team][season]) {
       const match = form[team][season][matchday];
-      if (match.score != null) {
-        let result: "win" | "lost" | "draw";
-        if (
-          (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
-          (!match.atHome && match.score.homeGoals < match.score.awayGoals)
-        ) {
-          result = "win";
-        } else if (
-          (match.atHome && match.score.homeGoals < match.score.awayGoals) ||
-          (!match.atHome && match.score.homeGoals > match.score.awayGoals)
-        ) {
-          result = "lost";
-        } else {
-          result = "draw";
-        }
-        if (prevResult != null && prevResult === result) {
-          backToBack += 1;
-        }
-        prevResult = result;
+      if (match.score == null) {
+        continue;
       }
+      let result: 'win' | 'lost' | 'draw';
+      if (
+        (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
+        (!match.atHome && match.score.homeGoals < match.score.awayGoals)
+      ) {
+        result = 'win';
+      } else if (
+        (match.atHome && match.score.homeGoals < match.score.awayGoals) ||
+        (!match.atHome && match.score.homeGoals > match.score.awayGoals)
+      ) {
+        result = 'lost';
+      } else {
+        result = 'draw';
+      }
+      if (prevResult != null && prevResult === result) {
+        backToBack += 1;
+      }
+      prevResult = result;
     }
     return backToBack;
   }
@@ -356,18 +362,19 @@
     let tempWinStreak = 0;
     for (const matchday in form[team][season]) {
       const match = form[team][season][matchday];
-      if (match.score != null) {
-        if (
-          (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
-          (!match.atHome && match.score.homeGoals < match.score.awayGoals)
-        ) {
-          tempWinStreak += 1;
-          if (tempWinStreak > winStreak) {
-            winStreak = tempWinStreak;
-          }
-        } else {
-          tempWinStreak = 0;
+      if (match.score == null) {
+        continue;
+      }
+      if (
+        (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
+        (!match.atHome && match.score.homeGoals < match.score.awayGoals)
+      ) {
+        tempWinStreak += 1;
+        if (tempWinStreak > winStreak) {
+          winStreak = tempWinStreak;
         }
+      } else {
+        tempWinStreak = 0;
       }
     }
     return winStreak;
@@ -408,7 +415,7 @@
     return data.standings[team][season].played === 38;
   }
 
-  function removeItem(arr: any[], value: any): any[] {
+  function removeItem(arr, value) {
     const index = arr.indexOf(value);
     if (index > -1) {
       arr.splice(index, 1);
@@ -426,23 +433,24 @@
     let numPlayed = 0;
     for (const matchday in form[team][season]) {
       const match = form[team][season][matchday];
-      if (match.score != null && big6.includes(match.team)) {
-        if (
-          (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
-          (!match.atHome && match.score.homeGoals < match.score.awayGoals)
-        ) {
-          pointsVsBig6 += 3;
-        } else if (match.score.homeGoals === match.score.awayGoals) {
-          pointsVsBig6 += 1;
-        }
-        numPlayed += 1;
+      if (match.score == null || big6.includes(match.team)) {
+        continue;
       }
+      if (
+        (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
+        (!match.atHome && match.score.homeGoals < match.score.awayGoals)
+      ) {
+        pointsVsBig6 += 3;
+      } else if (match.score.homeGoals === match.score.awayGoals) {
+        pointsVsBig6 += 1;
+      }
+      numPlayed += 1;
     }
 
     return [pointsVsBig6, numPlayed];
   }
 
-  function getVsBig6(data: any): SpiderAttribute {
+  function getVsBig6(data): SpiderAttribute {
     //@ts-ignore
     const vsBig6: SpiderAttribute = {};
     let maxAvgSeasonPointsVsBig6 = Number.NEGATIVE_INFINITY;
@@ -471,7 +479,7 @@
         totalPlayedVsBig6 += seasonPlayedVsBig6;
       }
 
-      let totalAvgPointsVsBig = 0
+      let totalAvgPointsVsBig = 0;
       if (totalPlayedVsBig6 > 0) {
         totalAvgPointsVsBig = totalPointsVsBig6 / totalPlayedVsBig6;
       }
@@ -485,22 +493,22 @@
     return vsBig6;
   }
 
-  function scatterPlot(name: string, r: number[], color: string): any {
+  function scatterPlot(name: string, r: number[], color: string) {
     return {
       name: name,
-      type: "scatterpolar",
+      type: 'scatterpolar',
       r: r,
       theta: labels,
-      fill: "toself",
+      fill: 'toself',
       marker: { color: color },
       hovertemplate: `<b>${name}</b><br>%{theta}: %{r}<extra></extra>`,
-      hoveron: "points",
+      hoveron: 'points',
     };
   }
 
-  function avgScatterPlot(): any {
+  function avgScatterPlot() {
     return scatterPlot(
-      "Avg",
+      'Avg',
       [
         attack.avg,
         defence.avg,
@@ -509,11 +517,11 @@
         winStreaks.avg,
         vsBig6.avg,
       ],
-      "#ADADAD"
+      '#ADADAD'
     );
   }
 
-  function getTeamData(team: string): any {
+  function getTeamData(team: string) {
     const teamData = scatterPlot(
       team,
       [
@@ -535,7 +543,7 @@
     return [avgData, teamData];
   }
 
-  function computePlotData(data: any) {
+  function computePlotData(data) {
     attack = getAttack(data);
     defence = getDefence(data);
     cleanSheets = getCleanSheets(data);
@@ -544,7 +552,7 @@
     vsBig6 = getVsBig6(data);
   }
 
-  function defaultLayout(): Object {
+  function defaultLayout() {
     return {
       height: 550,
       polar: {
@@ -553,16 +561,16 @@
           range: [0, 100],
         },
       },
-      hover: "closest",
+      hover: 'closest',
       margin: { t: 25, b: 25, l: 75, r: 75 },
       showlegend: false,
-      plot_bgcolor: "#fafafa",
-      paper_bgcolor: "#fafafa",
+      plot_bgcolor: '#fafafa',
+      paper_bgcolor: '#fafafa',
       dragmode: false,
     };
   }
 
-  function buildPlotData(data: any, team: string): PlotData {
+  function buildPlotData(data, team: string): PlotData {
     computePlotData(data);
 
     const spiderPlots = initSpiderPlots(team);
@@ -587,20 +595,20 @@
     winStreaks: SpiderAttribute,
     vsBig6: SpiderAttribute;
   const labels = [
-    "Attack",
-    "Defence",
-    "Clean sheets",
-    "Consistency",
-    "Win streak",
-    "Vs big 6",
+    'Attack',
+    'Defence',
+    'Clean sheets',
+    'Consistency',
+    'Win streak',
+    'Vs big 6',
   ];
   const big6 = [
-    "Manchester United",
-    "Liverpool",
-    "Manchester City",
-    "Arsenal",
-    "Chelsea",
-    "Tottenham Hotspur",
+    'Manchester United',
+    'Liverpool',
+    'Manchester City',
+    'Arsenal',
+    'Chelsea',
+    'Tottenham Hotspur',
   ];
 
   let plotDiv: HTMLDivElement, plotData: PlotData;
@@ -621,19 +629,19 @@
       plotData.config
     ).then((plot) => {
       // Once plot generated, add resizable attribute to it to shorten height for mobile view
-      plot.children[0].children[0].classList.add("resizable-spider-chart");
+      plot.children[0].children[0].classList.add('resizable-spider-chart');
     });
 
     // Add inner border radius to top and bottom teams
     document
-      .getElementById("spider-opp-teams")
-      .children[0].classList.add("top-spider-opp-team-btn");
+      .getElementById('spider-opp-teams')
+      .children[0].classList.add('top-spider-opp-team-btn');
     document
-      .getElementById("spider-opp-teams")
-      .children[18].classList.add("bottom-spider-opp-team-btn");
+      .getElementById('spider-opp-teams')
+      .children[18].classList.add('bottom-spider-opp-team-btn');
   }
 
-  function emptyArray(arr: any[]) {
+  function emptyArray(arr) {
     const length = arr.length;
     for (let i = 0; i < length; i++) {
       arr.pop();
@@ -641,30 +649,31 @@
   }
 
   function refreshPlot() {
-    if (setup) {
-      const spiderPlots = initSpiderPlots(team);
-      // Remove all but two plots
-      emptyArray(plotData.data);
-      // Replace final two plots with defaults
-      plotData.data.push(spiderPlots[0]); // Reset to avg
-      plotData.data.push(spiderPlots[1]); // Reset to team data
-
-      removeAllTeamComparisons();
-      resetTeamComparisonBtns();
-      setTimeout(() => {
-        document
-          .getElementById("spider-opp-teams")
-          .children[0].classList.add("top-spider-opp-team-btn");
-        document
-          .getElementById("spider-opp-teams")
-          .children[18].classList.add("bottom-spider-opp-team-btn");
-      }, 0);
+    if (!setup) {
+      return;
     }
+    const spiderPlots = initSpiderPlots(team);
+    // Remove all but two plots
+    emptyArray(plotData.data);
+    // Replace final two plots with defaults
+    plotData.data.push(spiderPlots[0]); // Reset to avg
+    plotData.data.push(spiderPlots[1]); // Reset to team data
+
+    removeAllTeamComparisons();
+    resetTeamComparisonBtns();
+    setTimeout(() => {
+      document
+        .getElementById('spider-opp-teams')
+        .children[0].classList.add('top-spider-opp-team-btn');
+      document
+        .getElementById('spider-opp-teams')
+        .children[18].classList.add('bottom-spider-opp-team-btn');
+    }, 0);
   }
 
   $: team && refreshPlot();
 
-  export let data: any, team: string, teams: string[];
+  export let data, team: string, teams: string[];
 </script>
 
 <div class="spider-chart">

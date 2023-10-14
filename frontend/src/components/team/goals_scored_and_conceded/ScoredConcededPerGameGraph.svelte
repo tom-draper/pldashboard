@@ -8,12 +8,13 @@
     for (const team of Object.keys(data.standings)) {
       for (const matchday of Object.keys(data.form[team][data._id])) {
         const score = data.form[team][data._id][matchday].score;
-        if (score != null) {
-          if (matchday in avgGoals) {
-            avgGoals[matchday] += score.homeGoals + score.awayGoals;
-          } else {
-            avgGoals[matchday] = score.homeGoals + score.awayGoals;
-          }
+        if (score == null) {
+          continue;
+        }
+        if (matchday in avgGoals) {
+          avgGoals[matchday] += score.homeGoals + score.awayGoals;
+        } else {
+          avgGoals[matchday] = score.homeGoals + score.awayGoals;
         }
       }
     }
@@ -34,14 +35,15 @@
     const conceded: Counter = {};
     for (const matchday of Object.keys(data.form[team][data._id])) {
       const score = data.form[team][data._id][matchday].score;
-      if (score != null) {
-        if (data.form[team][data._id][matchday].atHome) {
-          scored[matchday] = score.homeGoals;
-          conceded[matchday] = score.awayGoals;
-        } else {
-          scored[matchday] = score.awayGoals;
-          conceded[matchday] = score.homeGoals;
-        }
+      if (score == null) {
+        continue
+      }
+      if (data.form[team][data._id][matchday].atHome) {
+        scored[matchday] = score.homeGoals;
+        conceded[matchday] = score.awayGoals;
+      } else {
+        scored[matchday] = score.awayGoals;
+        conceded[matchday] = score.homeGoals;
       }
     }
 
@@ -135,27 +137,29 @@
   }
 
   function setDefaultLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': { text: 'Goals' },
-        'yaxis.visible': true,
-        'margin.l': 60,
-      };
-      //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate);
+    if (!setup) {
+      return
     }
+    const layoutUpdate = {
+      'yaxis.title': { text: 'Goals' },
+      'yaxis.visible': true,
+      'margin.l': 60,
+    };
+    //@ts-ignore
+    Plotly.update(plotDiv, {}, layoutUpdate);
   }
 
   function setMobileLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': null,
-        'yaxis.visible': false,
-        'margin.l': 20,
-      };
-      //@ts-ignore
-      Plotly.update(plotDiv, {}, layoutUpdate);
+    if (!setup) {
+      return
     }
+    const layoutUpdate = {
+      'yaxis.title': null,
+      'yaxis.visible': false,
+      'margin.l': 20,
+    };
+    //@ts-ignore
+    Plotly.update(plotDiv, {}, layoutUpdate);
   }
 
   function buildPlotData(data: DashboardData, team: Team): PlotData {
@@ -201,24 +205,25 @@
   }
 
   function refreshPlot() {
-    if (setup) {
-      const [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
-      const avgGoals = getAvgGoalsPerGame(data);
-      const matchdays = Object.keys(avgGoals);
+    if (!setup) {
+      return
+    }
+    const [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
+    const avgGoals = getAvgGoalsPerGame(data);
+    const matchdays = Object.keys(avgGoals);
 
-      const scoredBar = teamScoredBar(playedDates, teamScored, matchdays);
-      const concededBar = teamConcededBar(playedDates, teamConceded, matchdays);
-      const line = avgLine(playedDates, avgGoals, matchdays);
+    const scoredBar = teamScoredBar(playedDates, teamScored, matchdays);
+    const concededBar = teamConcededBar(playedDates, teamConceded, matchdays);
+    const line = avgLine(playedDates, avgGoals, matchdays);
 
-      plotData.data[0] = scoredBar;
-      plotData.data[1] = concededBar;
-      plotData.data[2] = line;
+    plotData.data[0] = scoredBar;
+    plotData.data[1] = concededBar;
+    plotData.data[2] = line;
 
-      //@ts-ignore
-      Plotly.redraw(plotDiv);
-      if (mobileView) {
-        setMobileLayout();
-      }
+    //@ts-ignore
+    Plotly.redraw(plotDiv);
+    if (mobileView) {
+      setMobileLayout();
     }
   }
 

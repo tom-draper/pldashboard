@@ -6,33 +6,22 @@
   function getTeamCleanSheets(
     data: DashboardData,
     team: Team
-  ): [number[], number[]] {
-    const notCleanSheets = [];
+  ): number[] {
     const cleanSheets = [];
     for (const matchday of Object.keys(data.form[team][data._id])) {
       const score = data.form[team][data._id][matchday].score;
       if (score != null) {
         if (data.form[team][data._id][matchday].atHome) {
-          if (score.awayGoals > 0) {
-            notCleanSheets.push(1);
-            cleanSheets.push(0);
-          } else {
-            cleanSheets.push(1);
-            notCleanSheets.push(0);
-          }
+          const cleanSheetFlag = score.awayGoals > 0 ? 1 : 0;
+          cleanSheets.push(cleanSheetFlag)
         } else {
-          if (score.homeGoals > 0) {
-            notCleanSheets.push(1);
-            cleanSheets.push(0);
-          } else {
-            cleanSheets.push(1);
-            notCleanSheets.push(0);
-          }
+          const cleanSheetFlag = score.awayGoals > 0 ? 1 : 0;
+          cleanSheets.push(cleanSheetFlag)
         }
       }
     }
 
-    return [cleanSheets, notCleanSheets];
+    return cleanSheets;
   }
 
   function bars(
@@ -41,7 +30,9 @@
     playedDates: Date[],
     matchdays: string[]
   ) {
-    const [cleanSheets, notCleanSheets] = getTeamCleanSheets(data, team);
+    const cleanSheets = getTeamCleanSheets(data, team);
+    // Create inverse of clean sheets for goals scored
+    const notCleanSheets = Array.from(cleanSheets).map(x => x == 0 ? 1 : 0)
     return [
       {
         name: 'Clean sheets',

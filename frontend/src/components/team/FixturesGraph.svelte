@@ -196,67 +196,69 @@
   }
 
   function setDefaultLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': { text: 'Team rating' },
-        'margin.l': 60,
-        'yaxis.color': 'black',
-      };
-
-      const sizes = plotData.data[0].marker.size;
-      for (let i = 0; i < sizes.length; i++) {
-        sizes[i] = Math.round(sizes[i] * 1.7);
-      }
-      const dataUpdate = {
-        marker: {
-          size: sizes,
-          colorscale: [
-            [0, '#00fe87'],
-            [0.5, '#f3f3f3'],
-            [1, '#f83027'],
-          ],
-          color: plotData.data[0].y,
-          opacity: 1,
-          line: { width: 1 },
-        },
-      };
-      plotData.data[0].marker.size = sizes;
-
-      //@ts-ignore
-      Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+    if (!setup) {
+      return;
     }
+    const layoutUpdate = {
+      'yaxis.title': { text: 'Team rating' },
+      'margin.l': 60,
+      'yaxis.color': 'black',
+    };
+
+    const sizes = plotData.data[0].marker.size;
+    for (let i = 0; i < sizes.length; i++) {
+      sizes[i] = Math.round(sizes[i] * 1.7);
+    }
+    const dataUpdate = {
+      marker: {
+        size: sizes,
+        colorscale: [
+          [0, '#00fe87'],
+          [0.5, '#f3f3f3'],
+          [1, '#f83027'],
+        ],
+        color: plotData.data[0].y,
+        opacity: 1,
+        line: { width: 1 },
+      },
+    };
+    plotData.data[0].marker.size = sizes;
+
+    //@ts-ignore
+    Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
   }
 
   function setMobileLayout() {
-    if (setup) {
-      const layoutUpdate = {
-        'yaxis.title': null,
-        'margin.l': 20,
-        'yaxis.color': '#fafafa',
-      };
-
-      const sizes = plotData.data[0].marker.size;
-      for (let i = 0; i < sizes.length; i++) {
-        sizes[i] = Math.round(sizes[i] / 1.7);
-      }
-      const dataUpdate = {
-        marker: {
-          size: sizes,
-          colorscale: [
-            [0, '#00fe87'],
-            [0.5, '#f3f3f3'],
-            [1, '#f83027'],
-          ],
-          color: plotData.data[0].y,
-          opacity: 1,
-          line: { width: 1 },
-        },
-      };
-      plotData.data[0].marker.size = sizes;
-
-      //@ts-ignore
-      Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+    if (!setup) {
+      return;
     }
+    const layoutUpdate = {
+      'yaxis.title': null,
+      'margin.l': 20,
+      'yaxis.color': '#fafafa',
+    };
+
+    const sizes = plotData.data[0].marker.size;
+    for (let i = 0; i < sizes.length; i++) {
+      sizes[i] = Math.round(sizes[i] / 1.7);
+    }
+    const dataUpdate = {
+      marker: {
+        size: sizes,
+        colorscale: [
+          [0, '#00fe87'],
+          [0.5, '#f3f3f3'],
+          [1, '#f83027'],
+        ],
+        color: plotData.data[0].y,
+        opacity: 1,
+        line: { width: 1 },
+      },
+    };
+    plotData.data[0].marker.size = sizes;
+
+    //@ts-ignore
+    Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
   }
 
   function buildPlotData(data: DashboardData, team: Team): PlotData {
@@ -292,14 +294,15 @@
   }
 
   function refreshPlot() {
-    if (setup) {
-      const l = line(data, team, Date.now());
-      plotData.data[0] = l; // Overwrite plot data
-      //@ts-ignore
-      Plotly.redraw(plotDiv);
-      if (mobileView) {
-        setMobileLayout();
-      }
+    if (!setup) {
+      return
+    }
+    const l = line(data, team, Date.now());
+    plotData.data[0] = l; // Overwrite plot data
+    //@ts-ignore
+    Plotly.redraw(plotDiv);
+    if (mobileView) {
+      setMobileLayout();
     }
   }
 

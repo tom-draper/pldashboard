@@ -23,19 +23,20 @@
     for (let i = 0; i < json.predictions.length; i++) {
       for (let j = 0; j < json.predictions[i].predictions.length; j++) {
         const prediction = json.predictions[i].predictions[j];
-        if (prediction.actual != null) {
-          if (identicalScore(prediction.prediction, prediction.actual)) {
-            prediction.colour = 'green';
-            scoreCorrect += 1;
-            resultCorrect += 1;
-          } else if (sameResult(prediction.prediction, prediction.actual)) {
-            prediction.colour = 'yellow';
-            resultCorrect += 1;
-          } else {
-            prediction.colour = 'red';
-          }
-          total += 1;
+        if (prediction.actual == null) {
+          continue;
         }
+        if (identicalScore(prediction.prediction, prediction.actual)) {
+          prediction.colour = 'green';
+          scoreCorrect += 1;
+          resultCorrect += 1;
+        } else if (sameResult(prediction.prediction, prediction.actual)) {
+          prediction.colour = 'yellow';
+          resultCorrect += 1;
+        } else {
+          prediction.colour = 'red';
+        }
+        total += 1;
       }
     }
 
@@ -64,7 +65,7 @@
     // Sort each day of predictions by time
     for (let i = 0; i < predictions.length; i++) {
       predictions[i].predictions.sort((a: Prediction, b: Prediction) => {
-        return (new Date(a.datetime)) - (new Date(b.datetime));
+        return new Date(a.datetime) - new Date(b.datetime);
       });
     }
   }
