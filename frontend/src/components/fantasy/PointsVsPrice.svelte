@@ -41,9 +41,7 @@
     for (let i = 0; i < sizes.length; i++) {
       sizes[i] /= maxMinutes * 0.02;
     }
-    // sizes.map((x) => {
-    //   return (x / maxMinutes) * sizeScale;
-    // });
+
     const playtimes = minutes.map((x) => ((x / maxMinutes) * 100).toFixed(1));
 
     const markers = {
@@ -54,11 +52,6 @@
       type: 'scatter',
       marker: {
         size: sizes,
-        // colorscale: [
-        //   [0, "#00fe87"],
-        //   [0.5, "#f3f3f3"],
-        //   [1, "#f83027"],
-        // ],
         opacity: 0.75,
         color: colours,
       },

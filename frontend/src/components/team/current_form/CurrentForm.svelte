@@ -4,7 +4,7 @@
   import type { DashboardData, Team } from '../../../lib/dashboard.types';
 
   function getSortedMatchdays(data: DashboardData, team: Team): string[] {
-    let matchdays = Object.keys(data.form[team][data._id]).sort(function (
+    const matchdays = Object.keys(data.form[team][data._id]).sort(function (
       matchday1,
       matchday2
     ) {
@@ -21,9 +21,9 @@
     team: Team,
     matchdays: string[]
   ): boolean[] {
-    let formStarTeams = [];
-    for (let matchday of matchdays) {
-      let oppTeam = data.form[team][data._id][matchday].team;
+    const formStarTeams = [];
+    for (const matchday of matchdays) {
+      const oppTeam = data.form[team][data._id][matchday].team;
       formStarTeams.unshift(data.teamRatings[oppTeam].totalRating > 0.75);
     }
 
@@ -56,9 +56,9 @@
     team: Team,
     matchdays: string[]
   ): string[] {
-    let formInitials = [];
+    const formInitials = [];
 
-    for (let matchday of matchdays) {
+    for (const matchday of matchdays) {
       formInitials.unshift(
         toInitials(data.form[team][data._id][matchday].team)
       );
@@ -78,7 +78,7 @@
     matchdays: string[],
     N: number
   ): string[] {
-    let latestN = [];
+    const latestN = [];
 
     for (let i = matchdays.length - 1; i >= 0; i--) {
       if (data.form[team][data._id][matchdays[i]].score != null) {
@@ -93,9 +93,9 @@
   }
 
   function setFormValues() {
-    let sortedMatchdays = getSortedMatchdays(data, team);
+    const sortedMatchdays = getSortedMatchdays(data, team);
 
-    let matchdays = latestNPlayedMatchdays(data, team, sortedMatchdays, 5);
+    const matchdays = latestNPlayedMatchdays(data, team, sortedMatchdays, 5);
 
     formIcons = getFormIcons(data, team);
     formStarTeams = getFormStarTeams(data, team, matchdays);

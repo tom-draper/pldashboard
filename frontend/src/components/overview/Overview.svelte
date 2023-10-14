@@ -11,9 +11,9 @@
   };
 
   function upcomingMatches(): UpcomingMatch[] {
-    let upcoming: UpcomingMatch[] = [];
-    for (let team in data.upcoming) {
-      let date = new Date(data.upcoming[team].date);
+    const upcoming: UpcomingMatch[] = [];
+    for (const team in data.upcoming) {
+      const date = new Date(data.upcoming[team].date);
       if (data.upcoming[team].atHome) {
         upcoming.push({
           time: date,
@@ -43,9 +43,9 @@
   };
 
   function standingsTable(): Standings[] {
-    let standings: Standings[] = [];
-    for (let team in data.standings) {
-      let row = Object(data.standings[team][data._id]);
+    const standings: Standings[] = [];
+    for (const team in data.standings) {
+      const row = Object(data.standings[team][data._id]);
       row.team = team;
       standings.push(row);
     }
@@ -61,9 +61,9 @@
     }
     fixturesScaling = 'rating';
 
-    for (let teamFixtures of fixtures) {
-      for (let match of teamFixtures.matches) {
-        let homeAdvantage = match.atHome
+    for (const teamFixtures of fixtures) {
+      for (const match of teamFixtures.matches) {
+        const homeAdvantage = match.atHome
           ? 0
           : data.homeAdvantages[match.team].totalHomeAdvantage;
         match.colour = fixtureColourSkewed(
@@ -80,16 +80,16 @@
     }
     fixturesScaling = 'form';
 
-    for (let teamFixtures of fixtures) {
-      for (let match of teamFixtures.matches) {
+    for (const teamFixtures of fixtures) {
+      for (const match of teamFixtures.matches) {
         let form = 0.5;
-        let matchdays = Object.keys(
+        const matchdays = Object.keys(
           data.form[teamFixtures.team][data._id]
         ).reverse();
-        let homeAdvantage = match.atHome
+        const homeAdvantage = match.atHome
           ? 0
           : data.homeAdvantages[match.team].totalHomeAdvantage;
-        for (let matchday of matchdays) {
+        for (const matchday of matchdays) {
           if (data.form[match.team][data._id][matchday].formRating5 != null) {
             form = data.form[match.team][data._id][matchday].formRating5;
           }
@@ -112,12 +112,12 @@
   };
 
   function fixturesTable(standings: Standings[]): Fixtures[] {
-    let fixtures = [];
-    for (let row of standings) {
-      let matches = [];
-      for (let matchday in data.fixtures[row.team]) {
-        let match = data.fixtures[row.team][matchday];
-        let homeAdvantage = match.atHome
+    const fixtures = [];
+    for (const row of standings) {
+      const matches = [];
+      for (const matchday in data.fixtures[row.team]) {
+        const match = data.fixtures[row.team][matchday];
+        const homeAdvantage = match.atHome
           ? 0
           : data.homeAdvantages[match.team].totalHomeAdvantage;
         matches.push({

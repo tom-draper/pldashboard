@@ -9,7 +9,7 @@
   import type { DashboardData } from "../../lib/dashboard.types";
 
   function addTeamComparison(team: string) {
-    let teamData = {
+    const teamData = {
       name: team,
       type: "scatterpolar",
       r: [
@@ -30,7 +30,7 @@
   }
 
   function addAvg() {
-    let avg = avgScatterPlot();
+    const avg = avgScatterPlot();
     plotData.data.unshift(avg); // Add avg below the teamName spider plot
   }
 
@@ -77,10 +77,10 @@
   }
 
   function resetTeamComparisonBtns() {
-    let btns = document.getElementById("spider-opp-teams");
+    const btns = document.getElementById("spider-opp-teams");
     for (let i = 0; i < btns.children.length; i++) {
       //@ts-ignore
-      let btn: HTMLButtonElement = btns.children[i];
+      const btn: HTMLButtonElement = btns.children[i];
       if (btn.style.background != "") {
         btn.style.background = "";
         btn.style.color = "black";
@@ -89,9 +89,9 @@
   }
 
   function spiderBtnClick(btn: HTMLButtonElement) {
-    let team = toName(btn.innerHTML);
+    const team = toName(btn.innerHTML);
     if (btn.style.background === "") {
-      let teamKey = toHyphenatedName(team);
+      const teamKey = toHyphenatedName(team);
       btn.style.background = `var(--${teamKey})`;
       btn.style.color = `var(--${teamKey}-secondary)`;
     } else {
@@ -113,22 +113,22 @@
   }
 
   function goalsPerGame(data: DashboardData): [SpiderAttribute, [number, number]] {
-    let attack = {};
+    const attack = {};
     let maxGoalsPerSeason = Number.NEGATIVE_INFINITY;
     let minGoalsPerSeason = Number.POSITIVE_INFINITY;
-    for (let team of Object.keys(data.standings)) {
+    for (const team of Object.keys(data.standings)) {
       let totalGoals = 0;
       let gamesPlayed = 0;
-      for (let season in data.standings[team]) {
-        let goals = data.standings[team][season].gF;
-        let played = data.standings[team][season].played;
+      for (const season in data.standings[team]) {
+        const goals = data.standings[team][season].gF;
+        const played = data.standings[team][season].played;
         if (goals > 0) {
           totalGoals += goals;
           gamesPlayed += played;
         }
         // If season completed, check if team's attacking performance is most extreme yet
         if (played === 38) {
-          let seasonGoalsPerGame = goals / played;
+          const seasonGoalsPerGame = goals / played;
           if (seasonGoalsPerGame > maxGoalsPerSeason) {
             maxGoalsPerSeason = seasonGoalsPerGame;
           } else if (seasonGoalsPerGame < minGoalsPerSeason) {
@@ -151,8 +151,8 @@
     attack: SpiderAttribute,
     range: [number, number]
   ): SpiderAttribute {
-    let [lower, upper] = range;
-    for (let team in attack) {
+    const [lower, upper] = range;
+    for (const team in attack) {
       if (attack[team] === null) {
         attack[team] = 0;
       } else {
@@ -164,21 +164,21 @@
 
   function attributeAvgScaled(attribute: SpiderAttribute, max: number): number {
     let total = 0;
-    for (let team in attribute) {
+    for (const team in attribute) {
       attribute[team] = (attribute[team] / max) * 100;
       total += attribute[team];
     }
-    let avg = total / Object.keys(attribute).length;
+    const avg = total / Object.keys(attribute).length;
 
     return avg;
   }
 
   function attributeAvg(attribute: SpiderAttribute): number {
     let total = 0;
-    for (let team in attribute) {
+    for (const team in attribute) {
       total += attribute[team];
     }
-    let avg = total / Object.keys(attribute).length;
+    const avg = total / Object.keys(attribute).length;
 
     return avg;
   }
@@ -193,22 +193,22 @@
   function concededPerSeason(
     data: DashboardData
   ): [SpiderAttribute, [number, number]] {
-    let defence = {};
+    const defence = {};
     let maxConcededPerSeason = Number.NEGATIVE_INFINITY;
     let minConcededPerSeason = Number.POSITIVE_INFINITY;
-    for (let team of Object.keys(data.standings)) {
+    for (const team of Object.keys(data.standings)) {
       let totalConceded = 0;
       let gamesPlayed = 0;
-      for (let season in data.standings[team]) {
-        let conceded = data.standings[team][season].gA;
-        let played = data.standings[team][season].played;
+      for (const season in data.standings[team]) {
+        const conceded = data.standings[team][season].gA;
+        const played = data.standings[team][season].played;
         if (conceded > 0) {
           totalConceded += conceded;
           gamesPlayed += played;
         }
         // If season completed, check if team's defensive performance is most extreme yet
         if (played === 38) {
-          let seasonConcededPerGame = conceded / played;
+          const seasonConcededPerGame = conceded / played;
           if (seasonConcededPerGame > maxConcededPerSeason) {
             maxConcededPerSeason = seasonConcededPerGame;
           } else if (seasonConcededPerGame < minConcededPerSeason) {
@@ -234,8 +234,8 @@
     defence: SpiderAttribute,
     range: [number, number]
   ): SpiderAttribute {
-    let [lower, upper] = range;
-    for (let team in defence) {
+    const [lower, upper] = range;
+    for (const team in defence) {
       if (defence[team] === null) {
         defence[team] = 0;
       } else {
@@ -255,8 +255,8 @@
 
   function formCleanSheets(form: Form, team: string, season: number): number {
     let nCleanSheets = 0;
-    for (let matchday in form[team][season]) {
-      let match = form[team][season][matchday];
+    for (const matchday in form[team][season]) {
+      const match = form[team][season][matchday];
       if (match.score != null) {
         if (match.atHome && match.score.awayGoals === 0) {
           nCleanSheets += 1;
@@ -269,12 +269,12 @@
   }
 
   function getCleanSheets(data: DashboardData): SpiderAttribute {
-    let cleanSheets = {} as SpiderAttribute;
+    const cleanSheets = {} as SpiderAttribute;
     let maxSeasonCleanSheets = Number.NEGATIVE_INFINITY;
-    for (let team of Object.keys(data.standings)) {
+    for (const team of Object.keys(data.standings)) {
       let totalCleanSheetsCount = 0;
       for (let i = 0; i < numSeasons; i++) {
-        let seasonCleanSheets = formCleanSheets(data.form, team, data._id - i);
+        const seasonCleanSheets = formCleanSheets(data.form, team, data._id - i);
         // If season completed, check if season clean sheets is highest yet
         if (
           seasonComplete(data, team, data._id - i) &&
@@ -298,8 +298,8 @@
   function formConsistency(form: Form, team: string, season: number): number {
     let backToBack = 0; // Counts pairs of back to back identical match results
     let prevResult = null;
-    for (let matchday in form[team][season]) {
-      let match = form[team][season][matchday];
+    for (const matchday in form[team][season]) {
+      const match = form[team][season][matchday];
       if (match.score != null) {
         let result: "win" | "lost" | "draw";
         if (
@@ -325,12 +325,12 @@
   }
 
   function getConsistency(data: DashboardData): SpiderAttribute {
-    let consistency = {} as SpiderAttribute;
+    const consistency = {} as SpiderAttribute;
     let maxSeasonBackToBack = Number.NEGATIVE_INFINITY;
-    for (let team of Object.keys(data.standings)) {
+    for (const team of Object.keys(data.standings)) {
       let totalBackToBack = 0;
       for (let i = 0; i < numSeasons; i++) {
-        let seasonBackToBack = formConsistency(data.form, team, data._id - i);
+        const seasonBackToBack = formConsistency(data.form, team, data._id - i);
         // If season completed, check if season consistency is highest yet
         if (
           seasonComplete(data, team, data._id - i) &&
@@ -354,8 +354,8 @@
   function formWinStreak(form: Form, team: string, season: number): number {
     let winStreak = 0;
     let tempWinStreak = 0;
-    for (let matchday in form[team][season]) {
-      let match = form[team][season][matchday];
+    for (const matchday in form[team][season]) {
+      const match = form[team][season][matchday];
       if (match.score != null) {
         if (
           (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
@@ -374,12 +374,12 @@
   }
 
   function getWinStreak(data: DashboardData): SpiderAttribute {
-    let winStreaks = {} as SpiderAttribute;
+    const winStreaks = {} as SpiderAttribute;
     let maxSeasonWinStreak = Number.NEGATIVE_INFINITY;
-    for (let team of Object.keys(data.standings)) {
+    for (const team of Object.keys(data.standings)) {
       let totalWinStreak = 0;
       for (let i = 0; i < numSeasons; i++) {
-        let seasonWinSteak = formWinStreak(data.form, team, data._id - i);
+        const seasonWinSteak = formWinStreak(data.form, team, data._id - i);
         // If season completed, check if season consistency is highest yet
         if (
           seasonComplete(data, team, data._id - i) &&
@@ -409,7 +409,7 @@
   }
 
   function removeItem(arr: any[], value: any): any[] {
-    let index = arr.indexOf(value);
+    const index = arr.indexOf(value);
     if (index > -1) {
       arr.splice(index, 1);
     }
@@ -424,8 +424,8 @@
   ): [number, number] {
     let pointsVsBig6 = 0;
     let numPlayed = 0;
-    for (let matchday in form[team][season]) {
-      let match = form[team][season][matchday];
+    for (const matchday in form[team][season]) {
+      const match = form[team][season][matchday];
       if (match.score != null && big6.includes(match.team)) {
         if (
           (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
@@ -444,13 +444,13 @@
 
   function getVsBig6(data: any): SpiderAttribute {
     //@ts-ignore
-    let vsBig6: SpiderAttribute = {};
+    const vsBig6: SpiderAttribute = {};
     let maxAvgSeasonPointsVsBig6 = Number.NEGATIVE_INFINITY;
-    for (let team of Object.keys(data.standings)) {
+    for (const team of Object.keys(data.standings)) {
       let totalPointsVsBig6 = 0;
       let totalPlayedVsBig6 = 0;
       for (let i = 0; i < numSeasons; i++) {
-        let [seasonPointsVsBig6, seasonPlayedVsBig6] = formWinsVsBig6(
+        const [seasonPointsVsBig6, seasonPlayedVsBig6] = formWinsVsBig6(
           data.form,
           team,
           data._id - i,
@@ -459,7 +459,7 @@
         if (seasonPlayedVsBig6 === 0) {
           continue;
         }
-        let avgSeasonPointsVsBig6 = seasonPlayedVsBig6 / seasonPlayedVsBig6;
+        const avgSeasonPointsVsBig6 = seasonPlayedVsBig6 / seasonPlayedVsBig6;
         // If season completed, check if season consistency is highest yet
         if (
           seasonComplete(data, team, data._id - i) &&
@@ -514,7 +514,7 @@
   }
 
   function getTeamData(team: string): any {
-    let teamData = scatterPlot(
+    const teamData = scatterPlot(
       team,
       [
         attack[team],
@@ -530,8 +530,8 @@
   }
 
   function initSpiderPlots(team: string): [SpiderAttribute, SpiderAttribute] {
-    let avgData = avgScatterPlot();
-    let teamData = getTeamData(team);
+    const avgData = avgScatterPlot();
+    const teamData = getTeamData(team);
     return [avgData, teamData];
   }
 
@@ -565,9 +565,9 @@
   function buildPlotData(data: any, team: string): PlotData {
     computePlotData(data);
 
-    let spiderPlots = initSpiderPlots(team);
+    const spiderPlots = initSpiderPlots(team);
 
-    let plotData = {
+    const plotData = {
       data: spiderPlots,
       layout: defaultLayout(),
       config: {
@@ -586,7 +586,7 @@
     consistency: SpiderAttribute,
     winStreaks: SpiderAttribute,
     vsBig6: SpiderAttribute;
-  let labels = [
+  const labels = [
     "Attack",
     "Defence",
     "Clean sheets",
@@ -594,7 +594,7 @@
     "Win streak",
     "Vs big 6",
   ];
-  let big6 = [
+  const big6 = [
     "Manchester United",
     "Liverpool",
     "Manchester City",
@@ -604,7 +604,7 @@
   ];
 
   let plotDiv: HTMLDivElement, plotData: PlotData;
-  let comparisonTeams = [];
+  const comparisonTeams = [];
   let setup = false;
   onMount(() => {
     genPlot();
@@ -634,7 +634,7 @@
   }
 
   function emptyArray(arr: any[]) {
-    let length = arr.length;
+    const length = arr.length;
     for (let i = 0; i < length; i++) {
       arr.pop();
     }
@@ -642,7 +642,7 @@
 
   function refreshPlot() {
     if (setup) {
-      let spiderPlots = initSpiderPlots(team);
+      const spiderPlots = initSpiderPlots(team);
       // Remove all but two plots
       emptyArray(plotData.data);
       // Replace final two plots with defaults

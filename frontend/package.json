@@ -14,7 +14,9 @@
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "server": "nodemon server.js --watch server.js --watch public/App.js",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "lint": "eslint . --ext .js,.svelte --fix",
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.2",

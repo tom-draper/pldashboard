@@ -8,7 +8,7 @@
     window.dispatchEvent(new Event('resize')); // Snap plotly graphs to new width
   }
 
-  let widths = [];
+  const widths = [];
   for (let i = 0; i < 20; i++) {
     widths.push(35 + Math.floor(Math.random() * 8) * 5);
   }

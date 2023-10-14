@@ -87,7 +87,6 @@
       if (name === '_id') {
         continue;
       }
-      // console.log(name, data[name].points, data[name].minutes, data[name].minutes/90, data[name].points / (data[name].minutes/90))
       const player = [
         `${data[name].firstName} ${data[name].surname}`,
         `£${data[name].price / 10}`,
@@ -105,8 +104,6 @@
         data[name].cleanSheets,
         data[name].saves,
         data[name].bonusPoints,
-        // data[team].yellowCards,
-        // data[team].redCards,
         data[name].transferIn,
         data[name].transferOut,
       ];
@@ -180,8 +177,6 @@
   });
 
   $: page && refreshTable(data);
-  //   $: !mobileView && setDefaultLayout();
-  //   $: setup && mobileView && setMobileLayout();
 
   export let data: FantasyData, page: Page, mobileView: boolean;
 </script>
