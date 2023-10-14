@@ -20,7 +20,7 @@ node server.js
 
 ## Hosting
 
-This website is currently hosted with Vercel at https://www.pldashboard.com/ and requires the following configuration in order to run.
+This website is currently hosted with Vercel at https://www.pldashboard.com/ and requires the following Vercel configuration in order to run.
 
 `/frontend/vercel.json`
 
