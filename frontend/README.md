@@ -10,13 +10,9 @@ This web application is currently built with Svelte and uses SSR (server-side re
 npm run dev
 ```
 
-## Build
-
-```bash
-npm run build
-```
-
 ## Production Server
+
+Once built with `npm run build`, you can run the production server.
 
 ```bash
 node server.js
