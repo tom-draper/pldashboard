@@ -39,7 +39,7 @@ class Predictor:
         current_season_fixtures: Fixtures,
         current_season: int,
         num_seasons: int,
-    ) -> DataFrame:
+    ):
         # [last season, 2 seasons ago, 3 seasons ago]
         total_fixtures = {current_season: current_season_fixtures.df}
         prev_fixtures = [Fixtures(), Fixtures(), Fixtures()]
@@ -275,7 +275,7 @@ class Predictor:
         freq: dict[Scoreline, int],
         scorelines: list[Scoreline],
         weightings: list[float] = None,
-    ) -> dict[Scoreline, int]:
+    ):
         if weightings is None:
             # Even weightings
             weightings = [1] * len(scorelines)
@@ -293,7 +293,7 @@ class Predictor:
         scorelines: list[Scoreline],
         intended_home_team: str = None,
         intended_away_team: str = None,
-    ) -> list[Scoreline]:
+    ):
         for scoreline in scorelines:
             # If wrong way around, swap scoreline team order
             if (
@@ -332,12 +332,12 @@ class Predictor:
         team_row = self.fixtures.loc[team]
         # Remove higher-level multi-index
         team_row.index = team_row.index.get_level_values(2)
-        teams = team_row.loc["team"]  # type: list[str]
-        scores = team_row.loc["score"]  # type: list[dict[str, int]]
-        at_homes = team_row.loc["atHome"]  # type: list[bool]
-        dates = team_row.loc["date"]  # type: list[datetime]
+        teams: list[str] = team_row.loc["team"]
+        scores: list[dict[str, int]] = team_row.loc["score"]
+        at_homes: list[bool] = team_row.loc["atHome"]
+        dates: list[datetime] = team_row.loc["date"]
 
-        dated_scorelines = []  # type: list[tuple[datetime, Scoreline]]
+        dated_scorelines: list[tuple[datetime, Scoreline]] = []
         for date, opp_team, score, at_home in zip(dates, teams, scores, at_homes):
             if pd.isna(score):
                 continue
