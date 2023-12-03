@@ -26,14 +26,16 @@ def is_sorted(my_list):
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
 def test_dfs_filled(updater):
-    dataframes = [updater.data.standings.df,
-                  updater.data.fixtures.df,
-                  updater.data.team_ratings.df,
-                  updater.data.team_ratings.df,
-                  updater.data.home_advantages.df,
-                  updater.data.form.df,
-                  updater.data.upcoming.df]
-                #   updater.data.season_stats.df]
+    dataframes = [
+        updater.data.standings.df,
+        updater.data.fixtures.df,
+        updater.data.team_ratings.df,
+        updater.data.team_ratings.df,
+        updater.data.home_advantages.df,
+        updater.data.form.df,
+        updater.data.upcoming.df,
+    ]
+    #   updater.data.season_stats.df]
 
     # Check all dataframes are filled
     assert all([not df.empty for df in dataframes])
@@ -41,20 +43,20 @@ def test_dfs_filled(updater):
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
 def test_index_identical(updater):
-    dataframes = [updater.data.standings.df,
-                  updater.data.fixtures.df,
-                  updater.data.team_ratings.df,
-                  updater.data.team_ratings.df,
-                  updater.data.home_advantages.df,
-                  updater.data.form.df,
-                  updater.data.upcoming.df]
-                #   updater.data.season_stats.df]
+    dataframes = [
+        updater.data.standings.df,
+        updater.data.fixtures.df,
+        updater.data.team_ratings.df,
+        updater.data.team_ratings.df,
+        updater.data.home_advantages.df,
+        updater.data.form.df,
+        updater.data.upcoming.df,
+    ]
+    #   updater.data.season_stats.df]
 
-    pairs = [(dataframes[i], dataframes[i+1])
-             for i in range(len(dataframes)-1)]
+    pairs = [(dataframes[i], dataframes[i + 1]) for i in range(len(dataframes) - 1)]
     for pair in pairs:
-        assert set(pair[0].index.values.tolist()) == set(
-            pair[1].index.values.tolist())
+        assert set(pair[0].index.values.tolist()) == set(pair[1].index.values.tolist())
 
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
@@ -69,7 +71,7 @@ def test_standings_df(updater):
 def test_standings_df_not_alphabetical(updater):
     # If alphabetical, it means standings dataframe is incorrect
     index = updater.data.standings.df.index.tolist()
-    assert (not is_sorted(index))
+    assert not is_sorted(index)
 
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
@@ -89,7 +91,7 @@ def test_team_ratings_df(updater):
 def test_team_ratings_df_not_alphabetical(updater):
     # If alphabetical, it means standings dataframe is incorrect
     index = updater.data.team_ratings.df.index.tolist()
-    assert (not is_sorted(index))
+    assert not is_sorted(index)
 
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
@@ -104,7 +106,7 @@ def test_home_advantages_df(updater):
 def test_home_advantages_df_not_alphabetical(updater):
     # If alphabetical, it means home advantages  dataframe is incorrect
     index = updater.data.home_advantages.df.index.tolist()
-    assert (not is_sorted(index))
+    assert not is_sorted(index)
 
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)
@@ -112,7 +114,7 @@ def test_form_df(updater):
     # 20 teams with upto 38(x12) matchday columns
     assert updater.data.form.df.shape[0] == 20
     # Maximum of [38 matchday x 12] columns
-    assert 0 <= updater.data.form.df.shape[1] <= (38*12)
+    assert 0 <= updater.data.form.df.shape[1] <= (38 * 12)
     assert updater.data.form.df.shape[1] % 12 == 0
 
 
@@ -120,15 +122,20 @@ def test_form_df(updater):
 def test_form_df_early_matchdays_(matchday_no):
     matchday_cols = list(updater_new.data.form.df.columns.levels[0])
 
-    if f'Matchday {matchday_no}' in matchday_cols:
-        matchday = updater_new.data.form.df[f'Matchday {matchday_no}']
+    if f"Matchday {matchday_no}" in matchday_cols:
+        matchday = updater_new.data.form.df[f"Matchday {matchday_no}"]
 
         for _, row in matchday.iterrows():
-            assert len(row['Teams Played']) == len(row['Scores']) == len(row['HomeAway']) == len(row['Form'])
-            assert len(row['Teams Played']) <= matchday_no
-            assert len(row['Scores']) <= matchday_no
-            assert len(row['HomeAway']) <= matchday_no
-            assert len(row['Form']) <= matchday_no
+            assert (
+                len(row["Teams Played"])
+                == len(row["Scores"])
+                == len(row["HomeAway"])
+                == len(row["Form"])
+            )
+            assert len(row["Teams Played"]) <= matchday_no
+            assert len(row["Scores"]) <= matchday_no
+            assert len(row["HomeAway"]) <= matchday_no
+            assert len(row["Form"]) <= matchday_no
 
 
 @pytest.mark.parametrize("updater", updater_objects, ids=updater_ids)

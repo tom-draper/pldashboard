@@ -4,7 +4,12 @@ from src.dataframes import TeamRatings
 from .scoreline import Scoreline
 
 
-def calc_form(team: str, recent_matches: list[Scoreline], weightings: list[float], team_ratings: TeamRatings) -> float:
+def calc_form(
+    team: str,
+    recent_matches: list[Scoreline],
+    weightings: list[float],
+    team_ratings: TeamRatings,
+) -> float:
     weightings /= np.sum(weightings)
 
     form = 0.5
@@ -24,7 +29,7 @@ def calc_form(team: str, recent_matches: list[Scoreline], weightings: list[float
 
         opp_team_rating = 0
         if opp_team in team_ratings.df.index:
-            opp_team_rating = team_ratings.df.at[opp_team, 'totalRating']
+            opp_team_rating = team_ratings.df.at[opp_team, "totalRating"]
         form += opp_team_rating * gd * weight
 
     form = min(max(0, form), 1)  # Cap rating

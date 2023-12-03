@@ -3,7 +3,15 @@ from typing import Literal
 
 
 class Odds:
-    def __init__(self, home: float, draw: float, away: float, home_team: str = None, away_team: str = None, match_date: datetime = None):
+    def __init__(
+        self,
+        home: float,
+        draw: float,
+        away: float,
+        home_team: str = None,
+        away_team: str = None,
+        match_date: datetime = None,
+    ):
         self.home = home
         self.draw = draw
         self.away = away
@@ -12,10 +20,10 @@ class Odds:
         self.away_team = away_team
         self.match_date = match_date
 
-        self.representation: Literal['odds', 'probabilities'] = 'odds'
+        self.representation: Literal["odds", "probabilities"] = "odds"
 
     def __str__(self):
-        return f'{self.home_team} vs {self.away_team} [{self.home}] [{self.draw}] [{self.away}]'
+        return f"{self.home_team} vs {self.away_team} [{self.home}] [{self.draw}] [{self.away}]"
 
     def __repr__(self):
         return str(self)
@@ -26,14 +34,14 @@ class Odds:
         self.away = 1 / self.away
 
     def convert_to_probabilities(self):
-        if self.representation == 'odds':
+        if self.representation == "odds":
             self._toggle_reciprocal()
-            self.representation = 'probabilities'
+            self.representation = "probabilities"
 
     def convert_to_odds(self):
-        if self.representation == 'probabilities':
+        if self.representation == "probabilities":
             self._toggle_reciprocal()
-            self.representation = 'odds'
+            self.representation = "odds"
 
 
 def scale_by_odds(freq: dict[str, int | float], odds: Odds):
