@@ -18,12 +18,16 @@ class HomeAdvantages(DF):
         if team not in d:
             d[team] = {}
         if (season, "home", "wins") not in d[team]:
-            d[team][(season, "home", "wins")] = 0
-            d[team][(season, "home", "loses")] = 0
-            d[team][(season, "home", "draws")] = 0
-            d[team][(season, "away", "wins")] = 0
-            d[team][(season, "away", "loses")] = 0
-            d[team][(season, "away", "draws")] = 0
+            d[team].update(
+                {
+                    (season, "home", "wins"): 0,
+                    (season, "home", "draws"): 0,
+                    (season, "home", "loses"): 0,
+                    (season, "away", "wins"): 0,
+                    (season, "away", "draws"): 0,
+                    (season, "away", "loses"): 0,
+                }
+            )
 
     def _home_advantages_for_season(self, d: defaultdict, data: dict, season: int):
         for match in data:
@@ -33,21 +37,23 @@ class HomeAdvantages(DF):
             self._check_init_team_row(d, home_team, season)
             self._check_init_team_row(d, away_team, season)
 
-            if match["score"]["winner"] is not None:
-                home_goals = match["score"]["fullTime"]["homeTeam"]
-                away_goals = match["score"]["fullTime"]["awayTeam"]
-                if home_goals > away_goals:
-                    # Home team wins
-                    d[home_team][(season, "home", "wins")] += 1
-                    d[away_team][(season, "away", "loses")] += 1
-                elif home_goals < away_goals:
-                    # Away team wins
-                    d[home_team][(season, "home", "loses")] += 1
-                    d[away_team][(season, "away", "wins")] += 1
-                else:
-                    # Draw
-                    d[home_team][(season, "home", "draws")] += 1
-                    d[away_team][(season, "away", "draws")] += 1
+            if match["score"]["winner"] is None:
+                continue
+
+            home_goals = match["score"]["fullTime"]["homeTeam"]
+            away_goals = match["score"]["fullTime"]["awayTeam"]
+            if home_goals > away_goals:
+                # Home team wins
+                d[home_team][(season, "home", "wins")] += 1
+                d[away_team][(season, "away", "loses")] += 1
+            elif home_goals < away_goals:
+                # Away team wins
+                d[home_team][(season, "home", "loses")] += 1
+                d[away_team][(season, "away", "wins")] += 1
+            else:
+                # Draw
+                d[home_team][(season, "home", "draws")] += 1
+                d[away_team][(season, "away", "draws")] += 1
 
     @staticmethod
     def _create_season_home_advantage_col(home_advantages: DataFrame, season: int):

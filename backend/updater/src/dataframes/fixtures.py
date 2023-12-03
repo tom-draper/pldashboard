@@ -32,13 +32,14 @@ class Fixtures(DF):
         avg_conceded = 0
         total = 0
         for matchday_no in self.df.columns.unique(level=0):
-            if self.df.at[team_name, (matchday_no, "status")] == "FINISHED":
-                at_home = self.df.at[team_name, (matchday_no, "atHome")]
-                score = self.df.at[team_name, (matchday_no, "score")]
-                avg_scored, avg_conceded = self._inc_avg_scored_conceded(
-                    avg_scored, avg_conceded, score, at_home
-                )
-                total += 1
+            if self.df.at[team_name, (matchday_no, "status")] != "FINISHED":
+                continue
+            at_home = self.df.at[team_name, (matchday_no, "atHome")]
+            score = self.df.at[team_name, (matchday_no, "score")]
+            avg_scored, avg_conceded = self._inc_avg_scored_conceded(
+                avg_scored, avg_conceded, score, at_home
+            )
+            total += 1
 
         if total > 0:
             avg_scored = avg_scored / total
@@ -54,21 +55,22 @@ class Fixtures(DF):
             matchday = self.df[matchday_no]
 
             # If whole column is SCHEDULED, skip
-            if not all(matchday["status"] == "SCHEDULED"):
-                for team_name, row in matchday.iterrows():
-                    if row["status"] == "FINISHED":
-                        if row["atHome"]:
-                            home_name = team_name
-                            away_name = row["team"]
-                        else:
-                            home_name = row["team"]
-                            away_name = team_name
-                        home_initials = convert_team_name_or_initials(home_name)
-                        away_initials = convert_team_name_or_initials(away_name)
+            if all(matchday["status"] == "SCHEDULED"):
+                continue
 
-                        actual_scores[f"{home_initials} vs {away_initials}"] = row[
-                            "score"
-                        ]
+            for team_name, row in matchday.iterrows():
+                if row["status"] != "FINISHED":
+                    continue
+                if row["atHome"]:
+                    home_name = team_name
+                    away_name = row["team"]
+                else:
+                    home_name = row["team"]
+                    away_name = team_name
+                home_initials = convert_team_name_or_initials(home_name)
+                away_initials = convert_team_name_or_initials(away_name)
+
+                actual_scores[f"{home_initials} vs {away_initials}"] = row["score"]
 
         return actual_scores
 

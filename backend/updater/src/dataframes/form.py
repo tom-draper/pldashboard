@@ -60,14 +60,13 @@ class Form(DF):
         if matchday < 1 or matchday > 38:
             return 0
 
-        rating = 50.0
-        if matchday is not None:
-            rating = (
-                self.df.at[
-                    team_name, (current_season, matchday, f"formRating{n_games}")
-                ]
-                * 100
-            ).round(1)
+        if matchday is None:
+            return 50.0
+
+        rating = (
+            self.df.at[team_name, (current_season, matchday, f"formRating{n_games}")]
+            * 100
+        ).round(1)
         return rating
 
     def _get_matchday(self, season: int, n_back: int = 0) -> int:

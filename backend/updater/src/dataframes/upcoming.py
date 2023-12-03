@@ -8,7 +8,7 @@ from src.fmt import (
     clean_full_team_name,
     extract_scoreline,
 )
-from src.predictions.predict_v2 import Predictor
+from src.predictions import PredictorV2 as Predictor
 
 from .df import DF
 from .fixtures import Fixtures
@@ -95,8 +95,7 @@ class Upcoming(DF):
             return ("drew", "drew")
         elif home_score > away_score:
             return ("won", "lost")
-        else:
-            return ("lost", "won")
+        return ("lost", "won")
 
     def _append_prev_match(
         self,
@@ -163,24 +162,28 @@ class Upcoming(DF):
         data = json_data["fixtures"][season]
 
         for match in data:
-            if match["status"] == "FINISHED":
-                home_team = clean_full_team_name(match["homeTeam"]["name"])  # type: str
-                away_team = clean_full_team_name(match["awayTeam"]["name"])  # type: str
+            if match["status"] != "FINISHED":
+                continue
 
-                if home_team in team_names and away_team in team_names:
-                    home_goals = match["score"]["fullTime"]["homeTeam"]
-                    away_goals = match["score"]["fullTime"]["awayTeam"]
-                    date = match["utcDate"]
-                    result = self._game_result_tuple(match)
-                    self._append_prev_match(
-                        next_games,
-                        home_team,
-                        away_team,
-                        home_goals,
-                        away_goals,
-                        date,
-                        result,
-                    )
+            home_team = clean_full_team_name(match["homeTeam"]["name"])  # type: str
+            away_team = clean_full_team_name(match["awayTeam"]["name"])  # type: str
+
+            if home_team not in team_names or away_team not in team_names:
+                continue
+
+            home_goals = match["score"]["fullTime"]["homeTeam"]
+            away_goals = match["score"]["fullTime"]["awayTeam"]
+            date = match["utcDate"]
+            result = self._game_result_tuple(match)
+            self._append_prev_match(
+                next_games,
+                home_team,
+                away_team,
+                home_goals,
+                away_goals,
+                date,
+                result,
+            )
 
     def _merge_predictions_into_upcoming(
         self, upcoming: DataFrame, predictions: DataFrame

@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import matplotlib.pyplot as plt
 import numpy as np
-from database.database import Database
+from database import Database
 from src.fmt import extract_int_score_from_scoreline, identical_result
 
 
@@ -33,14 +33,15 @@ class PredictionsAnalysis:
         count = 0
         for prediction in predictions.values():
             for pred in prediction:
-                if pred["actual"] is not None and pred["details"] is not None:
-                    if self.by_form(
-                        pred["actual"],
-                        pred["details"]["adjustments"][0]["homeFormRating"],
-                        pred["details"]["adjustments"][0]["awayFormRating"],
-                    ):
-                        count += 1
-                    total += 1
+                if pred["actual"] is None or pred["details"] is None:
+                    continue
+                if self.by_form(
+                    pred["actual"],
+                    pred["details"]["adjustments"][0]["homeFormRating"],
+                    pred["details"]["adjustments"][0]["awayFormRating"],
+                ):
+                    count += 1
+                total += 1
         return count / total
 
     def by_prev_matches(self, actual_scoreline, home_goals, away_goals):
@@ -55,19 +56,20 @@ class PredictionsAnalysis:
         count = 0
         for prediction in predictions.values():
             for pred in prediction:
-                if pred["actual"] is not None and pred["details"] is not None:
-                    print(pred)
-                    if (
-                        pred["details"]["starting"]["description"]
-                        == "Previous match average"
+                if pred["actual"] is None or pred["details"] is None:
+                    continue
+                print(pred)
+                if (
+                    pred["details"]["starting"]["description"]
+                    == "Previous match average"
+                ):
+                    if self.by_prev_matches(
+                        pred["actual"],
+                        pred["details"]["starting"]["homeGoals"],
+                        pred["details"]["starting"]["awayGoals"],
                     ):
-                        if self.by_prev_matches(
-                            pred["actual"],
-                            pred["details"]["starting"]["homeGoals"],
-                            pred["details"]["starting"]["awayGoals"],
-                        ):
-                            count += 1
-                        total += 1
+                        count += 1
+                    total += 1
         return count / total
 
     def by_home_team(self, actual):
@@ -86,10 +88,11 @@ class PredictionsAnalysis:
         total = 0
         count = 0
         for prediction in predictions:
-            if prediction["actual"] is not None:
-                if by_function(prediction["actual"]):
-                    count += 1
-                total += 1
+            if prediction["actual"] is None:
+                continue
+            if by_function(prediction["actual"]):
+                count += 1
+            total += 1
         return count / total
 
     def display_current_accuracy(self):
@@ -149,22 +152,23 @@ class PredictionsAnalysis:
         vs = []
         count = 0
         for pred in predictions:
-            if pred["actual"] is not None:
-                ph = pred["prediction"]["homeGoals"]
-                pa = pred["prediction"]["awayGoals"]
-                ah = pred["actual"]["homeGoals"]
-                aa = pred["actual"]["awayGoals"]
+            if pred["actual"] is None:
+                continue
+            ph = pred["prediction"]["homeGoals"]
+            pa = pred["prediction"]["awayGoals"]
+            ah = pred["actual"]["homeGoals"]
+            aa = pred["actual"]["awayGoals"]
 
-                # Two points
-                x = (ph, ah)
-                y = (pa, aa)
-                xs.append(x)
-                ys.append(y)
-                vector = (ah - ph, aa - pa)
-                vs.append(vector)
-                distance = ((ph - ah) ** 2 + (pa - aa) ** 2) ** 0.5
-                ds.append(distance)
-                count += 1
+            # Two points
+            x = (ph, ah)
+            y = (pa, aa)
+            xs.append(x)
+            ys.append(y)
+            vector = (ah - ph, aa - pa)
+            vs.append(vector)
+            distance = ((ph - ah) ** 2 + (pa - aa) ** 2) ** 0.5
+            ds.append(distance)
+            count += 1
         print("n =", count)
         print("Mean distance", np.mean(ds))
         print("S.d. distance", np.std(ds))

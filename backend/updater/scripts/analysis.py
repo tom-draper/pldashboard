@@ -36,7 +36,7 @@ class Analysis:
 
     def _last_played_match(self, row, i):
         j = i - 1
-        while j > 1 and row[j]["Score"] == None:
+        while j > 1 and row[j]["Score"] is None:
             j -= 1
         if j == 0:
             return None, -1

@@ -28,13 +28,11 @@ class Fantasy(DF):
         current_season = next(iter(json_data["fantasy"].keys()))
         fantasy_data = json_data["fantasy"][current_season]
 
-        teams = {}
-        for team in fantasy_data["teams"]:
-            teams[team["code"]] = team["name"]
-
-        player_types = {}
-        for player_type in fantasy_data["element_types"]:
-            player_types[player_type["id"]] = player_type["singular_name"]
+        teams = {team["code"]: team["name"] for team in fantasy_data["teams"]}
+        player_types = {
+            player_type["id"]: player_type["singular_name"]
+            for player_type in fantasy_data["element_types"]
+        }
 
         d = {}
         for player in fantasy_data["elements"]:

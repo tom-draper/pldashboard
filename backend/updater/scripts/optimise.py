@@ -4,9 +4,9 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
-from database.database import Database
+from database import Database
 from src.fmt import convert_team_name_or_initials
-from src.predictions.predictions import Predictor
+from src.predictions import Predictor
 from updater import Updater
 
 
@@ -20,32 +20,34 @@ class OptimisePredictions:
         home_score = match["score"]["fullTime"]["homeTeam"]
         away_score = match["score"]["fullTime"]["awayTeam"]
         if home_score == away_score:
-            result = ("Drew", "Drew")
+            return ("Drew", "Drew")
         elif home_score > away_score:
-            result = ("Won", "Lost")
-        else:
-            result = ("Lost", "Won")
-        return result
+            return ("Won", "Lost")
+        return ("Lost", "Won")
 
     def get_prev_matches(self, json_data, team_names):
         prev_matches = []
         for i in range(4):
             data = json_data["fixtures"][current_season - i]
             for match in data:
-                if match["status"] == "FINISHED":
-                    home_team = match["homeTeam"]["name"].replace("&", "and")  # type: str
-                    away_team = match["awayTeam"]["name"].replace("&", "and")  # type: str
+                if match["status"] != "FINISHED":
+                    continue
 
-                    if home_team in team_names and away_team in team_names:
-                        result = self.game_result_tuple(match)
-                        prev_match = {
-                            "HomeTeam": home_team,
-                            "AwayTeam": away_team,
-                            "HomeGoals": match["score"]["fullTime"]["homeTeam"],
-                            "AwayGoals": match["score"]["fullTime"]["awayTeam"],
-                            "Result": result[0],
-                        }
-                        prev_matches.append(prev_match)
+                home_team = match["homeTeam"]["name"].replace("&", "and")  # type: str
+                away_team = match["awayTeam"]["name"].replace("&", "and")  # type: str
+
+                if home_team not in team_names or away_team not in team_names:
+                    continue
+
+                result = self.game_result_tuple(match)
+                prev_match = {
+                    "HomeTeam": home_team,
+                    "AwayTeam": away_team,
+                    "HomeGoals": match["score"]["fullTime"]["homeTeam"],
+                    "AwayGoals": match["score"]["fullTime"]["awayTeam"],
+                    "Result": result[0],
+                }
+                prev_matches.append(prev_match)
         return prev_matches
 
     def prediction_performance(
@@ -122,13 +124,16 @@ class OptimisePredictions:
 
         actual_scores = []
         for prediction in predictions:
-            if prediction["actual"] is not None:
-                actual_score = (
-                    convert_team_name_or_initials(prediction["home"]),
-                    convert_team_name_or_initials(prediction["away"]),
-                    prediction["actual"],
-                )
-                actual_scores.append(actual_score)
+            if prediction["actual"] is None:
+                continue
+
+            actual_score = (
+                convert_team_name_or_initials(prediction["home"]),
+                convert_team_name_or_initials(prediction["away"]),
+                prediction["actual"],
+            )
+            actual_scores.append(actual_score)
+
         return actual_scores
 
     def brute_force(self, current_season):
