@@ -2,8 +2,7 @@ from datetime import datetime
 
 import numpy as np
 import pandas as pd
-from pandas.core.frame import DataFrame
-from src.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
+from src.data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
 
 from .form import calc_form
 from .market import fetch_odds
@@ -83,10 +82,9 @@ class Predictor:
                 score["homeGoals"], score["awayGoals"], home_team, away_team
             )
 
-            if scoreline in freq:
-                freq[scoreline] += 1
-            else:
-                freq[scoreline] = 1
+            if scoreline not in freq:
+                freq[scoreline] = 0
+            freq[scoreline] += 1
 
         return freq
 
@@ -115,10 +113,9 @@ class Predictor:
                 score["homeGoals"], score["awayGoals"], home_team, away_team
             )
 
-            if scoreline in freq:
-                freq[scoreline] += 1
-            else:
-                freq[scoreline] = 1
+            if scoreline not in freq:
+                freq[scoreline] = 0
+            freq[scoreline] += 1
 
         return freq
 
@@ -170,10 +167,9 @@ class Predictor:
         new_freq = {}
         for scoreline, count in freq.items():
             scoreline.show_team = False
-            if scoreline in new_freq:
-                new_freq[scoreline] += count
-            else:
-                new_freq[scoreline] = count
+            if scoreline not in new_freq:
+                new_freq[scoreline] = 0
+            new_freq[scoreline] += count
 
         return new_freq
 
@@ -195,24 +191,20 @@ class Predictor:
             ):
                 scoreline.reverse()
 
-            if scoreline in new_freq:
-                new_freq[scoreline] += count
-            else:
-                new_freq[scoreline] = count
+            if scoreline not in new_freq:
+                new_freq[scoreline] = 0
+            new_freq[scoreline] += count
 
         return new_freq
 
     @staticmethod
-    def _merge_scoreline_freq(
-        freq1: dict[Scoreline, int], freq2: dict[Scoreline, int]
-    ) -> dict[Scoreline, int]:
-        merged_freq = {}  # type: dict[Scoreline, int]
+    def _merge_scoreline_freq(freq1: dict[Scoreline, int], freq2: dict[Scoreline, int]):
+        merged_freq: dict[Scoreline, int] = {}
         for freq in (freq1, freq2):
             for scoreline, count in freq.items():
-                if scoreline in merged_freq:
-                    merged_freq[scoreline] += count
-                else:
-                    merged_freq[scoreline] = count
+                if scoreline not in merged_freq:
+                    merged_freq[scoreline] = 0
+                merged_freq[scoreline] += count
 
         return merged_freq
 
@@ -255,10 +247,9 @@ class Predictor:
         scale: float = 1.0,
     ):
         for scoreline, count in insert_freq.items():
-            if scoreline in freq:
-                freq[scoreline] += count * scale
-            else:
-                freq[scoreline] = count * scale
+            if scoreline not in freq:
+                freq[scoreline] = 0
+            freq[scoreline] += count * scale
 
     @staticmethod
     def _subtract_scaled_from_freq(
@@ -283,10 +274,9 @@ class Predictor:
             return
 
         for scoreline, weight in zip(scorelines, weightings):
-            if scoreline in freq:
-                freq[scoreline] += 1 * weight
-            else:
-                freq[scoreline] = 1 * weight
+            if scoreline not in freq:
+                freq[scoreline] = 0
+            freq[scoreline] += 1 * weight
 
     @staticmethod
     def _remove_recent_scorelines_home_away(

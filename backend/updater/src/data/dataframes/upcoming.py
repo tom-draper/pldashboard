@@ -4,10 +4,7 @@ from typing import Optional
 
 import pandas as pd
 from pandas import DataFrame
-from src.fmt import (
-    clean_full_team_name,
-    extract_scoreline,
-)
+from src.fmt import clean_full_team_name, extract_scoreline
 from src.predictions import PredictorV2 as Predictor
 
 from .df import DF

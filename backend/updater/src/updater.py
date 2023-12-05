@@ -1,0 +1,237 @@
+import json
+import logging
+import sys
+from datetime import datetime
+from os import getenv
+from os.path import abspath, dirname, join
+
+import requests
+from dotenv import load_dotenv
+from src.data import Data
+from src.fmt import clean_full_team_name
+from timebudget import timebudget
+
+# Required to access database module in parent folder
+sys.path.append(dirname(dirname(abspath(__file__))))
+from database import Database  # noqa: E402
+
+
+class Updater:
+    def __init__(self, current_season: int):
+        self.current_season = current_season
+        self.data = Data()  # To build
+        self.database = Database(current_season)
+
+        # Number of games played in a season for season data to be used
+        self.games_threshold = 4
+        self.home_games_threshold = 6
+
+        # Store for new requested API data or old data from local storage
+        self.raw_data = {"fixtures": {}, "standings": {}, "fantasy": {}}
+
+        # Import environment variables
+        __file__ = "updater.py"
+        dotenv_path = join(dirname(__file__), ".env")
+        load_dotenv(dotenv_path)
+        self.url = getenv("URL")
+        self.headers = {"X-Auth-Token": getenv("X_AUTH_TOKEN")}
+
+    # ----------------------------- DATA API -----------------------------------
+
+    def fetch_fixtures_data(self, season: int) -> dict:
+        response = requests.get(
+            self.url + "v2/competitions/PL/matches/?season={}".format(season),
+            headers=self.headers,
+        )
+
+        code = response.status_code
+        if code == 429 or code == 403:
+            logging.info(f"❌  Status: {code}")
+            raise ValueError("❌ ERROR: Data request failed")
+        else:
+            logging.info(f"✔️  Status: {code}")
+
+        return response.json()["matches"]
+
+    def load_fixtures_data(self, season: int) -> dict:
+        with open(f"backups/fixtures/fixtures_{season}.json", "r") as json_file:
+            return json.load(json_file)
+
+    def fetch_standings_data(self, season: int) -> dict:
+        response = requests.get(
+            self.url + "v4/competitions/PL/standings/?season={}".format(season),
+            headers=self.headers,
+        )
+
+        code = response.status_code
+        if code == 429 or code == 403:
+            logging.info(f"❌  Status: {code}")
+            raise ValueError("❌ ERROR: Data request failed")
+        else:
+            logging.info(f"✔️  Status: {code}")
+
+        return response.json()["standings"][0]["table"]
+
+    def load_standings_data(self, season: int) -> dict:
+        with open(f"backups/standings/standings_{season}.json", "r") as json_file:
+            return json.load(json_file)
+
+    def fetch_fantasy_data(self) -> dict:
+        response = requests.get(
+            "https://fantasy.premierleague.com/api/bootstrap-static/"
+        )
+
+        code = response.status_code
+        if code == 429 or code == 403:
+            logging.info(f"❌  Status: {code}")
+            raise ValueError("❌ ERROR: Data request failed")
+        else:
+            logging.info(f"✔️  Status: {code}")
+
+        return response.json()
+
+    def load_fantasy_data(self, season: int) -> dict:
+        with open(f"backups/fantasy/fantasy_{season}.json", "r") as json_file:
+            return json.load(json_file)
+
+    def fetch_current_season(self):
+        # Fetch data from API (max this season and last season)
+        self.raw_data["fixtures"][self.current_season] = self.fetch_fixtures_data(
+            self.current_season
+        )
+        self.raw_data["standings"][self.current_season] = self.fetch_standings_data(
+            self.current_season
+        )
+        self.raw_data["fantasy"][self.current_season] = self.fetch_fantasy_data()
+
+    def load_current_season(self):
+        # Fetch data from API (max this season and last season)
+        self.raw_data["fixtures"][self.current_season] = self.load_fixtures_data(
+            self.current_season
+        )
+        self.raw_data["standings"][self.current_season] = self.load_standings_data(
+            self.current_season
+        )
+        self.raw_data["fantasy"][self.current_season] = self.load_fantasy_data(
+            self.current_season
+        )
+
+    def load_previous_seasons(self, n_seasons: int):
+        for i in range(1, n_seasons):
+            season = self.current_season - i
+            self.raw_data["fixtures"][season] = self.load_fixtures_data(season)
+            self.raw_data["standings"][season] = self.load_standings_data(season)
+
+    def set_raw_data(self, n_seasons: int, request_new: bool = True):
+        if request_new:
+            self.data.last_updated = datetime.now()
+            self.fetch_current_season()
+        else:
+            self.load_current_season()
+
+        self.load_previous_seasons(n_seasons)
+
+    def save_data_to_json(self):
+        """Save current season fixtures and standings data in self.json_data to
+        json files."""
+        for type in ("fixtures", "standings", "fantasy"):
+            with open(f"backups/{type}/{type}_{self.current_season}.json", "w") as f:
+                json.dump(self.raw_data[type][self.current_season], f)
+
+    def build_dataframes(self, n_seasons: int, display_tables: bool = False):
+        # Standings for the last [n_seasons] seasons
+        self.data.teams.standings.build(
+            self.raw_data, self.current_season, n_seasons, display=display_tables
+        )
+        # Fixtures for the whole season for each team
+        self.data.teams.fixtures.build(
+            self.raw_data, self.current_season, display=display_tables
+        )
+        # Ratings for each team, based on last <no_seasons> seasons standings table
+        self.data.teams.team_ratings.build(
+            self.data.teams.standings,
+            self.current_season,
+            self.games_threshold,
+            n_seasons,
+            display=display_tables,
+        )
+        # Calculated values to represent the personalised advantage each team has at home
+        self.data.teams.home_advantages.build(
+            self.raw_data,
+            self.current_season,
+            self.home_games_threshold,
+            n_seasons,
+            display=display_tables,
+        )
+        # Calculated form values for each team for each matchday played so far
+        self.data.teams.form.build(
+            self.raw_data,
+            self.data.teams.team_ratings,
+            self.current_season,
+            display=display_tables,
+        )
+        # Data about the opponent in each team's next game
+        self.data.teams.upcoming.build(
+            self.raw_data,
+            self.data.teams.fixtures,
+            self.data.teams.form,
+            self.data.teams.team_ratings,
+            self.data.teams.home_advantages,
+            self.current_season,
+            n_seasons,
+            display=display_tables,
+        )
+        self.data.fantasy.build(self.raw_data)
+
+    def save_team_data_to_db(self):
+        team_data = self.data.teams.to_dict()
+        self.database.update_team_data(team_data, self.current_season)
+
+    def save_fantasy_data_to_db(self):
+        fantasy_data = self.fantasy_data.to_dict()
+        self.database.update_fantasy_data(fantasy_data)
+
+    def save_predictions_to_db(self):
+        predictions = self.data.teams.upcoming.get_predictions()
+        actual_scores = self.data.teams.fixtures.get_actual_scores_new()
+        self.database.update_predictions(predictions, actual_scores)
+        self.database.update_actual_scores(actual_scores)
+
+    def get_logo_urls(self) -> dict[str, str]:
+        data = self.raw_data["standings"][self.current_season]
+
+        logo_urls = {}
+        for standings_row in data:
+            team_name = clean_full_team_name(standings_row["team"]["name"])
+            crest_url = standings_row["team"]["crestUrl"]
+            logo_urls[team_name] = crest_url
+
+        return logo_urls
+
+    @timebudget
+    def build_all(
+        self,
+        n_seasons: int = 4,
+        display_tables: bool = False,
+        request_new: bool = True,
+        update_db: bool = True,
+    ):
+        try:
+            self.set_raw_data(n_seasons, request_new)
+        except ValueError as e:
+            logging.error(e)
+            logging.info("🔁 Retrying with local backup data...")
+            self.set_raw_data(n_seasons, request_new := False)
+
+        self.build_dataframes(n_seasons, display_tables)
+
+        if request_new:
+            logging.info("💾 Saving new team data to local backup...")
+            self.save_data_to_json()
+            if update_db:
+                logging.info("💾 Saving new team data to database...")
+                self.save_team_data_to_db()
+                logging.info("💾 Saving new fantasy data to database...")
+                self.save_fantasy_data_to_db()
+                logging.info("💾 Saving predictions to database...")
+                self.save_predictions_to_db()

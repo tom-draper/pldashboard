@@ -1,8 +1,3 @@
-import os
-import sys
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import numpy as np
 from database import Database
 from src.fmt import convert_team_name_or_initials
@@ -12,7 +7,9 @@ from updater import Updater
 
 class OptimisePredictions:
     @staticmethod
-    def correct_result(ph, pa, ah, aa):
+    def correct_result(
+        ph: int | float, pa: int | float, ah: int | float, aa: int | float
+    ):
         return (ph > pa and ah > aa) or (ph == pa and ah == aa) or (ph < pa and ah < aa)
 
     @staticmethod
@@ -25,8 +22,8 @@ class OptimisePredictions:
             return ("Won", "Lost")
         return ("Lost", "Won")
 
-    def get_prev_matches(self, json_data, team_names):
-        prev_matches = []
+    def get_prev_matches(self, json_data: dict, team_names: list[str]):
+        prev_matches: list[dict] = []
         for i in range(4):
             data = json_data["fixtures"][current_season - i]
             for match in data:
@@ -59,7 +56,7 @@ class OptimisePredictions:
         form,
         fixtures,
         home_advantages,
-    ) -> dict:
+    ):
         correct = 0
         correct_result = 0
         loss = 0
@@ -136,7 +133,7 @@ class OptimisePredictions:
 
         return actual_scores
 
-    def brute_force(self, current_season):
+    def brute_force(self, current_season: int):
         updater = Updater(current_season)
         updater.build_all(request_new=True, update_db=False)
 

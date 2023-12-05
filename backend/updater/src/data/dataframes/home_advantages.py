@@ -3,9 +3,9 @@ from collections import defaultdict
 
 import pandas as pd
 from pandas import DataFrame
+from src.fmt import clean_full_team_name
 from timebudget import timebudget
 
-from ..fmt import clean_full_team_name
 from .df import DF
 
 

@@ -1,14 +1,14 @@
 import os
 import sys
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from datetime import datetime
 
 import uvicorn
-from database import Database
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+# Required to access database module in parent folder
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from database import Database  # noqa: E402
 
 season = 2023
 
@@ -36,7 +36,6 @@ def recent_cache(date: datetime) -> bool:
 
 @app.get("/api/teams")
 async def team() -> str:
-    teams_data = None
     if cache["team"]["data"] is not None and recent_cache(cache["team"]["time"]):
         teams_data = cache["team"]["data"]
     else:
@@ -48,7 +47,6 @@ async def team() -> str:
 
 @app.get("/api/fantasy")
 async def fantasy() -> str:
-    fantasy_data = None
     if cache["fantasy"]["data"] is not None and recent_cache(cache["fantasy"]["time"]):
         fantasy_data = cache["fantasy"]["data"]
     else:
@@ -60,7 +58,6 @@ async def fantasy() -> str:
 
 @app.get("/api/predictions")
 async def predictions() -> str:
-    predictions_data = None
     if cache["predictions"]["data"] is not None and recent_cache(
         cache["predictions"]["time"]
     ):

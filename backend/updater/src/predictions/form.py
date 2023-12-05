@@ -1,5 +1,5 @@
 import numpy as np
-from src.dataframes import TeamRatings
+from src.data.dataframes import TeamRatings
 
 from .scoreline import Scoreline
 

@@ -1,13 +1,24 @@
+from __future__ import annotations
+
 import logging
 import math
+import sys
 from datetime import datetime
-from typing import Union
+from os.path import abspath, dirname
+from typing import TYPE_CHECKING, Union
 
 import numpy as np
 import pandas as pd
-from database.database import Database
-from pandas.core.frame import DataFrame
-from src.dataframes import Form, HomeAdvantages, TeamRatings, Upcoming
+from src.data.dataframes import Form, HomeAdvantages, TeamRatings
+
+# Temp avoid circular import
+if TYPE_CHECKING:
+    from src.data.dataframes import Upcoming
+
+# Required to access database module in parent folder
+sys.path.append(dirname(dirname(dirname(dirname(abspath(__file__))))))
+
+from database import Database
 
 
 class Predictor:
@@ -28,11 +39,6 @@ class Predictor:
             opp_team_rating = team_ratings.df.at[opp_team, "totalRating"]
         xg *= 1 + team_ratings.df.at[team, "totalRating"] - opp_team_rating
 
-        # Scale by current form
-        # opp_team_form = 0
-        # if opp_team in form.df.index:
-        #     opp_team_form = form.get_long_term_form_rating(opp_team)
-        # xg *= 1 + ((form.get_long_term_form_rating(team) - opp_team_form) / 100)
         return xg
 
     def _prev_match_xg(
@@ -71,8 +77,8 @@ class Predictor:
         return team_xg
 
     @staticmethod
-    def _team_prev_matches(team: str, form: Form) -> list[dict]:
-        prev_matches = []
+    def _team_prev_matches(team: str, form: Form):
+        prev_matches: list[dict] = []
         for season, matchday in form.df.droplevel(2, axis=1).columns.values:
             score = form.df.at[team, (season, matchday, "score")]
             if isinstance(score, dict):
@@ -108,7 +114,7 @@ class Predictor:
         form: Form,
         team_ratings: TeamRatings,
         home_advantages: HomeAdvantages,
-    ) -> tuple[float, float]:
+    ):
         at_home = upcoming.at[team, "atHome"]
         if at_home:
             home_team = team
@@ -156,8 +162,8 @@ class Predictor:
         upcoming: Upcoming,
         team_ratings: TeamRatings,
         home_advantages: HomeAdvantages,
-    ) -> dict[dict[str, Union[datetime, str, float]]]:
-        predictions = {}  # type: dict[dict[str, Union[datetime, str, float]]]
+    ):
+        predictions: dict[dict[str, Union[datetime, str, float]]] = {}
         team_names = form.df.index.values.tolist()
 
         # Check ALL teams as two teams can have different next games
@@ -185,7 +191,7 @@ class Predictions:
         self.prediction_file = f"data/predictions_{current_season}.json"
 
     @staticmethod
-    def _predictions_to_df(predictions: dict[str, dict[str, float]]) -> DataFrame:
+    def _predictions_to_df(predictions: dict[str, dict[str, float]]):
         d = {}
         for team, prediction in predictions.items():
             d[team] = {
@@ -202,7 +208,7 @@ class Predictions:
         upcoming: Upcoming,
         team_ratings: TeamRatings,
         home_advantages: HomeAdvantages,
-    ) -> DataFrame:
+    ):
         predictions = self.predictor.score_predictions(
             form, upcoming, team_ratings, home_advantages
         )

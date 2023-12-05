@@ -1,12 +1,12 @@
 import os
 import sys
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import matplotlib.pyplot as plt
 import numpy as np
-from database import Database
 from src.fmt import extract_int_score_from_scoreline, identical_result
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from database import Database
 
 
 class PredictionsAnalysis:
@@ -58,7 +58,6 @@ class PredictionsAnalysis:
             for pred in prediction:
                 if pred["actual"] is None or pred["details"] is None:
                     continue
-                print(pred)
                 if (
                     pred["details"]["starting"]["description"]
                     == "Previous match average"

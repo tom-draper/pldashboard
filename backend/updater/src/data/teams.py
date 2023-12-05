@@ -1,10 +1,8 @@
 import math
-import os
-import sys
 
 import pandas as pd
 from pandas.core.frame import DataFrame
-from src.dataframes import (
+from src.data.dataframes import (
     Fixtures,
     Form,
     HomeAdvantages,
@@ -13,12 +11,9 @@ from src.dataframes import (
     Upcoming,
 )
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-
-class Data:
+class TeamsData:
     def __init__(self):
-        self.last_updated = None
         self.fixtures: Fixtures = Fixtures()
         self.standings: Standings = Standings()
         self.team_ratings: TeamRatings = TeamRatings()
@@ -46,7 +41,7 @@ class Data:
                 self.form.df,
                 self.upcoming.df,
             ),
-            1,
+            axis=1,
         )
 
     def collapse_tuple_keys(self, d):
