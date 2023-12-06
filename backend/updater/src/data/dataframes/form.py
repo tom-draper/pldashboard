@@ -1,5 +1,4 @@
 import logging
-import math
 
 import numpy as np
 import pandas as pd
@@ -140,9 +139,10 @@ class Form(DF):
             if not form[current_season][matchday].isnull().values.any():
                 continue
             for team in teams:
-                value = form.at[team, (current_season, matchday, "team")]
-                if isinstance(value, float) or not math.isnan(value):
-                    continue
+                # value = form.at[team, (current_season, matchday, "team")]
+                # print(value)
+                # if isinstance(value, float) or not math.isnan(value):
+                #     continue
                 # Team does not have a completed match in this matchday (postponed etc.)
                 prev_matchday = matchday - 1
                 while prev_matchday > 0 and prev_matchday not in matchdays:
@@ -394,7 +394,7 @@ class Form(DF):
             display (bool, optional): flag to print the dataframe to console after
                 creation. Defaults to False.
         """
-        logging.info("🛠️  Building form dataframe... ")
+        self.log_building(season)
 
         d = {}
         teams = set()

@@ -132,7 +132,7 @@ class Fixtures(DF):
             display (bool, optional): flag to print the dataframe to console after
                 creation. Defaults to False.
         """
-        logging.info("🛠️  Building fixtures dataframe... ")
+        self.log_building(season)
 
         data = json_data["fixtures"][season]
 

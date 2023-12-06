@@ -11,7 +11,7 @@ def run(display_tables: bool = False, request_new: bool = True, update_db: bool 
     )
 
 
-def run_production():
+async def run_production():
     timebudget.set_quiet()
     logging.basicConfig(
         level=logging.CRITICAL, format="%(asctime)s :: %(levelname)s :: %(message)s"
@@ -27,4 +27,4 @@ def run_development():
 
 
 if __name__ == "__main__":
-    run_production()
+    run_development()

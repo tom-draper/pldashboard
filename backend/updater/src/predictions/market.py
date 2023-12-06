@@ -1,6 +1,8 @@
+import logging
 import time
 
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -10,10 +12,15 @@ from .odds import Odds
 
 
 def fetch_odds(url: str, js_rendered: bool = False):
-    driver = _fetch_webpage(url, js_rendered)
-    time.sleep(5)  # Allows webpage to load
-    tables = driver.find_elements(By.CLASS_NAME, "coupon-table")
-    odds = _extract_odds(tables)
+    try:
+        driver = _fetch_webpage(url, js_rendered)
+        time.sleep(5)  # Allows webpage to load
+        tables = driver.find_elements(By.CLASS_NAME, "coupon-table")
+        odds = _extract_odds(tables)
+        driver.quit()
+    except WebDriverException as e:
+        logging.error(f"❌ Failed to fetch odds: {e}")
+        odds = {}
     return odds
 
 

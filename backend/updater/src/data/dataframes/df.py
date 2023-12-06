@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from pandas import DataFrame
@@ -18,3 +19,9 @@ class DF:
                 raise ValueError(
                     f"❌ [ERROR] Cannot {self.name} dataframe: {arg.name} dataframe empty"
                 )
+
+    def log_building(self, season: int | None = None):
+        season_tag = "" if season is None else f"[{season}]"
+        logging.info(
+            f"🛠️  {season_tag} Building {self.name.replace('_', ' ')} dataframe... "
+        )

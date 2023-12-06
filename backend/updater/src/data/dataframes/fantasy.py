@@ -14,6 +14,10 @@ class Fantasy(DF):
     def to_dict(self):
         return self.df.to_dict(orient="index")
 
+    @staticmethod
+    def get_current_season(json_data: dict) -> int:
+        return next(iter(json_data["fantasy"].keys()))
+
     @timebudget
     def build(self, json_data: dict, display: bool = False):
         """Builds a dataframe containing the past and future fixtures for the
@@ -22,10 +26,10 @@ class Fantasy(DF):
 
         Rows: all players participating in the current season
         """
-        logging.info("🛠️  Building fantasy dataframe... ")
+        current_season = self.get_current_season(json_data)
+        self.log_building(current_season)
 
         # Get first and only key as the current season
-        current_season = next(iter(json_data["fantasy"].keys()))
         fantasy_data = json_data["fantasy"][current_season]
 
         teams = {team["code"]: team["name"] for team in fantasy_data["teams"]}

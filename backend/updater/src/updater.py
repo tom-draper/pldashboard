@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import sys
@@ -5,7 +6,7 @@ from datetime import datetime
 from os import getenv
 from os.path import abspath, dirname, join
 
-import requests
+import aiohttp
 from dotenv import load_dotenv
 from src.data import Data
 from src.fmt import clean_full_team_name
@@ -37,72 +38,67 @@ class Updater:
         self.headers = {"X-Auth-Token": getenv("X_AUTH_TOKEN")}
 
     # ----------------------------- DATA API -----------------------------------
+    @staticmethod
+    async def get(url: str, headers=None) -> dict:
+        async with aiohttp.ClientSession() as session:
+            logging.debug(f"🌐 Requesting {url}...")
+            response = await session.request("GET", url=url, headers=headers)
 
-    def fetch_fixtures_data(self, season: int) -> dict:
-        response = requests.get(
-            self.url + "v2/competitions/PL/matches/?season={}".format(season),
+            if response.status != 200:
+                logging.error(f"❌ Status: {response.status} [{url}]")
+                raise ValueError("Data request failed")
+            else:
+                logging.debug(f"✅ Status: {response.status} [{url}]")
+
+            data = await response.json()
+            logging.debug(f"Received data from {url}")
+            return data
+
+    async def fetch_fixtures_data(self, season: int) -> dict:
+        data = await self.get(
+            f"{self.url}v2/competitions/PL/matches/?season={season}",
             headers=self.headers,
         )
-
-        code = response.status_code
-        if code == 429 or code == 403:
-            logging.info(f"❌  Status: {code}")
-            raise ValueError("❌ ERROR: Data request failed")
-        else:
-            logging.info(f"✔️  Status: {code}")
-
-        return response.json()["matches"]
+        return data["matches"]
 
     def load_fixtures_data(self, season: int) -> dict:
+        logging.debug(f"💾 Loading fixtures data for season {season}...")
         with open(f"backups/fixtures/fixtures_{season}.json", "r") as json_file:
             return json.load(json_file)
 
-    def fetch_standings_data(self, season: int) -> dict:
-        response = requests.get(
-            self.url + "v4/competitions/PL/standings/?season={}".format(season),
+    async def fetch_standings_data(self, season: int) -> dict:
+        data = await self.get(
+            f"{self.url}v4/competitions/PL/standings/?season={season}",
             headers=self.headers,
         )
-
-        code = response.status_code
-        if code == 429 or code == 403:
-            logging.info(f"❌  Status: {code}")
-            raise ValueError("❌ ERROR: Data request failed")
-        else:
-            logging.info(f"✔️  Status: {code}")
-
-        return response.json()["standings"][0]["table"]
+        return data["standings"][0]["table"]
 
     def load_standings_data(self, season: int) -> dict:
+        logging.debug(f"💾 Loading standings data for season {season}...")
         with open(f"backups/standings/standings_{season}.json", "r") as json_file:
             return json.load(json_file)
 
-    def fetch_fantasy_data(self) -> dict:
-        response = requests.get(
-            "https://fantasy.premierleague.com/api/bootstrap-static/"
-        )
-
-        code = response.status_code
-        if code == 429 or code == 403:
-            logging.info(f"❌  Status: {code}")
-            raise ValueError("❌ ERROR: Data request failed")
-        else:
-            logging.info(f"✔️  Status: {code}")
-
-        return response.json()
+    async def fetch_fantasy_data(self) -> dict:
+        data = await self.get("https://fantasy.premierleague.com/api/bootstrap-static/")
+        return data
 
     def load_fantasy_data(self, season: int) -> dict:
+        logging.debug(f"💾 Loading fantasy data for season {season}...")
         with open(f"backups/fantasy/fantasy_{season}.json", "r") as json_file:
             return json.load(json_file)
 
-    def fetch_current_season(self):
+    async def fetch_current_season(self):
+        data = await asyncio.gather(
+            *[
+                self.fetch_fixtures_data(self.current_season),
+                self.fetch_standings_data(self.current_season),
+                self.fetch_fantasy_data(),
+            ]
+        )
         # Fetch data from API (max this season and last season)
-        self.raw_data["fixtures"][self.current_season] = self.fetch_fixtures_data(
-            self.current_season
-        )
-        self.raw_data["standings"][self.current_season] = self.fetch_standings_data(
-            self.current_season
-        )
-        self.raw_data["fantasy"][self.current_season] = self.fetch_fantasy_data()
+        self.raw_data["fixtures"][self.current_season] = data[0]
+        self.raw_data["standings"][self.current_season] = data[1]
+        self.raw_data["fantasy"][self.current_season] = data[2]
 
     def load_current_season(self):
         # Fetch data from API (max this season and last season)
@@ -125,7 +121,8 @@ class Updater:
     def set_raw_data(self, n_seasons: int, request_new: bool = True):
         if request_new:
             self.data.last_updated = datetime.now()
-            self.fetch_current_season()
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(self.fetch_current_season())
         else:
             self.load_current_season()
 
@@ -181,7 +178,7 @@ class Updater:
             n_seasons,
             display=display_tables,
         )
-        self.data.fantasy.build(self.raw_data)
+        self.data.fantasy.data.build(self.raw_data)
 
     def save_team_data_to_db(self):
         team_data = self.data.teams.to_dict()

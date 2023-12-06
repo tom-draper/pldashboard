@@ -197,7 +197,7 @@ class HomeAdvantages(DF):
             display (bool, optional): flag to print the dataframe to console after
                 creation. Defaults to False.
         """
-        logging.info("🛠️  Building home advantages dataframe... ")
+        self.log_building(season)
 
         d = defaultdict(lambda: self._row_template(season, no_seasons))
         for i in range(no_seasons):

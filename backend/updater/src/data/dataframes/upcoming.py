@@ -255,7 +255,7 @@ class Upcoming(DF):
             display (bool, optional): flag to print the dataframe to console after
                 creation. Defaults to False.
         """
-        logging.info("🛠️  Building upcoming dataframe... ")
+        self.log_building(season)
 
         d = {}  # type: dict[str, dict[str, Optional[str] | list]]
         team_names = fixtures.df.index.to_list()

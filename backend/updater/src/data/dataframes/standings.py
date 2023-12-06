@@ -95,7 +95,7 @@ class Standings(DF):
             display (bool, optional): flag to print the dataframe to console after
                 creation. Defaults to False.
         """
-        logging.info("🛠️  Building standings dataframe...")
+        self.log_building(season)
 
         standings = pd.DataFrame()
 
