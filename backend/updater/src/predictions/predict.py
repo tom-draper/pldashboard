@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 # Required to access database module in parent folder
 sys.path.append(dirname(dirname(dirname(dirname(abspath(__file__))))))
-
 from database import Database
 
 
@@ -81,20 +80,22 @@ class Predictor:
         prev_matches: list[dict] = []
         for season, matchday in form.df.droplevel(2, axis=1).columns.values:
             score = form.df.at[team, (season, matchday, "score")]
-            if isinstance(score, dict):
-                if form.df.at[team, (season, matchday, "atHome")]:
-                    home_team = team
-                    away_team = form.df.at[team, (season, matchday, "team")]
-                else:
-                    home_team = form.df.at[team, (season, matchday, "team")]
-                    away_team = team
-                prev_match = {
-                    "homeTeam": home_team,
-                    "awayTeam": away_team,
-                    "homeGoals": score["homeGoals"],
-                    "awayGoals": score["awayGoals"],
-                }
-                prev_matches.append(prev_match)
+            if not isinstance(score, dict):
+                continue
+
+            if form.df.at[team, (season, matchday, "atHome")]:
+                home_team = team
+                away_team = form.df.at[team, (season, matchday, "team")]
+            else:
+                home_team = form.df.at[team, (season, matchday, "team")]
+                away_team = team
+            prev_match = {
+                "homeTeam": home_team,
+                "awayTeam": away_team,
+                "homeGoals": score["homeGoals"],
+                "awayGoals": score["awayGoals"],
+            }
+            prev_matches.append(prev_match)
 
         return prev_matches
 
@@ -168,17 +169,18 @@ class Predictor:
 
         # Check ALL teams as two teams can have different next games
         for team_name in team_names:
-            prediction = None
-            if upcoming is not None:
-                home_goals, away_goals = self._score_prediction(
-                    team_name, upcoming, form, team_ratings, home_advantages
-                )
+            if upcoming is None:
+                predictions[team_name] = None
+                continue
 
-                prediction = {
-                    "homeGoals": round(home_goals, 4),
-                    "awayGoals": round(away_goals, 4),
-                }
+            home_goals, away_goals = self._score_prediction(
+                team_name, upcoming, form, team_ratings, home_advantages
+            )
 
+            prediction = {
+                "homeGoals": round(home_goals, 4),
+                "awayGoals": round(away_goals, 4),
+            }
             predictions[team_name] = prediction
 
         return predictions

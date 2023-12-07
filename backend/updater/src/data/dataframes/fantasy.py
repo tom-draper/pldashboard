@@ -1,5 +1,3 @@
-import logging
-
 import pandas as pd
 from pandas import DataFrame
 from timebudget import timebudget
@@ -18,6 +16,61 @@ class Fantasy(DF):
     def get_current_season(json_data: dict) -> int:
         return next(iter(json_data["fantasy"].keys()))
 
+    def get_fixtures(
+        self, json_data: dict, player_positions: dict[str, str], current_season: int
+    ):
+        fantasy_fixtures = json_data["fantasy_fixtures"][current_season]
+
+        result = {}
+        for fixture in fantasy_fixtures:
+            matchday = fixture["event"]
+            if matchday not in result:
+                result[matchday] = {}
+
+            for stat in fixture["stats"]:
+                identifier = stat["identifier"]
+                for team in ("h", "a"):
+                    for s in stat[team]:
+                        player_id = s["element"]
+                        points = self.get_stat_points(
+                            identifier, player_positions[player_id]
+                        )
+                        if player_id not in result[matchday]:
+                            result[matchday][player_id] = 0
+                        result[matchday][player_id] += points
+
+    def get_stat_points(self, value: int, identifier: str, position: str):
+        match identifier:
+            case "goals_scored":
+                if position == "Forward":
+                    return 4 * value
+                elif position == "Midfielder":
+                    return 5 * value
+                elif position == "Defender" or position == "Goalkeeper":
+                    return 6 * value
+            case "assists":
+                return 3 * value
+            case "clean_sheets":
+                if position == "Goalkeeper":
+                    return 4
+                elif position == "Defender":
+                    return 3
+            case "own_goals":
+                return -2 * value
+            case "penalties_saved":
+                return 5 * value
+            case "penalties_missed":
+                return -2 * value
+            case "yellow_cards":
+                return -1
+            case "red_cards":
+                return -3
+            case "saves":
+                return value // 3
+            case "bonus":
+                return value
+        return 0
+
     @timebudget
     def build(self, json_data: dict, display: bool = False):
         """Builds a dataframe containing the past and future fixtures for the
@@ -33,7 +86,7 @@ class Fantasy(DF):
         fantasy_data = json_data["fantasy"][current_season]
 
         teams = {team["code"]: team["name"] for team in fantasy_data["teams"]}
-        player_types = {
+        player_positions = {
             player_type["id"]: player_type["singular_name"]
             for player_type in fantasy_data["element_types"]
         }
@@ -48,7 +101,7 @@ class Fantasy(DF):
                 "minutes": player["minutes"],
                 "pointsPerGame": player["points_per_game"],
                 "price": player["now_cost"],
-                "position": player_types[player["element_type"]],
+                "position": player_positions[player["element_type"]],
                 "selectedBy": player["selected_by_percent"],
                 "points": player["event_points"],
                 "totalPoints": player["total_points"],

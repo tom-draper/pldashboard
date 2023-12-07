@@ -28,7 +28,11 @@ class Updater:
         self.home_games_threshold = 6
 
         # Store for new requested API data or old data from local storage
-        self.raw_data = {"fixtures": {}, "standings": {}, "fantasy": {}}
+        self.raw_data = {
+            "fixtures": {},
+            "standings": {},
+            "fantasy": {"general": {}, "fixtures": {}},
+        }
 
         # Import environment variables
         __file__ = "updater.py"
@@ -78,13 +82,22 @@ class Updater:
         with open(f"backups/standings/standings_{season}.json", "r") as json_file:
             return json.load(json_file)
 
-    async def fetch_fantasy_data(self) -> dict:
+    async def fetch_fantasy_general_data(self) -> dict:
         data = await self.get("https://fantasy.premierleague.com/api/bootstrap-static/")
         return data
 
-    def load_fantasy_data(self, season: int) -> dict:
+    def load_fantasy_general_data(self, season: int) -> dict:
         logging.debug(f"💾 Loading fantasy data for season {season}...")
-        with open(f"backups/fantasy/fantasy_{season}.json", "r") as json_file:
+        with open(f"backups/fantasy/general_{season}.json", "r") as json_file:
+            return json.load(json_file)
+
+    async def fetch_fantasy_fixtures_data(self) -> dict:
+        data = await self.get("https://fantasy.premierleague.com/api/fixtures/")
+        return data
+
+    def load_fantasy_fixtures_data(self, season: int) -> dict:
+        logging.debug(f"💾 Loading fantasy fixtures data for season {season}...")
+        with open(f"backups/fantasy/fixtures_{season}.json", "r") as json_file:
             return json.load(json_file)
 
     async def fetch_current_season(self):
@@ -92,13 +105,15 @@ class Updater:
             *[
                 self.fetch_fixtures_data(self.current_season),
                 self.fetch_standings_data(self.current_season),
-                self.fetch_fantasy_data(),
+                self.fetch_fantasy_general_data(),
+                self.fetch_fantasy_fixtures_data(),
             ]
         )
         # Fetch data from API (max this season and last season)
         self.raw_data["fixtures"][self.current_season] = data[0]
         self.raw_data["standings"][self.current_season] = data[1]
-        self.raw_data["fantasy"][self.current_season] = data[2]
+        self.raw_data["fantasy"]["general"] = data[2]
+        self.raw_data["fantasy"]["fixtures"] = data[3]
 
     def load_current_season(self):
         # Fetch data from API (max this season and last season)
@@ -108,7 +123,10 @@ class Updater:
         self.raw_data["standings"][self.current_season] = self.load_standings_data(
             self.current_season
         )
-        self.raw_data["fantasy"][self.current_season] = self.load_fantasy_data(
+        self.raw_data["fantasy"]["general"] = self.load_fantasy_general_data(
+            self.current_season
+        )
+        self.raw_data["fantasy"]["fixtures"] = self.load_fantasy_fixtures_data(
             self.current_season
         )
 
@@ -131,9 +149,13 @@ class Updater:
     def save_data_to_json(self):
         """Save current season fixtures and standings data in self.json_data to
         json files."""
-        for type in ("fixtures", "standings", "fantasy"):
+        for type in ("fixtures", "standings"):
             with open(f"backups/{type}/{type}_{self.current_season}.json", "w") as f:
                 json.dump(self.raw_data[type][self.current_season], f)
+
+        for type in ("general", "fixtures"):
+            with open(f"backups/fixtures/{type}_{self.current_season}.json", "w") as f:
+                json.dump(self.raw_data["fixtures"][type], f)
 
     def build_dataframes(self, n_seasons: int, display_tables: bool = False):
         # Standings for the last [n_seasons] seasons
