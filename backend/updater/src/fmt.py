@@ -57,7 +57,19 @@ names_and_initials = TwoWayDict(
 )
 
 
-def convert_team_name_or_initials(team_name: str):
+def convert_team_name_or_initials(team_name: str) -> str:
+    """Converts team name to three-letter initials, or converts three-letter
+    initials to a team name.
+
+    Args:
+        team_name (str): Team name or three-letter team initials.
+
+    Raises:
+        KeyError: Team name or team initials are invalid.
+
+    Returns:
+        str: Three-letter team initials or team name.
+    """
     if team_name in names_and_initials or team_name in names_and_initials.values():
         return names_and_initials[team_name]
     elif len(team_name) == 3:
@@ -97,11 +109,12 @@ def extract_scoreline(score: str):
 
 
 def identical_fixtures(scoreline1: str, scoreline2: str):
-    identical = False
-    if scoreline1 is not None and scoreline2 is not None:
-        home_p, _, _, _, away_p = scoreline1.split(" ")
-        home_s, _, _, _, away_s = scoreline2.split(" ")
-        identical = (home_p == home_s) and (away_p == away_s)
+    if scoreline1 is None or scoreline2 is None:
+        return False
+
+    home_p, _, _, _, away_p = scoreline1.split(" ")
+    home_s, _, _, _, away_s = scoreline2.split(" ")
+    identical = (home_p == home_s) and (away_p == away_s)
     return identical
 
 

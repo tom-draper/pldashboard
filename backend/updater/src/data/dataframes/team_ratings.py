@@ -87,15 +87,15 @@ class TeamRatings(DF):
     def include_current_season(
         standings: Standings, current_season: int, games_threshold: float
     ) -> bool:
-        # Check whether current season data should be included in each team's total rating
-        include = True
-        # If current season hasn't played enough games
+        """Check whether current season data should be included in each team's total rating
+        If current season hasn't played enough games, don't include.
+        """
         if (standings.df[current_season]["played"] <= games_threshold).all():
             logging.info(
                 f"Team Ratings: Current season excluded from calculation; all teams must have played {games_threshold} games."
             )
-            include = False
-        return include
+            return False
+        return True
 
     @staticmethod
     def clean_dataframe(team_ratings: DataFrame) -> DataFrame:

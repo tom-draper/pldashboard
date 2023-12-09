@@ -95,15 +95,18 @@ class Form(DF):
         gds: list[int],
     ) -> float:
         form_rating = 0.5  # Default percentage, moves up or down based on performance
-        if form_str is not None:  # If games have been played this season
-            for i, opp_team in enumerate(teams_played):
-                # Convert opposition team initials to their name
-                opp_team_rating = 0
-                if opp_team in team_ratings.df.index:
-                    opp_team_rating = team_ratings.df.at[opp_team, "totalRating"]
 
-                # Increment form score based on rating of the team they've won, drawn or lost against
-                form_rating += (opp_team_rating / len(form_str)) * gds[i]
+        if form_str is None:
+            return form_rating
+
+        for i, opp_team in enumerate(teams_played):
+            # Convert opposition team initials to their name
+            opp_team_rating = 0
+            if opp_team in team_ratings.df.index:
+                opp_team_rating = team_ratings.df.at[opp_team, "totalRating"]
+
+            # Increment form score based on rating of the team they've won, drawn or lost against
+            form_rating += (opp_team_rating / len(form_str)) * gds[i]
 
         form_rating = min(max(0, form_rating), 1)  # Cap rating
         return form_rating
@@ -136,6 +139,7 @@ class Form(DF):
         for matchday in matchdays:
             if not form[current_season][matchday].isnull().values.any():
                 continue
+
             for team in teams:
                 # value = form.at[team, (current_season, matchday, "team")]
                 # print(value)

@@ -43,14 +43,29 @@ class Updater:
 
     # ----------------------------- DATA API -----------------------------------
     @staticmethod
-    async def get(url: str, headers=None) -> dict:
+    async def get(url: str, headers: dict = None) -> dict:
+        """Fetch data from url.
+
+        Args:
+            url (str): URL to send GET request.
+            headers (dict, optional): Headers to include in request. Defaults
+                to None.
+
+        Raises:
+            ValueError: Request failed.
+
+        Returns:
+            dict: JSON data from response.
+        """
         async with aiohttp.ClientSession() as session:
             logging.debug(f"🌐 Requesting {url}...")
             response = await session.request("GET", url=url, headers=headers)
 
             if response.status != 200:
                 logging.error(f"❌ Status: {response.status} [{url}]")
-                raise ValueError("Data request failed")
+                raise aiohttp.ClientConnectionError(
+                    f"Data request to {url} failed with status {response.status}"
+                )
             else:
                 logging.debug(f"✅ Status: {response.status} [{url}]")
 
@@ -101,6 +116,9 @@ class Updater:
             return json.load(json_file)
 
     async def fetch_current_season(self):
+        """Fetch teams data and fantasy data from football data API and stores
+        the results in `self.raw_data`.
+        """
         data = await asyncio.gather(
             *[
                 self.fetch_fixtures_data(self.current_season),
@@ -114,8 +132,12 @@ class Updater:
         self.raw_data["standings"][self.current_season] = data[1]
         self.raw_data["fantasy"]["general"] = data[2]
         self.raw_data["fantasy"]["fixtures"] = data[3]
+        self.data.last_updated = datetime.now()
 
     def load_current_season(self):
+        """Load teams data and fantasy data for the current Premier League
+        season from local store.
+        """
         # Fetch data from API (max this season and last season)
         self.raw_data["fixtures"][self.current_season] = self.load_fixtures_data(
             self.current_season
@@ -137,8 +159,15 @@ class Updater:
             self.raw_data["standings"][season] = self.load_standings_data(season)
 
     def set_raw_data(self, n_seasons: int, request_new: bool = True):
+        """Sets the raw data object with data from the football data API or
+        local store.
+
+        Args:
+            n_seasons (int): Number of seasons to set.
+            request_new (bool, optional): Request new data from API, otherwise
+                load from local store. Defaults to True.
+        """
         if request_new:
-            self.data.last_updated = datetime.now()
             loop = asyncio.get_event_loop()
             loop.run_until_complete(self.fetch_current_season())
         else:
@@ -146,9 +175,10 @@ class Updater:
 
         self.load_previous_seasons(n_seasons)
 
-    def save_data_to_json(self):
-        """Save current season fixtures and standings data in self.json_data to
-        json files."""
+    def save_local_backup(self):
+        """Save current season fixtures and standings data in `self.raw_data` to
+        local store.
+        """
         for type in ("fixtures", "standings"):
             with open(f"backups/{type}/{type}_{self.current_season}.json", "w") as f:
                 json.dump(self.raw_data[type][self.current_season], f)
@@ -158,6 +188,12 @@ class Updater:
                 json.dump(self.raw_data["fixtures"][type], f)
 
     def build_dataframes(self, n_seasons: int, display_tables: bool = False):
+        """Builds all dataframes within `self.data` using the raw data.
+
+        Args:
+            n_seasons (int): The number of Premier League seasons to consider.
+            display_tables (bool, optional): Print dataframes once built. Defaults to False.
+        """
         # Standings for the last [n_seasons] seasons
         self.data.teams.standings.build(
             self.raw_data, self.current_season, n_seasons, display=display_tables
@@ -235,6 +271,21 @@ class Updater:
         request_new: bool = True,
         update_db: bool = True,
     ):
+        """Requests any current-season data from football data APIs, and loads
+        and previous data from local store. Uses this data to builds all
+        dataframes in `self.data`. Finally, saves all data to local store backup
+        and database.
+
+        Args:
+            n_seasons (int, optional): Number of Premier League seasons to
+                consider including the current season. Defaults to 4.
+            display_tables (bool, optional): Print dataframes once built.
+                Defaults to False.
+            request_new (bool, optional): Request new data from football data
+                APIs, otherwise use local backup. Defaults to True.
+            update_db (bool, optional): Upload build data to the hosted
+                database. Defaults to True.
+        """
         try:
             self.set_raw_data(n_seasons, request_new)
         except ValueError as e:
@@ -246,7 +297,7 @@ class Updater:
 
         if request_new:
             logging.info("💾 Saving new team data to local backup...")
-            self.save_data_to_json()
+            self.save_local_backup()
             if update_db:
                 logging.info("💾 Saving new team data to database...")
                 self.save_team_data_to_db()
