@@ -16,7 +16,7 @@ Hosted at: https://pldashboard.com
   <img src="https://user-images.githubusercontent.com/41476809/207646620-e3b2ab27-879c-4926-b91c-75a7e435be17.png"/>
 </p>
 
-# Contributions
+## Contributions
 
 If you find value in my work consider supporting me.
 
