@@ -184,8 +184,8 @@ class Updater:
                 json.dump(self.raw_data[type][self.current_season], f)
 
         for type in ("general", "fixtures"):
-            with open(f"backups/fixtures/{type}_{self.current_season}.json", "w") as f:
-                json.dump(self.raw_data["fixtures"][type], f)
+            with open(f"backups/fantasy/{type}_{self.current_season}.json", "w") as f:
+                json.dump(self.raw_data["fantasy"][type], f)
 
     def build_dataframes(self, n_seasons: int, display_tables: bool = False):
         """Builds all dataframes within `self.data` using the raw data.

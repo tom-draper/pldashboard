@@ -19,7 +19,7 @@ python updater/main.py
 ### Tests
 
 ```bash
-python -m pytest updater/tests/tests.py
+pytest
 ```
 
 ## Environment Variables
