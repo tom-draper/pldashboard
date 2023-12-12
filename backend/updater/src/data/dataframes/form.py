@@ -116,12 +116,12 @@ class Form(DF):
         for season in seasons:
             played_matchdays = df[season].columns.unique(level=0).tolist()
             for matchday in played_matchdays:
-                df.sort_values(
+                df = df.sort_values(
                     by=[(season, matchday, "cumPoints"), (season, matchday, "cumGD")],
                     ascending=False,
-                    inplace=True,
                 )
                 df[(season, matchday, "position")] = list(range(1, 21))
+        return df
 
     def _fill_teams_missing_matchday(self, form: DataFrame):
         """Fill in missing essential matchday data with copies from previous matchday."""
@@ -425,7 +425,7 @@ class Form(DF):
 
         self._fill_teams_missing_matchday(form)
 
-        self._insert_position_columns(form)
+        form = self._insert_position_columns(form)
 
         form = form.sort_index(axis=1)
 

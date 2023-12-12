@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from database import Database  # noqa: E402
 
-season = 2023
+CURRENT_SEASON = 2023
 
 app = FastAPI()
 
@@ -22,7 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-database = Database(season)
+database = Database(CURRENT_SEASON)
 cache = {
     "team": {"time": None, "data": None},
     "fantasy": {"time": None, "data": None},
