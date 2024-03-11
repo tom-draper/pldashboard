@@ -1,4 +1,4 @@
-from src.fmt import convert_team_name_or_initials
+from ..fmt import convert_team_name_or_initials
 
 
 class Scoreline:

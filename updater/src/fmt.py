@@ -77,10 +77,9 @@ def convert_team_name_or_initials(team_name: str) -> str:
         raise KeyError(
             f"Team name {team_name} corresponding to input initials does not exist"
         )
-    else:
-        # If no match found for a given full team name, shorten name to
-        # create initials
-        return team_name[:3].upper()
+    # If no match found for a given full team name, shorten name to
+    # create initials
+    return team_name[:3].upper()
 
 
 def extract_int_score(score: str):

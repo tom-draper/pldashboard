@@ -3,7 +3,7 @@ from typing import Optional
 
 import pandas as pd
 from pandas import DataFrame
-from src.fmt import clean_full_team_name, extract_scoreline
+from src.fmt import clean_full_team_name, extract_int_score
 from src.predictions import PredictorV2 as Predictor
 
 from .df import DF
@@ -39,9 +39,14 @@ class Upcoming(DF):
 
         predictions: dict[str, dict[str, datetime | str | dict[str, float]]] = {}
         for team, row in self.df.iterrows():
-            home_initials, home_goals, away_goals, away_initials = extract_scoreline(
-                row["prediction"]
-            )
+            if row["atHome"]:
+                home_initials = team
+                away_initials = row["nextTeam"]
+            else:
+                home_initials = row["nextTeam"]
+                away_initials = team
+
+            home_goals, away_goals = extract_int_score(row["prediction"])
 
             predictions[team] = {
                 "date": row["date"].to_pydatetime(),

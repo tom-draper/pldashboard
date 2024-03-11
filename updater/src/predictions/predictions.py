@@ -3,10 +3,10 @@ from datetime import datetime
 from typing import Union
 
 import pandas as pd
-from database.database import Database
+from ..database import Database
 from pandas.core.frame import DataFrame
-from src.data.dataframes import Fixtures, Form, HomeAdvantages, Upcoming
-from src.fmt import convert_team_name_or_initials, identical_fixtures
+from ..data.dataframes import Fixtures, Form, HomeAdvantages, Upcoming
+from ..fmt import convert_team_name_or_initials, identical_fixtures
 
 
 class Predictor:

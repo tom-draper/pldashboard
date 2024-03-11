@@ -1,7 +1,8 @@
 import math
-
 import pandas as pd
 from pandas.core.frame import DataFrame
+
+
 from src.data.dataframes import (
     Fixtures,
     Form,
@@ -14,6 +15,7 @@ from src.data.dataframes import (
 
 class TeamsData:
     def __init__(self):
+        self.last_updated = None
         self.fixtures: Fixtures = Fixtures()
         self.standings: Standings = Standings()
         self.team_ratings: TeamRatings = TeamRatings()
@@ -45,15 +47,17 @@ class TeamsData:
         )
 
     def collapse_tuple_keys(self, d):
-        if isinstance(d, list):
-            if isinstance(d, float) and math.isnan(d):
-                # Remove NaN values
-                return None
+        # Remove NaN values
+        if isinstance(d, float) and math.isnan(d):
+            return None
+
+        # If hit bottom of tree, stop recusring
+        if not isinstance(d, dict):
             return d
 
         new_d = {}
         for k, v in d.items():
-            if type(k) is tuple:
+            if isinstance(k, tuple):
                 # Remove blank multi-index levels
                 k = [x for x in k if x != ""]
                 if len(k) == 1:
@@ -63,8 +67,7 @@ class TeamsData:
                 # Separate multi-index into a nested dict
                 temp_d = new_d
                 for i, _k in enumerate(k):
-                    if isinstance(_k, int) or isinstance(_k, float):
-                        _k = str(_k)
+                    _k = str(_k)
                     if _k not in temp_d:
                         temp_d[_k] = {}
                     if i == len(k) - 1:

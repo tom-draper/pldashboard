@@ -1,20 +1,16 @@
 import asyncio
 import json
 import logging
-import sys
 from datetime import datetime
 from os import getenv
-from os.path import abspath, dirname, join
+from os.path import dirname, join
 
 import aiohttp
 from dotenv import load_dotenv
-from src.data import Data
-from src.fmt import clean_full_team_name
+from .data import Data
+from .fmt import clean_full_team_name
+from .database import Database
 from timebudget import timebudget
-
-# Required to access database module in parent folder
-sys.path.append(dirname(dirname(abspath(__file__))))
-from database import Database  # noqa: E402
 
 
 class Updater:
@@ -132,7 +128,7 @@ class Updater:
         self.raw_data["standings"][self.current_season] = data[1]
         self.raw_data["fantasy"]["general"] = data[2]
         self.raw_data["fantasy"]["fixtures"] = data[3]
-        self.data.last_updated = datetime.now()
+        self.data.teams.last_updated = datetime.now()
 
     def load_current_season(self):
         """Load teams data and fantasy data for the current Premier League
@@ -243,7 +239,7 @@ class Updater:
         self.database.update_team_data(team_data, self.current_season)
 
     def save_fantasy_data_to_db(self):
-        fantasy_data = self.fantasy_data.to_dict()
+        fantasy_data = self.data.fantasy.to_dict()
         self.database.update_fantasy_data(fantasy_data)
 
     def save_predictions_to_db(self):

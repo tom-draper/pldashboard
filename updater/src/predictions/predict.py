@@ -2,22 +2,17 @@ from __future__ import annotations
 
 import logging
 import math
-import sys
 from datetime import datetime
-from os.path import abspath, dirname
 from typing import TYPE_CHECKING, Union
 
 import numpy as np
 import pandas as pd
-from src.data.dataframes import Form, HomeAdvantages, TeamRatings
+from ..data.dataframes import Form, HomeAdvantages, TeamRatings
+from ..database import Database
 
 # Temp avoid circular import
 if TYPE_CHECKING:
-    from src.data.dataframes import Upcoming
-
-# Required to access database module in parent folder
-sys.path.append(dirname(dirname(dirname(dirname(abspath(__file__))))))
-from database import Database
+    from ..data.dataframes import Upcoming
 
 
 class Predictor:

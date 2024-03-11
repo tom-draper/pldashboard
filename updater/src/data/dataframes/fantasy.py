@@ -9,9 +9,6 @@ class Fantasy(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, "fantasy")
 
-    def to_dict(self):
-        return self.df.to_dict(orient="index")
-
     @staticmethod
     def get_current_season(json_data: dict) -> int:
         return next(iter(json_data["fantasy"].keys()))
@@ -96,9 +93,8 @@ class Fantasy(DF):
             for player_type in fantasy_data["element_types"]
         }
 
-        d = {}
-        for player in fantasy_data["elements"]:
-            d[player["web_name"]] = {
+        d = {
+            player["web_name"]: {
                 "firstName": player["first_name"],
                 "surname": player["second_name"],
                 "form": player["form"],
@@ -126,6 +122,8 @@ class Fantasy(DF):
                 "chanceOfPlayingNextRound": player["chance_of_playing_next_round"],
                 "chanceOfPlayingThisRound": player["chance_of_playing_this_round"],
             }
+            for player in fantasy_data["elements"]
+        }
 
         fantasy = pd.DataFrame.from_dict(d, orient="index")
         fantasy.fillna(0, inplace=True)
