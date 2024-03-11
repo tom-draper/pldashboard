@@ -25,11 +25,14 @@
     currentMatchday as getCurrentMatchday,
   } from './team';
   import { toTitleCase } from './format';
-  import { url } from './consts';
   import type { DashboardData, Team } from './dashboard.types';
 
   function toggleMobileNav() {
     const mobileNav = document.getElementById('mobileNav');
+	if (mobileNav === null) {
+		return;
+	}
+
     if (mobileNav.style.width === '0%') {
       mobileNav.style.display = 'block';
       mobileNav.style.width = '100%';
@@ -65,38 +68,30 @@
 
   async function initDashboard() {
     // Set formatted team name so page header can display while fetching data
-    if (slug === 'overview') {
+    if (data.slug === 'overview') {
       team = 'Overview';
       title = 'Dashboard | Overview';
-    } else if (slug != null) {
-      slug = slugAlias(slug);
-      team = toTitleCase(slug.replace(/-/g, ' ')) as Team;
+    } else if (data.slug != null) {
+      data.slug = slugAlias(data.slug);
+      team = toTitleCase(data.slug.replace(/-/g, ' ')) as Team;
       title = `Dashboard | ${team}`;
     }
 
-    const response = await fetch(`${url}/teams`);
-    if (!response.ok) {
-      return;
-    }
-    const json = (await response.json()) as DashboardData;
-
-    teams = Object.keys(json.standings) as Team[];
-    if (slug === null) {
+    teams = Object.keys(data.data.standings) as Team[];
+    if (data.slug === null) {
       // If root, set team to current leader
       team = teams[0];
       title = `Dashboard | ${team}`;
-      slug = toHyphenatedName(team);
+      data.slug = toHyphenatedName(team);
       // Change url to /team-name without reloading page
-      history.pushState({}, null, window.location.href + slug);
+      history.pushState({}, null, window.location.href + data.slug);
     } else if (team != 'Overview' && team != '' && !teams.includes(team)) {
-      window.location.href = '/error';
+    //   window.location.href = '/error';
     }
     if (team != 'Overview' && team != '') {
-      currentMatchday = getCurrentMatchday(json, team);
-      playedDates = playedMatchdayDates(json, team);
+      currentMatchday = getCurrentMatchday(data.data, team);
+      playedDates = playedMatchdayDates(data.data, team);
     }
-    data = json;
-    console.log(data);
 
     window.dispatchEvent(new Event('resize')); // Snap plots to currently set size
   }
@@ -129,19 +124,19 @@
   }
 
   function switchTeam(newTeam: Team) {
-    slug = newTeam;
-    if (slug === 'overview') {
+    data.slug = newTeam;
+    if (data.slug === 'overview') {
       team = 'Overview';
       title = 'Dashboard | Overview';
     } else {
-      slug = slugAlias(slug);
-      team = toTitleCase(slug.replace(/-/g, ' ')) as Team;
+      data.slug = slugAlias(data.slug);
+      team = toTitleCase(data.slug.replace(/-/g, ' ')) as Team;
       title = `Dashboard | ${team}`;
       // Overwrite values from new team's perspective using same data
-      currentMatchday = getCurrentMatchday(data, team);
-      playedDates = playedMatchdayDates(data, team);
+      currentMatchday = getCurrentMatchday(data.data, team);
+      playedDates = playedMatchdayDates(data.data, team);
     }
-    window.history.pushState(null, null, slug); // Change current url without reloading
+    window.history.pushState(null, null, data.slug); // Change current url without reloading
   }
 
   function lazyLoad() {
@@ -162,12 +157,11 @@
   let currentMatchday: string;
   let playedDates: Date[];
 
-  let data: DashboardData;
   onMount(() => {
     initDashboard();
   });
 
-  export let slug: string;
+	export let data;
 </script>
 
 <svelte:head>
@@ -177,9 +171,9 @@
 <svelte:window bind:innerWidth={pageWidth} bind:scrollY={y} />
 
   <div id="team">
-    <Nav team={slug} {teams} {toAlias} {switchTeam} />
+    <Nav team={data.slug} {teams} {toAlias} {switchTeam} />
     <MobileNav
-      hyphenatedTeam={slug}
+      hyphenatedTeam={data.slug}
       {teams}
       {toAlias}
       {switchTeam}
@@ -195,17 +189,16 @@
     {/if}
 
     <div id="dashboard">
-      <div class="header" style="background-color: var(--{slug});">
-        <a class="main-link no-decoration" href="/{slug}">
-          <div class="title" style="color: var(--{slug + '-secondary'});">
+      <div class="header" style="background-color: var(--{data.slug});">
+        <a class="main-link no-decoration" href="/{data.slug}">
+          <div class="title" style="color: var(--{data.slug + '-secondary'});">
             {team == '' || team == 'Overview' ? team : toAlias(team)}
           </div>
         </a>
       </div>
 
-      {#if data != undefined}
-        {#if slug === 'overview'}
-          <Overview {data} />
+        {#if data.slug === 'overview'}
+          <Overview data={data.data} />
         {:else}
           <div class="page-content">
             <div class="row multi-element-row small-bottom-margin">
@@ -217,48 +210,48 @@
                       cy="150"
                       r="100"
                       stroke-width="0"
-                      fill="var(--{slug}-secondary)"
+                      fill="var(--{data.slug}-secondary)"
                     />
                     <circle
                       cx="170"
                       cy="170"
                       r="140"
                       stroke-width="0"
-                      fill="var(--{slug})"
+                      fill="var(--{data.slug})"
                     />
                     <circle
                       cx="300"
                       cy="320"
                       r="170"
                       stroke-width="0"
-                      fill="var(--{slug})"
+                      fill="var(--{data.slug})"
                     />
                   </svg>
                 </div>
                 <div class="position-central">
-                  {data.standings[team][data._id].position}
+                  {data.data.standings[team][data.data._id].position}
                 </div>
               </div>
               <div class="row-right fixtures-graph row-graph">
                 <h1 class="lowered">Fixtures</h1>
                 <div class="graph mini-graph mobile-margin">
-                  <FixturesGraph {data} {team} {mobileView} />
+                  <FixturesGraph data={data.data} {team} {mobileView} />
                 </div>
               </div>
             </div>
 
             <div class="row multi-element-row">
               <div class="row-left form-details">
-                <CurrentForm {data} {currentMatchday} {team} />
+                <CurrentForm data={data.data} {currentMatchday} {team} />
                 <TableSnippet
-                  {data}
-                  hyphenatedTeam={slug}
+                  data={data.data}
+                  hyphenatedTeam={data.slug}
                   {team}
                   {switchTeam}
                 />
               </div>
               <div class="row-right">
-                <NextGame {data} {team} {switchTeam} />
+                <NextGame data={data.data} {team} {switchTeam} />
               </div>
             </div>
 
@@ -267,7 +260,7 @@
                 <h1 class="lowered">Form</h1>
                 <div class="graph full-row-graph">
                   <FormOverTimeGraph
-                    {data}
+                    data={data.data}
                     {team}
                     {playedDates}
                     bind:lazyLoad={load}
@@ -282,7 +275,7 @@
                 <div class="position-over-time-graph row-graph">
                   <h1 class="lowered">Position</h1>
                   <div class="graph full-row-graph">
-                    <PositionOverTimeGraph {data} {team} {mobileView} />
+                    <PositionOverTimeGraph data={data.data} {team} {mobileView} />
                   </div>
                 </div>
               </div>
@@ -291,7 +284,7 @@
                 <div class="position-over-time-graph row-graph">
                   <h1 class="lowered">Points</h1>
                   <div class="graph full-row-graph">
-                    <PointsOverTimeGraph {data} {team} {mobileView} />
+                    <PointsOverTimeGraph data={data.data} {team} {mobileView} />
                   </div>
                 </div>
               </div>
@@ -301,7 +294,7 @@
                   <h1 class="lowered">Goals Per Game</h1>
                   <div class="graph full-row-graph">
                     <GoalsScoredAndConcededGraph
-                      {data}
+                      data={data.data}
                       {team}
                       {playedDates}
                       {mobileView}
@@ -314,7 +307,7 @@
                 <div class="row-graph">
                   <div class="clean-sheets graph full-row-graph">
                     <CleanSheetsGraph
-                      {data}
+                      data={data.data}
                       {team}
                       {playedDates}
                       {mobileView}
@@ -324,13 +317,13 @@
               </div>
 
               <div class="season-stats-row">
-                <StatsValues {data} {team} />
+                <StatsValues data={data.data} {team} />
               </div>
 
               <div class="row">
                 <div class="row-graph">
                   <div class="graph full-row-graph">
-                    <ScoredConcededOverTimeGraph {data} {team} {mobileView} />
+                    <ScoredConcededOverTimeGraph data={data.data} {team} {mobileView} />
                   </div>
                 </div>
               </div>
@@ -338,14 +331,14 @@
               <div class="row">
                 <div class="goals-freq-row row-graph">
                   <h1>Scorelines</h1>
-                  <GoalsPerGame {data} {team} {mobileView} />
+                  <GoalsPerGame data={data.data} {team} {mobileView} />
                 </div>
               </div>
 
               <div class="row">
                 <div class="row-graph">
                   <div class="score-freq graph">
-                    <ScorelineFreqGraph {data} {team} {mobileView} />
+                    <ScorelineFreqGraph data={data.data} {team} {mobileView} />
                   </div>
                 </div>
               </div>
@@ -354,19 +347,19 @@
                 <div class="spider-chart-row row-graph">
                   <h1>Team Comparison</h1>
                   <div class="spider-chart-container">
-                    <SpiderGraph {data} {team} {teams} />
+                    <SpiderGraph data={data.data} {team} {teams} />
                   </div>
                 </div>
               </div>
             {/if}
           </div>
         {/if}
-        <Footer lastUpdated={data.lastUpdated} />
-      {:else}
+        <Footer lastUpdated={data.data.lastUpdated} />
+      <!-- {:else}
         <div class="loading-spinner-container">
           <div class="loading-spinner" />
         </div>
-      {/if}
+      {/if} -->
     </div>
   </div>
 
