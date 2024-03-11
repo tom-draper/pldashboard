@@ -22,7 +22,7 @@
     data: DashboardData,
     team: Team,
     matchdays: string[]
-  ): number[] {
+  ) {
     const y = [];
     for (const matchday of matchdays) {
       const points = data.form[team][data._id][matchday].cumPoints;
@@ -35,7 +35,7 @@
     data: DashboardData,
     team: Team,
     matchdays: string[]
-  ): Date[] {
+  ) {
     const dates = [];
     for (let i = 0; i < matchdays.length; i++) {
       const date = data.form[team][data._id][matchdays[i]].date;
@@ -134,7 +134,6 @@
       'margin.l': 20,
       'margin.t': 5,
     };
-    //@ts-ignore
     Plotly.update(plotDiv, {}, layoutUpdate);
   }
 
@@ -160,7 +159,6 @@
 
   function genPlot() {
     plotData = buildPlotData(data, team);
-    //@ts-ignore
     new Plotly.newPlot(
       plotDiv,
       plotData.data,

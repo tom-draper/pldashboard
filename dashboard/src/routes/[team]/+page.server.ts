@@ -13,9 +13,7 @@ async function fetchTeams() {
 
 export async function load({ params }) {
     const data = await fetchTeams();
-    console.log(data)
     return {
-        team: params.team,
         slug: params.team,
         data: data
     };

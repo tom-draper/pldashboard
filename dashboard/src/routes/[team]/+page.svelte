@@ -26,6 +26,7 @@
   } from './team';
   import { toTitleCase } from './format';
   import type { DashboardData, Team } from './dashboard.types';
+  import {pushState, replaceState} from '$app/navigation'
 
   function toggleMobileNav() {
     const mobileNav = document.getElementById('mobileNav');
@@ -136,7 +137,8 @@
       currentMatchday = getCurrentMatchday(data.data, team);
       playedDates = playedMatchdayDates(data.data, team);
     }
-    window.history.pushState(null, null, data.slug); // Change current url without reloading
+
+    replaceState(data.slug, {}); // Change current url without reloading
   }
 
   function lazyLoad() {
@@ -160,6 +162,7 @@
   onMount(() => {
     initDashboard();
   });
+
 
 	export let data;
 </script>
@@ -197,6 +200,7 @@
         </a>
       </div>
 
+	  {#if team}
         {#if data.slug === 'overview'}
           <Overview data={data.data} />
         {:else}
@@ -352,14 +356,14 @@
                 </div>
               </div>
             {/if}
-          </div>
-        {/if}
+		</div>
+		{/if}
         <Footer lastUpdated={data.data.lastUpdated} />
-      <!-- {:else}
+      {:else}
         <div class="loading-spinner-container">
           <div class="loading-spinner" />
         </div>
-      {/if} -->
+      {/if} 
     </div>
   </div>
 
