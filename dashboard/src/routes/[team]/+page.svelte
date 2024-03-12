@@ -48,15 +48,6 @@
 		replaceState(data.slug, {}); // Change current url without reloading
 	}
 
-	function lazyLoad() {
-		load = true;
-		window.dispatchEvent(new Event('resize')); // Snap plots to currently set size
-	}
-
-	let y: number;
-	let load = false;
-	$: y > 30 && lazyLoad();
-
 	let pageWidth: number;
 	$: mobileView = pageWidth <= 700;
 
@@ -157,88 +148,86 @@
 					</div>
 				</div>
 
-				{#if load}
-					<div class="row">
-						<div class="position-over-time-graph row-graph">
-							<h1 class="lowered">Position</h1>
-							<div class="graph full-row-graph">
-								<PositionOverTimeGraph data={data.data} team={data.team} {mobileView} />
-							</div>
+				<div class="row">
+					<div class="position-over-time-graph row-graph">
+						<h1 class="lowered">Position</h1>
+						<div class="graph full-row-graph">
+							<PositionOverTimeGraph data={data.data} team={data.team} {mobileView} />
 						</div>
 					</div>
+				</div>
 
-					<div class="row">
-						<div class="position-over-time-graph row-graph">
-							<h1 class="lowered">Points</h1>
-							<div class="graph full-row-graph">
-								<PointsOverTimeGraph data={data.data} team={data.team} {mobileView} />
-							</div>
+				<div class="row">
+					<div class="position-over-time-graph row-graph">
+						<h1 class="lowered">Points</h1>
+						<div class="graph full-row-graph">
+							<PointsOverTimeGraph data={data.data} team={data.team} {mobileView} />
 						</div>
 					</div>
+				</div>
 
-					<div class="row no-bottom-margin">
-						<div class="goals-scored-vs-conceded-graph row-graph">
-							<h1 class="lowered">Goals Per Game</h1>
-							<div class="graph full-row-graph">
-								<GoalsScoredAndConcededGraph
-									data={data.data}
-									team={data.team}
-									playedDates={data.playedDates}
-									{mobileView}
-								/>
-							</div>
+				<div class="row no-bottom-margin">
+					<div class="goals-scored-vs-conceded-graph row-graph">
+						<h1 class="lowered">Goals Per Game</h1>
+						<div class="graph full-row-graph">
+							<GoalsScoredAndConcededGraph
+								data={data.data}
+								team={data.team}
+								playedDates={data.playedDates}
+								{mobileView}
+							/>
 						</div>
 					</div>
+				</div>
 
-					<div class="row">
-						<div class="row-graph">
-							<div class="clean-sheets graph full-row-graph">
-								<CleanSheetsGraph
-									data={data.data}
-									team={data.team}
-									playedDates={data.playedDates}
-									{mobileView}
-								/>
-							</div>
+				<div class="row">
+					<div class="row-graph">
+						<div class="clean-sheets graph full-row-graph">
+							<CleanSheetsGraph
+								data={data.data}
+								team={data.team}
+								playedDates={data.playedDates}
+								{mobileView}
+							/>
 						</div>
 					</div>
+				</div>
 
-					<div class="season-stats-row">
-						<StatsValues data={data.data} team={data.team} />
-					</div>
+				<div class="season-stats-row">
+					<StatsValues data={data.data} team={data.team} />
+				</div>
 
-					<div class="row">
-						<div class="row-graph">
-							<div class="graph full-row-graph">
-								<ScoredConcededOverTimeGraph data={data.data} team={data.team} {mobileView} />
-							</div>
+				<div class="row">
+					<div class="row-graph">
+						<div class="graph full-row-graph">
+							<ScoredConcededOverTimeGraph data={data.data} team={data.team} {mobileView} />
 						</div>
 					</div>
+				</div>
 
-					<div class="row">
-						<div class="goals-freq-row row-graph">
-							<h1>Scorelines</h1>
-							<GoalsPerGame data={data.data} team={data.team} {mobileView} />
+				<div class="row">
+					<div class="goals-freq-row row-graph">
+						<h1>Scorelines</h1>
+						<GoalsPerGame data={data.data} team={data.team} {mobileView} />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="row-graph">
+						<div class="score-freq graph">
+							<ScorelineFreqGraph data={data.data} team={data.team} {mobileView} />
 						</div>
 					</div>
+				</div>
 
-					<div class="row">
-						<div class="row-graph">
-							<div class="score-freq graph">
-								<ScorelineFreqGraph data={data.data} team={data.team} {mobileView} />
-							</div>
+				<div class="row">
+					<div class="spider-chart-row row-graph">
+						<h1>Team Comparison</h1>
+						<div class="spider-chart-container">
+							<SpiderGraph data={data.data} team={data.team} teams={data.teams} />
 						</div>
 					</div>
-
-					<div class="row">
-						<div class="spider-chart-row row-graph">
-							<h1>Team Comparison</h1>
-							<div class="spider-chart-container">
-								<SpiderGraph data={data.data} team={data.team} teams={data.teams} />
-							</div>
-						</div>
-					</div>
-				{/if}
+				</div>
 			</div>
 		{/if}
 		<Footer lastUpdated={data.data.lastUpdated} />
