@@ -1,1 +1,1 @@
-export const url = "https://pldashboard-backend.vercel.app/api"
+export const url = 'https://pldashboard-backend.vercel.app/api';

@@ -1,29 +1,29 @@
 export type PredictionsData = {
-    predictions: Predictions[];
-    accuracy:    Accuracy;
-}
+	predictions: Predictions[];
+	accuracy: Accuracy;
+};
 
 export type Accuracy = {
-    scoreAccuracy:  number;
-    resultAccuracy: number;
-}
+	scoreAccuracy: number;
+	resultAccuracy: number;
+};
 
 export type Predictions = {
-    _id:         Date;
-    predictions: Prediction[];
-}
+	_id: Date;
+	predictions: Prediction[];
+};
 
 export type Prediction = {
-    _id:        string;
-    datetime:   Date;
-    home:       string;
-    away:       string;
-    prediction: ActualClass;
-    actual:     ActualClass | null;
-    colour?:    string;
-}
+	_id: string;
+	datetime: Date;
+	home: string;
+	away: string;
+	prediction: ActualClass;
+	actual: ActualClass | null;
+	colour?: string;
+};
 
 export type ActualClass = {
-    homeGoals: number;
-    awayGoals: number;
-}
+	homeGoals: number;
+	awayGoals: number;
+};

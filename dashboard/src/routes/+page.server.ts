@@ -1,14 +1,13 @@
-import { fetchTeams, getTeams, getTitle, validTeam } from './data';
-import { slugAlias, toTitleCase } from './format';
-import { getCurrentMatchday, playedMatchdayDates } from './team';
+import type { TeamsData } from './[team]/dashboard.types';
+import { fetchTeams, getTeams, getTitle, validTeam } from './[team]/data';
+import { getCurrentMatchday, playedMatchdayDates, getTeamID } from './[team]/team';
 
-function getTeam(slug: string) {
-	const team = toTitleCase(slug.replace(/-/g, ' '));
+function getTeam(data: TeamsData) {
+	const team = Object.keys(data.standings)[0];
 	return team;
 }
 
-export async function load({ params }: { params: { team: string } }) {
-	const slug = slugAlias(params.team);
+export async function load() {
 	const data = await fetchTeams();
 	if (!data) {
 		return {
@@ -17,7 +16,7 @@ export async function load({ params }: { params: { team: string } }) {
 		};
 	}
 
-	const team = getTeam(slug);
+	const team = getTeam(data);
 	const teams = getTeams(data);
 	if (!validTeam(team, teams)) {
 		return {
@@ -29,11 +28,12 @@ export async function load({ params }: { params: { team: string } }) {
 	const title = getTitle(team);
 	const currentMatchday = getCurrentMatchday(data, team);
 	const playedDates = playedMatchdayDates(data, team);
+	const teamID = getTeamID(team);
 	return {
-		slug,
+		slug: null,
 		team: {
 			name: team,
-			id: slug
+			id: teamID
 		},
 		teams,
 		title,

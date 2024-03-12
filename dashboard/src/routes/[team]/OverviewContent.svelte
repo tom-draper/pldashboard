@@ -1,28 +1,37 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { toInitials } from '../../[team]/team';
-	import { teamStyle } from '../../[team]/format';
-	import type { DashboardData, Team } from '../../[team]/dashboard.types';
+	import { toInitials } from './team';
+	import { teamStyle } from './format';
+	// import OverviewFooter from "./Footer.svelte";
 
 	type UpcomingMatch = {
 		time: Date;
-		home: Team;
-		away: Team;
+		home: string;
+		away: string;
 	};
 
 	function upcomingMatches(): UpcomingMatch[] {
-		return Object.entries(data.data.upcoming)
-			.filter(([_, upcoming]) => upcoming.atHome)
-			.map(([team, upcoming]) => ({
-				time: new Date(upcoming.date),
+		const upcoming: UpcomingMatch[] = [];
+		for (const team in data.upcoming) {
+			const date = new Date(data.upcoming[team].date);
+			if (!data.upcoming[team].atHome) {
+				continue;
+			}
+			upcoming.push({
+				time: date,
 				home: team,
-				away: upcoming.nextTeam
-			}))
-			.sort((a, b) => a.time - b.time);
+				away: data.upcoming[team].nextTeam
+			});
+		}
+		upcoming.sort((a: UpcomingMatch, b: UpcomingMatch) => {
+			//@ts-ignore
+			return a.time - b.time;
+		});
+		return upcoming;
 	}
 
 	type Standings = {
-		team: Team;
+		team: string;
 		position: number;
 		played: number;
 		points: number;
@@ -35,9 +44,16 @@
 	};
 
 	function standingsTable(): Standings[] {
-		return Object.entries(data.data.standings)
-			.map(([team, row]) => ({ ...row[data.data._id], team }))
-			.sort((a, b) => a.position - b.position);
+		const standings: Standings[] = [];
+		for (const team in data.standings) {
+			const row = Object(data.standings[team][data._id]);
+			row.team = team;
+			standings.push(row);
+		}
+		standings.sort((a, b) => {
+			return a.position - b.position;
+		});
+		return standings;
 	}
 
 	function applyRatingFixturesScaling() {
@@ -48,11 +64,9 @@
 
 		for (const teamFixtures of fixtures) {
 			for (const match of teamFixtures.matches) {
-				const homeAdvantage = match.atHome
-					? 0
-					: data.data.homeAdvantages[match.team].totalHomeAdvantage;
+				const homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage;
 				match.colour = fixtureColourSkewed(
-					data.data.teamRatings[match.team].totalRating + homeAdvantage
+					data.teamRatings[match.team].totalRating + homeAdvantage
 				);
 			}
 		}
@@ -67,14 +81,14 @@
 
 		for (const teamFixtures of fixtures) {
 			for (const match of teamFixtures.matches) {
-				const matchdays = Object.keys(data.data.form[teamFixtures.team][data.data._id]).reverse();
-				const homeAdvantage = match.atHome
-					? 0
-					: data.data.homeAdvantages[match.team].totalHomeAdvantage;
-				let form = matchdays.reduce((prevForm, matchday) => {
-					const formRating = data.data.form[match.team][data.data._id][matchday].formRating5;
-					return formRating != null ? formRating : prevForm;
-				}, 0.5);
+				let form = 0.5;
+				const matchdays = Object.keys(data.form[teamFixtures.team][data._id]).reverse();
+				const homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage;
+				for (const matchday of matchdays) {
+					if (data.form[match.team][data._id][matchday].formRating5 != null) {
+						form = data.form[match.team][data._id][matchday].formRating5;
+					}
+				}
 				match.colour = fixtureColour(form + homeAdvantage);
 			}
 		}
@@ -82,9 +96,9 @@
 	}
 
 	type Fixtures = {
-		team: Team;
+		team: string;
 		matches: {
-			team: Team;
+			team: string;
 			date: string;
 			atHome: boolean;
 			status: string;
@@ -92,59 +106,87 @@
 		}[];
 	};
 
-	function fixturesTable(standings: Standings[]) {
-		const fixtures: Fixtures[] = standings.map((row) => {
-			const matches = Object.values(data.data.fixtures[row.team]).map((match) => {
-				const homeAdvantage = match.atHome
-					? 0
-					: data.data.homeAdvantages[match.team].totalHomeAdvantage;
-				return {
+	function fixturesTable(standings: Standings[]): Fixtures[] {
+		const fixtures = [];
+		for (const row of standings) {
+			const matches = [];
+			for (const matchday in data.fixtures[row.team]) {
+				const match = data.fixtures[row.team][matchday];
+				const homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage;
+				matches.push({
 					team: match.team,
 					date: match.date,
 					atHome: match.atHome,
 					status: match.status,
-					colour: fixtureColourSkewed(data.data.teamRatings[match.team].totalRating + homeAdvantage)
-				};
-			});
-			return {
+					colour: fixtureColourSkewed(data.teamRatings[match.team].totalRating + homeAdvantage)
+				});
+			}
+			fixtures.push({
 				team: row.team,
 				matches: matches
-			};
-		});
+			});
+		}
 		return fixtures;
 	}
 
 	function fixtureColourSkewed(scaleVal: number) {
-		const thresholds = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6];
-
-		for (let i = 0; i < thresholds.length; i++) {
-			if (scaleVal < thresholds[i]) {
-				return colors[i];
-			}
+		if (scaleVal < 0.05) {
+			return '#00fe87';
+		} else if (scaleVal < 0.1) {
+			return '#63fb6e';
+		} else if (scaleVal < 0.15) {
+			return '#8df755';
+		} else if (scaleVal < 0.2) {
+			return '#aef23e';
+		} else if (scaleVal < 0.25) {
+			return '#cbec27';
+		} else if (scaleVal < 0.3) {
+			return '#e6e50f';
+		} else if (scaleVal < 0.35) {
+			return '#ffdd00';
+		} else if (scaleVal < 0.4) {
+			return '#ffc400';
+		} else if (scaleVal < 0.45) {
+			return '#ffab00';
+		} else if (scaleVal < 0.5) {
+			return '#ff9000';
+		} else if (scaleVal < 0.55) {
+			return '#ff7400';
+		} else if (scaleVal < 0.6) {
+			return '#ff5618';
+		} else {
+			return '#f83027';
 		}
-
-		return colors[thresholds.length];
 	}
 
-	const colors = [
-		'#00fe87',
-		'#63fb6e',
-		'#8df755',
-		'#aef23e',
-		'#cbec27',
-		'#e6e50f',
-		'#ffdd00',
-		'#ffc400',
-		'#ffab00',
-		'#ff9000',
-		'#ff7400',
-		'#ff5618',
-		'#f83027'
-	];
-
 	function fixtureColour(scaleVal: number) {
-		const index = Math.floor(scaleVal * colors.length);
-		return colors[index];
+		if (scaleVal < 0.2) {
+			return '#00fe87';
+		} else if (scaleVal < 0.25) {
+			return '#63fb6e';
+		} else if (scaleVal < 0.35) {
+			return '#8df755';
+		} else if (scaleVal < 0.4) {
+			return '#aef23e';
+		} else if (scaleVal < 0.45) {
+			return '#cbec27';
+		} else if (scaleVal < 0.5) {
+			return '#e6e50f';
+		} else if (scaleVal < 0.55) {
+			return '#ffdd00';
+		} else if (scaleVal < 0.6) {
+			return '#ffc400';
+		} else if (scaleVal < 0.65) {
+			return '#ffab00';
+		} else if (scaleVal < 0.7) {
+			return '#ff9000';
+		} else if (scaleVal < 0.75) {
+			return '#ff7400';
+		} else if (scaleVal < 0.8) {
+			return '#ff5618';
+		} else {
+			return '#f83027';
+		}
 	}
 
 	let upcoming: UpcomingMatch[];
@@ -158,7 +200,7 @@
 		fixtures = fixturesTable(standings);
 	});
 
-	export let data: DashboardData;
+	export let data;
 </script>
 
 <div id="page-content">
@@ -258,29 +300,19 @@
 									{row.points}
 								</div>
 								<div class="standings-rating">
-									{data.data.teamRatings[row.team].totalRating.toFixed(2)}
+									{data.teamRatings[row.team].totalRating.toFixed(2)}
 								</div>
 								<div class="standings-form">
-									{Object.keys(data.data.form[row.team][data.data._id]).length > 0 &&
-									data.data.form[row.team][data.data._id][
-										Math.max(
-											...Object.keys(data.data.form[row.team][data.data._id]).map((x) =>
-												parseInt(x)
-											)
-										)
+									{Object.keys(data.form[row.team][data._id]).length > 0 &&
+									data.form[row.team][data._id][
+										Math.max(...Object.keys(data.form[row.team][data._id]).map((x) => parseInt(x)))
 									] != undefined &&
-									data.data.form[row.team][data.data._id][
-										Math.max(
-											...Object.keys(data.data.form[row.team][data.data._id]).map((x) =>
-												parseInt(x)
-											)
-										)
+									data.form[row.team][data._id][
+										Math.max(...Object.keys(data.form[row.team][data._id]).map((x) => parseInt(x)))
 									].formRating5 != null
-										? data.data.form[row.team][data.data._id][
+										? data.form[row.team][data._id][
 												Math.max(
-													...Object.keys(data.data.form[row.team][data.data._id]).map((x) =>
-														parseInt(x)
-													)
+													...Object.keys(data.form[row.team][data._id]).map((x) => parseInt(x))
 												)
 											].formRating5.toFixed(2)
 										: ''}

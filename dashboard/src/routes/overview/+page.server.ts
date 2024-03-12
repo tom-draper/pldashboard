@@ -1,20 +1,25 @@
-import { url } from "./consts";
-import type { DashboardData } from "./dashboard.types";
+import { fetchTeams, getTeams } from '../[team]/data';
 
-async function fetchTeams() {
-    const response = await fetch(`${url}/teams`);
-    if (!response.ok) {
-        // error(response.statusText, response.status);
-        return
-    }
-    const json: DashboardData = await response.json();
-    return json
-}
+export async function load() {
+	const data = await fetchTeams();
+	if (!data) {
+		return {
+			status: 500,
+			error: new Error('Failed to load data')
+		};
+	}
 
-export async function load({ params }) {
-    const data = await fetchTeams();
-    return {
-        slug: params.team,
-        data: data
-    };
+	const teams = getTeams(data);
+	return {
+		slug: 'overview',
+		team: {
+			name: null,
+			id: null
+		},
+		teams,
+		title: 'Overview',
+		currentMatchday: null,
+		playedDates: null,
+		data
+	};
 }
