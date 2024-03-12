@@ -4,7 +4,7 @@
 
 A Premier League dashboard presenting the current relative performance of each Premier League team. The dashboard includes interactive visualizations, curated metrics and score predictions for upcoming games. Throughout the dashboard, long-term performance and short-term form have been blended where appropriate, aiming to give a balanced and accurate view of each team's current state and their expected performance in the near future.
 
-Built with Svelte, TypeScript, Plotly, Python, FastAPI, Pandas, MongoDB and <a href="https://www.football-data.org/">football-data.org</a> API for the data. 
+Built with SvelteKit, TypeScript, Plotly, Python, Pandas, MongoDB and <a href="https://www.football-data.org/">football-data.org</a> API for the data. 
 
 Hosted at: https://pldashboard.com
 
