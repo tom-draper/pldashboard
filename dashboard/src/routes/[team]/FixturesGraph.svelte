@@ -5,22 +5,14 @@
 	import type { TeamsData, Fixture, Team } from './dashboard.types';
 
 	function matchDescription(team: Team, match: Fixture): string {
-		let description: string;
-		let homeTeam: string;
-		let awayTeam: string;
-		if (match.atHome) {
-			homeTeam = toAlias(team);
-			awayTeam = toAlias(match.team);
-		} else {
-			homeTeam = toAlias(match.team);
-			awayTeam = toAlias(team);
-		}
+		const homeTeam = match.atHome ? toAlias(team) : toAlias(match.team);
+		const awayTeam = match.atHome ? toAlias(match.team) : toAlias(team);
+		
 		if (match.score != null) {
-			description = scoreline(homeTeam, awayTeam, match.score.homeGoals, match.score.awayGoals);
+			return scoreline(homeTeam, awayTeam, match.score.homeGoals, match.score.awayGoals);
 		} else {
-			description = `${homeTeam} vs ${awayTeam}`;
+			return `${homeTeam} vs ${awayTeam}`;
 		}
-		return description;
 	}
 
 	function sortByMatchDate(x: Date[], y: number[], details: string[]) {
