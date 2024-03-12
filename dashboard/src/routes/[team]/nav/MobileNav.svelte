@@ -1,76 +1,57 @@
 <script lang="ts">
   import { toHyphenatedName } from '../team';
   import { Team } from '../dashboard.types';
+  import { toAlias } from '../team';
 
-  function switchTeamToTop(team: string) {
+  function switchTeamToTop(team: Team) {
     switchTeam(team);
     window.scrollTo(0, 0);
     toggleMobileNav();
   }
 
-  function getHyphenatedTeamNames() {
-    const hyphenatedTeamNames = [];
-    for (let i = 0; i < teams.length; i++) {
-      const teamLink = toHyphenatedName(teams[i]);
-      if (teamLink != hyphenatedTeam) {
-        hyphenatedTeamNames.push(teamLink);
-      } else {
-        hyphenatedTeamNames.push(null); // To keep teams and teamLinks list same length
-      }
-    }
-    hyphenatedTeams = hyphenatedTeamNames;
-  }
-
-  let hyphenatedTeams: string[];
-  //@ts-ignore
-  $: hyphenatedTeam && teams.length > 0 && getHyphenatedTeamNames();
-
-  export let hyphenatedTeam: string,
-    teams: string[],
-    toAlias: (team: Team) => string,
+  export let
+    teams: Team[],
     switchTeam: (newTeam: Team) => void,
     toggleMobileNav: () => void;
 </script>
 
 <nav id="mobileNav" style="width: 0%;">
-  {#if hyphenatedTeams != undefined}
-    <div class="team-links">
-      {#each hyphenatedTeams as team, i}
-        {#if team != null}
-          {#if i === 0 || (i === 1 && hyphenatedTeams[0] === null)}
-            <!-- Button with first-team class -->
-            <button
-              on:click={() => {
-                switchTeamToTop(hyphenatedTeams[i]);
-              }}
-              style="color: var(--{hyphenatedTeams[i]}-secondary);
-            background-color: var(--{hyphenatedTeams[i]})"
-              class="team-link first-team">{toAlias(teams[i])}</button
-            >
-          {:else if i === hyphenatedTeams.length - 1 || (i === hyphenatedTeams.length - 2 && hyphenatedTeams[hyphenatedTeams.length - 1] === null)}
-            <!-- Button with last-team class -->
-            <button
-              on:click={() => {
-                switchTeamToTop(hyphenatedTeams[i]);
-              }}
-              style="color: var(--{hyphenatedTeams[i]}-secondary);
-                background-color: var(--{hyphenatedTeams[i]})"
-              class="team-link last-team">{toAlias(teams[i])}</button
-            >
-          {:else}
-            <button
-              on:click={() => {
-                switchTeamToTop(team);
-              }}
-              style="color: var(--{team}-secondary);
-                  background-color: var(--{team})"
-              class="team-link">{toAlias(teams[i])}</button
-            >
-          {/if}
+  <div class="team-links">
+    {#each teams as team, i}
+      {#if team != null}
+        {#if i === 0 || (i === 1 && teams[0] === null)}
+          <!-- Button with first-team class -->
+          <button
+            on:click={() => {
+              switchTeamToTop(teams[i]);
+            }}
+            style="color: var(--{toHyphenatedName(team)}-secondary);
+          background-color: var(--{toHyphenatedName(team)})"
+            class="team-link first-team">{toAlias(teams[i])}</button
+          >
+        {:else if i === teams.length - 1 || (i === teams.length - 2 && teams[teams.length - 1] === null)}
+          <!-- Button with last-team class -->
+          <button
+            on:click={() => {
+              switchTeamToTop(team);
+            }}
+            style="color: var(--{toHyphenatedName(team)}-secondary);
+              background-color: var(--{toHyphenatedName(team)})"
+            class="team-link last-team">{toAlias(team)}</button
+          >
+        {:else}
+          <button
+            on:click={() => {
+              switchTeamToTop(team);
+            }}
+            style="color: var(--{toHyphenatedName(team)}-secondary);
+                background-color: var(--{team})"
+            class="team-link">{toAlias(team)}</button
+          >
         {/if}
-      {/each}
-    </div>
-  {/if}
+      {/if}
+    {/each}
+  </div>
 </nav>
 
 <style scoped>

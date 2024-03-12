@@ -2,6 +2,8 @@
   import { teamStyle } from '../format';
   import { toHyphenatedName } from '../team';
   import { Team } from '../dashboard.types';
+  import { toAlias } from '../team';
+  import closeNavImg from '$lib/images/arrow-bar-left.svg';
 
   function closeNavBar() {
     document.getElementById('navBar').style.display = 'none';
@@ -9,14 +11,13 @@
     window.dispatchEvent(new Event('resize')); // Snap plotly graphs to new width
   }
 
-  const widths = [];
+  const widths: number[] = [];
   for (let i = 0; i < 20; i++) {
     widths.push(35 + Math.floor(Math.random() * 8) * 5);
   }
 
-  export let team: string,
-    teams: string[],
-    toAlias: (team: Team) => string,
+  export let team: Team,
+    teams: Team[],
     switchTeam: (newTeam: Team) => void;
 </script>
 
@@ -27,13 +28,15 @@
     </a>
   </div>
   <div class="team-links">
-    {#if teams.length === 0}
-      {#each widths as width, _}
-        <div class="placeholder" style="width: {width}%" />
-      {/each}
+    {#if !teams}
+      {#if widths}
+        {#each widths as width, _}
+          <div class="placeholder" style="width: {width}%" />
+        {/each}
+      {/if}
     {:else}
       {#each teams as _team, _ (_team)}
-        {#if toHyphenatedName(_team) === team}
+        {#if _team === team}
           <a href="/{toHyphenatedName(_team)}" class="team-link">
             <div class="this-team-container" style={teamStyle(_team)}>
               <div class="this-team-name">
@@ -45,7 +48,7 @@
           <button
             class="team-link"
             on:click={() => {
-              switchTeam(toHyphenatedName(_team));
+              switchTeam(_team);
             }}
           >
             <div class="team-container">
@@ -60,7 +63,7 @@
   </div>
   <div class="close">
     <button class="close-btn" on:click={closeNavBar}>
-      <img src="/arrow-bar-left.svg" alt="" />
+      <img src="{closeNavImg}" alt="Close" />
     </button>
   </div>
 </nav>

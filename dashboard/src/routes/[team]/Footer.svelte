@@ -1,4 +1,5 @@
 <script lang="ts">
+  import githubIcon from '$lib/images/github.png';
   export let lastUpdated: string;
 </script>
 
@@ -9,7 +10,7 @@
       target="_blank"
       class="github"
     >
-      <img src="/github.png" alt="GitHub" class="github-img" />
+      <img src="{githubIcon}" alt="GitHub" class="github-img" />
     </a>
     {#if lastUpdated != null}
       <div class="last-updated no-select">

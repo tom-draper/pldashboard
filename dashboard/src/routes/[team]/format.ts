@@ -25,3 +25,30 @@ export function toTitleCase(str: string): string {
         .join(" ")
         .replace("And", "and");
 }
+
+export function slugAlias(slug: string): string {
+    switch (slug) {
+        case 'brighton':
+        return 'brighton-and-hove-albion';
+        case 'palace':
+        return 'crystal-palace';
+        case 'united':
+        return 'manchester-united';
+        case 'city':
+        return 'city';
+        case 'nottingham':
+        return 'nottingham-forest';
+        case 'luton':
+        return 'luton-town';
+        case 'sheffield':
+        return 'sheffield-united';
+        case 'villa':
+        return 'aston-villa';
+        case 'spurs':
+        return 'tottenham-hotspur';
+        case 'wolves':
+        return 'wolverhampton-wanderers';
+        default:
+        return slug; // No alias found
+    }
+}

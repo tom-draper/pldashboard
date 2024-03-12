@@ -3,7 +3,7 @@
     toAlias,
     toInitials,
     toHyphenatedName,
-    currentMatchday,
+    getCurrentMatchday,
   } from './team';
   import { ordinal, teamStyle } from './format';
   import type { DashboardData, Team } from './dashboard.types';
@@ -69,7 +69,7 @@
             <span class="current-form-value"
               >{(
                 data.form[data.upcoming[team].nextTeam][data._id][
-                  currentMatchday(data, data.upcoming[team].nextTeam)
+                  getCurrentMatchday(data, data.upcoming[team].nextTeam)
                 ].formRating5 * 100
               ).toFixed(1)}%</span
             >
