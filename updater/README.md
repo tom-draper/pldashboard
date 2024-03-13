@@ -1,19 +1,9 @@
-# Backend
-
-## FastAPI Server
-
-An API that serves data from the hosted MongoDB database to the frontend dashboard.
-
-```bash
-python server/app.py
-```
-
-## Data Updater
+# Data Updater
 
 A script to fetch new data from the football data API, compute metrics and statistics and restructure into dataframes before uploading to the MongoDB database. This script is scheduled to run at regular intervals to continuously refresh the data stored in the database.
 
 ```bash
-python updater/main.py
+python main.py
 ```
 
 ### Tests
@@ -24,7 +14,7 @@ pytest
 
 ## Environment Variables
 
-The backend relies on a set of environment variables in `/backend/.env` in order to access data from the football data API, and login to the MongoDB database to upload data.
+The backend relies on a set of environment variables in `updater/.env` in order to access data from the football data API, and login to the MongoDB database to upload data.
 
 ```text
 URL=https://api.football-data.org/v2/
