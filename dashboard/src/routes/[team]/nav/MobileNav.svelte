@@ -22,8 +22,7 @@
 						on:click={() => {
 							switchTeamToTop(teams[i]);
 						}}
-						style="color: var(--{getTeamID(team)}-secondary);
-          background-color: var(--{getTeamID(team)})"
+						style="color: var(--{getTeamID(team)}-secondary);background-color: var(--{getTeamID(team)})"
 						class="team-link first-team">{toAlias(teams[i])}</button
 					>
 				{:else if i === teams.length - 1 || (i === teams.length - 2 && teams[teams.length - 1] === null)}
@@ -32,8 +31,7 @@
 						on:click={() => {
 							switchTeamToTop(team);
 						}}
-						style="color: var(--{getTeamID(team)}-secondary);
-              background-color: var(--{getTeamID(team)})"
+						style="color: var(--{getTeamID(team)}-secondary);background-color: var(--{getTeamID(team)})"
 						class="team-link last-team">{toAlias(team)}</button
 					>
 				{:else}
@@ -41,8 +39,7 @@
 						on:click={() => {
 							switchTeamToTop(team);
 						}}
-						style="color: var(--{getTeamID(team)}-secondary);
-                background-color: var(--{getTeamID(team)})"
+						style="color: var(--{getTeamID(team)}-secondary);background-color: var(--{getTeamID(team)})"
 						class="team-link">{toAlias(team)}</button
 					>
 				{/if}

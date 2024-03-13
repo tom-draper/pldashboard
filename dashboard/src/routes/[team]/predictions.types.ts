@@ -20,7 +20,7 @@ export type Prediction = {
 	away: string;
 	prediction: ActualClass;
 	actual: ActualClass | null;
-	colour?: string;
+	color?: string;
 };
 
 export type ActualClass = {

@@ -14,12 +14,12 @@ export type DashboardData = {
 export type TeamsData = {
 	_id: number;
 	lastUpdated: string;
-	fixtures: { [key: string]: { [key: string]: Fixture } };
-	standings: { [key: string]: { [key: string]: Standing } };
-	teamRatings: { [key: string]: TeamRating };
-	homeAdvantages: { [key: string]: HomeAdvantage };
-	form: { [key: string]: { [key: string]: { [key: string]: Form } } };
-	upcoming: { [key: string]: Upcoming };
+	fixtures: { [team in Team]: { [matchday: string]: Fixture } };
+	standings: { [team in Team]: { [matchday: string]: Standing } };
+	teamRatings: { [team in Team]: TeamRating };
+	homeAdvantages: { [team in Team]: HomeAdvantage };
+	form: { [team in Team]: { [year: string]: { [matchday: string]: Form } } };
+	upcoming: { [team in Team]: Upcoming };
 };
 
 export type Fixture = {

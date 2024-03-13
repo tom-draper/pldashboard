@@ -104,6 +104,7 @@
 		if (!setup) {
 			return;
 		}
+
 		setStatsValues(stats, team);
 	}
 

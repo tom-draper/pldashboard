@@ -1,4 +1,4 @@
-import { url } from './consts';
+import { url } from '../consts';
 import type { TeamsData, Team } from './dashboard.types';
 
 export async function fetchTeams() {

@@ -3,6 +3,7 @@
 	import GoalsScoredFreq from './GoalsScoredFreqGraph.svelte';
 	import GoalsConcededFreq from './GoalsConcededFreqGraph.svelte';
 	import type { TeamsData, Team } from '../dashboard.types';
+	import { getTeams } from '../team';
 
 	function avgBars() {
 		return {
@@ -36,12 +37,12 @@
 		return [avgBars(), teamBars(data, name, color)];
 	}
 
-	// Basic colour scale shared between the two bar chars
-	const colourScale = ['#00fe87', '#aef23e', '#ffdd00', '#ff9000', '#f83027'];
+	// Basic color scale shared between the two bar chars
+	const colorScale = ['#00fe87', '#aef23e', '#ffdd00', '#ff9000', '#f83027'];
 
-	// Concatenate unique extreme colours, for extreme values that only a few teams achieve
+	// Concatenate unique extreme colors, for extreme values that only a few teams achieve
 	// Concatenate bright greens
-	const scoredColourScale = reversed(colourScale).concat([
+	const scoredColorScale = reversed(colorScale).concat([
 		'#00fe87',
 		'#00fe87',
 		'#00fe87',
@@ -49,7 +50,7 @@
 		'#00fe87'
 	]);
 	// Concatenate bright reds
-	const concededColourScale = colourScale.concat([
+	const concededColorScale = colorScale.concat([
 		'#f83027',
 		'#f83027',
 		'#f83027',
@@ -63,19 +64,19 @@
 
 	function getScoredBars() {
 		// return bars(teamScoredFreq, "Goals scored", "#77DD77");
-		return bars(teamScoredFreq, 'Scored', scoredColourScale);
+		return bars(teamScoredFreq, 'Scored', scoredColorScale);
 	}
 
 	function getConcededBars() {
-		return bars(teamConcededFreq, 'Conceded', concededColourScale);
+		return bars(teamConcededFreq, 'Conceded', concededColorScale);
 	}
 
 	function getScoredTeamBars() {
-		return teamBars(teamScoredFreq, 'Scored', scoredColourScale);
+		return teamBars(teamScoredFreq, 'Scored', scoredColorScale);
 	}
 
 	function getConcededTeamBars() {
-		return teamBars(teamConcededFreq, 'Conceded', concededColourScale);
+		return teamBars(teamConcededFreq, 'Conceded', concededColorScale);
 	}
 
 	function getXLabels(): string[] {
@@ -95,7 +96,7 @@
 		};
 	}
 
-	function countScored(data: TeamsData, goalFreq: Counter, season: number, team: string) {
+	function countScored(data: TeamsData, goalFreq: Counter, season: number, team: Team) {
 		if (!(team in data.form)) {
 			return;
 		}
@@ -143,7 +144,8 @@
 
 	function avgGoalFrequencies(data: TeamsData) {
 		const goalFreq: Counter = {};
-		for (const team of Object.keys(data.standings)) {
+		const teams = getTeams(data)
+		for (const team of teams) {
 			countScored(data, goalFreq, data._id, team);
 			countScored(data, goalFreq, data._id - 1, team);
 		}
@@ -151,7 +153,7 @@
 		fillGoalFreqBlanks(goalFreq);
 
 		// Divide by number of teams to get avg
-		for (const goals of Object.keys(goalFreq)) {
+		for (const goals in goalFreq) {
 			goalFreq[goals] /= 20;
 		}
 
@@ -172,7 +174,7 @@
 			return;
 		}
 
-		for (const matchday of Object.keys(data.form[team][season])) {
+		for (const matchday in data.form[team][season]) {
 			const score = data.form[team][season][matchday].score;
 			if (score == null) {
 				continue;
@@ -253,6 +255,7 @@
 		if (!setup) {
 			return;
 		}
+
 		teamScoredFreq = teamScoredFrequencies(data, team);
 		teamConcededFreq = teamConcededFrequencies(data, team);
 		scaleTeamFreq(goalFreq, teamScoredFreq, teamConcededFreq);

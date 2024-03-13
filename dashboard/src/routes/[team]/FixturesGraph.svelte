@@ -7,7 +7,7 @@
 	function matchDescription(team: Team, match: Fixture): string {
 		const homeTeam = match.atHome ? toAlias(team) : toAlias(match.team);
 		const awayTeam = match.atHome ? toAlias(match.team) : toAlias(team);
-		
+
 		if (match.score != null) {
 			return scoreline(homeTeam, awayTeam, match.score.homeGoals, match.score.awayGoals);
 		} else {
@@ -35,7 +35,7 @@
 		x: Date[],
 		now: number,
 		highlightSize: number
-	): number[] {
+	) {
 		// Get matchday date with smallest time difference to now
 		let nextGameIdx: number | undefined;
 		let minDiff = Number.POSITIVE_INFINITY;
@@ -114,22 +114,22 @@
 	}
 
 	function currentDateLine(now: number, maxX: number) {
-		let nowLine = null;
-		if (now <= maxX) {
-			// Vertical line shapw marking current day
-			nowLine = {
-				type: 'line',
-				x0: now,
-				y0: -4,
-				x1: now,
-				y1: 104,
-				line: {
-					color: 'black',
-					dash: 'dot',
-					width: 1
-				}
-			};
+		if (now > maxX) {
+			return null;
 		}
+
+		const nowLine = {
+			type: 'line',
+			x0: now,
+			y0: -4,
+			x1: now,
+			y1: 104,
+			line: {
+				color: 'black',
+				dash: 'dot',
+				width: 1
+			}
+		};
 		return nowLine;
 	}
 
@@ -179,6 +179,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Team rating' },
 			'margin.l': 60,
@@ -212,6 +213,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'margin.l': 20,
@@ -272,6 +274,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const l = line(data, team, Date.now());
 		plotData.data[0] = l; // Overwrite plot data
 		//@ts-ignore

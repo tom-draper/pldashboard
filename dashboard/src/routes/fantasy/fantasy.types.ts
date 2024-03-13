@@ -1,3 +1,11 @@
+export type FantasyDashboardData = {
+	slug: string;
+	title: string;
+	page: Page;
+	data: FantasyData;
+	pageData: FantasyData;
+}
+
 export type FantasyData = {
 	[player: string]: PlayerData;
 };

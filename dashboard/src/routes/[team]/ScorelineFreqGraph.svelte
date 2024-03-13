@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { teamInSeason } from './team';
+	import { getTeams, teamInSeason } from './team';
 	import type { TeamsData, Team, Form } from './dashboard.types';
 
-	function insertSeasonAvgScoreFreq(scoreFreq: ScoreFreq, form: Form, team: Team, season: number) {
+	function insertSeasonAvgScoreFreq(scoreFreq: ScoreFreq, form: TeamsData['form'], team: Team, season: number) {
 		for (const matchday in form[team][season]) {
 			const score = form[team][season][matchday].score;
 			if (score == null) {
@@ -25,11 +25,11 @@
 
 	function getAvgScoreFreq(data: TeamsData): ScoreFreq {
 		const scoreFreq: ScoreFreq = {};
-		for (const team in data.form) {
+		for (const team of getTeams(data)) {
 			for (let i = 0; i < 3; i++) {
 				if (i === 0) {
 					insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id - i);
-				} else if (teamInSeason(data.form, team as Team, data._id - i)) {
+				} else if (teamInSeason(data.form, team, data._id - i)) {
 					insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id - i);
 				}
 			}
@@ -38,7 +38,7 @@
 		return scoreFreq;
 	}
 
-	function insertSeasonTeamScoreBars(scoreFreq: ScoreFreq, form: Form, team: Team, season: number) {
+	function insertSeasonTeamScoreBars(scoreFreq: ScoreFreq, form: TeamsData['form'], team: Team, season: number) {
 		for (const matchday in form[team][season]) {
 			const score = form[team][season][matchday].score;
 			if (score == null) {
@@ -186,6 +186,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Probability' },
 			'yaxis.visible': true,
@@ -200,6 +201,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
@@ -249,6 +251,7 @@
 		if (!setup) {
 			return;
 		}
+
 		resetTeamBars(scoreFreq);
 		insertTeamScoreBars(data, team, scoreFreq);
 		scaleBars(scoreFreq);

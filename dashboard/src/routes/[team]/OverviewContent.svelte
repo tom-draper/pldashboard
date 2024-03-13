@@ -1,26 +1,26 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { toInitials } from './team';
+	import { getTeams, toInitials } from './team';
 	import { teamStyle } from './format';
-	// import OverviewFooter from "./Footer.svelte";
+	import { Team, type DashboardData } from './dashboard.types';
 
 	type UpcomingMatch = {
 		time: Date;
-		home: string;
-		away: string;
+		home: Team;
+		away: Team;
 	};
 
-	function upcomingMatches(): UpcomingMatch[] {
+	function upcomingMatches() {
 		const upcoming: UpcomingMatch[] = [];
-		for (const team in data.upcoming) {
-			const date = new Date(data.upcoming[team].date);
-			if (!data.upcoming[team].atHome) {
+		for (const team in data.data.upcoming) {
+			if (!data.data.upcoming[team].atHome) {
 				continue;
 			}
+			const date = new Date(data.data.upcoming[team].date);
 			upcoming.push({
 				time: date,
 				home: team,
-				away: data.upcoming[team].nextTeam
+				away: data.data.upcoming[team].nextTeam
 			});
 		}
 		upcoming.sort((a: UpcomingMatch, b: UpcomingMatch) => {
@@ -31,7 +31,7 @@
 	}
 
 	type Standings = {
-		team: string;
+		team: Team;
 		position: number;
 		played: number;
 		points: number;
@@ -43,10 +43,11 @@
 		gF: number;
 	};
 
-	function standingsTable(): Standings[] {
+	function standingsTable() {
 		const standings: Standings[] = [];
-		for (const team in data.standings) {
-			const row = Object(data.standings[team][data._id]);
+		const teams = getTeams(data.data)
+		for (const team of teams) {
+			const row = Object(data.data.standings[team][data.data._id]);
 			row.team = team;
 			standings.push(row);
 		}
@@ -64,9 +65,11 @@
 
 		for (const teamFixtures of fixtures) {
 			for (const match of teamFixtures.matches) {
-				const homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage;
-				match.colour = fixtureColourSkewed(
-					data.teamRatings[match.team].totalRating + homeAdvantage
+				const homeAdvantage = match.atHome
+					? 0
+					: data.data.homeAdvantages[match.team].totalHomeAdvantage;
+				match.color = fixtureColorSkewed(
+					data.data.teamRatings[match.team].totalRating + homeAdvantage
 				);
 			}
 		}
@@ -82,27 +85,30 @@
 		for (const teamFixtures of fixtures) {
 			for (const match of teamFixtures.matches) {
 				let form = 0.5;
-				const matchdays = Object.keys(data.form[teamFixtures.team][data._id]).reverse();
-				const homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage;
+				const matchdays = Object.keys(data.data.form[teamFixtures.team][data.data._id]).reverse();
+				const homeAdvantage = match.atHome
+					? 0
+					: data.data.homeAdvantages[match.team].totalHomeAdvantage;
 				for (const matchday of matchdays) {
-					if (data.form[match.team][data._id][matchday].formRating5 != null) {
-						form = data.form[match.team][data._id][matchday].formRating5;
+					const formRating = data.data.form[teamFixtures.team][data.data._id][matchday].formRating5;
+					if (formRating != null) {
+						form = formRating;
 					}
 				}
-				match.colour = fixtureColour(form + homeAdvantage);
+				match.color = fixtureColor(form + homeAdvantage);
 			}
 		}
 		fixtures = fixtures;
 	}
 
 	type Fixtures = {
-		team: string;
+		team: Team;
 		matches: {
-			team: string;
-			date: string;
+			team: Team;
+			date: Date;
 			atHome: boolean;
 			status: string;
-			colour: string;
+			color: string;
 		}[];
 	};
 
@@ -110,15 +116,17 @@
 		const fixtures = [];
 		for (const row of standings) {
 			const matches = [];
-			for (const matchday in data.fixtures[row.team]) {
-				const match = data.fixtures[row.team][matchday];
-				const homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage;
+			for (const matchday in data.data.fixtures[row.team]) {
+				const match = data.data.fixtures[row.team][matchday];
+				const homeAdvantage = match.atHome
+					? 0
+					: data.data.homeAdvantages[match.team].totalHomeAdvantage;
 				matches.push({
 					team: match.team,
 					date: match.date,
 					atHome: match.atHome,
 					status: match.status,
-					colour: fixtureColourSkewed(data.teamRatings[match.team].totalRating + homeAdvantage)
+					color: fixtureColorSkewed(data.data.teamRatings[match.team].totalRating + homeAdvantage)
 				});
 			}
 			fixtures.push({
@@ -129,7 +137,7 @@
 		return fixtures;
 	}
 
-	function fixtureColourSkewed(scaleVal: number) {
+	function fixtureColorSkewed(scaleVal: number) {
 		if (scaleVal < 0.05) {
 			return '#00fe87';
 		} else if (scaleVal < 0.1) {
@@ -159,7 +167,7 @@
 		}
 	}
 
-	function fixtureColour(scaleVal: number) {
+	function fixtureColor(scaleVal: number) {
 		if (scaleVal < 0.2) {
 			return '#00fe87';
 		} else if (scaleVal < 0.25) {
@@ -200,7 +208,7 @@
 		fixtures = fixturesTable(standings);
 	});
 
-	export let data;
+	export let data: DashboardData;
 </script>
 
 <div id="page-content">
@@ -300,21 +308,31 @@
 									{row.points}
 								</div>
 								<div class="standings-rating">
-									{data.teamRatings[row.team].totalRating.toFixed(2)}
+									{data.data.teamRatings[row.team].totalRating.toFixed(2)}
 								</div>
 								<div class="standings-form">
-									{Object.keys(data.form[row.team][data._id]).length > 0 &&
-									data.form[row.team][data._id][
-										Math.max(...Object.keys(data.form[row.team][data._id]).map((x) => parseInt(x)))
+									{Object.keys(data.data.form[row.team][data.data._id]).length > 0 &&
+									data.data.form[row.team][data.data._id][
+										Math.max(
+											...Object.keys(data.data.form[row.team][data.data._id]).map((x) =>
+												parseInt(x)
+											)
+										)
 									] != undefined &&
-									data.form[row.team][data._id][
-										Math.max(...Object.keys(data.form[row.team][data._id]).map((x) => parseInt(x)))
+									data.data.form[row.team][data.data._id][
+										Math.max(
+											...Object.keys(data.data.form[row.team][data.data._id]).map((x) =>
+												parseInt(x)
+											)
+										)
 									].formRating5 != null
-										? data.form[row.team][data._id][
+										? data.data.form[row.team][data.data._id][
 												Math.max(
-													...Object.keys(data.form[row.team][data._id]).map((x) => parseInt(x))
+													...Object.keys(data.data.form[row.team][data.data._id]).map((x) =>
+														parseInt(x)
+													)
 												)
-											].formRating5.toFixed(2)
+											].formRating5?.toFixed(2)
 										: ''}
 								</div>
 							</div>
@@ -379,10 +397,10 @@
 									{#each row.matches as match, i}
 										<div
 											class="match"
-											style="background: {match.colour}; {match.status == 'FINISHED'
+											style="background: {match.color}; {match.status == 'FINISHED'
 												? 'filter: grayscale(100%)'
 												: ''} {i === row.matches.length - 1 ? 'border-right: 2px solid black' : ''}"
-											title={match.date}
+											title={match.date.toLocaleString()}
 										>
 											{`${toInitials(match.team)} (${match.atHome ? 'H' : 'A'}`})
 										</div>

@@ -20,7 +20,7 @@
 		}
 
 		// Divide by number of teams to get avg goals per matchday
-		for (const matchday of Object.keys(avgGoals)) {
+		for (const matchday in avgGoals) {
 			avgGoals[matchday] /= 20;
 		}
 
@@ -123,6 +123,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Goals' },
 			'yaxis.visible': true,
@@ -136,6 +137,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
@@ -186,6 +188,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
 		const avgGoals = getAvgGoalsPerGame(data);
 		const matchdays = Object.keys(avgGoals);

@@ -1,18 +1,18 @@
 <script lang="ts">
-	import CurrentForm from './current_form/CurrentForm.svelte';
+	import CurrentForm from './current-form/CurrentForm.svelte';
 	import TableSnippet from './TableSnippet.svelte';
 	import NextGame from './NextGame.svelte';
-	import StatsValues from './goals_scored_and_conceded/StatsValues.svelte';
+	import StatsValues from './goals-scored-and-conceded/StatsValues.svelte';
 	import FixturesGraph from './FixturesGraph.svelte';
 	import FormOverTimeGraph from './FormOverTimeGraph.svelte';
 	import PositionOverTimeGraph from './PositionOverTimeGraph.svelte';
 	import PointsOverTimeGraph from './PointsOverTimeGraph.svelte';
-	import GoalsScoredAndConcededGraph from './goals_scored_and_conceded/ScoredConcededPerGameGraph.svelte';
-	import CleanSheetsGraph from './goals_scored_and_conceded/CleanSheetsGraph.svelte';
-	import GoalsPerGame from './goals_per_game/GoalsPerGame.svelte';
-	import SpiderGraph from './SpiderGraph.svelte';
+	import GoalsScoredAndConcededGraph from './goals-scored-and-conceded/ScoredConcededPerGameGraph.svelte';
+	import CleanSheetsGraph from './goals-scored-and-conceded/CleanSheetsGraph.svelte';
+	import GoalsPerGame from './goals-per-game/GoalsPerGame.svelte';
+	import SpiderGraph from './spider-graph/SpiderGraph.svelte';
 	import ScorelineFreqGraph from './ScorelineFreqGraph.svelte';
-	import ScoredConcededOverTimeGraph from './goals_scored_and_conceded/ScoredConcededOverTimeGraph.svelte';
+	import ScoredConcededOverTimeGraph from './goals-scored-and-conceded/ScoredConcededOverTimeGraph.svelte';
 	import type { DashboardData, Team } from './dashboard.types';
 
 	let pageWidth: number;

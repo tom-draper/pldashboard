@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getTeamID } from './team';
+	import { getTeamID, getTeams } from './team';
 	import type { TeamsData, Team } from './dashboard.types';
 
 	function getLineConfig(team: Team, isMainTeam: boolean) {
 		let lineConfig;
 		if (isMainTeam) {
-			// Get team primary colour from css variable
+			// Get team primary color from css variable
 			const teamKey = getTeamID(team);
 			const lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
 			lineConfig = { color: lineColor, width: 4 };
@@ -16,22 +16,12 @@
 		return lineConfig;
 	}
 
-	function getPositions(data: TeamsData, team: Team, matchdays: string[]) {
-		const y = [];
-		for (let i = 0; i < matchdays.length; i++) {
-			const position = data.form[team][data._id][matchdays[i]].position;
-			y.push(position);
-		}
-		return y;
+	function getPositions(data: TeamsData, team: Team, matchdays: string[]): number[] {
+		return matchdays.map((matchday) => data.form[team][data._id][matchday].position);
 	}
 
 	function getMatchdayDates(data: TeamsData, team: Team, matchdays: string[]) {
-		const dates = [];
-		for (let i = 0; i < matchdays.length; i++) {
-			const date = data.form[team][data._id][matchdays[i]].date;
-			dates.push(date);
-		}
-		return dates;
+		return matchdays.map((matchday) => data.form[team][data._id][matchday].date);
 	}
 
 	function getLine(data: TeamsData, team: Team, isMainTeam: boolean) {
@@ -56,13 +46,13 @@
 
 	function lines(data: TeamsData, team: Team) {
 		const lines = [];
-		const teams = Object.keys(data.standings) as Team[];
-		for (let i = 0; i < teams.length; i++) {
-			if (teams[i] === team) {
+		const teams = getTeams(data)
+		for (const _team of teams) {
+			if (_team === team) {
 				continue;
 			}
 
-			const line = getLine(data, teams[i], false);
+			const line = getLine(data, _team, false);
 			lines.push(line);
 		}
 
@@ -154,6 +144,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Position' },
 			'yaxis.visible': true,
@@ -169,6 +160,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,

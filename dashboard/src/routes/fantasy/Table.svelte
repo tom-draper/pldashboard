@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { FantasyData, Page } from '../[team]/fantasy.types';
+	import type { FantasyData, Page, Team } from './fantasy.types';
 
 	type TableRow = (string | number)[];
 
@@ -30,10 +30,10 @@
 		return team.toLowerCase().replace(' ', '-');
 	}
 
-	function buildTeamColourCSSTags() {
-		const playerTeams = {};
-		const teamCSS = {};
-		for (const name of Object.keys(data)) {
+	function buildTeamColorCSSTags() {
+		const playerTeams: {[player: string]: Team} = {};
+		const teamCSS: {[team in Team]?: string} = {};
+		for (const name in data) {
 			if (name === '_id') {
 				continue;
 			}
@@ -46,7 +46,7 @@
 		teamCSSTag = teamCSS;
 	}
 
-	function abbrNum(number: number, decPlaces: number): string {
+	function abbrNum(num: number, decPlaces: number): string {
 		// 2 decimal places => 100, 3 => 1000, etc
 		decPlaces = Math.pow(10, decPlaces);
 
@@ -59,31 +59,26 @@
 			const size = Math.pow(10, (i + 1) * 3);
 
 			// If the number is bigger or equal do the abbreviation
-			if (size <= number) {
+			if (size <= num) {
 				// Here, we multiply by decPlaces, round, and then divide by decPlaces.
 				// This gives us nice rounding to a particular decimal place.
-				number = Math.round((number * decPlaces) / size) / decPlaces;
+				num = Math.round((num * decPlaces) / size) / decPlaces;
 
 				// Handle special case where we round up to the next abbreviation
-				if (number == 1000 && i < abbrev.length - 1) {
-					number = 1;
+				if (num == 1000 && i < abbrev.length - 1) {
+					num = 1;
 					i++;
 				}
 
-				// Add the letter for the abbreviation
-				number += abbrev[i];
-
-				// We are done... stop
-				break;
+				return num.toString() + abbrev[i];
 			}
 		}
-
-		return number;
+		return num.toString();
 	}
 
 	function getTableRows(data: FantasyData): TableRow[] {
 		const tableRows: TableRow[] = [];
-		for (const name of Object.keys(data)) {
+		for (const name in data) {
 			if (name === '_id') {
 				continue;
 			}
@@ -124,14 +119,15 @@
 					targets: 0,
 					createdCell: function (
 						td: HTMLTableCellElement,
-						cellData,
+						cellData: Team,
 						rowData,
 						row: number,
 						col: number
 					) {
 						const team = playerToTeam[cellData];
-						td.style.background = `var(--${teamCSSTag[team]})`;
-						td.style.color = `var(--${teamCSSTag[team]}-secondary)`;
+						const teamID = teamCSSTag[team];
+						td.style.background = `var(--${teamID})`;
+						td.style.color = `var(--${teamID}-secondary)`;
 						td.title = team;
 					}
 				},
@@ -153,29 +149,31 @@
 	}
 
 	function refreshTable(data: FantasyData) {
-		if (setup) {
-			buildTeamColourCSSTags();
-			const tableRows = getTableRows(data);
-
-			table.clear();
-			table.rows.add(tableRows);
-			table.draw();
+		if (!setup) {
+			return
 		}
+
+		buildTeamColorCSSTags();
+		const tableRows = getTableRows(data);
+
+		table.clear();
+		table.rows.add(tableRows);
+		table.draw();
 	}
 
 	let table;
-	let playerToTeam;
-	let teamCSSTag;
+	let playerToTeam: {[player: string]: Team};
+	let teamCSSTag: {[team in Team]?: string};
 	let setup = false;
 	onMount(() => {
-		buildTeamColourCSSTags();
+		buildTeamColorCSSTags();
 		buildTable(data);
 		setup = true;
 	});
 
 	$: page && refreshTable(data);
 
-	export let data: FantasyData, page: Page, mobileView: boolean;
+	export let data: FantasyData, page: Page;
 </script>
 
 <div class="table">

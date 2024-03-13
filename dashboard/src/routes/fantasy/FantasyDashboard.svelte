@@ -1,10 +1,10 @@
 <script lang="ts">
-	import FantasyNav from '../[team]/nav/FantasyNav.svelte';
-	import FantasyMobileNav from '../[team]/nav/FantasyMobileNav.svelte';
+	import FantasyNav from './nav/FantasyNav.svelte';
+	import FantasyMobileNav from './nav/FantasyMobileNav.svelte';
 	import PointsVsPrice from './PointsVsPrice.svelte';
-	import Footer from '../[team]/Footer.svelte';
+	import Footer from '../Footer.svelte';
 	import Table from './Table.svelte';
-	import type { FantasyData, Page } from '../[team]/fantasy.types';
+	import type { FantasyDashboardData, FantasyData, Page } from './fantasy.types';
 	import { replaceState } from '$app/navigation';
 
 	function toggleMobileNav() {
@@ -24,7 +24,7 @@
 
 	function filterDataByPage(data: FantasyData, page: Page) {
 		const pageData: FantasyData = {};
-		for (const team of Object.keys(data)) {
+		for (const team in data) {
 			if (
 				team === '_id' ||
 				page === 'all' ||
@@ -62,13 +62,7 @@
 	let pageWidth: number;
 	$: mobileView = pageWidth <= 700;
 
-	export let data: {
-		slug: string;
-		title: string;
-		page: Page;
-		data: FantasyData;
-		pageData: FantasyData;
-	};
+	export let data: FantasyDashboardData;
 </script>
 
 <svelte:head>
@@ -94,7 +88,7 @@
 		</div>
 
 		<div class="table">
-			<Table data={data.pageData} page={data.page} {mobileView} />
+			<Table data={data.pageData} page={data.page} />
 		</div>
 		<Footer lastUpdated={null} />
 	</div>

@@ -4,25 +4,26 @@
 	import type { TeamsData, Team } from './dashboard.types';
 
 	function getFormLine(data: TeamsData, team: Team, isMainTeam: boolean) {
-		const playedDates = [];
-		const matchdays = [];
+		const playedDates: Date[] = [];
+		const matchdays: string[] = [];
 		for (const matchday in data.form[team][data._id]) {
 			if (data.form[team][data._id][matchday].score == null) {
 				continue;
 			}
 			matchdays.push(matchday);
-			playedDates.push(new Date(data.form[team][data._id][matchday].date));
+			const date = data.form[team][data._id][matchday].date ?? '';
+			playedDates.push(new Date(date));
 		}
 
 		const y = [];
 		for (const matchday of matchdays) {
-			const form = data.form[team][data._id][matchday].formRating5;
+			const form = data.form[team][data._id][matchday].formRating5 ?? 0;
 			y.push(form * 100);
 		}
 
 		let lineVal: { color: string; width?: number };
 		if (isMainTeam) {
-			// Get team primary colour from css variable
+			// Get team primary color from css variable
 			const teamKey = getTeamID(team);
 			const lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
 			lineVal = { color: lineColor, width: 4 };
@@ -44,16 +45,9 @@
 	}
 
 	function lines(data: TeamsData, team: Team) {
-		const lines = [];
-
-		const teams = Object.keys(data.standings) as Team[];
-		for (let i = 0; i < teams.length; i++) {
-			if (teams[i] === team) {
-				continue;
-			}
-			const line = getFormLine(data, teams[i], false);
-			lines.push(line);
-		}
+		const lines = Object.keys(data.standings)
+			.filter((t) => t !== team)
+			.map((t) => getFormLine(data, t, false));
 
 		// Add this team last to ensure it overlaps all other lines
 		const line = getFormLine(data, team, true);
@@ -97,6 +91,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Form rating' },
 			'yaxis.visible': true,
@@ -111,6 +106,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
@@ -154,6 +150,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const newPlotData = buildPlotData(data, team);
 		for (let i = 0; i < 20; i++) {
 			plotData.data[i] = newPlotData.data[i];

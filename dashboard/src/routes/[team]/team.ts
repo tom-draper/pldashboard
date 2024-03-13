@@ -1,3 +1,4 @@
+import { data } from 'jquery';
 import type { TeamsData, Form, Team } from './dashboard.types';
 
 export function toInitials(team: Team): string {
@@ -46,7 +47,7 @@ export function getTeamID(team: Team): string {
 	return team.toLowerCase().replace(/ /g, '-');
 }
 
-export function teamInSeason(form: Form, team: Team, season: number): boolean {
+export function teamInSeason(form: TeamsData['form'], team: Team, season: number): boolean {
 	return team in form && form[team][season]['1'] != null;
 }
 
@@ -56,7 +57,7 @@ export function teamColor(team: Team): string {
 	return teamColor;
 }
 
-export function playedMatchdays(data: TeamsData, team: string): string[] {
+export function playedMatchdays(data: TeamsData, team: Team): string[] {
 	const matchdays = [];
 	for (const matchday in data.form[team][data._id]) {
 		if (data.form[team][data._id][matchday].score != null) {
@@ -86,9 +87,10 @@ export function playedMatchdayDates(data: TeamsData, team: Team): Date[] {
 
 	// Find median matchday date across all teams for each matchday
 	const x = [];
+	const teams = getTeams(data);
 	for (let i = 0; i < matchdays.length; i++) {
 		const matchdayDates = [];
-		for (const team in data.standings) {
+		for (const team of teams) {
 			matchdayDates.push(new Date(data.fixtures[team][matchdays[i]].date));
 		}
 		matchdayDates.sort();
@@ -98,4 +100,8 @@ export function playedMatchdayDates(data: TeamsData, team: Team): Date[] {
 		return a - b;
 	});
 	return x;
+}
+
+export function getTeams(data: TeamsData): Team[] {
+	return Object.keys(data.standings) as Team[];
 }

@@ -101,6 +101,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'margin.l': 60
 		};
@@ -112,6 +113,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'margin.l': 20
 		};
@@ -169,6 +171,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const matchdays = playedMatchdays(data, team);
 		const [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
 		const line = hiddenLine(cleanSheetsBar.x);

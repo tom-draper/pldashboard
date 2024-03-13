@@ -3,7 +3,7 @@
 	export let lastUpdated: string | null;
 </script>
 
-<div class="teams-footer footer-text-colour">
+<div class="teams-footer footer-text-color">
 	<div class="teams-footer-bottom">
 		<a href="https://github.com/tom-draper/pldashboard" target="_blank" class="github">
 			<img src={githubIcon} alt="GitHub" class="github-img" />
@@ -40,7 +40,7 @@
 		font-size: 13px;
 		align-items: center;
 	}
-	.footer-text-colour {
+	.footer-text-color {
 		color: rgb(0 0 0 / 37%);
 	}
 	.teams-footer-bottom {

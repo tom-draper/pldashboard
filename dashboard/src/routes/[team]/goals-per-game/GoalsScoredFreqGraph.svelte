@@ -14,7 +14,7 @@
 			paper_bgcolor: '#fafafa',
 			yaxis: getYAxisLayout(),
 			xaxis: {
-				title: { text: 'Conceded' },
+				title: { text: 'Scored' },
 				linecolor: 'black',
 				showgrid: false,
 				showline: false,
@@ -35,8 +35,9 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
-			'yaxis.title': { text: 'Conceded' },
+			'yaxis.title': { text: 'Scored' },
 			'yaxis.visible': true,
 			'margin.l': 60
 		};
@@ -48,6 +49,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
@@ -59,7 +61,7 @@
 
 	function buildPlotData(): PlotData {
 		const plotData = {
-			data: getConcededBars(),
+			data: getScoredBars(),
 			layout: defaultLayout(),
 			config: {
 				responsive: true,
@@ -83,7 +85,8 @@
 		if (!setup) {
 			return;
 		}
-		plotData.data[1] = getConcededTeamBars();
+
+		plotData.data[1] = getScoredTeamBars(); // Update team bars
 		//@ts-ignore
 		Plotly.relayout(plotDiv, {
 			yaxis: getYAxisLayout()
@@ -107,10 +110,10 @@
 	$: setup && mobileView && setMobileLayout();
 
 	export let team: string,
-		getConcededBars: Function,
-		getConcededTeamBars: Function,
-		getXLabels: Function,
-		getYAxisLayout: Function,
+		getScoredBars: () => any,
+		getScoredTeamBars: () => any,
+		getXLabels: () => any,
+		getYAxisLayout: () => any,
 		mobileView: boolean;
 </script>
 

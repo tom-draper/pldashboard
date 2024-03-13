@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Footer from './Footer.svelte';
+	import Footer from '../Footer.svelte';
 	import Nav from './nav/Nav.svelte';
 	import MobileNav from './nav/MobileNav.svelte';
 	import { getCurrentMatchday, getTeamID, playedMatchdayDates, toAlias } from './team';
@@ -8,6 +8,7 @@
 	import { slugAlias, toTitleCase } from './format';
 	import TeamsContent from './TeamsContent.svelte';
 	import OverviewContent from './OverviewContent.svelte';
+	import { onMount } from 'svelte';
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');
@@ -28,13 +29,17 @@
 		data.slug = slugAlias(getTeamID(newTeam));
 		data.team.id = data.slug;
 		data.team.name = toTitleCase(data.slug.replace(/-/g, ' ')) as Team;
-		data.title = `Dashboard | ${data.team}`;
+		data.title = `Dashboard | ${data.team.name}`;
 		// Overwrite values from new team's perspective using same data
 		data.currentMatchday = getCurrentMatchday(data.data, data.team.name);
 		data.playedDates = playedMatchdayDates(data.data, data.team.name);
 
 		replaceState(data.slug, {}); // Change current url without reloading
 	}
+
+	onMount(() => {
+		console.log(data.data);
+	});
 
 	export let data: DashboardData;
 </script>
@@ -112,7 +117,7 @@
 		padding: 0.8em 0;
 		cursor: pointer;
 		font-size: 1.1em;
-		z-index: 1;
+		z-index: 100;
 		width: 100%;
 		bottom: 0;
 		border: none;

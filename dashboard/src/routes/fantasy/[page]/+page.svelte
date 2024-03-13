@@ -1,14 +1,8 @@
 <script lang="ts">
-	import type { FantasyData, Page } from '../../[team]/fantasy.types';
+	import type { FantasyDashboardData } from '../fantasy.types';
 	import FantasyDashboard from '../FantasyDashboard.svelte';
 
-	export let data: {
-		slug: string;
-		title: string;
-		page: Page;
-		data: FantasyData;
-		pageData: FantasyData;
-	};
+	export let data: FantasyDashboardData;
 </script>
 
 <FantasyDashboard {data} />

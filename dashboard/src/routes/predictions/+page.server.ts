@@ -1,7 +1,7 @@
-import { fetchFantasy } from './data';
+import { fetchPredictions } from './data';
 
 export async function load() {
-	const data = await fetchFantasy();
+	const data = await fetchPredictions();
 	if (!data) {
 		return {
 			status: 500,
@@ -10,9 +10,6 @@ export async function load() {
 	}
 
 	return {
-		data,
-		page: 'all',
-		title: 'Fantasy',
-		pageData: data
+		data
 	};
 }

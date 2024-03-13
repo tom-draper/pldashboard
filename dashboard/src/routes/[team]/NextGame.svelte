@@ -3,7 +3,7 @@
 	import { ordinal, teamStyle } from './format';
 	import type { TeamsData, Team } from './dashboard.types';
 
-	function resultColour(prevMatch, home: boolean): string {
+	function resultColor(prevMatch, home: boolean): string {
 		if (home) {
 			return prevMatch.homeGoals < prevMatch.awayGoals ? prevMatch.awayTeam : prevMatch.homeTeam;
 		} else {
@@ -92,14 +92,14 @@
 									<div class="home-team" style={teamStyle(prevMatch.homeTeam)}>
 										{toInitials(prevMatch.homeTeam)}
 									</div>
-									<div class="goals-container" style={teamStyle(resultColour(prevMatch, true))}>
+									<div class="goals-container" style={teamStyle(resultColor(prevMatch, true))}>
 										<div class="home-goals">
 											{prevMatch.homeGoals}
 										</div>
 									</div>
 								</div>
 								<div class="right-side">
-									<div class="goals-container" style={teamStyle(resultColour(prevMatch, false))}>
+									<div class="goals-container" style={teamStyle(resultColor(prevMatch, false))}>
 										<div class="away-goals">
 											{prevMatch.awayGoals}
 										</div>

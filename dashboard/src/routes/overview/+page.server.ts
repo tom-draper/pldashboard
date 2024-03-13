@@ -17,7 +17,7 @@ export async function load() {
 			id: null
 		},
 		teams,
-		title: 'Overview',
+		title: 'Dashboard | Overview',
 		currentMatchday: null,
 		playedDates: null,
 		data

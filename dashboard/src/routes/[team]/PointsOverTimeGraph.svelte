@@ -2,11 +2,12 @@
 	import { onMount } from 'svelte';
 	import { getTeamID } from './team';
 	import type { TeamsData, Team } from './dashboard.types';
+	import { getTeams } from './data';
 
 	function getLineConfig(team: Team, isMainTeam: boolean) {
 		let lineConfig;
 		if (isMainTeam) {
-			// Get team primary colour from css variable
+			// Get team primary color from css variable
 			const teamKey = getTeamID(team);
 			const lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
 			lineConfig = { color: lineColor, width: 4 };
@@ -55,12 +56,12 @@
 
 	function lines(data: TeamsData, team: Team) {
 		const lines = [];
-		const teams = Object.keys(data.standings) as Team[];
-		for (let i = 0; i < teams.length; i++) {
-			if (teams[i] === team) {
+		const teams = getTeams(data);
+		for (const _team of teams) {
+			if (_team === team) {
 				continue;
 			}
-			const line = getLine(data, teams[i], false);
+			const line = getLine(data, _team, false);
 			lines.push(line);
 		}
 
@@ -102,6 +103,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Points' },
 			'yaxis.visible': true,
@@ -116,12 +118,14 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
 			'margin.l': 20,
 			'margin.t': 5
 		};
+		//@ts-ignore
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -157,6 +161,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const newPlotData = buildPlotData(data, team);
 		for (let i = 0; i < 20; i++) {
 			plotData.data[i] = newPlotData.data[i];

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { FantasyData, Page, Position } from '../[team]/fantasy.types';
+	import type { FantasyData, Page, Position, Team } from './fantasy.types';
 
-	const positionColours: { [position: Position]: string } = {
+	const positionColors: { [position in Position]: string } = {
 		Forward: '#c600d8',
 		Midfielder: '#00fe87',
 		Defender: '#2dbaff',
@@ -10,25 +10,26 @@
 	} as const;
 
 	function lines(data: FantasyData) {
-		const teams: string[] = [];
+		const teams: Team[] = [];
 		const points: number[] = [];
 		const price: number[] = [];
 		const minutes: number[] = [];
-		const colours: string[] = [];
+		const colors: string[] = [];
 		let maxMinutes = 0;
-		for (const team of Object.keys(data)) {
+
+		Object.entries(data).forEach(([team, teamData]) => {
 			if (team === '_id') {
-				continue;
+				return;
 			}
 			teams.push(team);
-			points.push(data[team].totalPoints === null ? 0 : data[team].totalPoints);
-			price.push(data[team].price == null ? 0 : data[team].price / 10);
-			minutes.push(data[team].minutes == null ? 0 : data[team].minutes / 2);
+			points.push(teamData.totalPoints === null ? 0 : teamData.totalPoints);
+			price.push(teamData.price == null ? 0 : teamData.price / 10);
+			minutes.push(teamData.minutes == null ? 0 : teamData.minutes / 2);
 			if (minutes[minutes.length - 1] > maxMinutes) {
 				maxMinutes = minutes[minutes.length - 1];
 			}
-			colours.push(positionColours[data[team].position]);
-		}
+			colors.push(positionColors[teamData.position]);
+		});
 
 		const sizes = minutes.slice(0);
 		for (let i = 0; i < sizes.length; i++) {
@@ -46,7 +47,7 @@
 			marker: {
 				size: sizes,
 				opacity: 0.75,
-				color: colours
+				color: colors
 			},
 			customdata: playtimes,
 			text: teams,
@@ -91,6 +92,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Position' },
 			'yaxis.visible': true,
@@ -106,6 +108,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
@@ -168,6 +171,7 @@
 		if (!setup) {
 			return;
 		}
+
 		const newPlotData = buildPlotData(data);
 		plotData.data[0] = newPlotData.data[0];
 

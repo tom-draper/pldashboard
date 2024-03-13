@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { TeamsData, Team } from './dashboard.types';
-	import { toAlias } from './team';
+	import { getTeams, toAlias } from './team';
 
-	function tableSnippetRange(sortedTeams: string[], team: string): [number, number] {
+	function tableSnippetRange(sortedTeams: Team[], team: Team): [number, number] {
 		const teamStandingsIdx = sortedTeams.indexOf(team);
 
 		let low = teamStandingsIdx - 3;
@@ -22,7 +22,7 @@
 	}
 
 	function buildTableSnippet() {
-		const sortedTeams = Object.keys(data.standings).sort(function (teamA, teamB) {
+		const sortedTeams = getTeams(data).sort(function (teamA, teamB) {
 			return data.standings[teamA][data._id].position - data.standings[teamB][data._id].position;
 		});
 
