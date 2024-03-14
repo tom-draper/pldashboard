@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { TeamsData, Team } from '../dashboard.types';
+	import { getTeams } from '../team';
 
 	function getAvgGoalsPerGame(data: TeamsData): Counter {
 		const avgGoals: Counter = {};
 
-		for (const team in data.standings) {
+		const teams = getTeams(data)
+		for (const team of teams) {
 			for (const matchday in data.form[team][data._id]) {
 				const score = data.form[team][data._id][matchday].score;
 				if (score == null) {

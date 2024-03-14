@@ -51,18 +51,13 @@
 <div id="team">
 	<Nav team={data.team.name} teams={data.teams} {switchTeam} />
 	<MobileNav teams={data.teams} {switchTeam} {toggleMobileNav} />
-	{#if data.teams.length === 0}
-		<!-- Navigation disabled while teams list are loading -->
-		<button id="mobileNavBtn" style="cursor: default">Select Team</button>
-	{:else}
-		<button id="mobileNavBtn" on:click={toggleMobileNav}> Select Team </button>
-	{/if}
+	<button id="mobileNavBtn" on:click={toggleMobileNav}> Select Team </button>
 
 	<div id="dashboard">
 		{#if data.slug === 'overview'}
-			<div class="header" style="background-color: var(--overview);">
+			<div class="header overview-header">
 				<a class="main-link no-decoration" href="/overview">
-					<div class="title" style="color: var(--overview-secondary);">Overview</div>
+					<div class="title">Overview</div>
 				</a>
 			</div>
 		{:else}
@@ -89,6 +84,10 @@
 		display: grid;
 		place-items: center;
 	}
+	.overview-header {
+		background-color: var(--green);
+		color: var(--purple);
+	}
 	.main-link {
 		width: fit-content;
 		display: grid;
@@ -97,6 +96,10 @@
 	.title {
 		font-size: 2.3rem;
 		width: fit-content;
+	}
+
+	.default-cursor {
+		cursor: default;
 	}
 
 	#team {

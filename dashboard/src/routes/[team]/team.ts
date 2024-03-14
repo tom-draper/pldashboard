@@ -1,4 +1,3 @@
-import { data } from 'jquery';
 import type { TeamsData, Form, Team } from './dashboard.types';
 
 export function toInitials(team: Team): string {

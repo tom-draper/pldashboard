@@ -4,6 +4,7 @@
 	import GoalsConcededFreq from './GoalsConcededFreqGraph.svelte';
 	import type { TeamsData, Team } from '../dashboard.types';
 	import { getTeams } from '../team';
+	import { validTeam } from '../data';
 
 	function avgBars() {
 		return {
@@ -97,10 +98,6 @@
 	}
 
 	function countScored(data: TeamsData, goalFreq: Counter, season: number, team: Team) {
-		if (!(team in data.form)) {
-			return;
-		}
-
 		for (const matchday in data.form[team][season]) {
 			const score = data.form[team][season][matchday].score;
 			if (score == null) {
@@ -170,10 +167,6 @@
 	}
 
 	function countConceded(data: TeamsData, goalFreq: Counter, season: number, team: Team) {
-		if (!(team in data.form)) {
-			return;
-		}
-
 		for (const matchday in data.form[team][season]) {
 			const score = data.form[team][season][matchday].score;
 			if (score == null) {

@@ -170,8 +170,7 @@ button:focus:not(:focus-visible) {
 	--luton-town: rgb(232, 68, 34);
 	--luton-town-secondary: rgb(27, 27, 56);
 
-	--overview: #00fe87;
-	--overview-secondary: #280936;
+	--green: #00fe87;
 
 	--all: #00fe87;
 	--all-secondary: #1c0d2d;

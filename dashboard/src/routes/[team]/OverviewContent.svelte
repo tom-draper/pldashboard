@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { getTeams, toInitials } from './team';
 	import { teamStyle } from './format';
-	import { Team, type DashboardData } from './dashboard.types';
+	import { Team, type DashboardData, type TeamsData } from './dashboard.types';
 
 	type UpcomingMatch = {
 		time: Date;
@@ -10,17 +10,18 @@
 		away: Team;
 	};
 
-	function upcomingMatches() {
+	function upcomingMatches(data: TeamsData) {
 		const upcoming: UpcomingMatch[] = [];
-		for (const team in data.data.upcoming) {
-			if (!data.data.upcoming[team].atHome) {
+		const teams = getTeams(data)
+		for (const team of teams) {
+			if (!data.upcoming[team].atHome) {
 				continue;
 			}
-			const date = new Date(data.data.upcoming[team].date);
+			const date = new Date(data.upcoming[team].date);
 			upcoming.push({
 				time: date,
 				home: team,
-				away: data.data.upcoming[team].nextTeam
+				away: data.upcoming[team].nextTeam
 			});
 		}
 		upcoming.sort((a: UpcomingMatch, b: UpcomingMatch) => {
@@ -43,11 +44,11 @@
 		gF: number;
 	};
 
-	function standingsTable() {
+	function standingsTable(data: TeamsData) {
 		const standings: Standings[] = [];
-		const teams = getTeams(data.data)
+		const teams = getTeams(data)
 		for (const team of teams) {
-			const row = Object(data.data.standings[team][data.data._id]);
+			const row = Object(data.standings[team][data._id]);
 			row.team = team;
 			standings.push(row);
 		}
@@ -57,7 +58,7 @@
 		return standings;
 	}
 
-	function applyRatingFixturesScaling() {
+	function applyRatingFixturesScaling(data: TeamsData) {
 		if (fixturesScaling === 'rating') {
 			return;
 		}
@@ -67,34 +68,37 @@
 			for (const match of teamFixtures.matches) {
 				const homeAdvantage = match.atHome
 					? 0
-					: data.data.homeAdvantages[match.team].totalHomeAdvantage;
+					: data.homeAdvantages[match.team].totalHomeAdvantage;
 				match.color = fixtureColorSkewed(
-					data.data.teamRatings[match.team].totalRating + homeAdvantage
+					data.teamRatings[match.team].totalRating + homeAdvantage
 				);
 			}
 		}
 		fixtures = fixtures;
 	}
 
-	function applyRatingFormScaling() {
+	function applyRatingFormScaling(data: TeamsData) {
 		if (fixturesScaling === 'form') {
 			return;
 		}
 		fixturesScaling = 'form';
 
 		for (const teamFixtures of fixtures) {
+			console.log(teamFixtures.team)
 			for (const match of teamFixtures.matches) {
 				let form = 0.5;
-				const matchdays = Object.keys(data.data.form[teamFixtures.team][data.data._id]).reverse();
+				const matchdays = Object.keys(data.form[teamFixtures.team][data._id]).reverse();
 				const homeAdvantage = match.atHome
 					? 0
-					: data.data.homeAdvantages[match.team].totalHomeAdvantage;
+					: data.homeAdvantages[match.team].totalHomeAdvantage;
 				for (const matchday of matchdays) {
-					const formRating = data.data.form[teamFixtures.team][data.data._id][matchday].formRating5;
+					const formRating = data.form[match.team][data._id][matchday].formRating5;
+					console.log(formRating)
 					if (formRating != null) {
 						form = formRating;
 					}
 				}
+				console.log(match.team, form, homeAdvantage)
 				match.color = fixtureColor(form + homeAdvantage);
 			}
 		}
@@ -112,21 +116,21 @@
 		}[];
 	};
 
-	function fixturesTable(standings: Standings[]): Fixtures[] {
+	function fixturesTable(data: TeamsData, standings: Standings[]): Fixtures[] {
 		const fixtures = [];
 		for (const row of standings) {
 			const matches = [];
-			for (const matchday in data.data.fixtures[row.team]) {
-				const match = data.data.fixtures[row.team][matchday];
+			for (const matchday in data.fixtures[row.team]) {
+				const match = data.fixtures[row.team][matchday];
 				const homeAdvantage = match.atHome
 					? 0
-					: data.data.homeAdvantages[match.team].totalHomeAdvantage;
+					: data.homeAdvantages[match.team].totalHomeAdvantage;
 				matches.push({
 					team: match.team,
 					date: match.date,
 					atHome: match.atHome,
 					status: match.status,
-					color: fixtureColorSkewed(data.data.teamRatings[match.team].totalRating + homeAdvantage)
+					color: fixtureColorSkewed(data.teamRatings[match.team].totalRating + homeAdvantage)
 				});
 			}
 			fixtures.push({
@@ -203,9 +207,9 @@
 	$: fixtures;
 	let fixturesScaling = 'rating';
 	onMount(() => {
-		upcoming = upcomingMatches();
-		standings = standingsTable();
-		fixtures = fixturesTable(standings);
+		upcoming = upcomingMatches(data.data);
+		standings = standingsTable(data.data);
+		fixtures = fixturesTable(data.data, standings);
 	});
 
 	export let data: DashboardData;
@@ -273,9 +277,13 @@
 						</div>
 						{#each standings as row, i}
 							<div
-								class="table-row {i % 2 === 0 ? 'grey-row' : ''} {i < 4 ? 'cl' : ''} {i > 3 && i < 6
-									? 'el'
-									: ''} {i > 16 ? 'relegation' : ''}"
+								class="table-row"
+								class:top-row={i === 0}
+								class:bottom-row={i === standings.length - 1}
+								class:grey-row={i%2 == 0}
+								class:cl={i < 4}
+								class:el={i > 3 && i < 6}
+								class:relegation={i > 16}
 							>
 								<div class="standings-position">
 									{row.position}
@@ -350,8 +358,9 @@
 					<div class="scale-team-ratings">
 						<button
 							id="rating-scale-btn"
-							class="scale-btn {fixturesScaling === 'rating' ? 'scaling-selected' : ''}"
-							on:click={applyRatingFixturesScaling}
+							class="scale-btn"
+							class:scaling-selected={fixturesScaling === 'rating'}
+							on:click={() => {applyRatingFixturesScaling(data.data)}}
 						>
 							Rating
 						</button>
@@ -359,8 +368,9 @@
 					<div class="scale-team-form">
 						<button
 							id="form-scale-btn"
-							class="scale-btn {fixturesScaling === 'form' ? 'scaling-selected' : ''}"
-							on:click={applyRatingFormScaling}
+							class="scale-btn"
+							class:scaling-selected={fixturesScaling === 'form'}
+							on:click={() => {applyRatingFormScaling(data.data)}}
 						>
 							Form
 						</button>
@@ -487,7 +497,6 @@
 	.table-row {
 		display: flex;
 		padding: 4px 20px 4px 10px;
-		border-radius: 4px;
 	}
 	.standings-position {
 		width: 20px;
@@ -521,6 +530,12 @@
 	}
 	.standings-points {
 		margin-right: 10%;
+	}
+	.top-row {
+		border-radius: 4px 4px 0 0;
+	}
+	.bottom-row {
+		border-radius: 0 0 4px 4px;
 	}
 	.grey-row {
 		background: rgb(236, 236, 236);

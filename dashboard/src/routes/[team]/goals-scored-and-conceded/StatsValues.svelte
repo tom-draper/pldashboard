@@ -2,15 +2,17 @@
 	import { onMount } from 'svelte';
 	import { ordinal } from '../format';
 	import { isCleanSheet, notScored, goalsScored, goalsConceded } from '../goals';
-	import type { TeamsData } from '../dashboard.types';
+	import type { Team, TeamsData } from '../dashboard.types';
+	import { getTeams } from '../team';
 
 	function getStatsRank(
 		seasonStats: Stats,
-		attribute: string,
-		team: string,
+		attribute: keyof Stats[Team],
+		team: Team,
 		reverse: boolean
 	): number {
-		const sorted = Object.keys(seasonStats).sort(function (team1, team2) {
+		const teams = Object.keys(seasonStats) as Team[];
+		const sorted = teams.sort(function (team1, team2) {
 			return seasonStats[team2][attribute] - seasonStats[team1][attribute];
 		});
 		let rank = sorted.indexOf(team) + 1;
@@ -20,7 +22,7 @@
 		return rank;
 	}
 
-	function getStatsRankings(seasonStats: Stats, team: string): StatsRank {
+	function getStatsRankings(seasonStats: Stats, team: Team): StatsRank {
 		const xGRank = getStatsRank(seasonStats, 'xG', team, false);
 		// Reverse - lower rank the better
 		const xCRank = getStatsRank(seasonStats, 'xC', team, true);
@@ -32,7 +34,7 @@
 		};
 	}
 
-	function setStatsValues(seasonStats: Stats, team: string) {
+	function setStatsValues(seasonStats: Stats, team: Team) {
 		rank = getStatsRankings(seasonStats, team);
 
 		// Keep ordinal values at the correct offset
@@ -40,53 +42,65 @@
 		// window.addEventListener("resize", setPositionalOffset);
 	}
 
-	function countOccurances(data: TeamsData, seasonStats: Stats, team: string, season: number) {
+	function teamSeasonStats(data: TeamsData, team: Team, season: number) {
 		if (!(team in data.form)) {
-			return;
+			return null;
 		}
 
-		for (const matchday of Object.keys(data.form[team][season])) {
+		const seasonStats = {
+			cleanSheetRatio: 0,
+			noGoalRatio: 0,
+			xG: 0,
+			xC: 0,
+			played: 0
+		};
+
+		for (const matchday in data.form[team][season]) {
 			const score = data.form[team][season][matchday].score;
 			if (score == null) {
 				continue;
 			}
-			const atHome = data.form[team][season][matchday].atHome;
+			const atHome = data.form[team][season][matchday].atHome ?? false;
 			if (isCleanSheet(score.homeGoals, score.awayGoals, atHome)) {
-				seasonStats[team].cleanSheetRatio += 1;
+				seasonStats.cleanSheetRatio += 1;
 			}
 			if (notScored(score.homeGoals, score.awayGoals, atHome)) {
-				seasonStats[team].noGoalRatio += 1;
+				seasonStats.noGoalRatio += 1;
 			}
-			seasonStats[team].xG += goalsScored(score.homeGoals, score.awayGoals, atHome);
-			seasonStats[team].xC += goalsConceded(score.homeGoals, score.awayGoals, atHome);
-			seasonStats[team].played += 1;
+			seasonStats.xG += goalsScored(score.homeGoals, score.awayGoals, atHome);
+			seasonStats.xC += goalsConceded(score.homeGoals, score.awayGoals, atHome);
+			seasonStats.played += 1;
 		}
+		return seasonStats;
 	}
 
-	function buildStats(data: TeamsData): Stats {
-		const stats: Stats = {};
+	function buildStats(data: TeamsData) {
+		const stats: {[team in Team]?: Stats[Team]} = {}
 
 		const calculateAverage = (value: number, played: number): number => {
 			return played === 0 ? 0 : value / played;
 		};
 
-		for (const team in data.standings) {
-			stats[team] = {
-				cleanSheetRatio: 0,
-				noGoalRatio: 0,
-				xC: 0,
-				xG: 0,
-				played: 0
-			};
+		const teams = getTeams(data)
+		for (const team of teams) {
+			const currentSeasonStats = teamSeasonStats(data, team, data._id);
+			if (currentSeasonStats == null) {
+				continue;
+			}
+			const prevSeasonStats = teamSeasonStats(data, team, data._id - 1);
+			if (prevSeasonStats == null) {
+				continue;
+			}
 
-			countOccurances(data, stats, team, data._id);
-			countOccurances(data, stats, team, data._id - 1);
-
-			const { played, xG, xC, cleanSheetRatio, noGoalRatio } = stats[team];
-
+			const played = currentSeasonStats.played + prevSeasonStats.played;
 			if (played === 0) {
 				continue;
 			}
+
+			const xG = currentSeasonStats.xG + prevSeasonStats.xG;
+			const xC = currentSeasonStats.xC + prevSeasonStats.xC;
+			const cleanSheetRatio = currentSeasonStats.cleanSheetRatio + prevSeasonStats.cleanSheetRatio;
+			const noGoalRatio = currentSeasonStats.noGoalRatio + prevSeasonStats.noGoalRatio;
 
 			stats[team] = {
 				played,
@@ -97,7 +111,7 @@
 			};
 		}
 
-		return stats;
+		return stats as Stats;
 	}
 
 	function refreshStatsValues() {
@@ -109,7 +123,7 @@
 	}
 
 	type Stats = {
-		[teamName: string]: {
+		[team in Team]: {
 			played: number;
 			xG: number;
 			xC: number;
@@ -140,7 +154,7 @@
 
 	$: team && refreshStatsValues();
 
-	export let data: TeamsData, team: string;
+	export let data: TeamsData, team: Team;
 </script>
 
 {#if stats != undefined}

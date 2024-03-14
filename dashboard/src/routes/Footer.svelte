@@ -1,12 +1,12 @@
 <script lang="ts">
 	import githubIcon from '$lib/images/github.png';
-	export let lastUpdated: string | null;
+	export let lastUpdated: string | null, dark: boolean;
 </script>
 
 <div class="teams-footer footer-text-color">
 	<div class="teams-footer-bottom">
 		<a href="https://github.com/tom-draper/pldashboard" target="_blank" class="github">
-			<img src={githubIcon} alt="GitHub" class="github-img" />
+			<img src={githubIcon} alt="GitHub" class="github-img" class:github-img-dark={dark} />
 		</a>
 		{#if lastUpdated !== null}
 			<div class="last-updated no-select">
@@ -31,6 +31,9 @@
 	}
 	.github-img:hover {
 		opacity: 0.8;
+	}
+	.github-img-dark {
+		filter: invert(1);
 	}
 	.teams-footer {
 		color: #c6c6c6;
@@ -74,7 +77,7 @@
 
 	@media only screen and (max-width: 1200px) {
 		.teams-footer {
-			margin-bottom: 46px;
+			padding-bottom: 46px;
 		}
 	}
 </style>

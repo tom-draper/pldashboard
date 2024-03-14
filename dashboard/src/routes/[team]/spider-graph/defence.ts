@@ -2,7 +2,7 @@ import type { TeamsData } from "../dashboard.types";
 import { getTeams } from "../team";
 import { attributeAvg } from "./util";
 
-function concededPerSeason(data: TeamsData) {
+function concededPerSeason(data: TeamsData): [SpiderAttribute, [number, number]] {
 	const defence: SpiderAttribute = { avg: 0 };
 	let maxConcededPerSeason = Number.NEGATIVE_INFINITY;
 	let minConcededPerSeason = Number.POSITIVE_INFINITY;
@@ -36,16 +36,17 @@ function concededPerSeason(data: TeamsData) {
 		defence[team] = goalsPerGame;
 	}
 
-	return [defence, [minConcededPerSeason, maxConcededPerSeason]] as const;
+	return [defence, [minConcededPerSeason, maxConcededPerSeason]];
 }
 
 function scaleDefence(defence: SpiderAttribute, range: [number, number]) {
 	const [lower, upper] = range;
 	for (const team in defence) {
-		if (defence[team] === null) {
+		const teamConcededPerGame = defence[team];
+		if (teamConcededPerGame === null) {
 			defence[team] = 0;
 		} else {
-			defence[team] = 100 - ((defence[team] - lower) / (upper - lower)) * 100;
+			defence[team] = 100 - ((teamConcededPerGame - lower) / (upper - lower)) * 100;
 		}
 	}
 	return defence;

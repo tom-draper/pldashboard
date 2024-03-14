@@ -89,8 +89,8 @@ type HomeAdvantages = {
 };
 
 type PrevMatch = {
-	homeTeam: string;
-	awayTeam: string;
+	homeTeam: Team;
+	awayTeam: Team;
 	homeGoals: number;
 	awayGoals: number;
 	date: string;
@@ -109,12 +109,12 @@ type Upcoming = {
 };
 
 type LogoURLs = {
-	[teamName: string]: string;
+	[teamName: Team]: string;
 };
 
 type any = {
 	_id: number; // Season start year
-	teamNames: string[];
+	teamNames: Team[];
 	lastUpdated: string;
 	logoURLs?: LogoURLS;
 	fixtures: Fixtures;
@@ -136,6 +136,6 @@ type Counter = {
 };
 
 type SpiderAttribute = {
-	[team: string]: number;
+	[team in Team]: number | null;
 	avg: number;
 };
