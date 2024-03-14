@@ -12,7 +12,7 @@
 
 	function upcomingMatches(data: TeamsData) {
 		const upcoming: UpcomingMatch[] = [];
-		const teams = getTeams(data)
+		const teams = getTeams(data);
 		for (const team of teams) {
 			if (!data.upcoming[team].atHome) {
 				continue;
@@ -46,7 +46,7 @@
 
 	function standingsTable(data: TeamsData) {
 		const standings: Standings[] = [];
-		const teams = getTeams(data)
+		const teams = getTeams(data);
 		for (const team of teams) {
 			const row = Object(data.standings[team][data._id]);
 			row.team = team;
@@ -66,12 +66,8 @@
 
 		for (const teamFixtures of fixtures) {
 			for (const match of teamFixtures.matches) {
-				const homeAdvantage = match.atHome
-					? 0
-					: data.homeAdvantages[match.team].totalHomeAdvantage;
-				match.color = fixtureColorSkewed(
-					data.teamRatings[match.team].totalRating + homeAdvantage
-				);
+				const homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage;
+				match.color = fixtureColorSkewed(data.teamRatings[match.team].totalRating + homeAdvantage);
 			}
 		}
 		fixtures = fixtures;
@@ -84,21 +80,19 @@
 		fixturesScaling = 'form';
 
 		for (const teamFixtures of fixtures) {
-			console.log(teamFixtures.team)
+			console.log(teamFixtures.team);
 			for (const match of teamFixtures.matches) {
 				let form = 0.5;
 				const matchdays = Object.keys(data.form[teamFixtures.team][data._id]).reverse();
-				const homeAdvantage = match.atHome
-					? 0
-					: data.homeAdvantages[match.team].totalHomeAdvantage;
+				const homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage;
 				for (const matchday of matchdays) {
 					const formRating = data.form[match.team][data._id][matchday].formRating5;
-					console.log(formRating)
+					console.log(formRating);
 					if (formRating != null) {
 						form = formRating;
 					}
 				}
-				console.log(match.team, form, homeAdvantage)
+				console.log(match.team, form, homeAdvantage);
 				match.color = fixtureColor(form + homeAdvantage);
 			}
 		}
@@ -122,9 +116,7 @@
 			const matches = [];
 			for (const matchday in data.fixtures[row.team]) {
 				const match = data.fixtures[row.team][matchday];
-				const homeAdvantage = match.atHome
-					? 0
-					: data.homeAdvantages[match.team].totalHomeAdvantage;
+				const homeAdvantage = match.atHome ? 0 : data.homeAdvantages[match.team].totalHomeAdvantage;
 				matches.push({
 					team: match.team,
 					date: match.date,
@@ -280,7 +272,7 @@
 								class="table-row"
 								class:top-row={i === 0}
 								class:bottom-row={i === standings.length - 1}
-								class:grey-row={i%2 == 0}
+								class:grey-row={i % 2 == 0}
 								class:cl={i < 4}
 								class:el={i > 3 && i < 6}
 								class:relegation={i > 16}
@@ -360,7 +352,9 @@
 							id="rating-scale-btn"
 							class="scale-btn"
 							class:scaling-selected={fixturesScaling === 'rating'}
-							on:click={() => {applyRatingFixturesScaling(data.data)}}
+							on:click={() => {
+								applyRatingFixturesScaling(data.data);
+							}}
 						>
 							Rating
 						</button>
@@ -370,7 +364,9 @@
 							id="form-scale-btn"
 							class="scale-btn"
 							class:scaling-selected={fixturesScaling === 'form'}
-							on:click={() => {applyRatingFormScaling(data.data)}}
+							on:click={() => {
+								applyRatingFormScaling(data.data);
+							}}
 						>
 							Form
 						</button>

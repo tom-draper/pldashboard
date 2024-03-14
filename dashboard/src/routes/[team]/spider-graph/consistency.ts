@@ -1,6 +1,6 @@
-import type { Team, TeamsData } from "../dashboard.types";
-import { getTeams } from "../team";
-import { attributeAvgScaled, seasonComplete } from "./util";
+import type { Team, TeamsData } from '../dashboard.types';
+import { getTeams } from '../team';
+import { attributeAvgScaled, seasonComplete } from './util';
 
 function formConsistency(form: TeamsData['form'], team: Team, season: number) {
 	let backToBack = 0; // Counts pairs of back to back identical match results
@@ -34,7 +34,7 @@ function formConsistency(form: TeamsData['form'], team: Team, season: number) {
 }
 
 export default function getConsistency(data: TeamsData, numSeasons: number): SpiderAttribute {
-	const consistency: SpiderAttribute = {avg: 0};
+	const consistency: SpiderAttribute = { avg: 0 };
 	let maxSeasonBackToBack = Number.NEGATIVE_INFINITY;
 	const teams = getTeams(data);
 	for (const team of teams) {
@@ -54,4 +54,3 @@ export default function getConsistency(data: TeamsData, numSeasons: number): Spi
 	consistency.avg = attributeAvgScaled(consistency, maxSeasonBackToBack * numSeasons);
 	return consistency;
 }
-

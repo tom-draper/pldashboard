@@ -1,6 +1,6 @@
-import type { TeamsData } from "../dashboard.types";
-import { getTeams } from "../team";
-import { attributeAvg } from "./util";
+import type { TeamsData } from '../dashboard.types';
+import { getTeams } from '../team';
+import { attributeAvg } from './util';
 
 function concededPerSeason(data: TeamsData): [SpiderAttribute, [number, number]] {
 	const defence: SpiderAttribute = { avg: 0 };
@@ -59,4 +59,3 @@ export default function getDefence(data: TeamsData) {
 
 	return defence;
 }
-

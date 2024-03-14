@@ -1,4 +1,4 @@
-import type { FantasyData, Page } from "../fantasy.types";
+import type { FantasyData, Page } from '../fantasy.types';
 
 export function getTitle(page: Page) {
 	if (page === 'all') {

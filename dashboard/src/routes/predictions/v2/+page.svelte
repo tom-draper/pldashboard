@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Predictions from "./Predictions.svelte";
+	import Predictions from './Predictions.svelte';
 
 	export let data;
 </script>

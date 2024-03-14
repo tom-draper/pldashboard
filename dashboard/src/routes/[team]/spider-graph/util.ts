@@ -1,4 +1,4 @@
-import type { Team, TeamsData } from "../dashboard.types";
+import type { Team, TeamsData } from '../dashboard.types';
 
 export function attributeAvg(attribute: SpiderAttribute) {
 	const values = Object.values(attribute).map((value) => value ?? 0);

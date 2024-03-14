@@ -1,12 +1,12 @@
-import type { Team, TeamsData } from "../dashboard.types";
-import { getTeams } from "../team";
-import { attributeAvg } from "./util";
+import type { Team, TeamsData } from '../dashboard.types';
+import { getTeams } from '../team';
+import { attributeAvg } from './util';
 
 function goalsPerGame(data: TeamsData): [SpiderAttribute, [number, number]] {
 	const attack: SpiderAttribute = { avg: 0 };
 	let maxGoalsPerSeason = Number.NEGATIVE_INFINITY;
 	let minGoalsPerSeason = Number.POSITIVE_INFINITY;
-	const teams = getTeams(data)
+	const teams = getTeams(data);
 	for (const team of teams) {
 		let totalGoals = 0;
 		let gamesPlayed = 0;
@@ -52,7 +52,6 @@ function scaleAttack(attack: SpiderAttribute, range: [number, number]) {
 	}
 	return attack;
 }
-
 
 export default function getAttack(data: TeamsData) {
 	let [attack, extremes] = goalsPerGame(data);

@@ -6,7 +6,7 @@
 	function getAvgGoalsPerGame(data: TeamsData): Counter {
 		const avgGoals: Counter = {};
 
-		const teams = getTeams(data)
+		const teams = getTeams(data);
 		for (const team of teams) {
 			for (const matchday in data.form[team][data._id]) {
 				const score = data.form[team][data._id][matchday].score;

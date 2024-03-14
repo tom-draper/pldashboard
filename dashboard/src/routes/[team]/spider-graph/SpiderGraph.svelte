@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { toAlias, toName, getTeamID, teamColor } from '../team';
 	import type { TeamsData, Team } from '../dashboard.types';
-	import getAttack from './attack'
+	import getAttack from './attack';
 	import { removeItem } from './util';
 	import getCleanSheets from './cleanSheets';
 	import getConsistency from './consistency';
@@ -135,7 +135,7 @@
 			[attack.avg, defence.avg, cleanSheets.avg, consistency.avg, winStreaks.avg, vsBig6.avg],
 			'#ADADAD'
 		);
-		return avgData
+		return avgData;
 	}
 
 	function getTeamData(team: Team) {
@@ -212,7 +212,6 @@
 		winStreaks: SpiderAttribute,
 		vsBig6: SpiderAttribute;
 	const labels = ['Attack', 'Defence', 'Clean sheets', 'Consistency', 'Win streak', 'Vs big 6'];
-
 
 	let plotDiv: HTMLDivElement, plotData: PlotData;
 	const comparisonTeams: Team[] = [];

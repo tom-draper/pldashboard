@@ -3,7 +3,12 @@
 	import { getTeams, teamInSeason } from './team';
 	import type { TeamsData, Team, Form } from './dashboard.types';
 
-	function insertSeasonAvgScoreFreq(scoreFreq: ScoreFreq, form: TeamsData['form'], team: Team, season: number) {
+	function insertSeasonAvgScoreFreq(
+		scoreFreq: ScoreFreq,
+		form: TeamsData['form'],
+		team: Team,
+		season: number
+	) {
 		for (const matchday in form[team][season]) {
 			const score = form[team][season][matchday].score;
 			if (score == null) {
@@ -38,7 +43,12 @@
 		return scoreFreq;
 	}
 
-	function insertSeasonTeamScoreBars(scoreFreq: ScoreFreq, form: TeamsData['form'], team: Team, season: number) {
+	function insertSeasonTeamScoreBars(
+		scoreFreq: ScoreFreq,
+		form: TeamsData['form'],
+		team: Team,
+		season: number
+	) {
 		for (const matchday in form[team][season]) {
 			const score = form[team][season][matchday].score;
 			if (score == null) {

@@ -75,13 +75,13 @@
 	}
 
 	function buildStats(data: TeamsData) {
-		const stats: {[team in Team]?: Stats[Team]} = {}
+		const stats: { [team in Team]?: Stats[Team] } = {};
 
 		const calculateAverage = (value: number, played: number): number => {
 			return played === 0 ? 0 : value / played;
 		};
 
-		const teams = getTeams(data)
+		const teams = getTeams(data);
 		for (const team of teams) {
 			const currentSeasonStats = teamSeasonStats(data, team, data._id);
 			if (currentSeasonStats == null) {

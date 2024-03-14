@@ -1,6 +1,6 @@
-import type { Team, TeamsData } from "../dashboard.types";
-import { getTeams } from "../team";
-import { attributeAvgScaled, removeItem, seasonComplete } from "./util";
+import type { Team, TeamsData } from '../dashboard.types';
+import { getTeams } from '../team';
+import { attributeAvgScaled, removeItem, seasonComplete } from './util';
 
 const big6 = [
 	'Manchester United',
@@ -11,12 +11,7 @@ const big6 = [
 	'Tottenham Hotspur'
 ];
 
-function formWinsVsBig6(
-	form: TeamsData['form'],
-	team: Team,
-	season: number,
-	big6: Team[]
-) {
+function formWinsVsBig6(form: TeamsData['form'], team: Team, season: number, big6: Team[]) {
 	let pointsVsBig6 = 0;
 	let numPlayed = 0;
 	for (const matchday in form[team][season]) {
@@ -40,7 +35,7 @@ function formWinsVsBig6(
 
 export default function getVsBig6(data: TeamsData, numSeasons: number) {
 	//@ts-ignore
-	const vsBig6: SpiderAttribute = {avg: 0};
+	const vsBig6: SpiderAttribute = { avg: 0 };
 	let maxAvgSeasonPointsVsBig6 = Number.NEGATIVE_INFINITY;
 	const teams = getTeams(data);
 	for (const team of teams) {

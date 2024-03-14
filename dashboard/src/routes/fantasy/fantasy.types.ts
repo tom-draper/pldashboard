@@ -4,7 +4,7 @@ export type FantasyDashboardData = {
 	page: Page;
 	data: FantasyData;
 	pageData: FantasyData;
-}
+};
 
 export type FantasyData = {
 	[player: string]: PlayerData;

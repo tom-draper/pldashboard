@@ -46,7 +46,7 @@
 
 	function lines(data: TeamsData, team: Team) {
 		const lines = [];
-		const teams = getTeams(data)
+		const teams = getTeams(data);
 		for (const _team of teams) {
 			if (_team === team) {
 				continue;
