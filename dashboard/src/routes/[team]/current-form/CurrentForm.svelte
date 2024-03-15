@@ -17,7 +17,8 @@
 		const formStarTeams = [];
 		for (const matchday of matchdays) {
 			const oppTeam = data.form[team][data._id][matchday].team;
-			formStarTeams.unshift(data.teamRatings[oppTeam].totalRating > 0.75);
+			const starTeam = oppTeam == null ? false : data.teamRatings[oppTeam].totalRating > 0.75;
+			formStarTeams.unshift(starTeam);
 		}
 
 		// Fill in blanks
@@ -30,11 +31,12 @@
 
 	function getFormIcons(data: TeamsData, team: Team): string {
 		let formIcons: string[] = [];
+		const form = data.form[team][data._id][currentMatchday].form5;
 		if (
 			Object.keys(data.form[team][data._id][currentMatchday]).length > 0 &&
-			data.form[team][data._id][currentMatchday].form5 != null
+			form != null
 		) {
-			formIcons = data.form[team][data._id][currentMatchday].form5.split('');
+			formIcons = form.split('');
 		}
 
 		// Fill in blanks with None icons
@@ -48,7 +50,9 @@
 		const formInitials = [];
 
 		for (const matchday of matchdays) {
-			formInitials.unshift(toInitials(data.form[team][data._id][matchday].team));
+			const opposition =  data.form[team][data._id][matchday].team;
+			const initials = opposition == null ? '' : toInitials(opposition);
+			formInitials.unshift(initials);
 		}
 
 		// Fill in blanks with None icons
@@ -111,7 +115,7 @@
 	Current form:
 	{#if currentMatchday != undefined}
 		<span class="current-form-value"
-			>{(data.form[team][data._id][currentMatchday].formRating5 * 100).toFixed(1)}%</span
+			>{((data.form[team][data._id][currentMatchday].formRating5 ?? 0) * 100).toFixed(1)}%</span
 		>
 	{:else}
 		None

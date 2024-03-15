@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { toAlias, toInitials, getTeamID, getCurrentMatchday } from './team';
 	import { ordinal, teamStyle } from './format';
-	import type { TeamsData, Team } from './dashboard.types';
+	import type { TeamsData, Team, PrevMatch } from './dashboard.types';
 
-	function resultColor(prevMatch, home: boolean): string {
+	function resultColor(prevMatch: PrevMatch, home: boolean): Team {
 		if (home) {
 			return prevMatch.homeGoals < prevMatch.awayGoals ? prevMatch.awayTeam : prevMatch.homeTeam;
 		} else {
@@ -53,9 +53,9 @@
 						Current form:
 						<span class="current-form-value"
 							>{(
-								data.form[data.upcoming[team].nextTeam][data._id][
+								(data.form[data.upcoming[team].nextTeam][data._id][
 									getCurrentMatchday(data, data.upcoming[team].nextTeam)
-								].formRating5 * 100
+								].formRating5 ?? 0) * 100
 							).toFixed(1)}%</span
 						>
 					</div>

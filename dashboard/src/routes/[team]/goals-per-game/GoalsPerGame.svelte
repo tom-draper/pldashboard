@@ -4,7 +4,6 @@
 	import GoalsConcededFreq from './GoalsConcededFreqGraph.svelte';
 	import type { TeamsData, Team } from '../dashboard.types';
 	import { getTeams } from '../team';
-	import { validTeam } from '../data';
 
 	function avgBars() {
 		return {
@@ -141,7 +140,7 @@
 
 	function avgGoalFrequencies(data: TeamsData) {
 		const goalFreq: Counter = {};
-		const teams = getTeams(data);
+		const teams = getTeams(data)
 		for (const team of teams) {
 			countScored(data, goalFreq, data._id, team);
 			countScored(data, goalFreq, data._id - 1, team);

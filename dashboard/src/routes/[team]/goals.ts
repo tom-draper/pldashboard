@@ -37,3 +37,10 @@ export function goalsConceded(h: number, a: number, atHome: boolean): number {
 export function notScored(h: number, a: number, atHome: boolean): boolean {
 	return (h === 0 && atHome) || (a === 0 && !atHome);
 }
+
+export function extractGoals(score: string) {
+	const [hs, _, as] = score.split(' ');
+	const h = parseInt(hs);
+	const a = parseInt(as);
+	return [h, a] as const;
+}

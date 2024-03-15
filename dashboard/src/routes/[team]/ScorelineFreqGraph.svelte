@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { getTeams, teamInSeason } from './team';
-	import type { TeamsData, Team, Form } from './dashboard.types';
+	import type { TeamsData, Team } from './dashboard.types';
+	import { extractGoals } from './goals';
 
 	function insertSeasonAvgScoreFreq(
 		scoreFreq: ScoreFreq,
@@ -16,9 +17,9 @@
 			}
 			let scoreStr: string;
 			if (form[team][season][matchday].atHome) {
-				scoreStr = score.homeGoals + ' - ' + score.awayGoals;
+				scoreStr = `${score.homeGoals} - ${score.awayGoals}`;
 			} else {
-				scoreStr = score.awayGoals + ' - ' + score.homeGoals;
+				scoreStr = `${score.awayGoals} - ${score.homeGoals}`;
 			}
 			if (!(scoreStr in scoreFreq)) {
 				scoreFreq[scoreStr] = [1];
@@ -56,9 +57,9 @@
 			}
 			let scoreStr: string;
 			if (form[team][season][matchday].atHome) {
-				scoreStr = score.homeGoals + ' - ' + score.awayGoals;
+				scoreStr = `${score.homeGoals} - ${score.awayGoals}`;
 			} else {
-				scoreStr = score.awayGoals + ' - ' + score.homeGoals;
+				scoreStr = `${score.awayGoals} - ${score.homeGoals}`;
 			}
 			scoreFreq[scoreStr][1] += 1;
 		}
@@ -81,9 +82,7 @@
 
 	function getColors(scores: string[]): string[] {
 		return scores.map((score) => {
-			const [hs, _, as] = score.split(' ');
-			const h = parseInt(hs);
-			const a = parseInt(as);
+			const [h, a] = extractGoals(score);
 			if (h > a) {
 				return '#00fe87';
 			} else if (h < a) {
@@ -96,15 +95,14 @@
 
 	function separateBars(scoreFreq: ScoreFreq) {
 		const sorted = Object.entries(scoreFreq).sort((a, b) => b[1][0] - a[1][0]);
-		const { x, avgY, teamY } = sorted.reduce(
-			(acc, [score, [avg, team]]) => {
-				acc.x.push(score);
-				acc.avgY.push(avg);
-				acc.teamY.push(team);
-				return acc;
-			},
-			{ x: [], avgY: [], teamY: [] }
-		);
+		const x = [];
+		const avgY = [];
+		const teamY = [];
+		for (const [score, freq] of sorted) {
+			x.push(score);
+			avgY.push(freq[0]);
+			teamY.push(freq[1]);
+		}
 
 		const colors = getColors(x);
 

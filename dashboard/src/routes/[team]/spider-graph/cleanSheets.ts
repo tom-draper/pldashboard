@@ -1,6 +1,6 @@
-import type { Team, TeamsData } from '../dashboard.types';
-import { getTeams } from '../team';
-import { attributeAvgScaled, seasonComplete } from './util';
+import type { Team, TeamsData } from "../dashboard.types";
+import { getTeams } from "../team";
+import { attributeAvgScaled, seasonComplete } from "./util";
 
 function formCleanSheets(form: TeamsData['form'], team: Team, season: number) {
 	let nCleanSheets = 0;

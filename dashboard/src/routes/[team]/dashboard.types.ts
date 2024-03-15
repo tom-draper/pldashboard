@@ -127,7 +127,7 @@ export type TeamRating = {
 
 export type Upcoming = {
 	date: Date;
-	nextTeam: Team;
+	nextTeam: Team | null;
 	atHome: boolean;
 	prevMatches: PrevMatch[];
 	prediction: string;

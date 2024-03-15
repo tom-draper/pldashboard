@@ -18,20 +18,12 @@
 	}
 
 	function getCumulativePoints(data: TeamsData, team: Team, matchdays: string[]) {
-		const y = [];
-		for (const matchday of matchdays) {
-			const points = data.form[team][data._id][matchday].cumPoints;
-			y.push(points);
-		}
+		const y = matchdays.map((matchday) => data.form[team][data._id][matchday].cumPoints);
 		return y;
 	}
 
 	function getMatchdayDates(data: TeamsData, team: Team, matchdays: string[]) {
-		const dates = [];
-		for (let i = 0; i < matchdays.length; i++) {
-			const date = data.form[team][data._id][matchdays[i]].date;
-			dates.push(date);
-		}
+		const dates = matchdays.map((matchday) => data.form[team][data._id][matchday].date);
 		return dates;
 	}
 

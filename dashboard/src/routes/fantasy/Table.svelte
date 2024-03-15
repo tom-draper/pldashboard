@@ -31,8 +31,8 @@
 	}
 
 	function buildTeamColorCSSTags() {
-		const playerTeams: { [player: string]: Team } = {};
-		const teamCSS: { [team in Team]?: string } = {};
+		const playerTeams: {[player: string]: Team} = {};
+		const teamCSS: {[team in Team]?: string} = {};
 		for (const name in data) {
 			if (name === '_id') {
 				continue;
@@ -150,7 +150,7 @@
 
 	function refreshTable(data: FantasyData) {
 		if (!setup) {
-			return;
+			return
 		}
 
 		buildTeamColorCSSTags();
@@ -162,8 +162,8 @@
 	}
 
 	let table;
-	let playerToTeam: { [player: string]: Team };
-	let teamCSSTag: { [team in Team]?: string };
+	let playerToTeam: {[player: string]: Team};
+	let teamCSSTag: {[team in Team]?: string};
 	let setup = false;
 	onMount(() => {
 		buildTeamColorCSSTags();

@@ -1,4 +1,4 @@
-import { url } from '../consts';
+import { url } from "../consts";
 
 export async function fetchFantasy() {
 	const response = await fetch(`${url}/fantasy`);

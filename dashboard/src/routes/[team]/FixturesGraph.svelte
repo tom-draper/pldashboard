@@ -30,7 +30,12 @@
 		}
 	}
 
-	function highlightNextGameMarker(sizes: number[], x: Date[], now: number, highlightSize: number) {
+	function highlightNextGameMarker(
+		sizes: number[],
+		x: Date[],
+		now: number,
+		highlightSize: number
+	) {
 		// Get matchday date with smallest time difference to now
 		let nextGameIdx: number | undefined;
 		let minDiff = Number.POSITIVE_INFINITY;

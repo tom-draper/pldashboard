@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { toAlias, toName, getTeamID, teamColor } from '../team';
 	import type { TeamsData, Team } from '../dashboard.types';
-	import getAttack from './attack';
+	import getAttack from './attack'
 	import { removeItem } from './util';
 	import getCleanSheets from './cleanSheets';
 	import getConsistency from './consistency';
@@ -54,11 +54,11 @@
 		Plotly.redraw(plotDiv); // Redraw with teamName removed
 	}
 
-	function removeAllTeamComparisons() {
-		for (let i = 0; i < comparisonTeams.length; i++) {
+	function removeAllTeamComparisons(team: Team) {
+		for (const _team of comparisonTeams) {
 			// Remove spider plot for this teamName
 			for (let i = 0; i < plotData.data.length; i++) {
-				if (plotData.data[i].name === comparisonTeams[i] && comparisonTeams[i] != team) {
+				if (plotData.data[i].name === _team && _team != team) {
 					plotData.data.splice(i, 1);
 					break;
 				}
@@ -68,7 +68,7 @@
 			if (comparisonTeams.length === 1) {
 				addAvg();
 			}
-			removeItem(comparisonTeams, comparisonTeams[i]); // Remove from comparison teams
+			removeItem(comparisonTeams, _team); // Remove from comparison teams
 		}
 
 		//@ts-ignore
@@ -135,7 +135,7 @@
 			[attack.avg, defence.avg, cleanSheets.avg, consistency.avg, winStreaks.avg, vsBig6.avg],
 			'#ADADAD'
 		);
-		return avgData;
+		return avgData
 	}
 
 	function getTeamData(team: Team) {
@@ -205,13 +205,14 @@
 	}
 
 	const numSeasons = 3;
-	let attack: SpiderAttribute,
-		defence: SpiderAttribute,
-		cleanSheets: SpiderAttribute,
-		consistency: SpiderAttribute,
-		winStreaks: SpiderAttribute,
-		vsBig6: SpiderAttribute;
+	let attack: SpiderAttribute;
+	let defence: SpiderAttribute;
+	let cleanSheets: SpiderAttribute;
+	let consistency: SpiderAttribute;
+	let winStreaks: SpiderAttribute;
+	let vsBig6: SpiderAttribute;
 	const labels = ['Attack', 'Defence', 'Clean sheets', 'Consistency', 'Win streak', 'Vs big 6'];
+
 
 	let plotDiv: HTMLDivElement, plotData: PlotData;
 	const comparisonTeams: Team[] = [];
@@ -231,8 +232,7 @@
 	}
 
 	function emptyArray(arr: any[]) {
-		const length = arr.length;
-		for (let i = 0; i < length; i++) {
+		for (let i = 0; i < arr.length; i++) {
 			arr.pop();
 		}
 	}
@@ -248,7 +248,7 @@
 		plotData.data.push(spiderPlots[0]); // Reset to avg
 		plotData.data.push(spiderPlots[1]); // Reset to team data
 
-		removeAllTeamComparisons();
+		removeAllTeamComparisons(team);
 		resetTeamComparisonBtns();
 	}
 

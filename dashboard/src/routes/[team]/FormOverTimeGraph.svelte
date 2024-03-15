@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getTeamID } from './team';
+	import { getTeamID, getTeams } from './team';
 	import type { TeamsData, Team } from './dashboard.types';
 
 	function getFormLine(data: TeamsData, team: Team, isMainTeam: boolean) {
@@ -15,11 +15,10 @@
 			playedDates.push(new Date(date));
 		}
 
-		const y = [];
-		for (const matchday of matchdays) {
+		const y = matchdays.map(matchday => {
 			const form = data.form[team][data._id][matchday].formRating5 ?? 0;
-			y.push(form * 100);
-		}
+			return form * 100;
+		});
 
 		let lineVal: { color: string; width?: number };
 		if (isMainTeam) {
@@ -45,7 +44,8 @@
 	}
 
 	function lines(data: TeamsData, team: Team) {
-		const lines = Object.keys(data.standings)
+		const teams = getTeams(data);
+		const lines = teams
 			.filter((t) => t !== team)
 			.map((t) => getFormLine(data, t, false));
 

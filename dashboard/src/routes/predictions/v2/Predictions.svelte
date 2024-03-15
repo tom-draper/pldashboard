@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Footer from '../../Footer.svelte';
+	import Footer from "../../Footer.svelte";
 
 	let predictions = [
 		{
@@ -13,7 +13,7 @@
 					away: 0.3
 				}
 			},
-			kickoff: new Date('2024-03-14T16:30:00Z')
+			kickoff: new Date('2024-03-14T16:30:00Z'),
 		},
 		{
 			home: 'Liverpool',
@@ -26,7 +26,7 @@
 					away: 0.3
 				}
 			},
-			kickoff: new Date('2024-03-14T17:30:00Z')
+			kickoff: new Date('2024-03-14T17:30:00Z'),
 		},
 		{
 			home: 'Manchester United',
@@ -39,7 +39,7 @@
 					away: 0.7
 				}
 			},
-			kickoff: new Date('2024-03-14T16:30:00Z')
+			kickoff: new Date('2024-03-14T16:30:00Z'),
 		},
 		{
 			home: 'Brighton',
@@ -52,7 +52,7 @@
 					away: 0.35
 				}
 			},
-			kickoff: new Date('2024-03-14T16:30:00Z')
+			kickoff: new Date('2024-03-14T16:30:00Z'),
 		}
 	].sort((a, b) => a.kickoff.getTime() - b.kickoff.getTime());
 
@@ -84,6 +84,11 @@
 		const hours = Math.floor(minutes / 60);
 		const days = Math.floor(hours / 24);
 
+		const countdown = countdownString(days, hours, minutes, seconds);
+		return countdown
+	}
+
+	function countdownString(days: number, hours: number, minutes: number, seconds: number) {
 		let countdown = '';
 		if (days) {
 			countdown += `${days}d `;
@@ -200,13 +205,14 @@
 				</div>
 			{/each}
 		{:else}
-			<div class="no-predictions">
-				No live predictions available. Check back closer to the game.
-			</div>
+			<div class="no-predictions">No live predictions available. Check back closer to the game.</div>
 		{/if}
 	</div>
-	<div class="previous-predictions">362 games, 61% accuracy</div>
+	<div class="previous-predictions">
+		362 games, 61% accuracy
+	</div>
 </div>
+
 
 <div class="footer-container">
 	<Footer lastUpdated={null} dark={true} />

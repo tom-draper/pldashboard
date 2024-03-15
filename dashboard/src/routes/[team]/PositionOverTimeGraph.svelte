@@ -45,16 +45,9 @@
 	}
 
 	function lines(data: TeamsData, team: Team) {
-		const lines = [];
-		const teams = getTeams(data);
-		for (const _team of teams) {
-			if (_team === team) {
-				continue;
-			}
-
-			const line = getLine(data, _team, false);
-			lines.push(line);
-		}
+		const lines = getTeams(data)
+			.filter((_team) => _team !== team)
+			.map((_team) => getLine(data, _team, false));
 
 		// Add this team last to ensure it overlaps all other lines
 		const line = getLine(data, team, true);

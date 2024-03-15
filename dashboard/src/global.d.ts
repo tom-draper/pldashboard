@@ -16,7 +16,7 @@ type Match = {
 };
 
 type Fixtures = {
-	[teamName: Team]: {
+	[team: Team]: {
 		// Team name
 		number: Match; // Matchday number 1 to 38
 	};
@@ -25,10 +25,10 @@ type Fixtures = {
 type Form = {
 	[season: string]: {
 		// Season start year
-		[teamName: Team]: {
+		[team: Team]: {
 			[matchday: number]: {
 				// Matchday number 1 to 38
-				team: string;
+				team: Team;
 				date: string;
 				starTeam: boolean;
 				score: {
@@ -99,8 +99,8 @@ type PrevMatch = {
 };
 
 type Upcoming = {
-	[teamName: string]: {
-		nextTeam: string;
+	[teamName: Team]: {
+		nextTeam: Team;
 		date: string;
 		atHome: boolean;
 		prediction: Scoreline;
