@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Optional
 
 
 class Odds:
@@ -8,9 +8,9 @@ class Odds:
         home: float,
         draw: float,
         away: float,
-        home_team: str = None,
-        away_team: str = None,
-        match_date: datetime = None,
+        home_team: Optional[str] = None,
+        away_team: Optional[str] = None,
+        match_date: Optional[datetime] = None,
     ):
         self.home = home
         self.draw = draw

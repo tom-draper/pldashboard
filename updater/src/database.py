@@ -18,7 +18,7 @@ class Database:
         MONGODB_DATABASE = getenv("MONGODB_DATABASE")
         self.connection_string = f"mongodb+srv://{USERNAME}:{PASSWORD}@main.pvnry.mongodb.net/{MONGODB_DATABASE}?retryWrites=true&w=majority&authSource=admin"
 
-    async def get_predictions(self) -> list[dict]:
+    async def get_predictions(self):
         predictions = None
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.Predictions2023
@@ -42,15 +42,15 @@ class Database:
 
         return predictions
 
-    async def get_teams_data(self) -> dict:
-        team_data = None
+    async def get_teams_data(self):
+        team_data: Optional[dict] = None
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData
             team_data = dict(collection.find_one({"_id": self.current_season}))
         return team_data
 
-    async def get_fantasy_data(self) -> dict:
-        fantasy_data = None
+    async def get_fantasy_data(self):
+        fantasy_data: Optional[dict] = None
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.Fantasy
             fantasy_data = dict(collection.find_one({"_id": "fantasy"}))
@@ -59,8 +59,8 @@ class Database:
     @staticmethod
     def _get_actual_score(
         prediction_id: str, actual_scores: dict[tuple[str, str], dict[str, int]]
-    ) -> Optional[str]:
-        actual_score = None
+    ):
+        actual_score: Optional[str] = None
         if prediction_id in actual_scores:
             actual_score = actual_scores[prediction_id]
         return actual_score

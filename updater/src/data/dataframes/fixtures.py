@@ -26,10 +26,10 @@ class Fixtures(DF):
 
         return avg_scored, avg_conceded
 
-    def get_avg_result(self, team_name: str) -> tuple[float, float]:
-        avg_scored = 0
-        avg_conceded = 0
-        total = 0
+    def get_avg_result(self, team_name: str):
+        avg_scored = 0.0
+        avg_conceded = 0.0
+        total = 0.0
         for matchday_no in self.df.columns.unique(level=0):
             if self.df.at[team_name, (matchday_no, "status")] != "FINISHED":
                 continue
@@ -46,9 +46,9 @@ class Fixtures(DF):
 
         return avg_scored, avg_conceded
 
-    def get_actual_scores_new(self) -> dict[tuple[str, str], dict[str, int]]:
+    def get_actual_scores_new(self):
         # To contain a tuple for all actual scores so far this season
-        actual_scores = {}
+        actual_scores: dict[tuple[str, str], dict[str, int]] = {}
 
         for matchday_no in range(1, 39):
             matchday = self.df[matchday_no]
@@ -135,10 +135,10 @@ class Fixtures(DF):
 
         data = json_data["fixtures"][season]
 
-        team_names = []  # type: list[str]
+        team_names: list[str] = []
         team_names_index = []  # Specific order of team names to be dataframe index
-        matchday = defaultdict(lambda: [])  # type: dict[tuple[int, str], list]
-        matchdays = []  # type: list[DataFrame]
+        matchday: dict[tuple[int, str], list] = defaultdict(lambda: [])
+        matchdays: list[DataFrame] = []
         prev_matchday = 0
         for match in sorted(data, key=lambda x: x["matchday"]):
             # If moved on to data for the next matchday, or

@@ -14,11 +14,11 @@ class TeamRatings(DF):
         super().__init__(d, "team_ratings")
 
     @staticmethod
-    def _calc_rating(points: int, gd: int) -> float:
+    def _calc_rating(points: int, gd: int):
         return points + gd
 
     @staticmethod
-    def _get_season_weightings(no_seasons: int) -> list[float]:
+    def _get_season_weightings(no_seasons: int):
         mult = 2.5  # High = recent weighted more
         season_weights = [0.01 * (mult**3), 0.01 * (mult**2), 0.01 * mult, 0.01]
         weights = np.array(season_weights[:no_seasons])
@@ -86,7 +86,7 @@ class TeamRatings(DF):
     @staticmethod
     def include_current_season(
         standings: Standings, current_season: int, games_threshold: float
-    ) -> bool:
+    ):
         """Check whether current season data should be included in each team's total rating
         If current season hasn't played enough games, don't include.
         """
@@ -98,7 +98,7 @@ class TeamRatings(DF):
         return True
 
     @staticmethod
-    def clean_dataframe(team_ratings: DataFrame) -> DataFrame:
+    def clean_dataframe(team_ratings: DataFrame):
         team_ratings = team_ratings.sort_values(by="totalRating", ascending=False)
         team_ratings = team_ratings.rename(columns={"rating0YAgo": "ratingCurrent"})
         return team_ratings

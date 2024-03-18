@@ -112,11 +112,11 @@ _betfair_team_alias = {
 }
 
 
-def _is_odds_value(cell_value: str) -> bool:
+def _is_odds_value(cell_value: str):
     return ("." in cell_value or cell_value.isnumeric()) and not _has_alpha(cell_value)
 
 
-def _has_alpha(value: str) -> bool:
+def _has_alpha(value: str):
     return value.upper().isupper()
 
 

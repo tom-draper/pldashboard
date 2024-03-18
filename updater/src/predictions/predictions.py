@@ -1,10 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Union
 
 import pandas as pd
 from ..database import Database
-from pandas.core.frame import DataFrame
 from ..data.dataframes import Fixtures, Form, HomeAdvantages, Upcoming
 from ..fmt import convert_team_name_or_initials, identical_fixtures
 
@@ -17,7 +15,7 @@ class Predictor:
     @staticmethod
     def _outdated_prediction_already_made(
         date: str, new_prediction: str, predictions: dict
-    ) -> bool:
+    ):
         if date not in predictions.keys():
             return False
 
@@ -28,15 +26,11 @@ class Predictor:
                 continue
             if identical_fixtures(predicted_score, new_prediction):
                 # If fixture match perfectly but predicted scoreline different (outdated)
-                if (predicted_score != new_prediction) and (actual_score is None):
-                    return True
-                return False
+                return (predicted_score != new_prediction) and (actual_score is None)
         return False
 
     @staticmethod
-    def _avg_previous_result(
-        team_name: str, prev_matches: list[dict[str, str]]
-    ) -> tuple[float, float]:
+    def _avg_previous_result(team_name: str, prev_matches: list[dict[str, str]]):
         goals_scored = 0
         goals_conceded = 0
         for prev_match in prev_matches:
@@ -61,7 +55,7 @@ class Predictor:
         opp_form_rating: float,
         pred_scored: float = 0,
         pred_conceded: float = 0,
-    ) -> tuple[float, float]:
+    ):
         # Boost the score of the team better in form based on the absolute difference in form
         form_diff = form_rating - opp_form_rating
 
@@ -82,7 +76,7 @@ class Predictor:
         away_form_rating: float,
         home_goals: float = 0,
         away_goals: float = 0,
-    ) -> tuple[float, float]:
+    ):
         # Boost the score of the team better in form based on the absolute difference in form
         form_diff = home_form_rating - away_form_rating
 
@@ -101,7 +95,7 @@ class Predictor:
         at_home: bool,
         pred_scored: float = 0,
         pred_conceded: float = 0,
-    ) -> tuple[float, float]:
+    ):
         # Use the home advantge to adjust the pred scored and conceded
         # for a team in opposite directions by an equal amount
         if at_home:
@@ -119,14 +113,14 @@ class Predictor:
 
     def _adjust_by_home_advantage_new(
         self, home_advantage: float, home_goals: float = 0, away_goals: float = 0
-    ) -> tuple[float, float]:
+    ):
         home_goals *= 1 + (home_advantage * self.home_adv_multiplier * 0.5)
         away_goals *= 1 - (home_advantage * self.home_adv_multiplier * 0.5)
         return home_goals, away_goals
 
     @staticmethod
     def _neutral_prev_matches(prev_matches: list[dict[str, str]]):
-        neutral_prev_matches = []
+        neutral_prev_matches: list[dict[str, str]] = []
         for match in prev_matches:
             neutral_match = {}
             # Rename to match json format
@@ -140,7 +134,7 @@ class Predictor:
     @staticmethod
     def _starting_score(
         avg_result: tuple[float, float], opp_avg_result: tuple[float, float]
-    ) -> tuple[float, float]:
+    ):
         # Midway between team's avg scored and opposition's avg conceded
         pred_scored = (avg_result[0] + opp_avg_result[1]) / 2
         pred_conceded = (avg_result[1] + opp_avg_result[0]) / 2
@@ -150,7 +144,7 @@ class Predictor:
     @staticmethod
     def _starting_score_new(
         home_avg_result: tuple[float, float], away_avg_result: tuple[float, float]
-    ) -> tuple[float, float]:
+    ):
         # Midway between team's avg scored and opposition's avg conceded
         home_goals = (home_avg_result[0] + away_avg_result[1]) / 2
         away_goals = (home_avg_result[1] + away_avg_result[0]) / 2
@@ -163,7 +157,7 @@ class Predictor:
         pred_conceded: float,
         prev_matches: list[dict[str, str]],
         prev_meeting_weight: float = 0.5,
-    ) -> tuple[float, float]:
+    ):
         if not prev_matches:
             return 0, 0
 
@@ -189,7 +183,7 @@ class Predictor:
         at_home: float,
         prev_matches: list[dict[str, str]],
         prev_meeting_weight: float = 0.5,
-    ) -> tuple[float, float]:
+    ):
         if not prev_matches:
             return home_goals, away_goals
 
@@ -226,7 +220,7 @@ class Predictor:
         opp_form_rating: float,
         opp_long_term_form_rating: float,
         prev_matches: list[dict[str, str]],
-    ) -> tuple[float, float]:
+    ):
         pred_scored, pred_conceded = self._starting_score(avg_result, opp_avg_result)
 
         pred_scored, pred_conceded = self._adjust_by_prev_matches(
@@ -262,7 +256,7 @@ class Predictor:
         at_home: bool,
         home_advantage: float,
         prev_matches: list[dict[str, str]],
-    ) -> tuple[float, float]:
+    ):
         home_goals, away_goals = self._starting_score_new(
             home_avg_result, away_avg_result
         )
@@ -298,7 +292,7 @@ class Predictor:
         pred_scored: float,
         pred_conceded: float,
         at_home: bool,
-    ) -> tuple[str, str, dict[str, int], dict[str, float]]:
+    ):
         team_name_initials = convert_team_name_or_initials(team_name)
         opp_team_name_initials = convert_team_name_or_initials(opp_team_name)
 
@@ -326,8 +320,8 @@ class Predictor:
         form: Form,
         upcoming: Upcoming,
         home_advantages: HomeAdvantages,
-    ) -> dict[dict[str, Union[datetime, str, float]]]:
-        predictions = {}  # type: dict[dict[str, Union[datetime, str, float]]]
+    ):
+        predictions: dict[dict[str, datetime | str | float]] = {}
         team_names = form.df.index.values.tolist()
 
         # Check ALL teams as two teams can have different next games
@@ -391,8 +385,8 @@ class Predictor:
         form: Form,
         upcoming: Upcoming,
         home_advantages: HomeAdvantages,
-    ) -> dict[dict[str, Union[datetime, str, float]]]:
-        predictions = {}  # type: dict[dict[str, Union[datetime, str, float]]]
+    ):
+        predictions: dict[dict[str, datetime | str | float]] = {}
         team_names = form.df.index.values.tolist()
 
         # Check ALL teams as two teams can have different next games
@@ -462,13 +456,13 @@ class Predictions:
         n_act_away: int
 
     @staticmethod
-    def _signed_float_str(value: float) -> str:
+    def _signed_float_str(value: float):
         value = round(value, 2)
         if value >= 0:
             return f"+{value}"
         return str(value)
 
-    def _predictions_to_df(self, predictions: dict[str, dict[str, float]]) -> DataFrame:
+    def _predictions_to_df(self, predictions: dict[str, dict[str, float]]):
         d = {}
         for team, prediction in predictions.items():
             p = {}
@@ -485,7 +479,7 @@ class Predictions:
         form: Form,
         upcoming: Upcoming,
         home_advantages: HomeAdvantages,
-    ) -> DataFrame:
+    ):
         predictions = self.predictor.gen_score_predictions_new(
             fixtures, form, upcoming, home_advantages
         )

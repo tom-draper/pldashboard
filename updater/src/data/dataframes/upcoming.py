@@ -17,7 +17,7 @@ class Upcoming(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, "upcoming")
 
-    def get_predictions(self) -> dict[str, dict]:
+    def get_predictions(self):
         """Extracts a predictions dictionary from the dataframe including
         prediction details for each team about their upcoming game.
 
@@ -33,11 +33,12 @@ class Upcoming(DF):
             }
         }
         """
+        predictions: dict[str, dict[str, datetime | str | dict[str, float]]] = {}
+
         # If predictions haven't been added to dataframe, skip (season is over)
         if "prediction" not in self.df:
-            return {}
+            return predictions
 
-        predictions: dict[str, dict[str, datetime | str | dict[str, float]]] = {}
         for team, row in self.df.iterrows():
             if row["atHome"]:
                 home_initials = team
@@ -57,7 +58,7 @@ class Upcoming(DF):
 
         return predictions
 
-    def _next_matchday(self, team_name: str, fixtures: Fixtures) -> int:
+    def _next_matchday(self, team_name: str, fixtures: Fixtures):
         """Scan through list of fixtures to find the next game that is scheduled."""
         # Arbitrary initial future date that will always be greater than any possible matchday date
         future = datetime.now() + timedelta(days=365)
@@ -73,12 +74,10 @@ class Upcoming(DF):
                 matchday["matchday"] = matchday_no
         return matchday["matchday"]
 
-    def _get_next_game(
-        self, team_name: str, fixtures: Fixtures
-    ) -> tuple[Optional[str], Optional[str], Optional[str]]:
-        date = None  # type: Optional[str]
-        next_team = None  # type: Optional[str]
-        at_home = None  # type: Optional[str]
+    def _get_next_game(self, team_name: str, fixtures: Fixtures):
+        date: Optional[str] = None
+        next_team: Optional[str] = None
+        at_home: Optional[str] = None
 
         next_matchday = self._next_matchday(team_name, fixtures)
         if next_matchday is not None:
@@ -89,7 +88,7 @@ class Upcoming(DF):
         return date, next_team, at_home
 
     @staticmethod
-    def _game_result_tuple(match: dict) -> tuple[str, str]:
+    def _game_result_tuple(match: dict):
         home_score = match["score"]["fullTime"]["homeTeam"]
         away_score = match["score"]["fullTime"]["awayTeam"]
         if home_score == away_score:
@@ -133,14 +132,14 @@ class Upcoming(DF):
             next_games[away_team]["prevMatches"].append(prev_match)
 
     @staticmethod
-    def _ord(n: int) -> str:
+    def _ord(n: int):
         return str(n) + (
             "th"
             if 4 <= n % 100 <= 20
             else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
         )
 
-    def _readable_date(self, date: datetime) -> str:
+    def _readable_date(self, date: datetime):
         dt = datetime.strptime(date[:10], "%Y-%m-%d")
         day = self._ord(dt.day)
         return day + dt.date().strftime(" %B %Y")
@@ -166,8 +165,8 @@ class Upcoming(DF):
             if match["status"] != "FINISHED":
                 continue
 
-            home_team = clean_full_team_name(match["homeTeam"]["name"])  # type: str
-            away_team = clean_full_team_name(match["awayTeam"]["name"])  # type: str
+            home_team: str = clean_full_team_name(match["homeTeam"]["name"])
+            away_team: str = clean_full_team_name(match["awayTeam"]["name"])
 
             if home_team not in team_names or away_team not in team_names:
                 continue
@@ -188,7 +187,7 @@ class Upcoming(DF):
 
     def _merge_predictions_into_upcoming(
         self, upcoming: DataFrame, predictions: DataFrame
-    ) -> DataFrame:
+    ):
         upcoming = upcoming.rename(
             columns={column: (column, "") for column in upcoming.columns.tolist()}
         )
@@ -196,11 +195,9 @@ class Upcoming(DF):
         upcoming = pd.concat([upcoming, predictions], axis=1)
         return upcoming
 
-    def calc_next_game_predictions(
-        self, predictor: Predictor, upcoming: DataFrame
-    ) -> list[str]:
-        next_game_predictions = []
-        next_game_predictions_cache = {}
+    def calc_next_game_predictions(self, predictor: Predictor, upcoming: DataFrame):
+        next_game_predictions: list[str] = []
+        next_game_predictions_cache: dict[tuple[str, str], str] = {}
         for team, row in upcoming.iterrows():
             opponent = row["nextTeam"]
             home_team = team if row["atHome"] else opponent
@@ -261,7 +258,7 @@ class Upcoming(DF):
         """
         self.log_building(season)
 
-        d = {}  # type: dict[str, dict[str, Optional[str] | list]]
+        d: dict[str, dict[str, Optional[str] | list]] = {}
         team_names = fixtures.df.index.to_list()
         for team_name in team_names:
             date, next_team, at_home = self._get_next_game(team_name, fixtures)

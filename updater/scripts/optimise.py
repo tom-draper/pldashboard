@@ -13,7 +13,7 @@ class OptimisePredictions:
         return (ph > pa and ah > aa) or (ph == pa and ah == aa) or (ph < pa and ah < aa)
 
     @staticmethod
-    def game_result_tuple(match: dict) -> tuple[str, str]:
+    def game_result_tuple(match: dict):
         home_score = match["score"]["fullTime"]["homeTeam"]
         away_score = match["score"]["fullTime"]["awayTeam"]
         if home_score == away_score:
@@ -23,15 +23,15 @@ class OptimisePredictions:
         return ("Lost", "Won")
 
     def get_prev_matches(self, json_data: dict, team_names: list[str]):
-        prev_matches: list[dict] = []
+        prev_matches: list[dict[str, str | int]] = []
         for i in range(4):
             data = json_data["fixtures"][current_season - i]
             for match in data:
                 if match["status"] != "FINISHED":
                     continue
 
-                home_team = match["homeTeam"]["name"].replace("&", "and")  # type: str
-                away_team = match["awayTeam"]["name"].replace("&", "and")  # type: str
+                home_team: str = match["homeTeam"]["name"].replace("&", "and")
+                away_team: str = match["awayTeam"]["name"].replace("&", "and")
 
                 if home_team not in team_names or away_team not in team_names:
                     continue

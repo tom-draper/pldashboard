@@ -1,3 +1,4 @@
+from typing import Optional
 from ..fmt import convert_team_name_or_initials
 
 
@@ -8,8 +9,8 @@ class Scoreline:
         self,
         home_goals: int,
         away_goals: int,
-        home_team: str = None,
-        away_team: str = None,
+        home_team: Optional[str] = None,
+        away_team: Optional[str] = None,
         show_teams: bool = True,
     ):
         self.home_team = self.BLANK_TEAM if home_team is None else home_team

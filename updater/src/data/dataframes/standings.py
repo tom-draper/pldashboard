@@ -17,9 +17,7 @@ class Standings(DF):
         return team_names
 
     @staticmethod
-    def _season_standings(
-        json_data: dict, current_teams: list[str], season: int
-    ) -> DataFrame:
+    def _season_standings(json_data: dict, current_teams: list[str], season: int):
         data = json_data["standings"][season]
         df = pd.DataFrame.from_dict(data)
 
@@ -52,7 +50,7 @@ class Standings(DF):
         return df
 
     @staticmethod
-    def clean_dataframe(standings: DataFrame) -> DataFrame:
+    def clean_dataframe(standings: DataFrame):
         standings = standings.fillna(0).astype(int)
         standings.index.name = "team"
         standings.columns.names = ("Season", None)

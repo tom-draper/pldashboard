@@ -1,3 +1,4 @@
+from typing import Optional
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
@@ -12,19 +13,19 @@ class Form(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, "form")
 
-    def get_prev_matchday(self, current_season: int) -> int:
+    def get_prev_matchday(self, current_season: int):
         current_season = self.get_current_season()
         return self._get_matchday(current_season, n_back=1)
 
-    def get_current_matchday(self, current_season: int = None) -> int:
+    def get_current_matchday(self, current_season: Optional[int] = None):
         if current_season is None:
             current_season = self.get_current_season()
         return self._get_matchday(current_season, n_back=0)
 
-    def get_current_season(self) -> int:
+    def get_current_season(self):
         return max(self.df.columns.unique(level=0))
 
-    def get_current_form_rating(self, team_name: str) -> float:
+    def get_current_form_rating(self, team_name: str):
         current_season = self.get_current_season()
         current_matchday = self.get_current_matchday(current_season)
         matchday = self._get_last_played_matchday(
@@ -32,7 +33,7 @@ class Form(DF):
         )
         return self._get_form_rating(team_name, matchday, current_season, 5)
 
-    def get_long_term_form_rating(self, team_name: str) -> float:
+    def get_long_term_form_rating(self, team_name: str):
         current_season = self.get_current_season()
         current_matchday = self.get_current_matchday(current_season)
         matchday = self._get_last_played_matchday(
@@ -42,7 +43,7 @@ class Form(DF):
 
     def _get_last_played_matchday(
         self, current_matchday: int, current_season: int, team_name: str
-    ) -> int | None:
+    ):
         matchday = current_matchday
         while (
             matchday > 0
@@ -53,7 +54,7 @@ class Form(DF):
 
     def _get_form_rating(
         self, team_name: str, matchday: int, current_season: int, n_games: int
-    ) -> float:
+    ):
         if matchday < 1 or matchday > 38:
             return 0
 
@@ -66,7 +67,7 @@ class Form(DF):
         ).round(1)
         return rating
 
-    def _get_matchday(self, season: int, n_back: int = 0) -> int:
+    def _get_matchday(self, season: int, n_back: int = 0):
         current_matchday = 0
         matchdays = self.df[season].columns.unique(level=0)
         if len(matchdays) != 0:
@@ -74,7 +75,7 @@ class Form(DF):
         return current_matchday
 
     @staticmethod
-    def _get_points(gd: int) -> int:
+    def _get_points(gd: int):
         if gd > 0:
             return 3
         elif gd == 0:
@@ -82,7 +83,7 @@ class Form(DF):
         return 0
 
     @staticmethod
-    def _get_gd(score: str, at_home: bool) -> int:
+    def _get_gd(score: str, at_home: bool):
         if at_home:
             return score["homeGoals"] - score["awayGoals"]
         return score["awayGoals"] - score["homeGoals"]
@@ -93,7 +94,7 @@ class Form(DF):
         teams_played: list[str],
         form_str: str,
         gds: list[int],
-    ) -> float:
+    ):
         form_rating = 0.5  # Default percentage, moves up or down based on performance
 
         if form_str is None:
@@ -156,7 +157,7 @@ class Form(DF):
                         team, (current_season, prev_matchday, col)
                     ]
 
-    def _clean_dataframe(self, form: DataFrame, matchday_nos: list[int]) -> DataFrame:
+    def _clean_dataframe(self, form: DataFrame, matchday_nos: list[int]):
         # Drop columns used for working
         form = form.drop(columns=["points"], level=1)
         form = form.reindex(sorted(form.columns.values), axis=1)
@@ -173,9 +174,7 @@ class Form(DF):
             return "L"
         return "D"
 
-    def _last_n_played_matchdays(
-        self, d: dict, team: str, current_season: int, N: int
-    ) -> list[int]:
+    def _last_n_played_matchdays(self, d: dict, team: str, current_season: int, N: int):
         played_matchdays = []
         for matchday in range(38, 0, -1):
             if (current_season, matchday, "team") in d[team]:
@@ -194,7 +193,7 @@ class Form(DF):
         current_season: int,
         matchdays: list[int],
         length: int,
-    ) -> float:
+    ):
         # played_matchdays = self._last_n_played_matchdays(
         # d, team, current_season, length)
         played_matchdays = matchdays[-min(length, len(matchdays)) :]
@@ -248,7 +247,7 @@ class Form(DF):
         d[team][(season, matchday, col_heading)] = form_str
 
     @staticmethod
-    def _prev_matchday(d: dict, team: str, matchday: int, season: int) -> int | None:
+    def _prev_matchday(d: dict, team: str, matchday: int, season: int):
         prev_matchday = matchday - 1
         while (season, prev_matchday, "team") not in d[team] and prev_matchday >= 0:
             prev_matchday -= 1
@@ -256,8 +255,8 @@ class Form(DF):
             prev_matchday = None
         return prev_matchday
 
-    def _ordered_played_matchdays(self, d: dict, team: str, season: int) -> list[int]:
-        played_matchdays = []  # type: list[tuple[int, str]]
+    def _ordered_played_matchdays(self, d: dict, team: str, season: int):
+        played_matchdays: list[tuple[int, str]] = []
         for matchday in range(1, 39):
             if (season, matchday, "date") in d[team]:
                 played_matchdays.append((matchday, d[team][(season, matchday, "date")]))
@@ -266,7 +265,7 @@ class Form(DF):
         played_matchdays.sort(key=lambda x: x[1])
 
         # Collect ordered matchday numbers to return
-        ordered_matchdays = []  # type: list[int]
+        ordered_matchdays: list[int] = []
         for matchday in played_matchdays:
             ordered_matchdays.append(matchday[0])
         return ordered_matchdays

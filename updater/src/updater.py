@@ -4,6 +4,7 @@ import logging
 from datetime import datetime
 from os import getenv
 from os.path import dirname, join
+from typing import Optional
 
 import aiohttp
 from dotenv import load_dotenv
@@ -39,7 +40,7 @@ class Updater:
 
     # ----------------------------- DATA API -----------------------------------
     @staticmethod
-    async def get(url: str, headers: dict = None) -> dict:
+    async def get(url: str, headers: Optional[dict] = None):
         """Fetch data from url.
 
         Args:
@@ -65,48 +66,50 @@ class Updater:
             else:
                 logging.debug(f"✅ Status: {response.status} [{url}]")
 
-            data = await response.json()
+            data: dict = await response.json()
             logging.debug(f"Received data from {url}")
             return data
 
-    async def fetch_fixtures_data(self, season: int) -> dict:
-        data = await self.get(
+    async def fetch_fixtures_data(self, season: int):
+        data: dict = await self.get(
             f"{self.url}v2/competitions/PL/matches/?season={season}",
             headers=self.headers,
         )
         return data["matches"]
 
-    def load_fixtures_data(self, season: int) -> dict:
+    def load_fixtures_data(self, season: int):
         logging.debug(f"💾 Loading fixtures data for season {season}...")
         with open(f"backups/fixtures/fixtures_{season}.json", "r") as json_file:
             return json.load(json_file)
 
-    async def fetch_standings_data(self, season: int) -> dict:
-        data = await self.get(
+    async def fetch_standings_data(self, season: int):
+        data: dict = await self.get(
             f"{self.url}v4/competitions/PL/standings/?season={season}",
             headers=self.headers,
         )
         return data["standings"][0]["table"]
 
-    def load_standings_data(self, season: int) -> dict:
+    def load_standings_data(self, season: int):
         logging.debug(f"💾 Loading standings data for season {season}...")
         with open(f"backups/standings/standings_{season}.json", "r") as json_file:
             return json.load(json_file)
 
-    async def fetch_fantasy_general_data(self) -> dict:
-        data = await self.get("https://fantasy.premierleague.com/api/bootstrap-static/")
+    async def fetch_fantasy_general_data(self):
+        data: dict = await self.get(
+            "https://fantasy.premierleague.com/api/bootstrap-static/"
+        )
         return data
 
-    def load_fantasy_general_data(self, season: int) -> dict:
+    def load_fantasy_general_data(self, season: int):
         logging.debug(f"💾 Loading fantasy data for season {season}...")
         with open(f"backups/fantasy/general_{season}.json", "r") as json_file:
             return json.load(json_file)
 
-    async def fetch_fantasy_fixtures_data(self) -> dict:
-        data = await self.get("https://fantasy.premierleague.com/api/fixtures/")
+    async def fetch_fantasy_fixtures_data(self):
+        data: dict = await self.get("https://fantasy.premierleague.com/api/fixtures/")
         return data
 
-    def load_fantasy_fixtures_data(self, season: int) -> dict:
+    def load_fantasy_fixtures_data(self, season: int):
         logging.debug(f"💾 Loading fantasy fixtures data for season {season}...")
         with open(f"backups/fantasy/fixtures_{season}.json", "r") as json_file:
             return json.load(json_file)
@@ -248,10 +251,10 @@ class Updater:
         self.database.update_predictions(predictions, actual_scores)
         self.database.update_actual_scores(actual_scores)
 
-    def get_logo_urls(self) -> dict[str, str]:
-        data = self.raw_data["standings"][self.current_season]
+    def get_logo_urls(self):
+        data: dict = self.raw_data["standings"][self.current_season]
 
-        logo_urls = {}
+        logo_urls: dict[str, str] = {}
         for standings_row in data:
             team_name = clean_full_team_name(standings_row["team"]["name"])
             crest_url = standings_row["team"]["crestUrl"]

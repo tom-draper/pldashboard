@@ -9,7 +9,7 @@ def calc_form(
     recent_matches: list[Scoreline],
     weightings: list[float],
     team_ratings: TeamRatings,
-) -> float:
+):
     weightings /= np.sum(weightings)
 
     form = 0.5

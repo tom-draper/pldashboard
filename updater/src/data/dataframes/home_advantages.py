@@ -17,6 +17,7 @@ class HomeAdvantages(DF):
     def _check_init_team_row(d: defaultdict, team: str, season: int):
         if team not in d:
             d[team] = {}
+
         if (season, "home", "wins") not in d[team]:
             d[team].update(
                 {
@@ -119,8 +120,8 @@ class HomeAdvantages(DF):
         return home_advantages
 
     @staticmethod
-    def _row_template(season: int, no_seasons: int) -> dict[tuple[int, str, str], int]:
-        template = {}
+    def _row_template(season: int, no_seasons: int):
+        template: dict[tuple[int, str, str], int] = {}
         for i in range(no_seasons):
             template.update(
                 {
@@ -135,9 +136,7 @@ class HomeAdvantages(DF):
         return template
 
     @staticmethod
-    def _clean_dataframe(
-        home_advantages: DataFrame, current_season_teams: list[str]
-    ) -> DataFrame:
+    def _clean_dataframe(home_advantages: DataFrame, current_season_teams: list[str]):
         home_advantages = home_advantages.drop(
             columns=["wins", "loses", "draws"], level=2
         )
@@ -147,8 +146,8 @@ class HomeAdvantages(DF):
         return home_advantages
 
     @staticmethod
-    def get_season_teams(season_fixtures_data: dict) -> list[str]:
-        current_season_teams = set()
+    def get_season_teams(season_fixtures_data: dict):
+        current_season_teams: set[str] = set()
         for match in season_fixtures_data:
             home_team = clean_full_team_name(match["homeTeam"]["name"])
             away_team = clean_full_team_name(match["awayTeam"]["name"])

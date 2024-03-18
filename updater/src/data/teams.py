@@ -23,7 +23,7 @@ class TeamsData:
         self.form: Form = Form()
         self.upcoming: Upcoming = Upcoming()
 
-    def all_built(self) -> bool:
+    def all_built(self):
         return (
             self.fixtures.df is not None
             and self.standings.df is not None
@@ -33,7 +33,7 @@ class TeamsData:
             and self.upcoming.df is not None
         )
 
-    def to_dataframe(self) -> DataFrame:
+    def to_dataframe(self):
         return pd.concat(
             (
                 self.fixtures.df,
@@ -81,7 +81,7 @@ class TeamsData:
 
         return new_d
 
-    def to_dict(self) -> dict:
+    def to_dict(self):
         if not self.all_built():
             raise ValueError(
                 "❌ [ERROR] Cannot build one team data dict: A dataframe is empty"

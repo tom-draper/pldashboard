@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -58,14 +59,14 @@ class Predictor:
 
         return total_fixtures
 
-    def _team_scoreline_freq(self, team: str) -> dict[Scoreline, int]:
-        freq = {}
+    def _team_scoreline_freq(self, team: str):
+        freq: dict[Scoreline, int] = {}
 
         team_row = self.fixtures.loc[team]
         # Remove higher-level multi-index
         team_row.index = team_row.index.get_level_values(2)
-        scores = team_row.loc["score"]  # type: list[dict[str, int]]
-        at_homes = team_row.loc["atHome"]  # type: list[bool]
+        scores: list[dict[str, int]] = team_row.loc["score"]
+        at_homes: list[bool] = team_row.loc["atHome"]
 
         for score, at_home in zip(scores, at_homes):
             if pd.isna(score):
@@ -88,15 +89,15 @@ class Predictor:
 
         return freq
 
-    def _fixture_scoreline_freq(self, team1: str, team2: str) -> dict[Scoreline, int]:
-        freq = {}  # type: dict[str, int]
+    def _fixture_scoreline_freq(self, team1: str, team2: str):
+        freq: dict[Scoreline, int] = {}
 
         team1_row = self.fixtures.loc[team1]
         # Remove higher-level multi-index
         team1_row.index = team1_row.index.get_level_values(2)
-        teams = team1_row.loc["team"]  # type: list[str]
-        scores = team1_row.loc["score"]  # type: list[dict[str, int]]
-        at_homes = team1_row.loc["atHome"]  # type: list[bool]
+        teams: list[str] = team1_row.loc["team"]
+        scores: list[dict[str, int]] = team1_row.loc["score"]
+        at_homes: list[bool] = team1_row.loc["atHome"]
 
         for team, score, at_home in zip(teams, scores, at_homes):
             if pd.isna(score) or team != team2:
@@ -122,8 +123,8 @@ class Predictor:
     @staticmethod
     def _separate_scoreline_freq_by_home_away(
         team: str, freq: dict[Scoreline, int], at_home: bool
-    ) -> dict[Scoreline, int]:
-        freq_subset = {}  # type: dict[str, int]
+    ):
+        freq_subset: dict[Scoreline, int] = {}
 
         # If at_home, only keep scoreline frequencies where team is at home
         # If not at_home, only keep scoreline frequencies where team is away
@@ -148,12 +149,10 @@ class Predictor:
             print(scoreline, count)
 
     @staticmethod
-    def _scoreline_freq_probability(
-        freq: dict[Scoreline, int]
-    ) -> dict[Scoreline, float]:
+    def _scoreline_freq_probability(freq: dict[Scoreline, int]):
         total_scorelines = sum(freq.values())
 
-        probabilities = {}  # type: dict[str, float]
+        probabilities: dict[Scoreline, float] = {}
         if total_scorelines > 0:
             for scoreline in freq:
                 probabilities[scoreline] = freq[scoreline] / total_scorelines
@@ -161,10 +160,8 @@ class Predictor:
         return probabilities
 
     @staticmethod
-    def _remove_scoreline_freq_teams(
-        freq: dict[Scoreline, int]
-    ) -> dict[Scoreline, int]:
-        new_freq = {}
+    def _remove_scoreline_freq_teams(freq: dict[Scoreline, int]):
+        new_freq: dict[Scoreline, int] = {}
         for scoreline, count in freq.items():
             scoreline.show_team = False
             if scoreline not in new_freq:
@@ -176,10 +173,10 @@ class Predictor:
     @staticmethod
     def _remove_scoreline_freq_home_away(
         freq: dict[Scoreline, int],
-        intended_home_team: str = None,
-        intended_away_team: str = None,
-    ) -> dict[Scoreline, int]:
-        new_freq = {}
+        intended_home_team: Optional[str] = None,
+        intended_away_team: Optional[str] = None,
+    ):
+        new_freq: dict[Scoreline, int] = {}
         for scoreline, count in freq.items():
             # If wrong way around, swap scoreline team order
             if (
@@ -208,9 +205,7 @@ class Predictor:
 
         return merged_freq
 
-    def _avg_goals_scored(
-        freq: dict[Scoreline, int], team1: str, team2: str
-    ) -> tuple[float, float]:
+    def _avg_goals_scored(freq: dict[Scoreline, int], team1: str, team2: str):
         team1_played = 0
         team2_played = 0
         team1_goals = 0
@@ -265,7 +260,7 @@ class Predictor:
     def _insert_scorelines_into_freq(
         freq: dict[Scoreline, int],
         scorelines: list[Scoreline],
-        weightings: list[float] = None,
+        weightings: Optional[list[float]] = None,
     ):
         if weightings is None:
             # Even weightings
@@ -281,8 +276,8 @@ class Predictor:
     @staticmethod
     def _remove_recent_scorelines_home_away(
         scorelines: list[Scoreline],
-        intended_home_team: str = None,
-        intended_away_team: str = None,
+        intended_home_team: Optional[str] = None,
+        intended_away_team: Optional[str] = None,
     ):
         for scoreline in scorelines:
             # If wrong way around, swap scoreline team order
@@ -297,8 +292,8 @@ class Predictor:
         return scorelines
 
     @staticmethod
-    def _remove_recent_scorelines_teams(scorelines: list[Scoreline]) -> list[Scoreline]:
-        new_scorelines = []  # type: list[str]
+    def _remove_recent_scorelines_teams(scorelines: list[Scoreline]):
+        new_scorelines: list[Scoreline] = []
         for scoreline in scorelines:
             scoreline.show_team = False
             new_scorelines.append(scoreline)
@@ -309,16 +304,14 @@ class Predictor:
         freq: dict[Scoreline, float],
         scorelines: list[Scoreline],
         weightings: list[float],
-    ) -> dict[Scoreline, float]:
+    ):
         for scoreline, weight in zip(scorelines, weightings):
             if scoreline in freq:
                 freq[scoreline] += 1 * weight
             else:
                 freq[scoreline] = 1 * weight
 
-    def get_recent_scorelines(
-        self, team: str, num_matches: int | None
-    ) -> list[Scoreline]:
+    def get_recent_scorelines(self, team: str, num_matches: Optional[int]):
         team_row = self.fixtures.loc[team]
         # Remove higher-level multi-index
         team_row.index = team_row.index.get_level_values(2)
@@ -350,9 +343,7 @@ class Predictor:
             scorelines = scorelines[-num_matches:]
         return scorelines
 
-    def scoreline_probabilities(
-        self, home_team: str, away_team: str
-    ) -> dict[Scoreline, float]:
+    def scoreline_probabilities(self, home_team: str, away_team: str):
         # All multi-season scorelines available for each team
         home_scoreline_freq = self._team_scoreline_freq(home_team)
         away_scoreline_freq = self._team_scoreline_freq(away_team)
@@ -463,9 +454,7 @@ class Predictor:
                 scoreline_freq[scoreline] *= draw
 
     @staticmethod
-    def maximum_likelihood(
-        scoreline_probabilities: dict[Scoreline, float]
-    ) -> Scoreline | None:
+    def maximum_likelihood(scoreline_probabilities: dict[Scoreline, float]):
         predicted = None
         best = 0
         for scoreline, probability in scoreline_probabilities.items():
@@ -478,7 +467,7 @@ class Predictor:
         self,
         home_team: str,
         away_team: str,
-    ) -> Scoreline:
+    ):
         scoreline_probabilities = self.scoreline_probabilities(home_team, away_team)
         predicted = self.maximum_likelihood(scoreline_probabilities)
         # Overwrite predicted scoreline teams with fixture

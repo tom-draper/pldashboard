@@ -57,7 +57,7 @@ names_and_initials = TwoWayDict(
 )
 
 
-def convert_team_name_or_initials(team_name: str) -> str:
+def convert_team_name_or_initials(team_name: str):
     """Converts team name to three-letter initials, or converts three-letter
     initials to a team name.
 

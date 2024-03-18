@@ -10,7 +10,7 @@ class Fantasy(DF):
         super().__init__(d, "fantasy")
 
     @staticmethod
-    def get_current_season(json_data: dict) -> int:
+    def get_current_season(json_data: dict):
         return next(iter(json_data["fantasy"].keys()))
 
     def get_fixtures(
