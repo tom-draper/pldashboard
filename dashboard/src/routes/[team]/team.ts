@@ -1,4 +1,4 @@
-import type { TeamsData, Form, Team } from './dashboard.types';
+import type { TeamsData, Team } from './dashboard.types';
 
 export function toInitials(team: Team): string {
 	switch (team) {

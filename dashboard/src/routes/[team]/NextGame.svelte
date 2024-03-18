@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { toAlias, toInitials, getTeamID, getCurrentMatchday } from './team';
 	import { ordinal, teamStyle } from './format';
-	import type { TeamsData } from './dashboard.types';
-	import type { PrevMatch, Team } from '../../global';
+	import type { PrevMatch, Team, TeamsData } from './dashboard.types';
 
 	function resultColor(prevMatch: PrevMatch, home: boolean): Team {
 		if (home) {

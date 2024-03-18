@@ -307,10 +307,9 @@ class Predictor:
         weightings: list[float],
     ):
         for scoreline, weight in zip(scorelines, weightings):
-            if scoreline in freq:
-                freq[scoreline] += 1 * weight
-            else:
-                freq[scoreline] = 1 * weight
+            if scoreline not in freq:
+                freq[scoreline] = 0
+            freq[scoreline] += 1 * weight
 
     def get_recent_scorelines(self, team: str, num_matches: Optional[int]):
         team_row = self.fixtures.loc[team]
@@ -457,7 +456,7 @@ class Predictor:
     @staticmethod
     def maximum_likelihood(scoreline_probabilities: dict[Scoreline, float]):
         predicted: Optional[Scoreline] = None
-        best = 0.
+        best = 0.0
         for scoreline, probability in scoreline_probabilities.items():
             if probability > best:
                 best = probability

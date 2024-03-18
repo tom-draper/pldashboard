@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import type { PredictionsData } from './predictions.types';
 
 	function toggleDetailsDisplay(id: string) {
 		const prediction = document.getElementById(id);
@@ -17,7 +18,7 @@
 		console.log(data);
 	});
 
-	export let data: { data: PredictionsData };
+	export let data: PredictionsData;
 </script>
 
 <div id="predictions">
@@ -29,19 +30,19 @@
 		<div class="accuracy-display">
 			<div class="accuracy">
 				<span class="accuracy-item">
-					Predicting with accuracy: <b>{(data.data.accuracy.scoreAccuracy * 100).toFixed(2)}%</b
+					Predicting with accuracy: <b>{(data.accuracy.scoreAccuracy * 100).toFixed(2)}%</b
 					></span
 				><br />
 				<div class="accuracy-item">
-					General results accuracy: <b>{(data.data.accuracy.resultAccuracy * 100).toFixed(2)}%</b>
+					General results accuracy: <b>{(data.accuracy.resultAccuracy * 100).toFixed(2)}%</b>
 				</div>
 			</div>
 		</div>
 
 		<div class="predictions-container">
 			<div class="predictions">
-				{#if data.data.predictions != null}
-					{#each data.data.predictions as { _id, predictions }}
+				{#if data.predictions != null}
+					{#each data.predictions as { _id, predictions }}
 						<div class="date">
 							{_id}
 						</div>

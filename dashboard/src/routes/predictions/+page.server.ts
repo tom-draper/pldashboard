@@ -9,7 +9,5 @@ export async function load() {
 		};
 	}
 
-	return {
-		data
-	};
+	return data;
 }

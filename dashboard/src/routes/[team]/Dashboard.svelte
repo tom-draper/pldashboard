@@ -75,7 +75,7 @@
 		{:else}
 			<TeamsContent {data} {switchTeam} />
 		{/if}
-		<Footer lastUpdated={data.data.lastUpdated} />
+		<Footer lastUpdated={data.data.lastUpdated} dark={false} />
 	</div>
 </div>
 

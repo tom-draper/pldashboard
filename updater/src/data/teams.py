@@ -53,6 +53,10 @@ class TeamsData:
         elif isinstance(d, Scoreline):
             # Unpack Scoreline object into a dict and continue recursing
             d = d.to_dict()
+        elif isinstance(d, list):
+            for i, v in enumerate(d):
+                d[i] = self.collapse_tuple_keys(v)
+            return d
         elif not isinstance(d, dict):
             # If hit bottom of tree, stop recursing
             return d

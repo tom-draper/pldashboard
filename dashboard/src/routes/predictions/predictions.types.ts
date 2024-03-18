@@ -1,6 +1,18 @@
+import type { Scoreline } from "../[team]/dashboard.types";
+
 export type PredictionsData = {
-	predictions: Predictions[];
 	accuracy: Accuracy;
+	predictions: MatchdayPredictions[];
+};
+
+export type Prediction = {
+	_id: string; // HOME_INITIALS vs AWAY_INITIALS
+	home: string;
+	away: string;
+	prediction: Scoreline;
+	actual: null | Scoreline;
+	datetime: string;
+	color?: string;
 };
 
 export type Accuracy = {
@@ -8,19 +20,14 @@ export type Accuracy = {
 	resultAccuracy: number;
 };
 
-export type Predictions = {
-	_id: Date;
+export type MatchdayPredictions = {
+	_id: string; // YYYY-MM-DD
 	predictions: Prediction[];
 };
 
-export type Prediction = {
-	_id: string;
-	datetime: Date;
-	home: string;
-	away: string;
-	prediction: ActualClass;
-	actual: ActualClass | null;
-	color?: string;
+export type Predictions = {
+	_id: Date;
+	predictions: Prediction[];
 };
 
 export type ActualClass = {

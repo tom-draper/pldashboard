@@ -23,13 +23,13 @@ class Scoreline:
     def reverse(self):
         self.home_team, self.away_team = self.away_team, self.home_team
         self.home_goals, self.away_goals = self.away_goals, self.home_goals
-    
+
     def to_dict(self):
         return {
-            "home_team": self.home_team,
-            "away_team": self.away_team,
-            "home_goals": self.home_goals,
-            "away_goals": self.away_goals,
+            "homeTeam": self.home_team,
+            "awayTeam": self.away_team,
+            "homeGoals": self.home_goals,
+            "awayGoals": self.away_goals,
         }
 
     def __hash__(self):

@@ -1,5 +1,6 @@
 import { url } from '../consts';
 import { identicalScore, sameResult } from '../[team]/goals';
+import type { MatchdayPredictions, Prediction, PredictionsData } from './predictions.types';
 
 export async function fetchPredictions() {
 	const response = await fetch(`${url}/predictions`);
@@ -58,13 +59,12 @@ function insertExtras(json: PredictionsData) {
 
 function sortByDate(predictions: MatchdayPredictions[]) {
 	predictions.sort((a, b) => {
-		//@ts-ignore
-		return new Date(b._id) - new Date(a._id);
+		return (new Date(b._id)).getTime() - (new Date(a._id)).getTime();
 	});
 	// Sort each day of predictions by time
 	for (let i = 0; i < predictions.length; i++) {
 		predictions[i].predictions.sort((a: Prediction, b: Prediction) => {
-			return new Date(a.datetime) - new Date(b.datetime);
+			return (new Date(a.datetime)).getTime() - (new Date(b.datetime)).getTime();
 		});
 	}
 }
