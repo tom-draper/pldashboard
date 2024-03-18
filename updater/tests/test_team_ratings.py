@@ -10,6 +10,6 @@ def test_team_ratings_df(data: Data):
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_team_ratings_df_not_alphabetical(data: Data):
-    # If alphabetical, it means standings dataframe is incorrect
+    # If alphabetical, it means standings DataFrame is incorrect
     index = data.teams.team_ratings.df.index.tolist()
     assert not pytest.is_sorted(index)

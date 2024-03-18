@@ -2,7 +2,8 @@
 	import { onMount } from 'svelte';
 	import { getTeams, toInitials } from './team';
 	import { teamStyle } from './format';
-	import { Team, type DashboardData, type TeamsData } from './dashboard.types';
+	import type { DashboardData, TeamsData } from './dashboard.types';
+	import type { Team } from '../../global';
 
 	type UpcomingMatch = {
 		time: Date;
@@ -17,7 +18,7 @@
 			if (!data.upcoming[team].atHome) {
 				continue;
 			}
-			const awayTeam = data.upcoming[team].nextTeam;
+			const awayTeam = data.upcoming[team].team;
 			if (awayTeam === null) {
 				continue;
 			}
@@ -74,7 +75,7 @@
 					? 0
 					: data.homeAdvantages[match.team].totalHomeAdvantage;
 				match.color = fixtureColorSkewed(
-					data.teamRatings[match.team].totalRating + homeAdvantage
+					data.teamRatings[match.team].total + homeAdvantage
 				);
 			}
 		}
@@ -131,7 +132,7 @@
 					date: match.date,
 					atHome: match.atHome,
 					status: match.status,
-					color: fixtureColorSkewed(data.teamRatings[match.team].totalRating + homeAdvantage)
+					color: fixtureColorSkewed(data.teamRatings[match.team].total + homeAdvantage)
 				});
 			}
 			fixtures.push({
@@ -317,7 +318,7 @@
 									{row.points}
 								</div>
 								<div class="standings-rating">
-									{data.data.teamRatings[row.team].totalRating.toFixed(2)}
+									{data.data.teamRatings[row.team].total.toFixed(2)}
 								</div>
 								<div class="standings-form">
 									{Object.keys(data.data.form[row.team][data.data._id]).length > 0 &&

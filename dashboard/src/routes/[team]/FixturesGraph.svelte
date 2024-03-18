@@ -64,12 +64,12 @@
 			const match = data.fixtures[team][matchday];
 			x.push(new Date(match.date));
 
-			let oppTeamRating = data.teamRatings[match.team].totalRating;
+			let oppositionRating = data.teamRatings[match.team].total;
 			if (match.atHome) {
 				// If team playing at home, decrease opposition rating by the amount of home advantage the team gains
-				oppTeamRating *= 1 - data.homeAdvantages[match.team].totalHomeAdvantage;
+				oppositionRating *= 1 - data.homeAdvantages[match.team].totalHomeAdvantage;
 			}
-			y.push(oppTeamRating * 100);
+			y.push(oppositionRating * 100);
 
 			const description = matchDescription(team, match);
 			descriptions.push(description);

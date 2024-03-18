@@ -1,20 +1,21 @@
 <script lang="ts">
 	import { toAlias, toInitials, getTeamID, getCurrentMatchday } from './team';
 	import { ordinal, teamStyle } from './format';
-	import type { TeamsData, Team, PrevMatch } from './dashboard.types';
+	import type { TeamsData } from './dashboard.types';
+	import type { PrevMatch, Team } from '../../global';
 
 	function resultColor(prevMatch: PrevMatch, home: boolean): Team {
 		if (home) {
-			return prevMatch.homeGoals < prevMatch.awayGoals ? prevMatch.awayTeam : prevMatch.homeTeam;
+			return prevMatch.result.homeGoals < prevMatch.result.awayGoals ? prevMatch.result.awayTeam : prevMatch.result.homeTeam;
 		} else {
-			return prevMatch.homeGoals > prevMatch.awayGoals ? prevMatch.homeTeam : prevMatch.awayTeam;
+			return prevMatch.result.homeGoals > prevMatch.result.awayGoals ? prevMatch.result.homeTeam : prevMatch.result.awayTeam;
 		}
 	}
 
 	export let data: TeamsData, team: Team, switchTeam: (newTeam: Team) => void;
 </script>
 
-{#if data.upcoming[team].nextTeam === null}
+{#if data.upcoming[team].team === null}
 	<div class="next-game-prediction-complete">
 		<div class="next-game-season-complete">
 			<h1 class="next-game-title-text">
@@ -29,9 +30,9 @@
 				Next Game:&nbsp
 				<button
 					on:click={() => {
-						switchTeam(getTeamID(data.upcoming[team].nextTeam));
+						switchTeam(getTeamID(data.upcoming[team].team));
 					}}
-					class="next-game-team-btn">{toAlias(data.upcoming[team].nextTeam)}&nbsp</button
+					class="next-game-team-btn">{toAlias(data.upcoming[team].team)}&nbsp</button
 				>
 				({data.upcoming[team].atHome ? 'Home' : 'Away'})
 			</h1>
@@ -43,9 +44,9 @@
 				<div class="predictions">
 					<div class="next-game-item">
 						<div class="next-game-position">
-							{data.standings[data.upcoming[team].nextTeam][data._id].position}<span
+							{data.standings[data.upcoming[team].team][data._id].position}<span
 								class="ordinal-position"
-								>{ordinal(data.standings[data.upcoming[team].nextTeam][data._id].position)}</span
+								>{ordinal(data.standings[data.upcoming[team].team][data._id].position)}</span
 							>
 						</div>
 					</div>
@@ -53,8 +54,8 @@
 						Current form:
 						<span class="current-form-value"
 							>{(
-								(data.form[data.upcoming[team].nextTeam][data._id][
-									getCurrentMatchday(data, data.upcoming[team].nextTeam)
+								(data.form[data.upcoming[team].team][data._id][
+									getCurrentMatchday(data, data.upcoming[team].team)
 								].formRating5 ?? 0) * 100
 							).toFixed(1)}%</span
 						>
@@ -89,23 +90,23 @@
 						<div class="next-game-item result-details">
 							<div class="past-result">
 								<div class="left-side">
-									<div class="home-team" style={teamStyle(prevMatch.homeTeam)}>
-										{toInitials(prevMatch.homeTeam)}
+									<div class="home-team" style={teamStyle(prevMatch.result.homeTeam)}>
+										{toInitials(prevMatch.result.homeTeam)}
 									</div>
 									<div class="goals-container" style={teamStyle(resultColor(prevMatch, true))}>
 										<div class="home-goals">
-											{prevMatch.homeGoals}
+											{prevMatch.result.homeGoals}
 										</div>
 									</div>
 								</div>
 								<div class="right-side">
 									<div class="goals-container" style={teamStyle(resultColor(prevMatch, false))}>
 										<div class="away-goals">
-											{prevMatch.awayGoals}
+											{prevMatch.result.awayGoals}
 										</div>
 									</div>
-									<div class="away-team" style={teamStyle(prevMatch.awayTeam)}>
-										{toInitials(prevMatch.awayTeam)}
+									<div class="away-team" style={teamStyle(prevMatch.result.awayTeam)}>
+										{toInitials(prevMatch.result.awayTeam)}
 									</div>
 								</div>
 							</div>

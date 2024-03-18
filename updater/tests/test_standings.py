@@ -12,6 +12,6 @@ def test_standings_df(data: Data):
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_standings_df_not_alphabetical(data: Data):
-    # If alphabetical, it means standings dataframe is incorrect
+    # If alphabetical, it means standings DataFrame is incorrect
     index = data.teams.standings.df.index.tolist()
     assert not pytest.is_sorted(index)

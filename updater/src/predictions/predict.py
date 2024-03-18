@@ -7,12 +7,12 @@ from typing import TYPE_CHECKING, Union
 
 import numpy as np
 import pandas as pd
-from ..data.dataframes import Form, HomeAdvantages, TeamRatings
-from ..database import Database
+from src.data.dataframes import Form, HomeAdvantages, TeamRatings
+from src.database import Database
 
 # Temp avoid circular import
 if TYPE_CHECKING:
-    from ..data.dataframes import Upcoming
+    from src.data.dataframes import Upcoming
 
 
 class Predictor:
@@ -20,7 +20,7 @@ class Predictor:
     def _game_xg(
         team: str,
         goals: float,
-        opp_team: str,
+        opposition: str,
         home_advantage: float,
         team_ratings: TeamRatings,
     ):
@@ -28,10 +28,10 @@ class Predictor:
         # Scale by home advantage recieved by the home team
         xg *= 1 + home_advantage
         # Scale by strength of opposition team
-        opp_team_rating = 0
-        if opp_team in team_ratings.df.index:
-            opp_team_rating = team_ratings.df.at[opp_team, "totalRating"]
-        xg *= 1 + team_ratings.df.at[team, "totalRating"] - opp_team_rating
+        opposition_rating = 0
+        if opposition in team_ratings.df.index:
+            opposition_rating = team_ratings.df.at[opposition, "total"]
+        xg *= 1 + team_ratings.df.at[team, "total"] - opposition_rating
 
         return xg
 
@@ -114,10 +114,10 @@ class Predictor:
         at_home = upcoming.at[team, "atHome"]
         if at_home:
             home_team = team
-            away_team = upcoming.at[home_team, "nextTeam"]
+            away_team = upcoming.at[home_team, "team"]
         else:
             away_team = team
-            home_team = upcoming.at[away_team, "nextTeam"]
+            home_team = upcoming.at[away_team, "team"]
 
         # xG from prev matches between these two teams
         prev_matches = upcoming.at[team, "prevMatches"]
@@ -160,23 +160,23 @@ class Predictor:
         home_advantages: HomeAdvantages,
     ):
         predictions: dict[dict[str, Union[datetime, str, float]]] = {}
-        team_names = form.df.index.values.tolist()
+        teams = form.df.index.values.tolist()
 
         # Check ALL teams as two teams can have different next games
-        for team_name in team_names:
+        for team in teams:
             if upcoming is None:
-                predictions[team_name] = None
+                predictions[team] = None
                 continue
 
             home_goals, away_goals = self._score_prediction(
-                team_name, upcoming, form, team_ratings, home_advantages
+                team, upcoming, form, team_ratings, home_advantages
             )
 
             prediction = {
                 "homeGoals": round(home_goals, 4),
                 "awayGoals": round(away_goals, 4),
             }
-            predictions[team_name] = prediction
+            predictions[team] = prediction
 
         return predictions
 

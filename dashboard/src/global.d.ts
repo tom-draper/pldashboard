@@ -1,128 +1,152 @@
-type Scoreline = {
+enum Team {
+	Arsenal = 'Arsenal',
+	AstonVilla = 'Aston Villa',
+	Bournemouth = 'Bournemouth',
+	Brentford = 'Brentford',
+	BrightonAndHoveAlbion = 'Brighton and Hove Albion',
+	Burnley = 'Burnley',
+	Chelsea = 'Chelsea',
+	CrystalPalace = 'Crystal Palace',
+	Everton = 'Everton',
+	Fulham = 'Fulham',
+	LeedsUnited = 'Leeds United',
+	LeicesterCity = 'Leicester City',
+	Liverpool = 'Liverpool',
+	LutonTown = 'Luton Town',
+	ManchesterCity = 'Manchester City',
+	ManchesterUnited = 'Manchester United',
+	NewcastleUnited = 'Newcastle United',
+	NorwichCity = 'Norwich City',
+	NottinghamForest = 'Nottingham Forest',
+	SheffieldUnited = 'Sheffield United',
+	Southampton = 'Southampton',
+	TottenhamHotspur = 'Tottenham Hotspur',
+	Watford = 'Watford',
+	WestBromwichAlbion = 'West Bromwich Albion',
+	WestHamUnited = 'West Ham United',
+	WolverhamptonWanderers = 'Wolverhampton Wanderers'
+}
+
+type Score = {
 	homeGoals: number;
 	awayGoals: number;
+};
+
+type Scoreline = Score & {
+	homeTeam: Team;
+	awayTeam: Team;
 };
 
 type Match = {
 	team: Team;
 	date: string;
-	score: {
-		homeGoals: number;
-		awayGoals: number;
-	};
+	score: Score,
 	status: 'FINISHED' | 'IN-PLAY';
 	SCHEDULED;
 	atHome: boolean;
 };
 
 type Fixtures = {
-	[team: Team]: {
-		// Team name
-		number: Match; // Matchday number 1 to 38
+	[team in Team]: {
+		[matchday: number]: Fixture
 	};
+};
+
+type Fixture = {
+	date: Date;
+	atHome: boolean;
+	team: Team;
+	status: Status;
+	score: Score | null;
 };
 
 type Form = {
 	[season: string]: {
 		// Season start year
-		[team: Team]: {
-			[matchday: number]: {
-				// Matchday number 1 to 38
-				team: Team;
-				date: string;
-				starTeam: boolean;
-				score: {
-					homeGoals: number;
-					awayGoals: number;
-				};
-				position: number;
-				gD: number;
-				formRating5: number;
-				formRating10: number;
-				form5: string;
-				form10: string;
-				cumGD: number;
-				cumPoints: number;
-				atHome: boolean;
-			};
+		[team in Team]: {
+			[matchday: number]: FormEntry;
 		};
 	};
+};
+
+type FormEntry = {
+	team: Team;
+	date: string;
+	starTeam: boolean;
+	score: Score;
+	position: number;
+	gD: number;
+	formRating5: number;
+	formRating10: number;
+	form5: string;
+	form10: string;
+	cumGD: number;
+	cumPoints: number;
+	atHome: boolean;
 };
 
 type Standings = {
-	[teamName: Team]: {
-		[season: number]: {
-			// Season start year
-			won: number;
-			drawn: number;
-			gA: number;
-			gD: number;
-			gF: number;
-			lost: number;
-			played: number;
-			points: number;
-			position: number;
-		};
+	[team in Team]: {
+		[season: number]: Standing;
 	};
+};
+
+type Standing = {
+	position: number;
+	played: number;
+	won: number;
+	drawn: number;
+	lost: number;
+	gF: number;
+	gA: number;
+	gD: number;
+	points: number;
 };
 
 type TeamRatings = {
-	[teamName: Team]: {
-		ratingCurrent: number;
-		rating1YAgo: number;
-		rating2YAgo: number;
-		rating3YAgo: number;
-		totalRating: number;
-	};
+	[team in Team]: TeamRating;
 };
 
+type TeamRating = {
+	current: number;
+	prevSeason1: number;
+	prevSeason2: number;
+	prevSeason3: number;
+	total: number;
+}
+
 type HomeAdvantages = {
-	[teamName: Team]: {
-		[season: number]: {
-			// Season start year
-			home: number;
-			homeAdvantage: number;
-			overall: number;
-		};
-		totalHomeAdvantage: number;
-	};
+	[team in Team]: HomeAdvantage;
+};
+
+export type HomeAdvantage = {
+	[season: number]: SeasonHomeAdvantage;
+	totalHomeAdvantage: number;
+};
+
+type SeasonHomeAdvantage = {
+	home: number;
+	homeAdvantage: number;
+	overall: number;
 };
 
 type PrevMatch = {
-	homeTeam: Team;
-	awayTeam: Team;
-	homeGoals: number;
-	awayGoals: number;
+	result: Scoreline;
 	date: string;
-	readableDate: string;
-	result: string;
 };
 
 type Upcoming = {
-	[teamName: Team]: {
-		nextTeam: Team;
+	[team in Team]: {
+		team: Team;
 		date: string;
 		atHome: boolean;
-		prediction: Scoreline;
+		prediction: Score;
 		prevMatches: PrevMatch[];
 	};
 };
 
 type LogoURLs = {
-	[teamName: Team]: string;
-};
-
-type any = {
-	_id: number; // Season start year
-	teamNames: Team[];
-	lastUpdated: string;
-	logoURLs?: LogoURLS;
-	fixtures: Fixtures;
-	form: Form;
-	standings: Standings;
-	teamRatings: TeamRatings;
-	upcoming: Upcoming;
-	homeAdvantages: HomeAdvantages;
+	[team in Team]: string;
 };
 
 type PlotData = {
@@ -136,6 +160,6 @@ type Counter = {
 };
 
 type SpiderAttribute = {
-	[team in Team]: number | null;
+	[team: Team]: number | null;
 	avg: number;
 };

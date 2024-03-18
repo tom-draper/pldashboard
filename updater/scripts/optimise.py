@@ -1,5 +1,5 @@
 import numpy as np
-from database import Database
+from src.database import Database
 from src.fmt import convert_team_name_or_initials
 from src.predictions import Predictor
 from updater import Updater
@@ -22,7 +22,7 @@ class OptimisePredictions:
             return ("Won", "Lost")
         return ("Lost", "Won")
 
-    def get_prev_matches(self, json_data: dict, team_names: list[str]):
+    def get_prev_matches(self, json_data: dict, teams: list[str]):
         prev_matches: list[dict[str, str | int]] = []
         for i in range(4):
             data = json_data["fixtures"][current_season - i]
@@ -33,7 +33,7 @@ class OptimisePredictions:
                 home_team: str = match["homeTeam"]["name"].replace("&", "and")
                 away_team: str = match["awayTeam"]["name"].replace("&", "and")
 
-                if home_team not in team_names or away_team not in team_names:
+                if home_team not in teams or away_team not in teams:
                     continue
 
                 result = self.game_result_tuple(match)
@@ -52,7 +52,7 @@ class OptimisePredictions:
         predictor,
         actual_scores,
         json_data,
-        team_names,
+        teams,
         form,
         fixtures,
         home_advantages,
@@ -61,21 +61,21 @@ class OptimisePredictions:
         correct_result = 0
         loss = 0
         # Check ALL teams as two teams can have different next games
-        for team_name, opp_team_name, actual_score in actual_scores:
-            form_rating = form.get_current_form_rating(team_name)
-            long_term_form_rating = form.get_long_term_form_rating(team_name)
-            opp_form_rating = form.get_current_form_rating(opp_team_name)
-            opp_long_term_form_rating = form.get_long_term_form_rating(opp_team_name)
-            avg_result = fixtures.get_avg_result(team_name)
-            opp_avg_result = fixtures.get_avg_result(opp_team_name)
-            home_advantage = home_advantages.df.loc[team_name, "TotalHomeAdvantage"][0]
+        for team, opposition, actual_score in actual_scores:
+            form_rating = form.get_current_form_rating(team)
+            long_term_form_rating = form.get_long_term_form_rating(team)
+            opp_form_rating = form.get_current_form_rating(opposition)
+            opp_long_term_form_rating = form.get_long_term_form_rating(opposition)
+            avg_result = fixtures.get_avg_result(team)
+            opp_avg_result = fixtures.get_avg_result(opposition)
+            home_advantage = home_advantages.df.loc[team, "TotalHomeAdvantage"][0]
             opp_home_advantage = home_advantages.df.loc[
-                opp_team_name, "TotalHomeAdvantage"
+                opposition, "TotalHomeAdvantage"
             ][0]
-            prev_matches = self.get_prev_matches(json_data, team_names)
+            prev_matches = self.get_prev_matches(json_data, teams)
 
-            pred_scored, pred_conceded = predictor._calc_score_prediction(
-                team_name,
+            predicted_scored, predicted_conceded = predictor._calc_score_prediction(
+                team,
                 avg_result,
                 opp_avg_result,
                 home_advantage,
@@ -88,24 +88,24 @@ class OptimisePredictions:
                 prev_matches,
             )
 
-            pred_scored = int(round(pred_scored))
-            pred_conceded = int(round(pred_conceded))
+            predicted_scored = int(round(predicted_scored))
+            predicted_conceded = int(round(predicted_conceded))
 
             if (
-                pred_scored == actual_score["homeGoals"]
-                and pred_conceded == actual_score["awayGoals"]
+                predicted_scored == actual_score["homeGoals"]
+                and predicted_conceded == actual_score["awayGoals"]
             ):
                 correct += 1
             if self.correct_result(
-                pred_scored,
-                pred_conceded,
+                predicted_scored,
+                predicted_conceded,
                 actual_score["homeGoals"],
                 actual_score["awayGoals"],
             ):
                 correct_result += 1
             loss += (
-                abs(pred_scored - actual_score["homeGoals"])
-                + abs(pred_conceded - actual_score["awayGoals"])
+                abs(predicted_scored - actual_score["homeGoals"])
+                + abs(predicted_conceded - actual_score["awayGoals"])
             ) ** 2
 
         accuracy = correct / len(actual_scores)

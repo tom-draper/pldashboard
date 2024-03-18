@@ -16,8 +16,8 @@
 	function getFormStarTeams(data: TeamsData, team: Team, matchdays: string[]): boolean[] {
 		const formStarTeams = [];
 		for (const matchday of matchdays) {
-			const oppTeam = data.form[team][data._id][matchday].team;
-			const starTeam = oppTeam == null ? false : data.teamRatings[oppTeam].totalRating > 0.75;
+			const opposition = data.form[team][data._id][matchday].team;
+			const starTeam = opposition == null ? false : data.teamRatings[opposition].total > 0.75;
 			formStarTeams.unshift(starTeam);
 		}
 

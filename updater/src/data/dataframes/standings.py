@@ -13,35 +13,28 @@ class Standings(DF):
     @staticmethod
     def get_team_names(json_data: dict, season: int):
         data = json_data["standings"][season]
-        team_names = [clean_full_team_name(row["team"]["name"]) for row in data]
-        return team_names
+        teams = [clean_full_team_name(row["team"]["name"]) for row in data]
+        return teams
 
-    @staticmethod
-    def _season_standings(json_data: dict, current_teams: list[str], season: int):
+    def _season_standings(self, json_data: dict, current_teams: list[str], season: int):
         data = json_data["standings"][season]
         df = pd.DataFrame.from_dict(data)
 
         # Rename teams to their team name
-        team_names = [
-            clean_full_team_name(name)
-            for name in [df["team"][x]["name"] for x in range(len(df))]
-        ]
+        teams = self.get_team_names(json_data, season) 
         df = df.drop(columns=["form", "team"])
-        df.index = team_names
+        df.index = teams
 
-        # Move points column to the end
-        points_col = df.pop("points")
-        df.insert(8, "points", points_col)
         col_headings = [
             "position",
             "played",
             "won",
             "drawn",
             "lost",
+            "points",
             "gF",
             "gA",
             "gD",
-            "points",
         ]
         df.columns = pd.MultiIndex.from_product([[season], col_headings])
 
@@ -60,7 +53,7 @@ class Standings(DF):
     def build(
         self, json_data: dict, season: int, num_seasons: int = 3, display: bool = False
     ):
-        """Assigns self.df to a dataframe containing all table standings for
+        """Assigns self.df to a DataFrame containing all table standings for
             each season from current season to season [num_seasons] years ago.
 
             Rows: the 20 teams participating in the current season, ordered ascending
@@ -82,24 +75,24 @@ class Standings(DF):
             gF: goals for - the number of goals the team has scored in this season.
             gA: goals against - the number of games the team has lost in the season.
             gD: the number of games the team has lost in the season.
-            points: the points aquired by the team.
+            points: the points acquired by the team.
 
         Args:
-            json_data dict: the json data storage used to build the dataframe
-            season: the year of the current season
+            json_data dict: the json data storage used to build the DataFrame.
+            season: the year of the current season.
             num_seasons (int): number of previous seasons to include. Defaults to 3.
-            display (bool, optional): flag to print the dataframe to console after
+            display (bool, optional): flag to print the DataFrame to console after
                 creation. Defaults to False.
         """
         self.log_building(season)
 
         standings = pd.DataFrame()
 
-        team_names = self.get_team_names(json_data, season)
+        teams = self.get_team_names(json_data, season)
 
         # Loop from current season to the season 2 years ago
         for n in range(num_seasons):
-            season_standings = self._season_standings(json_data, team_names, season - n)
+            season_standings = self._season_standings(json_data, teams, season - n)
             standings = pd.concat((standings, season_standings), axis=1)
 
         standings = self.clean_dataframe(standings)

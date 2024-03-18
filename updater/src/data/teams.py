@@ -1,8 +1,7 @@
 import math
+from typing import Any
+
 import pandas as pd
-from pandas.core.frame import DataFrame
-
-
 from src.data.dataframes import (
     Fixtures,
     Form,
@@ -11,6 +10,7 @@ from src.data.dataframes import (
     TeamRatings,
     Upcoming,
 )
+from src.predictions.scoreline import Scoreline
 
 
 class TeamsData:
@@ -46,13 +46,15 @@ class TeamsData:
             axis=1,
         )
 
-    def collapse_tuple_keys(self, d):
-        # Remove NaN values
+    def collapse_tuple_keys(self, d: dict | Any):
         if isinstance(d, float) and math.isnan(d):
+            # Remove NaN values
             return None
-
-        # If hit bottom of tree, stop recusring
-        if not isinstance(d, dict):
+        elif isinstance(d, Scoreline):
+            # Unpack Scoreline object into a dict and continue recursing
+            d = d.to_dict()
+        elif not isinstance(d, dict):
+            # If hit bottom of tree, stop recursing
             return d
 
         new_d = {}
@@ -84,10 +86,10 @@ class TeamsData:
     def to_dict(self):
         if not self.all_built():
             raise ValueError(
-                "❌ [ERROR] Cannot build one team data dict: A dataframe is empty"
+                "❌ [ERROR] Cannot build one team data dict: A DataFrame is empty"
             )
 
-        # Build one dict containing all dataframes
+        # Build one dict containing all DataFrames
         d = {
             "lastUpdated": self.last_updated,
             "fixtures": self.fixtures.df.to_dict(orient="index"),

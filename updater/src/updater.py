@@ -7,10 +7,10 @@ from os.path import dirname, join
 from typing import Optional
 
 import aiohttp
+from src.data import Data
+from src.database import Database
 from dotenv import load_dotenv
-from .data import Data
-from .fmt import clean_full_team_name
-from .database import Database
+from src.fmt import clean_full_team_name
 from timebudget import timebudget
 
 
@@ -151,18 +151,18 @@ class Updater:
             self.current_season
         )
 
-    def load_previous_seasons(self, n_seasons: int):
-        for i in range(1, n_seasons):
+    def load_previous_seasons(self, num_seasons: int):
+        for i in range(1, num_seasons):
             season = self.current_season - i
             self.raw_data["fixtures"][season] = self.load_fixtures_data(season)
             self.raw_data["standings"][season] = self.load_standings_data(season)
 
-    def set_raw_data(self, n_seasons: int, request_new: bool = True):
+    def set_raw_data(self, num_seasons: int, request_new: bool = True):
         """Sets the raw data object with data from the football data API or
         local store.
 
         Args:
-            n_seasons (int): Number of seasons to set.
+            num_seasons (int): Number of seasons to set.
             request_new (bool, optional): Request new data from API, otherwise
                 load from local store. Defaults to True.
         """
@@ -172,7 +172,7 @@ class Updater:
         else:
             self.load_current_season()
 
-        self.load_previous_seasons(n_seasons)
+        self.load_previous_seasons(num_seasons)
 
     def save_local_backup(self):
         """Save current season fixtures and standings data in `self.raw_data` to
@@ -186,16 +186,16 @@ class Updater:
             with open(f"backups/fantasy/{type}_{self.current_season}.json", "w") as f:
                 json.dump(self.raw_data["fantasy"][type], f)
 
-    def build_dataframes(self, n_seasons: int, display_tables: bool = False):
-        """Builds all dataframes within `self.data` using the raw data.
+    def build_dataframes(self, num_seasons: int, display_tables: bool = False):
+        """Builds all DataFrames within `self.data` using the raw data.
 
         Args:
-            n_seasons (int): The number of Premier League seasons to consider.
-            display_tables (bool, optional): Print dataframes once built. Defaults to False.
+            num_seasons (int): The number of Premier League seasons to consider.
+            display_tables (bool, optional): Print DataFrames once built. Defaults to False.
         """
-        # Standings for the last [n_seasons] seasons
+        # Standings for the last [num_seasons] seasons
         self.data.teams.standings.build(
-            self.raw_data, self.current_season, n_seasons, display=display_tables
+            self.raw_data, self.current_season, num_seasons, display=display_tables
         )
         # Fixtures for the whole season for each team
         self.data.teams.fixtures.build(
@@ -206,7 +206,7 @@ class Updater:
             self.data.teams.standings,
             self.current_season,
             self.games_threshold,
-            n_seasons,
+            num_seasons,
             display=display_tables,
         )
         # Calculated values to represent the personalised advantage each team has at home
@@ -214,7 +214,7 @@ class Updater:
             self.raw_data,
             self.current_season,
             self.home_games_threshold,
-            n_seasons,
+            num_seasons,
             display=display_tables,
         )
         # Calculated form values for each team for each matchday played so far
@@ -232,7 +232,7 @@ class Updater:
             self.data.teams.team_ratings,
             self.data.teams.home_advantages,
             self.current_season,
-            n_seasons,
+            num_seasons,
             display=display_tables,
         )
         self.data.fantasy.data.build(self.raw_data)
@@ -256,29 +256,29 @@ class Updater:
 
         logo_urls: dict[str, str] = {}
         for standings_row in data:
-            team_name = clean_full_team_name(standings_row["team"]["name"])
+            team = clean_full_team_name(standings_row["team"]["name"])
             crest_url = standings_row["team"]["crestUrl"]
-            logo_urls[team_name] = crest_url
+            logo_urls[team] = crest_url
 
         return logo_urls
 
     @timebudget
     def build_all(
         self,
-        n_seasons: int = 4,
+        num_seasons: int = 4,
         display_tables: bool = False,
         request_new: bool = True,
         update_db: bool = True,
     ):
         """Requests any current-season data from football data APIs, and loads
         and previous data from local store. Uses this data to builds all
-        dataframes in `self.data`. Finally, saves all data to local store backup
+        DataFrames in `self.data`. Finally, saves all data to local store backup
         and database.
 
         Args:
-            n_seasons (int, optional): Number of Premier League seasons to
+            num_seasons (int, optional): Number of Premier League seasons to
                 consider including the current season. Defaults to 4.
-            display_tables (bool, optional): Print dataframes once built.
+            display_tables (bool, optional): Print DataFrames once built.
                 Defaults to False.
             request_new (bool, optional): Request new data from football data
                 APIs, otherwise use local backup. Defaults to True.
@@ -286,13 +286,13 @@ class Updater:
                 database. Defaults to True.
         """
         try:
-            self.set_raw_data(n_seasons, request_new)
+            self.set_raw_data(num_seasons, request_new)
         except ValueError as e:
             logging.error(e)
             logging.info("🔁 Retrying with local backup data...")
-            self.set_raw_data(n_seasons, request_new := False)
+            self.set_raw_data(num_seasons, request_new := False)
 
-        self.build_dataframes(n_seasons, display_tables)
+        self.build_dataframes(num_seasons, display_tables)
 
         if request_new:
             logging.info("💾 Saving new team data to local backup...")

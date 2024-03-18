@@ -1,13 +1,13 @@
-from typing import Any, Hashable
+from typing import Hashable
 
 
 class TwoWayDict(dict):
-    def __init__(self, dict: dict[Hashable, Any]):
+    def __init__(self, dict: dict[Hashable, Hashable]):
         super().__init__()
         for key, value in dict.items():
             self.__setitem__(key, value)
 
-    def __setitem__(self, key: Hashable, value: Any):
+    def __setitem__(self, key: Hashable, value: Hashable):
         # Remove any previous connections with these values
         if key in self:
             del self[key]
@@ -57,12 +57,12 @@ names_and_initials = TwoWayDict(
 )
 
 
-def convert_team_name_or_initials(team_name: str):
+def convert_team_name_or_initials(team: str):
     """Converts team name to three-letter initials, or converts three-letter
     initials to a team name.
 
     Args:
-        team_name (str): Team name or three-letter team initials.
+        team (str): Team name or three-letter team initials.
 
     Raises:
         KeyError: Team name or team initials are invalid.
@@ -70,16 +70,16 @@ def convert_team_name_or_initials(team_name: str):
     Returns:
         str: Three-letter team initials or team name.
     """
-    if team_name in names_and_initials or team_name in names_and_initials.values():
-        return names_and_initials[team_name]
-    elif len(team_name) == 3:
+    if team in names_and_initials:
+        return names_and_initials[team]
+    elif len(team) == 3:
         # Cannot convert initials to a full team name if not in dict
         raise KeyError(
-            f"Team name {team_name} corresponding to input initials does not exist"
+            f"Team name {team} corresponding to input initials does not exist"
         )
     # If no match found for a given full team name, shorten name to
     # create initials
-    return team_name[:3].upper()
+    return team[:3].upper()
 
 
 def extract_int_score(score: str):
@@ -117,41 +117,41 @@ def identical_fixtures(scoreline1: str, scoreline2: str):
     return identical
 
 
-def identical_result(pred_home_goals, pred_away_goals, act_home_goals, act_away_goals):
+def identical_result(predicted_home_goals, predicted_away_goals, act_home_goals, act_away_goals):
     return (
-        (pred_home_goals == pred_away_goals and act_home_goals == act_away_goals)
-        or (pred_home_goals > pred_away_goals and act_home_goals > act_away_goals)
-        or (pred_home_goals < pred_away_goals and act_home_goals < act_away_goals)
+        (predicted_home_goals == predicted_away_goals and act_home_goals == act_away_goals)
+        or (predicted_home_goals > predicted_away_goals and act_home_goals > act_away_goals)
+        or (predicted_home_goals < predicted_away_goals and act_home_goals < act_away_goals)
     )
 
 
 def format_scoreline_str_from_str(
-    team_name: str, opp_team_name: str, score: str, at_home: bool
+    team: str, opposition: str, score: str, at_home: bool
 ):
-    team_name_initials = convert_team_name_or_initials(team_name)
-    opp_team_name_initials = convert_team_name_or_initials(opp_team_name)
+    team_initials = convert_team_name_or_initials(team)
+    opposition_initials = convert_team_name_or_initials(opposition)
 
     if at_home:
-        scoreline = f"{team_name_initials} {score} {opp_team_name_initials}"
+        scoreline = f"{team_initials} {score} {opposition_initials}"
     else:
-        scoreline = f"{opp_team_name_initials} {score} {team_name_initials}"
+        scoreline = f"{opposition_initials} {score} {team_initials}"
     return scoreline
 
 
 def format_scoreline_str(
-    team_name: str, opp_team_name: str, scored: int, conceded: int, at_home: bool
+    team: str, opposition: str, scored: int, conceded: int, at_home: bool
 ):
-    team_name_initials = convert_team_name_or_initials(team_name)
-    opp_team_name_initials = convert_team_name_or_initials(opp_team_name)
+    team_initials = convert_team_name_or_initials(team)
+    opposition_initials = convert_team_name_or_initials(opposition)
 
     # Construct prediction string for display...
     if at_home:
         scoreline = (
-            f"{team_name_initials} {scored} - {conceded} {opp_team_name_initials}"
+            f"{team_initials} {scored} - {conceded} {opposition_initials}"
         )
     else:
         scoreline = (
-            f"{opp_team_name_initials} {conceded} - {scored} {team_name_initials}"
+            f"{opposition_initials} {conceded} - {scored} {team_initials}"
         )
     return scoreline
 

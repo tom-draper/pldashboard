@@ -3,7 +3,7 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
-from ..data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
+from src.data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
 
 from .form import calc_form
 from .market import fetch_odds
@@ -31,7 +31,8 @@ class Predictor:
         self.FIXTURE_WEIGHTING = 0.4
         self.MARKET_URL = "https://www.betfair.com/exchange/plus/en/football/english-premier-league-betting-10932509"
 
-        self.odds = fetch_odds(self.MARKET_URL, js_rendered=False)
+        # self.odds = fetch_odds(self.MARKET_URL, js_rendered=False)
+        self.odds = {}
 
     @staticmethod
     def _build_long_term_fixtures(
@@ -138,7 +139,7 @@ class Predictor:
 
     @staticmethod
     def _display_scoreline_freq(freq: dict[Scoreline, int | float]):
-        sorted_freq = []  # list[tuple[Scoreline], int | float]
+        sorted_freq: list[tuple[Scoreline, int | float]] = []
         for scoreline, count in freq.items():
             sorted_freq.append((scoreline, count))
 
@@ -321,15 +322,15 @@ class Predictor:
         dates: list[datetime] = team_row.loc["date"]
 
         dated_scorelines: list[tuple[datetime, Scoreline]] = []
-        for date, opp_team, score, at_home in zip(dates, teams, scores, at_homes):
+        for date, opposition, score, at_home in zip(dates, teams, scores, at_homes):
             if pd.isna(score):
                 continue
 
             if at_home:
                 home_team = team
-                away_team = opp_team
+                away_team = opposition
             else:
-                home_team = opp_team
+                home_team = opposition
                 away_team = team
 
             scoreline = Scoreline(
@@ -455,8 +456,8 @@ class Predictor:
 
     @staticmethod
     def maximum_likelihood(scoreline_probabilities: dict[Scoreline, float]):
-        predicted = None
-        best = 0
+        predicted: Optional[Scoreline] = None
+        best = 0.
         for scoreline, probability in scoreline_probabilities.items():
             if probability > best:
                 best = probability

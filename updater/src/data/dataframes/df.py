@@ -18,11 +18,11 @@ class DF:
         for arg in args:
             if arg.df.empty:
                 raise ValueError(
-                    f"❌ [ERROR] Cannot {self.name} dataframe: {arg.name} dataframe empty"
+                    f"❌ [ERROR] Cannot {self.name} DataFrame: {arg.name} DataFrame empty"
                 )
 
     def log_building(self, season: Optional[int] = None):
         season_tag = "" if season is None else f"[{season}]"
         logging.info(
-            f"🛠️  {season_tag} Building {self.name.replace('_', ' ')} dataframe... "
+            f"🛠️  {season_tag} Building {self.name.replace('_', ' ')} DataFrame... "
         )

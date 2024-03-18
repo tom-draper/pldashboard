@@ -16,7 +16,7 @@ def test_dfs_filled(data: Data):
         data.teams.upcoming.df,
     ]
 
-    # Check all dataframes are filled
+    # Check all DataFrames are filled
     assert all([not df.empty for df in dataframes])
 
 

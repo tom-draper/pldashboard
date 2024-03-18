@@ -1,6 +1,6 @@
 # Data Updater
 
-A script to fetch new data from the football data API, compute metrics and statistics and restructure into dataframes before uploading to the MongoDB database. This script is scheduled to run at regular intervals to continuously refresh the data stored in the database.
+A script to fetch new data from the football data API, compute metrics and statistics and restructure into DataFrames before uploading to the MongoDB database. This script is scheduled to run at regular intervals to continuously refresh the data stored in the database.
 
 ```bash
 python main.py

@@ -92,18 +92,18 @@ class Database:
         ]
         """
         prediction_objs = []
-        for pred in predictions.values():
-            pred_id = f'{pred["homeInitials"]} vs {pred["awayInitials"]}'
-            actual_score = self._get_actual_score(pred_id, actual_scores)
-            prediction = {
-                "_id": pred_id,
-                "datetime": pred["date"],
-                "home": pred["homeInitials"],
-                "away": pred["awayInitials"],
-                "prediction": pred["prediction"],
+        for prediction in predictions.values():
+            pid = f'{prediction["homeInitials"]} vs {prediction["awayInitials"]}'
+            actual_score = self._get_actual_score(pid, actual_scores)
+            _prediction = {
+                "_id": pid,
+                "datetime": prediction["date"],
+                "home": prediction["homeInitials"],
+                "away": prediction["awayInitials"],
+                "prediction": prediction["prediction"],
                 "actual": actual_score,
             }
-            prediction_objs.append(prediction)
+            prediction_objs.append(_prediction)
 
         return prediction_objs
 
@@ -127,7 +127,7 @@ class Database:
 
         predictions: dict holding prediction details for each team's upcoming game.
         predictions = {
-            team_name: {
+            [team]: {
                 'date': datetime,
                 'homeInitials': str,
                 'awayInitials': str,
@@ -139,7 +139,7 @@ class Database:
         }
         actual_scores: dict holding actual results for each team's last game.
         actual_scores = {
-            match_id: {
+            [match_id]: {
                 'homeGoals': int
                 'awayGoals': int,
             }

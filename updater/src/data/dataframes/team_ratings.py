@@ -31,7 +31,7 @@ class TeamRatings(DF):
         include_current_season: bool,
     ):
         # Calculate total rating column
-        team_ratings["totalRating"] = 0
+        team_ratings["total"] = 0
         if include_current_season:
             start_n = 0  # Include current season when calculating total rating
             w = self._get_season_weightings(no_seasons)  # Column weights
@@ -40,15 +40,15 @@ class TeamRatings(DF):
             w = self._get_season_weightings(no_seasons - 1)  # Column weights
 
         for n in range(start_n, no_seasons):
-            team_ratings["totalRating"] += (
-                w[n - start_n] * team_ratings[f"rating{n}YAgo"]
+            team_ratings["total"] += (
+                w[n - start_n] * team_ratings[f"prevSeason{n}"]
             )
 
     @staticmethod
     def init_rating_columns(team_ratings: DataFrame, num_seasons: int):
         # Create column for each included season
         for n in range(0, num_seasons):
-            team_ratings[f"rating{n}YAgo"] = np.nan
+            team_ratings[f"prevSeason{n}"] = np.nan
 
     def insert_rating_values(
         self,
@@ -57,12 +57,12 @@ class TeamRatings(DF):
         current_season: int,
         num_seasons: int,
     ):
-        for team_name, row in standings.df.iterrows():
+        for team, row in standings.df.iterrows():
             for n in range(num_seasons):
                 rating = self._calc_rating(
                     row[current_season - n]["points"], row[current_season - n]["gD"]
                 )
-                team_ratings.at[team_name, f"rating{n}YAgo"] = rating
+                team_ratings.at[team, f"prevSeason{n}"] = rating
 
     @staticmethod
     def replace_nan(team_ratings: DataFrame):
@@ -73,14 +73,15 @@ class TeamRatings(DF):
             )
 
     @staticmethod
-    def normalise_ratings(team_ratings: DataFrame, num_seasons):
+    def normalise_ratings(team_ratings: DataFrame, num_seasons: int):
         # Create normalised versions of the three ratings columns
         for n in range(0, num_seasons):
-            team_ratings[f"rating{n}YAgo"] = (
-                team_ratings[f"rating{n}YAgo"] - team_ratings[f"rating{n}YAgo"].min()
+            col_heading = f"prevSeason{n}"
+            team_ratings[col_heading] = (
+                team_ratings[col_heading] - team_ratings[col_heading].min()
             ) / (
-                team_ratings[f"rating{n}YAgo"].max()
-                - team_ratings[f"rating{n}YAgo"].min()
+                team_ratings[col_heading].max()
+                - team_ratings[col_heading].min()
             )
 
     @staticmethod
@@ -99,8 +100,8 @@ class TeamRatings(DF):
 
     @staticmethod
     def clean_dataframe(team_ratings: DataFrame):
-        team_ratings = team_ratings.sort_values(by="totalRating", ascending=False)
-        team_ratings = team_ratings.rename(columns={"rating0YAgo": "ratingCurrent"})
+        team_ratings = team_ratings.sort_values(by="total", ascending=False)
+        team_ratings = team_ratings.rename(columns={"prevSeason0": "current"})
         return team_ratings
 
     @timebudget
@@ -112,24 +113,24 @@ class TeamRatings(DF):
         num_seasons: int = 3,
         display: bool = False,
     ):
-        """Assigns self.df a dataframe containing each team's calculated
+        """Assigns self.df a DataFrame containing each team's calculated
             'team rating' based on the last [num_seasons] seasons results.
 
             Rows: the 20 teams participating in the current season, ordered
                 descending by the team's rating
             Columns (multi-index):
             -----------------------------------------------
-            | ratingCurrent | rating[N]YAgo | totalRating |
+            | current | prevSeason[N] | total |
 
-            ratingCurrent: a normalised value that represents the team's rating
+            current: a normalised value that represents the team's rating
                 based on the state of the current season's standings table.
-            rating[N]YAgo: a normalised value that represents the team's rating
+            prevSeason[N]: a normalised value that represents the team's rating
                 based on the state of the standings table [N] seasons ago.
-            totalRating: a final normalised rating value incorporating the values
+            total: a final normalised rating value incorporating the values
                 from all normalised columns.
 
         Args:
-            standings Standings: a completed dataframe filled with standings data
+            standings Standings: a completed DataFrame filled with standings data
                 for the last num_seasons seasons
             season int: the year of the current season
             games_threshold: the minimum number of home games all teams must have
@@ -137,13 +138,13 @@ class TeamRatings(DF):
                 each team during that season to be incorporated into the total home
                 advantage value
             num_seasons (int, optional): number of seasons to include. Defaults to 3.
-            display (bool, optional): flag to print the dataframe to console after
+            display (bool, optional): flag to print the DataFrame to console after
                 creation. Defaults to False.
         """
         self.log_building(season)
         self._check_dependencies(standings)
 
-        # Add current season team names to the object team dataframe
+        # Add current season team names to the object team DataFrame
         team_ratings = pd.DataFrame(index=standings.df.index)
 
         self.init_rating_columns(team_ratings, num_seasons)

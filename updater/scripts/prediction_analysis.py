@@ -1,12 +1,7 @@
-import os
-import sys
-
 import matplotlib.pyplot as plt
 import numpy as np
 from src.fmt import extract_int_score_from_scoreline, identical_result
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from database import Database
+from src.database import Database
 
 
 class PredictionsAnalysis:
@@ -187,7 +182,7 @@ class PredictionsAnalysis:
 
 
 if __name__ == "__main__":
-    current_season = 2021
+    current_season = 2023
     pa = PredictionsAnalysis(current_season)
     pa.possible_predictions()
     pa.analyse_predictions()

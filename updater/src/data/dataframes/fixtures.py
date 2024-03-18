@@ -26,15 +26,15 @@ class Fixtures(DF):
 
         return avg_scored, avg_conceded
 
-    def get_avg_result(self, team_name: str):
+    def get_avg_result(self, team: str):
         avg_scored = 0.0
         avg_conceded = 0.0
         total = 0.0
         for matchday_no in self.df.columns.unique(level=0):
-            if self.df.at[team_name, (matchday_no, "status")] != "FINISHED":
+            if self.df.at[team, (matchday_no, "status")] != "FINISHED":
                 continue
-            at_home = self.df.at[team_name, (matchday_no, "atHome")]
-            score = self.df.at[team_name, (matchday_no, "score")]
+            at_home = self.df.at[team, (matchday_no, "atHome")]
+            score = self.df.at[team, (matchday_no, "score")]
             avg_scored, avg_conceded = self._inc_avg_scored_conceded(
                 avg_scored, avg_conceded, score, at_home
             )
@@ -57,15 +57,15 @@ class Fixtures(DF):
             if all(matchday["status"] == "SCHEDULED"):
                 continue
 
-            for team_name, row in matchday.iterrows():
+            for team, row in matchday.iterrows():
                 if row["status"] != "FINISHED":
                     continue
                 if row["atHome"]:
-                    home_name = team_name
+                    home_name = team
                     away_name = row["team"]
                 else:
                     home_name = row["team"]
-                    away_name = team_name
+                    away_name = team
                 home_initials = convert_team_name_or_initials(home_name)
                 away_initials = convert_team_name_or_initials(away_name)
 
@@ -75,16 +75,16 @@ class Fixtures(DF):
 
     @staticmethod
     def _insert_team_row(
-        matchday: int, match: dict, team_names: list[str], home_team: bool
+        matchday: int, match: dict, teams: list[str], home_team: bool
     ):
         date = datetime.strptime(match["utcDate"], "%Y-%m-%dT%H:%M:%SZ")
 
         if home_team:
-            team_name = clean_full_team_name(match["homeTeam"]["name"])
-            opp_team_name = clean_full_team_name(match["awayTeam"]["name"])
+            team = clean_full_team_name(match["homeTeam"]["name"])
+            opposition = clean_full_team_name(match["awayTeam"]["name"])
         else:
-            team_name = clean_full_team_name(match["awayTeam"]["name"])
-            opp_team_name = clean_full_team_name(match["homeTeam"]["name"])
+            team = clean_full_team_name(match["awayTeam"]["name"])
+            opposition = clean_full_team_name(match["homeTeam"]["name"])
 
         if match["score"]["fullTime"]["homeTeam"] is not None:
             score = {
@@ -96,14 +96,14 @@ class Fixtures(DF):
 
         matchday[(match["matchday"], "date")].append(date)
         matchday[(match["matchday"], "atHome")].append(home_team)
-        matchday[(match["matchday"], "team")].append(opp_team_name)
+        matchday[(match["matchday"], "team")].append(opposition)
         matchday[(match["matchday"], "status")].append(match["status"])
         matchday[(match["matchday"], "score")].append(score)
-        team_names.append(team_name)
+        teams.append(team)
 
     @timebudget
     def build(self, json_data: dict, season: int, display: bool = False):
-        """Builds a dataframe containing the past and future fixtures for the
+        """Builds a DataFrame containing the past and future fixtures for the
             current season (matchday 1 to 38) and inserts it into the fixtures
             class variable.
 
@@ -126,47 +126,47 @@ class Fixtures(DF):
                 or None if status is 'SCHEDULED' or 'IN-PLAY'
 
         Args:
-            json_data dict: the json data storage used to build the dataframe
+            json_data dict: the json data storage used to build the DataFrame
             season int: the year of the current season
-            display (bool, optional): flag to print the dataframe to console after
+            display (bool, optional): flag to print the DataFrame to console after
                 creation. Defaults to False.
         """
         self.log_building(season)
 
         data = json_data["fixtures"][season]
 
-        team_names: list[str] = []
-        team_names_index = []  # Specific order of team names to be dataframe index
+        teams: list[str] = []
+        teams_index = []  # Specific order of team names to be DataFrame index
         matchday: dict[tuple[int, str], list] = defaultdict(lambda: [])
         matchdays: list[DataFrame] = []
         prev_matchday = 0
         for match in sorted(data, key=lambda x: x["matchday"]):
             # If moved on to data for the next matchday, or
             if prev_matchday < match["matchday"]:
-                # Package matchday dictionary into dataframe to concatenate into main fixtures dataframe
+                # Package matchday dictionary into DataFrame to concatenate into main fixtures DataFrame
                 df_matchday = pd.DataFrame(matchday)
-                df_matchday.index = team_names
+                df_matchday.index = teams
 
                 matchday = defaultdict(lambda: [])
-                # If just finished matchday 1 data, take team name list order as main fixtures dataframe index
+                # If just finished matchday 1 data, take team name list order as main fixtures DataFrame index
                 if prev_matchday == 1:
-                    team_names_index = team_names[:]
+                    teams_index = teams[:]
                 matchdays.append(df_matchday)
 
                 prev_matchday = match["matchday"]
-                team_names = []
+                teams = []
 
-            self._insert_team_row(matchday, match, team_names, True)
-            self._insert_team_row(matchday, match, team_names, False)
+            self._insert_team_row(matchday, match, teams, True)
+            self._insert_team_row(matchday, match, teams, False)
 
-        # Add last matchday (38) dataframe to list
+        # Add last matchday (38) DataFrame to list
         df_matchday = pd.DataFrame(matchday)
-        df_matchday.index = team_names
+        df_matchday.index = teams
         matchdays.append(df_matchday)
 
         fixtures = pd.concat(matchdays, axis=1)
 
-        fixtures.index = team_names_index
+        fixtures.index = teams_index
         fixtures.columns.names = ("matchday", None)
         fixtures.index.name = "team"
 

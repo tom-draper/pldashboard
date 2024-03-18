@@ -164,7 +164,7 @@ class HomeAdvantages(DF):
         no_seasons: int = 3,
         display: bool = False,
     ):
-        """Assigns self.df a dataframe containing team's home advantage data
+        """Assigns self.df a DataFrame containing team's home advantage data
             for each season with a combined total home advantage value.
 
             Rows: the 20 teams participating in the current season, ordered descending
@@ -187,13 +187,13 @@ class HomeAdvantages(DF):
                in the table: the average home wins ratio / wins ratio.
 
         Args:
-            json_data dict: the json data storage used to build the dataframe
+            json_data dict: the json data storage used to build the DataFrame
             season int: the year of the current season
             threshold float: the minimum number of home games played to incorporate
                 a season's home advantage calculation for all teams into the
                 Total home Advantage value
             no_seasons (int, optional): number of seasons to include.
-            display (bool, optional): flag to print the dataframe to console after
+            display (bool, optional): flag to print the DataFrame to console after
                 creation. Defaults to False.
         """
         self.log_building(season)

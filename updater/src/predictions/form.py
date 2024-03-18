@@ -1,5 +1,5 @@
 import numpy as np
-from ..data.dataframes import TeamRatings
+from src.data.dataframes import TeamRatings
 
 from .scoreline import Scoreline
 
@@ -17,20 +17,20 @@ def calc_form(
         if scoreline.home_team == team:
             scored = scoreline.home_goals
             conceded = scoreline.away_goals
-            opp_team = scoreline.away_team
+            opposition = scoreline.away_team
         elif scoreline.away_team == team:
             scored = scoreline.away_goals
             conceded = scoreline.home_goals
-            opp_team = scoreline.home_team
+            opposition = scoreline.home_team
         else:
             continue
 
         gd = scored - conceded
 
-        opp_team_rating = 0
-        if opp_team in team_ratings.df.index:
-            opp_team_rating = team_ratings.df.at[opp_team, "totalRating"]
-        form += opp_team_rating * gd * weight
+        opposition_rating = 0
+        if opposition in team_ratings.df.index:
+            opposition_rating = team_ratings.df.at[opposition, "total"]
+        form += opposition_rating * gd * weight
 
     form = min(max(0, form), 1)  # Cap rating
     return form

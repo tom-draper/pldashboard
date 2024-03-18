@@ -1,11 +1,11 @@
-export function identicalScore(prediction: Scoreline, actual: Scoreline): boolean {
+export function identicalScore(prediction: Score, actual: Score): boolean {
 	return (
 		Math.round(prediction.homeGoals) === actual.homeGoals &&
 		Math.round(prediction.awayGoals) === actual.awayGoals
 	);
 }
 
-export function sameResult(prediction: Scoreline, actual: Scoreline): boolean {
+export function sameResult(prediction: Score, actual: Score): boolean {
 	return (
 		(Math.round(prediction.homeGoals) > Math.round(prediction.awayGoals) &&
 			Math.round(actual.homeGoals) > Math.round(actual.awayGoals)) ||

@@ -1,5 +1,5 @@
 from src.fmt import extract_int_score
-from updater import Updater
+from src.updater import Updater
 
 
 class Analysis:
@@ -7,9 +7,7 @@ class Analysis:
         self.updater = Updater(season)
         self.updater.build_all(
             request_new=False,
-            team_name=None,
             display_tables=False,
-            display_graphs=False,
             update_db=False,
         )
 
@@ -67,6 +65,6 @@ class Analysis:
 
 
 if __name__ == "__main__":
-    # Update all dataframes
+    # Update all DataFrames
     a = Analysis()
     a.form_predictions()
