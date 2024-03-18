@@ -2,8 +2,7 @@
 	import { onMount } from 'svelte';
 	import { getTeams, toInitials } from './team';
 	import { teamStyle } from './format';
-	import type { DashboardData, TeamsData } from './dashboard.types';
-	import type { Team } from '../../global';
+	import type { DashboardData, Team, TeamsData } from './dashboard.types';
 
 	type UpcomingMatch = {
 		time: Date;

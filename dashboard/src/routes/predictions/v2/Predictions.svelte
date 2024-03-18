@@ -108,7 +108,7 @@
 
 	updateCountdowns();
 
-	export let data;
+	export let data: unknown;
 </script>
 
 <div class="predictions-container">

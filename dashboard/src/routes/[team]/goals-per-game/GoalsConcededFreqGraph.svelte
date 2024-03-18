@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import type { PlotData } from '../dashboard.types';
 
 	function defaultLayout() {
 		const xLabels = getXLabels();
@@ -110,10 +111,10 @@
 	$: setup && mobileView && setMobileLayout();
 
 	export let team: string,
-		getConcededBars: Function,
-		getConcededTeamBars: Function,
-		getXLabels: Function,
-		getYAxisLayout: Function,
+		getConcededBars: () => unknown,
+		getConcededTeamBars: () => unknown,
+		getXLabels: () => unknown,
+		getYAxisLayout: () => unknown,
 		mobileView: boolean;
 </script>
 

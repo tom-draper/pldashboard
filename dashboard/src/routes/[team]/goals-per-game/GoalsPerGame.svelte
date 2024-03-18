@@ -4,6 +4,7 @@
 	import GoalsConcededFreq from './GoalsConcededFreqGraph.svelte';
 	import type { TeamsData, Team } from '../dashboard.types';
 	import { getTeams } from '../team';
+	import type { Counter } from '../../../global';
 
 	function avgBars() {
 		return {

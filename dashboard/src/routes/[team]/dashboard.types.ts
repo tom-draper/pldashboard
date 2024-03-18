@@ -14,12 +14,12 @@ export type DashboardData = {
 export type TeamsData = {
     _id: number;
     lastUpdated: string;
-    fixtures: { [team in Team]: { [matchday: string]: Fixture } };
-    standings: { [team in Team]: { [matchday: string]: Standing } };
-    teamRatings: { [team in Team]: TeamRating };
-    homeAdvantages: { [team in Team]: HomeAdvantage };
-    form: { [team in Team]: { [year: string]: { [matchday: string]: Form } } };
-    upcoming: { [team in Team]: Upcoming };
+    fixtures: Fixtures;
+    standings: Standings;
+    teamRatings: TeamRatings;
+    homeAdvantages: HomeAdvantages;
+    form: Form;
+    upcoming: Upcoming;
 };
 
 export enum Team {
@@ -83,18 +83,17 @@ export type Fixture = {
     score: Score | null;
 };
 
-export type Form = {
-    [season: string]: {
-        // Season start year
-        [team in Team]: {
-            [matchday: number]: FormEntry;
-        };
-    };
-};
+export type Form = { 
+    [team in Team]: { 
+        [year: string]: { 
+            [matchday: string]: FormEntry 
+        } 
+    } 
+}
 
 export type FormEntry = {
     team: Team;
-    date: string;
+    date: Date;
     starTeam: boolean;
     score: Score;
     position: number;
@@ -159,6 +158,10 @@ export type PrevMatch = {
 };
 
 export type Upcoming = {
+    [team in Team]: UpcomingMatch;
+}
+
+export type UpcomingMatch = {
     team: Team;
     date: string;
     atHome: boolean;
@@ -174,10 +177,6 @@ export type PlotData = {
     data;
     layout;
     config;
-};
-
-export type Counter = {
-    [k: string | number | symbol]: number;
 };
 
 export type SpiderAttribute = {

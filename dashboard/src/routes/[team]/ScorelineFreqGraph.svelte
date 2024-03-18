@@ -31,7 +31,8 @@
 
 	function getAvgScoreFreq(data: TeamsData): ScoreFreq {
 		const scoreFreq: ScoreFreq = {};
-		for (const team of getTeams(data)) {
+		const teams = getTeams(data);
+		for (const team of teams) {
 			for (let i = 0; i < 3; i++) {
 				if (i === 0) {
 					insertSeasonAvgScoreFreq(scoreFreq, data.form, team, data._id - i);

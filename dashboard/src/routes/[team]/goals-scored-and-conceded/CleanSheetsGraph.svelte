@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { playedMatchdays } from '../team';
-	import type { TeamsData, Team } from '../dashboard.types';
+	import type { TeamsData, Team, PlotData } from '../dashboard.types';
 
 	function getTeamCleanSheets(data: TeamsData, team: Team): number[] {
 		return Object.keys(data.form[team][data._id]).map((matchday) => {
@@ -135,7 +135,7 @@
 		};
 	}
 
-	function buildPlotData(data: TeamsData, team: Team): PlotData {
+	function buildPlotData(data: TeamsData, team: Team) {
 		const matchdays = playedMatchdays(data, team);
 		const [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
 		// Hidden line required on plot to make x-axis length match goalsScoredAndConcededGraph

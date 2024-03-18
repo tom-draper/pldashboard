@@ -90,7 +90,7 @@
 		<div class="table">
 			<Table data={data.pageData} page={data.page} />
 		</div>
-		<Footer lastUpdated={null} />
+		<Footer lastUpdated={null} dark={false} />
 	</div>
 </div>
 

@@ -6,8 +6,8 @@
 	function getSortedMatchdays(data: TeamsData, team: Team): string[] {
 		const matchdays = Object.keys(data.form[team][data._id]).sort(function (matchday1, matchday2) {
 			return (
-				new Date(data.form[team][data._id][matchday1].date) -
-				new Date(data.form[team][data._id][matchday2].date)
+				new Date(data.form[team][data._id][matchday1].date).getTime() -
+				new Date(data.form[team][data._id][matchday2].date).getTime()
 			);
 		});
 		return matchdays;
