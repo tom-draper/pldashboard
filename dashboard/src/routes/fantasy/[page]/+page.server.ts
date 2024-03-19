@@ -1,6 +1,11 @@
+import { fantasy } from '$db/fantasy';
 import type { PageServerLoad } from './$types';
-import { fetchFantasy } from '../data';
 import { filterDataByPage, getTitle } from './data';
+
+async function fetchFantasy() {
+	const data = Object((await fantasy.find({_id: "fantasy"}).toArray())[0])
+	return data
+}
 
 export const load: PageServerLoad = async ({ params }: { params: { page: string } }) => {
 	const page = params.page;

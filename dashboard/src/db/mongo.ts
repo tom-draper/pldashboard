@@ -3,7 +3,7 @@ import { MONGO_URL, MAIN_DB, PREDICTIONS_DB } from '$env/static/private';
 
 const client = new MongoClient(MONGO_URL)
 
-export function start_mongo() {
+export function startMongo() {
 	return client.connect();
 }
 

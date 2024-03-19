@@ -1,5 +1,10 @@
+import { fantasy } from '$db/fantasy';
 import type { PageServerLoad } from './$types';
-import { fetchFantasy } from './data';
+
+async function fetchFantasy() {
+	const data = Object((await fantasy.find({_id: "fantasy"}).toArray())[0])
+	return data
+}
 
 export const load: PageServerLoad = async () => {
 	const data = await fetchFantasy();

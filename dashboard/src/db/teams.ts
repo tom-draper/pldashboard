@@ -1,3 +1,3 @@
 import db from '$db/mongo'
 
-export const teams = db.collection('TeamData')
+export const teams = db.collection('TeamData');

@@ -1,5 +1,13 @@
 import type { PageServerLoad } from './$types';
-import { fetchTeams, getTeams } from '../[team]/data';
+import { getTeams } from '../[team]/data';
+import { teams } from '$db/teams';
+import { CURRENT_SEASON } from '$lib/consts';
+import type { TeamsData } from '../[team]/dashboard.types';
+
+async function fetchTeams() {
+	const data = Object((await teams.find({_id: CURRENT_SEASON}).toArray())[0]);
+	return data as TeamsData
+}
 
 export const load: PageServerLoad = async () => {
 	const data = await fetchTeams();

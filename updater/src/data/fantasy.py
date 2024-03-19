@@ -6,4 +6,4 @@ class FantasyData:
         self.data = Fantasy()
 
     def to_dict(self):
-        return self.data.df.to_dict()
+        return self.data.df.to_dict(orient="index")

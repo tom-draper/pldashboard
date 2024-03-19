@@ -1,48 +1,12 @@
-import { URL } from '$lib/consts';
 import { identicalScore, sameResult } from '$lib/goals';
 import type { MatchdayPredictions, Prediction, PredictionsData } from './predictions.types';
-import predictions from "$db/predictions"
-
-export async function fetchPredictions() {
-	let data = predictions.aggregate([
-		{
-			"$group": {
-				"_id": {
-					"$dateToString": {
-						"format": "%Y-%m-%d",
-						"date": "$datetime",
-					}
-				},
-				"predictions": { "$push": "$$ROOT" },
-			}
-		}
-	]);
-
-	sortByDate(data);
-	data = { predictions: data };
-	insertExtras(data);
-	return data as PredictionsData;
-}
-
-export async function fetchPredictionsOld() {
-	const response = await fetch(`${URL}/predictions`);
-	if (!response.ok) {
-		return;
-	}
-
-	let json = await response.json();
-	sortByDate(json);
-	json = { predictions: json };
-	insertExtras(json);
-	return json as PredictionsData;
-}
 
 /**
  * Insert green, yellow or red color values representing the results of completed
  * games as well as overall prediction accuracy values for scores and general
  * match results.
  */
-function insertExtras(json: PredictionsData) {
+export function insertExtras(json: PredictionsData) {
 	let scoreCorrect = 0;
 	let resultCorrect = 0;
 	let total = 0;
@@ -79,7 +43,7 @@ function insertExtras(json: PredictionsData) {
 	};
 }
 
-function sortByDate(predictions: MatchdayPredictions[]) {
+export function sortByDate(predictions: MatchdayPredictions[]) {
 	predictions.sort((a, b) => {
 		return (new Date(b._id)).getTime() - (new Date(a._id)).getTime();
 	});

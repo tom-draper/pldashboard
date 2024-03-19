@@ -1,7 +1,14 @@
 import type { PageServerLoad } from './$types';
 import type { TeamsData } from './[team]/dashboard.types';
-import { fetchTeams, getTeams, getTitle, validTeam } from './[team]/data';
+import { getTeams, getTitle, validTeam } from './[team]/data';
 import { getCurrentMatchday, playedMatchdayDates, getTeamID } from '$lib/team';
+import { CURRENT_SEASON } from '$lib/consts';
+import { teams } from '$db/teams';
+
+async function fetchTeams() {
+	const data = Object((await teams.find({_id: CURRENT_SEASON}).toArray())[0]);
+	return data as TeamsData
+}
 
 function getTeam(data: TeamsData) {
 	const team = Object.keys(data.standings)[0];
