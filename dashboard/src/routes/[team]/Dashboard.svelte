@@ -1,14 +1,15 @@
 <script lang="ts">
-	import Footer from '../Footer.svelte';
+	import Footer from '$components/Footer.svelte';
 	import Nav from './nav/Nav.svelte';
 	import MobileNav from './nav/MobileNav.svelte';
-	import { getCurrentMatchday, getTeamID, playedMatchdayDates, toAlias } from './team';
-	import type { Team, DashboardData } from './dashboard.types';
+	import { getCurrentMatchday, getTeamID, playedMatchdayDates, toAlias } from '$lib/team';
+	import type { DashboardData } from './dashboard.types';
 	import { replaceState } from '$app/navigation';
-	import { slugAlias, toTitleCase } from './format';
+	import { slugAlias, toTitleCase } from '$lib/format';
 	import TeamsContent from './TeamsContent.svelte';
 	import OverviewContent from './OverviewContent.svelte';
 	import { onMount } from 'svelte';
+	import type { Team } from '$lib/types';
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');

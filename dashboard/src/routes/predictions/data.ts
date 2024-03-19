@@ -1,9 +1,31 @@
-import { url } from '../consts';
-import { identicalScore, sameResult } from '../[team]/goals';
+import { URL } from '$lib/consts';
+import { identicalScore, sameResult } from '$lib/goals';
 import type { MatchdayPredictions, Prediction, PredictionsData } from './predictions.types';
+import predictions from "$db/predictions"
 
 export async function fetchPredictions() {
-	const response = await fetch(`${url}/predictions`);
+	let data = predictions.aggregate([
+		{
+			"$group": {
+				"_id": {
+					"$dateToString": {
+						"format": "%Y-%m-%d",
+						"date": "$datetime",
+					}
+				},
+				"predictions": { "$push": "$$ROOT" },
+			}
+		}
+	]);
+
+	sortByDate(data);
+	data = { predictions: data };
+	insertExtras(data);
+	return data as PredictionsData;
+}
+
+export async function fetchPredictionsOld() {
+	const response = await fetch(`${URL}/predictions`);
 	if (!response.ok) {
 		return;
 	}

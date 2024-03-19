@@ -1,6 +1,7 @@
+import type { PageServerLoad } from './$types';
 import { fetchTeams, getTeams } from '../[team]/data';
 
-export async function load() {
+export const load: PageServerLoad = async () => {
 	const data = await fetchTeams();
 	if (!data) {
 		return {

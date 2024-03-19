@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getTeamID, getTeams } from './team';
-	import type { TeamsData, Team } from './dashboard.types';
+	import { getTeamID, getTeams } from '$lib/team';
+	import type { TeamsData } from './dashboard.types';
+	import type { Team } from '$lib/types';
 
 	function getLineConfig(team: Team, isMainTeam: boolean) {
 		let lineConfig;

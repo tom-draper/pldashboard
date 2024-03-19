@@ -1,8 +1,9 @@
-import type { Team, TeamsData } from "../dashboard.types";
-import { getTeams } from "../team";
+import type { Form, SpiderAttribute, TeamsData } from "../dashboard.types";
+import { getTeams } from "$lib/team";
 import { attributeAvgScaled, seasonComplete } from "./util";
+import type { Team } from "$lib/types";
 
-function formCleanSheets(form: TeamsData['form'], team: Team, season: number) {
+function formCleanSheets(form: Form, team: Team, season: number) {
 	let nCleanSheets = 0;
 	for (const matchday in form[team][season]) {
 		const match = form[team][season][matchday];

@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { toAlias, toInitials, getTeamID, getCurrentMatchday } from './team';
-	import { ordinal, teamStyle } from './format';
-	import type { PrevMatch, Team, TeamsData } from './dashboard.types';
+	import { toAlias, toInitials, getCurrentMatchday } from '$lib/team';
+	import { ordinal, teamStyle } from '$lib/format';
+	import type { PrevMatch, TeamsData } from './dashboard.types';
+	import type { Team } from '$lib/types';
 
 	function resultColor(prevMatch: PrevMatch, home: boolean): Team {
 		if (home) {
@@ -29,7 +30,7 @@
 				Next Game:&nbsp
 				<button
 					on:click={() => {
-						switchTeam(getTeamID(data.upcoming[team].team));
+						switchTeam(data.upcoming[team].team);
 					}}
 					class="next-game-team-btn">{toAlias(data.upcoming[team].team)}&nbsp</button
 				>

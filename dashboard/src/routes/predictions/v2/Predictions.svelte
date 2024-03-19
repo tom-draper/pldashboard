@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Footer from "../../Footer.svelte";
+	import Footer from "$components/Footer.svelte";
 
 	let predictions = [
 		{

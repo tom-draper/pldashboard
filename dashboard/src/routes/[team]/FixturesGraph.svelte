@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { toAlias } from './team';
-	import { scoreline } from './format';
-	import type { TeamsData, Fixture, Team } from './dashboard.types';
+	import { toAlias } from '$lib/team';
+	import { scoreline } from '$lib/format';
+	import type { TeamsData, Fixture } from './dashboard.types';
+	import type { PlotData, Team } from '$lib/types';
 
 	function matchDescription(team: Team, match: Fixture): string {
 		const homeTeam = match.atHome ? toAlias(team) : toAlias(match.team);

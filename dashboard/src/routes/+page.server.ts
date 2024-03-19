@@ -1,13 +1,14 @@
+import type { PageServerLoad } from './$types';
 import type { TeamsData } from './[team]/dashboard.types';
 import { fetchTeams, getTeams, getTitle, validTeam } from './[team]/data';
-import { getCurrentMatchday, playedMatchdayDates, getTeamID } from './[team]/team';
+import { getCurrentMatchday, playedMatchdayDates, getTeamID } from '$lib/team';
 
 function getTeam(data: TeamsData) {
 	const team = Object.keys(data.standings)[0];
 	return team;
 }
 
-export async function load() {
+export const load: PageServerLoad = async () => {
 	const data = await fetchTeams();
 	if (!data) {
 		return {

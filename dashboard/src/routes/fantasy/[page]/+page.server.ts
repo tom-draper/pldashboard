@@ -1,7 +1,8 @@
+import type { PageServerLoad } from './$types';
 import { fetchFantasy } from '../data';
 import { filterDataByPage, getTitle } from './data';
 
-export async function load({ params }: { params: { page: string } }) {
+export const load: PageServerLoad = async ({ params }: { params: { page: string } }) => {
 	const page = params.page;
 	if (
 		page !== 'all' &&

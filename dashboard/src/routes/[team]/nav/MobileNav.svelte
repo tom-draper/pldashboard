@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { getTeamID } from '../team';
-	import { Team } from '../dashboard.types';
-	import { toAlias } from '../team';
+	import { toAlias, getTeamID } from '$lib/team';
+	import type { Team } from '$lib/types';
 
 	function switchTeamToTop(team: Team) {
 		switchTeam(team);

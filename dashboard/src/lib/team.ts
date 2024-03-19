@@ -1,4 +1,5 @@
-import type { TeamsData, Team } from './dashboard.types';
+import type { TeamsData } from '../routes/[team]/dashboard.types';
+import type { Team } from './types';
 
 export function toInitials(team: Team): string {
 	switch (team) {
@@ -46,7 +47,7 @@ export function getTeamID(team: Team): string {
 	return team.toLowerCase().replace(/ /g, '-');
 }
 
-export function teamInSeason(form: TeamsData['form'], team: Team, season: number): boolean {
+export function teamInSeason(form: Form, team: Team, season: number): boolean {
 	return team in form && form[team][season]['1'] != null;
 }
 

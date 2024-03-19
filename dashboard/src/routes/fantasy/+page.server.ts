@@ -1,6 +1,7 @@
+import type { PageServerLoad } from './$types';
 import { fetchFantasy } from './data';
 
-export async function load() {
+export const load: PageServerLoad = async () => {
 	const data = await fetchFantasy();
 	if (!data) {
 		return {

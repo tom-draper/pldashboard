@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { teamStyle } from '../format';
-	import { getTeamID } from '../team';
-	import { Team } from '../dashboard.types';
-	import { toAlias } from '../team';
+	import { teamStyle } from '$lib/format';
+	import { getTeamID, toAlias } from '$lib/team';
 	import closeNavIcon from '$lib/images/arrow-bar-left.svg';
+	import type { Team } from '$lib/types';
 
 	function closeNavBar() {
 		const navBar = document.getElementById('navBar');

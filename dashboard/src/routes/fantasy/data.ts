@@ -1,7 +1,13 @@
-import { url } from "../consts";
+import { URL } from "$lib/consts";
+import fantasy from "$db/fantasy";
 
 export async function fetchFantasy() {
-	const response = await fetch(`${url}/fantasy`);
+	const data = fantasy.find({_id: "fantasy"})
+	return data
+}
+
+export async function fetchFantasyOld() {
+	const response = await fetch(`${URL}/fantasy`);
 	if (!response.ok) {
 		return;
 	}

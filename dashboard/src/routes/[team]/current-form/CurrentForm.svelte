@@ -1,7 +1,8 @@
 <script lang="ts">
 	import FormTiles from './FormTiles.svelte';
-	import { toInitials } from '../team';
-	import type { TeamsData, Team } from '../dashboard.types';
+	import { toInitials } from '$lib/team';
+	import type { TeamsData } from '../dashboard.types';
+	import type { Team } from '$lib/types';
 
 	function getSortedMatchdays(data: TeamsData, team: Team): string[] {
 		const matchdays = Object.keys(data.form[team][data._id]).sort(function (matchday1, matchday2) {

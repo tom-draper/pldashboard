@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { TeamsData, Team } from './dashboard.types';
-	import { getTeams, toAlias } from './team';
+	import type { TeamsData } from './dashboard.types';
+	import { getTeams, toAlias } from '$lib/team';
+	import type { Team } from '$lib/types';
 
 	function tableSnippetRange(sortedTeams: Team[], team: Team): [number, number] {
 		const teamStandingsIdx = sortedTeams.indexOf(team);
@@ -28,7 +29,7 @@
 
 		const [low, high] = tableSnippetRange(sortedTeams, team);
 
-		let teamTableIdx: number;
+		let teamTableIdx: number | null = null;
 		const rows = [];
 		for (let i = low; i < high; i++) {
 			if (sortedTeams[i] === team) {
@@ -42,10 +43,13 @@
 			});
 		}
 
-		tableSnippet = {
-			teamTableIdx: teamTableIdx,
-			rows: rows
-		};
+		if (teamTableIdx !== null) {
+			tableSnippet = {
+				teamTableIdx: teamTableIdx,
+				rows: rows
+			};
+		}
+
 	}
 
 	type TableSnippet = {

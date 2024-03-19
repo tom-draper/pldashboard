@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { ordinal } from '../format';
-	import { isCleanSheet, notScored, goalsScored, goalsConceded } from '../goals';
-	import type { Team, TeamsData } from '../dashboard.types';
-	import { getTeams } from '../team';
+	import { ordinal } from '$lib/format';
+	import { isCleanSheet, notScored, goalsScored, goalsConceded } from '$lib/goals';
+	import type { TeamsData } from '../dashboard.types';
+	import { getTeams } from '$lib/team';
+	import type { Team } from '$lib/types';
 
 	function getStatsRank(
 		seasonStats: Stats,

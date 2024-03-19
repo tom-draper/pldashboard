@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Page } from '../../fantasy/fantasy.types';
+	import type { Page } from "../fantasy.types";
 
 	function switchTeamToTop(page: Page) {
 		switchPage(page);

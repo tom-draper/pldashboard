@@ -1,13 +1,14 @@
+import type { PageServerLoad } from './$types';
 import { fetchTeams, getTeams, getTitle, validTeam } from './data';
-import { slugAlias, toTitleCase } from './format';
-import { getCurrentMatchday, playedMatchdayDates } from './team';
+import { slugAlias, toTitleCase } from '$lib/format';
+import { getCurrentMatchday, playedMatchdayDates } from '$lib/team';
 
 function getTeam(slug: string) {
 	const team = toTitleCase(slug.replace(/-/g, ' '));
 	return team;
 }
 
-export async function load({ params }: { params: { team: string } }) {
+export const load: PageServerLoad = async ({ params }: { params: { team: string } }) => {
 	const slug = slugAlias(params.team);
 	const data = await fetchTeams();
 	if (!data) {

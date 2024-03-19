@@ -1,5 +1,5 @@
-import type { TeamsData } from "../dashboard.types";
-import { getTeams } from "../team";
+import type { SpiderAttribute, TeamsData } from "../dashboard.types";
+import { getTeams } from "$lib/team";
 import { attributeAvg } from "./util";
 
 function concededPerSeason(data: TeamsData): [SpiderAttribute, [number, number]] {

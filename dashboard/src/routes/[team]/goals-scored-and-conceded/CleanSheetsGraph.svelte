@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { playedMatchdays } from '../team';
-	import type { TeamsData, Team, PlotData } from '../dashboard.types';
+	import { playedMatchdays } from '$lib/team';
+	import type { TeamsData } from '../dashboard.types';
+	import type { PlotData, Team } from '$lib/types';
 
 	function getTeamCleanSheets(data: TeamsData, team: Team): number[] {
 		return Object.keys(data.form[team][data._id]).map((matchday) => {

@@ -1,8 +1,15 @@
-import { url } from '../consts';
-import type { TeamsData, Team } from './dashboard.types';
+import { CURRENT_SEASON, URL } from '$lib/consts';
+import teams from "$db/teams";
+import type { TeamsData } from './dashboard.types';
+import type { Team } from '$lib/types';
 
 export async function fetchTeams() {
-	const response = await fetch(`${url}/teams`);
+	const data = await teams.find({_id: CURRENT_SEASON});
+	return data
+}
+
+export async function fetchTeamsOld() {
+	const response = await fetch(`${URL}/teams`);
 	if (!response.ok) {
 		// error(response.statusText, response.status);
 		return;

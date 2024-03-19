@@ -13,7 +13,8 @@
 	import SpiderGraph from './spider-graph/SpiderGraph.svelte';
 	import ScorelineFreqGraph from './ScorelineFreqGraph.svelte';
 	import ScoredConcededOverTimeGraph from './goals-scored-and-conceded/ScoredConcededOverTimeGraph.svelte';
-	import type { DashboardData, Team } from './dashboard.types';
+	import type { DashboardData } from './dashboard.types';
+	import type { Team } from '$lib/types';
 
 	let pageWidth: number;
 	$: mobileView = pageWidth <= 700;

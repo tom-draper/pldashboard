@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { TeamsData, Team } from '../dashboard.types';
-	import { getTeams } from '../team';
-	import type { Counter } from '../../../global';
+	import type { TeamsData } from '../dashboard.types';
+	import { getTeams } from '$lib/team';
+	import type { Counter, PlotData, Team } from '$lib/types';
 
 	function getAvgGoalsPerGame(data: TeamsData): Counter {
 		const avgGoals: Counter = {};

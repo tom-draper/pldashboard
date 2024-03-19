@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getTeams, toInitials } from './team';
-	import { teamStyle } from './format';
-	import type { DashboardData, Team, TeamsData } from './dashboard.types';
+	import { getTeams, toInitials } from '$lib/team';
+	import { teamStyle } from '$lib/format';
+	import type { DashboardData, TeamsData } from './dashboard.types';
+	import type { Team } from '$lib/types';
 
 	type UpcomingMatch = {
 		time: Date;

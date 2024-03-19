@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { TeamsData, Team } from '../dashboard.types';
+	import type { TeamsData } from '../dashboard.types';
+	import type { PlotData, Team } from '$lib/types';
 
 	function seasonFinishLines(seasonBoundaries: number[], maxX: number, maxY: number) {
 		return seasonBoundaries

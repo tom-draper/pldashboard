@@ -2,9 +2,9 @@
 	import { onMount } from 'svelte';
 	import GoalsScoredFreq from './GoalsScoredFreqGraph.svelte';
 	import GoalsConcededFreq from './GoalsConcededFreqGraph.svelte';
-	import type { TeamsData, Team } from '../dashboard.types';
-	import { getTeams } from '../team';
-	import type { Counter } from '../../../global';
+	import type { TeamsData } from '../dashboard.types';
+	import { getTeams } from '$lib/team';
+	import type { Counter, Team } from '$lib/types';
 
 	function avgBars() {
 		return {

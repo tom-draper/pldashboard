@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { FantasyData, Page, Position, Team } from './fantasy.types';
-	import type { PlotData } from '../[team]/dashboard.types';
+	import type { PlotData } from '$lib/types';
 
 	const positionColors: { [position in Position]: string } = {
 		Forward: '#c600d8',

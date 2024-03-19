@@ -1,6 +1,6 @@
 <script lang="ts">
+	import type { PlotData } from '$lib/types';
 	import { onMount } from 'svelte';
-	import type { PlotData } from '../dashboard.types';
 
 	function defaultLayout() {
 		const xLabels = getXLabels();

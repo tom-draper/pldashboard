@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { toAlias, toName, getTeamID, teamColor } from '../team';
-	import type { TeamsData, Team } from '../dashboard.types';
+	import { toAlias, toName, getTeamID, teamColor } from '$lib/team';
+	import type { SpiderAttribute, TeamsData } from '../dashboard.types';
 	import getAttack from './attack'
 	import { removeItem } from './util';
 	import getCleanSheets from './cleanSheets';
@@ -9,6 +9,7 @@
 	import getVsBig6 from './vsBig6';
 	import getWinStreak from './winStreak';
 	import getDefence from './defence';
+	import type { PlotData, Team } from '$lib/types';
 
 	function addTeamComparison(team: Team) {
 		const teamData = {

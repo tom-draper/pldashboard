@@ -2,7 +2,7 @@
 	import FantasyNav from './nav/FantasyNav.svelte';
 	import FantasyMobileNav from './nav/FantasyMobileNav.svelte';
 	import PointsVsPrice from './PointsVsPrice.svelte';
-	import Footer from '../Footer.svelte';
+	import Footer from '$components/Footer.svelte';
 	import Table from './Table.svelte';
 	import type { FantasyDashboardData, FantasyData, Page } from './fantasy.types';
 	import { replaceState } from '$app/navigation';

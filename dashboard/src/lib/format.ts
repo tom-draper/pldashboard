@@ -1,5 +1,5 @@
-import type { Team } from './dashboard.types';
 import { getTeamID } from './team';
+import type { Team } from './types';
 
 export function ordinal(n: number): string {
 	const ord = ['', 'st', 'nd', 'rd'];
