@@ -1,10 +1,10 @@
-import { predictions } from '$db/predictions';
+import { predictions as predictionsCollection } from '$db/predictions';
 import type { PageServerLoad } from './$types';
-import { insertExtras, sortByDate } from './data';
+import { calcAccuracy, sortByDate } from './data';
 import type { PredictionsData } from './predictions.types';
 
 async function fetchPredictions() {
-	let data = Object(await predictions.aggregate([
+	const predictions = Object(await predictionsCollection.aggregate([
 		{
 			"$group": {
 				"_id": {
@@ -18,9 +18,12 @@ async function fetchPredictions() {
 		}
 	]).toArray());
 
-	sortByDate(data);
-	data = { predictions: data };
-	insertExtras(data);
+	sortByDate(predictions);
+	const accuracy = calcAccuracy(predictions);
+	const data = {
+		accuracy,
+		predictions
+	}
 	return data as PredictionsData;
 }
 

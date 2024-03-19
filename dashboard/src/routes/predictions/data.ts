@@ -1,18 +1,17 @@
 import { identicalScore, sameResult } from '$lib/goals';
-import type { MatchdayPredictions, Prediction, PredictionsData } from './predictions.types';
+import type { Accuracy, MatchdayPredictions, Prediction } from './predictions.types';
 
 /**
  * Insert green, yellow or red color values representing the results of completed
  * games as well as overall prediction accuracy values for scores and general
  * match results.
  */
-export function insertExtras(json: PredictionsData) {
+export function calcAccuracy(predictions: MatchdayPredictions[]) {
 	let scoreCorrect = 0;
 	let resultCorrect = 0;
 	let total = 0;
-	for (let i = 0; i < json.predictions.length; i++) {
-		for (let j = 0; j < json.predictions[i].predictions.length; j++) {
-			const prediction = json.predictions[i].predictions[j];
+	for (const matchdayPredictions of predictions) {
+		for (const prediction of matchdayPredictions.predictions) {
 			if (prediction.actual == null) {
 				continue;
 			}
@@ -31,16 +30,11 @@ export function insertExtras(json: PredictionsData) {
 		}
 	}
 
-	let scoreAccuracy = 0;
-	let resultAccuracy = 0;
-	if (total > 0) {
-		scoreAccuracy = scoreCorrect / total;
-		resultAccuracy = resultCorrect / total;
-	}
-	json.accuracy = {
-		scoreAccuracy,
-		resultAccuracy
+	const accuracy: Accuracy = {
+		scoreAccuracy: total > 0 ? scoreCorrect / total : 0,
+		resultAccuracy: total > 0 ? resultCorrect / 0 : 0	
 	};
+	return accuracy
 }
 
 export function sortByDate(predictions: MatchdayPredictions[]) {
