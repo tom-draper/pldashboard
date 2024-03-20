@@ -1,65 +1,17 @@
 <script lang="ts">
-	import Footer from "$components/Footer.svelte";
-
-	let predictions = [
-		{
-			home: 'Arsenal',
-			away: 'Chelsea',
-			prediction: {
-				prediction: 'home',
-				probability: {
-					home: 0.6,
-					draw: 0.1,
-					away: 0.3
-				}
-			},
-			kickoff: new Date('2024-03-14T16:30:00Z'),
-		},
-		{
-			home: 'Liverpool',
-			away: 'Arsenal',
-			prediction: {
-				prediction: 'draw',
-				probability: {
-					home: 0.3,
-					draw: 0.4,
-					away: 0.3
-				}
-			},
-			kickoff: new Date('2024-03-14T17:30:00Z'),
-		},
-		{
-			home: 'Manchester United',
-			away: 'Manchester City',
-			prediction: {
-				prediction: 'away',
-				probability: {
-					home: 0.2,
-					draw: 0.1,
-					away: 0.7
-				}
-			},
-			kickoff: new Date('2024-03-14T16:30:00Z'),
-		},
-		{
-			home: 'Brighton',
-			away: 'Crystal Palace',
-			prediction: {
-				prediction: 'away',
-				probability: {
-					home: 0.6,
-					draw: 0.05,
-					away: 0.35
-				}
-			},
-			kickoff: new Date('2024-03-14T16:30:00Z'),
-		}
-	].sort((a, b) => a.kickoff.getTime() - b.kickoff.getTime());
+	import Footer from "$lib/components/Footer.svelte";
+	import type { PredictionsV2Data } from "./predictions-v2.types";
+	import live from "$lib/images/live.svg";
 
 	function updateCountdowns() {
-		const updatedCountdowns = Array(predictions.length);
-		for (let i = 0; i < predictions.length; i++) {
-			updatedCountdowns[i] = getCountdown(predictions[i].kickoff);
+		const updatedCountdowns = Array(data.matches.length);
+		for (let i = 0; i < data.matches.length; i++) {
+			const kickoff = data.matches[i].kickoff
+			if (kickoff !== null) {
+				updatedCountdowns[i] = getCountdown(kickoff);
+			} else {
+				updatedCountdowns[i] = '';
+			}
 		}
 		countdowns = updatedCountdowns;
 		setTimeout(updateCountdowns, 1000);
@@ -103,12 +55,13 @@
 		return countdown;
 	}
 
-	let countdowns = Array(predictions.length).fill('');
+	export let data: PredictionsV2Data;
+
+	let countdowns = Array(data.matches.length).fill('');
 	$: countdowns;
 
 	updateCountdowns();
 
-	export let data: unknown;
 </script>
 
 <div class="predictions-container">
@@ -121,63 +74,19 @@
 	</div>
 
 	<div class="predictions">
-		{#if predictions.length > 0}
-			{#each predictions as prediction, i}
+		{#if data.matches.length > 0}
+			{#each data.matches as prediction, i}
 				<div class="prediction">
 					<div class="prediction-header">
-						<div>{prediction.home} vs {prediction.away}</div>
+						<div>{prediction._id}</div>
 
-						<svg
-							version="1.1"
-							id="L9"
-							xmlns="http://www.w3.org/2000/svg"
-							xmlns:xlink="http://www.w3.org/1999/xlink"
-							x="0px"
-							y="0px"
-							viewBox="0 0 100 100"
-							enable-background="new 0 0 0 0"
-							xml:space="preserve"
-						>
-							<rect x="20" y="50" width="4" height="10" fill="var(--pink)">
-								<animateTransform
-									attributeType="xml"
-									attributeName="transform"
-									type="translate"
-									values="0 0; 0 20; 0 0"
-									begin="0"
-									dur="1.2s"
-									repeatCount="indefinite"
-								/>
-							</rect>
-							<rect x="30" y="50" width="4" height="10" fill="var(--pink)">
-								<animateTransform
-									attributeType="xml"
-									attributeName="transform"
-									type="translate"
-									values="0 0; 0 20; 0 0"
-									begin="0.2s"
-									dur="1.2s"
-									repeatCount="indefinite"
-								/>
-							</rect>
-							<rect x="40" y="50" width="4" height="10" fill="var(--pink)">
-								<animateTransform
-									attributeType="xml"
-									attributeName="transform"
-									type="translate"
-									values="0 0; 0 20; 0 0"
-									begin="0.4s"
-									dur="1.2s"
-									repeatCount="indefinite"
-								/>
-							</rect>
-						</svg>
+						<img src="{live}" alt="Live" />
 						<div class="countdown">{countdowns[i]}</div>
 					</div>
 					<div class="prediction-value">
-						{#if prediction.prediction.prediction === 'home'}
+						{#if prediction.odds[prediction.odds.length - 1].prediction.value === 1}
 							Home win
-						{:else if prediction.prediction.prediction === 'draw'}
+						{:else if prediction.odds[prediction.odds.length - 1].prediction.value === 0}
 							Draw
 						{:else}
 							Away win
@@ -187,18 +96,18 @@
 						<div class="probability-bar">
 							<div
 								class="probability-bar probability-bar-home"
-								style="width: {prediction.prediction.probability.home * 100}%"
-								title="{prediction.prediction.probability.home * 100}% home win"
+								style="width: {prediction.odds[prediction.odds.length - 1].prediction.probability[0] * 100}%"
+								title="{(prediction.odds[prediction.odds.length - 1].prediction.probability[0] * 100).toFixed(2)}% home win"
 							></div>
 							<div
 								class="probability-bar probability-bar-draw"
-								style="width: {prediction.prediction.probability.draw * 100}%"
-								title="{prediction.prediction.probability.draw * 100}% draw"
+								style="width: {prediction.odds[prediction.odds.length - 1].prediction.probability[1] * 100}%"
+								title="{(prediction.odds[prediction.odds.length - 1].prediction.probability[1] * 100).toFixed(2)}% draw"
 							></div>
 							<div
 								class="probability-bar probability-bar-away"
-								style="width: {prediction.prediction.probability.away * 100}%"
-								title="{prediction.prediction.probability.away * 100}% away win"
+								style="width: {prediction.odds[prediction.odds.length - 1].prediction.probability[2] * 100}%"
+								title="{(prediction.odds[prediction.odds.length - 1].prediction.probability[2] * 100).toFixed(2)}% away win"
 							></div>
 						</div>
 					</div>
@@ -212,8 +121,6 @@
 		362 games, 61% accuracy
 	</div>
 </div>
-
-
 <div class="footer-container">
 	<Footer lastUpdated={null} dark={true} />
 </div>
@@ -298,7 +205,7 @@
 		height: auto;
 	}
 
-	svg {
+	img {
 		width: 80px;
 		height: 80px;
 		margin-top: -44px;

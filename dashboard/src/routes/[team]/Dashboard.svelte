@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Footer from '$components/Footer.svelte';
+	import { onMount } from 'svelte';
+	import Footer from '$lib/components/Footer.svelte';
 	import Nav from './nav/Nav.svelte';
 	import MobileNav from './nav/MobileNav.svelte';
 	import { getCurrentMatchday, getTeamID, playedMatchdayDates, toAlias } from '$lib/team';
@@ -8,7 +9,6 @@
 	import { slugAlias, toTitleCase } from '$lib/format';
 	import TeamsContent from './TeamsContent.svelte';
 	import OverviewContent from './OverviewContent.svelte';
-	import { onMount } from 'svelte';
 	import type { Team } from '$lib/types';
 
 	function toggleMobileNav() {

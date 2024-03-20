@@ -1,4 +1,4 @@
-import type { TeamsData } from '../routes/[team]/dashboard.types';
+import type { Form, TeamsData } from '../routes/[team]/dashboard.types';
 import type { Team } from './types';
 
 export function toInitials(team: Team): string {
@@ -21,13 +21,13 @@ export function toInitials(team: Team): string {
 	return team.slice(0, 3).toUpperCase();
 }
 
-const alias = {
+const alias: {[team in Team]?: string} = {
 	'Wolverhampton Wanderers': 'Wolves',
 	'Tottenham Hotspur': 'Spurs',
 	'Leeds United': 'Leeds',
 	'West Ham United': 'West Ham',
 	'Brighton and Hove Albion': 'Brighton'
-};
+} as const;
 
 export function toAlias(team: Team): string {
 	if (team in alias) {
@@ -36,11 +36,9 @@ export function toAlias(team: Team): string {
 	return team;
 }
 
-export function toName(teamAlias: string): Team {
-	if (!Object.values(alias).includes(teamAlias)) {
-		return teamAlias;
-	}
-	return Object.keys(alias).find((key) => alias[key] === teamAlias);
+export function toName(teamAlias: string): string {
+	const team = Object.keys(alias).find(key => alias[key] === teamAlias);
+	return team ?? teamAlias;
 }
 
 export function getTeamID(team: Team): string {
@@ -58,13 +56,9 @@ export function teamColor(team: Team): string {
 }
 
 export function playedMatchdays(data: TeamsData, team: Team): string[] {
-	const matchdays = [];
-	for (const matchday in data.form[team][data._id]) {
-		if (data.form[team][data._id][matchday].score != null) {
-			matchdays.push(matchday);
-		}
-	}
-	return matchdays;
+	return Object.keys(data.form[team][data._id]).filter(
+		(matchday) => data.form[team][data._id][matchday].score != null
+	);
 }
 
 export function getCurrentMatchday(data: TeamsData, team: Team): string {
@@ -88,16 +82,16 @@ export function playedMatchdayDates(data: TeamsData, team: Team): Date[] {
 	// Find median matchday date across all teams for each matchday
 	const x = [];
 	const teams = getTeams(data);
-	for (let i = 0; i < matchdays.length; i++) {
+	for (const matchday of matchdays) {
 		const matchdayDates = [];
 		for (const team of teams) {
-			matchdayDates.push(new Date(data.fixtures[team][matchdays[i]].date));
+			matchdayDates.push(new Date(data.fixtures[team][matchday].date));
 		}
 		matchdayDates.sort();
 		x.push(matchdayDates[Math.floor(matchdayDates.length / 2)]);
 	}
 	x.sort(function (a, b) {
-		return a - b;
+		return a.getTime() - b.getTime();
 	});
 	return x;
 }

@@ -69,4 +69,4 @@ export enum Team {
 	Wolves = 'Wolves'
 }
 
-export type Page = 'all' | 'attack' | 'midfield' | 'defence' | 'goalkeeper';
+export type Page = 'all' | 'forward' | 'midfielder' | 'defender' | 'goalkeeper';

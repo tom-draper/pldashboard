@@ -2,10 +2,11 @@
 	import FantasyNav from './nav/FantasyNav.svelte';
 	import FantasyMobileNav from './nav/FantasyMobileNav.svelte';
 	import PointsVsPrice from './PointsVsPrice.svelte';
-	import Footer from '$components/Footer.svelte';
+	import Footer from '$lib/components/Footer.svelte';
 	import Table from './Table.svelte';
 	import type { FantasyDashboardData, FantasyData, Page } from './fantasy.types';
 	import { replaceState } from '$app/navigation';
+	import { filterDataByPage, getTitle } from './data';
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');
@@ -22,42 +23,27 @@
 		}
 	}
 
-	function filterDataByPage(data: FantasyData, page: Page) {
-		const pageData: FantasyData = {};
-		for (const team in data) {
-			if (
-				team === '_id' ||
-				page === 'all' ||
-				(page === 'attack' && data[team].position === 'Forward') ||
-				(page === 'midfield' && data[team].position === 'Midfielder') ||
-				(page === 'defence' && data[team].position === 'Defender') ||
-				(page === 'goalkeeper' && data[team].position === 'Goalkeeper')
-			)
-				pageData[team] = data[team];
-		}
-		return pageData;
-	}
-
 	function switchPage(newPage: Page) {
 		data.page = newPage;
-		if (data.page === 'all') {
-			data.title = 'Fantasy';
-		} else {
-			data.title = `Fantasy | ${data.page[0].toUpperCase() + data.page.slice(1)}`;
-		}
+		data.title = getTitle(newPage);
 
-		data.pageData = filterDataByPage(data.data, data.page);
+		data.pageData = filterDataByPage(data.data, newPage);
 
-		let nextPage: string = data.page;
-		if (nextPage === 'all') {
-			nextPage = '/fantasy';
-		} else if (!window.location.href.endsWith('/')) {
-			nextPage = '/fantasy/' + nextPage;
-		}
+		const nextPage = getNextPage(newPage);
 		replaceState(nextPage, {}); // Change current url without reloading
 	}
 
-	const pages: Page[] = ['all', 'attack', 'midfield', 'defence', 'goalkeeper'];
+	function getNextPage(page: Page) {
+		if (page === 'all') {
+			return '/fantasy';
+		} else if (!window.location.href.endsWith('/')) {
+			return '/fantasy/' + data.page;
+		} else {
+			return data.page;
+		}
+	}
+
+	const pages: Page[] = ['all', 'forward', 'midfielder', 'defender', 'goalkeeper'];
 
 	let pageWidth: number;
 	$: mobileView = pageWidth <= 700;

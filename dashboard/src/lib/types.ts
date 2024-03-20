@@ -40,9 +40,3 @@ export type Scoreline = Score & {
 	homeTeam: Team;
 	awayTeam: Team;
 };
-
-export type PlotData = {
-	data: any;
-	layout: any;
-	config: any;
-};

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import Predictions from "./Predictions.svelte";
+	import type { PredictionsV2Data } from "./predictions-v2.types";
 
-	export let data;
+	export let data: PredictionsV2Data;
 </script>
 
 <svelte:head>

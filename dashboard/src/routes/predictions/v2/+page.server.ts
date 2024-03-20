@@ -1,12 +1,14 @@
-import { predictions } from '$db/predictions-v2';
+import { predictions } from '$lib/server/database/predictions-v2';
 import type { PageServerLoad } from './$types';
 
 async function fetchPredictions() {
-	const data = Object((await predictions.find({}).toArray())[0]);
+	const data = await predictions.find({ score: null }).toArray();
 	return data
 }
 
 export const load: PageServerLoad = async () => {
 	const data = await fetchPredictions();
-	return data;
+	return {
+		matches: data,
+	};
 }

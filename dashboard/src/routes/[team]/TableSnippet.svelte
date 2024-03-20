@@ -49,7 +49,6 @@
 				rows: rows
 			};
 		}
-
 	}
 
 	type TableSnippet = {

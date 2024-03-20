@@ -1,20 +1,23 @@
-import { fantasy } from '$db/fantasy';
+import { fantasy } from '$lib/server/database/fantasy';
+import { filterDataByPage } from '../data';
 import type { PageServerLoad } from './$types';
-import { filterDataByPage, getTitle } from './data';
+import { getTitle } from '../data';
 
 async function fetchFantasy() {
-	const data = Object((await fantasy.find({_id: "fantasy"}).toArray())[0])
+	const data = Object((await fantasy.find({ _id: "fantasy" }).toArray())[0])
 	return data
 }
 
 export const load: PageServerLoad = async ({ params }: { params: { page: string } }) => {
 	const page = params.page;
+
+	// check if page is a valid page
 	if (
 		page !== 'all' &&
-		page !== 'attack' &&
-		page !== 'defence' &&
+		page !== 'forward' &&
+		page !== 'defender' &&
 		page !== 'goalkeeper' &&
-		page !== 'midfield'
+		page !== 'midfielder'
 	) {
 		return {
 			status: 404,

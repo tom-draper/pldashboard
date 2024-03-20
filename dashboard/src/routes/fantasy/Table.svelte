@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { FantasyData, Page, Team } from './fantasy.types';
-
+ 
 	type TableRow = (string | number)[];
 
 	function teamToCSS(team: string) {
@@ -120,7 +120,7 @@
 					createdCell: function (
 						td: HTMLTableCellElement,
 						cellData: Team,
-						rowData,
+						rowData: any,
 						row: number,
 						col: number
 					) {
@@ -132,8 +132,19 @@
 					}
 				},
 				{
-					targets: 12,
-					render: function (data, type, row, meta) {
+					targets: 3,
+					render: function (data: any, type: string, row: any, meta: any) {
+						// If render is just displaying value to user, format as abbreviated number
+						if (type === 'display') {
+							return data ? data.toLocaleString(): 0;
+						}
+						// Otherwise return raw data so that sort and filter still works
+						return data;
+					}
+				},
+				{
+					targets: [12, 13],
+					render: function (data: any, type: string, row: any, meta: any) {
 						// If render is just displaying value to user, format as abbreviated number
 						if (type === 'display') {
 							return data ? abbrNum(data, 1) : 0;
@@ -161,7 +172,7 @@
 		table.draw();
 	}
 
-	let table;
+	let table: any;
 	let playerToTeam: {[player: string]: Team};
 	let teamCSSTag: {[team in Team]?: string};
 	let setup = false;
@@ -176,7 +187,23 @@
 	export let data: FantasyData, page: Page;
 </script>
 
-<div class="table">
+<svelte:head>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+		integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+		crossorigin="anonymous"
+		referrerpolicy="no-referrer"
+	></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+	<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+</svelte:head>
+
+{#if !setup}
+	<div class="loading-spinner-container">
+		<div class="loading-spinner" />
+	</div>
+{/if}
+<div class="table" class:hidden={!setup}>
 	<table id="myTable">
 		<thead>
 			<tr>
@@ -184,16 +211,14 @@
 				<th>Price</th>
 				<th>Points</th>
 				<th>Minutes</th>
-				<th>Points per Game</th>
-				<th>Points per 90</th>
+				<th>Points/Game</th>
+				<th>Points/90'</th>
 				<th>Form</th>
 				<th>Goals</th>
 				<th>Assists</th>
 				<th>Clean Sheets</th>
 				<th>Saves</th>
 				<th>Bonus</th>
-				<!-- <th>Yellow Cards</th>
-        <th>Red Cards</th> -->
 				<th>Transfers In</th>
 				<th>Transfers Out</th>
 			</tr>
@@ -208,9 +233,12 @@
 		overflow-x: auto;
 	}
 
+	.hidden {
+		visibility: hidden;
+	}
+
 	#myTable {
 		width: 100% !important;
-		/* min-width: 2000px; */
 	}
 
 	:global(tr.even) {

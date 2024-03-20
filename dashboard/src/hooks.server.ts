@@ -1,3 +1,3 @@
-import { startMongo } from "$db/mongo";
+import { startMongo } from "$lib/server/database/mongo";
 
-startMongo().catch(e => {console.error(e)})
+startMongo().catch(e => { console.error(e) })

@@ -1,4 +1,4 @@
-import { predictions as predictionsCollection } from '$db/predictions';
+import { predictions as predictionsCollection } from '$lib/server/database/predictions';
 import type { PageServerLoad } from './$types';
 import { calcAccuracy, sortByDate } from './data';
 import type { PredictionsData } from './predictions.types';

@@ -1,8 +1,8 @@
-import { fantasy } from '$db/fantasy';
+import { fantasy } from '$lib/server/database/fantasy';
 import type { PageServerLoad } from './$types';
 
 async function fetchFantasy() {
-	const data = Object((await fantasy.find({_id: "fantasy"}).toArray())[0])
+	const data = Object((await fantasy.find({ _id: "fantasy" }).toArray())[0])
 	return data
 }
 

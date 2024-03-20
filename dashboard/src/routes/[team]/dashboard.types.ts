@@ -34,7 +34,7 @@ export type Match = {
 
 export type Fixtures = {
 	[team in Team]: {
-		[matchday: number]: Fixture
+		[matchday: string]: Fixture
 	};
 };
 

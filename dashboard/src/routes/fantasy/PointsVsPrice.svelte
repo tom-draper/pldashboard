@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { FantasyData, Page, Position, Team } from './fantasy.types';
-	import type { PlotData } from '$lib/types';
+	import type { Config, Layout, PlotData } from 'plotly.js';
 
 	const positionColors: { [position in Position]: string } = {
 		Forward: '#c600d8',
@@ -19,7 +19,7 @@
 		let maxMinutes = 0;
 
 		Object.entries(data).forEach(([team, teamData]) => {
-			if (team === '_id') {
+			if (!isTeam(team)) {
 				return;
 			}
 			teams.push(team);
@@ -32,10 +32,7 @@
 			colors.push(positionColors[teamData.position]);
 		});
 
-		const sizes = minutes.slice(0);
-		for (let i = 0; i < sizes.length; i++) {
-			sizes[i] /= maxMinutes * 0.02;
-		}
+		const sizes = minutes.map((x) => x / (maxMinutes * 0.02));
 
 		const playtimes = minutes.map((x) => ((x / maxMinutes) * 100).toFixed(1));
 
@@ -58,6 +55,10 @@
 
 		// Add this team last to ensure it overlaps all other lines
 		return [markers];
+	}
+
+	function isTeam(value: string): value is Team {
+		return value !== '_id';
 	}
 
 	function defaultLayout() {
@@ -94,14 +95,13 @@
 			return;
 		}
 
-		const layoutUpdate = {
+		const layoutUpdate: Partial<Layout> = {
 			'yaxis.title': { text: 'Position' },
 			'yaxis.visible': true,
 			'yaxis.tickvals': Array.from(Array(20), (_, i) => i + 1),
 			'margin.l': 60,
 			'margin.t': 15
 		};
-		//@ts-ignore
 		Plotly.update(plotDiv, {}, layoutUpdate, 0);
 	}
 
@@ -110,7 +110,7 @@
 			return;
 		}
 
-		const layoutUpdate = {
+		const layoutUpdate: Layout = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
 			'yaxis.tickvals': Array.from(Array(10), (_, i) => i + 2),
@@ -118,10 +118,7 @@
 			'margin.t': 5
 		};
 
-		const sizes = plotData.data[0].marker.size;
-		for (let i = 0; i < sizes.length; i++) {
-			sizes[i] = Math.round(sizes[i] / 2);
-		}
+		const sizes = plotData.data[0].marker.size.map(size => Math.round(size / 2));
 		const dataUpdate = {
 			marker: {
 				size: sizes,
@@ -132,12 +129,11 @@
 
 		plotData.data[0].marker.size = sizes;
 
-		//@ts-ignore
 		Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
 	}
 
-	function buildPlotData(data: FantasyData): PlotData {
-		const plotData = {
+	function buildPlotData(data: FantasyData) {
+		const plotData: {data: PlotData, layout: Layout, config: Config} = {
 			data: lines(data),
 			layout: defaultLayout(),
 			config: {
@@ -149,7 +145,8 @@
 		return plotData;
 	}
 
-	let plotDiv: HTMLDivElement, plotData: PlotData;
+	let plotDiv: HTMLDivElement
+	let plotData: {data: PlotData[], layout: Layout, config: Config};
 	let setup = false;
 	onMount(() => {
 		genPlot();
@@ -158,7 +155,6 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data);
-		//@ts-ignore
 		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(
 			(plot: HTMLDivElement) => {
 				// Once plot generated, add resizable attribute to it to shorten height for mobile view
@@ -176,7 +172,6 @@
 		const newPlotData = buildPlotData(data);
 		plotData.data[0] = newPlotData.data[0];
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();
