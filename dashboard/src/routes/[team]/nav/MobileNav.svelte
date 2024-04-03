@@ -8,6 +8,11 @@
 		toggleMobileNav();
 	}
 
+	function teamStyling(team: Team) {
+		const teamID = getTeamID(team);
+		return `color: var(--${teamID}-secondary);backgroundColor: var(--${teamID});`
+	}
+
 	export let teams: Team[], switchTeam: (newTeam: Team) => void, toggleMobileNav: () => void;
 </script>
 
@@ -15,33 +20,15 @@
 	<div class="team-links">
 		{#each teams as team, i}
 			{#if team != null}
-				{#if i === 0 || (i === 1 && teams[0] === null)}
-					<!-- Button with first-team class -->
-					<button
-						on:click={() => {
-							switchTeamToTop(teams[i]);
-						}}
-						style="color: var(--{getTeamID(team)}-secondary);background-color: var(--{getTeamID(team)})"
-						class="team-link first-team">{toAlias(teams[i])}</button
-					>
-				{:else if i === teams.length - 1 || (i === teams.length - 2 && teams[teams.length - 1] === null)}
-					<!-- Button with last-team class -->
-					<button
-						on:click={() => {
-							switchTeamToTop(team);
-						}}
-						style="color: var(--{getTeamID(team)}-secondary);background-color: var(--{getTeamID(team)})"
-						class="team-link last-team">{toAlias(team)}</button
-					>
-				{:else}
-					<button
-						on:click={() => {
-							switchTeamToTop(team);
-						}}
-						style="color: var(--{getTeamID(team)}-secondary);background-color: var(--{getTeamID(team)})"
-						class="team-link">{toAlias(team)}</button
-					>
-				{/if}
+				<button
+					on:click={() => {
+						switchTeamToTop(team);
+					}}
+					style="{teamStyling(team)}"
+					class:first-team={i === 0 || (i === 1 && team[0] === null)}
+					class:last-team={i === teams.length - 1 || (i === teams.length - 2 && teams[teams.length - 1] === null)}
+					class="team-link">{toAlias(teams)}</button
+				>
 			{/if}
 		{/each}
 	</div>
@@ -78,4 +65,4 @@
 			width: 100%;
 		}
 	}
-</style>
+</style>i
