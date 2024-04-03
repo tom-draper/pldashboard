@@ -4,7 +4,7 @@
 	import PointsVsPrice from './PointsVsPrice.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import Table from './Table.svelte';
-	import type { FantasyDashboardData, FantasyData, Page } from './fantasy.types';
+	import type { FantasyDashboardData, Page } from './fantasy.types';
 	import { replaceState } from '$app/navigation';
 	import { filterDataByPage, getTitle } from './data';
 
@@ -38,9 +38,8 @@
 			return '/fantasy';
 		} else if (!window.location.href.endsWith('/')) {
 			return '/fantasy/' + data.page;
-		} else {
-			return data.page;
 		}
+		return data.page;
 	}
 
 	const pages: Page[] = ['all', 'forward', 'midfielder', 'defender', 'goalkeeper'];

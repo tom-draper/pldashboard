@@ -27,7 +27,7 @@
 					style="{teamStyling(team)}"
 					class:first-team={i === 0 || (i === 1 && team[0] === null)}
 					class:last-team={i === teams.length - 1 || (i === teams.length - 2 && teams[teams.length - 1] === null)}
-					class="team-link">{toAlias(teams)}</button
+					class="team-link">{toAlias(team)}</button
 				>
 			{/if}
 		{/each}

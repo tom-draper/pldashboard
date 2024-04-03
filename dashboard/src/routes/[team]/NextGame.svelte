@@ -7,9 +7,8 @@
 	function resultColor(prevMatch: PrevMatch, home: boolean): Team {
 		if (home) {
 			return prevMatch.result.homeGoals < prevMatch.result.awayGoals ? prevMatch.result.awayTeam : prevMatch.result.homeTeam;
-		} else {
-			return prevMatch.result.homeGoals > prevMatch.result.awayGoals ? prevMatch.result.homeTeam : prevMatch.result.awayTeam;
 		}
+		return prevMatch.result.homeGoals > prevMatch.result.awayGoals ? prevMatch.result.homeTeam : prevMatch.result.awayTeam;
 	}
 
 	export let data: TeamsData, team: Team, switchTeam: (newTeam: Team) => void;

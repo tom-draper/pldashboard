@@ -65,17 +65,23 @@
 			const match = data.fixtures[team][matchday];
 			x.push(new Date(match.date));
 
-			let oppositionRating = data.teamRatings[match.team].total;
-			if (match.atHome) {
-				// If team playing at home, decrease opposition rating by the amount of home advantage the team gains
-				oppositionRating *= 1 - data.homeAdvantages[match.team].totalHomeAdvantage;
-			}
+			const oppositionRating = getOppositionTeamRating(data, match.team, match.atHome);
 			y.push(oppositionRating * 100);
 
 			const description = matchDescription(team, match);
 			descriptions.push(description);
 		}
 		return [x, y, descriptions];
+	}
+
+	function getOppositionTeamRating(data: TeamsData, oppositionTeam: Team, atHome: boolean) {
+		let oppositionRating = data.teamRatings[oppositionTeam].total;
+		if (atHome) {
+			// If team playing at home, decrease opposition rating by the amount of home advantage the team gains
+			oppositionRating *= 1 - data.homeAdvantages[oppositionTeam].totalHomeAdvantage;
+		}
+		return oppositionRating;
+
 	}
 
 	function line(data: TeamsData, team: Team, now: number) {
@@ -221,10 +227,7 @@
 			'yaxis.color': '#fafafa'
 		};
 
-		const sizes = plotData.data[0].marker.size;
-		for (let i = 0; i < sizes.length; i++) {
-			sizes[i] = Math.round(sizes[i] / 1.7);
-		}
+		const sizes = plotData.data[0].marker.size.map(size => Math.round(size / 1.7));
 		const dataUpdate = {
 			marker: {
 				size: sizes,

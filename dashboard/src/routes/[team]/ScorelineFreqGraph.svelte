@@ -11,17 +11,12 @@
 			if (score == null) {
 				continue;
 			}
-			let scoreStr: string;
-			if (form[team][season][matchday].atHome) {
-				scoreStr = `${score.homeGoals} - ${score.awayGoals}`;
-			} else {
-				scoreStr = `${score.awayGoals} - ${score.homeGoals}`;
-			}
+			const atHome = form[team][season][matchday].atHome;
+			const scoreStr = getScoreString(score.homeGoals, score.awayGoals, atHome);
 			if (!(scoreStr in scoreFreq)) {
-				scoreFreq[scoreStr] = [1];
-			} else {
-				scoreFreq[scoreStr][0] += 1;
-			}
+				scoreFreq[scoreStr] = [];
+			} 
+			scoreFreq[scoreStr][0] += 1;
 		}
 	}
 
@@ -47,14 +42,17 @@
 			if (score == null) {
 				continue;
 			}
-			let scoreStr: string;
-			if (form[team][season][matchday].atHome) {
-				scoreStr = `${score.homeGoals} - ${score.awayGoals}`;
-			} else {
-				scoreStr = `${score.awayGoals} - ${score.homeGoals}`;
-			}
+			const atHome = form[team][season][matchday].atHome;
+			const scoreStr = getScoreString(score.homeGoals, score.awayGoals, atHome);
 			scoreFreq[scoreStr][1] += 1;
 		}
+	}
+
+	function getScoreString(homeGoals: number, awayGoals: number, atHome: boolean): string {
+		if (atHome) {
+			return `${homeGoals} - ${awayGoals}`;
+		}
+		return `${awayGoals} - ${homeGoals}`;
 	}
 
 	function insertTeamScoreBars(data: TeamsData, team: Team, scoreFreq: ScoreFreq) {
