@@ -18,7 +18,7 @@ class DF:
         for arg in args:
             if arg.df.empty:
                 raise ValueError(
-                    f"❌ [ERROR] Cannot {self.name} DataFrame: {arg.name} DataFrame empty"
+                    f"Cannot {self.name} DataFrame: {arg.name} DataFrame empty."
                 )
 
     def log_building(self, season: Optional[int] = None):

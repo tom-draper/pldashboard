@@ -46,7 +46,7 @@ class TeamsData:
             axis=1,
         )
 
-    def collapse_tuple_keys(self, d: dict | Any):
+    def _collapse_tuple_keys(self, d: dict | Any):
         if isinstance(d, float) and math.isnan(d):
             # Remove NaN values
             return None
@@ -55,7 +55,7 @@ class TeamsData:
             d = d.to_dict()
         elif isinstance(d, list):
             for i, v in enumerate(d):
-                d[i] = self.collapse_tuple_keys(v)
+                d[i] = self._collapse_tuple_keys(v)
             return d
         elif not isinstance(d, dict):
             # If hit bottom of tree, stop recursing
@@ -77,20 +77,20 @@ class TeamsData:
                     if _k not in temp_d:
                         temp_d[_k] = {}
                     if i == len(k) - 1:
-                        temp_d[_k] = self.collapse_tuple_keys(v)
+                        temp_d[_k] = self._collapse_tuple_keys(v)
                     else:
                         temp_d = temp_d[_k]
             elif isinstance(k, int):
-                new_d[str(k)] = self.collapse_tuple_keys(v)
+                new_d[str(k)] = self._collapse_tuple_keys(v)
             else:
-                new_d[k] = self.collapse_tuple_keys(v)
+                new_d[k] = self._collapse_tuple_keys(v)
 
         return new_d
 
     def to_dict(self):
         if not self.all_built():
             raise ValueError(
-                "❌ [ERROR] Cannot build one team data dict: A DataFrame is empty"
+                "Cannot convert TeamsData instance to dictionary: A DataFrame is empty."
             )
 
         # Build one dict containing all DataFrames
@@ -105,5 +105,5 @@ class TeamsData:
         }
 
         # Collapse tuple keys, convert int key to str and remove NaN values
-        d = self.collapse_tuple_keys(d)
+        d = self._collapse_tuple_keys(d)
         return d

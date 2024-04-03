@@ -1,8 +1,9 @@
+from dataclasses import dataclass, field
 from .fantasy import FantasyData
 from .teams import TeamsData
 
 
+@dataclass
 class Data:
-    def __init__(self):
-        self.teams = TeamsData()
-        self.fantasy = FantasyData()
+    teams: TeamsData = field(default_factory=TeamsData)
+    fantasy: FantasyData = field(default_factory=FantasyData)

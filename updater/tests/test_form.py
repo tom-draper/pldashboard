@@ -15,7 +15,7 @@ def test_shape(data: Data):
 def test_index(data: Data):
     index = set(data.teams.form.df.index)
     teams = data.teams.form.df.loc[:, (pytest.current_season, slice(None), ["team"])]
-    for name, values in teams.items():
+    for values in teams.values():
         assert len(values) == 20
         assert set(values) == index
 
@@ -24,7 +24,7 @@ def test_index(data: Data):
 def test_positions(data: Data):
     positions = data.teams.form.df.loc[:, (slice(None), slice(None), ["position"])]
 
-    for name, values in positions.items():
+    for values in positions.values():
         assert len(values.unique()) == 20
         assert min(values) == 1
         assert max(values) == 20

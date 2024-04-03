@@ -37,5 +37,5 @@ def test_index_identical(data: Data):
 
 
 def test_last_updated():
-    assert isinstance(pytest.data_objects[0].last_updated, NoneType)
-    assert isinstance(pytest.data_objects[1].last_updated, datetime)
+    assert isinstance(pytest.data_objects[0].teams.last_updated, NoneType)
+    assert isinstance(pytest.data_objects[1].teams.last_updated, datetime)
