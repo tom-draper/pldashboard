@@ -103,7 +103,7 @@ class Fixtures(DF):
 
     @timebudget
     def build(self, json_data: dict, season: int, display: bool = False):
-        """Builds a DataFrame containing the past and future fixtures for the
+        """ Builds a DataFrame containing the past and future fixtures for the
             current season (matchday 1 to 38) and inserts it into the fixtures
             class variable.
 

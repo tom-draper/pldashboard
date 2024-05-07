@@ -354,7 +354,7 @@ class Form(DF):
         num_seasons: int = 4,
         display: bool = False,
     ):
-        """Assigns self.df to a DataFrame containing the form data for each team
+        """ Assigns self.df to a DataFrame containing the form data for each team
             for the matchdays played in the current season.
 
             Rows: the 20 teams participating in the current season.

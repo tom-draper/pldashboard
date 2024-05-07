@@ -113,7 +113,7 @@ class TeamRatings(DF):
         num_seasons: int = 3,
         display: bool = False,
     ):
-        """Assigns self.df a DataFrame containing each team's calculated
+        """ Assigns self.df a DataFrame containing each team's calculated
             'team rating' based on the last [num_seasons] seasons results.
 
             Rows: the 20 teams participating in the current season, ordered

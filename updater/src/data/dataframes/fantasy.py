@@ -70,15 +70,16 @@ class Fantasy(DF):
 
     @timebudget
     def build(self, raw_data: dict, display: bool = False):
-        """Builds a DataFrame containing the past and future fixtures for the
-        current season (matchday 1 to 38) and inserts it into the fixtures
-        class variable.
-        Rows: all players participating in the current season
+        """ Builds a DataFrame containing the past and future fixtures for the
+            current season (matchday 1 to 38) and inserts it into the fixtures
+            class variable.
 
-        Args:
-            json_data (dict): Raw JSON data from API or local store.
-            display (bool, optional): Print DataFrame once built. Defaults to
-                False.
+            Rows: all players participating in the current season.
+
+            Args:
+                json_data (dict): Raw JSON data from API or local store.
+                display (bool, optional): Print DataFrame once built. Defaults to
+                    False.
         """
 
         current_season = self.get_current_season(raw_data)

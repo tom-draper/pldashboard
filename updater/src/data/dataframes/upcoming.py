@@ -265,7 +265,7 @@ class Upcoming(DF):
         num_seasons: int = 3,
         display: bool = False,
     ):
-        """Assigns self.df a DataFrame for details about the next game each team
+        """ Assigns self.df a DataFrame for details about the next game each team
             has to play.
 
             Rows: the 20 teams participating in the current season

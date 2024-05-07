@@ -53,7 +53,7 @@ class Standings(DF):
     def build(
         self, json_data: dict, season: int, num_seasons: int = 3, display: bool = False
     ):
-        """Assigns self.df to a DataFrame containing all table standings for
+        """ Assigns self.df to a DataFrame containing all table standings for
             each season from current season to season [num_seasons] years ago.
 
             Rows: the 20 teams participating in the current season, ordered ascending

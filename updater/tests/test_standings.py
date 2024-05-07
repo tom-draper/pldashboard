@@ -41,8 +41,8 @@ def get_seasons(data: Data):
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_teams_not_alphabetical(data: Data):
-    # Sorted by teams index indicates not sorted by points
+def test_df_index_not_sorted(data: Data):
+    # Sorted by teams index indicates likely not sorted by points
     index = data.teams.standings.df.index.tolist()
     assert not pytest.is_sorted(index)
 

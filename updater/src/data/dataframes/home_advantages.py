@@ -164,7 +164,7 @@ class HomeAdvantages(DF):
         no_seasons: int = 3,
         display: bool = False,
     ):
-        """Assigns self.df a DataFrame containing team's home advantage data
+        """ Assigns self.df a DataFrame containing team's home advantage data
             for each season with a combined total home advantage value.
 
             Rows: the 20 teams participating in the current season, ordered descending
