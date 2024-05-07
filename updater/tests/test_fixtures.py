@@ -4,19 +4,19 @@ from datetime import datetime
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_fixtures_df_teams(data: Data):
+def test_df_shape_teams(data: Data):
     # 20 team rows
     assert data.teams.fixtures.df.shape[0] == 20
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_fixtures_df_columns(data: Data):
+def test_df_shape_columns(data: Data):
     # 5 columns for each matchday
     assert data.teams.fixtures.df.shape[1] % 5 == 0
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_fixtures_df_matchday_columns(data: Data):
+def test_df_shape_matchday_columns(data: Data):
     # Up to 38 matchdays x 5 columns
     assert data.teams.fixtures.df.shape[1] <= 5 * 38
 
@@ -56,6 +56,16 @@ def test_df_teams_unique(data: Data):
     for matchday in matchdays:
         teams = data.teams.fixtures.df[matchday, 'team']
         assert len(teams) == len(teams.unique())
+
+
+@pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
+def test_df_teams_valid(data: Data):
+    # Teams column holds the same teams as the index values
+    index = data.teams.fixtures.df.index.tolist()
+    matchdays = get_matchdays(data)
+    for matchday in matchdays:
+        teams = data.teams.fixtures.df[matchday, 'team']
+        assert set(index) == set(teams.unique())
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)

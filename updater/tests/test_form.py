@@ -3,11 +3,20 @@ from src.data import Data
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_shape(data: Data):
+def test_df_teams_shape(data: Data):
     # 20 teams with up to 38(x13) matchday columns in the final season
     assert data.teams.form.df.shape[0] == 20
+
+
+@pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
+def test_df_shape_columns_max(data: Data):
     # Maximum of [4 seasons x 38 matchday x 13] columns
     assert (3 * 38 * 13) <= data.teams.form.df.shape[1] <= (4 * 38 * 13)
+
+
+@pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
+def test_df_shape_columns(data: Data):
+    # 13 columns per season per matchday
     assert data.teams.form.df.shape[1] % 13 == 0
 
 

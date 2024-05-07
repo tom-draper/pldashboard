@@ -119,7 +119,7 @@ class TeamRatings(DF):
             Rows: the 20 teams participating in the current season, ordered
                 descending by the team's rating
             Columns (multi-index):
-            -----------------------------------------------
+            -----------------------------------
             | current | prevSeason[N] | total |
 
             current: a normalised value that represents the team's rating
