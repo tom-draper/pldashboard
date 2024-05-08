@@ -360,10 +360,13 @@ class Form(DF):
             Rows: the 20 teams participating in the current season.
             Columns (multi-index):
             ------------------------------------------------------------------------------------------------------------------
+            |                                                      [SEASON]                                                  |
+            ------------------------------------------------------------------------------------------------------------------
             |                                                  [MATCHDAY NUMBER]                                             |
             |----------------------------------------------------------------------------------------------------------------|
             | date | team | score | gD | points | position | form5 | form10 | formRating5 | formRating10 | cumGD | cumPoints |
 
+            [SEASON]: the starting year (YYYY) of the Premier League season.
             [MATCHDAY NUMBER]: the matchdays numbers that have been played.
             date: the datetime of the team's game played on that matchday.
             team str: the initials of the opposition team played on that matchday.

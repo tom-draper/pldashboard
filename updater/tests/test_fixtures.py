@@ -136,3 +136,11 @@ def is_int(s: str):
     if s[0] in ('-', '+'):
         return s[1:].isdigit()
     return s.isdigit()
+
+
+@pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
+def test_form_df_matchday_range(data: Data):
+    # Matchdays in expected range
+    matchdays = get_matchdays(data)
+    for matchday in matchdays:
+        assert pytest.valid_matchday(matchday)

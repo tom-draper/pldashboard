@@ -33,8 +33,18 @@ def is_sorted(my_list: list[CT]):
     return all(b >= a for a, b in zip(my_list, my_list[1:]))
 
 
+def valid_matchday(matchday: int):
+    return 1 <= matchday <= 38
+
+
+def valid_season(season: int):
+    return 2000 <= season <= 2090
+
+
 def pytest_configure():
     pytest.current_season = current_season
     pytest.data_objects = data_objects
     pytest.data_ids = data_ids
     pytest.is_sorted = is_sorted
+    pytest.valid_matchday = valid_matchday
+    pytest.valid_season = valid_season

@@ -140,7 +140,7 @@ def test_standings_df_season_range(data: Data):
     # Seasons in reasonable range
     seasons = get_seasons(data)
     for season in seasons:
-        assert 2000 <= season <= 2090
+        assert pytest.valid_season(season)
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
