@@ -1,7 +1,7 @@
 import pytest
 from src.data import Data
 from src.updater import Updater
-from typing import Sequence, Protocol, TypeVar
+from typing import Protocol, TypeVar
 
 
 current_season = 2023
@@ -29,7 +29,7 @@ class Comparable(Protocol):
 CT = TypeVar("CT", bound=Comparable)
 
 
-def is_sorted(my_list: Sequence[CT]):
+def is_sorted(my_list: list[CT]):
     return all(b >= a for a, b in zip(my_list, my_list[1:]))
 
 
