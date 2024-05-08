@@ -6,7 +6,7 @@ from src.data import Data
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_dfs_filled(data: Data):
+def test_teams_dfs_filled(data: Data):
     dataframes = [
         data.teams.standings.df,
         data.teams.fixtures.df,
@@ -21,7 +21,7 @@ def test_dfs_filled(data: Data):
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_index_identical(data: Data):
+def test_teams_dfs_index_identical(data: Data):
     dataframes = [
         data.teams.standings.df,
         data.teams.fixtures.df,
@@ -36,6 +36,6 @@ def test_index_identical(data: Data):
         assert set(pair[0].index.values.tolist()) == set(pair[1].index.values.tolist())
 
 
-def test_last_updated():
+def test_teams_last_updated():
     assert isinstance(pytest.data_objects[0].teams.last_updated, NoneType)
     assert isinstance(pytest.data_objects[1].teams.last_updated, datetime)
