@@ -3,31 +3,31 @@ from src.data import Data
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_shape_rows(data: Data):
+def test_standings_df_shape_rows(data: Data):
     # 20 teams rows
     assert data.teams.standings.df.shape[0] == 20
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_shape_seasons(data: Data):
+def test_standings_df_shape_seasons(data: Data):
     # 4 seasons each with 9 columns
     assert data.teams.standings.df.shape[1] % 4 == 0
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_shape_columns(data: Data):
+def test_standings_df_shape_columns(data: Data):
     # 9 columns for each season
     assert data.teams.standings.df.shape[1] % 9 == 0
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_shape_season_columns(data: Data):
+def test_standings_df_shape_season_columns(data: Data):
     # 4 seasons x 9 columns
     assert data.teams.standings.df.shape[1] == 4 * 9
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_sorted_by_current_season_points(data: Data):
+def test_standings_df_sorted_by_current_season_points(data: Data):
     # Standings should be sorted by points
     seasons = get_seasons(data)
     current_season = max(seasons)
@@ -41,20 +41,20 @@ def get_seasons(data: Data):
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_index_not_sorted(data: Data):
+def test_standings_df_index_not_sorted(data: Data):
     # Sorted by teams index indicates likely not sorted by points
     index = data.teams.standings.df.index.tolist()
     assert not pytest.is_sorted(index)
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_multiindex(data: Data):
+def test_standings_df_multiindex(data: Data):
     # Columns should be multi-index (season, column) tuples
     assert isinstance(data.teams.standings.df.columns, pd.MultiIndex)
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_position_unique(data: Data):
+def test_standings_df_position_unique(data: Data):
     # No duplicates in position column
     seasons = get_seasons(data)
     for season in seasons:
@@ -63,7 +63,7 @@ def test_df_position_unique(data: Data):
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_position_range(data: Data):
+def test_standings_df_position_range(data: Data):
     # Position column in 1 to 20 range
     seasons = get_seasons(data)
     for season in seasons:
@@ -72,7 +72,7 @@ def test_df_position_range(data: Data):
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_played_range(data: Data):
+def test_standings_df_played_range(data: Data):
     # Played column in 0 to 38 range
     seasons = get_seasons(data)
     for season in seasons:
@@ -81,7 +81,7 @@ def test_df_played_range(data: Data):
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_won_range(data: Data):
+def test_standings_df_won_range(data: Data):
     # Won column in 0 to 38 range
     seasons = get_seasons(data)
     for season in seasons:
@@ -90,7 +90,7 @@ def test_df_won_range(data: Data):
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_drawn_range(data: Data):
+def test_standings_df_drawn_range(data: Data):
     # Drawn column in 0 to 38 range
     seasons = get_seasons(data)
     for season in seasons:
@@ -99,7 +99,7 @@ def test_df_drawn_range(data: Data):
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_lost_range(data: Data):
+def test_standings_df_lost_range(data: Data):
     # Lost column in 0 to 38 range
     seasons = get_seasons(data)
     for season in seasons:
@@ -108,7 +108,7 @@ def test_df_lost_range(data: Data):
         
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_gf_non_negative(data: Data):
+def test_standings_df_gf_non_negative(data: Data):
     # GF column zero or above
     seasons = get_seasons(data)
     for season in seasons:
@@ -117,7 +117,7 @@ def test_df_gf_non_negative(data: Data):
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_ga_non_negative(data: Data):
+def test_standings_df_ga_non_negative(data: Data):
     # GA column zero or above
     seasons = get_seasons(data)
     for season in seasons:
@@ -126,7 +126,7 @@ def test_df_ga_non_negative(data: Data):
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_gd_range(data: Data):
+def test_standings_df_gd_range(data: Data):
     # GD column in reasonable range
     seasons = get_seasons(data)
     for season in seasons:
@@ -136,7 +136,7 @@ def test_df_gd_range(data: Data):
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_season_range(data: Data):
+def test_standings_df_season_range(data: Data):
     # Seasons in reasonable range
     seasons = get_seasons(data)
     for season in seasons:
@@ -144,7 +144,7 @@ def test_df_season_range(data: Data):
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
-def test_df_points_range(data: Data):
+def test_standings_df_points_range(data: Data):
     # Points column in 0 to 150 range
     seasons = get_seasons(data)
     for season in seasons:
