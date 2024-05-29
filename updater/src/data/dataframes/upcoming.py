@@ -231,6 +231,11 @@ class Upcoming(DF):
         next_game_predictions_cache: dict[tuple[str, str], Scoreline] = {}
         for team, row in upcoming.iterrows():
             opponent = row["team"]
+
+            if opponent is None:
+                next_game_predictions.append(None)
+                continue
+
             home_team = team if row["atHome"] else opponent
             away_team = opponent if row["atHome"] else team
             if (home_team, away_team) in next_game_predictions_cache:
@@ -265,7 +270,7 @@ class Upcoming(DF):
         num_seasons: int = 3,
         display: bool = False,
     ):
-        """ Assigns self.df a DataFrame for details about the next game each team
+        """Assigns self.df a DataFrame for details about the next game each team
             has to play.
 
             Rows: the 20 teams participating in the current season
@@ -321,6 +326,7 @@ class Upcoming(DF):
             season,
             num_seasons,
         )
+        print(upcoming)
         next_game_predictions = self._calc_next_game_predictions(predictor, upcoming)
         upcoming["prediction"] = next_game_predictions
 
