@@ -3,15 +3,12 @@ from src.data import Data
 from src.updater import Updater
 from typing import Protocol, TypeVar
 
-
-current_season = 2023
-
 # DataFrames built from data backups
-updater_loaded = Updater(current_season)
+updater_loaded = Updater()
 updater_loaded.build_all(request_new=False, display_tables=False, update_db=False)
 
 # DataFrames built from live data
-updater_fetched = Updater(current_season)
+updater_fetched = Updater()
 updater_fetched.build_all(request_new=True, display_tables=False, update_db=False)
 
 data_objects: list[Data] = [updater_loaded.data, updater_fetched.data]

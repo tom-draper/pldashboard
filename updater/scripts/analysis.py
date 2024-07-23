@@ -1,4 +1,4 @@
-from src.fmt import extract_int_score
+from src.format import extract_int_score
 from src.updater import Updater
 
 

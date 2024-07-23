@@ -1,6 +1,6 @@
 import numpy as np
 from src.database import Database
-from src.fmt import convert_team_name_or_initials
+from src.format import convert_team_name_or_initials
 from src.predictions import Predictor
 from updater import Updater
 

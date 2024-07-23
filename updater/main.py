@@ -3,11 +3,9 @@ import logging
 from src.updater import Updater
 from timebudget import timebudget
 
-CURRENT_SEASON = 2023
-
 
 def run(display_tables: bool = False, request_new: bool = True, update_db: bool = True):
-    updater = Updater(CURRENT_SEASON)
+    updater = Updater()
     updater.build_all(
         display_tables=display_tables, request_new=request_new, update_db=update_db
     )
@@ -29,4 +27,4 @@ def run_development():
 
 
 if __name__ == "__main__":
-    run_development()
+    run_production()

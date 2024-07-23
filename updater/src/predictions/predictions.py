@@ -4,7 +4,7 @@ from datetime import datetime
 import pandas as pd
 from src.data.dataframes import Fixtures, Form, HomeAdvantages, Upcoming
 from src.database import Database
-from src.fmt import convert_team_name_or_initials, identical_fixtures
+from src.format import convert_team_name_or_initials, identical_fixtures
 
 
 class Predictor:

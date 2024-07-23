@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from src.fmt import extract_int_score_from_scoreline, identical_result
+from src.format import extract_int_score_from_scoreline, identical_result
 from src.database import Database
 
 

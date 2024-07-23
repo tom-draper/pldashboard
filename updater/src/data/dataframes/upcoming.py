@@ -3,7 +3,7 @@ from typing import Optional
 
 import pandas as pd
 from pandas import DataFrame
-from src.fmt import clean_full_team_name, convert_team_name_or_initials
+from src.format import clean_full_team_name, convert_team_name_or_initials
 from src.predictions import PredictorV2 as Predictor
 from src.predictions.scoreline import Scoreline
 
@@ -326,7 +326,6 @@ class Upcoming(DF):
             season,
             num_seasons,
         )
-        print(upcoming)
         next_game_predictions = self._calc_next_game_predictions(predictor, upcoming)
         upcoming["prediction"] = next_game_predictions
 

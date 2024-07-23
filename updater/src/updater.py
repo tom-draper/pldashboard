@@ -10,15 +10,23 @@ import aiohttp
 from src.data import Data
 from src.database import Database
 from dotenv import load_dotenv
-from src.fmt import clean_full_team_name
+from src.format import clean_full_team_name
 from timebudget import timebudget
 
 
 class Updater:
-    def __init__(self, current_season: int):
-        self.current_season = current_season
+    def __init__(self):
+        # Import environment variables
+        __file__ = "updater.py"
+        dotenv_path = join(dirname(__file__), ".env")
+        load_dotenv(dotenv_path)
+
+        self.url = getenv("URL")
+        self.current_season = int(getenv("SEASON"))
+        self.headers = {"X-Auth-Token": getenv("X_AUTH_TOKEN")}
+        
         self.data = Data()  # To build
-        self.database = Database(current_season)
+        self.database = Database()
 
         # Number of games played in a season for season data to be used
         self.games_threshold = 4
@@ -31,12 +39,6 @@ class Updater:
             "fantasy": {"general": {}, "fixtures": {}},
         }
 
-        # Import environment variables
-        __file__ = "updater.py"
-        dotenv_path = join(dirname(__file__), ".env")
-        load_dotenv(dotenv_path)
-        self.url = getenv("URL")
-        self.headers = {"X-Auth-Token": getenv("X_AUTH_TOKEN")}
 
     # ----------------------------- DATA API -----------------------------------
     @staticmethod

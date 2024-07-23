@@ -1,9 +1,25 @@
 # Data Updater
 
-A script to fetch new data from the football data API, compute metrics and statistics and restructure into DataFrames before uploading to the MongoDB database. This script is scheduled to run at regular intervals to continuously refresh the data stored in the database.
+A script to fetch the latest data from the football data API, compute metrics and statistics and restructure into a collection of DataFrames before uploading to a hosted MongoDB database. When deployed, this script runs as a cron job to update the database at regular intervals.
+
+## Getting Started
 
 ```bash
+pip install -r requirements.txt
 python main.py
+```
+
+### Docker
+
+```bash
+docker build -t pldashboard-updater .
+docker run -d --name pldashboard-updater pldashboard-updater
+```
+
+Check logs with:
+
+```bash
+docker exec -it <container_id> cat /var/log/pldashboard-updater.log
 ```
 
 ### Tests
@@ -14,10 +30,11 @@ pytest
 
 ## Environment Variables
 
-The backend relies on a set of environment variables in `updater/.env` in order to access data from the football data API, and login to the MongoDB database to upload data.
+The backend relies on a set of environment variables in `updater/.env` in order to configure the current football season, access data from the football data API, and login to the MongoDB database to upload data.
 
 ```text
-URL=https://api.football-data.org/v2/
+SEASON=<year>
+URL=https://api.football-data.org/
 X_AUTH_TOKEN=<X-AUTH-TOKEN from football-data.org>
 MONGODB_USERNAME=<MongoDB username>
 MONGODB_PASSWORD=<MongoDB password>

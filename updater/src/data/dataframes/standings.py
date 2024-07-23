@@ -1,6 +1,6 @@
 import pandas as pd
 from pandas import DataFrame
-from src.fmt import clean_full_team_name
+from src.format import clean_full_team_name
 from timebudget import timebudget
 
 from .df import DF

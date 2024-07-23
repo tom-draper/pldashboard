@@ -7,12 +7,13 @@ from dotenv import load_dotenv
 
 
 class Database:
-    def __init__(self, current_season):
-        self.current_season = current_season
-
+    def __init__(self):
         __file__ = "database.py"
         dotenv_path = join(dirname(__file__), ".env")
         load_dotenv(dotenv_path)
+
+        self.current_season = int(getenv("SEASON"))
+
         USERNAME = getenv("MONGODB_USERNAME")
         PASSWORD = getenv("MONGODB_PASSWORD")
         MONGODB_DATABASE = getenv("MONGODB_DATABASE")
@@ -109,7 +110,7 @@ class Database:
 
     def _save_predictions(self, predictions: list):
         with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Predictions2023
+            collection = client.PremierLeague.Predictions2024
 
             for prediction in predictions:
                 collection.replace_one(
@@ -153,7 +154,7 @@ class Database:
         self, actual_scores: dict[tuple[str, str], dict[str, int]]
     ):
         with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Predictions2023
+            collection = client.PremierLeague.Predictions2024
 
             # Get the id of all prediction objects that have no value for actual score
             no_actual_scores = collection.find({"actual": None}, {"_id": 1})
