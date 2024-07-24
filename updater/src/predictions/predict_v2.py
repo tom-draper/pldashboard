@@ -3,7 +3,7 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
-from src.data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
+from data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
 
 from .form import calc_form
 from .market import fetch_odds

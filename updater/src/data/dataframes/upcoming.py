@@ -3,9 +3,9 @@ from typing import Optional
 
 import pandas as pd
 from pandas import DataFrame
-from src.format import clean_full_team_name, convert_team_name_or_initials
-from src.predictions import PredictorV2 as Predictor
-from src.predictions.scoreline import Scoreline
+from fmt import clean_full_team_name, convert_team_name_or_initials
+from predictions import PredictorV2 as Predictor
+from predictions.scoreline import Scoreline
 
 from .df import DF
 from .fixtures import Fixtures

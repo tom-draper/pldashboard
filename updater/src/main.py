@@ -1,6 +1,6 @@
 import logging
 
-from src.updater import Updater
+from updater import Updater
 from timebudget import timebudget
 
 

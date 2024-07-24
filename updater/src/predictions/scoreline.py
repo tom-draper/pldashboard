@@ -1,6 +1,6 @@
 from typing import Optional
 
-from src.format import convert_team_name_or_initials
+from fmt import convert_team_name_or_initials
 
 
 class Scoreline:

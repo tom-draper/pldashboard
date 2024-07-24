@@ -5,7 +5,6 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # Copy the local script to the container
-COPY main.py /app/
 COPY src /app/src
 COPY backups /app/backups
 COPY .env /app/

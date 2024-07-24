@@ -6,7 +6,7 @@ A script to fetch the latest data from the football data API, compute metrics an
 
 ```bash
 pip install -r requirements.txt
-python main.py
+python src/main.py
 ```
 
 ### Docker

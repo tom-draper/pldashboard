@@ -7,12 +7,12 @@ from typing import TYPE_CHECKING, Union
 
 import numpy as np
 import pandas as pd
-from src.data.dataframes import Form, HomeAdvantages, TeamRatings
-from src.database import Database
+from data.dataframes import Form, HomeAdvantages, TeamRatings
+from database import Database
 
 # Temp avoid circular import
 if TYPE_CHECKING:
-    from src.data.dataframes import Upcoming
+    from data.dataframes import Upcoming
 
 
 class Predictor:

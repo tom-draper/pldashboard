@@ -7,10 +7,10 @@ from os.path import dirname, join
 from typing import Optional
 
 import aiohttp
-from src.data import Data
-from src.database import Database
+from data import Data
+from database import Database
 from dotenv import load_dotenv
-from src.format import clean_full_team_name
+from fmt import clean_full_team_name
 from timebudget import timebudget
 
 
