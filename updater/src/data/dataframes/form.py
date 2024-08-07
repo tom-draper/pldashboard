@@ -63,8 +63,7 @@ class Form(DF):
             return 50.0
 
         rating = (
-            self.df.at[team, (current_season, matchday, f"formRating{n_games}")]
-            * 100
+            self.df.at[team, (current_season, matchday, f"formRating{n_games}")] * 100
         ).round(1)
         return rating
 
@@ -354,7 +353,7 @@ class Form(DF):
         num_seasons: int = 4,
         display: bool = False,
     ):
-        """ Assigns self.df to a DataFrame containing the form data for each team
+        """Assigns self.df to a DataFrame containing the form data for each team
             for the matchdays played in the current season.
 
             Rows: the 20 teams participating in the current season.
