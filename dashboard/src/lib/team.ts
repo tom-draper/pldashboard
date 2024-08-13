@@ -55,14 +55,20 @@ export function teamColor(team: Team): string {
 	return teamColor;
 }
 
-export function playedMatchdays(data: TeamsData, team: Team): string[] {
+export function getPlayedMatchdays(data: TeamsData, team: Team): string[] {
+	if (!(data._id in data.form[team])) {
+		return [];
+	}
 	return Object.keys(data.form[team][data._id]).filter(
 		(matchday) => data.form[team][data._id][matchday].score != null
 	);
 }
 
 export function getCurrentMatchday(data: TeamsData, team: Team): string {
-	const matchdays = Object.keys(data.form[team][data._id]);
+	// if (!(data._id in data.form[team])) {
+	// 	return '0';
+	// }
+	const matchdays = getMatchdays(data, team);
 	for (let i = matchdays.length - 1; i >= 0; i--) {
 		if (data.form[team][data._id][matchdays[i]].score != null) {
 			return matchdays[i];
@@ -71,8 +77,15 @@ export function getCurrentMatchday(data: TeamsData, team: Team): string {
 	return '1';
 }
 
+export function getMatchdays(data: TeamsData, team: Team): string[] {
+	if (!(data._id in data.form[team])) {
+		return [];
+	}
+	return Object.keys(data.form[team][data._id]);
+}
+
 export function playedMatchdayDates(data: TeamsData, team: Team): Date[] {
-	let matchdays = playedMatchdays(data, team);
+	let matchdays = getPlayedMatchdays(data, team);
 
 	// If played one or no games, take x-axis from whole season dates
 	if (matchdays.length === 0) {

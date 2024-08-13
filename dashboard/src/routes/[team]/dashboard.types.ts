@@ -128,7 +128,7 @@ export type UpcomingMatch = {
 	team: Team;
 	date: string;
 	atHome: boolean;
-	prediction: Score;
+	prediction: Scoreline;
 	prevMatches: PrevMatch[];
 };
 

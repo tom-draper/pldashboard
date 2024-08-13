@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getTeamID, getTeams } from '$lib/team';
+	import { getMatchdays, getTeamID, getTeams } from '$lib/team';
 	import type { TeamsData } from './dashboard.types';
 	import type { Team } from '$lib/types';
 
@@ -28,7 +28,7 @@
 	}
 
 	function getLine(data: TeamsData, team: Team, isMainTeam: boolean) {
-		const matchdays = Object.keys(data.form[team][data._id]);
+		const matchdays = getMatchdays(data, team);
 		const dates = getMatchdayDates(data, team, matchdays);
 		const y = getCumulativePoints(data, team, matchdays);
 		const lineConfig = getLineConfig(team, isMainTeam);

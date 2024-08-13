@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { playedMatchdays } from '$lib/team';
+	import { getMatchdays, getPlayedMatchdays } from '$lib/team';
 	import type { TeamsData } from '../dashboard.types';
-	import type { PlotData, Team } from '$lib/types';
+	import type { Team } from '$lib/types';
 
 	function getTeamCleanSheets(data: TeamsData, team: Team): number[] {
-		return Object.keys(data.form[team][data._id]).map((matchday) => {
+		const matchdays = getMatchdays(data, team);
+		return matchdays.map((matchday) => {
 			const score = data.form[team][data._id][matchday].score;
 			if (score == null) {
 				return 0;
@@ -137,7 +138,7 @@
 	}
 
 	function buildPlotData(data: TeamsData, team: Team) {
-		const matchdays = playedMatchdays(data, team);
+		const matchdays = getPlayedMatchdays(data, team);
 		const [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
 		// Hidden line required on plot to make x-axis length match goalsScoredAndConcededGraph
 		// Line added to plotly bar chart changes x-axis physical length vs without
@@ -173,7 +174,7 @@
 			return;
 		}
 
-		const matchdays = playedMatchdays(data, team);
+		const matchdays = getPlayedMatchdays(data, team);
 		const [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
 		const line = hiddenLine(cleanSheetsBar.x);
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { TeamsData } from '../dashboard.types';
-	import type { PlotData, Team } from '$lib/types';
+	import type { Team } from '$lib/types';
 
 	function seasonFinishLines(seasonBoundaries: number[], maxX: number, maxY: number) {
 		return seasonBoundaries
@@ -111,8 +111,8 @@
 				// To remove summer gap between seasons, increase dateOffset by number
 				// of days between current season end and next season start
 				const currentSeasonEndDate = data.form[team][data._id - i][38].date;
-				const nextSeasonStartDate = data.form[team][data._id - i + 1][1].date;
-				// @ts-ignore
+				// If on the prev season (i == 1), safer to take date from fixtures otherwise fails if current season has not yet started and form is empty
+				const nextSeasonStartDate = i == 1 ? data.fixtures[team][1].date : data.form[team][data._id - i + 1][1].date;
 				dateOffset += numDays(nextSeasonStartDate, currentSeasonEndDate);
 				dateOffset -= 14; // Allow a 2 week gap between seasons for clarity
 			}

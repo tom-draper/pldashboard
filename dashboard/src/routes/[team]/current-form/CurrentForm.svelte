@@ -5,6 +5,9 @@
 	import type { Team } from '$lib/types';
 
 	function getSortedMatchdays(data: TeamsData, team: Team): string[] {
+		if (!(data._id in data.form[team])) {
+			return [];
+		}
 		const matchdays = Object.keys(data.form[team][data._id]).sort(function (matchday1, matchday2) {
 			return (
 				new Date(data.form[team][data._id][matchday1].date).getTime() -
@@ -31,6 +34,10 @@
 	}
 
 	function getFormIcons(data: TeamsData, team: Team): string {
+		if (!(data._id in data.form[team])) {
+			return '';
+		}
+
 		let formIcons: string[] = [];
 		const form = data.form[team][data._id][currentMatchday].form5;
 		if (
@@ -94,6 +101,13 @@
 		formInitials = getFormInitials(data, team, matchdays);
 	}
 
+	function formPercentageString() {
+		if (!(data._id in data.form[team])) {
+			return 'N/A';
+		}
+		return ((data.form[team][data._id][currentMatchday].formRating5 ?? 0) * 100).toFixed(1) + '%'
+	}
+
 	let formIcons: string, formStarTeams: boolean[], formInitials: string[];
 	$: team && setFormValues();
 
@@ -116,7 +130,7 @@
 	Current form:
 	{#if currentMatchday != undefined}
 		<span class="current-form-value"
-			>{((data.form[team][data._id][currentMatchday].formRating5 ?? 0) * 100).toFixed(1)}%</span
+			>{formPercentageString()}</span
 		>
 	{:else}
 		None

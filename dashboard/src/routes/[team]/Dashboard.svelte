@@ -110,7 +110,7 @@
 	}
 
 	#dashboard {
-		margin-left: 220px;
+		margin-left: 216px;
 		width: 100%;
 	}
 
