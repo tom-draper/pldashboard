@@ -101,7 +101,7 @@
 		formInitials = getFormInitials(data, team, matchdays);
 	}
 
-	function formPercentageString() {
+	function formPercentage(data: TeamsData, team: Team) {
 		if (!(data._id in data.form[team])) {
 			return 'N/A';
 		}
@@ -130,7 +130,7 @@
 	Current form:
 	{#if currentMatchday != undefined}
 		<span class="current-form-value"
-			>{formPercentageString()}</span
+			>{formPercentage(data, team)}</span
 		>
 	{:else}
 		None

@@ -11,7 +11,7 @@
 		return prevMatch.result.homeGoals > prevMatch.result.awayGoals ? prevMatch.result.homeTeam : prevMatch.result.awayTeam;
 	}
 
-	function formPercentage() {
+	function oppositionFormPercentage(data: TeamsData, team: Team) {
 		const opposition = data.upcoming[team].team;
 		if (!(data._id in data.form[opposition])) {
 			return 'N/A';
@@ -19,7 +19,7 @@
 		return ((data.form[opposition][data._id][getCurrentMatchday(data, opposition)].formRating5 ?? 0) * 100).toFixed(1) + '%'
 	}
 
-	function predictedScoreline() {
+	function predictedScoreline(data: TeamsData, team: Team) {
 		const homeGoals = data.upcoming[team].prediction.homeGoals;
 		const awayGoals = data.upcoming[team].prediction.awayGoals;
 		const homeTeam = data.upcoming[team].prediction.homeTeam;
@@ -68,14 +68,14 @@
 					<div class="next-game-item current-form">
 						Current form:
 						<span class="current-form-value"
-							>{formPercentage()}</span
+							>{oppositionFormPercentage(data, team)}</span
 						>
 					</div>
 					<div class="next-game-item">
 						Score prediction
 						<br />
 						<a class="predictions-link" href="/predictions">
-							<b>{predictedScoreline()}</b>
+							<b>{predictedScoreline(data, team)}</b>
 						</a>
 						<br />
 					</div>
