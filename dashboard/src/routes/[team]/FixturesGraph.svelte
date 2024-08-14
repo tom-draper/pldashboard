@@ -3,7 +3,7 @@
 	import { toAlias } from '$lib/team';
 	import { scoreline } from '$lib/format';
 	import type { TeamsData, Fixture } from './dashboard.types';
-	import type { PlotData, Team } from '$lib/types';
+	import type { Team } from '$lib/types';
 
 	function matchDescription(team: Team, match: Fixture): string {
 		const homeTeam = match.atHome ? toAlias(team) : toAlias(match.team);
@@ -41,8 +41,7 @@
 		let nextGameIdx: number | undefined;
 		let minDiff = Number.POSITIVE_INFINITY;
 		for (let i = 0; i < x.length; i++) {
-			//@ts-ignore
-			const diff = x[i] - now;
+			const diff = x[i].getTime() - now;
 			if (0 < diff && diff < minDiff) {
 				minDiff = diff;
 				nextGameIdx = i;
@@ -84,7 +83,7 @@
 
 	}
 
-	function line(data: TeamsData, team: Team, now: number) {
+	function getLine(data: TeamsData, team: Team, now: number) {
 		const [x, y, description] = linePoints(data, team);
 
 		sortByMatchDate(x, y, description);
@@ -94,7 +93,7 @@
 		let sizes = Array(x.length).fill(13);
 		sizes = highlightNextGameMarker(sizes, x, now, 26);
 
-		return {
+		const line: Plotly.Data = {
 			x: x,
 			y: y,
 			type: 'scatter',
@@ -118,14 +117,15 @@
 			hovertemplate:
 				'<b>%{text}</b><br>Matchday %{customdata}<br>%{x|%d %b %Y}<br>Team rating: <b> %{y:.1f}%</b><extra></extra>'
 		};
+		return line;
 	}
 
 	function currentDateLine(now: number, maxX: number) {
 		if (now > maxX) {
-			return null;
+			return {};
 		}
 
-		const nowLine = {
+		const nowLine: Partial<Plotly.Shape> = {
 			type: 'line',
 			x0: now,
 			y0: -4,
@@ -152,9 +152,9 @@
 		const yLabels = Array.from(Array(11), (_, i) => i * 10);
 
 		const [minX, maxX] = xRange(x);
-		// @ts-ignore
-		const currentDate = currentDateLine(now, maxX);
-		return {
+		const currentDate = currentDateLine(now, maxX.getTime());
+		const layout: Plotly.Layout = {
+			// @ts-ignore
 			title: false,
 			autosize: true,
 			margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
@@ -167,6 +167,7 @@
 				showline: false,
 				zeroline: false,
 				fixedrange: true,
+				// @ts-ignore
 				ticktext: yLabels,
 				tickvals: yLabels
 			},
@@ -180,6 +181,7 @@
 			shapes: [currentDate],
 			dragmode: false
 		};
+		return layout;
 	}
 
 	function setDefaultLayout() {
@@ -227,7 +229,7 @@
 			'yaxis.color': '#fafafa'
 		};
 
-		const sizes = plotData.data[0].marker.size.map(size => Math.round(size / 1.7));
+		const sizes = plotData.data[0].marker.size.map((size: number) => Math.round(size / 1.7));
 		const dataUpdate = {
 			marker: {
 				size: sizes,
@@ -247,15 +249,15 @@
 		Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
 	}
 
-	function buildPlotData(data: TeamsData, team: Team): PlotData {
+	function buildPlotData(data: TeamsData, team: Team) {
 		// Build data to create a fixtures line graph displaying the date along the
 		// x-axis and opponent strength along the y-axis
 		const now = Date.now();
-		const l = line(data, team, now);
+		const line = getLine(data, team, now);
 
-		const plotData = {
-			data: [l],
-			layout: defaultLayout(l.x, now),
+		const plotData: Plotly.PlotlyDataLayoutConfig = {
+			data: [line],
+			layout: defaultLayout(line.x, now),
 			config: {
 				responsive: true,
 				showSendToCloud: false,
@@ -279,7 +281,7 @@
 			return;
 		}
 
-		const l = line(data, team, Date.now());
+		const l = getLine(data, team, Date.now());
 		plotData.data[0] = l; // Overwrite plot data
 		//@ts-ignore
 		Plotly.redraw(plotDiv);
@@ -288,7 +290,7 @@
 		}
 	}
 
-	let plotDiv: HTMLDivElement, plotData: PlotData;
+	let plotDiv: HTMLDivElement, plotData: Plotly.PlotlyDataLayoutConfig;
 	let setup = false;
 	onMount(() => {
 		genPlot();
