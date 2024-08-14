@@ -136,9 +136,15 @@ export type LogoURLs = {
 	[team in Team]: string;
 };
 
+// The mapped type for teams
+export type TeamAttributes = {
+    [team in Team]: number;
+};
+
+// Combining the mapped type with the avg property
 export type SpiderAttribute = {
-	[team: Team]: number | null;
-	avg: number;
+	teams: TeamAttributes;
+    avg: number;
 };
 
 export enum Status {
