@@ -30,8 +30,7 @@
 			});
 		}
 		upcoming.sort((a: UpcomingMatch, b: UpcomingMatch) => {
-			//@ts-ignore
-			return a.time - b.time;
+			return a.time.getTime() - b.time.getTime();
 		});
 		return upcoming;
 	}

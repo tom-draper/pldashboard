@@ -1,4 +1,4 @@
-import type { Form, SpiderAttribute, TeamsData } from "../dashboard.types";
+import type { Form, SpiderAttribute, TeamAttributes, TeamsData } from "../dashboard.types";
 import { getTeams } from "$lib/team";
 import { attributeAvgScaled, seasonComplete } from "./util";
 import type { Team } from "$lib/types";
@@ -27,7 +27,8 @@ function formWinStreak(form: Form, team: Team, season: number) {
 }
 
 export default function getWinStreak(data: TeamsData, numSeasons: number) {
-	const winStreaks: SpiderAttribute = { avg: 0 };
+	const winStreaks: Partial<TeamAttributes> = {};
+
 	let maxSeasonWinStreak = Number.NEGATIVE_INFINITY;
 	const teams = getTeams(data)
 	for (const team of teams) {
@@ -44,6 +45,11 @@ export default function getWinStreak(data: TeamsData, numSeasons: number) {
 		winStreaks[team] = totalWinStreak;
 	}
 
-	winStreaks.avg = attributeAvgScaled(winStreaks, maxSeasonWinStreak * numSeasons);
-	return winStreaks;
+	const finalisedWinStreaks: TeamAttributes = winStreaks as TeamAttributes;
+
+	const attribute: SpiderAttribute = {
+		teams: finalisedWinStreaks,
+		avg: attributeAvgScaled(finalisedWinStreaks, maxSeasonWinStreak * numSeasons)
+	}
+	return attribute;
 }

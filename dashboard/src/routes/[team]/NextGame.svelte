@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { toAlias, toInitials, getCurrentMatchday } from '$lib/team';
-	import { ordinal, teamStyle } from '$lib/format';
+	import { ordinal, scorelineShort, teamStyle } from '$lib/format';
 	import type { PrevMatch, TeamsData } from './dashboard.types';
 	import type { Team } from '$lib/types';
 
@@ -11,6 +11,22 @@
 		return prevMatch.result.homeGoals > prevMatch.result.awayGoals ? prevMatch.result.homeTeam : prevMatch.result.awayTeam;
 	}
 
+	function oppositionFormPercentage(data: TeamsData, team: Team) {
+		const opposition = data.upcoming[team].team;
+		if (!(data._id in data.form[opposition])) {
+			return 'N/A';
+		}
+		return ((data.form[opposition][data._id][getCurrentMatchday(data, opposition)].formRating5 ?? 0) * 100).toFixed(1) + '%'
+	}
+
+	function predictedScoreline(data: TeamsData, team: Team) {
+		const homeGoals = data.upcoming[team].prediction.homeGoals;
+		const awayGoals = data.upcoming[team].prediction.awayGoals;
+		const homeTeam = data.upcoming[team].prediction.homeTeam;
+		const awayTeam = data.upcoming[team].prediction.awayTeam;
+		return scorelineShort(homeTeam, awayTeam, homeGoals, awayGoals);
+	}
+	
 	export let data: TeamsData, team: Team, switchTeam: (newTeam: Team) => void;
 </script>
 
@@ -52,18 +68,14 @@
 					<div class="next-game-item current-form">
 						Current form:
 						<span class="current-form-value"
-							>{(
-								(data.form[data.upcoming[team].team][data._id][
-									getCurrentMatchday(data, data.upcoming[team].team)
-								].formRating5 ?? 0) * 100
-							).toFixed(1)}%</span
+							>{oppositionFormPercentage(data, team)}</span
 						>
 					</div>
 					<div class="next-game-item">
 						Score prediction
 						<br />
 						<a class="predictions-link" href="/predictions">
-							<b>{data.upcoming[team].prediction}</b>
+							<b>{predictedScoreline(data, team)}</b>
 						</a>
 						<br />
 					</div>

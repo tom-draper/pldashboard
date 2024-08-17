@@ -1,7 +1,9 @@
-import type { Form, SpiderAttribute, TeamsData } from "../dashboard.types";
+import type { Form, FormEntry, SpiderAttribute, TeamAttributes, TeamsData } from "../dashboard.types";
 import { getTeams } from "$lib/team";
 import { attributeAvgScaled, seasonComplete } from "./util";
 import type { Team } from "$lib/types";
+
+type MatchResult = 'win' | 'lost' | 'draw';
 
 function formConsistency(form: Form, team: Team, season: number) {
 	let backToBack = 0; // Counts pairs of back to back identical match results
@@ -12,20 +14,7 @@ function formConsistency(form: Form, team: Team, season: number) {
 			continue;
 		}
 
-		let result: 'win' | 'lost' | 'draw';
-		if (
-			(match.atHome && match.score.homeGoals > match.score.awayGoals) ||
-			(!match.atHome && match.score.homeGoals < match.score.awayGoals)
-		) {
-			result = 'win';
-		} else if (
-			(match.atHome && match.score.homeGoals < match.score.awayGoals) ||
-			(!match.atHome && match.score.homeGoals > match.score.awayGoals)
-		) {
-			result = 'lost';
-		} else {
-			result = 'draw';
-		}
+		const result = matchResult(match);
 		if (prevResult != null && prevResult === result) {
 			backToBack += 1;
 		}
@@ -34,8 +23,31 @@ function formConsistency(form: Form, team: Team, season: number) {
 	return backToBack;
 }
 
+function matchResult(match: any) {
+	let result: MatchResult;
+	if (matchWon(match)) {
+		result = 'win';
+	} else if (matchLost(match)) {
+		result = 'lost';
+	} else {
+		result = 'draw';
+	}
+	return result;
+}
+
+function matchWon(match: FormEntry) {
+	return (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
+		(!match.atHome && match.score.homeGoals < match.score.awayGoals);
+}
+
+function matchLost(match: FormEntry) {
+	return (match.atHome && match.score.homeGoals < match.score.awayGoals) ||
+		(!match.atHome && match.score.homeGoals > match.score.awayGoals);
+}
+
 export default function getConsistency(data: TeamsData, numSeasons: number): SpiderAttribute {
-	const consistency: SpiderAttribute = { avg: 0 };
+	const consistency: Partial<TeamAttributes> = {};
+
 	let maxSeasonBackToBack = Number.NEGATIVE_INFINITY;
 	const teams = getTeams(data);
 	for (const team of teams) {
@@ -52,7 +64,12 @@ export default function getConsistency(data: TeamsData, numSeasons: number): Spi
 		consistency[team] = totalBackToBack;
 	}
 
-	consistency.avg = attributeAvgScaled(consistency, maxSeasonBackToBack * numSeasons);
-	return consistency;
+	const finalisedConsistency: TeamAttributes = consistency as TeamAttributes;
+
+	const attribute: SpiderAttribute = {
+		teams: finalisedConsistency,
+		avg: attributeAvgScaled(finalisedConsistency, maxSeasonBackToBack * numSeasons)
+	}
+	return attribute;
 }
 

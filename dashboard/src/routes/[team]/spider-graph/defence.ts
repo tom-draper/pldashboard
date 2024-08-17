@@ -1,62 +1,73 @@
-import type { SpiderAttribute, TeamsData } from "../dashboard.types";
+import type { TeamAttributes, SpiderAttribute, TeamsData } from "../dashboard.types";
 import { getTeams } from "$lib/team";
-import { attributeAvg } from "./util";
+import { type Range, attributeAvg, goalsPerGame } from "./util";
 
-function concededPerSeason(data: TeamsData): [SpiderAttribute, [number, number]] {
-	const defence: SpiderAttribute = { avg: 0 };
-	let maxConcededPerSeason = Number.NEGATIVE_INFINITY;
-	let minConcededPerSeason = Number.POSITIVE_INFINITY;
+function concededPerSeason(data: TeamsData) {
+	const defence: Partial<TeamAttributes> = {};
+
+	const range: Range = {
+		max: Number.NEGATIVE_INFINITY,
+		min: Number.POSITIVE_INFINITY
+	};
 	const teams = getTeams(data);
 	for (const team of teams) {
-		let totalConceded = 0;
-		let gamesPlayed = 0;
+		const total = {
+			conceded: 0,
+			played: 0
+		}
 		for (const season in data.standings[team]) {
 			const conceded = data.standings[team][season].gA;
 			const played = data.standings[team][season].played;
-			if (conceded > 0) {
-				totalConceded += conceded;
-				gamesPlayed += played;
-			}
+			total.conceded += conceded;
+			total.played += played;
+
 			// If season completed, check if team's defensive performance is most extreme yet
 			if (played < 38) {
 				continue;
 			}
 			const seasonConcededPerGame = conceded / played;
-			if (seasonConcededPerGame > maxConcededPerSeason) {
-				maxConcededPerSeason = seasonConcededPerGame;
-			} else if (seasonConcededPerGame < minConcededPerSeason) {
-				minConcededPerSeason = seasonConcededPerGame;
+			if (seasonConcededPerGame > range.max) {
+				range.max = seasonConcededPerGame;
+			} else if (seasonConcededPerGame < range.min) {
+				range.min = seasonConcededPerGame;
 			}
 		}
 
-		let goalsPerGame = null;
-		if (gamesPlayed > 0) {
-			goalsPerGame = totalConceded / gamesPlayed;
-		}
-		defence[team] = goalsPerGame;
+		defence[team] = goalsPerGame(total.conceded, total.played);
 	}
 
-	return [defence, [minConcededPerSeason, maxConcededPerSeason]];
+	const finalisedDefence: TeamAttributes = defence as TeamAttributes;
+
+	return {
+		defence: finalisedDefence,
+		range
+	};
 }
 
-function scaleDefence(defence: SpiderAttribute, range: [number, number]) {
-	const [lower, upper] = range;
+function scaleDefence(defence: TeamAttributes, range: Range) {
+	const { min, max } = range;
 	for (const team in defence) {
-		const teamConcededPerGame = defence[team];
+		const teamKey = team as keyof typeof defence;
+		const teamConcededPerGame = defence[teamKey];
 		if (teamConcededPerGame === null) {
-			defence[team] = 0;
+			defence[teamKey] = 0;
 		} else {
-			defence[team] = 100 - ((teamConcededPerGame - lower) / (upper - lower)) * 100;
+			defence[teamKey] = 100 - ((teamConcededPerGame - min) / (max - min)) * 100;
 		}
 	}
 	return defence;
 }
 
 export default function getDefence(data: TeamsData) {
-	let [defence, range] = concededPerSeason(data);
+	let { defence, range } = concededPerSeason(data);
 	defence = scaleDefence(defence, range);
-	defence.avg = attributeAvg(defence);
+	const avg = attributeAvg(defence);
 
-	return defence;
+	const attribute: SpiderAttribute = {
+		teams: defence,
+		avg
+	};
+
+	return attribute;
 }
 

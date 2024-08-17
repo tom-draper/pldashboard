@@ -2,32 +2,35 @@
 	import { onMount } from 'svelte';
 	import { toAlias, toName, getTeamID, teamColor } from '$lib/team';
 	import type { SpiderAttribute, TeamsData } from '../dashboard.types';
-	import getAttack from './attack'
+	import getAttack from './attack';
 	import { removeItem } from './util';
 	import getCleanSheets from './cleanSheets';
 	import getConsistency from './consistency';
 	import getVsBig6 from './vsBig6';
 	import getWinStreak from './winStreak';
 	import getDefence from './defence';
-	import type { PlotData, Team } from '$lib/types';
+	import type { Team } from '$lib/types';
+	import type Plotly from 'plotly.js';
 
 	function addTeamComparison(team: Team) {
-		const teamData = {
+		const teamData: Plotly.Data = {
 			name: team,
 			type: 'scatterpolar',
 			r: [
-				attack[team],
-				defence[team],
-				cleanSheets[team],
-				consistency[team],
-				winStreaks[team],
-				vsBig6[team]
+				attack.teams[team],
+				defence.teams[team],
+				cleanSheets.teams[team],
+				consistency.teams[team],
+				winStreaks.teams[team],
+				vsBig6.teams[team]
 			],
 			theta: labels,
 			fill: 'toself',
-			marker: { color: teamColor(team) }
+			marker: { color: teamColor(team) },
+			hovertemplate: `<b>${team}</b><br>%{theta}: %{r:.2f}<extra></extra>`
 		};
 		plotData.data.push(teamData);
+
 		//@ts-ignore
 		Plotly.redraw(plotDiv); // Redraw with teamName added
 	}
@@ -94,7 +97,7 @@
 	}
 
 	function spiderBtnClick(btn: HTMLButtonElement) {
-		const team = toName(btn.innerHTML);
+		const team = toName(btn.innerHTML) as Team;
 		if (btn.style.background === '') {
 			const teamKey = getTeamID(team);
 			btn.style.background = `var(--${teamKey})`;
@@ -117,7 +120,7 @@
 		}
 	}
 
-	function scatterPlot(name: string, r: number[], color: string) {
+	function scatterPlot(name: string, r: number[], color: string): Plotly.Data {
 		return {
 			name: name,
 			type: 'scatterpolar',
@@ -136,19 +139,19 @@
 			[attack.avg, defence.avg, cleanSheets.avg, consistency.avg, winStreaks.avg, vsBig6.avg],
 			'#ADADAD'
 		);
-		return avgData
+		return avgData;
 	}
 
 	function getTeamData(team: Team) {
 		const teamData = scatterPlot(
 			team,
 			[
-				attack[team],
-				defence[team],
-				cleanSheets[team],
-				consistency[team],
-				winStreaks[team],
-				vsBig6[team]
+				attack.teams[team],
+				defence.teams[team],
+				cleanSheets.teams[team],
+				consistency.teams[team],
+				winStreaks.teams[team],
+				vsBig6.teams[team]
 			],
 			teamColor(team)
 		);
@@ -171,7 +174,7 @@
 	}
 
 	function defaultLayout() {
-		return {
+		const layout: Plotly.Layout = {
 			height: 550,
 			polar: {
 				radialaxis: {
@@ -179,6 +182,7 @@
 					range: [0, 100]
 				}
 			},
+			// @ts-ignore
 			hover: 'closest',
 			margin: { t: 25, b: 25, l: 75, r: 75 },
 			showlegend: false,
@@ -186,14 +190,15 @@
 			paper_bgcolor: '#fafafa',
 			dragmode: false
 		};
+		return layout;
 	}
 
-	function buildPlotData(data: TeamsData, team: Team): PlotData {
+	function buildPlotData(data: TeamsData, team: Team) {
 		computePlotData(data);
 
 		const spiderPlots = initSpiderPlots(team);
 
-		const plotData = {
+		const plotData: Plotly.PlotlyDataLayoutConfig = {
 			data: spiderPlots,
 			layout: defaultLayout(),
 			config: {
@@ -214,8 +219,7 @@
 	let vsBig6: SpiderAttribute;
 	const labels = ['Attack', 'Defence', 'Clean sheets', 'Consistency', 'Win streak', 'Vs big 6'];
 
-
-	let plotDiv: HTMLDivElement, plotData: PlotData;
+	let plotDiv: HTMLDivElement, plotData: Plotly.PlotlyDataLayoutConfig;
 	const comparisonTeams: Team[] = [];
 	let setup = false;
 	onMount(() => {
@@ -298,8 +302,6 @@
 		border-radius: 6px;
 		display: flex;
 		flex-direction: column;
-		/* border: 3px solid #333333; */
-		/* color: #333333; */
 		width: 180px;
 	}
 	.spider-opp-team-btn {

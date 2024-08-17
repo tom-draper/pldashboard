@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getTeamID, getTeams } from '$lib/team';
+	import { getMatchdays, getTeamID, getTeams } from '$lib/team';
 	import type { TeamsData } from './dashboard.types';
 	import type { Team } from '$lib/types';
 
 	function getLineConfig(team: Team, isMainTeam: boolean) {
-		let lineConfig;
+		let lineConfig: { color: string; width?: number };
 		if (isMainTeam) {
 			// Get team primary color from css variable
 			const teamKey = getTeamID(team);
@@ -28,7 +28,7 @@
 	}
 
 	function getLine(data: TeamsData, team: Team, isMainTeam: boolean) {
-		const matchdays = Object.keys(data.form[team][data._id]);
+		const matchdays = getMatchdays(data, team);
 		const dates = getMatchdayDates(data, team, matchdays);
 		const y = getCumulativePoints(data, team, matchdays);
 		const lineConfig = getLineConfig(team, isMainTeam);
@@ -64,7 +64,8 @@
 	}
 
 	function defaultLayout() {
-		return {
+		const layout: Plotly.Layout = {
+			// @ts-ignore
 			title: false,
 			autosize: true,
 			margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
@@ -89,6 +90,7 @@
 			},
 			dragmode: false
 		};
+		return layout;
 	}
 
 	function setDefaultLayout() {
@@ -121,8 +123,8 @@
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
-	function buildPlotData(data: TeamsData, team: Team): PlotData {
-		const plotData = {
+	function buildPlotData(data: TeamsData, team: Team) {
+		const plotData: Plotly.PlotlyDataLayoutConfig = {
 			data: lines(data, team),
 			layout: defaultLayout(),
 			config: {
@@ -134,7 +136,7 @@
 		return plotData;
 	}
 
-	let plotDiv: HTMLDivElement, plotData: PlotData;
+	let plotDiv: HTMLDivElement, plotData: Plotly.PlotlyDataLayoutConfig;
 	let setup = false;
 	onMount(() => {
 		genPlot();
@@ -143,6 +145,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
+		// @ts-ignore
 		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
 			// Once plot generated, add resizable attribute to it to shorten height for mobile view
 			plot.children[0].children[0].classList.add('resizable-graph');
