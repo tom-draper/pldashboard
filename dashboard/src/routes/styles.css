@@ -1,0 +1,326 @@
+/* -------------------------------- Global ------------------------------------- */
+
+:root {
+	--sheffield-united: rgb(238 39 55);
+	--sheffield-united-secondary: rgb(13 23 26);
+	--leeds-united: rgb(255 205 0);
+	--leeds-united-secondary: rgb(29 66 138);
+	--aston-villa: rgb(103 14 54);
+	--aston-villa-secondary: rgb(149 191 229);
+	--fulham: rgb(204 0 0);
+	--fulham-secondary: rgb(255 255 255);
+	--wolverhampton-wanderers: rgb(253 185 19);
+	--wolverhampton-wanderers-secondary: rgb(35 31 32);
+	--west-ham-united: rgb(122 38 58);
+	--west-ham-united-secondary: rgb(243 212 89);
+	--west-bromwich-albion: rgb(18 47 103);
+	--west-bromwich-albion-secondary: rgb(255 255 255);
+	--tottenham-hotspur: rgb(19 34 87);
+	--tottenham-hotspur-secondary: rgb(255 255 255);
+	--southampton: rgb(215 25 32);
+	--southampton-secondary: rgb(19 12 14);
+	--newcastle-united: rgb(45 41 38);
+	--newcastle-united-secondary: rgb(255 255 255);
+	--manchester-united: rgb(218 41 28);
+	--manchester-united-secondary: rgb(251 225 34);
+	--manchester-city: rgb(108 171 221);
+	--manchester-city-secondary: rgb(28 44 91);
+	--liverpool: rgb(200 16 46);
+	--liverpool-secondary: rgb(0 178 169);
+	--leicester-city: rgb(0 83 160);
+	--leicester-city-secondary: rgb(253 190 17);
+	--everton: rgb(39 68 136);
+	--everton-secondary: rgb(255 255 255);
+	--crystal-palace: rgb(27 69 143);
+	--crystal-palace-secondary: rgb(196 18 46);
+	--chelsea: rgb(3 70 148);
+	--chelsea-secondary: rgb(0 0 0);
+	--burnley: rgb(108 29 69);
+	--burnley-secondary: rgb(153 214 234);
+	--brighton-and-hove-albion: rgb(0 87 184);
+	--brighton-and-hove-albion-secondary: rgb(255 255 255);
+	--arsenal: rgb(239 1 7);
+	--arsenal-secondary: rgb(255 255 255);
+	--norwich-city: rgb(255 242 0);
+	--norwich-city-secondary: rgb(0 166 80);
+	--cardiff-city: rgb(0 112 181);
+	--cardiff-city-secondary: rgb(209 21 26);
+	--watford: rgb(251 238 35);
+	--watford-secondary: rgb(237 33 39);
+	--swansea-city: rgb(18 18 18);
+	--swansea-city-secondary: rgb(255 255 255);
+	--stoke-city: rgb(224 58 62);
+	--stoke-city-secondary: rgb(27 68 156);
+	--huddersfield: rgb(14 99 173);
+	--huddersfield-secondary: rgb(255 255 255);
+	--bournemouth: rgb(218 41 28);
+	--bournemouth-secondary: rgb(0 0 0);
+	--brentford: rgb(227 6 19);
+	--brentford-secondary: rgb(255 255 255);
+	--nottingham-forest: rgb(229 50 51);
+	--nottingham-forest-secondary: rgb(255 255 255);
+	--luton-town: rgb(232, 68, 34);
+	--luton-town-secondary: rgb(27, 27, 56);
+
+	--green: #00fe87;
+
+	--all: #00fe87;
+	--all-secondary: #1c0d2d;
+	--attack: #00fe87;
+	--attack-secondary: #1c0d2d;
+	--midfield: #00fe87;
+	--midfield-secondary: #1c0d2d;
+	--defence: #00fe87;
+	--defence-secondary: #1c0d2d;
+	--goalkeeper: #00fe87;
+	--goalkeeper-secondary: #1c0d2d;
+
+	--border-radius: 6px;
+
+	--win: #00fe87;
+	--draw: #ffdd00;
+	--lose: #f83027;
+	--pink: #c600d8;
+	--dark-purple: #1c0d2d;
+	--purple: #280936;
+	--light-purple: #37003c;
+	--green: #00fe87;
+	--graph-height: '450px';
+}
+
+@font-face {
+	font-family: 'Radikal Medium';
+	src: url('../lib/fonts/Radikal-Medium.ttf');
+	font-display: swap;
+}
+
+* {
+	font-family: 'Radikal Medium';
+}
+
+body {
+	background: #fafafa;
+	color: var(--dark-purple);
+	margin: 0;
+}
+
+h1 {
+	margin: 25px 0 0;
+	font-size: 2em;
+	user-select: none;
+}
+
+.main-link {
+	font-size: 1.4em;
+	font-weight: 600;
+	color: var(--purple);
+	flex: auto;
+	align-self: center;
+	text-decoration: none;
+	letter-spacing: -1px;
+	margin: 10px;
+}
+
+.no-decoration {
+	text-decoration: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+/* -------------------------------- Layout ------------------------------------- */
+
+.header {
+	padding: 12px 15px;
+	text-align: center;
+	height: 72px;
+}
+
+.title {
+	font-size: 2.4em;
+	font-weight: 600;
+}
+
+/* ------------------------------- Teams Page ---------------------------------- */
+
+.W {
+	background-image: url('../lib/images/form_img/win.png');
+}
+
+.star-team {
+	background-image: url('../lib/images/form_img/super.png');
+}
+
+.D {
+	background-image: url('../lib/images/form_img/draw.png');
+}
+
+.L {
+	background-image: url('../lib/images/form_img/lose.png');
+}
+
+.N {
+	background-image: url('../lib/images/form_img/none.png');
+}
+
+.resizable-graph {
+	width: 100% !important;
+	height: 450px !important;
+}
+
+.tall-graph {
+	height: 700px !important;
+}
+
+.resizable-spider-chart {
+	width: 700px !important;
+	height: 550px !important;
+}
+
+.dataTables_wrapper .dataTables_filter {
+	float: left !important;
+	text-align: left !important;
+}
+.dataTables_filter > label {
+	padding-left: 10px !important;
+}
+.dataTables_filter > label > input {
+	margin-left: 10px !important;
+}
+
+/* Teams page footer */
+
+.season-stats-row {
+	margin: 40px 100px 60px;
+	height: auto;
+}
+
+/* Mobile view */
+
+@media only screen and (max-width: 1100px) {
+	.season-stats-row {
+		margin: 40px 50px 60px;
+	}
+
+	.resizable-graph {
+		height: 400px !important;
+	}
+
+	.resizable-spider-chart {
+		height: 500px !important;
+		width: 650px !important;
+	}
+	.tall-graph {
+		height: 700px !important;
+	}
+}
+
+@media only screen and (max-width: 1000px) {
+	.spider-chart {
+		margin-bottom: 1em;
+	}
+
+	.resizable-spider-chart {
+		width: 100% !important;
+	}
+}
+
+@media only screen and (max-width: 700px) {
+	.resizable-graph {
+		height: 300px !important;
+	}
+
+	.tall-graph {
+		height: 500px !important;
+	}
+	.resizable-spider-chart {
+		height: 350px !important;
+	}
+}
+
+@media only screen and (max-width: 550px) {
+	.row {
+		margin-bottom: 30px;
+	}
+
+	.teams-footer {
+		padding: 0;
+	}
+
+	.title {
+		font-size: 1.8em !important;
+	}
+
+	.main-link {
+		font-size: 1.2em;
+	}
+
+	h1 {
+		font-size: 1.5em;
+	}
+
+	.table-row.this-team {
+		padding: 10px 5% 8px 5%;
+	}
+
+	.season-stats-row {
+		margin-top: 20px;
+	}
+
+	.page-content {
+		overflow-x: hidden;
+	}
+
+	.resizable-graph {
+		height: 250px !important;
+	}
+
+	.tall-graph {
+		height: 400px !important;
+	}
+
+	.resizable-spider-chart {
+		height: 235px !important;
+	}
+
+	.plotly-graph-div {
+		width: 105% !important;
+	}
+
+	.teams {
+		box-shadow: none;
+		background-color: rgba(0, 0, 0, 0);
+	}
+}
+
+/* Spinner */
+
+.loading-spinner-container {
+	display: grid;
+	place-items: center;
+	margin-top: 30vh;
+	margin-bottom: 10px;
+}
+
+.loading-spinner {
+	height: 36px;
+	width: 36px;
+	color: rgba(56, 0, 61, 0.1);
+	position: relative;
+	display: inline-block;
+	border: 5px solid;
+	border-radius: 50%;
+	border-right-color: #5a5a5a;
+	animation: rotate 0.5s linear infinite;
+}
+
+@keyframes rotate {
+	0% {
+		transform: rotate(0);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}

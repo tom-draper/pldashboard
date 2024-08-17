@@ -1,5 +1,0 @@
-numpy==1.22.3
-pandas==1.4.2
-webdriver-manager==3.8.3
-timebudget==0.7.1
-requests==2.27.1
