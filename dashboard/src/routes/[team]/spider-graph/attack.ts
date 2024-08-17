@@ -1,53 +1,59 @@
-import type { SpiderAttribute, TeamsData } from "../dashboard.types";
+import type { SpiderAttribute, TeamAttributes, TeamsData } from "../dashboard.types";
 import { getTeams } from "$lib/team";
-import { attributeAvg } from "./util";
+import { type Range, attributeAvg, goalsPerGame } from "./util";
 
-function goalsPerGame(data: TeamsData): [SpiderAttribute, [number, number]] {
-	const attack: SpiderAttribute = { avg: 0 };
-	let maxGoalsPerSeason = Number.NEGATIVE_INFINITY;
-	let minGoalsPerSeason = Number.POSITIVE_INFINITY;
+function scoredPerGame(data: TeamsData) {
+	const attack: Partial<TeamAttributes> = {};
+
+	const range: Range = {
+		max: Number.NEGATIVE_INFINITY,
+		min: Number.POSITIVE_INFINITY
+	}
 	const teams = getTeams(data)
 	for (const team of teams) {
-		let totalGoals = 0;
-		let gamesPlayed = 0;
+		const total = {
+			scored: 0,
+			played: 0
+		}
 		for (const season in data.standings[team]) {
 			const goals = data.standings[team][season].gF;
 			const played = data.standings[team][season].played;
-			if (goals > 0) {
-				totalGoals += goals;
-				gamesPlayed += played;
-			}
+			total.scored += goals;
+			total.played += played;
+
 			// If season completed, check if team's attacking performance is most extreme yet
 			if (played < 38) {
 				continue;
 			}
 			const seasonGoalsPerGame = goals / played;
-			if (seasonGoalsPerGame > maxGoalsPerSeason) {
-				maxGoalsPerSeason = seasonGoalsPerGame;
-			} else if (seasonGoalsPerGame < minGoalsPerSeason) {
-				minGoalsPerSeason = seasonGoalsPerGame;
+			if (seasonGoalsPerGame > range.max) {
+				range.max = seasonGoalsPerGame;
+			} else if (seasonGoalsPerGame < range.min) {
+				range.min = seasonGoalsPerGame;
 			}
 		}
 
 		// Get team's overall goals per game across multiple seasons
-		let goalsPerGame = null;
-		if (gamesPlayed > 0) {
-			goalsPerGame = totalGoals / gamesPlayed;
-		}
-		attack[team] = goalsPerGame;
+		attack[team] = goalsPerGame(total.scored, total.played);
 	}
 
-	return [attack, [minGoalsPerSeason, maxGoalsPerSeason]];
+	const finalisedDefence: TeamAttributes = attack as TeamAttributes;
+
+	return {
+		attack: finalisedDefence,
+		range
+	};
 }
 
-function scaleAttack(attack: SpiderAttribute, range: [number, number]) {
-	const [lower, upper] = range;
+function scaleAttack(attack: TeamAttributes, range: Range) {
+	const { min, max } = range;
 	for (const team in attack) {
-		const teamGoalsPerGame = attack[team];
+		const teamKey = team as keyof typeof attack;
+		const teamGoalsPerGame = attack[teamKey];
 		if (teamGoalsPerGame === null) {
-			attack[team] = 0;
+			attack[teamKey] = 0;
 		} else {
-			attack[team] = ((teamGoalsPerGame - lower) / (upper - lower)) * 100;
+			attack[teamKey] = ((teamGoalsPerGame - min) / (max - min)) * 100;
 		}
 	}
 	return attack;
@@ -55,8 +61,15 @@ function scaleAttack(attack: SpiderAttribute, range: [number, number]) {
 
 
 export default function getAttack(data: TeamsData) {
-	let [attack, extremes] = goalsPerGame(data);
-	attack = scaleAttack(attack, extremes);
-	attack.avg = attributeAvg(attack);
-	return attack;
+	let { attack, range } = scoredPerGame(data);
+	attack = scaleAttack(attack, range);
+
+	const avg = attributeAvg(attack);
+
+	const attribute: SpiderAttribute = {
+		teams: attack,
+		avg
+	};
+
+	return attribute;
 }

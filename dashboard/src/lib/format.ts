@@ -1,4 +1,4 @@
-import { getTeamID } from './team';
+import { getTeamID, toInitials } from './team';
 import type { Team } from './types';
 
 export function ordinal(n: number): string {
@@ -19,6 +19,15 @@ export function scoreline(
 	awayGoals: number
 ): string {
 	return `${homeTeam} ${homeGoals} - ${awayGoals} ${awayTeam}`;
+}
+
+export function scorelineShort(
+	homeTeam: Team,
+	awayTeam: Team,
+	homeGoals: number,
+	awayGoals: number
+): string {
+	return `${toInitials(homeTeam)} ${homeGoals} - ${awayGoals} ${toInitials(awayTeam)}`;
 }
 
 export function toTitleCase(str: string): string {

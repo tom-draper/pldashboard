@@ -1,4 +1,4 @@
-import type { Form, TeamsData } from "../dashboard.types";
+import type { Form, SpiderAttribute, TeamAttributes, TeamsData } from "../dashboard.types";
 import { getTeams } from "$lib/team";
 import { attributeAvgScaled, removeItem, seasonComplete } from "./util";
 import type { Team } from "$lib/types";
@@ -36,19 +36,26 @@ function formWinsVsBig6(
 		numPlayed += 1;
 	}
 
-	return [pointsVsBig6, numPlayed] as const;
+	return { pointsVsBig6, numPlayed };
+}
+
+function average(value: number, total: number) {
+	if (total === 0) {
+		return 0;
+	}
+	return value / total;
 }
 
 export default function getVsBig6(data: TeamsData, numSeasons: number) {
-	//@ts-ignore
-	const vsBig6: SpiderAttribute = { avg: 0 };
+	const vsBig6: Partial<TeamAttributes> = {};
+
 	let maxAvgSeasonPointsVsBig6 = Number.NEGATIVE_INFINITY;
 	const teams = getTeams(data);
 	for (const team of teams) {
 		let totalPointsVsBig6 = 0;
 		let totalPlayedVsBig6 = 0;
 		for (let i = 0; i < numSeasons; i++) {
-			const [seasonPointsVsBig6, seasonPlayedVsBig6] = formWinsVsBig6(
+			const { pointsVsBig6: seasonPointsVsBig6, numPlayed: seasonPlayedVsBig6 } = formWinsVsBig6(
 				data.form,
 				team,
 				data._id - i,
@@ -69,13 +76,14 @@ export default function getVsBig6(data: TeamsData, numSeasons: number) {
 			totalPlayedVsBig6 += seasonPlayedVsBig6;
 		}
 
-		let totalAvgPointsVsBig = 0;
-		if (totalPlayedVsBig6 > 0) {
-			totalAvgPointsVsBig = totalPointsVsBig6 / totalPlayedVsBig6;
-		}
-		vsBig6[team] = totalAvgPointsVsBig;
+		vsBig6[team] = average(totalPointsVsBig6, totalPlayedVsBig6);
 	}
 
-	vsBig6.avg = attributeAvgScaled(vsBig6, maxAvgSeasonPointsVsBig6 * numSeasons);
-	return vsBig6;
+	const finalisedVsBig6: TeamAttributes = vsBig6 as TeamAttributes;
+
+	const attribute: SpiderAttribute = {
+		teams: finalisedVsBig6,
+		avg: attributeAvgScaled(finalisedVsBig6, maxAvgSeasonPointsVsBig6 * numSeasons)
+	}
+	return attribute;
 }

@@ -1,7 +1,12 @@
 import type { Team } from "$lib/types";
-import type { SpiderAttribute, TeamsData } from "../dashboard.types";
+import type { TeamAttributes, TeamsData } from "../dashboard.types";
 
-export function attributeAvg(attribute: SpiderAttribute) {
+export type Range = {
+	min: number;
+	max: number;
+};
+
+export function attributeAvg(attribute: TeamAttributes) {
 	const values = Object.values(attribute).map((value) => value ?? 0);
 	const total = values.reduce((sum, value) => sum + value, 0);
 	const avg = total / values.length;
@@ -9,15 +14,16 @@ export function attributeAvg(attribute: SpiderAttribute) {
 	return avg;
 }
 
-export function attributeAvgScaled(attribute: SpiderAttribute, max: number) {
+export function attributeAvgScaled(attribute: TeamAttributes, max: number) {
 	let total = 0;
 	for (const team in attribute) {
-		const value = attribute[team];
+		const teamKey = team as keyof typeof attribute;
+		const value = attribute[teamKey];
 		if (value === null) {
-			attribute[team] = 0;
+			attribute[teamKey] = 0;
 			continue;
 		}
-		attribute[team] = (value / max) * 100;
+		attribute[teamKey] = (value / max) * 100;
 		total += value;
 	}
 	const avg = total / Object.keys(attribute).length;
@@ -35,4 +41,11 @@ export function removeItem(arr: any[], value: any) {
 		arr.splice(index, 1);
 	}
 	return arr;
+}
+
+export function goalsPerGame(goals: number, played: number) {
+	if (played === 0) {
+		return 0;
+	}
+	return goals / played;
 }

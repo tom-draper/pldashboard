@@ -6,6 +6,7 @@ import { CURRENT_SEASON } from '$lib/consts';
 import { teams } from "$lib/server/database/teams";
 import type { TeamsData } from './dashboard.types';
 
+
 async function fetchTeams() {
 	const data = Object((await teams.find({ _id: CURRENT_SEASON }).toArray())[0]);
 	return data as TeamsData

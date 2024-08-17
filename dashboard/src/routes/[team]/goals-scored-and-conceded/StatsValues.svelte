@@ -82,7 +82,7 @@
 			return played === 0 ? 0 : value / played;
 		};
 
-		const teams = getTeams(data)
+		const teams = getTeams(data);
 		for (const team of teams) {
 			const currentSeasonStats = teamSeasonStats(data, team, data._id);
 			if (currentSeasonStats == null) {
@@ -95,6 +95,15 @@
 
 			const played = currentSeasonStats.played + prevSeasonStats.played;
 			if (played === 0) {
+				if (!(team in stats)) {
+					stats[team] = {
+						played: 0, 
+						xG: 0, 
+						xC: 0, 
+						cleanSheetRatio: 0, 
+						noGoalRatio: 0
+					}
+				}
 				continue;
 			}
 

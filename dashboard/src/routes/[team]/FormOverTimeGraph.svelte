@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { getTeamID, getTeams } from '$lib/team';
 	import type { TeamsData } from './dashboard.types';
-	import type { PlotData, Team } from '$lib/types';
+	import type { Team } from '$lib/types';
 
 	function getFormLine(data: TeamsData, team: Team, isMainTeam: boolean) {
 		const playedDates: Date[] = [];
@@ -21,22 +21,12 @@
 			return form * 100;
 		});
 
-		let lineVal: { color: string; width?: number };
-		if (isMainTeam) {
-			// Get team primary color from css variable
-			const teamKey = getTeamID(team);
-			const lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
-			lineVal = { color: lineColor, width: 4 };
-		} else {
-			lineVal = { color: '#d3d3d3' };
-		}
-
 		const line = {
 			x: matchdays,
 			y: y,
 			name: team,
 			mode: 'lines',
-			line: lineVal,
+			line: getLineValue(isMainTeam),
 			text: playedDates,
 			hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
 			showlegend: false
@@ -44,7 +34,20 @@
 		return line;
 	}
 
-	function lines(data: TeamsData, team: Team) {
+	function getLineValue(isMainTeam: boolean) {
+		let line: { color: string; width?: number };
+		if (isMainTeam) {
+			// Get team primary color from css variable
+			const teamKey = getTeamID(team);
+			const lineColor = getComputedStyle(document.documentElement).getPropertyValue(`--${teamKey}`);
+			line = { color: lineColor, width: 4 };
+		} else {
+			line = { color: '#d3d3d3' };
+		}
+		return line;
+	}
+
+	function getLines(data: TeamsData, team: Team) {
 		const teams = getTeams(data);
 		const lines = teams
 			.filter((t) => t !== team)
@@ -58,7 +61,8 @@
 
 	function defaultLayout() {
 		const yLabels = Array.from(Array(11), (_, i) => i * 10);
-		return {
+		const layout: Plotly.Layout = {
+			// @ts-ignore
 			title: false,
 			autosize: true,
 			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
@@ -72,6 +76,7 @@
 				showline: false,
 				zeroline: false,
 				fixedrange: true,
+				// @ts-ignore
 				ticktext: yLabels,
 				tickvals: yLabels,
 				range: [-1, 101]
@@ -86,6 +91,7 @@
 			},
 			dragmode: false
 		};
+		return layout;
 	}
 
 	function setDefaultLayout() {
@@ -118,9 +124,9 @@
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
-	function buildPlotData(data: TeamsData, team: Team): PlotData {
-		const plotData = {
-			data: lines(data, team),
+	function buildPlotData(data: TeamsData, team: Team) {
+		const plotData: Plotly.PlotlyDataLayoutConfig = {
+			data: getLines(data, team),
 			layout: defaultLayout(),
 			config: {
 				responsive: true,
@@ -131,7 +137,7 @@
 		return plotData;
 	}
 
-	let plotDiv: HTMLDivElement, plotData: PlotData;
+	let plotDiv: HTMLDivElement, plotData: Plotly.PlotlyDataLayoutConfig;
 	let setup = false;
 	onMount(() => {
 		genPlot();
@@ -157,8 +163,10 @@
 			plotData.data[i] = newPlotData.data[i];
 		}
 
-		plotData.layout.xaxis.range[0] = playedDates[0];
-		plotData.layout.xaxis.range[1] = playedDates[playedDates.length - 1];
+        if (plotData.layout && plotData.layout.xaxis && plotData.layout.xaxis.range) {
+            plotData.layout.xaxis.range[0] = playedDates[0];
+            plotData.layout.xaxis.range[1] = playedDates[playedDates.length - 1];
+        }
 
 		//@ts-ignore
 		Plotly.redraw(plotDiv);
