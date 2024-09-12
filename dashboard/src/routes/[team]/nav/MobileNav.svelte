@@ -10,7 +10,7 @@
 
 	function teamStyling(team: Team) {
 		const teamID = getTeamID(team);
-		return `color: var(--${teamID}-secondary);backgroundColor: var(--${teamID});`
+		return `color: var(--${teamID}-secondary);background-color: var(--${teamID});`
 	}
 
 	export let teams: Team[], switchTeam: (newTeam: Team) => void, toggleMobileNav: () => void;
