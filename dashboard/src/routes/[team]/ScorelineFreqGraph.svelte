@@ -14,7 +14,7 @@
 			const atHome = form[team][season][matchday].atHome;
 			const scoreStr = getScoreString(score.homeGoals, score.awayGoals, atHome);
 			if (!(scoreStr in scoreFreq)) {
-				scoreFreq[scoreStr] = [];
+				scoreFreq[scoreStr] = [0];
 			} 
 			scoreFreq[scoreStr][0] += 1;
 		}
@@ -217,7 +217,7 @@
 		scaleBars(scoreFreq);
 		convertToPercentage(scoreFreq);
 		const bars = separateBars(scoreFreq);
-
+		
 		const plotData = {
 			data: bars,
 			layout: defaultLayout(),

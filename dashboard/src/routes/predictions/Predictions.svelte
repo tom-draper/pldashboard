@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { PredictionsData } from './predictions.types';
 
 	function toggleDetailsDisplay(id: string) {
@@ -14,11 +13,9 @@
 		return date.toTimeString().slice(0, 5);
 	}
 
-	onMount(() => {
-		console.log(data);
-	});
-
 	export let data: PredictionsData;
+
+	console.log(data);
 </script>
 
 <div id="predictions">

@@ -13,16 +13,19 @@
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');
-		if (mobileNav === null) {
+		const mobileNavBtn = document.getElementById('mobileNavBtn');
+		if (mobileNav === null || mobileNavBtn === null) {
 			return;
 		}
 
 		if (mobileNav.style.width === '0%') {
 			mobileNav.style.display = 'block';
 			mobileNav.style.width = '100%';
+			mobileNavBtn.style.display = 'none';
 		} else {
 			mobileNav.style.display = 'none';
 			mobileNav.style.width = '0%';
+			mobileNavBtn.style.display = 'unset';
 		}
 	}
 
