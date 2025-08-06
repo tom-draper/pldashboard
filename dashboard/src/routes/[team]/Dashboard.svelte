@@ -102,10 +102,6 @@
 		width: fit-content;
 	}
 
-	.default-cursor {
-		cursor: default;
-	}
-
 	#team {
 		display: flex;
 		overflow-x: hidden;

@@ -103,27 +103,11 @@
 	.this-team-name {
 		padding: 0.4em 1.4em;
 	}
-	.overview {
-		padding: 0.4em 1.4em;
-	}
-	.overview-selected {
-		color: var(--purple) !important;
-		background: var(--green) !important;
-	}
-
-	.divider {
-		height: 15px;
-		border-bottom: 1px solid rgba(198, 0, 216, 0.4);
-		width: 85%;
-		margin: auto;
-		margin-bottom: 15px;
-	}
 
 	.this-team-container {
 		color: var(--pink);
 	}
 
-	:hover.overview-container,
 	:hover.team-container {
 		background: #2c002f;
 		background: #140921;

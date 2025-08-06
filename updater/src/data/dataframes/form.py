@@ -114,14 +114,30 @@ class Form(DF):
 
     def _insert_position_columns(self, df: DataFrame):
         seasons = df.columns.unique(level=0).tolist()
+        position_data = {}
+        
         for season in seasons:
             played_matchdays = df[season].columns.unique(level=0).tolist()
             for matchday in played_matchdays:
-                df = df.sort_values(
+                # Sort the dataframe for this season/matchday
+                sorted_df = df.sort_values(
                     by=[(season, matchday, "cumPoints"), (season, matchday, "cumGD")],
                     ascending=False,
                 )
-                df[(season, matchday, "position")] = list(range(1, 21))
+                
+                # Create position data for this season/matchday combination
+                position_data[(season, matchday, "position")] = pd.Series(
+                    list(range(1, 21)), 
+                    index=sorted_df.index,
+                    name=(season, matchday, "position")
+                )
+        
+        # Create a DataFrame from all position data at once
+        if position_data:
+            position_df = pd.DataFrame(position_data)
+            # Concatenate with original dataframe
+            df = pd.concat([df, position_df], axis=1)
+        
         return df
 
     def _fill_teams_missing_matchday(self, form: DataFrame):
