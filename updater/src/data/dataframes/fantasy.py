@@ -4,6 +4,8 @@ from timebudget import timebudget
 
 from .df import DF
 
+pd.set_option('future.no_silent_downcasting', True)
+
 
 class Fantasy(DF):
     def __init__(self, d: DataFrame = DataFrame()):
@@ -127,7 +129,7 @@ class Fantasy(DF):
         }
 
         fantasy = pd.DataFrame.from_dict(d, orient="index")
-        fantasy.fillna(0, inplace=True)
+        fantasy = fantasy.fillna(0).infer_objects(copy=False)
 
         if display:
             print(fantasy)

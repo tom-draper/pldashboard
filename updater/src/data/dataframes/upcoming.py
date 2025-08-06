@@ -37,7 +37,7 @@ class Upcoming(DF):
         predictions: dict[str, dict[str, datetime | str | dict[str, float]]] = {}
 
         # If predictions haven't been added to DataFrame, skip (season is over)
-        if "prediction" not in self.df:
+        if "prediction" in self.df and self.df["prediction"].isnull().all():
             return predictions
 
         for team, row in self.df.iterrows():
