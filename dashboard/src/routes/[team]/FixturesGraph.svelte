@@ -152,7 +152,12 @@
 		const yLabels = Array.from(Array(11), (_, i) => i * 10);
 
 		const [minX, maxX] = xRange(x);
-		const currentDate = currentDateLine(now, maxX.getTime());
+
+		// Show  the current date line only if currently before 30 days after of the season
+		const currentDateLineLimit = new Date(maxX);
+		currentDateLineLimit.setDate(currentDateLineLimit.getDate() + 30);
+		const currentDate = now <= currentDateLineLimit.getTime() ? currentDateLine(now, maxX.getTime()) : null;
+
 		const layout: Plotly.Layout = {
 			// @ts-ignore
 			title: false,
