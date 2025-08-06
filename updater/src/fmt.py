@@ -158,4 +158,4 @@ def format_scoreline_str(
 
 def clean_full_team_name(full_team_name: str):
     """Remove FC, AFC postfixes and replace ampersand for 'and'."""
-    return full_team_name.replace(" FC", "").replace("AFC ", "").replace("&", "and")
+    return full_team_name.replace(" FC", "").replace("AFC ", "").replace(' AFC', '').replace("&", "and")

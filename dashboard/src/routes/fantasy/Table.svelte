@@ -89,7 +89,7 @@
 				data[name].minutes,
 				data[name].pointsPerGame,
 				data[name].minutes > 0
-					? parseFloat((data[name].points / (data[name].minutes / 90)).toFixed(1))
+					? parseFloat((data[name].totalPoints / (data[name].minutes / 90)).toFixed(1))
 					: 0,
 				data[name].form,
 				data[name].goals,
