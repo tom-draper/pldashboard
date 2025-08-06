@@ -72,7 +72,7 @@ def convert_team_name_or_initials(team: str):
     """
     if team in names_and_initials:
         return names_and_initials[team]
-    elif len(team) == 3:
+    elif team is None or len(team) == 3:
         # Cannot convert initials to a full team name if not in dict
         raise KeyError(
             f"Team name {team} corresponding to input initials does not exist"
