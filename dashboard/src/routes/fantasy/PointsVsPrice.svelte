@@ -61,34 +61,38 @@
 		return value !== '_id';
 	}
 
-	function defaultLayout() {
-		return {
-			title: false,
-			autosize: true,
-			margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
-			hovermode: 'closest',
-			plot_bgcolor: 'transparent',
-			paper_bgcolor: 'transparent',
-			height: 700,
-			yaxis: {
-				title: { text: 'Price' },
-				gridcolor: 'gray',
-				showgrid: false,
-				showline: false,
-				zeroline: false,
-				fixedrange: true,
-				visible: true
-			},
-			xaxis: {
-				title: { text: 'Points' },
-				linecolor: 'black',
-				showgrid: false,
-				showline: false,
-				fixedrange: true
-			},
-			dragmode: false
-		};
-	}
+
+	function defaultLayout(): Layout {
+	return {
+		title: false,
+		autosize: true,
+		margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
+		hovermode: 'closest',
+		plot_bgcolor: 'transparent',
+		paper_bgcolor: 'transparent',
+		height: 700,
+		yaxis: {
+			title: { text: 'Price' },
+			gridcolor: 'rgba(128, 128, 128, 0.2)', // Faint grid lines
+			showgrid: true, // Ensure grid is visible
+			showline: false,
+			zeroline: false,
+			fixedrange: true,
+			visible: true,
+			range: [0, null] // Start Y-axis at 0
+		},
+		xaxis: {
+			title: { text: 'Points' },
+			linecolor: 'black',
+			gridcolor: 'rgba(128, 128, 128, 0.2)', // Faint grid lines
+			showgrid: true, // Ensure grid is visible
+			showline: false,
+			fixedrange: true,
+			range: [0, null] // Start X-axis at 0
+		},
+		dragmode: false
+	};
+}
 
 	function setDefaultLayout() {
 		if (!setup) {

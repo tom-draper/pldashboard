@@ -61,6 +61,7 @@
 			{/each}
 		{/if}
 	</div>
+	<div class="fantasy"><a href="/fantasy">Play fantasy?</a></div>
 	<div class="close">
 		<button class="close-btn" on:click={closeNavBar}>
 			<img src={closeNavIcon} alt="Close" />
@@ -102,6 +103,22 @@
 	.team-name,
 	.this-team-name {
 		padding: 0.4em 1.4em;
+	}
+
+	.fantasy {
+		color: rgba(255, 255, 255, 1);
+		position: absolute;
+		bottom: 1em;
+		font-size: 13px;
+		margin: 0.4em 1.4em;
+		cursor: pointer;
+	}
+	.fantasy a {
+		color: inherit;
+		text-decoration: none;
+	}
+	.fantasy:hover {
+		text-decoration: underline;
 	}
 
 	.this-team-container {
