@@ -14,7 +14,7 @@ def run(display_tables: bool = False, request_new: bool = True, update_db: bool 
 def run_production():
     timebudget.set_quiet()
     logging.basicConfig(
-        level=logging.DEBUG, format="%(asctime)s :: %(levelname)s :: %(message)s"
+        level=logging.CRITICAL, format="%(asctime)s :: %(levelname)s :: %(message)s"
     )
     run()
 
