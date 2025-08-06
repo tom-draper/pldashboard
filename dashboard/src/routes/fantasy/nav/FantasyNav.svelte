@@ -19,10 +19,10 @@
 
 <nav id="navBar">
 	<div class="title no-selection">
-		<p>
+		<a href="/home">
 			<span style="color: var(--green)">pl</span>dashboard
-		</p>
-		<div class="fantasy-logo">Fantasy</div>
+			<div class="fantasy-logo">Fantasy</div>
+		</a>
 	</div>
 	<div class="team-links">
 		{#each pages as _page, _ (_page)}
@@ -64,6 +64,9 @@
 		height: 96px;
 		display: grid;
 		place-items: center;
+	}
+	.title a {
+		color: white;
 	}
 	.fantasy-logo {
 		color: white;
