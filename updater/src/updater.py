@@ -74,7 +74,7 @@ class Updater:
 
     async def fetch_fixtures_data(self, season: int):
         data: dict = await self.get(
-            f"{self.url}v2/competitions/PL/matches/?season={season}",
+            f"{self.url}v4/competitions/PL/matches/?season={season}",
             headers=self.headers,
         )
         return data["matches"]

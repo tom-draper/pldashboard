@@ -14,8 +14,6 @@
 	}
 
 	export let data: PredictionsData;
-
-	console.log(data);
 </script>
 
 <div id="predictions">

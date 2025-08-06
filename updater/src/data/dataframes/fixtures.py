@@ -86,10 +86,13 @@ class Fixtures(DF):
             team = clean_full_team_name(match["awayTeam"]["name"])
             opposition = clean_full_team_name(match["homeTeam"]["name"])
 
-        if match["score"]["fullTime"]["homeTeam"] is not None:
+        # Data API v4 renamed 'homeTeam' to 'home'
+        home_goals = match["score"]["fullTime"]["home"] if "home" in match["score"]["fullTime"] else match['score']['fullTime']['homeTeam']
+        away_goals = match["score"]["fullTime"]["away"] if "away" in match["score"]["fullTime"] else match['score']['fullTime']['awayTeam']
+        if home_goals is not None:
             score = {
-                "homeGoals": match["score"]["fullTime"]["homeTeam"],
-                "awayGoals": match["score"]["fullTime"]["awayTeam"],
+                "homeGoals": home_goals,
+                "awayGoals": away_goals,
             }
         else:
             score = None
