@@ -1,5 +1,18 @@
+import pandas as pd
 import pytest
 from src.data import Data
+from src.data.dataframes.standings import Standings
+
+
+@pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
+def test_get_team_names(data: Data):
+    if data.online:
+        teams = Standings.get_team_names(data.json, data.season)
+        assert isinstance(teams, list)
+        assert len(teams) == 20
+        assert all(isinstance(team, str) for team in teams)
+
+
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
