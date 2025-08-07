@@ -263,8 +263,8 @@
 					<div class="standings-title">Standings</div>
 					<div class="standings">
 						<div class="table-row">
-							<div class="standings-position" />
-							<div class="standings-team-name" />
+							<div class="standings-position"></div>
+							<div class="standings-team-name"></div>
 							<div class="standings-won bold">W</div>
 							<div class="standings-drawn bold">D</div>
 							<div class="standings-lost bold">L</div>

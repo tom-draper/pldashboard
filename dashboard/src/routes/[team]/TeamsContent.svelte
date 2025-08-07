@@ -30,13 +30,13 @@
 			<div class="circles-background-container">
 				<svg class="circles-background" viewBox="0 0 600 600">
 					<!-- Background decorative circles -->
-					<circle cx="300" cy="320" r="230" fill="var(--{data.team.id})" />
-					<circle cx="300" cy="320" r="200" fill="var(--{data.team.id}-secondary)" />
-					<circle cx="300" cy="320" r="170" fill="var(--{data.team.id})" />
+					<circle cx="300" cy="320" r="210" fill="var(--{data.team.id})" />
+					<circle cx="300" cy="320" r="180" fill="var(--{data.team.id}-secondary)" />
+					<circle cx="300" cy="320" r="150" fill="var(--{data.team.id})" />
 
 					<!-- Central position number -->
 					<text
-						x="296"
+						x="298"
 						y="342"
 						text-anchor="middle"
 						dominant-baseline="middle"

@@ -69,9 +69,9 @@
 
 <div class="table-snippet">
 	{#if tableSnippet != undefined}
-		<div class="divider" />
+		<div class="divider"></div>
 		<div class="table-row">
-			<div class="table-element table-position column-title" />
+			<div class="table-element table-position column-title"></div>
 			<div class="table-element table-team-name column-title">Team</div>
 			<div class="table-element table-gd column-title">GD</div>
 			<div class="table-element table-points column-title">Points</div>
@@ -81,10 +81,10 @@
 			<!-- Divider -->
 			{#if i === 0}
 				{#if i != tableSnippet.teamTableIdx}
-					<div id="divider" />
+					<div id="divider"></div>
 				{/if}
 			{:else if i - 1 != tableSnippet.teamTableIdx && i != tableSnippet.teamTableIdx}
-				<div id="divider" />
+				<div id="divider"></div>
 			{/if}
 			<!-- Row of table -->
 			{#if i === tableSnippet.teamTableIdx}
@@ -137,7 +137,7 @@
 			{/if}
 		{/each}
 		{#if tableSnippet.teamTableIdx != 6}
-			<div id="divider" />
+			<div id="divider"></div>
 		{/if}
 	{/if}
 </div>

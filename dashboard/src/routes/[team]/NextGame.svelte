@@ -55,7 +55,7 @@
 
 		<div class="next-game-values">
 			<div class="predictions-and-logo">
-				<div class="next-game-position" />
+				<div class="next-game-position"></div>
 				<div class="predictions">
 					<div class="next-game-item">
 						<div class="next-game-position">
@@ -121,7 +121,7 @@
 									</div>
 								</div>
 							</div>
-							<div style="clear: both" />
+							<div style="clear: both"></div>
 						</div>
 					</div>
 				{/each}

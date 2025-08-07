@@ -1,34 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { FantasyData, Page, Team } from './fantasy.types';
+	import { teamToCSS } from '$lib/team';
 
 	type TableRow = (string | number)[];
 
-	function teamToCSS(team: string) {
-		switch (team) {
-			case 'Spurs':
-				return 'tottenham-hotspur';
-			case "Nott'm Forest":
-				return 'nottingham-forest';
-			case 'Man Utd':
-				return 'manchester-united';
-			case 'Man City':
-				return 'manchester-city';
-			case 'Brighton':
-				return 'brighton-and-hove-albion';
-			case 'Luton':
-				return 'luton-town';
-			case 'West Ham':
-				return 'west-ham-united';
-			case 'Sheffield Utd':
-				return 'sheffield-united';
-			case 'Wolves':
-				return 'wolverhampton-wanderers';
-			case 'Newcastle':
-				return 'newcastle-united';
-		}
-		return team.toLowerCase().replace(' ', '-');
-	}
+	
 
 	function buildTeamColorCSSTags() {
 		const playerTeams: { [player: string]: Team } = {};
@@ -228,7 +205,7 @@
 
 {#if !setup}
 	<div class="loading-spinner-container">
-		<div class="loading-spinner" />
+		<div class="loading-spinner"></div>
 	</div>
 {/if}
 <div class="table" class:hidden={!setup}>
@@ -251,7 +228,7 @@
 				<th>Transfers Out</th>
 			</tr>
 		</thead>
-		<tbody />
+		<tbody></tbody>
 	</table>
 </div>
 

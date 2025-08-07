@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { FantasyPlayer } from './fantasy.types';
+	import { teamToCSS } from '$lib/team';
 
 	export let players: FantasyPlayer[];
 
@@ -9,34 +10,17 @@
 	let defenders: FantasyPlayer[] = [];
 	let goalkeepers: FantasyPlayer[] = [];
 
-	function teamToCSS(team: string) {
-		switch (team) {
-			case 'Spurs':
-				return 'tottenham-hotspur';
-			case "Nott'm Forest":
-				return 'nottingham-forest';
-			case 'Man Utd':
-				return 'manchester-united';
-			case 'Man City':
-				return 'manchester-city';
-			case 'Brighton':
-				return 'brighton-and-hove-albion';
-			case 'Luton':
-				return 'luton-town';
-			case 'West Ham':
-				return 'west-ham-united';
-			case 'Sheffield Utd':
-				return 'sheffield-united';
-			case 'Wolves':
-				return 'wolverhampton-wanderers';
-			case 'Newcastle':
-				return 'newcastle-united';
-		}
-		return team.toLowerCase().replace(' ', '-');
-	}
+    let totalPoints: number = 0;
+
+    function formatPrice(price: number): string {
+        return (price/10).toLocaleString('en-GB', {
+            style: 'currency',
+            currency: 'GBP',
+            minimumFractionDigits: 1
+        }) + 'm';
+    }
 
 	onMount(() => {
-        console.log(players);
         if (!players) {
             return;
         }
@@ -46,34 +30,50 @@
 		midfielders = players.filter((player) => player.position === 'Midfielder');
 		defenders = players.filter((player) => player.position === 'Defender');
 		goalkeepers = players.filter((player) => player.position === 'Goalkeeper');
+
+        totalPoints = players.reduce((sum, player) => sum + player.totalPoints, 0);
 	});
-
-
 </script>
 
 <div id="pitch">
 	<div class="formation">
         {#each goalkeepers as player}
+        <div>
             <div class="player goalkeeper" style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(player.team)})">{player.firstName} {player.surname}</div>
+            <div class="price">{formatPrice(player.price)}</div>
+        </div>
         {/each}
     </div>
 
 	<div class="formation">
         {#each defenders as player}
+        <div>
             <div class="player goalkeeper" style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(player.team)})">{player.firstName} {player.surname}</div>
+            <div class="price">{formatPrice(player.price)}</div>
+        </div>
         {/each}
     </div>
 
 	<div class="formation">
         {#each midfielders as player}
-            <div class="player midfielder" style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(player.team)})">{player.firstName} {player.surname}</div>
+            <div>
+                <div class="player midfielder" style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(player.team)})">{player.firstName} {player.surname}</div>
+                <div class="price">{formatPrice(player.price)}</div>
+            </div>
         {/each}
     </div>
 
 	<div class="formation">
         {#each forwards as player}
+        <div>
             <div class="player forward" style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(player.team)})">{player.firstName} {player.surname}</div>
+            <div class="price">{formatPrice(player.price)}</div>
+        </div>
         {/each}
+    </div>
+
+    <div class="total-points">
+        Total points: {totalPoints.toLocaleString('en-GB')}
     </div>
 </div>
 
@@ -88,8 +88,17 @@
 			#4caf50 20px,
 			/* lighter green */ #4caf50 40px
 		);
+		background: repeating-linear-gradient(
+			to bottom,
+			#00fe87,
+			/* darker green */ #00fe87 20px,
+			#00e178 20px,
+			/* #00ce6e 20px, */
+			/* lighter green */ #00e178 40px
+		);
         padding: 1em;
-        padding-bottom: 5em;
+        padding-bottom: 3em;
+        position: relative;
 	}
     .formation {
         display: flex;
@@ -98,10 +107,25 @@
         z-index: 12;
     }
 
+    .price {
+        margin-top: 0.4em;
+        text-align: center;
+    }
+
     .player {
         background: #fff;
         border-radius: 4px;
-        padding: 0.5em 1em;
+        padding: 0.6em 1em;
         margin: 0 0.5em;
+        text-align: center;
+    }
+    .total-points {
+        position: absolute;
+        text-align: center;
+        font-size: 1em;
+        margin-top: 1em;
+        right: 1em;
+        top: 0;
+        color: #333;
     }
 </style>

@@ -6,5 +6,9 @@
 	export let data: FantasyDashboardData;
 </script>
 
+<svelte:head>
+  <meta name="theme-color" content="#000" />
+</svelte:head>
+
 <Support />
 <FantasyDashboard {data} />

@@ -94,7 +94,7 @@
 	}
 	#dashboard {
 		margin-left: 220px;
-		width: 100%;
+		width: calc(100% - 220px);
 	}
 	#mobileNavBtn {
 		position: fixed;
@@ -117,6 +117,7 @@
 	@media only screen and (max-width: 1200px) {
 		#dashboard {
 			margin-left: 0;
+			width: 100%;
 		}
 	}
 </style>
