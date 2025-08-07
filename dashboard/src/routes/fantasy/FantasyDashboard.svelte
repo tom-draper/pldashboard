@@ -73,9 +73,11 @@
 			<PointsVsPrice data={data.pageData} page={data.page} {mobileView} />
 		</div>
 
-		<div>
-			<OptimalTeam data={data.pageData} page={data.page} />
-		</div>
+		{#if data.page === 'all'}
+			<div>
+				<OptimalTeam data={data.pageData} />
+			</div>
+		{/if}
 
 		<div class="table">
 			<Table data={data.pageData} page={data.page} />
