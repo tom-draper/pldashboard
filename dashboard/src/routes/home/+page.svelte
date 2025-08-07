@@ -9,8 +9,8 @@
 
 <div id="home">
 	<div class="content">
-		<div id="circle" />
-		<img src={logo} alt="pldashboard" />
+		<div id="circle"></div>
+		<img src={logo} alt="pldashboard"></div>
 		<div class="links">
 			<a class="dashboard-link" href="/">Dashboard</a>
 			<a class="fantasy-link" href="/fantasy">Fantasy</a>
