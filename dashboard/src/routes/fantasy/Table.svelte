@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { FantasyData, Page, Team } from './fantasy.types';
- 
+
 	type TableRow = (string | number)[];
 
 	function teamToCSS(team: string) {
@@ -31,8 +31,8 @@
 	}
 
 	function buildTeamColorCSSTags() {
-		const playerTeams: {[player: string]: Team} = {};
-		const teamCSS: {[team in Team]?: string} = {};
+		const playerTeams: { [player: string]: Team } = {};
+		const teamCSS: { [team in Team]?: string } = {};
 		for (const name in data) {
 			if (name === '_id') {
 				continue;
@@ -136,7 +136,7 @@
 					render: function (data: any, type: string, row: any, meta: any) {
 						// If render is just displaying value to user, format as abbreviated number
 						if (type === 'display') {
-							return data ? data.toLocaleString(): 0;
+							return data ? data.toLocaleString() : 0;
 						}
 						// Otherwise return raw data so that sort and filter still works
 						return data;
@@ -161,7 +161,7 @@
 
 	function refreshTable(data: FantasyData) {
 		if (!setup) {
-			return
+			return;
 		}
 
 		buildTeamColorCSSTags();
@@ -172,11 +172,39 @@
 		table.draw();
 	}
 
+	function loadScript(src: string): Promise<void> {
+		return new Promise((resolve, reject) => {
+			const script = document.createElement('script');
+			script.src = src;
+			script.async = true;
+			script.onload = () => resolve();
+			script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+			document.head.appendChild(script);
+		});
+	}
+
+	function loadStyle(href: string): void {
+		const link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.href = href;
+		document.head.appendChild(link);
+	}
+
 	let table: any;
-	let playerToTeam: {[player: string]: Team};
-	let teamCSSTag: {[team in Team]?: string};
+	let playerToTeam: { [player: string]: Team };
+	let teamCSSTag: { [team in Team]?: string };
 	let setup = false;
-	onMount(() => {
+
+	onMount(async () => {
+		try {
+			loadStyle('https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css');
+
+			await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js');
+			await loadScript('https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js');
+		} catch (err) {
+			console.error('Error loading DataTables:', err);
+		}
+
 		buildTeamColorCSSTags();
 		buildTable(data);
 		setup = true;
@@ -187,7 +215,7 @@
 	export let data: FantasyData, page: Page;
 </script>
 
-<svelte:head>
+<!-- <svelte:head>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
 		integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
@@ -196,7 +224,7 @@
 	></script>
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
 	<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
-</svelte:head>
+</svelte:head> -->
 
 {#if !setup}
 	<div class="loading-spinner-container">

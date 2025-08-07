@@ -7,6 +7,7 @@
 	import type { FantasyDashboardData, Page } from './fantasy.types';
 	import { replaceState } from '$app/navigation';
 	import { filterDataByPage, getTitle } from './data';
+	import OptimalTeam from './OptimalTeam.svelte';
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');
@@ -70,6 +71,10 @@
 	<div id="dashboard">
 		<div class="first-graph">
 			<PointsVsPrice data={data.pageData} page={data.page} {mobileView} />
+		</div>
+
+		<div>
+			<OptimalTeam data={data.pageData} page={data.page} />
 		</div>
 
 		<div class="table">

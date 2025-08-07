@@ -3,6 +3,7 @@
 	import Dashboard from './[team]/Dashboard.svelte';
 	import { replaceState } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import Support from '$components/Support.svelte';
 
 	export let data: DashboardData;
 
@@ -12,4 +13,5 @@
 	});
 </script>
 
+<Support />
 <Dashboard {data} />
