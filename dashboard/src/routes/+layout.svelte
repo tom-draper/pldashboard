@@ -8,7 +8,7 @@
 			const path = $page.url.pathname;
 			if (path === '/home') {
 				setThemeColor('#000');
-			} else if (path === '/fantasy' || path === '/predictions') {
+			} else if (path === '/fantasy' || path === '/predictions' || path === '/overview') {
 				setThemeColor('#fff');
 			}
 		}

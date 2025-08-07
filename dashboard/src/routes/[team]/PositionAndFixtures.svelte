@@ -1,36 +1,51 @@
 <script lang="ts">
-	import PositionAndFixtures from './PositionAndFixtures.svelte';
+	import FixturesGraph from './FixturesGraph.svelte';
 	import type { DashboardData } from './dashboard.types';
-	import type { Team } from '$lib/types';
-	import GoalsGraphs from './GoalsGraphs.svelte';
-	import TeamGraphs from './TeamGraphs.svelte';
-	import FormAndNextGame from './FormAndNextGame.svelte';
-	import Scorelines from './Scorelines.svelte';
-	import TeamComparison from './TeamComparison.svelte';
 
 	let pageWidth: number;
 	$: mobileView = pageWidth <= 700;
 
-	export let data: DashboardData, switchTeam: (newTeam: Team) => void;
+	export let data: DashboardData;
 </script>
 
 <svelte:window bind:innerWidth={pageWidth} />
 
-<div class="page-content">
-	<PositionAndFixtures {data} />
-	<FormAndNextGame {data} {switchTeam} />
-	<TeamGraphs {data} {mobileView} />
-	<GoalsGraphs {data} {mobileView} />
-	<Scorelines {data} {mobileView} />
-	<TeamComparison {data} />
+<div class="row multi-element-row small-bottom-margin">
+	<div class="row-left position-no-badge">
+		<div class="circles-background-container">
+			<svg class="circles-background" viewBox="0 0 600 600">
+				<!-- Background decorative circles -->
+				<circle cx="300" cy="320" r="210" fill="var(--{data.team.id})" />
+				<circle cx="300" cy="320" r="180" fill="var(--{data.team.id}-secondary)" />
+				<circle cx="300" cy="320" r="150" fill="var(--{data.team.id})" />
+
+				<!-- Central position number -->
+				<text
+					x="298"
+					y="342"
+					text-anchor="middle"
+					dominant-baseline="middle"
+					font-size="180"
+					font-weight="900"
+					font-family="Arial, sans-serif"
+					fill="var(--{data.team.id}-secondary)"
+				>
+					{data.data.standings[data.team.name][data.data._id].position}
+				</text>
+			</svg>
+		</div>
+	</div>
+	<div class="row-right fixtures-graph row-graph">
+		<h1 class="lowered">Fixtures</h1>
+		<div class="graph mini-graph mobile-margin">
+			<FixturesGraph data={data.data} team={data.team.name} {mobileView} />
+		</div>
+	</div>
 </div>
 
-<style scoped>
+<style>
 	.lowered {
 		margin-bottom: -9px;
-	}
-	.page-content {
-		position: relative;
 	}
 
 	.position-no-badge {
@@ -57,20 +72,8 @@
 		flex-direction: column;
 	}
 
-	.clean-sheets {
-		height: 60px;
-	}
-
-	.no-bottom-margin {
-		margin-bottom: 0 !important;
-	}
 	.small-bottom-margin {
 		margin-bottom: 1.5rem !important;
-	}
-	.page-content {
-		display: flex;
-		flex-direction: column;
-		text-align: center;
 	}
 
 	.row {
@@ -82,9 +85,7 @@
 	.row-graph {
 		width: 100%;
 	}
-	.score-freq {
-		margin: 0 8% 0 8%;
-	}
+
 	.row-left {
 		display: flex;
 		flex-direction: column;
@@ -98,15 +99,6 @@
 	}
 	.multi-element-row {
 		margin: 0 1.4em 3rem;
-	}
-
-	.spider-chart-row {
-		display: grid;
-		place-items: center;
-	}
-	.spider-chart-container {
-		margin: 1em auto auto;
-		display: flex;
 	}
 
 	@media only screen and (max-width: 1800px) {
@@ -139,13 +131,6 @@
 		}
 	}
 
-	@media only screen and (min-width: 1100px) {
-		.form-details {
-			width: 80%;
-			align-items: center;
-		}
-	}
-
 	@media only screen and (max-width: 1000px) {
 		.row {
 			flex-direction: column;
@@ -153,9 +138,6 @@
 		}
 		.row-graph {
 			width: auto;
-		}
-		.score-freq {
-			margin: 0 0 10px;
 		}
 
 		.multi-element-row {
@@ -179,13 +161,6 @@
 		.circles-background-container {
 			align-self: center;
 		}
-		.spider-chart-container {
-			flex-direction: column;
-			width: 100%;
-		}
-		.full-row-graph {
-			margin: 0;
-		}
 	}
 
 	@media only screen and (max-width: 900px) {
@@ -193,7 +168,6 @@
 			transform: scale(0.45);
 			margin-top: -120px;
 		}
-
 	}
 
 	@media only screen and (max-width: 700px) {
@@ -205,7 +179,6 @@
 		.position-no-badge {
 			height: 330px;
 		}
-
 	}
 
 	@media only screen and (max-width: 800px) {
@@ -214,9 +187,6 @@
 			margin-top: -9em;
 		}
 
-		.season-stats-row {
-			margin: 1em;
-		}
 		.row-graph {
 			margin: 0;
 		}
@@ -227,12 +197,6 @@
 			margin: 0;
 		}
 
-		.season-stats-row {
-			margin: 0 1em 1em;
-		}
-		.form-details {
-			width: 95%;
-		}
 		.circles-background {
 			transform: scale(0.35);
 			margin-top: -9.5em;
