@@ -28,20 +28,26 @@
 	<div class="row multi-element-row small-bottom-margin">
 		<div class="row-left position-no-badge">
 			<div class="circles-background-container">
-				<svg class="circles-background">
-					<circle
-						cx="300"
-						cy="150"
-						r="100"
-						stroke-width="0"
+				<svg class="circles-background" viewBox="0 0 600 600">
+					<!-- Background decorative circles -->
+					<circle cx="300" cy="320" r="230" fill="var(--{data.team.id})" />
+					<circle cx="300" cy="320" r="200" fill="var(--{data.team.id}-secondary)" />
+					<circle cx="300" cy="320" r="170" fill="var(--{data.team.id})" />
+
+					<!-- Central position number -->
+					<text
+						x="296"
+						y="342"
+						text-anchor="middle"
+						dominant-baseline="middle"
+						font-size="180"
+						font-weight="900"
+						font-family="Arial, sans-serif"
 						fill="var(--{data.team.id}-secondary)"
-					/>
-					<circle cx="170" cy="170" r="140" stroke-width="0" fill="var(--{data.team.id})" />
-					<circle cx="300" cy="320" r="170" stroke-width="0" fill="var(--{data.team.id})" />
+					>
+						{data.data.standings[data.team.name][data.data._id].position}
+					</text>
 				</svg>
-			</div>
-			<div class="position-central">
-				{data.data.standings[data.team.name][data.data._id].position}
 			</div>
 		</div>
 		<div class="row-right fixtures-graph row-graph">
@@ -172,23 +178,6 @@
 		height: 500px;
 	}
 
-	.position-central {
-		text-shadow: 9px 9px #000;
-		font-weight: 800;
-		font-size: 430px;
-		user-select: none;
-		max-width: 500px;
-	}
-
-	.position-central {
-		text-align: center;
-		margin-top: 0.1em;
-		max-height: 500px;
-		margin-left: 0.05em;
-		font-size: 20vw;
-		color: #333;
-	}
-
 	.circles-background-container {
 		position: absolute;
 		align-self: center;
@@ -259,28 +248,9 @@
 		display: flex;
 	}
 
-	@media only screen and (min-width: 2400px) {
-		.position-central {
-			font-size: 16vw;
-		}
-	}
-	@media only screen and (min-width: 2200px) {
-		.position-central {
-			font-size: 18vw;
-		}
-	}
-	@media only screen and (min-width: 2000px) {
-		.position-central {
-			font-size: 20vw;
-		}
-	}
 	@media only screen and (max-width: 1800px) {
 		.circles-background {
 			transform: scale(0.9);
-		}
-		.position-central {
-			font-size: 20vw;
-			margin-top: 0.2em;
 		}
 	}
 	@media only screen and (max-width: 1600px) {
@@ -295,28 +265,16 @@
 		.circles-background {
 			transform: scale(0.8);
 		}
-		.position-central {
-			font-size: 22vw;
-		}
 	}
 	@media only screen and (max-width: 1400px) {
 		.circles-background {
 			transform: scale(0.75);
 		}
-		.position-central {
-			margin-top: 0.25em;
-		}
 	}
 
 	@media only screen and (max-width: 1200px) {
-		.position-central {
-			margin-top: 0.3em;
-		}
 		.circles-background {
 			transform: scale(0.7);
-		}
-		.position-central {
-			font-size: 24vw;
 		}
 	}
 
@@ -349,11 +307,7 @@
 		}
 
 		.position-no-badge {
-			height: 400px;
-			width: 500px;
-		}
-		.position-central {
-			margin: auto;
+			display: none;
 		}
 
 		.circles-background {
@@ -361,7 +315,6 @@
 			margin-top: -100px;
 		}
 
-		.position-central,
 		.circles-background-container {
 			align-self: center;
 		}
@@ -379,9 +332,7 @@
 			transform: scale(0.45);
 			margin-top: -120px;
 		}
-		.position-central {
-			font-size: 25vw;
-		}
+
 	}
 
 	@media only screen and (max-width: 700px) {
@@ -394,10 +345,6 @@
 			height: 330px;
 		}
 
-		.position-central {
-			font-size: 250px;
-			margin: 35px 0 0 0;
-		}
 	}
 
 	@media only screen and (max-width: 800px) {
@@ -405,9 +352,7 @@
 			transform: scale(0.4);
 			margin-top: -9em;
 		}
-		.position-central {
-			font-size: 13em;
-		}
+
 		.season-stats-row {
 			margin: 1em;
 		}
@@ -417,14 +362,6 @@
 	}
 
 	@media only screen and (max-width: 550px) {
-		.position-central {
-			font-size: 10em;
-			text-align: center;
-			line-height: 1.55;
-			padding-right: 20px;
-			margin: 0;
-			text-shadow: 7px 7px #000;
-		}
 		.multi-element-row {
 			margin: 0;
 		}
@@ -435,19 +372,13 @@
 		.form-details {
 			width: 95%;
 		}
-		.position-no-badge {
-			padding: 0 !important;
-			margin: 0 !important;
-			width: 100%;
-		}
-
 		.circles-background {
 			transform: scale(0.35);
 			margin-top: -9.5em;
 		}
 
 		.lowered {
-			margin: 0 30px;
+			margin: 20px 30px 0;
 		}
 	}
 </style>
