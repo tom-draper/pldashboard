@@ -1,5 +1,6 @@
 import logging
 from collections import defaultdict
+from typing import Dict, List, Set, Tuple, Any
 
 import pandas as pd
 from pandas import DataFrame
@@ -10,150 +11,168 @@ from .df import DF
 
 
 class HomeAdvantages(DF):
+    """Class for calculating and managing home advantage statistics for football teams."""
+    
+    PANDEMIC_YEAR = 2020  # Exclude due to anomalous conditions (no fans)
+    
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, "home_advantages")
 
-    @staticmethod
-    def _check_init_team_row(d: defaultdict, team: str, season: int):
-        if team not in d:
-            d[team] = {}
+    def _initialize_team_season_stats(self, stats: defaultdict, team: str, season: int) -> None:
+        """Initialize statistics structure for a team in a given season."""
+        if team not in stats:
+            stats[team] = {}
 
-        if (season, "home", "wins") not in d[team]:
-            d[team].update(
-                {
-                    (season, "home", "wins"): 0,
-                    (season, "home", "draws"): 0,
-                    (season, "home", "loses"): 0,
-                    (season, "away", "wins"): 0,
-                    (season, "away", "draws"): 0,
-                    (season, "away", "loses"): 0,
-                }
-            )
+        season_key = (season, "home", "wins")
+        if season_key not in stats[team]:
+            stats[team].update({
+                (season, "home", "wins"): 0,
+                (season, "home", "draws"): 0,
+                (season, "home", "loses"): 0,
+                (season, "away", "wins"): 0,
+                (season, "away", "draws"): 0,
+                (season, "away", "loses"): 0,
+            })
 
-    def _home_advantages_for_season(self, d: defaultdict, data: dict, season: int):
-        for match in data:
-            home_team = clean_full_team_name(match["homeTeam"]["name"])
-            away_team = clean_full_team_name(match["awayTeam"]["name"])
+    def _process_match_result(self, stats: defaultdict, match: Dict[str, Any], season: int) -> None:
+        """Process a single match and update team statistics."""
+        home_team = clean_full_team_name(match["homeTeam"]["name"])
+        away_team = clean_full_team_name(match["awayTeam"]["name"])
 
-            self._check_init_team_row(d, home_team, season)
-            self._check_init_team_row(d, away_team, season)
+        self._initialize_team_season_stats(stats, home_team, season)
+        self._initialize_team_season_stats(stats, away_team, season)
 
-            if match["score"]["winner"] is None:
-                continue
+        # Skip matches without a result
+        if match["score"]["winner"] is None:
+            return
 
-            home_goals = match["score"]["fullTime"]["homeTeam"]
-            away_goals = match["score"]["fullTime"]["awayTeam"]
-            if home_goals > away_goals:
-                # Home team wins
-                d[home_team][(season, "home", "wins")] += 1
-                d[away_team][(season, "away", "loses")] += 1
-            elif home_goals < away_goals:
-                # Away team wins
-                d[home_team][(season, "home", "loses")] += 1
-                d[away_team][(season, "away", "wins")] += 1
-            else:
-                # Draw
-                d[home_team][(season, "home", "draws")] += 1
-                d[away_team][(season, "away", "draws")] += 1
+        home_goals = match["score"]["fullTime"]["homeTeam"]
+        away_goals = match["score"]["fullTime"]["awayTeam"]
+        
+        if home_goals > away_goals:
+            # Home team wins
+            stats[home_team][(season, "home", "wins")] += 1
+            stats[away_team][(season, "away", "loses")] += 1
+        elif home_goals < away_goals:
+            # Away team wins
+            stats[home_team][(season, "home", "loses")] += 1
+            stats[away_team][(season, "away", "wins")] += 1
+        else:
+            # Draw
+            stats[home_team][(season, "home", "draws")] += 1
+            stats[away_team][(season, "away", "draws")] += 1
 
-    @staticmethod
-    def _create_season_home_advantage_col(home_advantages: DataFrame, season: int):
-        played_at_home = (
-            home_advantages[season]["home"]["wins"]
-            + home_advantages[season]["home"]["draws"]
-            + home_advantages[season]["home"]["loses"]
+    def _process_season_matches(self, stats: defaultdict, matches: List[Dict[str, Any]], season: int) -> None:
+        """Process all matches for a given season."""
+        for match in matches:
+            self._process_match_result(stats, match, season)
+
+    def _calculate_season_metrics(self, df: DataFrame, season: int) -> None:
+        """Calculate derived metrics for a specific season."""
+        # Calculate games played at home
+        home_played = (
+            df[season]["home"]["wins"] +
+            df[season]["home"]["draws"] +
+            df[season]["home"]["loses"]
         )
-        home_advantages[season, "home", "played"] = played_at_home
+        df[season, "home", "played"] = home_played
 
-        # Percentage wins at home = total wins at home / total games played at home
-        win_ratio_at_home = home_advantages[season]["home"]["wins"] / played_at_home
-        home_advantages[season, "home", "winRatio"] = win_ratio_at_home
+        # Calculate home win ratio (avoid division by zero)
+        home_win_ratio = df[season]["home"]["wins"] / home_played.replace(0, 1)
+        df[season, "home", "winRatio"] = home_win_ratio
 
-        played = (
-            played_at_home
-            + home_advantages[season]["away"]["wins"]
-            + home_advantages[season]["away"]["draws"]
-            + home_advantages[season]["away"]["loses"]
+        # Calculate total games played
+        total_played = (
+            home_played +
+            df[season]["away"]["wins"] +
+            df[season]["away"]["draws"] +
+            df[season]["away"]["loses"]
         )
-        home_advantages[season, "overall", "played"] = played
+        df[season, "overall", "played"] = total_played
 
-        # Percentage wins = total wins / total games played
-        win_ratio = (
-            home_advantages[season]["home"]["wins"]
-            + home_advantages[season]["away"]["wins"]
-        ) / played
-        home_advantages[season, "overall", "winRatio"] = win_ratio
+        # Calculate overall win ratio
+        total_wins = df[season]["home"]["wins"] + df[season]["away"]["wins"]
+        overall_win_ratio = total_wins / total_played.replace(0, 1)
+        df[season, "overall", "winRatio"] = overall_win_ratio
 
-        # home advantage = percentage wins at home - percentage wins
-        home_advantage = win_ratio_at_home - win_ratio
-        home_advantages[season, "homeAdvantage", ""] = home_advantage
+        # Calculate home advantage (difference between home and overall win ratios)
+        home_advantage = home_win_ratio - overall_win_ratio
+        df[season, "homeAdvantage", ""] = home_advantage
 
-    @staticmethod
-    def _create_total_home_advantage_col(
-        home_advantages: DataFrame, season: int, threshold: float
-    ):
-        home_advantages_cols = home_advantages.iloc[
-            :, home_advantages.columns.get_level_values(1) == "homeAdvantage"
-        ]
-        # Check whether all teams in current season have played enough home games to meet threshold for use
-        if (home_advantages[season]["home"]["played"] <= threshold).all():
+    def _calculate_total_home_advantage(self, df: DataFrame, current_season: int, threshold: float) -> DataFrame:
+        """Calculate the total home advantage across multiple seasons."""
+        # Get all home advantage columns
+        home_advantage_cols = df.loc[:, df.columns.get_level_values(1) == "homeAdvantage"]
+        
+        # Exclude current season if teams haven't played enough home games
+        current_season_home_played = df[current_season]["home"]["played"]
+        if (current_season_home_played <= threshold).all():
             logging.info(
-                f"Home Advantages: Current season excluded from calculation; all teams have not played >= {threshold} home games."
+                f"Home Advantages: Current season ({current_season}) excluded from calculation; "
+                f"all teams have not played >= {threshold} home games."
             )
-            # Drop this current seasons column (start from previous season)
-            home_advantages_cols = home_advantages_cols.drop(season, level=0, axis=1)
+            if (current_season, "homeAdvantage", "") in home_advantage_cols.columns:
+                home_advantage_cols = home_advantage_cols.drop(
+                    (current_season, "homeAdvantage", ""), axis=1
+                )
 
-        # Drop pandemic year (anomaly, no fans, data shows neutral home advantage)
-        if (2020, "homeAdvantage", "") in list(home_advantages_cols.columns):
-            home_advantages_cols = home_advantages_cols.drop(
-                (2020, "homeAdvantage", ""), axis=1
-            )
+        # Exclude pandemic year due to anomalous conditions
+        pandemic_col = (self.PANDEMIC_YEAR, "homeAdvantage", "")
+        if pandemic_col in home_advantage_cols.columns:
+            home_advantage_cols = home_advantage_cols.drop(pandemic_col, axis=1)
+            logging.info(f"Home Advantages: Excluded {self.PANDEMIC_YEAR} season due to pandemic conditions.")
 
-        home_advantages = home_advantages.sort_index(axis=1)
-        home_advantages["totalHomeAdvantage"] = home_advantages_cols.mean(
-            axis=1
-        ).fillna(0)
-        home_advantages = home_advantages.sort_values(
-            by="totalHomeAdvantage", ascending=False
-        )
+        # Calculate mean home advantage across seasons
+        df["totalHomeAdvantage"] = home_advantage_cols.mean(axis=1).fillna(0)
+        
+        # Sort by total home advantage (descending)
+        df = df.sort_values(by="totalHomeAdvantage", ascending=False)
+        
+        return df
 
-        return home_advantages
-
-    @staticmethod
-    def _row_template(season: int, no_seasons: int):
-        template: dict[tuple[int, str, str], int] = {}
-        for i in range(no_seasons):
-            template.update(
-                {
-                    (season - i, "home", "wins"): 0,
-                    (season - i, "home", "draws"): 0,
-                    (season - i, "home", "loses"): 0,
-                    (season - i, "away", "wins"): 0,
-                    (season - i, "away", "draws"): 0,
-                    (season - i, "away", "loses"): 0,
-                }
-            )
+    def _create_season_template(self, season: int, num_seasons: int) -> Dict[Tuple[int, str, str], int]:
+        """Create a template dictionary for initializing team statistics."""
+        template = {}
+        for i in range(num_seasons):
+            season_year = season - i
+            template.update({
+                (season_year, "home", "wins"): 0,
+                (season_year, "home", "draws"): 0,
+                (season_year, "home", "loses"): 0,
+                (season_year, "away", "wins"): 0,
+                (season_year, "away", "draws"): 0,
+                (season_year, "away", "loses"): 0,
+            })
         return template
 
-    @staticmethod
-    def _clean_dataframe(home_advantages: DataFrame, current_season_teams: list[str]):
-        home_advantages = home_advantages.drop(
-            columns=["wins", "loses", "draws"], level=2
-        )
-        home_advantages = home_advantages.loc[current_season_teams]
-        home_advantages.columns.names = ("season", None, None)
-        home_advantages.index.name = "team"
-        return home_advantages
+    def _clean_dataframe(self, df: DataFrame, current_season_teams: List[str]) -> DataFrame:
+        """Clean the dataframe by removing unnecessary columns and formatting."""
+        # Remove raw win/loss/draw counts (keep only derived metrics)
+        df = df.drop(columns=["wins", "loses", "draws"], level=2)
+        
+        # Filter to only include current season teams
+        df = df.loc[current_season_teams]
+        
+        # Set proper column and index names
+        df.columns.names = ("season", None, None)
+        df.index.name = "team"
+        
+        # Ensure final sorting by totalHomeAdvantage (descending)
+        if "totalHomeAdvantage" in df.columns:
+            df = df.sort_values(by="totalHomeAdvantage", ascending=False)
+        
+        return df
 
     @staticmethod
-    def get_season_teams(season_fixtures_data: dict):
-        current_season_teams: set[str] = set()
-        for match in season_fixtures_data:
+    def get_season_teams(season_fixtures: List[Dict[str, Any]]) -> List[str]:
+        """Extract unique team names from season fixture data."""
+        teams: Set[str] = set()
+        for match in season_fixtures:
             home_team = clean_full_team_name(match["homeTeam"]["name"])
             away_team = clean_full_team_name(match["awayTeam"]["name"])
-            current_season_teams.add(home_team)
-            current_season_teams.add(away_team)
-        return list(current_season_teams)
+            teams.add(home_team)
+            teams.add(away_team)
+        return sorted(list(teams))  # Sort for consistency
 
     @timebudget
     def build(
@@ -161,7 +180,7 @@ class HomeAdvantages(DF):
         json_data: dict,
         season: int,
         threshold: float,
-        no_seasons: int = 3,
+        num_seasons: int = 3,
         display: bool = False,
     ):
         """ Assigns self.df a DataFrame containing team's home advantage data
@@ -198,28 +217,32 @@ class HomeAdvantages(DF):
         """
         self.log_building(season)
 
-        d = defaultdict(lambda: self._row_template(season, no_seasons))
-        for i in range(no_seasons):
-            data = json_data["fixtures"][season - i]
-            self._home_advantages_for_season(d, data, season - i)
+        # Initialize statistics storage with template for each team
+        stats = defaultdict(lambda: self._create_season_template(season, num_seasons))
 
-        home_advantages = pd.DataFrame.from_dict(d, orient="index")
-        home_advantages = home_advantages.fillna(0).astype(int)
+        # Process matches for each season
+        for i in range(num_seasons):
+            season_year = season - i
+            season_data = json_data["fixtures"][season_year]
+            self._process_season_matches(stats, season_data, season_year)
 
-        # Calculate home advantages for each season
-        for i in range(no_seasons):
-            self._create_season_home_advantage_col(home_advantages, season - i)
+        # Convert to DataFrame and fill missing values
+        df = pd.DataFrame.from_dict(stats, orient="index")
+        df = df.fillna(0).astype(int)
 
-        # Create the final overall home advantage value for each team
-        home_advantages = self._create_total_home_advantage_col(
-            home_advantages, season, threshold
-        )
+        # Calculate derived metrics for each season
+        for i in range(num_seasons):
+            season_year = season - i
+            self._calculate_season_metrics(df, season_year)
 
-        # Remove working columns
+        # Calculate total home advantage across seasons
+        df = self._calculate_total_home_advantage(df, season, threshold)
+
+        # Clean and format the final DataFrame
         current_season_teams = self.get_season_teams(json_data["fixtures"][season])
-        home_advantages = self._clean_dataframe(home_advantages, current_season_teams)
+        df = self._clean_dataframe(df, current_season_teams)
 
         if display:
-            print(home_advantages)
+            print(df)
 
-        self.df = home_advantages
+        self.df = df

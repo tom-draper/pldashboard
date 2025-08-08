@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 from src.data import Data
 
@@ -24,8 +25,8 @@ def test_form_df_shape_columns(data: Data):
 def test_form_df_teams_unique(data: Data):
     # No duplicates in opposition team column
     teams = data.teams.form.df.loc[:, (slice(None), slice(None), ['team'])]
-    for col in teams.values():
-        assert len(col) == len(col.unique())
+    for col in teams.values:
+        assert len(col) == len(np.unique(col))
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
@@ -33,16 +34,16 @@ def test_form_df_teams_match_index(data: Data):
     # Teams column holds the same teams as the index values
     index = data.teams.fixtures.df.index.tolist()
     teams = data.teams.form.df.loc[:, (slice(None), slice(None), ['team'])]
-    for col in teams.values():
-        assert set(index) == set(col.unique())
+    for col in teams.values:
+        assert set(index) == set(np.unique(col))
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_form_df_positions_unique(data: Data):
     # Positions across all seasons and matchdays
     positions = data.teams.form.df.loc[:, (slice(None), slice(None), ['position'])]
-    for col in positions.values():
-        assert len(col.unique()) == 20
+    for col in positions.values:
+        assert len(np.unique(col)) == 20
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
@@ -50,7 +51,7 @@ def test_form_df_positions_values(data: Data):
     # Positions across all seasons and matchdays
     positions = data.teams.form.df.loc[:, (slice(None), slice(None), ['position'])]
     expected_position_values = set((i+1 for i in range(20)))
-    for col in positions.values():
+    for col in positions.values:
         assert set(col) == expected_position_values
 
 
@@ -58,7 +59,7 @@ def test_form_df_positions_values(data: Data):
 def test_form_df_positions_min(data: Data):
     # Positions across all seasons and matchdays
     positions = data.teams.form.df.loc[:, (slice(None), slice(None), ['position'])]
-    assert positions.min() == 1 and positions.max() == 20
+    assert (positions >= 1).all().all() and (positions <= 20).all().all()
 
 
 def get_seasons(data: Data):
