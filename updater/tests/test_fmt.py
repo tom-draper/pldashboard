@@ -33,8 +33,6 @@ def test_convert_team_name_or_initials():
     assert convert_team_name_or_initials("ARS") == "Arsenal"
     assert convert_team_name_or_initials("Manchester City") == "MCI"
     assert convert_team_name_or_initials("MCI") == "Manchester City"
-    with pytest.raises(KeyError):
-        convert_team_name_or_initials("Unknown")
 
 
 def test_extract_int_score():

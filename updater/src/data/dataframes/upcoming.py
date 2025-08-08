@@ -69,6 +69,8 @@ class Upcoming(DF):
         matchday = {"date": future, "matchday": None}
         now = datetime.now()
         for matchday_no in fixtures.df.columns.unique(level=0):
+            if not isinstance(matchday_no, int):
+                continue
             date = fixtures.df.at[team, (matchday_no, "date")]
             scheduled = fixtures.df.at[team, (matchday_no, "status")] == "SCHEDULED"
             if scheduled and now < date < matchday["date"]:

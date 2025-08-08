@@ -172,6 +172,7 @@ class Fixtures(DF):
         fixtures.index = teams_index
         fixtures.columns.names = ("matchday", None)
         fixtures.index.name = "team"
+        fixtures.sort_index(inplace=True)
 
         if display:
             print(fixtures)

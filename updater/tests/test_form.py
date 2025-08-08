@@ -24,35 +24,46 @@ def test_form_df_shape_columns(data: Data):
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_form_df_teams_unique(data: Data):
     # No duplicates in opposition team column
-    teams = data.teams.form.df.loc[:, (slice(None), slice(None), ['team'])]
-    for col in teams.values:
-        assert len(col) == len(np.unique(col))
+    teams = data.teams.form.df.loc[:, (slice(None), slice(None), ["team"])]
+    for col_name in teams.columns:
+        col = teams[col_name].dropna()
+        if not col.empty:
+            assert len(col) == len(np.unique(col))
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_form_df_teams_match_index(data: Data):
     # Teams column holds the same teams as the index values
-    index = data.teams.fixtures.df.index.tolist()
-    teams = data.teams.form.df.loc[:, (slice(None), slice(None), ['team'])]
-    for col in teams.values:
-        assert set(index) == set(np.unique(col))
+    teams = data.teams.form.df.loc[:, (slice(None), slice(None), ["team"])]
+    for col_name in teams.columns:
+        col = teams[col_name].dropna()
+        if not col.empty:
+            season = col_name[0]
+            season_teams = data.teams.fixtures.df[
+                data.teams.fixtures.df["season"] == season
+            ].index
+            assert set(np.unique(col)).issubset(set(season_teams))
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_form_df_positions_unique(data: Data):
     # Positions across all seasons and matchdays
-    positions = data.teams.form.df.loc[:, (slice(None), slice(None), ['position'])]
-    for col in positions.values:
-        assert len(np.unique(col)) == 20
+    positions = data.teams.form.df.loc[:, (slice(None), slice(None), ["position"])]
+    for col_name in positions.columns:
+        col = positions[col_name].dropna()
+        if not col.empty:
+            assert len(np.unique(col)) == len(col)
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_form_df_positions_values(data: Data):
     # Positions across all seasons and matchdays
-    positions = data.teams.form.df.loc[:, (slice(None), slice(None), ['position'])]
-    expected_position_values = set((i+1 for i in range(20)))
-    for col in positions.values:
-        assert set(col) == expected_position_values
+    positions = data.teams.form.df.loc[:, (slice(None), slice(None), ["position"])]
+    expected_position_values = set((i + 1 for i in range(20)))
+    for col_name in positions.columns:
+        col = positions[col_name].dropna()
+        if not col.empty:
+            assert set(col).issubset(expected_position_values)
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)

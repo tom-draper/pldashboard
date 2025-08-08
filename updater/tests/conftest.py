@@ -34,7 +34,7 @@ class Comparable(Protocol):
 
 
 def is_sorted(my_list: list[CT]):
-    return all(x >= y for x, y in zip(my_list, my_list[1:]))  # passes if descending
+    return all(x <= y for x, y in zip(my_list, my_list[1:]))
 
 
 def in_range(values: pd.Series, min_value: float, max_value: float):
