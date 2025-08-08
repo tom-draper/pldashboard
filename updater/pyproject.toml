@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pldashboard-updater"
+version = "0.1.0"
+dependencies = [
+    "aiohttp==3.12.15",
+    "aiosignal==1.4.0",
+    "attrs==25.3.0",
+    "certifi==2025.8.3",
+    "charset-normalizer==3.4.2",
+    "dnspython==2.7.0",
+    "frozenlist==1.7.0",
+    "idna==3.10",
+    "multidict==6.6.3",
+    "numpy==2.3.2",
+    "pandas==2.3.1",
+    "pydantic==2.10.1",
+    "pymongo==4.13.2",
+    "python-dotenv==1.1.1",
+    "python-dateutil==2.9.0.post0",
+    "pytz==2025.2",
+    "requests==2.32.4",
+    "selenium==4.34.2",
+    "six==1.17.0",
+    "tzdata==2025.2",
+    "urllib3==2.5.0",
+    "webdriver-manager==4.0.2",
+    "yarl==1.17.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -18,12 +18,12 @@ def test_team_ratings_df_index_not_sorted(data: Data):
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_team_ratings_df_sorted_by_total_rating(data: Data):
     # Ratings should be sorted by total rating
-    total_ratings = data.teams.standings.df['total'].tolist()
+    total_ratings = data.teams.team_ratings.df['total'].tolist()
     assert pytest.is_sorted(total_ratings)
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_team_ratings_df_total_rating_range(data: Data):
     # Total ratings between 0 and 1 inclusive
-    total_ratings = data.teams.standings.df['total']
+    total_ratings = data.teams.team_ratings.df['total']
     assert (0 <= total_ratings <= 1).all()

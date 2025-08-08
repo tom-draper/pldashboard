@@ -1,7 +1,10 @@
 import pytest
+from abc import ABC, abstractmethod
 from src.data import Data
 from src.updater import Updater
 from typing import Protocol, TypeVar
+
+CT = TypeVar("CT", bound="Comparable"), TypeVar
 
 # DataFrames built from data backups
 updater_loaded = Updater()
@@ -38,7 +41,8 @@ def valid_season(season: int):
     return 2000 <= season <= 2090
 
 
-def pytest_configure():
+def pytest_configure(config):
+    current_season = 2024
     pytest.current_season = current_season
     pytest.data_objects = data_objects
     pytest.data_ids = data_ids
