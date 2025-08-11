@@ -75,6 +75,9 @@
     <div class="total-points">
         Total points: {totalPoints.toLocaleString('en-GB')}
     </div>
+    <div class="label">
+        Optimal team
+    </div>
 </div>
 
 <style scoped>
@@ -125,6 +128,15 @@
         font-size: 1em;
         margin-top: 1em;
         right: 1em;
+        top: 0;
+        color: #333;
+    }
+    .label {
+        position: absolute;
+        text-align: center;
+        font-size: 1em;
+        margin-top: 1em;
+        left: 1em;
         top: 0;
         color: #333;
     }

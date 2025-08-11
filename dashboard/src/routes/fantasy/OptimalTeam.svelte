@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { FantasyData, FantasyPlayer, Page } from './fantasy.types';
+	import type { FantasyData, FantasyPlayer } from './fantasy.types';
 	import Pitch from './Pitch.svelte';
 
 	interface OptimalTeam {
@@ -186,24 +186,6 @@
 		};
 	}
 
-	// Helper function to display team summary
-	function displayTeamSummary(team: OptimalTeam): void {
-		console.log(`\n=== OPTIMAL FANTASY TEAM ===`);
-		console.log(`Total Points: ${team.totalPoints}`);
-		console.log(`Total Price: ${team.totalPrice}/1000`);
-		console.log(`Budget Remaining: ${1000 - team.totalPrice}\n`);
-
-		Object.entries(team.formation).forEach(([position, players]) => {
-			console.log(`${position.toUpperCase()}:`);
-			players.forEach((player) => {
-				console.log(
-					`  ${player.firstName} ${player.surname} (${player.team}) - ${player.totalPoints} pts - £${player.price}`
-				);
-			});
-			console.log();
-		});
-	}
-
 	let optimalTeam: OptimalTeam;
 
 	onMount(() => {
@@ -214,8 +196,6 @@
 			}
 		}
 		optimalTeam = findOptimalFantasyTeam(players);
-		console.log('Optimal Fantasy Team Found:');
-		displayTeamSummary(optimalTeam);
 	});
 
 	export let data: FantasyData;

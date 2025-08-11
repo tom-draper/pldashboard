@@ -8,6 +8,7 @@
 	import { replaceState } from '$app/navigation';
 	import { filterDataByPage, getTitle } from './data';
 	import OptimalTeam from './OptimalTeam.svelte';
+	import { onMount } from 'svelte';
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');
@@ -47,6 +48,10 @@
 
 	let pageWidth: number;
 	$: mobileView = pageWidth <= 700;
+
+	onMount(() => {
+		console.log(data);
+	});
 
 	export let data: FantasyDashboardData;
 </script>

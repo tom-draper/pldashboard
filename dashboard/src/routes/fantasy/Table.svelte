@@ -192,17 +192,6 @@
 	export let data: FantasyData, page: Page;
 </script>
 
-<!-- <svelte:head>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
-		integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
-		crossorigin="anonymous"
-		referrerpolicy="no-referrer"
-	></script>
-	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
-	<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
-</svelte:head> -->
-
 {#if !setup}
 	<div class="loading-spinner-container">
 		<div class="loading-spinner"></div>
