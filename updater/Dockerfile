@@ -1,12 +1,15 @@
 # Use an official Python runtime as a parent image
 FROM python:3.12-slim
 
-# Install system dependencies: cron + uv
+# Install system dependencies: cron + curl (needed for uv install)
 RUN apt-get update && \
     apt-get install -y curl cron && \
     curl -LsSf https://astral.sh/uv/install.sh | sh && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Add uv to PATH (installer puts it in /root/.cargo/bin)
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Set the working directory
 WORKDIR /app
