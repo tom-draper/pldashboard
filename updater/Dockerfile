@@ -1,32 +1,25 @@
 # Use an official Python runtime as a parent image
 FROM python:3.12-slim
 
-# Install system dependencies: cron + curl (needed for uv install)
-RUN apt-get update && \
-    apt-get install -y curl cron && \
-    curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Add uv to PATH (installer puts it in /root/.cargo/bin)
-ENV PATH="/root/.cargo/bin:${PATH}"
-
-# Set the working directory
 WORKDIR /app
 
-# Copy project files
+# Install system dependencies
+RUN apt-get update && apt-get install -y cron && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copy pyproject + lockfile first (to leverage Docker cache)
+COPY pyproject.toml /app/
+
+# Install build tools and deps
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install .
+
+# Copy source code and other files
 COPY src /app/src
 COPY backups /app/backups
 COPY .env /app/
-COPY pyproject.toml uv.lock /app/
-
-# Install dependencies with uv (using lock file for reproducibility)
-RUN uv sync --frozen
 
 # Add the cron job
 COPY crontab /etc/cron.d/pldashboard-updater-cron
-RUN chmod 0644 /etc/cron.d/pldashboard-updater-cron && \
-    crontab /etc/cron.d/pldashboard-updater-cron
+RUN chmod 0644 /etc/cron.d/pldashboard-updater-cron && crontab /etc/cron.d/pldashboard-updater-cron
 
-# Run cron in foreground
 CMD ["cron", "-f"]
