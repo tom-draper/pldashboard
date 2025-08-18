@@ -188,8 +188,17 @@ class Upcoming(DF):
             if home_team not in teams or away_team not in teams:
                 continue
 
-            home_goals = match["score"]["fullTime"]["homeTeam"]
-            away_goals = match["score"]["fullTime"]["awayTeam"]
+            home_goals = (
+                match["score"]["fullTime"]["home"]
+                if "home" in match["score"]["fullTime"]
+                else match["score"]["fullTime"]["homeTeam"]
+            )
+            away_goals = (
+                match["score"]["fullTime"]["away"]
+                if "away" in match["score"]["fullTime"]
+                else match["score"]["fullTime"]["awayTeam"]
+            )
+
             date = match["utcDate"]
 
             # From the perspective from the home team
