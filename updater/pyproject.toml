@@ -29,6 +29,7 @@ dependencies = [
     "urllib3==2.5.0",
     "webdriver-manager==4.0.2",
     "yarl==1.17.0",
+    "timebudget>=0.7.1",
 ]
 
 [tool.setuptools.packages.find]
