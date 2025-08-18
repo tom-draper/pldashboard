@@ -7,12 +7,16 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install uv and add to PATH in one step
+# Install uv and verify installation
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    echo 'export PATH="/root/.cargo/bin:$PATH"' >> ~/.bashrc
+    ls -la /root/.cargo/bin/ && \
+    /root/.cargo/bin/uv --version
 
-# Add uv to PATH for Docker
+# Add uv to PATH
 ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Verify uv is in PATH
+RUN which uv && uv --version
 
 # Set the working directory
 WORKDIR /app
@@ -23,8 +27,8 @@ COPY backups /app/backups
 COPY .env /app/
 COPY pyproject.toml uv.lock /app/
 
-# Install dependencies with uv - use explicit path to be safe
-RUN /root/.cargo/bin/uv sync --frozen
+# Install dependencies with uv (using lock file for reproducibility)
+RUN uv sync --frozen
 
 # Add the cron job
 COPY crontab /etc/cron.d/pldashboard-updater-cron
