@@ -5,8 +5,8 @@ A script to fetch the latest data from the football data API, compute metrics an
 ## Getting Started
 
 ```bash
-pip install -r requirements.txt
-python src/main.py
+uv install
+uv run src/main.py
 ```
 
 ### Docker
@@ -25,7 +25,7 @@ docker exec -it <container_id> cat /var/log/pldashboard-updater.log
 ### Tests
 
 ```bash
-pytest
+uv run pytest
 ```
 
 ## Environment Variables

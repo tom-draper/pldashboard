@@ -31,7 +31,7 @@
 		{#if !teams}
 			{#if widths}
 				{#each widths as width, _}
-					<div class="placeholder" style="width: {width}%" />
+					<div class="placeholder" style="width: {width}%"></div>
 				{/each}
 			{/if}
 		{:else}
@@ -118,7 +118,7 @@
 		text-decoration: none;
 	}
 	.fantasy:hover {
-		text-decoration: underline;
+		color: rgba(255, 255, 255, 0.7);
 	}
 
 	.this-team-container {

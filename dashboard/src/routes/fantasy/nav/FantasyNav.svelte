@@ -10,6 +10,7 @@
 		const dashboard = document.getElementById('dashboard');
 		if (dashboard !== null) {
 			dashboard.style.marginLeft = '0';
+			dashboard.style.width = '100%';
 		}
 		window.dispatchEvent(new Event('resize')); // Snap plotly graphs to new width
 	}

@@ -1,35 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { FantasyData, Page } from './fantasy.types';
-
-	interface FantasyPlayer {
-		firstName: string;
-		surname: string;
-		form: string;
-		team: string;
-		minutes: number;
-		pointsPerGame: string;
-		price: number;
-		position: string;
-		selectedBy: string;
-		points: number;
-		totalPoints: number;
-		bonusPoints: number;
-		transferIn: number;
-		transferOut: number;
-		goals: number;
-		assists: number;
-		cleanSheets: number;
-		ownGoals: number;
-		penalitiesSaved: number;
-		penalitiesMissed: number;
-		yellowCards: number;
-		news: string;
-		redCards: number;
-		saves: number;
-		chanceOfPlayingNextRound: number;
-		chanceOfPlayingThisRound: number;
-	}
+	import type { FantasyData, FantasyPlayer } from './fantasy.types';
+	import Pitch from './Pitch.svelte';
 
 	interface OptimalTeam {
 		players: FantasyPlayer[];
@@ -214,23 +186,7 @@
 		};
 	}
 
-	// Helper function to display team summary
-	function displayTeamSummary(team: OptimalTeam): void {
-		console.log(`\n=== OPTIMAL FANTASY TEAM ===`);
-		console.log(`Total Points: ${team.totalPoints}`);
-		console.log(`Total Price: ${team.totalPrice}/1000`);
-		console.log(`Budget Remaining: ${1000 - team.totalPrice}\n`);
-
-		Object.entries(team.formation).forEach(([position, players]) => {
-			console.log(`${position.toUpperCase()}:`);
-			players.forEach((player) => {
-				console.log(
-					`  ${player.firstName} ${player.surname} (${player.team}) - ${player.totalPoints} pts - £${player.price}`
-				);
-			});
-			console.log();
-		});
-	}
+	let optimalTeam: OptimalTeam;
 
 	onMount(() => {
 		const players: FantasyPlayer[] = [];
@@ -239,12 +195,21 @@
 				players.push(value);
 			}
 		}
-		const optimalTeam = findOptimalFantasyTeam(players);
-		console.log('Optimal Fantasy Team Found:');
-		displayTeamSummary(optimalTeam);
+		optimalTeam = findOptimalFantasyTeam(players);
 	});
 
-	export let data: FantasyData, page: Page;
+	export let data: FantasyData;
 </script>
 
-<div></div>
+{#if optimalTeam}
+	<div class="optimal-team">
+		<Pitch players={optimalTeam.players} />
+	</div>
+{/if}
+
+<style scoped>
+	.optimal-team {
+		margin-bottom: -40px;
+	}
+
+</style>

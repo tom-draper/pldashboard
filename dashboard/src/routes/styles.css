@@ -31,6 +31,7 @@
 	--manchester-city-secondary: rgb(28 44 91);
 	--liverpool: rgb(200 16 46);
 	--liverpool-secondary: rgb(0 178 169);
+	--liverpool-secondary: #009685;
 	--leicester-city: rgb(0 83 160);
 	--leicester-city-secondary: rgb(253 190 17);
 	--everton: rgb(39 68 136);
@@ -38,7 +39,7 @@
 	--crystal-palace: rgb(27 69 143);
 	--crystal-palace-secondary: rgb(196 18 46);
 	--chelsea: rgb(3 70 148);
-	--chelsea-secondary: rgb(0 0 0);
+	--chelsea-secondary: rgb(255 255 255);
 	--burnley: rgb(108 29 69);
 	--burnley-secondary: rgb(153 214 234);
 	--brighton-and-hove-albion: rgb(0 87 184);

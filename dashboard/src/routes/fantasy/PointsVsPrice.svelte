@@ -3,14 +3,57 @@
 	import type { FantasyData, Page, Position, Team } from './fantasy.types';
 	import type { Config, Layout, PlotData } from 'plotly.js';
 
-	const positionColors: { [position in Position]: string } = {
+	// Props
+	export let data: FantasyData;
+	export let page: Page;
+	export let mobileView: boolean;
+
+	// Constants
+	const POSITION_COLORS: Record<Position, string> = {
 		Forward: '#c600d8',
 		Midfielder: '#00fe87',
 		Defender: '#2dbaff',
 		Goalkeeper: '#280936'
 	} as const;
 
-	function lines(data: FantasyData) {
+	const CHART_CONFIG: Config = {
+		responsive: true,
+		showSendToCloud: false,
+		displayModeBar: false
+	};
+
+	// State
+	let plotDiv: HTMLDivElement;
+	let plotData: { data: PlotData[]; layout: Layout; config: Config };
+	let isSetup = false;
+
+	// Utility functions
+	function isTeam(value: string): value is Team {
+		return value !== '_id';
+	}
+
+	function createScatterData(data: FantasyData): PlotData {
+		const processedData = processTeamData(data);
+		
+		return {
+			x: processedData.points,
+			y: processedData.price,
+			name: 'Fantasy Players',
+			mode: 'markers',
+			type: 'scatter',
+			marker: {
+				size: processedData.sizes,
+				opacity: 0.75,
+				color: processedData.colors
+			},
+			customdata: processedData.playtimes,
+			text: processedData.teams,
+			hovertemplate: `<b>%{text}</b><br><b>£%{y}m</b><br><b>%{x} points</b><br>%{customdata}% playtime<extra></extra>`,
+			showlegend: false
+		};
+	}
+
+	function processTeamData(data: FantasyData) {
 		const teams: Team[] = [];
 		const points: number[] = [];
 		const price: number[] = [];
@@ -18,175 +61,159 @@
 		const colors: string[] = [];
 		let maxMinutes = 0;
 
+		// Process team data
 		Object.entries(data).forEach(([team, teamData]) => {
-			if (!isTeam(team)) {
-				return;
-			}
+			if (!isTeam(team)) return;
+
 			teams.push(team);
-			points.push(teamData.totalPoints === null ? 0 : teamData.totalPoints);
-			price.push(teamData.price == null ? 0 : teamData.price / 10);
-			minutes.push(teamData.minutes == null ? 0 : teamData.minutes / 2);
-			if (minutes[minutes.length - 1] > maxMinutes) {
-				maxMinutes = minutes[minutes.length - 1];
-			}
-			colors.push(positionColors[teamData.position]);
+			points.push(teamData.totalPoints ?? 0);
+			price.push((teamData.price ?? 0) / 10);
+			
+			const playerMinutes = (teamData.minutes ?? 0) / 2;
+			minutes.push(playerMinutes);
+			maxMinutes = Math.max(maxMinutes, playerMinutes);
+			
+			colors.push(POSITION_COLORS[teamData.position]);
 		});
 
-		const sizes = minutes.map((x) => x / (maxMinutes * 0.02));
+		// Calculate sizes and playtimes
+		const sizes = minutes.map(m => m / (maxMinutes * 0.02));
+		const playtimes = minutes.map(m => ((m / maxMinutes) * 100).toFixed(1));
 
-		const playtimes = minutes.map((x) => ((x / maxMinutes) * 100).toFixed(1));
+		return { teams, points, price, minutes, colors, sizes, playtimes };
+	}
 
-		const markers = {
-			x: points,
-			y: price,
-			name: 'test',
-			mode: 'markers',
-			type: 'scatter',
-			marker: {
-				size: sizes,
-				opacity: 0.75,
-				color: colors
+	function createDefaultLayout(): Layout {
+		return {
+			title: false,
+			autosize: true,
+			margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
+			hovermode: 'closest',
+			plot_bgcolor: 'transparent',
+			paper_bgcolor: 'transparent',
+			height: 700,
+			yaxis: {
+				title: { text: 'Price' },
+				gridcolor: 'rgba(128, 128, 128, 0.2)',
+				showgrid: true,
+				showline: false,
+				zeroline: false,
+				fixedrange: true,
+				visible: true,
+				range: [0, null]
 			},
-			customdata: playtimes,
-			text: teams,
-			hovertemplate: `<b>%{text}</b><br><b>£%{y}m</b><br><b>%{x} points</b><br>%{customdata}% playtime<extra></extra>`,
-			showlegend: false
+			xaxis: {
+				title: { text: 'Points' },
+				linecolor: 'black',
+				gridcolor: 'rgba(128, 128, 128, 0.2)',
+				showgrid: true,
+				showline: false,
+				fixedrange: true,
+				range: [0, null]
+			},
+			dragmode: false
 		};
-
-		// Add this team last to ensure it overlaps all other lines
-		return [markers];
 	}
 
-	function isTeam(value: string): value is Team {
-		return value !== '_id';
+	function buildPlotData(data: FantasyData) {
+		return {
+			data: [createScatterData(data)],
+			layout: createDefaultLayout(),
+			config: CHART_CONFIG
+		};
 	}
 
-
-	function defaultLayout(): Layout {
-	return {
-		title: false,
-		autosize: true,
-		margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
-		hovermode: 'closest',
-		plot_bgcolor: 'transparent',
-		paper_bgcolor: 'transparent',
-		height: 700,
-		yaxis: {
-			title: { text: 'Price' },
-			gridcolor: 'rgba(128, 128, 128, 0.2)', // Faint grid lines
-			showgrid: true, // Ensure grid is visible
-			showline: false,
-			zeroline: false,
-			fixedrange: true,
-			visible: true,
-			range: [0, null] // Start Y-axis at 0
-		},
-		xaxis: {
-			title: { text: 'Points' },
-			linecolor: 'black',
-			gridcolor: 'rgba(128, 128, 128, 0.2)', // Faint grid lines
-			showgrid: true, // Ensure grid is visible
-			showline: false,
-			fixedrange: true,
-			range: [0, null] // Start X-axis at 0
-		},
-		dragmode: false
-	};
-}
-
-	function setDefaultLayout() {
-		if (!setup) {
-			return;
-		}
+	function applyDesktopLayout() {
+		if (!isSetup) return;
 
 		const layoutUpdate: Partial<Layout> = {
 			'yaxis.title': { text: 'Position' },
 			'yaxis.visible': true,
-			'yaxis.tickvals': Array.from(Array(20), (_, i) => i + 1),
+			'yaxis.tickvals': Array.from({ length: 20 }, (_, i) => i + 1),
 			'margin.l': 60,
 			'margin.t': 15
 		};
+		
 		Plotly.update(plotDiv, {}, layoutUpdate, 0);
 	}
 
-	function setMobileLayout() {
-		if (!setup) {
-			return;
-		}
+	function applyMobileLayout() {
+		if (!isSetup) return;
 
-		const layoutUpdate: Layout = {
+		const layoutUpdate: Partial<Layout> = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
-			'yaxis.tickvals': Array.from(Array(10), (_, i) => i + 2),
+			'yaxis.tickvals': Array.from({ length: 10 }, (_, i) => i + 2),
 			'margin.l': 20,
 			'margin.t': 5
 		};
 
-		const sizes = plotData.data[0].marker.size.map(size => Math.round(size / 2));
+		const originalSizes = plotData.data[0].marker.size as number[];
+		const mobileSizes = originalSizes.map(size => Math.round(size / 2));
+		
 		const dataUpdate = {
 			marker: {
-				size: sizes,
+				size: mobileSizes,
 				color: plotData.data[0].marker.color,
 				opacity: 0.75
 			}
 		};
 
-		plotData.data[0].marker.size = sizes;
+		// Update stored data
+		plotData.data[0].marker.size = mobileSizes;
 
 		Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
 	}
 
-	function buildPlotData(data: FantasyData) {
-		const plotData: {data: PlotData, layout: Layout, config: Config} = {
-			data: lines(data),
-			layout: defaultLayout(),
-			config: {
-				responsive: true,
-				showSendToCloud: false,
-				displayModeBar: false
-			}
-		};
-		return plotData;
-	}
-
-	let plotDiv: HTMLDivElement
-	let plotData: {data: PlotData[], layout: Layout, config: Config};
-	let setup = false;
-	onMount(() => {
-		genPlot();
-		setup = true;
-	});
-
-	function genPlot() {
+	async function initializePlot() {
 		plotData = buildPlotData(data);
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then(
-			(plot: HTMLDivElement) => {
-				// Once plot generated, add resizable attribute to it to shorten height for mobile view
-				plot.children[0].children[0].classList.add('resizable-graph');
-				plot.children[0].children[0].classList.add('tall-graph');
-			}
-		);
+		
+		const plot = await Plotly.newPlot(
+			plotDiv, 
+			plotData.data, 
+			plotData.layout, 
+			plotData.config
+		) as HTMLDivElement;
+
+		// Add CSS classes for responsive behavior
+		const chartContainer = plot.children[0]?.children[0];
+		if (chartContainer) {
+			chartContainer.classList.add('resizable-graph', 'tall-graph');
+		}
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
+		if (!isSetup) return;
 
 		const newPlotData = buildPlotData(data);
 		plotData.data[0] = newPlotData.data[0];
 
 		Plotly.redraw(plotDiv);
+		
+		// Apply appropriate layout for current view
 		if (mobileView) {
-			setMobileLayout();
+			applyMobileLayout();
 		}
 	}
 
-	$: page && refreshPlot();
-	$: !mobileView && setDefaultLayout();
-	$: setup && mobileView && setMobileLayout();
+	// Lifecycle
+	onMount(async () => {
+		await initializePlot();
+		isSetup = true;
+	});
 
-	export let data: FantasyData, page: Page, mobileView: boolean;
+	// Reactive statements
+	$: if (isSetup && page) {
+		refreshPlot();
+	}
+
+	$: if (isSetup) {
+		if (mobileView) {
+			applyMobileLayout();
+		} else {
+			applyDesktopLayout();
+		}
+	}
 </script>
 
 <div id="plotly">

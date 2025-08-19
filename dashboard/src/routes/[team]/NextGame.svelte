@@ -1,31 +1,13 @@
 <script lang="ts">
-	import { toAlias, toInitials, getCurrentMatchday } from '$lib/team';
-	import { ordinal, scorelineShort, teamStyle } from '$lib/format';
-	import type { PrevMatch, TeamsData } from './dashboard.types';
+	import { toAlias, toInitials } from '$lib/team';
+	import { ordinal, teamStyle } from '$lib/format';
+	import type { TeamsData } from './dashboard.types';
 	import type { Team } from '$lib/types';
-
-	function resultColor(prevMatch: PrevMatch, home: boolean): Team {
-		if (home) {
-			return prevMatch.result.homeGoals < prevMatch.result.awayGoals ? prevMatch.result.awayTeam : prevMatch.result.homeTeam;
-		}
-		return prevMatch.result.homeGoals > prevMatch.result.awayGoals ? prevMatch.result.homeTeam : prevMatch.result.awayTeam;
-	}
-
-	function oppositionFormPercentage(data: TeamsData, team: Team) {
-		const opposition = data.upcoming[team].team;
-		if (!(data._id in data.form[opposition])) {
-			return 'N/A';
-		}
-		return ((data.form[opposition][data._id][getCurrentMatchday(data, opposition)].formRating5 ?? 0) * 100).toFixed(1) + '%'
-	}
-
-	function predictedScoreline(data: TeamsData, team: Team) {
-		const homeGoals = data.upcoming[team].prediction.homeGoals;
-		const awayGoals = data.upcoming[team].prediction.awayGoals;
-		const homeTeam = data.upcoming[team].prediction.homeTeam;
-		const awayTeam = data.upcoming[team].prediction.awayTeam;
-		return scorelineShort(homeTeam, awayTeam, homeGoals, awayGoals);
-	}
+	import {
+		resultColor,
+		oppositionFormPercentage,
+		predictedScoreline
+	} from './next-game';
 	
 	export let data: TeamsData, team: Team, switchTeam: (newTeam: Team) => void;
 </script>
@@ -55,7 +37,7 @@
 
 		<div class="next-game-values">
 			<div class="predictions-and-logo">
-				<div class="next-game-position" />
+				<div class="next-game-position"></div>
 				<div class="predictions">
 					<div class="next-game-item">
 						<div class="next-game-position">
@@ -121,7 +103,7 @@
 									</div>
 								</div>
 							</div>
-							<div style="clear: both" />
+							<div style="clear: both"></div>
 						</div>
 					</div>
 				{/each}

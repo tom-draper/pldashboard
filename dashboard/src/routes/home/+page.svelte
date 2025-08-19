@@ -9,7 +9,7 @@
 
 <div id="home">
 	<div class="content">
-		<div id="circle" />
+		<div id="circle"></div>
 		<img src={logo} alt="pldashboard" />
 		<div class="links">
 			<a class="dashboard-link" href="/">Dashboard</a>

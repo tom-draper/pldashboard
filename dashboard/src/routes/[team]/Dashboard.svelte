@@ -1,15 +1,22 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Footer from '$lib/components/Footer.svelte';
+	import { browser } from '$app/environment';
 	import Nav from './nav/Nav.svelte';
 	import MobileNav from './nav/MobileNav.svelte';
-	import { getCurrentMatchday, getTeamID, playedMatchdayDates, toAlias } from '$lib/team';
+	import {
+		getCurrentMatchday,
+		getTeamID,
+		playedMatchdayDates,
+		toAlias
+	} from '$lib/team';
 	import type { DashboardData } from './dashboard.types';
 	import { replaceState } from '$app/navigation';
 	import { slugAlias, toTitleCase } from '$lib/format';
 	import TeamsContent from './TeamsContent.svelte';
 	import OverviewContent from './OverviewContent.svelte';
 	import type { Team } from '$lib/types';
+	import { setThemeColor } from '$lib/theme';
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');
@@ -29,20 +36,45 @@
 		}
 	}
 
-	function switchTeam(newTeam: Team) {
-		data.slug = slugAlias(getTeamID(newTeam));
-		data.team.id = data.slug;
-		data.team.name = toTitleCase(data.slug.replace(/-/g, ' ')) as Team;
-		data.title = `Dashboard | ${data.team.name}`;
-		// Overwrite values from new team's perspective using same data
-		data.currentMatchday = getCurrentMatchday(data.data, data.team.name);
-		data.playedDates = playedMatchdayDates(data.data, data.team.name);
-
-		replaceState(data.slug, {}); // Change current url without reloading
+	function getCSSVar(name: string) {
+		return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 	}
+
+		async function switchTeam(newTeam: Team) {
+		if (!browser) {
+			return;
+		}
+
+		const newSlug = slugAlias(getTeamID(newTeam));
+		if (data.slug !== newSlug) {
+			data.slug = newSlug;
+			data.team.id = data.slug;
+			data.team.name = toTitleCase(data.slug.replace(/-/g, ' ')) as Team;
+			data.title = `Dashboard | ${data.team.name}`;
+			// Overwrite values from new team's perspective using same data
+			data.currentMatchday = getCurrentMatchday(data.data, data.team.name);
+			data.playedDates = playedMatchdayDates(data.data, data.team.name);
+			
+			try {
+				replaceState(data.slug, {}); // Change current url without reloading
+			} catch (error) {
+				console.warn('SvelteKit navigation failed, using native browser API:', error);
+				// Fallback to native browser navigation
+				window.history.replaceState({}, '', `/${data.slug}`);
+			}
+			
+			// Set theme after navigation
+			setThemeColor(getCSSVar(`--${data.team.id}`));
+		}
+	}
+
+	let routerReady = false;
 
 	onMount(() => {
 		console.log(data.data);
+		setThemeColor(getCSSVar(`--${data.team.id}`));
+		// Mark router as ready after mount
+		routerReady = true;
 	});
 
 	export let data: DashboardData;

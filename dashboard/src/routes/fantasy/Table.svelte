@@ -1,34 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { FantasyData, Page, Team } from './fantasy.types';
+	import { teamToCSS } from '$lib/team';
 
 	type TableRow = (string | number)[];
 
-	function teamToCSS(team: string) {
-		switch (team) {
-			case 'Spurs':
-				return 'tottenham-hotspur';
-			case "Nott'm Forest":
-				return 'nottingham-forest';
-			case 'Man Utd':
-				return 'manchester-united';
-			case 'Man City':
-				return 'manchester-city';
-			case 'Brighton':
-				return 'brighton-and-hove-albion';
-			case 'Luton':
-				return 'luton-town';
-			case 'West Ham':
-				return 'west-ham-united';
-			case 'Sheffield Utd':
-				return 'sheffield-united';
-			case 'Wolves':
-				return 'wolverhampton-wanderers';
-			case 'Newcastle':
-				return 'newcastle-united';
-		}
-		return team.toLowerCase().replace(' ', '-');
-	}
+	
 
 	function buildTeamColorCSSTags() {
 		const playerTeams: { [player: string]: Team } = {};
@@ -215,20 +192,9 @@
 	export let data: FantasyData, page: Page;
 </script>
 
-<!-- <svelte:head>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
-		integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
-		crossorigin="anonymous"
-		referrerpolicy="no-referrer"
-	></script>
-	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
-	<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
-</svelte:head> -->
-
 {#if !setup}
 	<div class="loading-spinner-container">
-		<div class="loading-spinner" />
+		<div class="loading-spinner"></div>
 	</div>
 {/if}
 <div class="table" class:hidden={!setup}>
@@ -251,7 +217,7 @@
 				<th>Transfers Out</th>
 			</tr>
 		</thead>
-		<tbody />
+		<tbody></tbody>
 	</table>
 </div>
 

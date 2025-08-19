@@ -112,3 +112,29 @@ export function playedMatchdayDates(data: TeamsData, team: Team): Date[] {
 export function getTeams(data: TeamsData): Team[] {
 	return Object.keys(data.standings) as Team[];
 }
+
+export function teamToCSS(team: string) {
+	switch (team) {
+		case 'Spurs':
+			return 'tottenham-hotspur';
+		case "Nott'm Forest":
+			return 'nottingham-forest';
+		case 'Man Utd':
+			return 'manchester-united';
+		case 'Man City':
+			return 'manchester-city';
+		case 'Brighton':
+			return 'brighton-and-hove-albion';
+		case 'Luton':
+			return 'luton-town';
+		case 'West Ham':
+			return 'west-ham-united';
+		case 'Sheffield Utd':
+			return 'sheffield-united';
+		case 'Wolves':
+			return 'wolverhampton-wanderers';
+		case 'Newcastle':
+			return 'newcastle-united';
+	}
+	return team.toLowerCase().replace(' ', '-');
+}

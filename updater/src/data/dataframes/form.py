@@ -310,9 +310,20 @@ class Form(DF):
         d[team][(season, matchday, "date")] = match["utcDate"]
         d[team][(season, matchday, "atHome")] = home_team
 
+        home_goals = (
+            match["score"]["fullTime"]["home"]
+            if "home" in match["score"]["fullTime"]
+            else match["score"]["fullTime"]["homeTeam"]
+        )
+        away_goals = (
+            match["score"]["fullTime"]["away"]
+            if "away" in match["score"]["fullTime"]
+            else match["score"]["fullTime"]["awayTeam"]
+        )
+
         score = {
-            "homeGoals": match["score"]["fullTime"]["homeTeam"],
-            "awayGoals": match["score"]["fullTime"]["awayTeam"],
+            "homeGoals": home_goals,
+            "awayGoals": away_goals,
         }
         d[team][(season, matchday, "score")] = score
 

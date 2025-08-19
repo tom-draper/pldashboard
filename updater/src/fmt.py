@@ -78,7 +78,7 @@ def convert_team_name_or_initials(team: str):
             f"Team name {team} corresponding to input initials does not exist"
         )
     # If no match found for a given full team name, shorten name to
-    # create initials
+    # create initials 
     return team[:3].upper()
 
 

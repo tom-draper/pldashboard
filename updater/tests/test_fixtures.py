@@ -1,3 +1,4 @@
+import pandas as pd
 import pytest
 from src.data import Data
 from datetime import datetime
@@ -95,7 +96,7 @@ def test_fixtures_df_score_datatype(data: Data):
     for matchday in matchdays:
         scores = data.teams.fixtures.df[matchday, 'score']
         for score in scores:
-            assert isinstance(score, str) or isinstance(score, None)
+            assert isinstance(score, str) or score is None
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
@@ -115,7 +116,7 @@ def valid_score(score: str):
     if len(rest) > 0:
         return False
 
-    if midddle != "-":
+    if middle != "-":
         return False
 
     if not is_int(h) or not is_int(a):

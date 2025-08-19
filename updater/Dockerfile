@@ -1,32 +1,28 @@
-# Use an official Python runtime as a parent image
-FROM python:3.12-slim
+# Use the official uv image which has Python and uv pre-installed
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
-# Set the working directory in the container
-WORKDIR /app
-
-# Copy the local script to the container
-COPY src /app/src
-COPY backups /app/backups
-COPY .env /app/
-
-# Copy requirements.txt and install dependencies
-COPY requirements.txt /app/
-RUN pip install -r requirements.txt
-
-# Install cron and any other dependencies you need
+# Install system dependencies: cron
 RUN apt-get update && \
     apt-get install -y cron && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Add the cron job file to the container
+# Set the working directory
+WORKDIR /app
+
+# Copy project files
+COPY src /app/src
+COPY backups /app/backups
+COPY .env /app/
+COPY pyproject.toml uv.lock /app/
+
+# Install dependencies with uv (using lock file for reproducibility)
+RUN uv sync --frozen
+
+# Add the cron job
 COPY crontab /etc/cron.d/pldashboard-updater-cron
+RUN chmod 0644 /etc/cron.d/pldashboard-updater-cron && \
+    crontab /etc/cron.d/pldashboard-updater-cron
 
-# Give execution rights on the cron job
-RUN chmod 0644 /etc/cron.d/pldashboard-updater-cron
-
-# Apply cron job
-RUN crontab /etc/cron.d/pldashboard-updater-cron
-
-# Run the cron service in the foreground
+# Run cron in foreground
 CMD ["cron", "-f"]

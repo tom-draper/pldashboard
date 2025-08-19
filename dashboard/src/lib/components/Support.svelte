@@ -10,7 +10,7 @@
 		right: 0;
 		font-size: 13px;
 		padding: 5px 9px;
-		margin: 8px;
+		margin: 8px 10px;
 		z-index: 1000;
 		border-radius: 4px;
 		background: rgba(255, 255, 255, 0.25);
@@ -22,4 +22,7 @@
     a {
         color: inherit;
     }
+	a:hover {
+		color: rgba(0, 0, 0, 0.7);
+	}
 </style>
