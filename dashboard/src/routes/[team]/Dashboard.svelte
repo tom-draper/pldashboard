@@ -4,12 +4,7 @@
 	import { browser } from '$app/environment';
 	import Nav from './nav/Nav.svelte';
 	import MobileNav from './nav/MobileNav.svelte';
-	import {
-		getCurrentMatchday,
-		getTeamID,
-		playedMatchdayDates,
-		toAlias
-	} from '$lib/team';
+	import { getCurrentMatchday, getTeamID, playedMatchdayDates, toAlias } from '$lib/team';
 	import type { DashboardData } from './dashboard.types';
 	import { replaceState } from '$app/navigation';
 	import { slugAlias, toTitleCase } from '$lib/format';
@@ -40,7 +35,7 @@
 		return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 	}
 
-		async function switchTeam(newTeam: Team) {
+	async function switchTeam(newTeam: Team) {
 		if (!browser) {
 			return;
 		}
@@ -54,7 +49,7 @@
 			// Overwrite values from new team's perspective using same data
 			data.currentMatchday = getCurrentMatchday(data.data, data.team.name);
 			data.playedDates = playedMatchdayDates(data.data, data.team.name);
-			
+
 			try {
 				replaceState(data.slug, {}); // Change current url without reloading
 			} catch (error) {
@@ -62,7 +57,7 @@
 				// Fallback to native browser navigation
 				window.history.replaceState({}, '', `/${data.slug}`);
 			}
-			
+
 			// Set theme after navigation
 			setThemeColor(getCSSVar(`--${data.team.id}`));
 		}
