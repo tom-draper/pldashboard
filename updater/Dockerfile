@@ -1,5 +1,5 @@
 # Use the official uv image which has Python and uv pre-installed
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 
 # Install system dependencies: cron
 RUN apt-get update && \
