@@ -72,7 +72,7 @@ class Upcoming(DF):
             if not isinstance(matchday_no, int):
                 continue
             date = fixtures.df.at[team, (matchday_no, "date")]
-            scheduled = fixtures.df.at[team, (matchday_no, "status")] == "SCHEDULED"
+            scheduled = fixtures.df.at[team, (matchday_no, "status")] == "SCHEDULED" or fixtures.df.at[team, (matchday_no, "status")] == "TIMED"
             if scheduled and now < date < matchday["date"]:
                 matchday["date"] = date
                 matchday["matchday"] = matchday_no
@@ -140,8 +140,11 @@ class Upcoming(DF):
             else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
         )
 
-    def _readable_date(self, date: datetime):
-        dt = datetime.strptime(date[:10], "%Y-%m-%d")
+    def _readable_date(self, date):
+        if isinstance(date, str):
+            dt = datetime.strptime(date[:10], "%Y-%m-%d")
+        else:
+            dt = pd.to_datetime(date)
         day = self._ord(dt.day)
         return day + dt.date().strftime(" %B %Y")
 
@@ -242,13 +245,14 @@ class Upcoming(DF):
         next_game_predictions_cache: dict[tuple[str, str], Scoreline] = {}
         for team, row in upcoming.iterrows():
             opponent = row["team"]
+            at_home = row["atHome"]
 
-            if opponent is None:
+            if opponent is None or at_home is None:
                 next_game_predictions.append(None)
                 continue
 
-            home_team = team if row["atHome"] else opponent
-            away_team = opponent if row["atHome"] else team
+            home_team = team if at_home else opponent
+            away_team = opponent if at_home else team
             if (home_team, away_team) in next_game_predictions_cache:
                 prediction = next_game_predictions_cache[(home_team, away_team)]
             else:

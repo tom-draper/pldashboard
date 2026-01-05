@@ -54,7 +54,7 @@ class Fixtures(DF):
             matchday = self.df[matchday_no]
 
             # If whole column is SCHEDULED, skip
-            if all(matchday["status"] == "SCHEDULED"):
+            if all(matchday["status"] == "SCHEDULED") or all(matchday["status"] == "TIMED"):
                 continue
 
             for team, row in matchday.iterrows():
