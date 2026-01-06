@@ -94,7 +94,7 @@ class Database:
         """
         prediction_objs = []
         for prediction in predictions.values():
-            pid = f'{prediction["homeInitials"]} vs {prediction["awayInitials"]}'
+            pid = f"{prediction['homeInitials']} vs {prediction['awayInitials']}"
             actual_score = self._get_actual_score(pid, actual_scores)
             _prediction = {
                 "_id": pid,

@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from datetime import datetime
 
 import pandas as pd
-from data.dataframes import Fixtures, Form, HomeAdvantages, Upcoming
-from database import Database
-from fmt import convert_team_name_or_initials, identical_fixtures
+from updater.data.dataframes import Fixtures, Form, HomeAdvantages, Upcoming
+from updater.database import Database
+from updater.fmt import convert_team_name_or_initials, identical_fixtures
 
 
 class Predictor:

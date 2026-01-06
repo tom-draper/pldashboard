@@ -3,11 +3,11 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
-from data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
+from updater.data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
 
-from .form import calc_form
-from .market import fetch_odds
-from .scoreline import Scoreline
+from updater.predictions.form import calc_form
+from updater.predictions.market import fetch_odds
+from updater.predictions.scoreline import Scoreline
 
 
 class Predictor:

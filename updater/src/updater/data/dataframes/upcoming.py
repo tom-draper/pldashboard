@@ -3,15 +3,15 @@ from typing import Optional
 
 import pandas as pd
 from pandas import DataFrame
-from fmt import clean_full_team_name, convert_team_name_or_initials
-from predictions.predict_v2 import Predictor as PredictorV2
-from predictions.scoreline import Scoreline
+from updater.fmt import clean_full_team_name, convert_team_name_or_initials
+from updater.predictions.predict_v2 import Predictor as PredictorV2
+from updater.predictions.scoreline import Scoreline
 
-from .df import DF
-from .fixtures import Fixtures
-from .form import Form
-from .home_advantages import HomeAdvantages
-from .team_ratings import TeamRatings
+from updater.data.dataframes.df import DF
+from updater.data.dataframes.fixtures import Fixtures
+from updater.data.dataframes.form import Form
+from updater.data.dataframes.home_advantages import HomeAdvantages
+from updater.data.dataframes.team_ratings import TeamRatings
 
 
 class Upcoming(DF):

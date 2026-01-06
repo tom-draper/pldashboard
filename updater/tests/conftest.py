@@ -1,8 +1,8 @@
 import pandas as pd
 import pytest
 from abc import abstractmethod
-from src.data import Data
-from src.updater import Updater
+from src.updater.data import Data
+from src.updater.updater import Updater
 from typing import Protocol, TypeVar
 
 pd.set_option('display.max_columns', None)  # Show all columns without truncation

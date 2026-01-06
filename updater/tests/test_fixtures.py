@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from src.data import Data
+from src.updater.data import Data
 from datetime import datetime
 
 

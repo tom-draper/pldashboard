@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from webdriver_manager.chrome import ChromeDriverManager
 
-from .odds import Odds
+from updater.predictions.odds import Odds
 
 
 def fetch_odds(url: str, js_rendered: bool = False):

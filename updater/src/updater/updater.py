@@ -7,10 +7,10 @@ from os.path import dirname, join
 from typing import Optional
 
 import aiohttp
-from data import Data
-from database import Database
+from updater.data import Data
+from updater.database import Database
 from dotenv import load_dotenv
-from fmt import clean_full_team_name
+from updater.fmt import clean_full_team_name
 from timebudget import timebudget
 
 
@@ -24,7 +24,7 @@ class Updater:
         self.url = getenv("URL")
         self.current_season = int(getenv("SEASON"))
         self.headers = {"X-Auth-Token": getenv("X_AUTH_TOKEN")}
-        
+
         self.data = Data()  # To build
         self.database = Database()
 
@@ -38,7 +38,6 @@ class Updater:
             "standings": {},
             "fantasy": {"general": {}, "fixtures": {}},
         }
-
 
     # ----------------------------- DATA API -----------------------------------
     @staticmethod

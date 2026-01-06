@@ -3,7 +3,7 @@ from datetime import datetime
 
 import pandas as pd
 from pandas import DataFrame
-from fmt import clean_full_team_name, convert_team_name_or_initials
+from updater.fmt import clean_full_team_name, convert_team_name_or_initials
 from timebudget import timebudget
 
 from .df import DF

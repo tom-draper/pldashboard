@@ -1,6 +1,6 @@
 import pandas as pd
 from pandas import DataFrame
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 from timebudget import timebudget
 
 from .df import DF
