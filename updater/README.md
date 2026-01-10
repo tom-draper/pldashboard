@@ -30,7 +30,7 @@ uv run pytest
 
 ## Environment Variables
 
-The backend relies on a set of environment variables in `updater/.env` in order to configure the current football season, access data from the football data API, and login to the MongoDB database to upload data.
+The updater relies on a set of environment variables in `.env` in order to configure the current football season, access data from the football data API, and login to the MongoDB database to upload data.
 
 ```text
 SEASON=<year>
