@@ -5,6 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pldashboard-updater"
 version = "0.1.0"
+requires-python = ">=3.13"
 dependencies = [
     "aiohttp==3.12.15",
     "aiosignal==1.4.0",
@@ -31,6 +32,10 @@ dependencies = [
     "yarl==1.17.0",
     "timebudget>=0.7.1",
 ]
+
+[project.scripts]
+updater = "updater.main:main"
+# test = "pytest"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-from .fantasy import FantasyData
-from .teams import TeamsData
+from updater.data.fantasy import FantasyData
+from updater.data.teams import TeamsData
 
 
 @dataclass

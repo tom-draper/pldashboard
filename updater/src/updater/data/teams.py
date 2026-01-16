@@ -2,7 +2,7 @@ import math
 from typing import Any
 
 import pandas as pd
-from data.dataframes import (
+from updater.data.dataframes import (
     Fixtures,
     Form,
     HomeAdvantages,
@@ -10,7 +10,7 @@ from data.dataframes import (
     TeamRatings,
     Upcoming,
 )
-from predictions.scoreline import Scoreline
+from updater.predictions.scoreline import Scoreline
 
 
 class TeamsData:

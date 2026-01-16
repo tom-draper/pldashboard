@@ -4,10 +4,10 @@ from typing import Dict, List, Set, Tuple, Any
 
 import pandas as pd
 from pandas import DataFrame
-from fmt import clean_full_team_name
+from updater.fmt import clean_full_team_name
 from timebudget import timebudget
 
-from .df import DF
+from updater.data.dataframes.df import DF
 
 
 class HomeAdvantages(DF):

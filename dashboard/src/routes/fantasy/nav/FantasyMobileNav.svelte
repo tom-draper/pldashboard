@@ -51,10 +51,10 @@
 		color: #1c0d2d;
 		background: #00fe87;
 	}
-	.attack {
+	.forward {
 		background: var(--pink);
 	}
-	.defence {
+	.defender {
 		background: #2dbaff;
 	}
 	.goalkeeper {

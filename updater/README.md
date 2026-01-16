@@ -6,7 +6,7 @@ A script to fetch the latest data from the football data API, compute metrics an
 
 ```bash
 uv install
-uv run src/main.py
+uv run updater
 ```
 
 ### Docker

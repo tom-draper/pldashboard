@@ -127,7 +127,7 @@
 		if (!isSetup) return;
 
 		const layoutUpdate: Partial<Layout> = {
-			'yaxis.title': { text: 'Position' },
+			'yaxis.title': { text: 'Price' },
 			'yaxis.visible': true,
 			'yaxis.tickvals': Array.from({ length: 20 }, (_, i) => i + 1),
 			'margin.l': 60,

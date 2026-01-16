@@ -1,7 +1,7 @@
 import numpy as np
-from data.dataframes import TeamRatings
+from updater.data.dataframes import TeamRatings
 
-from .scoreline import Scoreline
+from updater.predictions.scoreline import Scoreline
 
 
 def calc_form(

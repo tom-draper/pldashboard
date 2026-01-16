@@ -2,10 +2,9 @@
 	import { onMount } from 'svelte';
 	import type { FantasyData, Page, Team } from './fantasy.types';
 	import { teamToCSS } from '$lib/team';
+	import type { TeamsData } from '../[team]/dashboard.types';
 
 	type TableRow = (string | number)[];
-
-	
 
 	function buildTeamColorCSSTags() {
 		const playerTeams: { [player: string]: Team } = {};
@@ -114,6 +113,28 @@
 						// If render is just displaying value to user, format as abbreviated number
 						if (type === 'display') {
 							return data ? data.toLocaleString() : 0;
+						}
+						// Otherwise return raw data so that sort and filter still works
+						return data;
+					}
+				},
+				{
+					targets: 1,
+					render: function (data: any, type: string, row: any, meta: any) {
+						// If render is just displaying value to user, format as abbreviated number
+						if (type === 'display') {
+							return data ? data.toLocaleString() + "m" : 0;
+						}
+						// Otherwise return raw data so that sort and filter still works
+						return data;
+					}
+				},
+				{
+					targets: [4, 5, 6],
+					render: function (data: any, type: string, row: any, meta: any) {
+						// If render is just displaying value to user, format as abbreviated number
+						if (type === 'display') {
+							return data ? parseFloat(data).toFixed(1) : 0;
 						}
 						// Otherwise return raw data so that sort and filter still works
 						return data;

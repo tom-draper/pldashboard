@@ -78,7 +78,7 @@ def convert_team_name_or_initials(team: str):
             f"Team name {team} corresponding to input initials does not exist"
         )
     # If no match found for a given full team name, shorten name to
-    # create initials 
+    # create initials
     return team[:3].upper()
 
 
@@ -117,11 +117,22 @@ def identical_fixtures(scoreline1: str, scoreline2: str):
     return identical
 
 
-def identical_result(predicted_home_goals, predicted_away_goals, act_home_goals, act_away_goals):
+def identical_result(
+    predicted_home_goals, predicted_away_goals, act_home_goals, act_away_goals
+):
     return (
-        (predicted_home_goals == predicted_away_goals and act_home_goals == act_away_goals)
-        or (predicted_home_goals > predicted_away_goals and act_home_goals > act_away_goals)
-        or (predicted_home_goals < predicted_away_goals and act_home_goals < act_away_goals)
+        (
+            predicted_home_goals == predicted_away_goals
+            and act_home_goals == act_away_goals
+        )
+        or (
+            predicted_home_goals > predicted_away_goals
+            and act_home_goals > act_away_goals
+        )
+        or (
+            predicted_home_goals < predicted_away_goals
+            and act_home_goals < act_away_goals
+        )
     )
 
 
@@ -146,16 +157,17 @@ def format_scoreline_str(
 
     # Construct prediction string for display...
     if at_home:
-        scoreline = (
-            f"{team_initials} {scored} - {conceded} {opposition_initials}"
-        )
+        scoreline = f"{team_initials} {scored} - {conceded} {opposition_initials}"
     else:
-        scoreline = (
-            f"{opposition_initials} {conceded} - {scored} {team_initials}"
-        )
+        scoreline = f"{opposition_initials} {conceded} - {scored} {team_initials}"
     return scoreline
 
 
 def clean_full_team_name(full_team_name: str):
     """Remove FC, AFC postfixes and replace ampersand for 'and'."""
-    return full_team_name.replace(" FC", "").replace("AFC ", "").replace(' AFC', '').replace("&", "and")
+    return (
+        full_team_name.replace(" FC", "")
+        .replace("AFC ", "")
+        .replace(" AFC", "")
+        .replace("&", "and")
+    )

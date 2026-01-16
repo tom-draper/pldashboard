@@ -3,11 +3,11 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from fmt import clean_full_team_name
+from updater.fmt import clean_full_team_name
 from timebudget import timebudget
 
-from .df import DF
-from .team_ratings import TeamRatings
+from updater.data.dataframes.df import DF
+from updater.data.dataframes.team_ratings import TeamRatings
 
 
 class Form(DF):

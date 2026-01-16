@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fmt import convert_team_name_or_initials
+from updater.fmt import convert_team_name_or_initials
 
 
 class Scoreline:

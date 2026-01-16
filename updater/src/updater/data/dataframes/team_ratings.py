@@ -5,8 +5,8 @@ import pandas as pd
 from pandas import DataFrame
 from timebudget import timebudget
 
-from .df import DF
-from .standings import Standings
+from updater.data.dataframes.df import DF
+from updater.data.dataframes.standings import Standings
 
 
 class TeamRatings(DF):

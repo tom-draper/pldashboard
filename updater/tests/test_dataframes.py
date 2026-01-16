@@ -2,7 +2,7 @@ from datetime import datetime
 from types import NoneType
 
 import pytest
-from src.data import Data
+from src.updater.data import Data
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)

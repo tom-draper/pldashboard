@@ -1,4 +1,4 @@
-from .dataframes import Fantasy
+from updater.data.dataframes import Fantasy
 
 
 class FantasyData:
