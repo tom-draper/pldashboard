@@ -6,7 +6,6 @@ import pandas as pd
 from updater.data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
 
 from updater.predictions.form import calc_form
-from updater.predictions.market import fetch_odds
 from updater.predictions.scoreline import Scoreline
 
 
@@ -205,36 +204,6 @@ class Predictor:
                 merged_freq[scoreline] += count
 
         return merged_freq
-
-    def _avg_goals_scored(freq: dict[Scoreline, int], team1: str, team2: str):
-        team1_played = 0
-        team2_played = 0
-        team1_goals = 0
-        team2_goals = 0
-        for scoreline, count in freq.items():
-            if scoreline.home_team == team1:
-                team1_played += count
-                team1_goals += scoreline.home_goals
-            elif scoreline.home_team == team2:
-                team2_played += count
-                team2_goals += scoreline.home_goals
-
-            if scoreline.away_team == team1:
-                team1_played += count
-                team1_goals += scoreline.away_goals
-            elif scoreline.away_team == team2:
-                team2_played += count
-                team2_goals += scoreline.away_goals
-
-        team1_avg_goals = 0
-        if team1_played > 0:
-            team1_avg_goals = team1_goals / team1_played
-
-        team2_avg_goals = 0
-        if team2_played > 0:
-            team2_avg_goals = team2_goals / team2_played
-
-        return (team1_avg_goals, team2_avg_goals)
 
     @staticmethod
     def _insert_scaled_into_freq(

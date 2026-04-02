@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 
 import pandas as pd
@@ -62,34 +62,24 @@ class Upcoming(DF):
 
         return predictions
 
-    def _next_matchday(self, team: str, fixtures: Fixtures):
-        """Scan through list of fixtures to find the next game that is scheduled."""
-        # Arbitrary initial future date that will always be greater than any possible matchday date
-        future = datetime.now() + timedelta(days=365)
-        matchday = {"date": future, "matchday": None}
+    def _all_next_matchdays(self, fixtures: Fixtures) -> pd.Series:
+        """Vectorised: find each team's next scheduled matchday in one pass."""
         now = datetime.now()
-        for matchday_no in fixtures.df.columns.unique(level=0):
-            if not isinstance(matchday_no, int):
-                continue
-            date = fixtures.df.at[team, (matchday_no, "date")]
-            scheduled = fixtures.df.at[team, (matchday_no, "status")] == "SCHEDULED" or fixtures.df.at[team, (matchday_no, "status")] == "TIMED"
-            if scheduled and now < date < matchday["date"]:
-                matchday["date"] = date
-                matchday["matchday"] = matchday_no
-        return matchday["matchday"]
-
-    def _get_next_game(self, team: str, fixtures: Fixtures):
-        date: Optional[str] = None
-        opposition: Optional[str] = None
-        at_home: Optional[str] = None
-
-        next_matchday = self._next_matchday(team, fixtures)
-        if next_matchday is not None:
-            date = fixtures.df.at[team, (next_matchday, "date")]
-            opposition = fixtures.df.at[team, (next_matchday, "team")]
-            at_home = fixtures.df.at[team, (next_matchday, "atHome")]
-
-        return date, opposition, at_home
+        matchday_nos = sorted(
+            md for md in fixtures.df.columns.unique(level=0) if isinstance(md, int)
+        )
+        status_df = (
+            fixtures.df.loc[:, pd.IndexSlice[matchday_nos, "status"]]
+            .droplevel(1, axis=1)
+        )
+        date_df = (
+            fixtures.df.loc[:, pd.IndexSlice[matchday_nos, "date"]]
+            .droplevel(1, axis=1)
+        )
+        is_valid = status_df.isin(["SCHEDULED", "TIMED"]) & (date_df > now)
+        # idxmin returns the column (matchday) with the earliest valid date;
+        # NaN for teams with no upcoming game
+        return date_df.where(is_valid).idxmin(axis=1, skipna=True)
 
     @staticmethod
     def _game_result_tuple(match: dict):
@@ -264,8 +254,21 @@ class Upcoming(DF):
     def _init_teams(self, fixtures: Fixtures):
         d: dict[str, dict[str, Optional[str] | list]] = {}
         teams = fixtures.df.index.to_list()
+        next_matchdays = self._all_next_matchdays(fixtures)
         for team in teams:
-            date, opposition, at_home = self._get_next_game(team, fixtures)
+            next_matchday = next_matchdays.get(team)
+            # idxmin returns NaN (float) when all candidates are NaN
+            if next_matchday is None or (
+                isinstance(next_matchday, float) and pd.isna(next_matchday)
+            ):
+                next_matchday = None
+            date = None
+            opposition = None
+            at_home = None
+            if next_matchday is not None:
+                date = fixtures.df.at[team, (next_matchday, "date")]
+                opposition = fixtures.df.at[team, (next_matchday, "team")]
+                at_home = fixtures.df.at[team, (next_matchday, "atHome")]
             d[team] = {
                 "date": date,
                 "team": opposition,

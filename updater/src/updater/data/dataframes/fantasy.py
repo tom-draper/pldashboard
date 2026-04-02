@@ -216,54 +216,6 @@ class Fantasy(DF):
         else:
             return 0
 
-    def process_fixture_points(self, json_data: Dict[str, Any], 
-                             position_mappings: Dict[int, str], 
-                             current_season: int) -> Dict[int, Dict[int, int]]:
-        """
-        Process fixture data to calculate points by matchday and player.
-        
-        Args:
-            json_data: The complete JSON data structure
-            position_mappings: Player position mappings
-            current_season: Current season year
-            
-        Returns:
-            Dictionary with structure {matchday: {player_id: points}}
-        """
-        try:
-            fantasy_fixtures = json_data["fantasy_fixtures"][current_season]
-        except KeyError:
-            print(f"Warning: No fixture data found for season {current_season}")
-            return {}
-
-        matchday_points = {}
-        
-        for fixture in fantasy_fixtures:
-            matchday = fixture["event"]
-            if matchday not in matchday_points:
-                matchday_points[matchday] = {}
-
-            for stat in fixture.get("stats", []):
-                identifier = stat["identifier"]
-                
-                # Process both home (h) and away (a) team stats
-                for team_side in ["h", "a"]:
-                    if team_side not in stat:
-                        continue
-                        
-                    for player_stat in stat[team_side]:
-                        player_id = player_stat["element"]
-                        stat_value = player_stat.get("value", 0)
-                        
-                        position = position_mappings.get(player_id, "Unknown")
-                        points = self.calculate_stat_points(identifier, stat_value, position)
-                        
-                        if player_id not in matchday_points[matchday]:
-                            matchday_points[matchday][player_id] = 0
-                        matchday_points[matchday][player_id] += points
-        
-        return matchday_points
-
     def _clean_final_dataframe(self, df: DataFrame) -> DataFrame:
         """
         Apply final cleaning and formatting to the fantasy DataFrame.

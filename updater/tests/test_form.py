@@ -33,16 +33,15 @@ def test_form_df_teams_unique(data: Data):
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_form_df_teams_match_index(data: Data):
-    # Teams column holds the same teams as the index values
-    teams = data.teams.form.df.loc[:, (slice(None), slice(None), ["team"])]
+    # For the current season, opposition teams in the form 'team' column should
+    # all be teams in the current season fixtures
+    current_season = data.teams.form.df.columns.get_level_values(0).max()
+    fixture_teams = set(data.teams.fixtures.df.index)
+    teams = data.teams.form.df.loc[:, (current_season, slice(None), ["team"])]
     for col_name in teams.columns:
         col = teams[col_name].dropna()
         if not col.empty:
-            season = col_name[0]
-            season_teams = data.teams.fixtures.df[
-                data.teams.fixtures.df["season"] == season
-            ].index
-            assert set(np.unique(col)).issubset(set(season_teams))
+            assert set(np.unique(col)).issubset(fixture_teams)
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)

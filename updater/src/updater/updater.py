@@ -3,7 +3,6 @@ import json
 import logging
 from datetime import datetime
 from os import getenv
-from os.path import dirname, join
 from typing import Optional
 
 import aiohttp
@@ -16,10 +15,7 @@ from timebudget import timebudget
 
 class Updater:
     def __init__(self):
-        # Import environment variables
-        __file__ = "updater.py"
-        dotenv_path = join(dirname(__file__), ".env")
-        load_dotenv(dotenv_path)
+        load_dotenv()
 
         self.url = getenv("URL")
         self.current_season = int(getenv("SEASON"))
@@ -168,8 +164,7 @@ class Updater:
                 load from local store. Defaults to True.
         """
         if request_new:
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(self.fetch_current_season())
+            asyncio.run(self.fetch_current_season())
         else:
             self.load_current_season()
 
@@ -223,6 +218,7 @@ class Updater:
             self.raw_data,
             self.data.teams.team_ratings,
             self.current_season,
+            num_seasons,
             display=display_tables,
         )
         # Data about the opponent in each team's next game

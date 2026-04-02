@@ -13,39 +13,6 @@ class Fixtures(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, "fixtures")
 
-    @staticmethod
-    def _inc_avg_scored_conceded(
-        avg_scored: float, avg_conceded: float, score: dict[str, int], at_home: bool
-    ):
-        if at_home:
-            avg_scored += score["homeGoals"]
-            avg_conceded += score["awayGoals"]
-        else:
-            avg_scored += score["awayGoals"]
-            avg_conceded += score["homeGoals"]
-
-        return avg_scored, avg_conceded
-
-    def get_avg_result(self, team: str):
-        avg_scored = 0.0
-        avg_conceded = 0.0
-        total = 0.0
-        for matchday_no in self.df.columns.unique(level=0):
-            if self.df.at[team, (matchday_no, "status")] != "FINISHED":
-                continue
-            at_home = self.df.at[team, (matchday_no, "atHome")]
-            score = self.df.at[team, (matchday_no, "score")]
-            avg_scored, avg_conceded = self._inc_avg_scored_conceded(
-                avg_scored, avg_conceded, score, at_home
-            )
-            total += 1
-
-        if total > 0:
-            avg_scored = avg_scored / total
-            avg_conceded = avg_conceded / total
-
-        return avg_scored, avg_conceded
-
     def get_actual_scores_new(self):
         # To contain a tuple for all actual scores so far this season
         actual_scores: dict[tuple[str, str], dict[str, int]] = {}
