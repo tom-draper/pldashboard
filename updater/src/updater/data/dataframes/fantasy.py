@@ -5,7 +5,6 @@ from timebudget import timebudget
 
 from .df import DF
 
-pd.set_option('future.no_silent_downcasting', True)
 
 
 class Fantasy(DF):
@@ -227,7 +226,7 @@ class Fantasy(DF):
             Cleaned DataFrame
         """
         # Fill missing values and infer appropriate data types
-        df = df.fillna(0).infer_objects(copy=False)
+        df = df.fillna(0).infer_objects()
         
         # Set proper index name
         df.index.name = "player"

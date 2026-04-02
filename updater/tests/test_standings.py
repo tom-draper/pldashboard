@@ -66,20 +66,22 @@ def test_standings_df_multiindex(data: Data):
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_standings_df_position_unique(data: Data):
-    # No duplicates in position column
+    # No duplicates in position column (exclude teams not in that season, position = 0)
     seasons = get_seasons(data)
     for season in seasons:
         positions = data.teams.standings.df[season, 'position']
-        assert len(positions) == len(positions.unique())
+        active = positions[positions != 0]
+        assert len(active) == len(active.unique())
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_standings_df_position_range(data: Data):
-    # Position column in 1 to 20 range
+    # Position column in 1 to 20 range (exclude teams not in that season, position = 0)
     seasons = get_seasons(data)
     for season in seasons:
         positions = data.teams.standings.df[season, 'position']
-        assert pytest.in_range(positions, 1, 20)  # checks if within range 1 to 20 inclusive
+        active = positions[positions != 0]
+        assert pytest.in_range(active, 1, 20)  # checks if within range 1 to 20 inclusive
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)

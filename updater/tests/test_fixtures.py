@@ -29,9 +29,9 @@ def get_matchdays(data: Data):
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_fixtures_df_teams_sorted(data: Data):
-    # Sorted by teams index
+    # Sorted alphabetically ascending by team name
     index = data.teams.fixtures.df.index.tolist()
-    assert pytest.is_sorted(index)
+    assert index == sorted(index)
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
