@@ -45,12 +45,11 @@ class TeamRatings(DF):
             )
 
     @staticmethod
-    def init_rating_columns(team_ratings: DataFrame, num_seasons: int):
-        # Create column for each included season
+    def _init_rating_columns(team_ratings: DataFrame, num_seasons: int):
         for n in range(0, num_seasons):
             team_ratings[f"prevSeason{n}"] = np.nan
 
-    def insert_rating_values(
+    def _insert_rating_values(
         self,
         team_ratings: DataFrame,
         standings: Standings,
@@ -65,7 +64,7 @@ class TeamRatings(DF):
                 team_ratings.at[team, f"prevSeason{n}"] = rating
 
     @staticmethod
-    def replace_nan(team_ratings: DataFrame):
+    def _fill_nan(team_ratings: DataFrame):
         # Replace any NaN with the lowest rating in the same column
         for col in team_ratings.columns:
             team_ratings[col] = team_ratings[col].replace(
@@ -73,24 +72,18 @@ class TeamRatings(DF):
             )
 
     @staticmethod
-    def normalise_ratings(team_ratings: DataFrame, num_seasons: int):
-        # Create normalised versions of the three ratings columns
+    def _normalise_ratings(team_ratings: DataFrame, num_seasons: int):
         for n in range(0, num_seasons):
-            col_heading = f"prevSeason{n}"
-            team_ratings[col_heading] = (
-                team_ratings[col_heading] - team_ratings[col_heading].min()
-            ) / (
-                team_ratings[col_heading].max()
-                - team_ratings[col_heading].min()
-            )
+            col = f"prevSeason{n}"
+            col_min = team_ratings[col].min()
+            col_max = team_ratings[col].max()
+            team_ratings[col] = (team_ratings[col] - col_min) / (col_max - col_min)
 
     @staticmethod
-    def include_current_season(
+    def _should_include_current_season(
         standings: Standings, current_season: int, games_threshold: float
     ):
-        """Check whether current season data should be included in each team's total rating
-        If current season hasn't played enough games, don't include.
-        """
+        """Return True if all teams have played enough games for current season data to count."""
         if (standings.df[current_season]["played"] <= games_threshold).all():
             logging.info(
                 f"Team Ratings: Current season excluded from calculation; all teams must have played {games_threshold} games."
@@ -99,7 +92,7 @@ class TeamRatings(DF):
         return True
 
     @staticmethod
-    def clean_dataframe(team_ratings: DataFrame):
+    def _clean_dataframe(team_ratings: DataFrame):
         team_ratings = team_ratings.sort_values(by="total", ascending=False)
         team_ratings = team_ratings.rename(columns={"prevSeason0": "current"})
         return team_ratings
@@ -147,14 +140,14 @@ class TeamRatings(DF):
         # Add current season team names to the object team DataFrame
         team_ratings = pd.DataFrame(index=standings.df.index)
 
-        self.init_rating_columns(team_ratings, num_seasons)
-        self.insert_rating_values(team_ratings, standings, season, num_seasons)
-        self.replace_nan(team_ratings)
-        self.normalise_ratings(team_ratings, num_seasons)
-        include_cs = self.include_current_season(standings, season, games_threshold)
+        self._init_rating_columns(team_ratings, num_seasons)
+        self._insert_rating_values(team_ratings, standings, season, num_seasons)
+        self._fill_nan(team_ratings)
+        self._normalise_ratings(team_ratings, num_seasons)
+        include_cs = self._should_include_current_season(standings, season, games_threshold)
         self._calc_total_rating_col(team_ratings, num_seasons, include_cs)
 
-        team_ratings = self.clean_dataframe(team_ratings)
+        team_ratings = self._clean_dataframe(team_ratings)
 
         if display:
             print(team_ratings)

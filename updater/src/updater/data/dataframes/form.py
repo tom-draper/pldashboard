@@ -3,7 +3,7 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from updater.fmt import clean_full_team_name
+from updater.fmt import clean_full_team_name, get_full_time_goals
 from timebudget import timebudget
 
 from updater.data.dataframes.df import DF
@@ -14,8 +14,9 @@ class Form(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, "form")
 
-    def get_prev_matchday(self, current_season: int):
-        current_season = self.get_current_season()
+    def get_prev_matchday(self, current_season: Optional[int] = None):
+        if current_season is None:
+            current_season = self.get_current_season()
         return self._get_matchday(current_season, n_back=1)
 
     def get_current_matchday(self, current_season: Optional[int] = None):
@@ -261,16 +262,7 @@ class Form(DF):
             "atHome": home_team,
         }
 
-        home_goals = (
-            match["score"]["fullTime"]["home"]
-            if "home" in match["score"]["fullTime"]
-            else match["score"]["fullTime"]["homeTeam"]
-        )
-        away_goals = (
-            match["score"]["fullTime"]["away"]
-            if "away" in match["score"]["fullTime"]
-            else match["score"]["fullTime"]["awayTeam"]
-        )
+        home_goals, away_goals = get_full_time_goals(match["score"]["fullTime"])
 
         score = {"homeGoals": home_goals, "awayGoals": away_goals}
         d[team][season][matchday]["score"] = score

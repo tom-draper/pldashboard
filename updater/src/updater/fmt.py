@@ -163,6 +163,15 @@ def format_scoreline_str(
     return scoreline
 
 
+def get_full_time_goals(full_time: dict) -> tuple[int, int]:
+    """Extract home and away goals from a full time score dict.
+    Handles both API v3 (homeTeam/awayTeam) and v4 (home/away) key formats.
+    """
+    home = full_time["home"] if "home" in full_time else full_time["homeTeam"]
+    away = full_time["away"] if "away" in full_time else full_time["awayTeam"]
+    return home, away
+
+
 def clean_full_team_name(full_team_name: str):
     """Remove FC, AFC postfixes and replace ampersand for 'and'."""
     return (

@@ -40,12 +40,11 @@ class Predictor:
         current_season: int,
         num_seasons: int,
     ):
-        # [last season, 2 seasons ago, 3 seasons ago]
         total_fixtures = {current_season: current_season_fixtures.df}
-        prev_fixtures = [Fixtures(), Fixtures(), Fixtures()]
         for i in range(num_seasons - 1):
-            prev_fixtures[i].build(json_data, current_season - i - 1)
-            total_fixtures[current_season - i - 1] = prev_fixtures[i].df
+            f = Fixtures()
+            f.build(json_data, current_season - i - 1)
+            total_fixtures[current_season - i - 1] = f.df
 
         total_fixtures = pd.concat(total_fixtures, axis=1)
 
@@ -226,60 +225,6 @@ class Predictor:
             if scoreline in freq:
                 freq[scoreline] -= count * scale
 
-    @staticmethod
-    def _insert_scorelines_into_freq(
-        freq: dict[Scoreline, int],
-        scorelines: list[Scoreline],
-        weightings: Optional[list[float]] = None,
-    ):
-        if weightings is None:
-            # Even weightings
-            weightings = [1] * len(scorelines)
-        elif len(weightings) != len(scorelines):
-            return
-
-        for scoreline, weight in zip(scorelines, weightings):
-            if scoreline not in freq:
-                freq[scoreline] = 0
-            freq[scoreline] += 1 * weight
-
-    @staticmethod
-    def _remove_recent_scorelines_home_away(
-        scorelines: list[Scoreline],
-        intended_home_team: Optional[str] = None,
-        intended_away_team: Optional[str] = None,
-    ):
-        for scoreline in scorelines:
-            # If wrong way around, swap scoreline team order
-            if (
-                intended_home_team is not None
-                and scoreline.away_team == intended_home_team
-            ) or (
-                intended_away_team is not None
-                and scoreline.home_team == intended_away_team
-            ):
-                scoreline.reverse()
-        return scorelines
-
-    @staticmethod
-    def _remove_recent_scorelines_teams(scorelines: list[Scoreline]):
-        new_scorelines: list[Scoreline] = []
-        for scoreline in scorelines:
-            scoreline.show_team = False
-            new_scorelines.append(scoreline)
-        return new_scorelines
-
-    @staticmethod
-    def _inserted_weighted_recent_scorelines(
-        freq: dict[Scoreline, float],
-        scorelines: list[Scoreline],
-        weightings: list[float],
-    ):
-        for scoreline, weight in zip(scorelines, weightings):
-            if scoreline not in freq:
-                freq[scoreline] = 0
-            freq[scoreline] += 1 * weight
-
     def get_recent_scorelines(self, team: str, num_matches: Optional[int]):
         team_row = self.fixtures.loc[team]
         # Remove higher-level multi-index
@@ -402,7 +347,7 @@ class Predictor:
             odds_scale = (1, 1, 1)
 
         scale = tuple(f / 2 + o / 2 for f, o in zip(form_scale, odds_scale))
-        self.scale_results(scoreline_freq, scale)
+        self._scale_results(scoreline_freq, scale)
 
         # Convert frequency counts into probability values
         scoreline_probabilities = self._scoreline_freq_probability(scoreline_freq)
@@ -410,7 +355,7 @@ class Predictor:
         return scoreline_probabilities
 
     @staticmethod
-    def scale_results(
+    def _scale_results(
         scoreline_freq: dict[Scoreline, float], scale: tuple[float, float, float]
     ):
         home, draw, away = scale

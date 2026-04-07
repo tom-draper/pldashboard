@@ -35,12 +35,3 @@ def calc_form(
     form = min(max(0, form), 1)  # Cap rating
     return form
 
-
-def scale_by_form(freq: dict[str, int | float], home_form: float, away_form: float):
-    home_form += 1
-    away_form += 1
-    for scoreline in freq:
-        if scoreline.home_goals > scoreline.away_goals:
-            freq[scoreline] *= home_form
-        elif scoreline.home_goals < scoreline.away_goals:
-            freq[scoreline] *= away_form

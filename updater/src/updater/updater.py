@@ -174,13 +174,13 @@ class Updater:
         """Save current season fixtures and standings data in `self.raw_data` to
         local store.
         """
-        for type in ("fixtures", "standings"):
-            with open(f"backups/{type}/{type}_{self.current_season}.json", "w") as f:
-                json.dump(self.raw_data[type][self.current_season], f)
+        for data_type in ("fixtures", "standings"):
+            with open(f"backups/{data_type}/{data_type}_{self.current_season}.json", "w") as f:
+                json.dump(self.raw_data[data_type][self.current_season], f)
 
-        for type in ("general", "fixtures"):
-            with open(f"backups/fantasy/{type}_{self.current_season}.json", "w") as f:
-                json.dump(self.raw_data["fantasy"][type], f)
+        for data_type in ("general", "fixtures"):
+            with open(f"backups/fantasy/{data_type}_{self.current_season}.json", "w") as f:
+                json.dump(self.raw_data["fantasy"][data_type], f)
 
     def build_dataframes(self, num_seasons: int, display_tables: bool = False):
         """Builds all DataFrames within `self.data` using the raw data.
@@ -287,7 +287,8 @@ class Updater:
         except ValueError as e:
             logging.error(e)
             logging.info("🔁 Retrying with local backup data...")
-            self.set_raw_data(num_seasons, request_new := False)
+            request_new = False
+            self.set_raw_data(num_seasons, request_new)
 
         self.build_dataframes(num_seasons, display_tables)
 

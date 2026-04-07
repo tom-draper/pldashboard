@@ -3,7 +3,7 @@ from datetime import datetime
 
 import pandas as pd
 from pandas import DataFrame
-from updater.fmt import clean_full_team_name, convert_team_name_or_initials
+from updater.fmt import clean_full_team_name, convert_team_name_or_initials, get_full_time_goals
 from timebudget import timebudget
 
 from .df import DF
@@ -53,9 +53,7 @@ class Fixtures(DF):
             team = clean_full_team_name(match["awayTeam"]["name"])
             opposition = clean_full_team_name(match["homeTeam"]["name"])
 
-        # Data API v4 renamed 'homeTeam' to 'home'
-        home_goals = match["score"]["fullTime"]["home"] if "home" in match["score"]["fullTime"] else match['score']['fullTime']['homeTeam']
-        away_goals = match["score"]["fullTime"]["away"] if "away" in match["score"]["fullTime"] else match['score']['fullTime']['awayTeam']
+        home_goals, away_goals = get_full_time_goals(match["score"]["fullTime"])
         if home_goals is not None:
             score = {
                 "homeGoals": home_goals,

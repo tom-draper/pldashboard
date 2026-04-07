@@ -16,9 +16,9 @@ class DF:
 
     def _check_dependencies(self, *args):
         for arg in args:
-            if arg.df.empty:
+            if arg.df is None or arg.df.empty:
                 raise ValueError(
-                    f"Cannot {self.name} DataFrame: {arg.name} DataFrame empty."
+                    f"Cannot build {self.name} DataFrame: {arg.name} DataFrame is not built."
                 )
 
     def log_building(self, season: Optional[int] = None):
