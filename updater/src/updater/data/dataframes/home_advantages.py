@@ -89,7 +89,6 @@ class HomeAdvantages(DF):
             )
 
         df["totalHomeAdvantage"] = home_advantage_cols.mean(axis=1).fillna(0)
-        df = df.sort_values(by="totalHomeAdvantage", ascending=False)
         return df
 
     def _clean_dataframe(self, df: DataFrame, current_season_teams: list[str]) -> DataFrame:

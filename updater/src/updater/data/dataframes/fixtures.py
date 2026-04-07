@@ -13,7 +13,7 @@ class Fixtures(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, "fixtures")
 
-    def get_actual_scores_new(self):
+    def get_actual_scores(self):
         # To contain a tuple for all actual scores so far this season
         actual_scores: dict[tuple[str, str], dict[str, int]] = {}
 

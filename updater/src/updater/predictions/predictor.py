@@ -1,9 +1,8 @@
-from datetime import datetime
 from typing import Optional
 
 import numpy as np
-import pandas as pd
-from updater.data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
+from updater.data.dataframes import Form, HomeAdvantages, TeamRatings
+from updater.fmt import clean_full_team_name, get_full_time_goals
 
 from updater.predictions.scoreline import Scoreline
 
@@ -36,16 +35,13 @@ class Predictor:
     def __init__(
         self,
         json_data: dict,
-        fixtures: Fixtures,
         form: Form,
         team_ratings: TeamRatings,
         home_advantages: HomeAdvantages,
         season: int,
         num_seasons: int,
     ):
-        self.fixtures = self._build_long_term_fixtures(
-            json_data, fixtures, season, num_seasons
-        )
+        self.team_records = self._build_team_records(json_data, season, num_seasons)
         self.form = form
         self.team_ratings = team_ratings
         self.home_advantages = home_advantages
@@ -53,77 +49,54 @@ class Predictor:
         self.FIXTURE_WEIGHTING = 0.4
 
     @staticmethod
-    def _build_long_term_fixtures(
-        json_data: dict,
-        current_season_fixtures: Fixtures,
-        current_season: int,
-        num_seasons: int,
-    ):
-        total_fixtures = {current_season: current_season_fixtures.df}
-        for i in range(num_seasons - 1):
-            f = Fixtures()
-            f.build(json_data, current_season - i - 1)
-            total_fixtures[current_season - i - 1] = f.df
+    def _build_team_records(
+        json_data: dict, season: int, num_seasons: int
+    ) -> dict[str, list[dict]]:
+        """Build a flat per-team records dict from raw fixtures JSON across all seasons.
 
-        total_fixtures = pd.concat(total_fixtures, axis=1)
-
-        # Drop rows for teams not featured in current season
-        total_fixtures = total_fixtures.drop(
-            index=total_fixtures.index.difference(
-                current_season_fixtures.df.index.tolist()
-            ),
-            axis=0,
-        )
-
-        return total_fixtures
+        Each record: {date, team (opposition), score {homeGoals, awayGoals}, atHome}.
+        Only includes finished matches (non-null scores).
+        """
+        records: dict[str, list[dict]] = {}
+        for i in range(num_seasons):
+            for match in json_data["fixtures"][season - i]:
+                home_goals, away_goals = get_full_time_goals(match["score"]["fullTime"])
+                if home_goals is None:
+                    continue
+                home_team = clean_full_team_name(match["homeTeam"]["name"])
+                away_team = clean_full_team_name(match["awayTeam"]["name"])
+                score = {"homeGoals": home_goals, "awayGoals": away_goals}
+                date = match["utcDate"]
+                records.setdefault(home_team, []).append(
+                    {"date": date, "team": away_team, "score": score, "atHome": True}
+                )
+                records.setdefault(away_team, []).append(
+                    {"date": date, "team": home_team, "score": score, "atHome": False}
+                )
+        return records
 
     def _team_scoreline_freq(self, team: str):
         freq: dict[Scoreline, int] = {}
-
-        team_row = self.fixtures.loc[team]
-        # Remove higher-level multi-index
-        team_row.index = team_row.index.get_level_values(2)
-        scores: list[dict[str, int]] = team_row.loc["score"]
-        at_homes: list[bool] = team_row.loc["atHome"]
-
-        for score, at_home in zip(scores, at_homes):
-            if pd.isna(score):
-                continue
-
+        for record in self.team_records.get(team, []):
+            at_home = record["atHome"]
+            score = record["score"]
             home_team = team if at_home else None
             away_team = None if at_home else team
-
-            scoreline = Scoreline(
-                score["homeGoals"], score["awayGoals"], home_team, away_team
-            )
-
+            scoreline = Scoreline(score["homeGoals"], score["awayGoals"], home_team, away_team)
             freq[scoreline] = freq.get(scoreline, 0) + 1
-
         return freq
 
     def _fixture_scoreline_freq(self, team1: str, team2: str):
         freq: dict[Scoreline, int] = {}
-
-        team1_row = self.fixtures.loc[team1]
-        # Remove higher-level multi-index
-        team1_row.index = team1_row.index.get_level_values(2)
-        teams: list[str] = team1_row.loc["team"]
-        scores: list[dict[str, int]] = team1_row.loc["score"]
-        at_homes: list[bool] = team1_row.loc["atHome"]
-
-        for team, score, at_home in zip(teams, scores, at_homes):
-            if pd.isna(score) or team != team2:
+        for record in self.team_records.get(team1, []):
+            if record["team"] != team2:
                 continue
-
+            at_home = record["atHome"]
+            score = record["score"]
             home_team = team1 if at_home else team2
             away_team = team2 if at_home else team1
-
-            scoreline = Scoreline(
-                score["homeGoals"], score["awayGoals"], home_team, away_team
-            )
-
+            scoreline = Scoreline(score["homeGoals"], score["awayGoals"], home_team, away_team)
             freq[scoreline] = freq.get(scoreline, 0) + 1
-
         return freq
 
     @staticmethod
@@ -201,30 +174,19 @@ class Predictor:
                 freq[key] -= count * scale
 
     def get_recent_scorelines(self, team: str, num_matches: Optional[int]):
-        team_row = self.fixtures.loc[team]
-        # Remove higher-level multi-index
-        team_row.index = team_row.index.get_level_values(2)
-        teams: list[str] = team_row.loc["team"]
-        scores: list[dict[str, int]] = team_row.loc["score"]
-        at_homes: list[bool] = team_row.loc["atHome"]
-        dates: list[datetime] = team_row.loc["date"]
-
-        dated_scorelines: list[tuple[datetime, Scoreline]] = []
-        for date, opposition, score, at_home in zip(dates, teams, scores, at_homes):
-            if pd.isna(score):
-                continue
-
+        dated_scorelines: list[tuple[str, Scoreline]] = []
+        for record in self.team_records.get(team, []):
+            score = record["score"]
+            opposition = record["team"]
+            at_home = record["atHome"]
             home_team = team if at_home else opposition
             away_team = opposition if at_home else team
-
-            scoreline = Scoreline(
-                score["homeGoals"], score["awayGoals"], home_team, away_team
-            )
-            dated_scorelines.append((date, scoreline))
+            scoreline = Scoreline(score["homeGoals"], score["awayGoals"], home_team, away_team)
+            dated_scorelines.append((record["date"], scoreline))
 
         dated_scorelines.sort(key=lambda x: x[0])
-        scorelines = [scoreline for (_, scoreline) in dated_scorelines]
-        if num_matches is not None:  # If None, return all matches
+        scorelines = [s for (_, s) in dated_scorelines]
+        if num_matches is not None:
             scorelines = scorelines[-num_matches:]
         return scorelines
 

@@ -244,7 +244,7 @@ class Updater:
 
     def save_predictions_to_db(self):
         predictions = self.data.teams.upcoming.get_predictions()
-        actual_scores = self.data.teams.fixtures.get_actual_scores_new()
+        actual_scores = self.data.teams.fixtures.get_actual_scores()
         self.database.update_predictions(predictions, actual_scores)
         self.database.update_actual_scores(actual_scores)
 

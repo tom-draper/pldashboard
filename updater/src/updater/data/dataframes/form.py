@@ -60,9 +60,6 @@ class Form(DF):
         if matchday < 1 or matchday > 38:
             return 0
 
-        if matchday is None:
-            return 50.0
-
         rating = (
             self.df.at[team, (current_season, matchday, f"formRating{n_games}")] * 100
         ).round(1)
@@ -91,7 +88,7 @@ class Form(DF):
 
     @staticmethod
     def _calc_form_rating(
-        team_ratings: TeamRatings,
+        ratings: dict[str, float],
         teams_played: list[str],
         form_str: str,
         gds: list[int],
@@ -101,12 +98,9 @@ class Form(DF):
         if form_str is None:
             return form_rating
 
-        for i, opposition in enumerate(teams_played):
-            opposition_rating = 0
-            if opposition in team_ratings.df.index:
-                opposition_rating = team_ratings.df.at[opposition, "total"]
-
-            form_rating += (opposition_rating / len(form_str)) * gds[i]
+        n = len(form_str)
+        for opposition, gd in zip(teams_played, gds):
+            form_rating += (ratings.get(opposition, 0) / n) * gd
 
         form_rating = min(max(0, form_rating), 1)  # Cap rating
         return form_rating
@@ -118,14 +112,13 @@ class Form(DF):
         for season in seasons:
             played_matchdays = df[season].columns.unique(level=0).tolist()
             for matchday in played_matchdays:
-                sorted_df = df.sort_values(
-                    by=[(season, matchday, "cumPoints"), (season, matchday, "cumGD")],
-                    ascending=False,
-                )
+                points = df[(season, matchday, "cumPoints")].to_numpy(dtype=float, na_value=0)
+                gd = df[(season, matchday, "cumGD")].to_numpy(dtype=float, na_value=0)
+                order = np.lexsort((-gd, -points))
+                positions = np.empty(len(order), dtype=int)
+                positions[order] = np.arange(1, len(order) + 1)
                 position_data[(season, matchday, "position")] = pd.Series(
-                    list(range(1, 21)),
-                    index=sorted_df.index,
-                    name=(season, matchday, "position"),
+                    positions, index=df.index, name=(season, matchday, "position")
                 )
 
         if position_data:
@@ -135,9 +128,9 @@ class Form(DF):
         return df
 
     def _fill_teams_missing_matchday(self, form: DataFrame):
-        """Fill in missing essential matchday data with copies from previous matchday."""
+        """Fill in missing essential matchday data with forward-fill from previous matchday."""
         current_season = max(form.columns.unique(level=0))
-        matchdays = list(sorted(form[current_season].columns.unique(level=0)))
+        matchdays = sorted(form[current_season].columns.unique(level=0))
         essential_cols = (
             "cumGD",
             "cumPoints",
@@ -146,22 +139,14 @@ class Form(DF):
             "formRating5",
             "formRating10",
         )
-        for matchday in matchdays:
-            if not form[current_season][matchday].isnull().values.any():
-                continue
-
-            # prev_matchday is the same for all teams — hoist out of team loop
-            prev_matchday = matchday - 1
-            while prev_matchday > 0 and prev_matchday not in matchdays:
-                prev_matchday -= 1
-            if prev_matchday == 0:
-                continue
-
-            for col in essential_cols:
-                dest = (current_season, matchday, col)
-                src = (current_season, prev_matchday, col)
-                mask = form[dest].isnull()
-                form.loc[mask, dest] = form.loc[mask, src].values
+        for col in essential_cols:
+            col_keys = [
+                (current_season, md, col)
+                for md in matchdays
+                if (current_season, md, col) in form.columns
+            ]
+            if col_keys:
+                form[col_keys] = form[col_keys].ffill(axis=1)
 
     @staticmethod
     def _get_form_char(gd: int):
@@ -174,7 +159,7 @@ class Form(DF):
     def _calc_form_rating_for_team(
         self,
         d: dict,
-        team_ratings: TeamRatings,
+        ratings: dict[str, float],
         team: str,
         current_season: int,
         matchdays: list[int],
@@ -186,19 +171,19 @@ class Form(DF):
         ]
         gds = [d[team][current_season][md]["gD"] for md in played_matchdays]
         form_str = d[team][current_season][played_matchdays[-1]][f"form{length}"]
-        return self._calc_form_rating(team_ratings, teams_played, form_str, gds)
+        return self._calc_form_rating(ratings, teams_played, form_str, gds)
 
     def _insert_form_rating(
         self,
         d: dict,
-        team_ratings: TeamRatings,
+        ratings: dict[str, float],
         team: str,
         season: int,
         ordered_matchdays: list[int],
         length: int,
     ):
         form_rating = self._calc_form_rating_for_team(
-            d, team_ratings, team, season, ordered_matchdays, length
+            d, ratings, team, season, ordered_matchdays, length
         )
         matchday = ordered_matchdays[-1]
         d[team][season][matchday][f"formRating{length}"] = form_rating
@@ -227,19 +212,15 @@ class Form(DF):
         d[team][season][matchday][col_heading] = form_str
 
     def _ordered_played_matchdays(self, d: dict, team: str, season: int):
-        if season not in d.get(team, {}):
-            return []
-        played = sorted(
-            ((md, data["date"]) for md, data in d[team][season].items() if "date" in data),
-            key=lambda x: x[1],
-        )
-        return [md for md, _ in played]
+        # Matches are inserted in utcDate order (sorted in build()), so dict
+        # insertion order is already chronological — no sort needed.
+        return [md for md, data in d.get(team, {}).get(season, {}).items() if "date" in data]
 
     def _insert_team_matchday(
         self,
         d: dict,
         match: dict,
-        team_ratings: TeamRatings,
+        ratings: dict[str, float],
         season: int,
         home_team: bool,
     ):
@@ -274,8 +255,8 @@ class Form(DF):
         ordered_matchdays = self._ordered_played_matchdays(d, team, season)
         self._insert_form_string(d, team, gd, season, ordered_matchdays, 5)
         self._insert_form_string(d, team, gd, season, ordered_matchdays, 10)
-        self._insert_form_rating(d, team_ratings, team, season, ordered_matchdays, 5)
-        self._insert_form_rating(d, team_ratings, team, season, ordered_matchdays, 10)
+        self._insert_form_rating(d, ratings, team, season, ordered_matchdays, 5)
+        self._insert_form_rating(d, ratings, team, season, ordered_matchdays, 10)
 
     @staticmethod
     def _compute_cumulative(form: DataFrame, seasons: list[int]) -> DataFrame:
@@ -386,17 +367,24 @@ class Form(DF):
         """
         self.log_building(season)
 
+        # Pre-compute ratings lookup to avoid repeated pandas .at[] calls in the loop
+        ratings: dict[str, float] = (
+            team_ratings.df["total"].to_dict()
+            if team_ratings.df is not None and not team_ratings.df.empty
+            else {}
+        )
+
         # d[team][season][matchday][col] = value
         d: dict[str, dict[int, dict[int, dict[str, object]]]] = {}
         teams: set[str] = set()
         for i in range(num_seasons):
-            for match in json_data["fixtures"][season - i]:
+            for match in sorted(json_data["fixtures"][season - i], key=lambda x: x["utcDate"]):
                 if i == 0:
                     teams.add(clean_full_team_name(match["homeTeam"]["name"]))
                     teams.add(clean_full_team_name(match["awayTeam"]["name"]))
                 if match["status"] == "FINISHED":
-                    self._insert_team_matchday(d, match, team_ratings, season - i, True)
-                    self._insert_team_matchday(d, match, team_ratings, season - i, False)
+                    self._insert_team_matchday(d, match, ratings, season - i, True)
+                    self._insert_team_matchday(d, match, ratings, season - i, False)
 
         self._init_missing_teams(d, teams, season)
 

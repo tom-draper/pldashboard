@@ -14,40 +14,22 @@ class TeamRatings(DF):
         super().__init__(d, "team_ratings")
 
     @staticmethod
-    def _calc_rating(points: int, gd: int):
-        return points + gd
-
-    @staticmethod
     def _get_season_weightings(no_seasons: int):
-        mult = 2.5  # High = recent weighted more
-        season_weights = [0.01 * (mult**3), 0.01 * (mult**2), 0.01 * mult, 0.01]
-        weights = np.array(season_weights[:no_seasons])
-        return list(weights / sum(weights))  # Normalise list
+        mult = 2.5  # Higher = recent seasons weighted more
+        weights = np.array([mult ** i for i in range(no_seasons - 1, -1, -1)])
+        return list(weights / weights.sum())
 
     def _calc_total_rating_col(
         self,
-        team_ratings: dict,
+        team_ratings: DataFrame,
         no_seasons: int,
         include_current_season: bool,
     ):
-        # Calculate total rating column
-        team_ratings["total"] = 0
-        if include_current_season:
-            start_n = 0  # Include current season when calculating total rating
-            w = self._get_season_weightings(no_seasons)  # Column weights
-        else:
-            start_n = 1  # Exclude current season when calculating total rating
-            w = self._get_season_weightings(no_seasons - 1)  # Column weights
-
-        for n in range(start_n, no_seasons):
-            team_ratings["total"] += (
-                w[n - start_n] * team_ratings[f"prevSeason{n}"]
-            )
-
-    @staticmethod
-    def _init_rating_columns(team_ratings: DataFrame, num_seasons: int):
-        for n in range(0, num_seasons):
-            team_ratings[f"prevSeason{n}"] = np.nan
+        season_cols = [
+            f"prevSeason{n}" for n in range(0 if include_current_season else 1, no_seasons)
+        ]
+        weights = np.array(self._get_season_weightings(len(season_cols)))
+        team_ratings["total"] = team_ratings[season_cols].mul(weights).sum(axis=1)
 
     def _insert_rating_values(
         self,
@@ -56,28 +38,21 @@ class TeamRatings(DF):
         current_season: int,
         num_seasons: int,
     ):
-        for team, row in standings.df.iterrows():
-            for n in range(num_seasons):
-                rating = self._calc_rating(
-                    row[current_season - n]["points"], row[current_season - n]["gD"]
-                )
-                team_ratings.at[team, f"prevSeason{n}"] = rating
+        for n in range(num_seasons):
+            season_data = standings.df[current_season - n]
+            team_ratings[f"prevSeason{n}"] = season_data["points"] + season_data["gD"]
 
     @staticmethod
     def _fill_nan(team_ratings: DataFrame):
         # Replace any NaN with the lowest rating in the same column
-        for col in team_ratings.columns:
-            team_ratings[col] = team_ratings[col].replace(
-                np.nan, team_ratings[col].min()
-            )
+        team_ratings.fillna(team_ratings.min(), inplace=True)
 
     @staticmethod
     def _normalise_ratings(team_ratings: DataFrame, num_seasons: int):
-        for n in range(0, num_seasons):
-            col = f"prevSeason{n}"
-            col_min = team_ratings[col].min()
-            col_max = team_ratings[col].max()
-            team_ratings[col] = (team_ratings[col] - col_min) / (col_max - col_min)
+        cols = [f"prevSeason{n}" for n in range(num_seasons)]
+        col_min = team_ratings[cols].min()
+        col_max = team_ratings[cols].max()
+        team_ratings[cols] = (team_ratings[cols] - col_min) / (col_max - col_min)
 
     @staticmethod
     def _should_include_current_season(
@@ -137,10 +112,8 @@ class TeamRatings(DF):
         self.log_building(season)
         self._check_dependencies(standings)
 
-        # Add current season team names to the object team DataFrame
         team_ratings = pd.DataFrame(index=standings.df.index)
 
-        self._init_rating_columns(team_ratings, num_seasons)
         self._insert_rating_values(team_ratings, standings, season, num_seasons)
         self._fill_nan(team_ratings)
         self._normalise_ratings(team_ratings, num_seasons)

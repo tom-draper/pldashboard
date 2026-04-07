@@ -236,7 +236,6 @@ class Upcoming(DF):
 
         predictor = Predictor(
             json_data,
-            fixtures,
             form,
             team_ratings,
             home_advantages,

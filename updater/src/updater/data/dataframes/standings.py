@@ -70,16 +70,14 @@ class Standings(DF):
                                 current_teams: list[str],
                                 season: int,
                                 num_seasons: int) -> DataFrame:
-        combined_standings = pd.DataFrame()
+        dfs = []
         for i in range(num_seasons):
             season_year = season - i
             try:
-                season_df = self._build_season_standings(json_data, current_teams, season_year)
-                combined_standings = pd.concat([combined_standings, season_df], axis=1)
+                dfs.append(self._build_season_standings(json_data, current_teams, season_year))
             except ValueError as e:
                 logging.warning(f"Skipping season {season_year} - {e}")
-                continue
-        return combined_standings
+        return pd.concat(dfs, axis=1) if dfs else pd.DataFrame()
 
     @timebudget
     def build(
