@@ -7,11 +7,11 @@ from updater.fmt import clean_full_team_name, convert_team_name_or_initials, get
 from updater.predictions.predictor import Predictor
 from updater.predictions.scoreline import Scoreline
 
-from updater.data.dataframes.df import DF
-from updater.data.dataframes.fixtures import Fixtures
-from updater.data.dataframes.form import Form
-from updater.data.dataframes.home_advantages import HomeAdvantages
-from updater.data.dataframes.team_ratings import TeamRatings
+from .df import DF
+from .fixtures import Fixtures
+from .form import Form
+from .home_advantages import HomeAdvantages
+from .team_ratings import TeamRatings
 
 
 class Upcoming(DF):

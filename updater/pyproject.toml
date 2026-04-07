@@ -19,7 +19,7 @@ dependencies = [
 dev = ["pytest>=8.0"]
 
 [project.scripts]
-updater = "updater.main:main"
+updater = "updater.run:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

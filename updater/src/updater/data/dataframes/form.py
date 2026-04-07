@@ -6,8 +6,8 @@ from pandas import DataFrame
 from updater.fmt import clean_full_team_name, get_full_time_goals
 from timebudget import timebudget
 
-from updater.data.dataframes.df import DF
-from updater.data.dataframes.team_ratings import TeamRatings
+from .df import DF
+from .team_ratings import TeamRatings
 
 
 class Form(DF):

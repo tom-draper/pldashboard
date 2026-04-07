@@ -1,4 +1,3 @@
-from .df import DF
 from .fixtures import Fixtures
 from .form import Form
 from .home_advantages import HomeAdvantages

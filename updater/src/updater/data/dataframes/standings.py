@@ -7,7 +7,7 @@ from typing import Any
 from updater.fmt import clean_full_team_name
 from timebudget import timebudget
 
-from updater.data.dataframes.df import DF
+from .df import DF
 
 
 class Standings(DF):

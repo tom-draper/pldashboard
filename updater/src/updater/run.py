@@ -9,6 +9,10 @@ class RunMode(Enum):
     DEVELOPMENT = "development"
 
 
+def main():
+    run_mode(RunMode.PRODUCTION)
+
+
 def run_mode(mode: RunMode):
     if mode == RunMode.PRODUCTION:
         logging.basicConfig(level=logging.CRITICAL, format="%(asctime)s :: %(levelname)s :: %(message)s")
