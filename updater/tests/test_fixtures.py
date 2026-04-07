@@ -91,52 +91,24 @@ def test_fixtures_df_at_home_datatype(data: Data):
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_fixtures_df_score_datatype(data: Data):
-    # Score column contains str or None
+    # Score column contains dict or None
     matchdays = get_matchdays(data)
     for matchday in matchdays:
         scores = data.teams.fixtures.df[matchday, 'score']
         for score in scores:
-            assert isinstance(score, str) or score is None
+            assert isinstance(score, dict) or score is None
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_fixtures_df_score_format(data: Data):
-    # Score column contains valid scores
+    # Score dicts contain non-negative integer homeGoals and awayGoals
     matchdays = get_matchdays(data)
     for matchday in matchdays:
         scores = data.teams.fixtures.df[matchday, 'score']
         for score in scores:
-            if isinstance(score, str):
-                assert valid_score(score)
-
-
-def valid_score(score: str):
-    h, middle, a, *rest = score.split(' ')
-
-    if len(rest) > 0:
-        return False
-
-    if middle != "-":
-        return False
-
-    if not is_int(h) or not is_int(a):
-        return False
-
-    home_goals = int(h)
-    if home_goals < 0:
-        return False
-
-    away_goals = int(a)
-    if away_goals < 0:
-        return False
-    
-    return True
-
-
-def is_int(s: str):
-    if s[0] in ('-', '+'):
-        return s[1:].isdigit()
-    return s.isdigit()
+            if isinstance(score, dict):
+                assert isinstance(score.get("homeGoals"), int) and score["homeGoals"] >= 0
+                assert isinstance(score.get("awayGoals"), int) and score["awayGoals"] >= 0
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)

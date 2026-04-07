@@ -90,8 +90,8 @@ class Fixtures(DF):
             team: the name of the opposition team
             status: the current status of that match, either 'FINISHED', 'IN PLAY'
                 or 'SCHEDULED'
-            score: the score of that game, either 'X - Y' if status is 'FINISHED'
-                or None if status is 'SCHEDULED' or 'IN-PLAY'
+            score: the score of that game as {'homeGoals': int, 'awayGoals': int}
+                if status is 'FINISHED', or None otherwise
 
         Args:
             json_data dict: the json data storage used to build the DataFrame

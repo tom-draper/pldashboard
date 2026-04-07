@@ -171,7 +171,7 @@ class Form(DF):
             return "L"
         return "D"
 
-    def calc_form_rating(
+    def _calc_form_rating_for_team(
         self,
         d: dict,
         team_ratings: TeamRatings,
@@ -197,7 +197,7 @@ class Form(DF):
         ordered_matchdays: list[int],
         length: int,
     ):
-        form_rating = self.calc_form_rating(
+        form_rating = self._calc_form_rating_for_team(
             d, team_ratings, team, season, ordered_matchdays, length
         )
         matchday = ordered_matchdays[-1]

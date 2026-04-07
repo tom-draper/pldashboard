@@ -24,13 +24,16 @@ class TeamsData:
         self.upcoming: Upcoming = Upcoming()
 
     def all_built(self):
-        return (
-            self.fixtures.df is not None
-            and self.standings.df is not None
-            and self.team_ratings.df is not None
-            and self.home_advantages.df is not None
-            and self.form.df is not None
-            and self.upcoming.df is not None
+        return all(
+            df.df is not None
+            for df in (
+                self.fixtures,
+                self.standings,
+                self.team_ratings,
+                self.home_advantages,
+                self.form,
+                self.upcoming,
+            )
         )
 
     def to_dataframe(self):

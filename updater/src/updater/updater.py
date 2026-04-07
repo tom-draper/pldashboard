@@ -232,7 +232,7 @@ class Updater:
             num_seasons,
             display=display_tables,
         )
-        self.data.fantasy.data.build(self.raw_data)
+        self.data.fantasy.build(self.raw_data)
 
     def save_team_data_to_db(self):
         team_data = self.data.teams.to_dict()

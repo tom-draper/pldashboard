@@ -1,42 +1,18 @@
+import logging
+
 import pandas as pd
 from pandas import DataFrame
-from typing import Dict, Any
+from typing import Any
 from timebudget import timebudget
 
 from .df import DF
 
 
-
 class Fantasy(DF):
-    """Class for managing Fantasy Premier League player data and statistics."""
-    
-    # Fantasy point scoring system constants
-    SCORING_SYSTEM = {
-        "goals_scored": {
-            "Forward": 4,
-            "Midfielder": 5,
-            "Defender": 6,
-            "Goalkeeper": 6
-        },
-        "assists": 3,
-        "clean_sheets": {
-            "Goalkeeper": 4,
-            "Defender": 4,
-            "Midfielder": 1,
-            "Forward": 0
-        },
-        "own_goals": -2,
-        "penalties_saved": 5,
-        "penalties_missed": -2,
-        "yellow_cards": -1,
-        "red_cards": -3,
-        "saves_per_point": 3  # Points awarded per 3 saves
-    }
 
-    # Column mapping for better maintainability
     PLAYER_COLUMN_MAPPING = {
         "web_name": "web_name",
-        "first_name": "firstName", 
+        "first_name": "firstName",
         "second_name": "surname",
         "form": "form",
         "minutes": "minutes",
@@ -65,227 +41,70 @@ class Fantasy(DF):
     def __init__(self, d: DataFrame = DataFrame()):
         super().__init__(d, "fantasy")
 
-    @staticmethod
-    def get_current_season(json_data: Dict[str, Any]) -> int:
-        """
-        Extract the current season from the fantasy data.
-        
-        Args:
-            json_data: The complete JSON data structure
-            
-        Returns:
-            Current season year
-            
-        Raises:
-            ValueError: If no fantasy data is found
-        """
-        try:
-            fantasy_seasons = json_data["fantasy"].keys()
-            if not fantasy_seasons:
-                raise ValueError("No fantasy seasons found in data")
-            return next(iter(fantasy_seasons))
-        except KeyError:
-            raise ValueError("Fantasy data not found in JSON structure")
+    def _build_player_record(
+        self,
+        player: dict[str, Any],
+        team_mappings: dict[int, str],
+        position_mappings: dict[int, str],
+    ) -> dict[str, Any]:
+        record = {
+            df_col: player.get(api_field, 0)
+            for api_field, df_col in self.PLAYER_COLUMN_MAPPING.items()
+        }
+        record["team"] = team_mappings.get(player.get("team_code"), "Unknown")
+        record["position"] = position_mappings.get(player.get("element_type"), "Unknown")
+        return record
 
-    def _extract_team_mappings(self, fantasy_data: Dict[str, Any]) -> Dict[int, str]:
-        """
-        Extract team code to name mappings from fantasy data.
-        
-        Args:
-            fantasy_data: Fantasy data for a specific season
-            
-        Returns:
-            Dictionary mapping team codes to team names
-        """
-        try:
-            return {team["code"]: team["name"] for team in fantasy_data["teams"]}
-        except KeyError:
-            raise ValueError("Team data not found in fantasy data")
+    def _process_all_players(self, fantasy_data: dict[str, Any]) -> dict[str, dict[str, Any]]:
+        team_mappings = {team["code"]: team["name"] for team in fantasy_data["teams"]}
+        position_mappings = {p["id"]: p["singular_name"] for p in fantasy_data["element_types"]}
 
-    def _extract_position_mappings(self, fantasy_data: Dict[str, Any]) -> Dict[int, str]:
-        """
-        Extract position ID to position name mappings from fantasy data.
-        
-        Args:
-            fantasy_data: Fantasy data for a specific season
-            
-        Returns:
-            Dictionary mapping position IDs to position names
-        """
-        try:
-            return {
-                position_type["id"]: position_type["singular_name"]
-                for position_type in fantasy_data["element_types"]
-            }
-        except KeyError:
-            raise ValueError("Position data not found in fantasy data")
-
-    def _build_player_record(self, player: Dict[str, Any], 
-                           team_mappings: Dict[int, str],
-                           position_mappings: Dict[int, str]) -> Dict[str, Any]:
-        """
-        Build a single player record with all relevant statistics.
-        
-        Args:
-            player: Raw player data from API
-            team_mappings: Team code to name mappings
-            position_mappings: Position ID to name mappings
-            
-        Returns:
-            Formatted player record dictionary
-        """
-        try:
-            team_name = team_mappings.get(player["team_code"], "Unknown")
-            position_name = position_mappings.get(player["element_type"], "Unknown")
-            
-            # Build record using column mapping
-            record = {}
-            for api_field, df_column in self.PLAYER_COLUMN_MAPPING.items():
-                if api_field in player:
-                    record[df_column] = player[api_field]
-                else:
-                    record[df_column] = 0  # Default value for missing fields
-            
-            # Add computed fields
-            record["team"] = team_name
-            record["position"] = position_name
-            
-            return record
-            
-        except KeyError as e:
-            raise ValueError(f"Missing required player field: {e}")
-
-    def _process_all_players(self, fantasy_data: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
-        """
-        Process all players and build their records.
-        
-        Args:
-            fantasy_data: Fantasy data for a specific season
-            
-        Returns:
-            Dictionary of player records keyed by web_name
-        """
-        team_mappings = self._extract_team_mappings(fantasy_data)
-        position_mappings = self._extract_position_mappings(fantasy_data)
-        
         player_records = {}
-        
-        try:
-            players_data = fantasy_data["elements"]
-        except KeyError:
-            raise ValueError("Player elements not found in fantasy data")
-        
-        for player in players_data:
+        for player in fantasy_data["elements"]:
+            web_name = player.get("web_name", f"Player_{player.get('id', 'Unknown')}")
             try:
-                web_name = player.get("web_name", f"Player_{player.get('id', 'Unknown')}")
-                player_record = self._build_player_record(player, team_mappings, position_mappings)
-                player_records[web_name] = player_record
-            except ValueError as e:
-                print(f"Warning: Skipping player due to error - {e}")
-                continue
-        
+                player_records[web_name] = self._build_player_record(
+                    player, team_mappings, position_mappings
+                )
+            except (KeyError, ValueError) as e:
+                logging.warning(f"Skipping player {web_name}: {e}")
         return player_records
 
-    def calculate_stat_points(self, identifier: str, value: int, position: str) -> int:
-        """
-        Calculate fantasy points for a specific statistic.
-        
-        Args:
-            identifier: The type of statistic (e.g., 'goals_scored')
-            value: The statistical value
-            position: Player's position
-            
-        Returns:
-            Points awarded for the statistic
-        """
-        if identifier in ["goals_scored", "clean_sheets"]:
-            # Position-dependent scoring
-            position_scores = self.SCORING_SYSTEM[identifier]
-            return position_scores.get(position, 0) * value
-        elif identifier == "assists":
-            return self.SCORING_SYSTEM["assists"] * value
-        elif identifier in ["own_goals", "penalties_saved", "penalties_missed"]:
-            return self.SCORING_SYSTEM[identifier] * value
-        elif identifier in ["yellow_cards", "red_cards"]:
-            return self.SCORING_SYSTEM[identifier] * value
-        elif identifier == "saves":
-            return value // self.SCORING_SYSTEM["saves_per_point"]
-        elif identifier == "bonus":
-            return value  # Bonus points are awarded directly
-        else:
-            return 0
+    def to_dict(self) -> dict:
+        if self.df is None or self.df.empty:
+            raise ValueError("Cannot convert Fantasy DataFrame to dict: not built.")
+        return self.df.to_dict(orient="index")
 
     def _clean_final_dataframe(self, df: DataFrame) -> DataFrame:
-        """
-        Apply final cleaning and formatting to the fantasy DataFrame.
-        
-        Args:
-            df: Raw fantasy DataFrame
-            
-        Returns:
-            Cleaned DataFrame
-        """
-        # Fill missing values and infer appropriate data types
         df = df.fillna(0).infer_objects()
-        
-        # Set proper index name
         df.index.name = "player"
-        
-        # Sort by total points (descending) for better readability
         if "totalPoints" in df.columns:
             df = df.sort_values(by="totalPoints", ascending=False)
-        
         return df
 
     @timebudget
-    def build(self, raw_data: Dict[str, Any], display: bool = False) -> None:
+    def build(self, raw_data: dict[str, Any], display: bool = False) -> None:
+        """Build a Fantasy Premier League DataFrame with player statistics.
+
+        Rows: All players in the current season (sorted by totalPoints desc)
+        Columns: firstName, surname, team, position, form, minutes, points,
+            totalPoints, pointsPerGame, price, selectedBy, transferIn,
+            transferOut, goals, assists, cleanSheets, saves, yellowCards,
+            redCards, ownGoals, bonusPoints, news, chanceOfPlayingThisRound,
+            chanceOfPlayingNextRound
         """
-        Build a comprehensive Fantasy Premier League DataFrame with player statistics.
+        self.log_building(None)
 
-        Creates a DataFrame containing all relevant fantasy football statistics for players
-        in the current season, sorted by total points in descending order.
+        fantasy_data = raw_data["fantasy"]["general"]
+        player_records = self._process_all_players(fantasy_data)
 
-        Args:
-            raw_data: Raw JSON data from the Fantasy Premier League API
-            display: Whether to print the DataFrame after creation (default: False)
+        if not player_records:
+            raise ValueError("No valid player records found")
 
-        DataFrame Structure:
-            Rows: All players in the current season (sorted by totalPoints desc)
-            Columns:
-                - Basic info: firstName, surname, team, position
-                - Performance: form, minutes, points, totalPoints, pointsPerGame
-                - Financial: price, selectedBy, transferIn, transferOut  
-                - Statistics: goals, assists, cleanSheets, saves, etc.
-                - Availability: chanceOfPlayingThisRound, chanceOfPlayingNextRound
-                - Disciplinary: yellowCards, redCards, ownGoals
-                - News: news (injury/status updates)
+        df = pd.DataFrame.from_dict(player_records, orient="index")
+        df = self._clean_final_dataframe(df)
 
-        Raises:
-            ValueError: If required data is missing or malformed
-        """
-        try:
-            current_season = self.get_current_season(raw_data)
-            self.log_building(current_season)
+        if display:
+            print(df)
 
-            # Extract fantasy data for current season
-            fantasy_data = raw_data["fantasy"][current_season]
-            
-            # Process all players
-            player_records = self._process_all_players(fantasy_data)
-            
-            if not player_records:
-                raise ValueError("No valid player records found")
-
-            # Build DataFrame
-            df = pd.DataFrame.from_dict(player_records, orient="index")
-            
-            # Apply final cleaning
-            df = self._clean_final_dataframe(df)
-
-            if display:
-                print(df)
-
-            self.df = df
-            
-        except Exception as e:
-            raise ValueError(f"Failed to build fantasy DataFrame: {e}")
+        self.df = df
