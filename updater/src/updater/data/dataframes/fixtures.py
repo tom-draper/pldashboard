@@ -103,34 +103,23 @@ class Fixtures(DF):
 
         data = json_data["fixtures"][season]
 
-        teams: list[str] = []
-        teams_index = []  # Specific order of team names to be DataFrame index
-        matchday: dict[tuple[int, str], list] = defaultdict(lambda: [])
+        teams_by_matchday: dict[int, list[str]] = defaultdict(list)
+        matchday_data: dict[int, dict[tuple[int, str], list]] = defaultdict(
+            lambda: defaultdict(list)
+        )
         matchdays: list[DataFrame] = []
-        prev_matchday = 0
-        for match in sorted(data, key=lambda x: x["matchday"]):
-            # If moved on to data for the next matchday, or
-            if prev_matchday < match["matchday"]:
-                # Package matchday dictionary into DataFrame to concatenate into main fixtures DataFrame
-                df_matchday = pd.DataFrame(matchday)
-                df_matchday.index = teams
+        for match in data:
+            current_matchday = match["matchday"]
+            current_matchday_data = matchday_data[current_matchday]
+            current_teams = teams_by_matchday[current_matchday]
+            self._insert_team_row(current_matchday_data, match, current_teams, True)
+            self._insert_team_row(current_matchday_data, match, current_teams, False)
 
-                matchday = defaultdict(lambda: [])
-                # If just finished matchday 1 data, take team name list order as main fixtures DataFrame index
-                if prev_matchday == 1:
-                    teams_index = teams[:]
-                matchdays.append(df_matchday)
-
-                prev_matchday = match["matchday"]
-                teams = []
-
-            self._insert_team_row(matchday, match, teams, True)
-            self._insert_team_row(matchday, match, teams, False)
-
-        # Add last matchday (38) DataFrame to list
-        df_matchday = pd.DataFrame(matchday)
-        df_matchday.index = teams
-        matchdays.append(df_matchday)
+        teams_index = teams_by_matchday.get(1, [])[:]
+        for current_matchday in sorted(matchday_data):
+            df_matchday = pd.DataFrame(matchday_data[current_matchday])
+            df_matchday.index = teams_by_matchday[current_matchday]
+            matchdays.append(df_matchday)
 
         fixtures = pd.concat(matchdays, axis=1)
 

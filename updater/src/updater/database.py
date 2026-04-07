@@ -2,6 +2,7 @@ from os import getenv
 from typing import Optional
 
 import pymongo
+from pymongo import ReplaceOne, UpdateOne
 from dotenv import load_dotenv
 
 
@@ -108,11 +109,15 @@ class Database:
     def _save_predictions(self, predictions: list):
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague[f"Predictions{self.current_season}"]
-
-            for prediction in predictions:
-                collection.replace_one(
-                    {"_id": prediction["_id"]}, prediction, upsert=True
-                )
+            if not predictions:
+                return
+            collection.bulk_write(
+                [
+                    ReplaceOne({"_id": prediction["_id"]}, prediction, upsert=True)
+                    for prediction in predictions
+                ],
+                ordered=False,
+            )
 
     def update_predictions(
         self,
@@ -156,20 +161,23 @@ class Database:
             # Get the id of all prediction objects that have no value for actual score
             no_actual_scores = collection.find({"actual": None}, {"_id": 1})
 
+            updates = []
             for d in no_actual_scores:
                 # Check if dict contains this missing actual score
                 actual = self._get_actual_score(d["_id"], actual_scores)
                 if actual is not None:
-                    collection.update_one(
-                        {"_id": d["_id"]}, {"$set": {"actual": actual}}
+                    updates.append(
+                        UpdateOne({"_id": d["_id"]}, {"$set": {"actual": actual}})
                     )
+            if updates:
+                collection.bulk_write(updates, ordered=False)
 
     def update_team_data(self, team_data: dict, season: int):
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.TeamData
-            collection.replace_one({"_id": season}, team_data)
+            collection.replace_one({"_id": season}, team_data, upsert=True)
 
     def update_fantasy_data(self, fantasy_data: dict):
         with pymongo.MongoClient(self.connection_string) as client:
             collection = client.PremierLeague.Fantasy
-            collection.replace_one({"_id": "fantasy"}, fantasy_data)
+            collection.replace_one({"_id": "fantasy"}, fantasy_data, upsert=True)

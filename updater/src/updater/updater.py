@@ -3,6 +3,7 @@ import json
 import logging
 from datetime import datetime
 from os import getenv
+from pathlib import Path
 from typing import Optional
 
 import aiohttp
@@ -28,6 +29,8 @@ class Updater:
         self.games_threshold = 4
         self.home_games_threshold = 6
 
+        self.backups_dir = Path(__file__).resolve().parents[2] / "backups"
+
         # Store for new requested API data or old data from local storage
         self.raw_data = {
             "fixtures": {},
@@ -37,7 +40,11 @@ class Updater:
 
     # ----------------------------- DATA API -----------------------------------
     @staticmethod
-    async def get(url: str, headers: Optional[dict] = None):
+    async def get(
+        url: str,
+        headers: Optional[dict] = None,
+        session: Optional[aiohttp.ClientSession] = None,
+    ):
         """Fetch data from url.
 
         Args:
@@ -51,78 +58,97 @@ class Updater:
         Returns:
             dict: JSON data from response.
         """
-        async with aiohttp.ClientSession() as session:
+        async def _request(client: aiohttp.ClientSession):
             logging.debug(f"🌐 Requesting {url}...")
-            response = await session.request("GET", url=url, headers=headers)
+            async with client.get(url=url, headers=headers) as response:
+                if response.status != 200:
+                    logging.error(f"❌ Status: {response.status} [{url}]")
+                    raise aiohttp.ClientConnectionError(
+                        f"Data request to {url} failed with status {response.status}"
+                    )
 
-            if response.status != 200:
-                logging.error(f"❌ Status: {response.status} [{url}]")
-                raise aiohttp.ClientConnectionError(
-                    f"Data request to {url} failed with status {response.status}"
-                )
-            else:
                 logging.debug(f"✅ Status: {response.status} [{url}]")
+                data: dict = await response.json()
+                logging.debug(f"Received data from {url}")
+                return data
 
-            data: dict = await response.json()
-            logging.debug(f"Received data from {url}")
-            return data
+        if session is not None:
+            return await _request(session)
 
-    async def fetch_fixtures_data(self, season: int):
+        async with aiohttp.ClientSession() as client:
+            return await _request(client)
+
+    def _backup_path(self, *parts: str) -> Path:
+        return self.backups_dir.joinpath(*parts)
+
+    async def fetch_fixtures_data(
+        self, season: int, session: Optional[aiohttp.ClientSession] = None
+    ):
         data: dict = await self.get(
             f"{self.url}v4/competitions/PL/matches/?season={season}",
             headers=self.headers,
+            session=session,
         )
         return data["matches"]
 
     def load_fixtures_data(self, season: int):
         logging.debug(f"💾 Loading fixtures data for season {season}...")
-        with open(f"backups/fixtures/fixtures_{season}.json", "r") as json_file:
+        with self._backup_path("fixtures", f"fixtures_{season}.json").open("r") as json_file:
             return json.load(json_file)
 
-    async def fetch_standings_data(self, season: int):
+    async def fetch_standings_data(
+        self, season: int, session: Optional[aiohttp.ClientSession] = None
+    ):
         data: dict = await self.get(
             f"{self.url}v4/competitions/PL/standings/?season={season}",
             headers=self.headers,
+            session=session,
         )
         return data["standings"][0]["table"]
 
     def load_standings_data(self, season: int):
         logging.debug(f"💾 Loading standings data for season {season}...")
-        with open(f"backups/standings/standings_{season}.json", "r") as json_file:
+        with self._backup_path("standings", f"standings_{season}.json").open("r") as json_file:
             return json.load(json_file)
 
-    async def fetch_fantasy_general_data(self):
+    async def fetch_fantasy_general_data(
+        self, session: Optional[aiohttp.ClientSession] = None
+    ):
         data: dict = await self.get(
-            "https://fantasy.premierleague.com/api/bootstrap-static/"
+            "https://fantasy.premierleague.com/api/bootstrap-static/",
+            session=session,
         )
         return data
 
     def load_fantasy_general_data(self, season: int):
         logging.debug(f"💾 Loading fantasy data for season {season}...")
-        with open(f"backups/fantasy/general_{season}.json", "r") as json_file:
+        with self._backup_path("fantasy", f"general_{season}.json").open("r") as json_file:
             return json.load(json_file)
 
-    async def fetch_fantasy_fixtures_data(self):
-        data: dict = await self.get("https://fantasy.premierleague.com/api/fixtures/")
+    async def fetch_fantasy_fixtures_data(
+        self, session: Optional[aiohttp.ClientSession] = None
+    ):
+        data: dict = await self.get(
+            "https://fantasy.premierleague.com/api/fixtures/", session=session
+        )
         return data
 
     def load_fantasy_fixtures_data(self, season: int):
         logging.debug(f"💾 Loading fantasy fixtures data for season {season}...")
-        with open(f"backups/fantasy/fixtures_{season}.json", "r") as json_file:
+        with self._backup_path("fantasy", f"fixtures_{season}.json").open("r") as json_file:
             return json.load(json_file)
 
     async def fetch_current_season(self):
         """Fetch teams data and fantasy data from football data API and stores
         the results in `self.raw_data`.
         """
-        data = await asyncio.gather(
-            *[
-                self.fetch_fixtures_data(self.current_season),
-                self.fetch_standings_data(self.current_season),
-                self.fetch_fantasy_general_data(),
-                self.fetch_fantasy_fixtures_data(),
-            ]
-        )
+        async with aiohttp.ClientSession() as session:
+            data = await asyncio.gather(
+                self.fetch_fixtures_data(self.current_season, session=session),
+                self.fetch_standings_data(self.current_season, session=session),
+                self.fetch_fantasy_general_data(session=session),
+                self.fetch_fantasy_fixtures_data(session=session),
+            )
         # Fetch data from API (max this season and last season)
         self.raw_data["fixtures"][self.current_season] = data[0]
         self.raw_data["standings"][self.current_season] = data[1]
@@ -175,11 +201,13 @@ class Updater:
         local store.
         """
         for data_type in ("fixtures", "standings"):
-            with open(f"backups/{data_type}/{data_type}_{self.current_season}.json", "w") as f:
+            with self._backup_path(
+                data_type, f"{data_type}_{self.current_season}.json"
+            ).open("w") as f:
                 json.dump(self.raw_data[data_type][self.current_season], f)
 
         for data_type in ("general", "fixtures"):
-            with open(f"backups/fantasy/{data_type}_{self.current_season}.json", "w") as f:
+            with self._backup_path("fantasy", f"{data_type}_{self.current_season}.json").open("w") as f:
                 json.dump(self.raw_data["fantasy"][data_type], f)
 
     def build_dataframes(self, num_seasons: int, display_tables: bool = False):

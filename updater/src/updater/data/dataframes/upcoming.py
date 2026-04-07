@@ -86,6 +86,11 @@ class Upcoming(DF):
             raise ValueError("Cannot build upcoming DataFrame: Teams names list empty.")
 
         season_fixtures = json_data["fixtures"][season]
+        next_opponents = {
+            team: next_games[team]["team"]
+            for team in teams
+            if next_games[team]["team"] is not None
+        }
 
         prev_matches: dict[str, list] = {team: [] for team in teams}
         for match in season_fixtures:
@@ -101,28 +106,20 @@ class Upcoming(DF):
             home_goals, away_goals = get_full_time_goals(match["score"]["fullTime"])
 
             date = match["utcDate"]
-
-            # From the perspective from the home team
-            # If this match's home team has their next game against this match's away team
-            home_team_next_opposition = next_games[home_team]["team"]
-            if home_team_next_opposition == away_team:
+            result = Scoreline(home_goals, away_goals, home_team, away_team)
+            if next_opponents.get(home_team) == away_team:
                 prev_matches[home_team].append(
                     {
                         "date": date,
-                        "result": Scoreline(
-                            home_goals, away_goals, home_team, away_team
-                        ),
+                        "result": result,
                     }
                 )
 
-            away_team_next_opposition = next_games[away_team]["team"]
-            if away_team_next_opposition == home_team:
+            if next_opponents.get(away_team) == home_team:
                 prev_matches[away_team].append(
                     {
                         "date": date,
-                        "result": Scoreline(
-                            home_goals, away_goals, home_team, away_team
-                        ),
+                        "result": result,
                     }
                 )
 
