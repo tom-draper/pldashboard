@@ -119,10 +119,21 @@ export type HomeAdvantage = {
 	totalHomeAdvantage: number;
 };
 
+export type HomeAdvantageSplit = {
+	played: number;
+	winRatio: number;
+};
+
 export type SeasonHomeAdvantage = {
-	home: number;
+	home: HomeAdvantageSplit;
+	/** `overall` includes the home games, so it is not the away split. */
+	overall: HomeAdvantageSplit;
+	/**
+	 * home win ratio - overall win ratio. Because `overall` double-counts the
+	 * home games this is exactly half of (home ratio - away ratio); use
+	 * homeAwaySplit() in HomeAdvantageGraph for the figure to show a reader.
+	 */
 	homeAdvantage: number;
-	overall: number;
 };
 
 export type PrevMatch = {

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import FormOverTimeGraph from './FormOverTimeGraph.svelte';
+	import HomeAdvantageGraph from './HomeAdvantageGraph.svelte';
 	import PositionOverTimeGraph from './PositionOverTimeGraph.svelte';
 	import PointsOverTimeGraph from './PointsOverTimeGraph.svelte';
 	import type { DashboardData } from './dashboard.types';
@@ -36,6 +37,15 @@
 		<h1 class="lowered">Points</h1>
 		<div class="graph full-row-graph">
 			<PointsOverTimeGraph data={data.data} team={data.team.name} {mobileView} />
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="home-advantage-graph row-graph">
+		<h1 class="lowered">Home advantage</h1>
+		<div class="graph full-row-graph">
+			<HomeAdvantageGraph data={data.data} team={data.team.name} {mobileView} />
 		</div>
 	</div>
 </div>
