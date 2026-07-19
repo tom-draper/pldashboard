@@ -1,10 +1,11 @@
 <script lang="ts">
+	import type { PlotData, PlotTrace, PlotLayout } from '$lib/types';
 	import { onMount } from 'svelte';
 
-	function defaultLayout() {
+	function defaultLayout(): PlotLayout {
 		const xLabels = getXLabels();
 		return {
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
 			hovermode: 'closest',
@@ -41,7 +42,6 @@
 			'yaxis.visible': true,
 			'margin.l': 60
 		};
-		//@ts-ignore
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -55,7 +55,7 @@
 			'yaxis.visible': false,
 			'margin.l': 20
 		};
-		//@ts-ignore
+		//@ts-expect-error
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -74,7 +74,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData();
-		//@ts-ignore
+		//@ts-expect-error
 		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
 			// Once plot generated, add resizable attribute to it to shorten height for mobile view
 			plot.children[0].children[0].classList.add('resizable-graph');
@@ -87,11 +87,9 @@
 		}
 
 		plotData.data[1] = getScoredTeamBars(); // Update team bars
-		//@ts-ignore
 		Plotly.relayout(plotDiv, {
 			yaxis: getYAxisLayout()
 		});
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();
@@ -110,10 +108,10 @@
 	$: setup && mobileView && setMobileLayout();
 
 	export let team: string,
-		getScoredBars: () => any,
-		getScoredTeamBars: () => any,
-		getXLabels: () => any,
-		getYAxisLayout: () => any,
+		getScoredBars: () => PlotTrace[],
+		getScoredTeamBars: () => PlotTrace,
+		getXLabels: () => string[],
+		getYAxisLayout: () => PlotLayout['yaxis'],
 		mobileView: boolean;
 </script>
 

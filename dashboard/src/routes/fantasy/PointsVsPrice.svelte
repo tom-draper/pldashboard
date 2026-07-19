@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { FantasyData, Page, Position, Team } from './fantasy.types';
-	import type { Config, Layout, PlotData } from 'plotly.js';
+	import type { PlotConfig, PlotData, PlotLayout, PlotTrace } from '$lib/types';
 
 	// Props
 	export let data: FantasyData;
@@ -16,7 +16,7 @@
 		Goalkeeper: '#280936'
 	} as const;
 
-	const CHART_CONFIG: Config = {
+	const CHART_CONFIG: PlotConfig = {
 		responsive: true,
 		showSendToCloud: false,
 		displayModeBar: false
@@ -24,7 +24,7 @@
 
 	// State
 	let plotDiv: HTMLDivElement;
-	let plotData: { data: PlotData[]; layout: Layout; config: Config };
+	let plotData: PlotData;
 	let isSetup = false;
 
 	// Utility functions
@@ -32,7 +32,7 @@
 		return value !== '_id';
 	}
 
-	function createScatterData(data: FantasyData): PlotData {
+	function createScatterData(data: FantasyData): PlotTrace {
 		const processedData = processTeamData(data);
 		
 		return {
@@ -83,9 +83,9 @@
 		return { teams, points, price, minutes, colors, sizes, playtimes };
 	}
 
-	function createDefaultLayout(): Layout {
+	function createDefaultLayout(): PlotLayout {
 		return {
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
 			hovermode: 'closest',
@@ -115,7 +115,7 @@
 		};
 	}
 
-	function buildPlotData(data: FantasyData) {
+	function buildPlotData(data: FantasyData): PlotData {
 		return {
 			data: [createScatterData(data)],
 			layout: createDefaultLayout(),
@@ -126,7 +126,7 @@
 	function applyDesktopLayout() {
 		if (!isSetup) return;
 
-		const layoutUpdate: Partial<Layout> = {
+		const layoutUpdate: Record<string, unknown> = {
 			'yaxis.title': { text: 'Price' },
 			'yaxis.visible': true,
 			'yaxis.tickvals': Array.from({ length: 20 }, (_, i) => i + 1),
@@ -140,7 +140,7 @@
 	function applyMobileLayout() {
 		if (!isSetup) return;
 
-		const layoutUpdate: Partial<Layout> = {
+		const layoutUpdate: Record<string, unknown> = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
 			'yaxis.tickvals': Array.from({ length: 10 }, (_, i) => i + 2),
@@ -148,19 +148,19 @@
 			'margin.t': 5
 		};
 
-		const originalSizes = plotData.data[0].marker.size as number[];
+		const originalSizes = plotData.data[0].marker!.size as number[];
 		const mobileSizes = originalSizes.map(size => Math.round(size / 2));
 		
 		const dataUpdate = {
 			marker: {
 				size: mobileSizes,
-				color: plotData.data[0].marker.color,
+				color: plotData.data[0].marker!.color,
 				opacity: 0.75
 			}
 		};
 
 		// Update stored data
-		plotData.data[0].marker.size = mobileSizes;
+		plotData.data[0].marker!.size = mobileSizes;
 
 		Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
 	}
@@ -173,7 +173,7 @@
 			plotData.data, 
 			plotData.layout, 
 			plotData.config
-		) as HTMLDivElement;
+		) as unknown as HTMLDivElement;
 
 		// Add CSS classes for responsive behavior
 		const chartContainer = plot.children[0]?.children[0];

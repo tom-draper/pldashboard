@@ -30,15 +30,13 @@ const alias: {[team in Team]?: string} = {
 } as const;
 
 export function toAlias(team: Team): string {
-	if (team in alias) {
-		return alias[team];
-	}
-	return team;
+	// `alias` only covers teams with a short name, so fall back to the full name.
+	return alias[team] ?? team;
 }
 
 export function toName(teamAlias: string): string {
-	const team = Object.keys(alias).find(key => alias[key] === teamAlias);
-	return team ?? teamAlias;
+	const entry = Object.entries(alias).find(([, value]) => value === teamAlias);
+	return entry?.[0] ?? teamAlias;
 }
 
 export function getTeamID(team: Team): string {
