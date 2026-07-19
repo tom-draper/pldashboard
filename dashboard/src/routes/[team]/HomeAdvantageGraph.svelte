@@ -5,13 +5,25 @@
 	import type { Team } from '$lib/types';
 	import type { TeamsData } from './dashboard.types';
 
-	// Validated against the light chart surface: lightness band, chroma floor,
-	// CVD separation and 3:1 contrast all pass. The site's brand green (#00fe87)
-	// fails both the lightness band and contrast as a fill, so this darker step
-	// stands in for it here.
-	const BETTER_AT_HOME = '#00a05f';
-	const WORSE_AT_HOME = '#f83027';
 	const CONTEXT_OPACITY = 0.45;
+
+	// Plotly cannot read CSS custom properties, so --green is resolved at run
+	// time the same way the other charts do it. Note it measures 1.32:1 against
+	// the chart surface, below the 3:1 mark contrast guideline: the direct label
+	// on the emphasised bar and the hover values are what keep it readable.
+	function cssVar(name: string, fallback: string): string {
+		if (typeof document === 'undefined') {
+			return fallback;
+		}
+		const value = getComputedStyle(document.documentElement)
+			.getPropertyValue(name)
+			.trim();
+		return value || fallback;
+	}
+
+	const betterAtHome = () => cssVar('--green', '#00fe87');
+	// --lose is the same #f83027 the other charts hardcode, just named.
+	const worseAtHome = () => cssVar('--lose', '#f83027');
 
 	type Split = {
 		team: Team;
@@ -66,7 +78,7 @@
 			x: rows.map((r) => r.delta),
 			y: rows.map((r) => toAlias(r.team)),
 			marker: {
-				color: rows.map((r) => (r.delta >= 0 ? BETTER_AT_HOME : WORSE_AT_HOME)),
+				color: rows.map((r) => (r.delta >= 0 ? betterAtHome() : worseAtHome())),
 				// Emphasis is carried by opacity rather than a third hue, so it
 				// cannot collide with the diverging encoding.
 				opacity: rows.map((r) => (r.team === team ? 1 : CONTEXT_OPACITY))
@@ -135,12 +147,12 @@
 		return {
 			title: { text: '' },
 			autosize: true,
-			height: Math.max(320, teamCount * 24 + 60),
+			height: Math.max(300, teamCount * 21 + 56),
 			margin: { r: 60, l: 130, t: 10, b: 40, pad: 5 },
 			hovermode: 'closest',
 			plot_bgcolor: '#fafafa',
 			paper_bgcolor: '#fafafa',
-			bargap: 0.35,
+			bargap: 0.22,
 			xaxis: {
 				title: { text: 'Home win rate minus away win rate' },
 				tickmode: 'array',
@@ -255,21 +267,24 @@
 
 <style>
 	.summary {
-		margin: 0 0 0.6em 0.2em;
+		/* Breathing room under the section heading, which sits tight by design. */
+		margin: 1.6em 0 1em;
+		text-align: center;
 	}
 	.figure {
 		font-size: 2.6em;
 		font-weight: 600;
 		line-height: 1.1;
-		color: #00a05f;
+		color: var(--green);
 	}
 	.figure.negative {
-		color: #f83027;
+		color: var(--lose);
 	}
 	.caption {
 		font-size: 0.9em;
 		color: #555;
 		max-width: 46em;
+		margin: 0 auto;
 	}
 	@media only screen and (max-width: 550px) {
 		.figure {
