@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from src.updater.data import Data
+from updater.data import Data
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
@@ -33,16 +33,19 @@ def test_form_df_teams_unique(data: Data):
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_form_df_teams_match_index(data: Data):
-    # Teams column holds the same teams as the index values
+    # Opposition names for the current season must be teams in that season.
+    # The fixtures DataFrame only covers the current season, so earlier seasons
+    # (whose opponents may since have been relegated) are not checked here.
+    current_season = pytest.current_season
+    season_teams = set(data.teams.fixtures.df.index)
+
     teams = data.teams.form.df.loc[:, (slice(None), slice(None), ["team"])]
     for col_name in teams.columns:
+        if col_name[0] != current_season:
+            continue
         col = teams[col_name].dropna()
         if not col.empty:
-            season = col_name[0]
-            season_teams = data.teams.fixtures.df[
-                data.teams.fixtures.df["season"] == season
-            ].index
-            assert set(np.unique(col)).issubset(set(season_teams))
+            assert set(np.unique(col)).issubset(season_teams)
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)

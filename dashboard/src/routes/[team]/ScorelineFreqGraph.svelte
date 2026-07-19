@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
 	import { onMount } from 'svelte';
 	import { getTeams, teamInSeason } from '$lib/team';
 	import type { Form, TeamsData } from './dashboard.types';
@@ -83,7 +84,7 @@
 		});
 	}
 
-	function separateBars(scoreFreq: ScoreFreq) {
+	function separateBars(scoreFreq: ScoreFreq): PlotTrace[] {
 		const sorted = Object.entries(scoreFreq).sort((a, b) => b[1][0] - a[1][0]);
 		const x = [];
 		const avgY = [];
@@ -146,9 +147,9 @@
 		}
 	}
 
-	function defaultLayout() {
+	function defaultLayout(): PlotLayout {
 		return {
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 65, t: 15, b: 60, pad: 5 },
 			hovermode: 'closest',
@@ -191,7 +192,6 @@
 			'xaxis.tickfont.size': 12,
 			'margin.l': 65
 		};
-		//@ts-ignore
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -206,7 +206,7 @@
 			'xaxis.tickfont.size': 5,
 			'margin.l': 20
 		};
-		//@ts-ignore
+		//@ts-expect-error
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -232,7 +232,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
+		//@ts-expect-error
 		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
 			// Once plot generated, add resizable attribute to it to shorten height for mobile view
 			plot.children[0].children[0].classList.add('resizable-graph');
@@ -256,7 +256,6 @@
 		convertToPercentage(scoreFreq);
 		const bars = separateBars(scoreFreq);
 		plotData.data[1] = bars[1]; // Update team bars
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();

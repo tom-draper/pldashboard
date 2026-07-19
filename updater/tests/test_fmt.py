@@ -1,5 +1,5 @@
 import pytest
-from src.updater.fmt import (
+from updater.fmt import (
     TwoWayDict,
     clean_full_team_name,
     convert_team_name_or_initials,

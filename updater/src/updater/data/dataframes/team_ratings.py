@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -10,8 +11,20 @@ from updater.data.dataframes.standings import Standings
 
 
 class TeamRatings(DF):
-    def __init__(self, d: DataFrame = DataFrame()):
+    def __init__(self, d: Optional[DataFrame] = None):
         super().__init__(d, "team_ratings")
+        self._total_ratings: Optional[dict[str, float]] = None
+
+    def total_ratings(self):
+        """Total rating per team as a plain dict.
+
+        Form calculation looks these up tens of thousands of times; a dict
+        avoids the per-call overhead of DataFrame scalar indexing. Rebuilt
+        whenever `build` replaces the underlying DataFrame.
+        """
+        if self._total_ratings is None:
+            self._total_ratings = self.df["total"].to_dict()
+        return self._total_ratings
 
     @staticmethod
     def _calc_rating(points: int, gd: int):
@@ -160,3 +173,4 @@ class TeamRatings(DF):
             print(team_ratings)
 
         self.df = team_ratings
+        self._total_ratings = None  # Invalidate cache for the new DataFrame

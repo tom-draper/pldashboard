@@ -5,37 +5,32 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pldashboard-updater"
 version = "0.1.0"
-requires-python = ">=3.13"
+# Upper bound matches the Dockerfile's python3.13 base image. Without it uv
+# resolves against the newest interpreter on the host, where wheels for the
+# pinned dependencies may not exist yet.
+requires-python = ">=3.13,<3.14"
+# Only direct imports are listed; transitive packages are pinned by uv.lock.
+# Ranges are capped at the next major so `uv lock --upgrade` picks up security
+# and bug fixes without silently crossing a breaking release. Exact versions
+# stay reproducible via uv.lock.
 dependencies = [
-    "aiohttp==3.12.15",
-    "aiosignal==1.4.0",
-    "attrs==25.3.0",
-    "certifi==2025.8.3",
-    "charset-normalizer==3.4.2",
-    "dnspython==2.7.0",
-    "frozenlist==1.7.0",
-    "idna==3.10",
-    "multidict==6.6.3",
-    "numpy==2.3.2",
-    "pandas==2.3.1",
-    "pydantic==2.10.1",
-    "pymongo==4.13.2",
-    "python-dotenv==1.1.1",
-    "python-dateutil==2.9.0.post0",
-    "pytz==2025.2",
-    "requests==2.32.4",
-    "selenium==4.34.2",
-    "six==1.17.0",
-    "tzdata==2025.2",
-    "urllib3==2.5.0",
-    "webdriver-manager==4.0.2",
-    "yarl==1.17.0",
-    "timebudget>=0.7.1",
+    "aiohttp>=3.12.15,<4",
+    "numpy>=2.3.2,<3",
+    "pandas>=3.0.3,<4",
+    "pymongo>=4.13.2,<5",
+    "python-dotenv>=1.1.1,<2",
+    "selenium>=4.34.2,<5",
+    "webdriver-manager>=4.0.2,<5",
+    "timebudget>=0.7.1,<1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.0",
 ]
 
 [project.scripts]
 updater = "updater.main:main"
-# test = "pytest"
 
 [tool.setuptools.packages.find]
 where = ["src"]

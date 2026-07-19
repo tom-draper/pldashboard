@@ -2,89 +2,106 @@ import asyncio
 import json
 import logging
 from datetime import datetime
-from os import getenv
-from os.path import dirname, join
 from typing import Optional
 
 import aiohttp
 from updater.data import Data
+from updater.data.build_graph import Stage, resolve_order
+from updater.data.raw_data import RawData
 from updater.database import Database
-from dotenv import load_dotenv
-from updater.fmt import clean_full_team_name
+from updater.env import BACKUPS_DIR, require_env, require_env_int
 from timebudget import timebudget
 
 
 class Updater:
     def __init__(self):
-        # Import environment variables
-        __file__ = "updater.py"
-        dotenv_path = join(dirname(__file__), ".env")
-        load_dotenv(dotenv_path)
-
-        self.url = getenv("URL")
-        self.current_season = int(getenv("SEASON"))
-        self.headers = {"X-Auth-Token": getenv("X_AUTH_TOKEN")}
+        self.current_season = require_env_int("SEASON")
 
         self.data = Data()  # To build
-        self.database = Database()
+        self._database: Optional[Database] = None
 
         # Number of games played in a season for season data to be used
         self.games_threshold = 4
         self.home_games_threshold = 6
 
         # Store for new requested API data or old data from local storage
-        self.raw_data = {
-            "fixtures": {},
-            "standings": {},
-            "fantasy": {"general": {}, "fixtures": {}},
-        }
+        self.raw_data = RawData()
+
+    @property
+    def database(self):
+        """Database connection, created on first use.
+
+        Building from local backups needs no database, so the credentials are
+        only required when data is actually uploaded.
+        """
+        if self._database is None:
+            self._database = Database()
+        return self._database
+
+    @property
+    def url(self):
+        return require_env("URL")
+
+    @property
+    def headers(self):
+        return {"X-Auth-Token": require_env("X_AUTH_TOKEN")}
 
     # ----------------------------- DATA API -----------------------------------
     @staticmethod
-    async def get(url: str, headers: Optional[dict] = None):
+    async def get(
+        session: aiohttp.ClientSession, url: str, headers: Optional[dict] = None
+    ):
         """Fetch data from url.
 
         Args:
+            session (aiohttp.ClientSession): Session shared across all requests.
             url (str): URL to send GET request.
             headers (dict, optional): Headers to include in request. Defaults
                 to None.
 
         Raises:
-            ValueError: Request failed.
+            aiohttp.ClientResponseError: Request returned a non-200 status.
 
         Returns:
             dict: JSON data from response.
         """
-        async with aiohttp.ClientSession() as session:
-            logging.debug(f"🌐 Requesting {url}...")
-            response = await session.request("GET", url=url, headers=headers)
-
+        logging.debug(f"🌐 Requesting {url}...")
+        async with session.get(url, headers=headers) as response:
             if response.status != 200:
                 logging.error(f"❌ Status: {response.status} [{url}]")
-                raise aiohttp.ClientConnectionError(
-                    f"Data request to {url} failed with status {response.status}"
+                raise aiohttp.ClientResponseError(
+                    response.request_info,
+                    response.history,
+                    status=response.status,
+                    message=f"Data request to {url} failed",
                 )
-            else:
-                logging.debug(f"✅ Status: {response.status} [{url}]")
 
+            logging.debug(f"✅ Status: {response.status} [{url}]")
             data: dict = await response.json()
             logging.debug(f"Received data from {url}")
             return data
 
-    async def fetch_fixtures_data(self, season: int):
+    async def fetch_fixtures_data(self, session: aiohttp.ClientSession, season: int):
         data: dict = await self.get(
+            session,
             f"{self.url}v4/competitions/PL/matches/?season={season}",
             headers=self.headers,
         )
         return data["matches"]
 
-    def load_fixtures_data(self, season: int):
-        logging.debug(f"💾 Loading fixtures data for season {season}...")
-        with open(f"backups/fixtures/fixtures_{season}.json", "r") as json_file:
+    @staticmethod
+    def _load_backup(category: str, filename: str):
+        path = BACKUPS_DIR / category / filename
+        with open(path, "r") as json_file:
             return json.load(json_file)
 
-    async def fetch_standings_data(self, season: int):
+    def load_fixtures_data(self, season: int):
+        logging.debug(f"💾 Loading fixtures data for season {season}...")
+        return self._load_backup("fixtures", f"fixtures_{season}.json")
+
+    async def fetch_standings_data(self, session: aiohttp.ClientSession, season: int):
         data: dict = await self.get(
+            session,
             f"{self.url}v4/competitions/PL/standings/?season={season}",
             headers=self.headers,
         )
@@ -92,46 +109,44 @@ class Updater:
 
     def load_standings_data(self, season: int):
         logging.debug(f"💾 Loading standings data for season {season}...")
-        with open(f"backups/standings/standings_{season}.json", "r") as json_file:
-            return json.load(json_file)
+        return self._load_backup("standings", f"standings_{season}.json")
 
-    async def fetch_fantasy_general_data(self):
+    async def fetch_fantasy_general_data(self, session: aiohttp.ClientSession):
         data: dict = await self.get(
-            "https://fantasy.premierleague.com/api/bootstrap-static/"
+            session, "https://fantasy.premierleague.com/api/bootstrap-static/"
         )
         return data
 
     def load_fantasy_general_data(self, season: int):
         logging.debug(f"💾 Loading fantasy data for season {season}...")
-        with open(f"backups/fantasy/general_{season}.json", "r") as json_file:
-            return json.load(json_file)
+        return self._load_backup("fantasy", f"general_{season}.json")
 
-    async def fetch_fantasy_fixtures_data(self):
-        data: dict = await self.get("https://fantasy.premierleague.com/api/fixtures/")
+    async def fetch_fantasy_fixtures_data(self, session: aiohttp.ClientSession):
+        data: dict = await self.get(
+            session, "https://fantasy.premierleague.com/api/fixtures/"
+        )
         return data
 
     def load_fantasy_fixtures_data(self, season: int):
         logging.debug(f"💾 Loading fantasy fixtures data for season {season}...")
-        with open(f"backups/fantasy/fixtures_{season}.json", "r") as json_file:
-            return json.load(json_file)
+        return self._load_backup("fantasy", f"fixtures_{season}.json")
 
     async def fetch_current_season(self):
         """Fetch teams data and fantasy data from football data API and stores
         the results in `self.raw_data`.
         """
-        data = await asyncio.gather(
-            *[
-                self.fetch_fixtures_data(self.current_season),
-                self.fetch_standings_data(self.current_season),
-                self.fetch_fantasy_general_data(),
-                self.fetch_fantasy_fixtures_data(),
-            ]
-        )
+        async with aiohttp.ClientSession() as session:
+            data = await asyncio.gather(
+                self.fetch_fixtures_data(session, self.current_season),
+                self.fetch_standings_data(session, self.current_season),
+                self.fetch_fantasy_general_data(session),
+                self.fetch_fantasy_fixtures_data(session),
+            )
         # Fetch data from API (max this season and last season)
-        self.raw_data["fixtures"][self.current_season] = data[0]
-        self.raw_data["standings"][self.current_season] = data[1]
-        self.raw_data["fantasy"]["general"] = data[2]
-        self.raw_data["fantasy"]["fixtures"] = data[3]
+        self.raw_data.fixtures[self.current_season] = data[0]
+        self.raw_data.standings[self.current_season] = data[1]
+        self.raw_data.fantasy_general = data[2]
+        self.raw_data.fantasy_fixtures = data[3]
         self.data.teams.last_updated = datetime.now()
 
     def load_current_season(self):
@@ -139,24 +154,24 @@ class Updater:
         season from local store.
         """
         # Fetch data from API (max this season and last season)
-        self.raw_data["fixtures"][self.current_season] = self.load_fixtures_data(
+        self.raw_data.fixtures[self.current_season] = self.load_fixtures_data(
             self.current_season
         )
-        self.raw_data["standings"][self.current_season] = self.load_standings_data(
+        self.raw_data.standings[self.current_season] = self.load_standings_data(
             self.current_season
         )
-        self.raw_data["fantasy"]["general"] = self.load_fantasy_general_data(
+        self.raw_data.fantasy_general = self.load_fantasy_general_data(
             self.current_season
         )
-        self.raw_data["fantasy"]["fixtures"] = self.load_fantasy_fixtures_data(
+        self.raw_data.fantasy_fixtures = self.load_fantasy_fixtures_data(
             self.current_season
         )
 
     def load_previous_seasons(self, num_seasons: int):
         for i in range(1, num_seasons):
             season = self.current_season - i
-            self.raw_data["fixtures"][season] = self.load_fixtures_data(season)
-            self.raw_data["standings"][season] = self.load_standings_data(season)
+            self.raw_data.fixtures[season] = self.load_fixtures_data(season)
+            self.raw_data.standings[season] = self.load_standings_data(season)
 
     def set_raw_data(self, num_seasons: int, request_new: bool = True):
         """Sets the raw data object with data from the football data API or
@@ -168,8 +183,7 @@ class Updater:
                 load from local store. Defaults to True.
         """
         if request_new:
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(self.fetch_current_season())
+            asyncio.run(self.fetch_current_season())
         else:
             self.load_current_season()
 
@@ -179,13 +193,82 @@ class Updater:
         """Save current season fixtures and standings data in `self.raw_data` to
         local store.
         """
-        for type in ("fixtures", "standings"):
-            with open(f"backups/{type}/{type}_{self.current_season}.json", "w") as f:
-                json.dump(self.raw_data[type][self.current_season], f)
+        backups = {
+            BACKUPS_DIR / "fixtures" / f"fixtures_{self.current_season}.json":
+                self.raw_data.fixtures[self.current_season],
+            BACKUPS_DIR / "standings" / f"standings_{self.current_season}.json":
+                self.raw_data.standings[self.current_season],
+            BACKUPS_DIR / "fantasy" / f"general_{self.current_season}.json":
+                self.raw_data.fantasy_general,
+            BACKUPS_DIR / "fantasy" / f"fixtures_{self.current_season}.json":
+                self.raw_data.fantasy_fixtures,
+        }
+        for path, payload in backups.items():
+            with open(path, "w") as f:
+                json.dump(payload, f)
 
-        for type in ("general", "fixtures"):
-            with open(f"backups/fantasy/{type}_{self.current_season}.json", "w") as f:
-                json.dump(self.raw_data["fantasy"][type], f)
+    def build_stages(self, num_seasons: int, display_tables: bool = False):
+        """Declare each DataFrame build and what it depends on.
+
+        The execution order is derived from these declarations, so adding a
+        stage or changing a dependency does not require reordering anything.
+        """
+        teams = self.data.teams
+        return [
+            # Standings for the last [num_seasons] seasons
+            Stage(
+                "standings",
+                lambda: teams.standings.build(
+                    self.raw_data, self.current_season, num_seasons,
+                    display=display_tables,
+                ),
+            ),
+            # Fixtures for the whole season for each team
+            Stage(
+                "fixtures",
+                lambda: teams.fixtures.build(
+                    self.raw_data, self.current_season, display=display_tables
+                ),
+            ),
+            # Ratings for each team, based on the last [num_seasons] standings
+            Stage(
+                "team_ratings",
+                lambda: teams.team_ratings.build(
+                    teams.standings, self.current_season, self.games_threshold,
+                    num_seasons, display=display_tables,
+                ),
+                depends_on=("standings",),
+            ),
+            # The personalised advantage each team has at home
+            Stage(
+                "home_advantages",
+                lambda: teams.home_advantages.build(
+                    self.raw_data, self.current_season,
+                    self.home_games_threshold, num_seasons,
+                    display=display_tables,
+                ),
+            ),
+            # Form values for each team for each matchday played so far
+            Stage(
+                "form",
+                lambda: teams.form.build(
+                    self.raw_data, teams.team_ratings, self.current_season,
+                    display=display_tables,
+                ),
+                depends_on=("team_ratings",),
+            ),
+            # Data about the opponent in each team's next game
+            Stage(
+                "upcoming",
+                lambda: teams.upcoming.build(
+                    self.raw_data, teams.fixtures, teams.form,
+                    teams.team_ratings, teams.home_advantages,
+                    self.current_season, num_seasons, display=display_tables,
+                ),
+                depends_on=("fixtures", "form", "team_ratings", "home_advantages"),
+            ),
+            Stage("fantasy", lambda: self.data.fantasy.data.build(self.raw_data)),
+        ]
 
     def build_dataframes(self, num_seasons: int, display_tables: bool = False):
         """Builds all DataFrames within `self.data` using the raw data.
@@ -194,49 +277,9 @@ class Updater:
             num_seasons (int): The number of Premier League seasons to consider.
             display_tables (bool, optional): Print DataFrames once built. Defaults to False.
         """
-        # Standings for the last [num_seasons] seasons
-        self.data.teams.standings.build(
-            self.raw_data, self.current_season, num_seasons, display=display_tables
-        )
-        # Fixtures for the whole season for each team
-        self.data.teams.fixtures.build(
-            self.raw_data, self.current_season, display=display_tables
-        )
-        # Ratings for each team, based on last <no_seasons> seasons standings table
-        self.data.teams.team_ratings.build(
-            self.data.teams.standings,
-            self.current_season,
-            self.games_threshold,
-            num_seasons,
-            display=display_tables,
-        )
-        # Calculated values to represent the personalised advantage each team has at home
-        self.data.teams.home_advantages.build(
-            self.raw_data,
-            self.current_season,
-            self.home_games_threshold,
-            num_seasons,
-            display=display_tables,
-        )
-        # Calculated form values for each team for each matchday played so far
-        self.data.teams.form.build(
-            self.raw_data,
-            self.data.teams.team_ratings,
-            self.current_season,
-            display=display_tables,
-        )
-        # Data about the opponent in each team's next game
-        self.data.teams.upcoming.build(
-            self.raw_data,
-            self.data.teams.fixtures,
-            self.data.teams.form,
-            self.data.teams.team_ratings,
-            self.data.teams.home_advantages,
-            self.current_season,
-            num_seasons,
-            display=display_tables,
-        )
-        self.data.fantasy.data.build(self.raw_data)
+        for stage in resolve_order(self.build_stages(num_seasons, display_tables)):
+            logging.debug(f"Building {stage.name}...")
+            stage.build()
 
     def save_team_data_to_db(self):
         team_data = self.data.teams.to_dict()
@@ -248,20 +291,9 @@ class Updater:
 
     def save_predictions_to_db(self):
         predictions = self.data.teams.upcoming.get_predictions()
-        actual_scores = self.data.teams.fixtures.get_actual_scores_new()
+        actual_scores = self.data.teams.fixtures.get_actual_scores()
         self.database.update_predictions(predictions, actual_scores)
         self.database.update_actual_scores(actual_scores)
-
-    def get_logo_urls(self):
-        data: dict = self.raw_data["standings"][self.current_season]
-
-        logo_urls: dict[str, str] = {}
-        for standings_row in data:
-            team = clean_full_team_name(standings_row["team"]["name"])
-            crest_url = standings_row["team"]["crestUrl"]
-            logo_urls[team] = crest_url
-
-        return logo_urls
 
     @timebudget
     def build_all(
@@ -288,10 +320,14 @@ class Updater:
         """
         try:
             self.set_raw_data(num_seasons, request_new)
-        except ValueError as e:
-            logging.error(e)
+        except (aiohttp.ClientError, asyncio.TimeoutError, KeyError, ValueError) as e:
+            # A failed fetch must not abort the run: fall back to the last known
+            # good backup, and skip the save/upload steps so the backup and
+            # database are not overwritten with stale data.
+            logging.error(f"❌ Failed to fetch new data: {e}")
             logging.info("🔁 Retrying with local backup data...")
-            self.set_raw_data(num_seasons, request_new := False)
+            request_new = False
+            self.set_raw_data(num_seasons, request_new)
 
         self.build_dataframes(num_seasons, display_tables)
 

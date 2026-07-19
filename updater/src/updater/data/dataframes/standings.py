@@ -1,11 +1,12 @@
 import pandas as pd
 from pandas import DataFrame
-from typing import Dict, List, Any
+from typing import Optional, Dict, List, Any
 
 from updater.fmt import clean_full_team_name
 from timebudget import timebudget
 
 from updater.data.dataframes.df import DF
+from updater.data.raw_data import RawData
 
 
 class Standings(DF):
@@ -26,34 +27,34 @@ class Standings(DF):
     
     COLUMNS_TO_DROP = ["form", "team"]
 
-    def __init__(self, d: DataFrame = DataFrame()):
+    def __init__(self, d: Optional[DataFrame] = None):
         super().__init__(d, "standings")
 
     @staticmethod
-    def extract_team_names(json_data: Dict[str, Any], season: int) -> List[str]:
+    def extract_team_names(raw_data: RawData, season: int) -> List[str]:
         """
         Extract and clean team names from standings data for a given season.
         
         Args:
-            json_data: The complete JSON data structure
+            raw_data: The complete JSON data structure
             season: The season year to extract teams from
             
         Returns:
             List of cleaned team names
         """
         try:
-            standings_data = json_data["standings"][season]
+            standings_data = raw_data.standings[season]
             teams = [clean_full_team_name(row["team"]["name"]) for row in standings_data]
             return teams
         except (KeyError, TypeError) as e:
             raise ValueError(f"Unable to extract team names for season {season}: {e}")
 
-    def _build_season_standings(self, json_data: Dict[str, Any], current_teams: List[str], season: int) -> DataFrame:
+    def _build_season_standings(self, raw_data: RawData, current_teams: List[str], season: int) -> DataFrame:
         """
         Build standings DataFrame for a single season.
         
         Args:
-            json_data: The complete JSON data structure
+            raw_data: The complete JSON data structure
             current_teams: List of current season team names to filter by
             season: The season year to process
             
@@ -61,7 +62,7 @@ class Standings(DF):
             DataFrame with standings data for the specified season
         """
         try:
-            standings_data = json_data["standings"][season]
+            standings_data = raw_data.standings[season]
         except KeyError:
             raise ValueError(f"Standings data not found for season {season}")
         
@@ -69,7 +70,7 @@ class Standings(DF):
         df = pd.DataFrame.from_dict(standings_data)
         
         # Get team names and set as index
-        team_names = self.extract_team_names(json_data, season)
+        team_names = self.extract_team_names(raw_data, season)
         df = df.drop(columns=self.COLUMNS_TO_DROP, errors='ignore')
         df.index = team_names
 
@@ -120,7 +121,7 @@ class Standings(DF):
         
         return df
 
-    def _combine_season_standings(self, json_data: Dict[str, Any], 
+    def _combine_season_standings(self, raw_data: RawData, 
                                 current_teams: List[str], 
                                 season: int, 
                                 num_seasons: int) -> DataFrame:
@@ -128,7 +129,7 @@ class Standings(DF):
         Combine standings data from multiple seasons into a single DataFrame.
         
         Args:
-            json_data: The complete JSON data structure
+            raw_data: The complete JSON data structure
             current_teams: List of current season team names
             season: The current season year
             num_seasons: Number of seasons to include
@@ -142,7 +143,7 @@ class Standings(DF):
         for i in range(num_seasons):
             season_year = season - i
             try:
-                season_df = self._build_season_standings(json_data, current_teams, season_year)
+                season_df = self._build_season_standings(raw_data, current_teams, season_year)
                 self._validate_data_completeness(season_df, season_year)
                 combined_standings = pd.concat([combined_standings, season_df], axis=1)
             except ValueError as e:
@@ -153,7 +154,7 @@ class Standings(DF):
 
     @timebudget
     def build(
-        self, json_data: dict, season: int, num_seasons: int = 3, display: bool = False
+        self, raw_data: RawData, season: int, num_seasons: int = 3, display: bool = False
     ):
         """ Assigns self.df to a DataFrame containing all table standings for
             each season from current season to season [num_seasons] years ago.
@@ -180,7 +181,7 @@ class Standings(DF):
             points: the points acquired by the team.
 
         Args:
-            json_data dict: the json data storage used to build the DataFrame.
+            raw_data dict: the json data storage used to build the DataFrame.
             season: the year of the current season.
             num_seasons (int): number of previous seasons to include. Defaults to 3.
             display (bool, optional): flag to print the DataFrame to console after
@@ -190,7 +191,7 @@ class Standings(DF):
 
         # Extract current season teams
         try:
-            current_teams = self.extract_team_names(json_data, season)
+            current_teams = self.extract_team_names(raw_data, season)
         except ValueError as e:
             raise ValueError(f"Cannot build standings: {e}")
 
@@ -198,7 +199,7 @@ class Standings(DF):
             raise ValueError(f"No teams found for current season {season}")
 
         # Combine standings from multiple seasons
-        df = self._combine_season_standings(json_data, current_teams, season, num_seasons)
+        df = self._combine_season_standings(raw_data, current_teams, season, num_seasons)
 
         if df.empty:
             raise ValueError("No valid standings data found for any season")

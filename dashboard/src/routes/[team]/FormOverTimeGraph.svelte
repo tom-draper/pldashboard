@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { PlotData } from '$lib/types';
 	import { onMount } from 'svelte';
 	import { getTeamID, getTeams } from '$lib/team';
 	import type { TeamsData } from './dashboard.types';
@@ -62,8 +63,7 @@
 	function defaultLayout() {
 		const yLabels = Array.from(Array(11), (_, i) => i * 10);
 		const layout: Plotly.Layout = {
-			// @ts-ignore
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
 			hovermode: 'closest',
@@ -76,7 +76,7 @@
 				showline: false,
 				zeroline: false,
 				fixedrange: true,
-				// @ts-ignore
+				// @ts-expect-error
 				ticktext: yLabels,
 				tickvals: yLabels,
 				range: [-1, 101]
@@ -105,7 +105,6 @@
 			'margin.l': 60,
 			'margin.t': 15
 		};
-		//@ts-ignore
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -120,7 +119,7 @@
 			'margin.l': 20,
 			'margin.t': 5
 		};
-		//@ts-ignore
+		//@ts-expect-error
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -146,7 +145,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
+		//@ts-expect-error
 		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
 			// Once plot generated, add resizable attribute to it to shorten height for mobile view
 			plot.children[0].children[0].classList.add('resizable-graph');
@@ -168,7 +167,6 @@
             plotData.layout.xaxis.range[1] = playedDates[playedDates.length - 1];
         }
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();

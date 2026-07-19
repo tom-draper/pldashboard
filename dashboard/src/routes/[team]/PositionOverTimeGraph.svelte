@@ -1,10 +1,11 @@
 <script lang="ts">
+	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
 	import { onMount } from 'svelte';
 	import { getMatchdays, getTeamID, getTeams } from '$lib/team';
 	import type { TeamsData } from './dashboard.types';
 	import type { Team } from '$lib/types';
 
-	function getLineConfig(team: Team, isMainTeam: boolean) {
+	function getLineConfig(team: Team, isMainTeam: boolean): PlotTrace['line'] {
 		let lineConfig;
 		if (isMainTeam) {
 			// Get team primary color from css variable
@@ -25,27 +26,27 @@
 		return matchdays.map((matchday) => data.form[team][data._id][matchday].date);
 	}
 
-	function getLine(data: TeamsData, team: Team, isMainTeam: boolean) {
+	function getLine(data: TeamsData, team: Team, isMainTeam: boolean): PlotTrace {
 		const matchdays = getMatchdays(data, team);
 		const dates = getMatchdayDates(data, team, matchdays);
 		const y = getPositions(data, team, matchdays);
 
 		const lineConfig = getLineConfig(team, isMainTeam);
 
-		const line = {
+		const line: PlotTrace = {
 			x: matchdays,
 			y: y,
 			name: team,
 			mode: 'lines',
 			line: lineConfig,
-			text: dates,
+			text: dates as unknown as string[],
 			hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
 			showlegend: false
 		};
 		return line;
 	}
 
-	function lines(data: TeamsData, team: Team) {
+	function lines(data: TeamsData, team: Team): PlotTrace[] {
 		const lines = getTeams(data)
 			.filter((_team) => _team !== team)
 			.map((_team) => getLine(data, _team, false));
@@ -56,7 +57,7 @@
 		return lines;
 	}
 
-	function positionRangeShapes() {
+	function positionRangeShapes(): PlotShape[] {
 		const matchdays = getMatchdays(data, team);
 		return [
 			{
@@ -101,10 +102,10 @@
 		];
 	}
 
-	function defaultLayout() {
+	function defaultLayout(): PlotLayout {
 		const yLabels = Array.from(Array(20), (_, i) => i + 1);
 		return {
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
 			hovermode: 'closest',
@@ -118,7 +119,7 @@
 				zeroline: false,
 				autorange: 'reversed',
 				fixedrange: true,
-				ticktext: yLabels,
+				ticktext: yLabels.map(String),
 				tickvals: yLabels,
 				visible: true
 			},
@@ -146,7 +147,6 @@
 			'margin.l': 60,
 			'margin.t': 15
 		};
-		//@ts-ignore
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -162,12 +162,12 @@
 			'margin.l': 20,
 			'margin.t': 5
 		};
-		//@ts-ignore
+		//@ts-expect-error
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
 	function buildPlotData(data: TeamsData, team: Team): PlotData {
-		const plotData = {
+		const plotData: PlotData = {
 			data: lines(data, team),
 			layout: defaultLayout(),
 			config: {
@@ -188,7 +188,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
+		//@ts-expect-error
 		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
 			// Once plot generated, add resizable attribute to it to shorten height for mobile view
 			plot.children[0].children[0].classList.add('resizable-graph');
@@ -206,7 +206,6 @@
 
 		plotData.layout.shapes = positionRangeShapes();
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();

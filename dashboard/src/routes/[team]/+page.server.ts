@@ -1,16 +1,9 @@
+import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getTitle, validTeam } from './data';
 import { slugAlias, toTitleCase } from '$lib/format';
 import { getCurrentMatchday, playedMatchdayDates, getTeams } from '$lib/team';
-import { CURRENT_SEASON } from '$lib/consts';
-import { teams } from "$lib/server/database/teams";
-import type { TeamsData } from './dashboard.types';
-
-
-async function fetchTeams() {
-	const data = Object((await teams.find({ _id: CURRENT_SEASON }).toArray())[0]);
-	return data as TeamsData
-}
+import { fetchTeams } from '$lib/server/database/queries';
 
 function getTeam(slug: string) {
 	const team = toTitleCase(slug.replace(/-/g, ' '));
@@ -20,20 +13,11 @@ function getTeam(slug: string) {
 export const load: PageServerLoad = async ({ params }: { params: { team: string } }) => {
 	const slug = slugAlias(params.team);
 	const data = await fetchTeams();
-	if (!data) {
-		return {
-			status: 500,
-			error: new Error('Failed to load data')
-		};
-	}
 
 	const team = getTeam(slug);
 	const teams = getTeams(data);
 	if (!validTeam(team, teams)) {
-		return {
-			status: 404,
-			error: new Error('Team not found')
-		};
+		throw error(404, 'Team not found');
 	}
 
 	const title = getTitle(team);

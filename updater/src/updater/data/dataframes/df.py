@@ -6,8 +6,8 @@ from pandas import DataFrame
 
 
 class DF:
-    def __init__(self, d: DataFrame = DataFrame(), name: Optional[str] = None):
-        self.df: Optional[DataFrame] = DataFrame(d) if not d.empty else None
+    def __init__(self, d: Optional[DataFrame] = None, name: Optional[str] = None):
+        self.df: Optional[DataFrame] = DataFrame(d) if d is not None and not d.empty else None
         self.name = name
         self.last_updated: Optional[datetime] = None
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { teamStyle } from '$lib/format';
+	import { teamColourVars, teamStyle } from '$lib/format';
 	import { getTeamID, toAlias } from '$lib/team';
 	import closeNavIcon from '$lib/images/arrow-bar-left.svg';
 	import type { Team } from '$lib/types';
@@ -51,7 +51,7 @@
 							switchTeam(_team);
 						}}
 					>
-						<div class="team-container">
+						<div class="team-container" style={teamColourVars(_team)}>
 							<div class="team-name">
 								{toAlias(_team)}
 							</div>
@@ -61,6 +61,7 @@
 			{/each}
 		{/if}
 	</div>
+	<div class="donate"><a href="https://www.buymeacoffee.com/tomdraper">Buy Me a Coffee</a></div>
 	<div class="fantasy"><a href="/fantasy">Play fantasy?</a></div>
 	<div class="close">
 		<button class="close-btn" on:click={closeNavBar}>
@@ -104,7 +105,14 @@
 	.this-team-name {
 		padding: 0.4em 1.4em;
 	}
-
+	.donate {
+		color: rgba(255, 255, 255, 1);
+		position: absolute;
+		bottom: 3.5em;
+		font-size: 13px;
+		margin: 0.4em 1.4em;
+		cursor: pointer;
+	}
 	.fantasy {
 		color: rgba(255, 255, 255, 1);
 		position: absolute;
@@ -113,21 +121,56 @@
 		margin: 0.4em 1.4em;
 		cursor: pointer;
 	}
+	.donate a,
 	.fantasy a {
 		color: inherit;
 		text-decoration: none;
 	}
+	.donate:hover,
 	.fantasy:hover {
 		color: rgba(255, 255, 255, 0.7);
+		color: var(--green);
 	}
 
 	.this-team-container {
 		color: var(--pink);
 	}
 
-	:hover.team-container {
-		background: #2c002f;
-		background: #140921;
+	.team-container {
+		/* Leaving the link returns to the default quickly. */
+		transition: background-color 250ms ease, color 250ms ease;
+	}
+
+	/*
+	 * Linger on a team for two seconds and its colours slowly bleed in over the
+	 * following eight. Keyframes rather than a transition-delay so the instant
+	 * dark hover still gives immediate feedback: the first 20% of the ten second
+	 * timeline holds that shade, and the remainder eases to the team's colours.
+	 */
+	@keyframes team-colour-reveal {
+		0%,
+		20% {
+			background-color: #140921;
+			/* Stated explicitly: a property that only appears in the final
+			   keyframe interpolates across the whole timeline, which would start
+			   the text shifting immediately instead of after the two seconds. */
+			color: var(--pink);
+		}
+		100% {
+			background-color: var(--team-colour);
+			color: var(--team-text);
+		}
+	}
+
+	.team-link:hover .team-container {
+		background-color: #140921;
+		animation: team-colour-reveal 10s ease-in-out forwards;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.team-link:hover .team-container {
+			animation: none;
+		}
 	}
 	nav {
 		position: fixed;
