@@ -1,28 +1,42 @@
+import os
+from abc import abstractmethod
+from typing import Protocol, TypeVar
+
 import pandas as pd
 import pytest
-from abc import abstractmethod
-from src.updater.data import Data
-from src.updater.updater import Updater
-from typing import Protocol, TypeVar
+from updater.data import Data
+from updater.env import require_env_int
+from updater.updater import Updater
 
 pd.set_option('display.max_columns', None)  # Show all columns without truncation
 pd.set_option('display.width', None)        # Disable line wrapping (use full width)
 
 CT = TypeVar("CT", bound="Comparable")
 
+# Hitting the live football-data API on every test run is slow, rate-limited and
+# makes results depend on the time of day, so it is opt-in.
+LIVE_DATA = os.getenv("UPDATER_TEST_LIVE_DATA") == "1"
+
+
+def _build_data(request_new: bool) -> Data:
+    updater = Updater()
+    updater.build_all(
+        request_new=request_new, display_tables=False, update_db=False
+    )
+    return updater.data
+
+
 # DataFrames built from data backups
-updater_loaded = Updater()
-updater_loaded.build_all(request_new=False, display_tables=False, update_db=False)
+data_objects: list[Data] = [_build_data(request_new=False)]
+data_ids = ["loaded"]
 
-# DataFrames built from live data
-updater_fetched = Updater()
-updater_fetched.build_all(request_new=True, display_tables=False, update_db=False)
-
-data_objects: list[Data] = [updater_loaded.data, updater_fetched.data]
-data_ids = ["loaded", "fetched"]
+if LIVE_DATA:
+    # DataFrames built from live data
+    data_objects.append(_build_data(request_new=True))
+    data_ids.append("fetched")
 
 
-current_season = 2024
+current_season = require_env_int("SEASON")
 
 
 class Comparable(Protocol):
@@ -34,7 +48,12 @@ class Comparable(Protocol):
 
 
 def is_sorted(my_list: list[CT]):
+    """True if ascending."""
     return all(x <= y for x, y in zip(my_list, my_list[1:]))
+
+
+def is_sorted_descending(my_list: list[CT]):
+    return all(x >= y for x, y in zip(my_list, my_list[1:]))
 
 
 def in_range(values: pd.Series, min_value: float, max_value: float):
@@ -62,6 +81,8 @@ def pytest_configure(config):
     pytest.data_objects = data_objects
     pytest.data_ids = data_ids
     pytest.is_sorted = is_sorted
+    pytest.is_sorted_descending = is_sorted_descending
+    pytest.live_data = LIVE_DATA
     pytest.in_range = in_range
     pytest.min_limit = min_limit
     pytest.max_limit = max_limit

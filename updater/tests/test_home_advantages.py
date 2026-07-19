@@ -1,5 +1,5 @@
 import pytest
-from src.updater.data import Data
+from updater.data import Data
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
@@ -32,4 +32,4 @@ def test_home_advantages_df_sorted_by_total_home_advantages(data: Data):
     # Home advantages should be sorted by total home advantages
     home_advantages = data.teams.home_advantages.df['totalHomeAdvantage'].tolist()
     print(data.teams.home_advantages)
-    assert pytest.is_sorted(home_advantages)
+    assert pytest.is_sorted_descending(home_advantages)

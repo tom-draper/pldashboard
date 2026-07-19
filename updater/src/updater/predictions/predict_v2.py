@@ -8,12 +8,13 @@ from updater.data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
 from updater.predictions.form import calc_form
 from updater.predictions.market import fetch_odds
 from updater.predictions.scoreline import Scoreline
+from updater.data.raw_data import RawData
 
 
 class Predictor:
     def __init__(
         self,
-        json_data: dict,
+        raw_data: RawData,
         fixtures: Fixtures,
         form: Form,
         team_ratings: TeamRatings,
@@ -22,7 +23,7 @@ class Predictor:
         num_seasons: int,
     ):
         self.fixtures = self._build_long_term_fixtures(
-            json_data, fixtures, season, num_seasons
+            raw_data, fixtures, season, num_seasons
         )
         self.form = form
         self.team_ratings = team_ratings
@@ -36,7 +37,7 @@ class Predictor:
 
     @staticmethod
     def _build_long_term_fixtures(
-        json_data: dict,
+        raw_data: RawData,
         current_season_fixtures: Fixtures,
         current_season: int,
         num_seasons: int,
@@ -45,7 +46,7 @@ class Predictor:
         total_fixtures = {current_season: current_season_fixtures.df}
         prev_fixtures = [Fixtures(), Fixtures(), Fixtures()]
         for i in range(num_seasons - 1):
-            prev_fixtures[i].build(json_data, current_season - i - 1)
+            prev_fixtures[i].build(raw_data, current_season - i - 1)
             total_fixtures[current_season - i - 1] = prev_fixtures[i].df
 
         total_fixtures = pd.concat(total_fixtures, axis=1)

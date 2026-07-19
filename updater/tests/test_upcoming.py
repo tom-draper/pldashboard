@@ -1,5 +1,5 @@
 import pytest
-from src.updater.data import Data
+from updater.data import Data
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)

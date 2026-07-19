@@ -1,6 +1,6 @@
 import logging
 from collections import defaultdict
-from typing import Dict, List, Set, Tuple, Any
+from typing import Optional, Dict, List, Set, Tuple, Any
 
 import pandas as pd
 from pandas import DataFrame
@@ -8,6 +8,7 @@ from updater.fmt import clean_full_team_name
 from timebudget import timebudget
 
 from updater.data.dataframes.df import DF
+from updater.data.raw_data import RawData
 
 
 class HomeAdvantages(DF):
@@ -15,7 +16,7 @@ class HomeAdvantages(DF):
 
     PANDEMIC_YEAR = 2020  # Exclude due to anomalous conditions (no fans)
 
-    def __init__(self, d: DataFrame = DataFrame()):
+    def __init__(self, d: Optional[DataFrame] = None):
         super().__init__(d, "home_advantages")
 
     def _initialize_team_season_stats(
@@ -205,7 +206,7 @@ class HomeAdvantages(DF):
     @timebudget
     def build(
         self,
-        json_data: dict,
+        raw_data: RawData,
         season: int,
         threshold: float,
         num_seasons: int = 3,
@@ -234,7 +235,7 @@ class HomeAdvantages(DF):
                in the table: the average home wins ratio / wins ratio.
 
         Args:
-            json_data dict: the json data storage used to build the DataFrame
+            raw_data dict: the json data storage used to build the DataFrame
             season int: the year of the current season
             threshold float: the minimum number of home games played to incorporate
                 a season's home advantage calculation for all teams into the
@@ -251,7 +252,7 @@ class HomeAdvantages(DF):
         # Process matches for each season
         for i in range(num_seasons):
             season_year = season - i
-            season_data = json_data["fixtures"][season_year]
+            season_data = raw_data.fixtures[season_year]
             self._process_season_matches(stats, season_data, season_year)
 
         # Convert to DataFrame and fill missing values
@@ -267,7 +268,7 @@ class HomeAdvantages(DF):
         df = self._calculate_total_home_advantage(df, season, threshold)
 
         # Clean and format the final DataFrame
-        current_season_teams = self.get_season_teams(json_data["fixtures"][season])
+        current_season_teams = self.get_season_teams(raw_data.fixtures[season])
         df = self._clean_dataframe(df, current_season_teams)
 
         if display:

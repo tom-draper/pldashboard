@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from src.updater.data import Data
+from updater.data import Data
 from datetime import datetime
 
 
@@ -96,7 +96,13 @@ def test_fixtures_df_score_datatype(data: Data):
     for matchday in matchdays:
         scores = data.teams.fixtures.df[matchday, 'score']
         for score in scores:
-            assert isinstance(score, str) or score is None
+            # Scores are stored as {'homeGoals': int, 'awayGoals': int}, or
+            # None for matches that have not been played.
+            assert score is None or (
+                isinstance(score, dict)
+                and isinstance(score['homeGoals'], int)
+                and isinstance(score['awayGoals'], int)
+            )
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)

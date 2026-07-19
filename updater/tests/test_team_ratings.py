@@ -1,5 +1,5 @@
 import pytest
-from src.updater.data import Data
+from updater.data import Data
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
@@ -19,7 +19,7 @@ def test_team_ratings_df_index_not_sorted(data: Data):
 def test_team_ratings_df_sorted_by_total_rating(data: Data):
     # Ratings should be sorted by total rating
     total_ratings = data.teams.team_ratings.df['total'].tolist()
-    assert pytest.is_sorted(total_ratings)  # passes if descending
+    assert pytest.is_sorted_descending(total_ratings)
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
