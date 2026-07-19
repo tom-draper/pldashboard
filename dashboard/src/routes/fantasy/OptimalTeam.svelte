@@ -24,121 +24,90 @@
 			Forward: 3
 		};
 
-		// Separate players by position and sort by points per price ratio (efficiency)
-		const playersByPosition = {
-			Goalkeeper: players
-				.filter((p) => p.position === 'Goalkeeper')
-				.sort((a, b) => b.totalPoints / b.price - a.totalPoints / a.price),
-			Defender: players
-				.filter((p) => p.position === 'Defender')
-				.sort((a, b) => b.totalPoints / b.price - a.totalPoints / a.price),
-			Midfielder: players
-				.filter((p) => p.position === 'Midfielder')
-				.sort((a, b) => b.totalPoints / b.price - a.totalPoints / a.price),
-			Forward: players
-				.filter((p) => p.position === 'Forward')
-				.sort((a, b) => b.totalPoints / b.price - a.totalPoints / a.price)
+		type TeamOption = {
+			price: number;
+			points: number;
+			players: FantasyPlayer[];
 		};
 
-		// Greedy approach with budget-aware selection
-		function selectTeam(): FantasyPlayer[] {
-			const selectedPlayers: FantasyPlayer[] = [];
-			let remainingBudget = MAX_BUDGET;
+		function isBetterTeam(candidate: TeamOption, current: TeamOption | null) {
+			return (
+				current === null ||
+				candidate.points > current.points ||
+				(candidate.points === current.points && candidate.price > current.price)
+			);
+		}
 
-			// Track how many players we need for each position
-			const remainingNeeds = { ...REQUIRED_POSITIONS };
+		function buildPositionOptions(position: keyof typeof REQUIRED_POSITIONS): TeamOption[] {
+			const requiredCount = REQUIRED_POSITIONS[position];
+			const positionPlayers = players.filter((player) => player.position === position);
+			const options: Array<Array<TeamOption | null>> = Array.from(
+				{ length: requiredCount + 1 },
+				() => Array(MAX_BUDGET + 1).fill(null)
+			);
 
-			// First pass: Try to fill each position with best value players
-			for (const [position, count] of Object.entries(REQUIRED_POSITIONS)) {
-				const positionPlayers = playersByPosition[position as keyof typeof playersByPosition];
+			options[0][0] = { price: 0, points: 0, players: [] };
 
-				for (let i = 0; i < Math.min(count, positionPlayers.length); i++) {
-					const player = positionPlayers[i];
-					if (player.price <= remainingBudget) {
-						selectedPlayers.push(player);
-						remainingBudget -= player.price;
-						remainingNeeds[position as keyof typeof remainingNeeds]--;
-					}
-				}
-			}
+			for (const player of positionPlayers) {
+				for (let count = requiredCount - 1; count >= 0; count--) {
+					for (let price = MAX_BUDGET - player.price; price >= 0; price--) {
+						const current = options[count][price];
+						if (current === null) continue;
 
-			// Second pass: Fill remaining positions with cheaper alternatives if needed
-			for (const [position, needed] of Object.entries(remainingNeeds)) {
-				if (needed > 0) {
-					const positionPlayers = playersByPosition[position as keyof typeof playersByPosition]
-						.filter((p) => !selectedPlayers.includes(p))
-						.sort((a, b) => a.price - b.price); // Sort by price for remaining slots
+						const candidate = {
+							price: price + player.price,
+							points: current.points + player.totalPoints,
+							players: [...current.players, player]
+						};
 
-					for (let i = 0; i < Math.min(needed, positionPlayers.length); i++) {
-						const player = positionPlayers[i];
-						if (player.price <= remainingBudget) {
-							selectedPlayers.push(player);
-							remainingBudget -= player.price;
+						if (isBetterTeam(candidate, options[count + 1][candidate.price])) {
+							options[count + 1][candidate.price] = candidate;
 						}
 					}
 				}
 			}
 
-			return selectedPlayers;
+			return options[requiredCount].filter((option): option is TeamOption => option !== null);
 		}
 
-		// Try multiple strategies and pick the best one
 		function optimizeTeam(): FantasyPlayer[] {
-			let bestTeam: FantasyPlayer[] = [];
-			let bestPoints = 0;
+			let squadOptions: Array<TeamOption | null> = Array(MAX_BUDGET + 1).fill(null);
+			squadOptions[0] = { price: 0, points: 0, players: [] };
 
-			// Strategy 1: Pure value-based selection
-			const valueTeam = selectTeam();
-			if (isValidTeam(valueTeam)) {
-				const points = valueTeam.reduce((sum, p) => sum + p.totalPoints, 0);
-				if (points > bestPoints) {
-					bestTeam = valueTeam;
-					bestPoints = points;
-				}
-			}
+			for (const position of Object.keys(REQUIRED_POSITIONS) as Array<
+				keyof typeof REQUIRED_POSITIONS
+			>) {
+				const positionOptions = buildPositionOptions(position);
+				const nextSquadOptions: Array<TeamOption | null> = Array(MAX_BUDGET + 1).fill(null);
 
-			// Strategy 2: Prioritize high scorers within budget constraints
-			const highScorerTeam = selectHighScorerTeam();
-			if (isValidTeam(highScorerTeam)) {
-				const points = highScorerTeam.reduce((sum, p) => sum + p.totalPoints, 0);
-				if (points > bestPoints) {
-					bestTeam = highScorerTeam;
-					bestPoints = points;
-				}
-			}
+				for (const squadOption of squadOptions) {
+					if (squadOption === null) continue;
 
-			return bestTeam;
-		}
+					for (const positionOption of positionOptions) {
+						const candidatePrice = squadOption.price + positionOption.price;
+						if (candidatePrice > MAX_BUDGET) continue;
 
-		function selectHighScorerTeam(): FantasyPlayer[] {
-			// Sort all players by total points descending
-			const allPlayersSorted = [...players].sort((a, b) => b.totalPoints - a.totalPoints);
+						const candidate = {
+							price: candidatePrice,
+							points: squadOption.points + positionOption.points,
+							players: [...squadOption.players, ...positionOption.players]
+						};
 
-			const selectedPlayers: FantasyPlayer[] = [];
-			let remainingBudget = MAX_BUDGET;
-			const positionCounts = {
-				Goalkeeper: 0,
-				Defender: 0,
-				Midfielder: 0,
-				Forward: 0
-			};
-
-			// Greedy selection of highest scorers that fit budget and position constraints
-			for (const player of allPlayersSorted) {
-				const position = player.position as keyof typeof positionCounts;
-				const maxForPosition = REQUIRED_POSITIONS[position];
-
-				if (positionCounts[position] < maxForPosition && player.price <= remainingBudget) {
-					selectedPlayers.push(player);
-					remainingBudget -= player.price;
-					positionCounts[position]++;
+						if (isBetterTeam(candidate, nextSquadOptions[candidatePrice])) {
+							nextSquadOptions[candidatePrice] = candidate;
+						}
+					}
 				}
 
-				// Check if team is complete
-				if (selectedPlayers.length === 15) break;
+				squadOptions = nextSquadOptions;
 			}
 
-			return selectedPlayers;
+			return (
+				squadOptions.reduce<TeamOption | null>(
+					(best, option) => (option !== null && isBetterTeam(option, best) ? option : best),
+					null
+				)?.players ?? []
+			);
 		}
 
 		function isValidTeam(team: FantasyPlayer[]): boolean {
@@ -211,5 +180,4 @@
 	.optimal-team {
 		margin-bottom: -40px;
 	}
-
 </style>

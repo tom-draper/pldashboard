@@ -1,6 +1,47 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import githubIcon from '$lib/images/github.png';
 	export let lastUpdated: string | null, dark: boolean;
+
+	const chartColors = ['#00fe87', '#7dff42', '#dfff00', '#ffd700', '#ffaf00', '#ff5f00', '#ff0000'];
+	const barCount = 8;
+	const chartWidth = 24;
+	const chartHeight = 12;
+	const minBarHeight = 3;
+	const barWidth = chartWidth / barCount;
+	let originalBars: number[] = Array(barCount).fill(6);
+	let displayedBars: number[] = originalBars;
+
+	function randomBars() {
+		return Array.from(
+			{ length: barCount },
+			() => Math.floor(Math.random() * (chartHeight - minBarHeight + 1)) + minBarHeight
+		);
+	}
+
+	function barColor(height: number) {
+		return chartColors[
+			Math.min(
+				chartColors.length - 1,
+				Math.floor(((height - minBarHeight) / (chartHeight - minBarHeight)) * chartColors.length)
+			)
+		];
+	}
+
+	function startRandomising() {
+		displayedBars = randomBars();
+	}
+
+	function stopRandomising() {
+		displayedBars = originalBars;
+	}
+
+	onMount(() => {
+		originalBars = randomBars();
+		displayedBars = originalBars;
+
+		return stopRandomising;
+	});
 </script>
 
 <div class="teams-footer footer-text-color">
@@ -16,6 +57,28 @@
 		<a href="https://pldashboard.com/home" class="version no-select"
 			><span class="pl">pl</span>dashboard</a
 		>
+		<button
+			type="button"
+			class="company-logo"
+			aria-label="pldashboard company logo"
+			on:mouseenter={startRandomising}
+			on:mouseleave={stopRandomising}
+			on:focus={startRandomising}
+			on:blur={stopRandomising}
+		>
+			<svg width="24" height="12" viewBox={`0 0 ${chartWidth} ${chartHeight}`} aria-hidden="true">
+				{#each displayedBars as height, index}
+					<rect
+						x={index * barWidth}
+						y={chartHeight - height}
+						width={barWidth}
+						{height}
+						rx="0.5"
+						fill={barColor(height)}
+					/>
+				{/each}
+			</svg>
+		</button>
 	</div>
 </div>
 
@@ -57,6 +120,29 @@
 		padding: 6px 10px;
 		border-radius: 4px;
 		width: fit-content;
+	}
+	.company-logo {
+		display: grid;
+		place-items: center;
+		width: 24px;
+		height: 12px;
+		margin: 4px auto 0;
+		padding: 0;
+		border: 0;
+		background: none;
+		cursor: pointer;
+		line-height: 0;
+		outline: none;
+	}
+	.company-logo svg {
+		display: block;
+		overflow: visible;
+	}
+	.company-logo rect {
+		transition:
+			height 90ms ease,
+			y 90ms ease,
+			fill 90ms ease;
 	}
 	.last-updated {
 		text-align: center;
