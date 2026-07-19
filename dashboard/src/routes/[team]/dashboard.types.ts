@@ -54,6 +54,16 @@ export type Form = {
 	}
 }
 
+/**
+ * A single matchday's form entry.
+ *
+ * Only `team`, `date`, `score` and `atHome` are present for seasons before the
+ * current one - the updater trims the rest to keep the payload down (see
+ * PAST_SEASON_FORM_FIELDS in updater/src/updater/data/serialise.py). The
+ * remaining fields are current-season only and will be undefined if read for an
+ * earlier season, which TypeScript cannot catch here because this data is cast
+ * from MongoDB.
+ */
 export type FormEntry = {
 	team: Team;
 	date: Date;
@@ -109,10 +119,21 @@ export type HomeAdvantage = {
 	totalHomeAdvantage: number;
 };
 
+export type HomeAdvantageSplit = {
+	played: number;
+	winRatio: number;
+};
+
 export type SeasonHomeAdvantage = {
-	home: number;
+	home: HomeAdvantageSplit;
+	/** `overall` includes the home games, so it is not the away split. */
+	overall: HomeAdvantageSplit;
+	/**
+	 * home win ratio - overall win ratio. Because `overall` double-counts the
+	 * home games this is exactly half of (home ratio - away ratio); use
+	 * homeAwaySplit() in HomeAdvantageGraph for the figure to show a reader.
+	 */
 	homeAdvantage: number;
-	overall: number;
 };
 
 export type PrevMatch = {

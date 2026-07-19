@@ -1,11 +1,10 @@
 import pandas as pd
 from pandas import DataFrame
-from typing import Dict, Any
+from typing import Optional, Dict, Any
 from timebudget import timebudget
 
 from .df import DF
-
-pd.set_option('future.no_silent_downcasting', True)
+from updater.data.raw_data import RawData
 
 
 class Fantasy(DF):
@@ -63,30 +62,8 @@ class Fantasy(DF):
         "chance_of_playing_this_round": "chanceOfPlayingThisRound",
     }
 
-    def __init__(self, d: DataFrame = DataFrame()):
+    def __init__(self, d: Optional[DataFrame] = None):
         super().__init__(d, "fantasy")
-
-    @staticmethod
-    def get_current_season(json_data: Dict[str, Any]) -> int:
-        """
-        Extract the current season from the fantasy data.
-        
-        Args:
-            json_data: The complete JSON data structure
-            
-        Returns:
-            Current season year
-            
-        Raises:
-            ValueError: If no fantasy data is found
-        """
-        try:
-            fantasy_seasons = json_data["fantasy"].keys()
-            if not fantasy_seasons:
-                raise ValueError("No fantasy seasons found in data")
-            return next(iter(fantasy_seasons))
-        except KeyError:
-            raise ValueError("Fantasy data not found in JSON structure")
 
     def _extract_team_mappings(self, fantasy_data: Dict[str, Any]) -> Dict[int, str]:
         """
@@ -216,54 +193,6 @@ class Fantasy(DF):
         else:
             return 0
 
-    def process_fixture_points(self, json_data: Dict[str, Any], 
-                             position_mappings: Dict[int, str], 
-                             current_season: int) -> Dict[int, Dict[int, int]]:
-        """
-        Process fixture data to calculate points by matchday and player.
-        
-        Args:
-            json_data: The complete JSON data structure
-            position_mappings: Player position mappings
-            current_season: Current season year
-            
-        Returns:
-            Dictionary with structure {matchday: {player_id: points}}
-        """
-        try:
-            fantasy_fixtures = json_data["fantasy_fixtures"][current_season]
-        except KeyError:
-            print(f"Warning: No fixture data found for season {current_season}")
-            return {}
-
-        matchday_points = {}
-        
-        for fixture in fantasy_fixtures:
-            matchday = fixture["event"]
-            if matchday not in matchday_points:
-                matchday_points[matchday] = {}
-
-            for stat in fixture.get("stats", []):
-                identifier = stat["identifier"]
-                
-                # Process both home (h) and away (a) team stats
-                for team_side in ["h", "a"]:
-                    if team_side not in stat:
-                        continue
-                        
-                    for player_stat in stat[team_side]:
-                        player_id = player_stat["element"]
-                        stat_value = player_stat.get("value", 0)
-                        
-                        position = position_mappings.get(player_id, "Unknown")
-                        points = self.calculate_stat_points(identifier, stat_value, position)
-                        
-                        if player_id not in matchday_points[matchday]:
-                            matchday_points[matchday][player_id] = 0
-                        matchday_points[matchday][player_id] += points
-        
-        return matchday_points
-
     def _clean_final_dataframe(self, df: DataFrame) -> DataFrame:
         """
         Apply final cleaning and formatting to the fantasy DataFrame.
@@ -274,8 +203,9 @@ class Fantasy(DF):
         Returns:
             Cleaned DataFrame
         """
-        # Fill missing values and infer appropriate data types
-        df = df.fillna(0).infer_objects(copy=False)
+        # Fill missing values and infer appropriate data types. Silent
+        # downcasting is already off and copies are lazy under pandas 3.
+        df = df.fillna(0).infer_objects()
         
         # Set proper index name
         df.index.name = "player"
@@ -287,7 +217,7 @@ class Fantasy(DF):
         return df
 
     @timebudget
-    def build(self, raw_data: Dict[str, Any], display: bool = False) -> None:
+    def build(self, raw_data: RawData, display: bool = False) -> None:
         """
         Build a comprehensive Fantasy Premier League DataFrame with player statistics.
 
@@ -313,11 +243,9 @@ class Fantasy(DF):
             ValueError: If required data is missing or malformed
         """
         try:
-            current_season = self.get_current_season(raw_data)
-            self.log_building(current_season)
+            self.log_building()
 
-            # Extract fantasy data for current season
-            fantasy_data = raw_data["fantasy"][current_season]
+            fantasy_data = raw_data.fantasy_general
             
             # Process all players
             player_records = self._process_all_players(fantasy_data)

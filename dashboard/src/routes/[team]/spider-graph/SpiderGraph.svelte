@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { PlotData } from '$lib/types';
 	import { onMount } from 'svelte';
 	import { toAlias, toName, getTeamID, teamColor } from '$lib/team';
 	import type { SpiderAttribute, TeamsData } from '../dashboard.types';
@@ -31,7 +32,7 @@
 		};
 		plotData.data.push(teamData);
 
-		//@ts-ignore
+		//@ts-expect-error
 		Plotly.redraw(plotDiv); // Redraw with teamName added
 	}
 
@@ -54,7 +55,7 @@
 			addAvg();
 		}
 
-		//@ts-ignore
+		//@ts-expect-error
 		Plotly.redraw(plotDiv); // Redraw with teamName removed
 	}
 
@@ -75,7 +76,7 @@
 			removeItem(comparisonTeams, _team); // Remove from comparison teams
 		}
 
-		//@ts-ignore
+		//@ts-expect-error
 		Plotly.redraw(plotDiv); // Redraw with teamName removed
 	}
 
@@ -86,7 +87,7 @@
 		}
 
 		for (let i = 0; i < btns.children.length; i++) {
-			//@ts-ignore
+			//@ts-expect-error
 			const btn: HTMLButtonElement = btns.children[i];
 			if (btn.style.background === '') {
 				continue;
@@ -182,7 +183,7 @@
 					range: [0, 100]
 				}
 			},
-			// @ts-ignore
+			// @ts-expect-error
 			hover: 'closest',
 			margin: { t: 25, b: 25, l: 75, r: 75 },
 			showlegend: false,
@@ -229,7 +230,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
+		//@ts-expect-error
 		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
 			// Once plot generated, add resizable attribute to it to shorten height for mobile view
 			plot.children[0].children[0].classList.add('resizable-spider-chart');
@@ -279,7 +280,7 @@
 					class:bottom-spider-opp-team-btn={i === teams.length - 1 ||
 						(teams[teams.length - 1] === team && i === teams.length - 2)}
 					on:click={(e) => {
-						//@ts-ignore
+						//@ts-expect-error
 						spiderBtnClick(e.target);
 					}}>{toAlias(_team)}</button
 				>

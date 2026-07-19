@@ -1,6 +1,3 @@
-import math
-from typing import Any
-
 import pandas as pd
 from updater.data.dataframes import (
     Fixtures,
@@ -10,7 +7,7 @@ from updater.data.dataframes import (
     TeamRatings,
     Upcoming,
 )
-from updater.predictions.scoreline import Scoreline
+from updater.data.serialise import form_to_dict, to_nested_dict
 
 
 class TeamsData:
@@ -46,64 +43,23 @@ class TeamsData:
             axis=1,
         )
 
-    def _collapse_tuple_keys(self, d: dict | Any):
-        if isinstance(d, float) and math.isnan(d):
-            # Remove NaN values
-            return None
-        elif isinstance(d, Scoreline):
-            # Unpack Scoreline object into a dict and continue recursing
-            d = d.to_dict()
-        elif isinstance(d, list):
-            for i, v in enumerate(d):
-                d[i] = self._collapse_tuple_keys(v)
-            return d
-        elif not isinstance(d, dict):
-            # If hit bottom of tree, stop recursing
-            return d
-
-        new_d = {}
-        for k, v in d.items():
-            if isinstance(k, tuple):
-                # Remove blank multi-index levels
-                k = [x for x in k if x != ""]
-                if len(k) == 1:
-                    k = k[0]  # If only one level remains, take the single heading
-
-            if isinstance(k, list):
-                # Separate multi-index into a nested dict
-                temp_d = new_d
-                for i, _k in enumerate(k):
-                    _k = str(_k)
-                    if _k not in temp_d:
-                        temp_d[_k] = {}
-                    if i == len(k) - 1:
-                        temp_d[_k] = self._collapse_tuple_keys(v)
-                    else:
-                        temp_d = temp_d[_k]
-            elif isinstance(k, int):
-                new_d[str(k)] = self._collapse_tuple_keys(v)
-            else:
-                new_d[k] = self._collapse_tuple_keys(v)
-
-        return new_d
-
     def to_dict(self):
+        """Build the payload the dashboard consumes.
+
+        The shape is defined by `updater.data.serialise`; see that module for
+        the nesting and trimming rules.
+        """
         if not self.all_built():
             raise ValueError(
                 "Cannot convert TeamsData instance to dictionary: A DataFrame is empty."
             )
 
-        # Build one dict containing all DataFrames
-        d = {
+        return {
             "lastUpdated": self.last_updated,
-            "fixtures": self.fixtures.df.to_dict(orient="index"),
-            "standings": self.standings.df.to_dict(orient="index"),
-            "teamRatings": self.team_ratings.df.to_dict(orient="index"),
-            "homeAdvantages": self.home_advantages.df.to_dict(orient="index"),
-            "form": self.form.df.to_dict(orient="index"),
-            "upcoming": self.upcoming.df.to_dict(orient="index"),
+            "fixtures": to_nested_dict(self.fixtures.df),
+            "standings": to_nested_dict(self.standings.df),
+            "teamRatings": to_nested_dict(self.team_ratings.df),
+            "homeAdvantages": to_nested_dict(self.home_advantages.df),
+            "form": form_to_dict(self.form.df),
+            "upcoming": to_nested_dict(self.upcoming.df),
         }
-
-        # Collapse tuple keys, convert int key to str and remove NaN values
-        d = self._collapse_tuple_keys(d)
-        return d

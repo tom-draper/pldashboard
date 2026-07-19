@@ -1,40 +1,24 @@
-import { fantasy } from '$lib/server/database/fantasy';
-import { filterDataByPage } from '../data';
+import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getTitle } from '../data';
+import { filterDataByPage, getTitle } from '../data';
+import type { Page } from '../fantasy.types';
+import { fetchFantasy } from '$lib/server/database/queries';
 
-async function fetchFantasy() {
-	const data = Object((await fantasy.find({ _id: "fantasy" }).toArray())[0])
-	return data
+const VALID_PAGES: readonly Page[] = ['all', 'forward', 'defender', 'goalkeeper', 'midfielder'];
+
+function isValidPage(page: string): page is Page {
+	return (VALID_PAGES as readonly string[]).includes(page);
 }
 
 export const load: PageServerLoad = async ({ params }: { params: { page: string } }) => {
 	const page = params.page;
 
-	// check if page is a valid page
-	if (
-		page !== 'all' &&
-		page !== 'forward' &&
-		page !== 'defender' &&
-		page !== 'goalkeeper' &&
-		page !== 'midfielder'
-	) {
-		return {
-			status: 404,
-			error: new Error('Invalid page')
-		};
+	if (!isValidPage(page)) {
+		throw error(404, `Unknown fantasy page: ${page}`);
 	}
 
 	const data = await fetchFantasy();
-	if (!data) {
-		return {
-			status: 500,
-			error: new Error('Failed to load data')
-		};
-	}
-
 	const pageData = filterDataByPage(data, page);
-
 	const title = getTitle(page);
 
 	return {

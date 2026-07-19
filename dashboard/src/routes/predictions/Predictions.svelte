@@ -41,7 +41,7 @@
 						<div class="date">
 							{_id}
 						</div>
-						<div class="medium-predictions-divider" />
+						<div class="medium-predictions-divider"></div>
 						<!-- Each prediction on this day -->
 						{#each predictions as pred}
 							<button
@@ -87,7 +87,7 @@
 								{/if}
 							</button>
 						{/each}
-						<div class="predictions-gap" />
+						<div class="predictions-gap"></div>
 					{/each}
 				{/if}
 			</div>

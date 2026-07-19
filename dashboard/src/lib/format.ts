@@ -12,6 +12,15 @@ export function teamStyle(team: Team): string {
 	return `background: var(--${teamID}); color: var(--${teamID}-secondary);`;
 }
 
+/**
+ * A team's colours as custom properties rather than applied styles, so CSS can
+ * animate towards them (see the nav's hover reveal).
+ */
+export function teamColourVars(team: Team): string {
+	const teamID = getTeamID(team);
+	return `--team-colour: var(--${teamID}); --team-text: var(--${teamID}-secondary);`;
+}
+
 export function scoreline(
 	homeTeam: string,
 	awayTeam: string,

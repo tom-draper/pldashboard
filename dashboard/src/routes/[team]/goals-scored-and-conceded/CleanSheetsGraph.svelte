@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
 	import { onMount } from 'svelte';
 	import { getMatchdays, getPlayedMatchdays } from '$lib/team';
 	import type { TeamsData } from '../dashboard.types';
@@ -22,7 +23,7 @@
 		});
 	}
 
-	function bars(data: TeamsData, team: Team, playedDates: Date[], matchdays: string[]) {
+	function bars(data: TeamsData, team: Team, playedDates: Date[], matchdays: string[]): PlotTrace[] {
 		const cleanSheets = getTeamCleanSheets(data, team);
 		// Create inverse of clean sheets for goals scored
 		const notCleanSheets = Array.from(cleanSheets).map((x) => (x == 0 ? 1 : 0));
@@ -50,7 +51,7 @@
 		];
 	}
 
-	function baseLine() {
+	function baseLine(): PlotShape {
 		return {
 			type: 'line',
 			x0: playedDates[0],
@@ -65,9 +66,9 @@
 		};
 	}
 
-	function defaultLayout(matchdays: string[]) {
+	function defaultLayout(matchdays: string[]): PlotLayout {
 		return {
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			height: 60,
 			margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
@@ -107,7 +108,7 @@
 		const layoutUpdate = {
 			'margin.l': 60
 		};
-		//@ts-ignore
+		//@ts-expect-error
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -119,14 +120,14 @@
 		const layoutUpdate = {
 			'margin.l': 20
 		};
-		//@ts-ignore
+		//@ts-expect-error
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
-	function hiddenLine(x: Date[]) {
+	function hiddenLine(x: Date[]): PlotTrace {
 		return {
 			name: 'Avg',
-			type: 'line',
+			type: 'scatter',
 			x: x,
 			y: Array(x.length).fill(1.1),
 			line: { color: '#FAFAFA', width: 1 },
@@ -137,13 +138,13 @@
 		};
 	}
 
-	function buildPlotData(data: TeamsData, team: Team) {
+	function buildPlotData(data: TeamsData, team: Team): PlotData {
 		const matchdays = getPlayedMatchdays(data, team);
 		const [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
 		// Hidden line required on plot to make x-axis length match goalsScoredAndConcededGraph
 		// Line added to plotly bar chart changes x-axis physical length vs without
 		// TODO: Solution avoiding this hidden line
-		const line = hiddenLine(cleanSheetsBar.x);
+		const line = hiddenLine(cleanSheetsBar.x as Date[]);
 		const plotData = {
 			data: [cleanSheetsBar, concededBar, line],
 			layout: defaultLayout(matchdays),
@@ -165,7 +166,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
+		//@ts-expect-error
 		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
@@ -176,17 +177,16 @@
 
 		const matchdays = getPlayedMatchdays(data, team);
 		const [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
-		const line = hiddenLine(cleanSheetsBar.x);
+		const line = hiddenLine(cleanSheetsBar.x as Date[]);
 
 		plotData.data[0] = cleanSheetsBar;
 		plotData.data[1] = concededBar;
 		plotData.data[2] = line;
 		for (let i = 0; i < matchdays.length; i++) {
-			plotData.layout.xaxis.ticktext[i] = matchdays[i];
+			plotData.layout.xaxis!.ticktext![i] = matchdays[i];
 		}
-		plotData.layout.shapes[0] = baseLine();
+		plotData.layout.shapes![0] = baseLine();
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();

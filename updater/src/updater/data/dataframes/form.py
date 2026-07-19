@@ -8,10 +8,11 @@ from timebudget import timebudget
 
 from updater.data.dataframes.df import DF
 from updater.data.dataframes.team_ratings import TeamRatings
+from updater.data.raw_data import RawData
 
 
 class Form(DF):
-    def __init__(self, d: DataFrame = DataFrame()):
+    def __init__(self, d: Optional[DataFrame] = None):
         super().__init__(d, "form")
 
     def get_prev_matchday(self, current_season: int):
@@ -100,11 +101,10 @@ class Form(DF):
         if form_str is None:
             return form_rating
 
+        ratings = team_ratings.total_ratings()
         for i, opposition in enumerate(teams_played):
             # Convert opposition team initials to their name
-            opposition_rating = 0
-            if opposition in team_ratings.df.index:
-                opposition_rating = team_ratings.df.at[opposition, "total"]
+            opposition_rating = ratings.get(opposition, 0)
 
             # Increment form score based on rating of the team they've won, drawn or lost against
             form_rating += (opposition_rating / len(form_str)) * gds[i]
@@ -113,38 +113,52 @@ class Form(DF):
         return form_rating
 
     def _insert_position_columns(self, df: DataFrame):
-        seasons = df.columns.unique(level=0).tolist()
-        position_data = {}
-        
-        for season in seasons:
-            played_matchdays = df[season].columns.unique(level=0).tolist()
-            for matchday in played_matchdays:
-                # Sort the dataframe for this season/matchday
-                sorted_df = df.sort_values(
-                    by=[(season, matchday, "cumPoints"), (season, matchday, "cumGD")],
-                    ascending=False,
-                )
-                
-                # Create position data for this season/matchday combination
-                position_data[(season, matchday, "position")] = pd.Series(
-                    list(range(1, 21)), 
-                    index=sorted_df.index,
-                    name=(season, matchday, "position")
-                )
-        
-        # Create a DataFrame from all position data at once
-        if position_data:
-            position_df = pd.DataFrame(position_data)
-            # Concatenate with original dataframe
-            df = pd.concat([df, position_df], axis=1)
-        
-        return df
+        # League position is decided by cumulative points, then goal difference.
+        # Pull both fields out of the (very wide) frame once here: doing a
+        # MultiIndex lookup per season/matchday instead made this the single
+        # most expensive step of the whole build.
+        cum_points = df.xs("cumPoints", level=2, axis=1)
+        cum_gd = df.xs("cumGD", level=2, axis=1)
+        if cum_points.empty:
+            return df
+
+        # Rank every season/matchday in one pass. Transposed so each row is a
+        # single season/matchday and the sort runs along the team axis.
+        points = -cum_points.to_numpy(dtype=float).T
+        goal_diff = -cum_gd.to_numpy(dtype=float).T
+
+        # lexsort takes its *last* key as primary, so points decide the order
+        # and goal difference breaks ties. Both are negated to sort descending;
+        # NaN still sorts last either way, matching the previous
+        # sort_values(..., na_position="last") behaviour.
+        order = np.lexsort((goal_diff, points), axis=-1)
+
+        # Invert the ordering: position 1 goes to the team sorted first.
+        positions = np.empty_like(order)
+        np.put_along_axis(
+            positions, order, np.arange(1, order.shape[-1] + 1), axis=-1
+        )
+
+        position_df = DataFrame(
+            positions.T,
+            index=cum_points.index,
+            columns=pd.MultiIndex.from_tuples(
+                [(season, matchday, "position") for season, matchday in cum_points.columns]
+            ),
+        )
+        return pd.concat([df, position_df], axis=1)
 
     def _fill_teams_missing_matchday(self, form: DataFrame):
-        """Fill in missing essential matchday data with copies from previous matchday."""
+        """Carry values forward for teams with no completed match in a matchday.
+
+        A team with a postponed or unplayed game has no cumulative or form
+        values for that matchday, so the previous matchday's are carried
+        forward. Only those teams are touched: teams that did play keep their
+        real values.
+        """
         current_season = max(form.columns.unique(level=0))
-        matchdays = list(sorted(form[current_season].columns.unique(level=0)))
-        teams = form[current_season].index.values
+        season_columns = form[current_season]
+        matchdays = list(sorted(season_columns.columns.unique(level=0)))
         essential_cols = (
             "cumGD",
             "cumPoints",
@@ -153,25 +167,24 @@ class Form(DF):
             "formRating5",
             "formRating10",
         )
-        for matchday in matchdays:
-            if not form[current_season][matchday].isnull().values.any():
+
+        # The opposition name is absent exactly when a team has no completed
+        # match that matchday, so it identifies the rows needing a fill.
+        opposition = season_columns.xs("team", level=1, axis=1)
+
+        for i, matchday in enumerate(matchdays):
+            if i == 0:
+                continue  # Nothing earlier to carry forward from
+            prev_matchday = matchdays[i - 1]
+
+            missing = opposition.index[opposition[matchday].isna()]
+            if missing.empty:
                 continue
 
-            for team in teams:
-                # value = form.at[team, (current_season, matchday, "team")]
-                # print(value)
-                # if isinstance(value, float) or not math.isnan(value):
-                #     continue
-                # Team does not have a completed match in this matchday (postponed etc.)
-                prev_matchday = matchday - 1
-                while prev_matchday > 0 and prev_matchday not in matchdays:
-                    prev_matchday -= 1
-                if prev_matchday == 0:
-                    continue
-                for col in essential_cols:
-                    form.at[team, (current_season, matchday, col)] = form.at[
-                        team, (current_season, prev_matchday, col)
-                    ]
+            for col in essential_cols:
+                form.loc[missing, (current_season, matchday, col)] = form.loc[
+                    missing, (current_season, prev_matchday, col)
+                ].to_numpy()
 
     def _clean_dataframe(self, form: DataFrame, matchday_nos: list[int]):
         # Drop columns used for working
@@ -374,7 +387,7 @@ class Form(DF):
     @timebudget
     def build(
         self,
-        json_data: dict,
+        raw_data: RawData,
         team_ratings: TeamRatings,
         season: int,
         num_seasons: int = 4,
@@ -430,7 +443,7 @@ class Form(DF):
         d = {}
         teams = set()
         for i in range(num_seasons):
-            for match in json_data["fixtures"][season - i]:
+            for match in raw_data.fixtures[season - i]:
                 if i == 0:
                     # Build list of teams in current season
                     teams.add(clean_full_team_name(match["homeTeam"]["name"]))

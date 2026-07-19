@@ -185,7 +185,7 @@
 							id="rating-scale-btn"
 							class="scale-btn"
 							class:scaling-selected={fixturesScaling === 'rating'}
-							on:click={() => {applyRatingFixturesScaling(data.data)}}
+							on:click={handleApplyRatingFixturesScaling}
 						>
 							Rating
 						</button>
@@ -195,7 +195,7 @@
 							id="form-scale-btn"
 							class="scale-btn"
 							class:scaling-selected={fixturesScaling === 'form'}
-							on:click={() => {applyRatingFormScaling(data.data)}}
+							on:click={handleApplyRatingFormScaling}
 						>
 							Form
 						</button>

@@ -51,6 +51,8 @@
 			{/if}
 		{/each}
 	</div>
+	<div class="donate"><a href="https://www.buymeacoffee.com/tomdraper">Buy Me a Coffee</a></div>
+	<div class="fantasy"><a href="/">Dashboard</a></div>
 	<div class="close">
 		<button class="close-btn" on:click={closeNavBar}>
 			<img src={closeNavIcon} alt="" />
@@ -109,6 +111,32 @@
 	:hover.team-container {
 		background: #2c002f;
 		background: #140921;
+	}
+	.donate {
+		color: rgba(255, 255, 255, 1);
+		position: absolute;
+		bottom: 3.5em;
+		font-size: 13px;
+		margin: 0.4em 1.4em;
+		cursor: pointer;
+	}
+	.fantasy {
+		color: rgba(255, 255, 255, 1);
+		position: absolute;
+		bottom: 1em;
+		font-size: 13px;
+		margin: 0.4em 1.4em;
+		cursor: pointer;
+	}
+	.donate a,
+	.fantasy a {
+		color: inherit;
+		text-decoration: none;
+	}
+	.donate:hover,
+	.fantasy:hover {
+		color: rgba(255, 255, 255, 0.7);
+		color: var(--green);
 	}
 	nav {
 		position: fixed;

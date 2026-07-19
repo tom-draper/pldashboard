@@ -1,3 +1,4 @@
+from typing import Optional
 from collections import defaultdict
 from datetime import datetime
 
@@ -7,10 +8,11 @@ from updater.fmt import clean_full_team_name, convert_team_name_or_initials
 from timebudget import timebudget
 
 from .df import DF
+from updater.data.raw_data import RawData
 
 
 class Fixtures(DF):
-    def __init__(self, d: DataFrame = DataFrame()):
+    def __init__(self, d: Optional[DataFrame] = None):
         super().__init__(d, "fixtures")
 
     @staticmethod
@@ -46,7 +48,7 @@ class Fixtures(DF):
 
         return avg_scored, avg_conceded
 
-    def get_actual_scores_new(self):
+    def get_actual_scores(self):
         # To contain a tuple for all actual scores so far this season
         actual_scores: dict[tuple[str, str], dict[str, int]] = {}
 
@@ -75,9 +77,20 @@ class Fixtures(DF):
 
     @staticmethod
     def _insert_team_row(
-        matchday: int, match: dict, teams: list[str], home_team: bool
+        columns: dict[tuple[int, str], dict[str, object]],
+        match: dict,
+        home_team: bool,
     ):
-        date = datetime.strptime(match["utcDate"], "%Y-%m-%dT%H:%M:%SZ")
+        """Record one team's view of a match into the column store.
+
+        Values are keyed by team name rather than appended positionally, so the
+        DataFrame is assembled by label in one pass instead of building a frame
+        per matchday and concatenating 38 of them.
+        """
+        # Trailing 'Z' is stripped rather than parsed so the result stays naive,
+        # matching the previous strptime("...%SZ") behaviour. fromisoformat is
+        # ~25x faster and this runs once per team per match.
+        date = datetime.fromisoformat(match["utcDate"][:-1])
 
         if home_team:
             team = clean_full_team_name(match["homeTeam"]["name"])
@@ -87,8 +100,9 @@ class Fixtures(DF):
             opposition = clean_full_team_name(match["homeTeam"]["name"])
 
         # Data API v4 renamed 'homeTeam' to 'home'
-        home_goals = match["score"]["fullTime"]["home"] if "home" in match["score"]["fullTime"] else match['score']['fullTime']['homeTeam']
-        away_goals = match["score"]["fullTime"]["away"] if "away" in match["score"]["fullTime"] else match['score']['fullTime']['awayTeam']
+        full_time = match["score"]["fullTime"]
+        home_goals = full_time["home"] if "home" in full_time else full_time["homeTeam"]
+        away_goals = full_time["away"] if "away" in full_time else full_time["awayTeam"]
         if home_goals is not None:
             score = {
                 "homeGoals": home_goals,
@@ -97,15 +111,15 @@ class Fixtures(DF):
         else:
             score = None
 
-        matchday[(match["matchday"], "date")].append(date)
-        matchday[(match["matchday"], "atHome")].append(home_team)
-        matchday[(match["matchday"], "team")].append(opposition)
-        matchday[(match["matchday"], "status")].append(match["status"])
-        matchday[(match["matchday"], "score")].append(score)
-        teams.append(team)
+        matchday_no = match["matchday"]
+        columns[(matchday_no, "date")][team] = date
+        columns[(matchday_no, "atHome")][team] = home_team
+        columns[(matchday_no, "team")][team] = opposition
+        columns[(matchday_no, "status")][team] = match["status"]
+        columns[(matchday_no, "score")][team] = score
 
     @timebudget
-    def build(self, json_data: dict, season: int, display: bool = False):
+    def build(self, raw_data: RawData, season: int, display: bool = False):
         """ Builds a DataFrame containing the past and future fixtures for the
             current season (matchday 1 to 38) and inserts it into the fixtures
             class variable.
@@ -129,48 +143,26 @@ class Fixtures(DF):
                 or None if status is 'SCHEDULED' or 'IN-PLAY'
 
         Args:
-            json_data dict: the json data storage used to build the DataFrame
+            raw_data dict: the json data storage used to build the DataFrame
             season int: the year of the current season
             display (bool, optional): flag to print the DataFrame to console after
                 creation. Defaults to False.
         """
         self.log_building(season)
 
-        data = json_data["fixtures"][season]
+        data = raw_data.fixtures[season]
 
-        teams: list[str] = []
-        teams_index = []  # Specific order of team names to be DataFrame index
-        matchday: dict[tuple[int, str], list] = defaultdict(lambda: [])
-        matchdays: list[DataFrame] = []
-        prev_matchday = 0
+        # Column store keyed by (matchday, field) -> {team: value}. Sorting the
+        # matches by matchday keeps the resulting column order matchday-ordered.
+        columns: dict[tuple[int, str], dict[str, object]] = defaultdict(dict)
         for match in sorted(data, key=lambda x: x["matchday"]):
-            # If moved on to data for the next matchday, or
-            if prev_matchday < match["matchday"]:
-                # Package matchday dictionary into DataFrame to concatenate into main fixtures DataFrame
-                df_matchday = pd.DataFrame(matchday)
-                df_matchday.index = teams
+            self._insert_team_row(columns, match, True)
+            self._insert_team_row(columns, match, False)
 
-                matchday = defaultdict(lambda: [])
-                # If just finished matchday 1 data, take team name list order as main fixtures DataFrame index
-                if prev_matchday == 1:
-                    teams_index = teams[:]
-                matchdays.append(df_matchday)
-
-                prev_matchday = match["matchday"]
-                teams = []
-
-            self._insert_team_row(matchday, match, teams, True)
-            self._insert_team_row(matchday, match, teams, False)
-
-        # Add last matchday (38) DataFrame to list
-        df_matchday = pd.DataFrame(matchday)
-        df_matchday.index = teams
-        matchdays.append(df_matchday)
-
-        fixtures = pd.concat(matchdays, axis=1)
-
-        fixtures.index = teams_index
-        fixtures.columns.names = ("matchday", None)
+        fixtures = pd.DataFrame(columns)
+        fixtures.columns = pd.MultiIndex.from_tuples(
+            fixtures.columns, names=("matchday", None)
+        )
         fixtures.index.name = "team"
         fixtures.sort_index(inplace=True)
 

@@ -1,10 +1,11 @@
 <script lang="ts">
+	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
 	import { onMount } from 'svelte';
 	import { getMatchdays, getTeamID, getTeams } from '$lib/team';
 	import type { TeamsData } from './dashboard.types';
 	import type { Team } from '$lib/types';
 
-	function getLineConfig(team: Team, isMainTeam: boolean) {
+	function getLineConfig(team: Team, isMainTeam: boolean): PlotTrace['line'] {
 		let lineConfig: { color: string; width?: number };
 		if (isMainTeam) {
 			// Get team primary color from css variable
@@ -27,26 +28,26 @@
 		return dates;
 	}
 
-	function getLine(data: TeamsData, team: Team, isMainTeam: boolean) {
+	function getLine(data: TeamsData, team: Team, isMainTeam: boolean): PlotTrace {
 		const matchdays = getMatchdays(data, team);
 		const dates = getMatchdayDates(data, team, matchdays);
 		const y = getCumulativePoints(data, team, matchdays);
 		const lineConfig = getLineConfig(team, isMainTeam);
 
-		const line = {
+		const line: PlotTrace = {
 			x: matchdays,
 			y: y,
 			name: team,
 			mode: 'lines',
 			line: lineConfig,
-			text: dates,
+			text: dates as unknown as string[],
 			hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
 			showlegend: false
 		};
 		return line;
 	}
 
-	function lines(data: TeamsData, team: Team) {
+	function lines(data: TeamsData, team: Team): PlotTrace[] {
 		const lines = [];
 		const teams = getTeams(data);
 		for (const _team of teams) {
@@ -63,10 +64,9 @@
 		return lines;
 	}
 
-	function defaultLayout() {
-		const layout: Plotly.Layout = {
-			// @ts-ignore
-			title: false,
+	function defaultLayout(): PlotLayout {
+		const layout: PlotLayout = {
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
 			hovermode: 'closest',
@@ -104,7 +104,6 @@
 			'margin.l': 60,
 			'margin.t': 15
 		};
-		//@ts-ignore
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -119,12 +118,12 @@
 			'margin.l': 20,
 			'margin.t': 5
 		};
-		//@ts-ignore
+		//@ts-expect-error
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
-	function buildPlotData(data: TeamsData, team: Team) {
-		const plotData: Plotly.PlotlyDataLayoutConfig = {
+	function buildPlotData(data: TeamsData, team: Team): PlotData {
+		const plotData: PlotData = {
 			data: lines(data, team),
 			layout: defaultLayout(),
 			config: {
@@ -136,7 +135,7 @@
 		return plotData;
 	}
 
-	let plotDiv: HTMLDivElement, plotData: Plotly.PlotlyDataLayoutConfig;
+	let plotDiv: HTMLDivElement, plotData: PlotData;
 	let setup = false;
 	onMount(() => {
 		genPlot();
@@ -145,7 +144,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		// @ts-ignore
+		// @ts-expect-error
 		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
 			// Once plot generated, add resizable attribute to it to shorten height for mobile view
 			plot.children[0].children[0].classList.add('resizable-graph');
@@ -162,7 +161,6 @@
 			plotData.data[i] = newPlotData.data[i];
 		}
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();

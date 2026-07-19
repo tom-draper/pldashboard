@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { PlotData, PlotTrace, PlotLayout } from '$lib/types';
 	import { onMount } from 'svelte';
 	import type { TeamsData } from '../dashboard.types';
 	import { getTeams } from '$lib/team';
@@ -50,10 +51,10 @@
 		return [scored, conceded];
 	}
 
-	function avgLine(playedDates: Date[], avgGoals: Counter, matchdays: string[]) {
+	function avgLine(playedDates: Date[], avgGoals: Counter, matchdays: string[]): PlotTrace {
 		return {
 			name: 'Avg',
-			type: 'line',
+			type: 'scatter',
 			x: playedDates,
 			y: Object.values(avgGoals),
 			text: matchdays,
@@ -62,7 +63,7 @@
 		};
 	}
 
-	function teamScoredBar(playedDates: Date[], teamScored: Counter, matchdays: string[]) {
+	function teamScoredBar(playedDates: Date[], teamScored: Counter, matchdays: string[]): PlotTrace {
 		return {
 			name: 'Scored',
 			type: 'bar',
@@ -74,7 +75,7 @@
 		};
 	}
 
-	function teamConcededBar(playedDates: Date[], teamConceded: Counter, matchdays: string[]) {
+	function teamConcededBar(playedDates: Date[], teamConceded: Counter, matchdays: string[]): PlotTrace {
 		return {
 			name: 'Conceded',
 			type: 'bar',
@@ -86,9 +87,9 @@
 		};
 	}
 
-	function defaultLayout() {
+	function defaultLayout(): PlotLayout {
 		return {
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 15, b: 15, pad: 5 },
 			barmode: 'stack',
@@ -132,7 +133,6 @@
 			'yaxis.visible': true,
 			'margin.l': 60
 		};
-		//@ts-ignore
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -146,7 +146,7 @@
 			'yaxis.visible': false,
 			'margin.l': 20
 		};
-		//@ts-ignore
+		//@ts-expect-error
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -180,7 +180,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
+		//@ts-expect-error
 		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
 			// Once plot generated, add resizable attribute to it to shorten height for mobile view
 			plot.children[0].children[0].classList.add('resizable-graph');
@@ -204,7 +204,6 @@
 		plotData.data[1] = concededBar;
 		plotData.data[2] = line;
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();

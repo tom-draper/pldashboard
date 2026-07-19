@@ -153,6 +153,7 @@
 		font-size: 1.05em;
 		background: -webkit-linear-gradient(rgb(188, 12, 241), rgb(212, 4, 4));
 		-webkit-background-clip: text;
+		background-clip: text;
 		-webkit-text-fill-color: transparent;
 	}
 

@@ -85,7 +85,7 @@
 	function buildTable(data: FantasyData) {
 		const tableRows = getTableRows(data);
 
-		// @ts-ignore
+		// @ts-expect-error
 		table = new DataTable('#myTable', {
 			responsive: true,
 			data: tableRows,

@@ -2,7 +2,7 @@ from datetime import datetime
 from types import NoneType
 
 import pytest
-from src.updater.data import Data
+from updater.data import Data
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
@@ -37,5 +37,13 @@ def test_teams_dfs_index_identical(data: Data):
 
 
 def test_teams_last_updated():
+    # Data built from backups has no fetch timestamp...
     assert isinstance(pytest.data_objects[0].teams.last_updated, NoneType)
+
+
+@pytest.mark.skipif(
+    not pytest.live_data, reason="requires UPDATER_TEST_LIVE_DATA=1"
+)
+def test_teams_last_updated_live():
+    # ...whereas data fetched from the API records when it was fetched.
     assert isinstance(pytest.data_objects[1].teams.last_updated, datetime)

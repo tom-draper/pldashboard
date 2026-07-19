@@ -4,9 +4,9 @@
 	import GoalsConcededFreq from './GoalsConcededFreqGraph.svelte';
 	import type { TeamsData } from '../dashboard.types';
 	import { getTeams } from '$lib/team';
-	import type { Counter, Team } from '$lib/types';
+	import type { Counter, Team, PlotTrace, PlotLayout } from '$lib/types';
 
-	function avgBars() {
+	function avgBars(): PlotTrace {
 		return {
 			x: Object.keys(goalFreq),
 			y: Object.values(goalFreq),
@@ -19,7 +19,7 @@
 		};
 	}
 
-	function teamBars(data: Counter, type: string, color: string | string[]) {
+	function teamBars(data: Counter, type: string, color: string | string[]): PlotTrace {
 		const opener = type === 'Scored' ? 'Score' : 'Concede';
 		return {
 			x: Object.keys(data),
@@ -34,7 +34,7 @@
 		};
 	}
 
-	function bars(data: Counter, name: string, color: string | string[]) {
+	function bars(data: Counter, name: string, color: string | string[]): PlotTrace[] {
 		return [avgBars(), teamBars(data, name, color)];
 	}
 
@@ -63,20 +63,20 @@
 		return arr.slice().reverse();
 	}
 
-	function getScoredBars() {
+	function getScoredBars(): PlotTrace[] {
 		// return bars(teamScoredFreq, "Goals scored", "#77DD77");
 		return bars(teamScoredFreq, 'Scored', scoredColorScale);
 	}
 
-	function getConcededBars() {
+	function getConcededBars(): PlotTrace[] {
 		return bars(teamConcededFreq, 'Conceded', concededColorScale);
 	}
 
-	function getScoredTeamBars() {
+	function getScoredTeamBars(): PlotTrace {
 		return teamBars(teamScoredFreq, 'Scored', scoredColorScale);
 	}
 
-	function getConcededTeamBars() {
+	function getConcededTeamBars(): PlotTrace {
 		return teamBars(teamConcededFreq, 'Conceded', concededColorScale);
 	}
 
@@ -84,7 +84,7 @@
 		return Object.keys(goalFreq);
 	}
 
-	function getYAxisLayout() {
+	function getYAxisLayout(): PlotLayout['yaxis'] {
 		return {
 			title: { text: 'Probability' },
 			gridcolor: 'gray',

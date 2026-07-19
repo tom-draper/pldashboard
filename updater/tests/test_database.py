@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import pytest
-from src.updater.database import Database
+from updater.database import Database
 
 
 @pytest.fixture
