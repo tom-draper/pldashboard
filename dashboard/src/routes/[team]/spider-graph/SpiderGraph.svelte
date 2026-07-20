@@ -309,7 +309,7 @@
 		cursor: pointer;
 		color: #333333;
 		border: none;
-		font-size: 13px;
+		font-size: 14px;
 		padding: 4px 10px;
 		background: var(--purple);
 		color: var(--pink);

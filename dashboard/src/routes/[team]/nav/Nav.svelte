@@ -104,13 +104,14 @@
 	.team-name,
 	.this-team-name {
 		padding: 0.4em 1.4em;
+		line-height: normal;
 	}
 	.donate {
 		color: rgba(255, 255, 255, 1);
 		position: absolute;
-		bottom: 3.5em;
+		bottom: 3.75em;
 		font-size: 13px;
-		margin: 0.4em 1.4em;
+		margin: 0.4em 1.4em 0;
 		cursor: pointer;
 	}
 	.fantasy {
@@ -118,7 +119,7 @@
 		position: absolute;
 		bottom: 1em;
 		font-size: 13px;
-		margin: 0.4em 1.4em;
+		margin: 0.4em 1.4em 3px;
 		cursor: pointer;
 	}
 	.donate a,
@@ -186,12 +187,13 @@
 	.close-btn {
 		position: absolute;
 		right: 0.9em;
-		bottom: 0.6em;
+		bottom: 0.9em;
 		background: transparent;
 		border: none;
 		outline: none;
 		padding-top: 0.3em;
 		cursor: pointer;
+		margin-bottom: 1px;
 	}
 
 	.placeholder {

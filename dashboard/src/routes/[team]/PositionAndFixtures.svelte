@@ -73,7 +73,29 @@
 	}
 
 	.small-bottom-margin {
-		margin-bottom: 1.5rem !important;
+		margin-bottom: 1.2em !important;
+	}
+
+	.mini-graph {
+		height: 450px;
+	}
+
+	@media only screen and (max-width: 1100px) {
+		.mini-graph {
+			height: 400px;
+		}
+	}
+
+	@media only screen and (max-width: 700px) {
+		.mini-graph {
+			height: 300px;
+		}
+	}
+
+	@media only screen and (max-width: 550px) {
+		.mini-graph {
+			height: 250px;
+		}
 	}
 
 	.row {

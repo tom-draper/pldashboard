@@ -192,7 +192,7 @@
 	.next-game-prediction-complete,
 	.next-game-prediction {
 		border-radius: var(--border-radius);
-		min-height: 97.5%;
+		min-height: 100%;
 		border: 6px solid var(--purple);
 	}
 	.next-game-prediction-complete {
