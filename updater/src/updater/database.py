@@ -31,17 +31,6 @@ class Database:
             self._client = pymongo.MongoClient(self.connection_string)
         return self._client
 
-    def close(self):
-        if self._client is not None:
-            self._client.close()
-            self._client = None
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.close()
-
     @property
     def predictions_collection(self):
         """The collection holding score predictions.
@@ -89,7 +78,7 @@ class Database:
 
     @staticmethod
     def _get_actual_score(
-        prediction_id: str, actual_scores: dict[tuple[str, str], dict[str, int]]
+        prediction_id: str, actual_scores: dict[str, dict[str, int]]
     ):
         actual_score: Optional[str] = None
         if prediction_id in actual_scores:
@@ -99,7 +88,7 @@ class Database:
     def _build_prediction_objs(
         self,
         predictions: dict[str, dict[str, float]],
-        actual_scores: dict[tuple[str, str], dict[str, int]],
+        actual_scores: dict[str, dict[str, int]],
     ):
         """Combine predictions and actual_scores and add an _id field to create
         a dictionary matching the MongoDB schema.
@@ -154,7 +143,7 @@ class Database:
     def update_predictions(
         self,
         predictions: dict[str, dict[str, float]],
-        actual_scores: dict[tuple[str, str], dict[str, int]],
+        actual_scores: dict[str, dict[str, int]],
     ):
         """
         Update the MongoDB database with predictions in the preds dict, including
@@ -185,7 +174,7 @@ class Database:
         self._save_predictions(preds)
 
     def update_actual_scores(
-        self, actual_scores: dict[tuple[str, str], dict[str, int]]
+        self, actual_scores: dict[str, dict[str, int]]
     ):
         collection = self.predictions_collection
 

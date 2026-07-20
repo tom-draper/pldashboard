@@ -49,8 +49,9 @@ class Fixtures(DF):
         return avg_scored, avg_conceded
 
     def get_actual_scores(self):
-        # To contain a tuple for all actual scores so far this season
-        actual_scores: dict[tuple[str, str], dict[str, int]] = {}
+        # Maps a match id "HOME vs AWAY" to that match's final score so far
+        # this season.
+        actual_scores: dict[str, dict[str, int]] = {}
 
         for matchday_no in range(1, 39):
             matchday = self.df[matchday_no]

@@ -151,3 +151,43 @@ def test_form_df_matchday_range(data: Data):
     matchdays = get_matchdays(data)
     for matchday in matchdays:
         assert pytest.valid_matchday(matchday)
+
+
+def count_finished_matches(data: Data):
+    # Each finished match appears as two team-rows (home and away).
+    df = data.teams.fixtures.df
+    finished_rows = sum(
+        (df[matchday, "status"] == "FINISHED").sum()
+        for matchday in get_matchdays(data)
+    )
+    return finished_rows // 2
+
+
+@pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
+def test_get_actual_scores_key_format(data: Data):
+    # Every key is a "HOME vs AWAY" pair of valid team initials.
+    actual_scores = data.teams.fixtures.get_actual_scores()
+    for match_id in actual_scores:
+        home, middle, away, *rest = match_id.split(" ")
+        assert middle == "vs"
+        assert not rest
+        assert home.isalnum() and away.isalnum()
+        assert home != away
+
+
+@pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
+def test_get_actual_scores_value_format(data: Data):
+    # Every value is a fully-populated integer scoreline.
+    actual_scores = data.teams.fixtures.get_actual_scores()
+    for score in actual_scores.values():
+        assert isinstance(score, dict)
+        assert isinstance(score["homeGoals"], int)
+        assert isinstance(score["awayGoals"], int)
+
+
+@pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
+def test_get_actual_scores_counts_finished_matches(data: Data):
+    # One entry per finished match: the two team-rows of a match collapse to a
+    # single "HOME vs AWAY" key, so unplayed fixtures never appear.
+    actual_scores = data.teams.fixtures.get_actual_scores()
+    assert len(actual_scores) == count_finished_matches(data)
