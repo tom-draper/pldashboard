@@ -147,6 +147,7 @@
 		place-items: center;
 		background: #f0f0f0;
 		background: linear-gradient(45deg, #c600d839, rgb(2 239 255 / 25%), #00fe873e);
+		background: var(--purple);
 		flex: 1;
 	}
 	.next-game-title-text {

@@ -77,9 +77,9 @@
 			if (h > a) {
 				return '#00fe87';
 			} else if (h < a) {
-				return '#f83027';
+				return '#ff0000';
 			} else {
-				return '#ffdd00';
+				return '#ffd700';
 			}
 		});
 	}

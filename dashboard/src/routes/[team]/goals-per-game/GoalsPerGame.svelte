@@ -39,7 +39,13 @@
 	}
 
 	// Basic color scale shared between the two bar chars
-	const colorScale = ['#00fe87', '#aef23e', '#ffdd00', '#ff9000', '#f83027'];
+	const colorScale = [
+		'#00fe87',
+		'#9eff33',
+		'#ffd700',
+		'#ff8a00',
+		'#ff0000'
+	]
 
 	// Concatenate unique extreme colors, for extreme values that only a few teams achieve
 	// Concatenate bright greens
@@ -52,11 +58,11 @@
 	]);
 	// Concatenate bright reds
 	const concededColorScale = colorScale.concat([
-		'#f83027',
-		'#f83027',
-		'#f83027',
-		'#f83027',
-		'#f83027'
+		'#ff0000',
+		'#ff0000',
+		'#ff0000',
+		'#ff0000',
+		'#ff0000'
 	]);
 
 	function reversed(arr: any[]) {
