@@ -65,146 +65,79 @@
 	$: team && buildTableSnippet();
 
 	export let data: TeamsData, teamID: string, team: Team, switchTeam: (newTeam: Team) => void;
+
+	const rowClass = 'flex rounded-[var(--border-radius)] px-[5%] py-[5px]';
+	const thisTeamRowClass = 'flex rounded-[var(--border-radius)] px-[5%] py-[14px] text-[1.1em]';
+	const dividerClass = 'm-auto w-[90%] self-center border-b border-b-[grey]';
 </script>
 
-<div class="table-snippet">
+<div
+	class="relative mt-[20px] flex h-auto w-full flex-col max-[1100px]:mt-0 max-[550px]:text-[14px]"
+>
 	{#if tableSnippet != undefined}
-		<div class="divider"></div>
-		<div class="table-row">
-			<div class="table-element table-position column-title"></div>
-			<div class="table-element table-team-name column-title">Team</div>
-			<div class="table-element table-gd column-title">GD</div>
-			<div class="table-element table-points column-title">Points</div>
+		<div></div>
+		<div class={rowClass}>
+			<div class="w-[7%] font-bold"></div>
+			<div class="ml-[8px] w-[63%] text-left font-bold text-[#333333]">Team</div>
+			<div class="w-[15%] font-bold">GD</div>
+			<div class="w-[15%] font-bold">Points</div>
 		</div>
 
 		{#each tableSnippet.rows as row, i}
 			<!-- Divider -->
 			{#if i === 0}
 				{#if i != tableSnippet.teamTableIdx}
-					<div id="divider"></div>
+					<div class={dividerClass}></div>
 				{/if}
 			{:else if i - 1 != tableSnippet.teamTableIdx && i != tableSnippet.teamTableIdx}
-				<div id="divider"></div>
+				<div class={dividerClass}></div>
 			{/if}
 			<!-- Row of table -->
 			{#if i === tableSnippet.teamTableIdx}
 				<!-- Highlighted row for the team of the current page -->
-				<div class="table-row this-team" style="background-color: var(--{teamID});">
-					<div
-						class="table-element table-position this-team"
-						style="color: var(--{teamID}-secondary);"
-					>
+				<div class={thisTeamRowClass} style="background-color: var(--{teamID});">
+					<div class="w-[7%] text-[1.1em]" style="color: var(--{teamID}-secondary);">
 						{row.position}
 					</div>
 					<a
 						href="/{teamID}"
-						class="table-element table-team-name this-team"
+						class="ml-[8px] w-[63%] text-left text-[1.1em]"
 						style="color: var(--{teamID}-secondary);"
 					>
 						{toAlias(row.name)}
 					</a>
-					<div class="table-element table-gd this-team" style="color: var(--{teamID}-secondary);">
+					<div class="w-[15%] text-[1.1em]" style="color: var(--{teamID}-secondary);">
 						{row.gd}
 					</div>
-					<div
-						class="table-element table-points this-team"
-						style="color: var(--{teamID}-secondary);"
-					>
+					<div class="w-[15%] text-[1.1em]" style="color: var(--{teamID}-secondary);">
 						{row.points}
 					</div>
 				</div>
 			{:else}
 				<!-- Plain row -->
-				<div class="table-row">
-					<div class="table-element table-position">
+				<div class={rowClass}>
+					<div class="w-[7%]">
 						{row.position}
 					</div>
 					<button
 						on:click={() => {
 							switchTeam(row.name);
 						}}
-						class="table-element table-team-name"
+						class="ml-[8px] w-[63%] cursor-pointer border-none bg-transparent p-0 text-left text-[#333333] [font:inherit] [outline:inherit]"
 					>
 						{toAlias(row.name)}
 					</button>
-					<div class="table-element table-gd">
+					<div class="w-[15%]">
 						{row.gd}
 					</div>
-					<div class="table-element table-points">
+					<div class="w-[15%]">
 						{row.points}
 					</div>
 				</div>
 			{/if}
 		{/each}
 		{#if tableSnippet.teamTableIdx != 6}
-			<div id="divider"></div>
+			<div class={dividerClass}></div>
 		{/if}
 	{/if}
 </div>
-
-<style scoped>
-	.table-snippet {
-		position: relative;
-		margin-top: 20px;
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		height: auto;
-	}
-	.table-row {
-		display: flex;
-		padding: 5px 5%;
-		border-radius: var(--border-radius);
-	}
-	.table-row.this-team {
-		padding: 14px 5%;
-		font-size: 20px;
-	}
-	.this-team {
-		font-size: 1.1em !important;
-	}
-	#divider {
-		align-self: center;
-		border-bottom: 1px solid grey;
-		width: 90%;
-		margin: auto;
-	}
-	.column-title {
-		font-weight: 700;
-	}
-	.table-position {
-		width: 7%;
-	}
-	button {
-		background: none;
-		color: inherit;
-		border: none;
-		padding: 0;
-		font: inherit;
-		cursor: pointer;
-		outline: inherit;
-	}
-	.table-team-name {
-		width: 63%;
-		text-align: left;
-		margin-left: 8px;
-		color: #333333;
-	}
-	.table-gd {
-		width: 15%;
-	}
-	.table-points {
-		width: 15%;
-	}
-
-	@media only screen and (max-width: 1100px) {
-		.table-snippet {
-			margin-top: 0;
-		}
-	}
-	@media only screen and (max-width: 550px) {
-		.table-snippet {
-			font-size: 14px;
-		}
-	}
-</style>
