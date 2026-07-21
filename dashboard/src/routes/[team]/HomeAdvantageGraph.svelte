@@ -58,14 +58,21 @@
 	}
 
 	/**
-	 * Colour for the headline figure, normalised between the weakest and
-	 * strongest home advantage in the league so it reads as a relative ranking.
+	 * Colour for the headline figure. Yellow is anchored at a level 0% gap, and
+	 * each side is scaled by the league's strongest advantage in that direction,
+	 * so the best home team reads full green and the worst full red while the
+	 * sign of the gap always lands on the correct half of the scale.
 	 */
 	function computeFigureColor(data: TeamsData, delta: number): string {
 		const rows = splits(data); // sorted ascending, so ends are min and max
-		const min = rows[0].delta;
-		const max = rows[rows.length - 1].delta;
-		const t = max > min ? (delta - min) / (max - min) : 0.5;
+		const minAdvantage = rows[0].delta;
+		const maxAdvantage = rows[rows.length - 1].delta;
+		let t: number;
+		if (delta >= 0) {
+			t = maxAdvantage > 0 ? 0.5 + 0.5 * (delta / maxAdvantage) : 0.5;
+		} else {
+			t = minAdvantage < 0 ? 0.5 - 0.5 * (delta / minAdvantage) : 0.5;
+		}
 		return scaleColor(t);
 	}
 
