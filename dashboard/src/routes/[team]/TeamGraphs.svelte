@@ -45,7 +45,7 @@
 <Row>
 	<div class="w-full max-[1000px]:w-auto">
 		<h1 class="mb-[-9px] max-[550px]:mx-[30px] max-[550px]:mt-[20px] max-[550px]:mb-0">
-			Home advantage
+			Home Advantage
 		</h1>
 		<div class="m-0">
 			<HomeAdvantageGraph data={data.data} team={data.team.name} {mobileView} />
