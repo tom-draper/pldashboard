@@ -62,16 +62,16 @@
 	}
 
 	/**
-	 * Colour for the home win rate quoted in the caption, ranked between the
-	 * lowest and highest home win rate in the league. Unlike the headline gap
-	 * this has no natural zero, so it is a straight min → max relative scale
-	 * (the weakest home record reads red, the strongest green).
+	 * Colour ranking a win rate against the league on a straight min → max
+	 * relative scale (weakest reads red, strongest green). Used for the home and
+	 * away rates in the caption, which — unlike the headline gap — have no natural
+	 * zero to anchor.
 	 */
-	function computeHomeRateColor(data: TeamsData, homeRatio: number): string {
-		const rates = splits(data).map((r) => r.homeRatio);
+	function rankColor(data: TeamsData, rate: number, accessor: (s: Split) => number): string {
+		const rates = splits(data).map(accessor);
 		const min = Math.min(...rates);
 		const max = Math.max(...rates);
-		const t = max > min ? (homeRatio - min) / (max - min) : 0.5;
+		const t = max > min ? (rate - min) / (max - min) : 0.5;
 		return scaleColor(t);
 	}
 
@@ -334,7 +334,8 @@
 
 	$: split = homeAwaySplit(data, team, data._id);
 	$: figureColor = computeFigureColor(data, split.delta);
-	$: homeRateColor = computeHomeRateColor(data, split.homeRatio);
+	$: homeRateColor = rankColor(data, split.homeRatio, (s) => s.homeRatio);
+	$: awayRateColor = rankColor(data, split.awayRatio, (s) => s.awayRatio);
 
 	export let data: TeamsData, team: Team, mobileView: boolean;
 </script>
@@ -352,13 +353,14 @@
 				<b style="color: {homeRateColor}">{Math.round(split.homeRatio * 100)}%</b>
 				of their
 				{split.homePlayed} home games, against
-				<b>{Math.round(split.awayRatio * 100)}%</b> of their {split.awayPlayed} away.
+				<b style="color: {awayRateColor}">{Math.round(split.awayRatio * 100)}%</b> of their {split.awayPlayed}
+				away.
 			{:else}
 				{toAlias(team)} win
 				<b style="color: {homeRateColor}">{Math.round(split.homeRatio * 100)}%</b>
 				of their
 				{split.homePlayed} home games — fewer than the
-				<b>{Math.round(split.awayRatio * 100)}%</b> they win away.
+				<b style="color: {awayRateColor}">{Math.round(split.awayRatio * 100)}%</b> they win away.
 			{/if}
 		</div>
 	</div>
