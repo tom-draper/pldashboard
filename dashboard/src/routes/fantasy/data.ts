@@ -1,4 +1,4 @@
-import type { FantasyData, Page } from "./fantasy.types";
+import type { FantasyData, Page } from './fantasy.types';
 
 export function filterDataByPage(data: FantasyData, page: Page) {
 	const pageData: FantasyData = {};
@@ -19,8 +19,8 @@ export function filterDataByPage(data: FantasyData, page: Page) {
 
 export function getTitle(page: Page) {
 	if (page === 'all') {
-		return 'Fantasy';
-	} else {
-		return `Fantasy | ${page[0].toUpperCase() + page.slice(1)}`;
+		return 'Fantasy Premier League Stats & Optimal Team | pldashboard';
 	}
+	const position = page[0].toUpperCase() + page.slice(1);
+	return `${position} — Fantasy Premier League Stats | pldashboard`;
 }

@@ -10,6 +10,7 @@
 	import { slugAlias, toTitleCase } from '$lib/format';
 	import TeamsContent from './TeamsContent.svelte';
 	import OverviewContent from './OverviewContent.svelte';
+	import Seo from '$components/Seo.svelte';
 	import type { Team } from '$lib/types';
 	import { setThemeColor } from '$lib/theme';
 
@@ -75,9 +76,20 @@
 	export let data: DashboardData;
 </script>
 
-<svelte:head>
-	<title>{data.title}</title>
-</svelte:head>
+{#if data.slug === 'overview'}
+	<Seo
+		title="Premier League Overview — Standings, Fixtures & Ratings | pldashboard"
+		description="Premier League standings, upcoming fixtures and team ratings at a glance, updated through the season."
+		path="/overview"
+	/>
+{:else}
+	<Seo
+		title={data.title}
+		description="{data.team
+			.name} Premier League statistics: current form, league position, goals scored and conceded, upcoming fixtures and match predictions."
+		path="/{data.team.id}"
+	/>
+{/if}
 
 <div id="team" class="flex overflow-x-hidden text-[15px]">
 	<Nav team={data.team.name} teams={data.teams} {switchTeam} />

@@ -8,6 +8,7 @@
 	import { replaceState } from '$app/navigation';
 	import { filterDataByPage, getTitle } from './data';
 	import OptimalTeam from './OptimalTeam.svelte';
+	import Seo from '$components/Seo.svelte';
 	import { onMount } from 'svelte';
 
 	function toggleMobileNav() {
@@ -56,10 +57,10 @@
 	export let data: FantasyDashboardData;
 </script>
 
-<svelte:head>
-	<title>{data.title}</title>
-	<meta name="description" content="Fantasy Premier League Statistics Dashboard" />
-</svelte:head>
+<Seo
+	title={data.title}
+	description="Fantasy Premier League stats: the optimal team, points vs price, and player form and value to guide your FPL picks."
+/>
 
 <svelte:window bind:innerWidth={pageWidth} />
 

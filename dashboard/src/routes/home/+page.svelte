@@ -1,11 +1,12 @@
 <script lang="ts">
 	import logo from '$lib/images/pldashboard5.png';
+	import Seo from '$components/Seo.svelte';
 </script>
 
-<svelte:head>
-	<title>Premier League Dashboard</title>
-	<meta name="description" content="Premier League Statistics Dashboard" />
-</svelte:head>
+<Seo
+	title="Premier League Dashboard — Team Stats, Form & Predictions"
+	description="Explore interactive Premier League team dashboards: current form, league position, goals, fixtures, standings and AI match predictions for every club."
+/>
 
 <div id="home" class="grid min-h-screen place-items-center bg-black">
 	<div class="mb-[100px] grid place-items-center">
