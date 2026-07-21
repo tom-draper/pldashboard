@@ -59,46 +59,26 @@
 
 	function positionRangeShapes(): PlotShape[] {
 		const matchdays = getMatchdays(data, team);
+
+		// A background band spanning the given league positions. y is inverted
+		// (1 at the top), so a slot n sits between n-0.5 and n+0.5.
+		const band = (topSlot: number, bottomSlot: number, fillcolor: string): PlotShape => ({
+			type: 'rect',
+			x0: matchdays[0],
+			x1: matchdays[matchdays.length - 1],
+			y0: topSlot - 0.5,
+			y1: bottomSlot + 0.5,
+			line: { width: 0 },
+			fillcolor,
+			opacity: 0.2,
+			layer: 'below'
+		});
+
 		return [
-			{
-				type: 'rect',
-				x0: matchdays[0],
-				y0: 4.5,
-				x1: matchdays[matchdays.length - 1],
-				y1: 0.5,
-				line: {
-					width: 0
-				},
-				fillcolor: '#00fe87',
-				opacity: 0.2,
-				layer: 'below'
-			},
-			{
-				type: 'rect',
-				x0: matchdays[0],
-				y0: 6.5,
-				x1: matchdays[matchdays.length - 1],
-				y1: 4.5,
-				line: {
-					width: 0
-				},
-				fillcolor: '#02efff',
-				opacity: 0.2,
-				layer: 'below'
-			},
-			{
-				type: 'rect',
-				x0: matchdays[0],
-				y0: 20.5,
-				x1: matchdays[matchdays.length - 1],
-				y1: 17.5,
-				line: {
-					width: 0
-				},
-				fillcolor: '#f83027',
-				opacity: 0.2,
-				layer: 'below'
-			}
+			band(1, 5, '#00fe87'), // Champions League: 1–5 (green, --win)
+			band(6, 7, '#02efff'), // Europa League: 6–7 (cyan)
+			band(8, 8, '#c600d8'), // Conference League: 8 (pink, --pink)
+			band(18, 20, '#f83027') // Relegation: 18–20 (red, --lose)
 		];
 	}
 
