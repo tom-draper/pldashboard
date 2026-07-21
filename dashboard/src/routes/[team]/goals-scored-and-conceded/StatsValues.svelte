@@ -1,3 +1,13 @@
+<script context="module" lang="ts">
+	const statClass =
+		'flex-1 max-[800px]:mx-0 max-[800px]:mt-[0.5em] max-[800px]:mb-[0.9em] max-[550px]:mt-[0.25em] max-[550px]:mb-[0.45em]';
+	const valueClass =
+		'relative mx-auto flex w-fit select-none text-[3.2em] font-bold leading-[0.6em] max-[1400px]:text-[2.5em] max-[800px]:text-[2.5em] max-[550px]:text-[1.4em] max-[550px]:tracking-[0.01em]';
+	const positionClass = 'ml-[0.2em] text-[0.3em] leading-[0] max-[550px]:text-[0.5em]';
+	const textClass =
+		'max-[1400px]:text-[0.9em] max-[800px]:text-[0.9em] max-[550px]:text-[0.7em] max-[550px]:tracking-[-0.04em]';
+</script>
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { ordinal } from '$lib/format';
@@ -76,7 +86,7 @@
 	}
 
 	function buildStats(data: TeamsData) {
-		const stats: {[team in Team]?: Stats[Team]} = {}
+		const stats: { [team in Team]?: Stats[Team] } = {};
 
 		const calculateAverage = (value: number, played: number): number => {
 			return played === 0 ? 0 : value / played;
@@ -97,12 +107,12 @@
 			if (played === 0) {
 				if (!(team in stats)) {
 					stats[team] = {
-						played: 0, 
-						xG: 0, 
-						xC: 0, 
-						cleanSheetRatio: 0, 
+						played: 0,
+						xG: 0,
+						xC: 0,
+						cleanSheetRatio: 0,
 						noGoalRatio: 0
-					}
+					};
 				}
 				continue;
 			}
@@ -168,53 +178,55 @@
 </script>
 
 {#if stats != undefined}
-	<div class="season-stats">
-		<div class="season-stat goals-per-game">
-			<div class="season-stat-value">
-				<div class="season-stat-position hidden">
+	<div class="flex w-full text-[2.2em] tracking-[-0.06em] max-[800px]:flex-col">
+		<div class={statClass}>
+			<div class={valueClass}>
+				<div class="{positionClass} text-transparent">
 					{rank.xG}
 				</div>
-				<div class="season-stat-number">
+				<div>
 					{stats[team].xG.toFixed(2)}
 				</div>
-				<div class="season-stat-position ssp-{rank.xG}">
+				<div class="{positionClass} ssp-{rank.xG}">
 					{rank.xG}
 				</div>
 			</div>
-			<div class="season-stat-text">goals per game</div>
+			<div class={textClass}>goals per game</div>
 		</div>
-		<div class="season-stat conceded-per-game">
-			<div class="season-stat-value">
-				<div class="season-stat-position hidden">
+		<div class={statClass}>
+			<div class={valueClass}>
+				<div class="{positionClass} text-transparent">
 					{rank.xC}
 				</div>
-				<div class="season-stat-number">
+				<div>
 					{stats[team].xC.toFixed(2)}
 				</div>
-				<div class="season-stat-position ssp-{rank.xC}">
+				<div class="{positionClass} ssp-{rank.xC}">
 					{rank.xC}
 				</div>
 			</div>
-			<div class="season-stat-text">conceded per game</div>
+			<div class={textClass}>conceded per game</div>
 		</div>
-		<div class="season-stat clean-sheet-ratio">
-			<div class="season-stat-value">
-				<div class="season-stat-position hidden">
+		<div class={statClass}>
+			<div class={valueClass}>
+				<div class="{positionClass} text-transparent">
 					{rank.cleanSheetRatio}
 				</div>
-				<div class="season-stat-number">
+				<div>
 					{stats[team].cleanSheetRatio.toFixed(2)}
 				</div>
-				<div class="season-stat-position ssp-{rank.cleanSheetRatio}">
+				<div class="{positionClass} ssp-{rank.cleanSheetRatio}">
 					{rank.cleanSheetRatio}
 				</div>
 			</div>
-			<div class="season-stat-text">clean sheets</div>
+			<div class={textClass}>clean sheets</div>
 		</div>
 	</div>
 {/if}
 
 <style scoped>
+	/* Data-driven rank colour scale: class is chosen at runtime via ssp-{rank},
+	   so it stays as CSS rather than becoming per-element utilities. */
 	.ssp-1st {
 		color: var(--green);
 	}
@@ -274,89 +286,5 @@
 	}
 	.ssp-20th {
 		color: #f83027;
-	}
-	.season-stats {
-		display: flex;
-		font-size: 2.2em;
-		width: 100%;
-		letter-spacing: -0.06em;
-	}
-
-	.season-stat-value {
-		font-size: 3.2em;
-		line-height: 0.6em;
-		font-weight: 700;
-		width: fit-content;
-		margin: 0 auto;
-		position: relative;
-		user-select: none;
-		display: flex;
-	}
-
-	.season-stat-position {
-		font-size: 0.3em;
-		line-height: 0;
-		margin-left: 0.2em;
-	}
-	.hidden {
-		color: transparent;
-	}
-
-	.season-stat {
-		flex: 1;
-	}
-
-	@media only screen and (max-width: 1400px) {
-		.season-stat-value {
-			font-size: 2.5em;
-		}
-
-		.season-stats-row {
-			margin: 70px 0 10px;
-		}
-
-		.season-stat-text {
-			font-size: 0.9em;
-		}
-	}
-
-	@media only screen and (max-width: 800px) {
-		.season-stats {
-			flex-direction: column;
-		}
-
-		.season-stat-text {
-			font-size: 0.9em;
-		}
-		.season-stat {
-			margin: 0.5em 0 0.9em 0;
-		}
-
-		.season-stat-value {
-			font-size: 2.5em;
-		}
-
-		.season-stat-text {
-			font-size: 0.9em;
-		}
-	}
-
-	@media only screen and (max-width: 550px) {
-		.season-stat-value {
-			font-size: 1.4em;
-			letter-spacing: 0.01em;
-		}
-
-		.season-stat {
-			margin: 0.25em 0 0.45em 0;
-		}
-		.season-stat-position {
-			font-size: 0.5em;
-			top: -0.5em;
-		}
-		.season-stat-text {
-			letter-spacing: -0.04em;
-			font-size: 0.7em;
-		}
 	}
 </style>

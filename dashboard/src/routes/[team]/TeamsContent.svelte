@@ -16,7 +16,7 @@
 
 <svelte:window bind:innerWidth={pageWidth} />
 
-<div class="page-content">
+<div class="relative flex flex-col text-center max-[550px]:overflow-x-hidden">
 	<PositionAndFixtures {data} />
 	<FormAndNextGame {data} {switchTeam} />
 	<TeamGraphs {data} {mobileView} />
@@ -24,12 +24,3 @@
 	<Scorelines {data} {mobileView} />
 	<TeamComparison {data} />
 </div>
-
-<style scoped>
-	.page-content {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		text-align: center;
-	}
-</style>
