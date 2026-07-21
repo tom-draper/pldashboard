@@ -114,26 +114,27 @@
 					</div>
 				</div>
 			{:else}
-				<!-- Plain row -->
-				<div class={rowClass}>
-					<div class="w-[7%]">
+				<!-- Plain row: the whole row is the switch-team control so it reads as clickable. -->
+				<button
+					type="button"
+					on:click={() => {
+						switchTeam(row.name);
+					}}
+					class="{rowClass} w-full cursor-pointer border-none bg-transparent text-left text-inherit transition-colors [font:inherit] [outline:inherit] hover:bg-[#ececec] motion-reduce:transition-none"
+				>
+					<span class="w-[7%]">
 						{row.position}
-					</div>
-					<button
-						on:click={() => {
-							switchTeam(row.name);
-						}}
-						class="ml-[8px] w-[63%] cursor-pointer border-none bg-transparent p-0 text-left text-[#333333] [font:inherit] [outline:inherit]"
-					>
+					</span>
+					<span class="ml-[8px] w-[63%] text-[#333333]">
 						{toAlias(row.name)}
-					</button>
-					<div class="w-[15%]">
+					</span>
+					<span class="w-[15%]">
 						{row.gd}
-					</div>
-					<div class="w-[15%]">
+					</span>
+					<span class="w-[15%]">
 						{row.points}
-					</div>
-				</div>
+					</span>
+				</button>
 			{/if}
 		{/each}
 		{#if tableSnippet.teamTableIdx != 6}
