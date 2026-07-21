@@ -9,10 +9,10 @@
 	export let mobileView: boolean;
 </script>
 
-<div class="row">
-	<div class="form-graph row-graph">
-		<h1 class="lowered">Form</h1>
-		<div class="graph full-row-graph">
+<div class="relative mb-[3rem] flex h-auto max-[1000px]:mb-[40px] max-[1000px]:flex-col">
+	<div class="w-full max-[1000px]:w-auto">
+		<h1 class="mb-[-9px] max-[550px]:mx-[30px] max-[550px]:mt-[20px] max-[550px]:mb-0">Form</h1>
+		<div class="m-0">
 			<FormOverTimeGraph
 				data={data.data}
 				team={data.team.name}
@@ -23,66 +23,31 @@
 	</div>
 </div>
 
-<div class="row">
-	<div class="position-over-time-graph row-graph">
-		<h1 class="lowered">Position</h1>
-		<div class="graph full-row-graph">
+<div class="relative mb-[3rem] flex h-auto max-[1000px]:mb-[40px] max-[1000px]:flex-col">
+	<div class="w-full max-[1000px]:w-auto">
+		<h1 class="mb-[-9px] max-[550px]:mx-[30px] max-[550px]:mt-[20px] max-[550px]:mb-0">Position</h1>
+		<div class="m-0">
 			<PositionOverTimeGraph data={data.data} team={data.team.name} {mobileView} />
 		</div>
 	</div>
 </div>
 
-<div class="row">
-	<div class="position-over-time-graph row-graph">
-		<h1 class="lowered">Points</h1>
-		<div class="graph full-row-graph">
+<div class="relative mb-[3rem] flex h-auto max-[1000px]:mb-[40px] max-[1000px]:flex-col">
+	<div class="w-full max-[1000px]:w-auto">
+		<h1 class="mb-[-9px] max-[550px]:mx-[30px] max-[550px]:mt-[20px] max-[550px]:mb-0">Points</h1>
+		<div class="m-0">
 			<PointsOverTimeGraph data={data.data} team={data.team.name} {mobileView} />
 		</div>
 	</div>
 </div>
 
-<div class="row">
-	<div class="home-advantage-graph row-graph">
-		<h1 class="lowered">Home advantage</h1>
-		<div class="graph full-row-graph">
+<div class="relative mb-[3rem] flex h-auto max-[1000px]:mb-[40px] max-[1000px]:flex-col">
+	<div class="w-full max-[1000px]:w-auto">
+		<h1 class="mb-[-9px] max-[550px]:mx-[30px] max-[550px]:mt-[20px] max-[550px]:mb-0">
+			Home advantage
+		</h1>
+		<div class="m-0">
 			<HomeAdvantageGraph data={data.data} team={data.team.name} {mobileView} />
 		</div>
 	</div>
 </div>
-
-<style>
-	.lowered {
-		margin-bottom: -9px;
-	}
-	.row {
-		position: relative;
-		display: flex;
-		margin-bottom: 3rem;
-		height: auto;
-	}
-	.row-graph {
-		width: 100%;
-	}
-	.full-row-graph {
-		margin: 0;
-	}
-	@media only screen and (max-width: 1000px) {
-		.row {
-			flex-direction: column;
-			margin-bottom: 40px;
-		}
-		.row-graph {
-			width: auto;
-		}
-	}
-	@media only screen and (max-width: 800px) {
-		.row-graph {
-			margin: 0;
-		}
-	}
-	@media only screen and (max-width: 550px) {
-		.lowered {
-			margin: 20px 30px 0;
-		}
-	}
-</style>

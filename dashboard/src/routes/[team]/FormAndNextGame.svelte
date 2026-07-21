@@ -8,69 +8,14 @@
 	export let data: DashboardData, switchTeam: (newTeam: Team) => void;
 </script>
 
-<div class="row multi-element-row">
-	<div class="row-left form-details">
+<div class="relative mx-[1.4em] mt-0 mb-[3rem] flex h-auto max-[1000px]:m-0 max-[1000px]:flex-col">
+	<div
+		class="flex flex-[4] flex-col mr-[1.5em] min-[1100px]:w-[80%] min-[1100px]:items-center max-[1000px]:mr-0 max-[1000px]:w-[80%] max-[1000px]:self-center max-[550px]:w-[95%]"
+	>
 		<CurrentForm data={data.data} currentMatchday={data.currentMatchday} team={data.team.name} />
 		<TableSnippet data={data.data} teamID={data.team.id} team={data.team.name} {switchTeam} />
 	</div>
-	<div class="row-right">
+	<div class="flex-[10]">
 		<NextGame data={data.data} team={data.team.name} {switchTeam} />
 	</div>
 </div>
-
-<style>
-	.row {
-		position: relative;
-		display: flex;
-		margin-bottom: 3rem;
-		height: auto;
-	}
-
-	.row-left {
-		display: flex;
-		flex-direction: column;
-		padding-right: auto;
-		margin-right: 1.5em;
-		text-justify: center;
-		flex: 4;
-	}
-	.row-right {
-		flex: 10;
-	}
-	.multi-element-row {
-		margin: 0 1.4em 3rem;
-	}
-
-	@media only screen and (min-width: 1100px) {
-		.form-details {
-			width: 80%;
-			align-items: center;
-		}
-	}
-
-	@media only screen and (max-width: 1000px) {
-		.row {
-			flex-direction: column;
-			margin-bottom: 40px;
-		}
-
-		.multi-element-row {
-			margin: 0;
-		}
-		.row-left {
-			margin-right: 0;
-			align-self: center;
-			width: 80%;
-		}
-	}
-
-	@media only screen and (max-width: 550px) {
-		.multi-element-row {
-			margin: 0;
-		}
-
-		.form-details {
-			width: 95%;
-		}
-	}
-</style>
