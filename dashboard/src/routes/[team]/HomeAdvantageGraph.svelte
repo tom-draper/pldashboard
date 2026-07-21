@@ -5,8 +5,6 @@
 	import type { Team } from '$lib/types';
 	import type { TeamsData } from './dashboard.types';
 
-	const CONTEXT_OPACITY = 0.45;
-
 	// The split is pooled over the most recent seasons so a single quiet season
 	// doesn't swing the figure; a team promoted partway through simply
 	// contributes whichever of these seasons it has data for.
@@ -131,11 +129,10 @@
 			orientation: 'h',
 			x: rows.map((r) => r.delta),
 			y: rows.map((r) => toInitials(r.team)),
+			// Every bar is full opacity so the hues read true to the scale; the
+			// focused team is picked out by its bold, darkened y-axis label instead.
 			marker: {
-				color: rows.map((r) => deltaColor(r.delta, minAdvantage, maxAdvantage)),
-				// Emphasis is carried by opacity rather than hue, so the focused team
-				// reads on top of the red-to-green scale without a fourth colour.
-				opacity: rows.map((r) => (r.team === team ? 1 : CONTEXT_OPACITY))
+				color: rows.map((r) => deltaColor(r.delta, minAdvantage, maxAdvantage))
 			},
 			// Only the team in focus is labelled; a number on every bar is noise.
 			text: rows.map((r) => (r.team === team ? formatDelta(r.delta) : '')),
@@ -186,6 +183,22 @@
 		};
 	}
 
+	/**
+	 * Category tick labels for the y-axis. The focused team's code is bolded and
+	 * darkened so it stands out now that every bar is full opacity. The order (and
+	 * so tickvals) is stable across team switches; only the styling moves.
+	 */
+	function yAxisTicks(rows: Split[], team: Team): { tickvals: string[]; ticktext: string[] } {
+		return {
+			tickvals: rows.map((r) => toInitials(r.team)),
+			ticktext: rows.map((r) =>
+				r.team === team
+					? `<span style="color: #1c0d2d"><b>${toInitials(r.team)}</b></span>`
+					: toInitials(r.team)
+			)
+		};
+	}
+
 	/** The neutral anchor the bars diverge from. */
 	function zeroLine(teamCount: number): PlotShape {
 		return {
@@ -199,8 +212,10 @@
 		};
 	}
 
-	function defaultLayout(teamCount: number, rows: Split[]): PlotLayout {
+	function defaultLayout(team: Team, rows: Split[]): PlotLayout {
+		const teamCount = rows.length;
 		const { tickvals, ticktext } = axisTicks(rows);
+		const yTicks = yAxisTicks(rows, team);
 		return {
 			title: { text: '' },
 			autosize: true,
@@ -221,6 +236,9 @@
 				fixedrange: true
 			},
 			yaxis: {
+				tickmode: 'array',
+				tickvals: yTicks.tickvals,
+				ticktext: yTicks.ticktext,
 				showgrid: false,
 				showline: false,
 				zeroline: false,
@@ -237,7 +255,7 @@
 		const rows = splits(data);
 		return {
 			data: [bars(data, team)],
-			layout: defaultLayout(rows.length, rows),
+			layout: defaultLayout(team, rows),
 			config: {
 				responsive: true,
 				showSendToCloud: false,
@@ -276,6 +294,8 @@
 			return;
 		}
 		plotData.data[0] = bars(data, team);
+		// Move the bold/dark highlight onto the newly selected team's label.
+		relayout({ 'yaxis.ticktext': yAxisTicks(splits(data), team).ticktext });
 		Plotly.redraw(plotDiv);
 	}
 
