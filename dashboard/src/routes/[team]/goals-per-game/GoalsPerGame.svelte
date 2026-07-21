@@ -39,13 +39,7 @@
 	}
 
 	// Basic color scale shared between the two bar chars
-	const colorScale = [
-		'#00fe87',
-		'#9eff33',
-		'#ffd700',
-		'#ff8a00',
-		'#ff0000'
-	]
+	const colorScale = ['#00fe87', '#9eff33', '#ffd700', '#ff8a00', '#ff0000'];
 
 	// Concatenate unique extreme colors, for extreme values that only a few teams achieve
 	// Concatenate bright greens
@@ -147,7 +141,7 @@
 
 	function avgGoalFrequencies(data: TeamsData) {
 		const goalFreq: Counter = {};
-		const teams = getTeams(data)
+		const teams = getTeams(data);
 		for (const team of teams) {
 			countScored(data, goalFreq, data._id, team);
 			countScored(data, goalFreq, data._id - 1, team);
@@ -283,9 +277,9 @@
 	export let data: TeamsData, team: Team, mobileView: boolean;
 </script>
 
-<div class="two-graphs">
+<div class="mx-[8%] flex max-[1000px]:mx-0">
 	{#if setup}
-		<div class="graph freq-graph mini-graph">
+		<div class="w-1/2">
 			<GoalsScoredFreq
 				{team}
 				{getScoredBars}
@@ -295,7 +289,7 @@
 				{mobileView}
 			/>
 		</div>
-		<div class="graph freq-graph mini-graph">
+		<div class="w-1/2">
 			<GoalsConcededFreq
 				{team}
 				{getConcededBars}
@@ -307,20 +301,3 @@
 		</div>
 	{/if}
 </div>
-
-<style scoped>
-	.two-graphs {
-		display: flex;
-		margin: 0 8%;
-	}
-	.freq-graph {
-		width: 50%;
-	}
-
-	@media only screen and (max-width: 1000px) {
-		.two-graphs {
-			display: flex;
-			margin: 0;
-		}
-	}
-</style>

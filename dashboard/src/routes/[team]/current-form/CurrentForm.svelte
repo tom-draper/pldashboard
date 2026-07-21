@@ -40,10 +40,7 @@
 
 		let formIcons: string[] = [];
 		const form = data.form[team][data._id][currentMatchday].form5;
-		if (
-			Object.keys(data.form[team][data._id][currentMatchday]).length > 0 &&
-			form != null
-		) {
+		if (Object.keys(data.form[team][data._id][currentMatchday]).length > 0 && form != null) {
 			formIcons = form.split('');
 		}
 
@@ -58,7 +55,7 @@
 		const formInitials = [];
 
 		for (const matchday of matchdays) {
-			const opposition =  data.form[team][data._id][matchday].team;
+			const opposition = data.form[team][data._id][matchday].team;
 			const initials = opposition == null ? '' : toInitials(opposition);
 			formInitials.unshift(initials);
 		}
@@ -105,94 +102,37 @@
 		if (!(data._id in data.form[team])) {
 			return 'N/A';
 		}
-		return ((data.form[team][data._id][currentMatchday].formRating5 ?? 0) * 100).toFixed(1) + '%'
+		return ((data.form[team][data._id][currentMatchday].formRating5 ?? 0) * 100).toFixed(1) + '%';
 	}
 
 	let formIcons: string, formStarTeams: boolean[], formInitials: string[];
 	$: team && setFormValues();
 
 	export let data: TeamsData, currentMatchday: string, team: Team;
+
+	const rowClass =
+		'grid w-full grid-cols-5 text-[13px] max-[1000px]:m-auto max-[1000px]:w-[min(80%,440px)] max-[700px]:w-[95%]';
 </script>
 
 {#if formInitials != undefined}
-	<div class="current-form-row icon-row">
+	<div class={rowClass}>
 		<FormTiles form="{formIcons}," starTeams={formStarTeams} />
 	</div>
-	<div class="current-form-row name-row">
-		<div class="icon-name pos-0">{formInitials[0]}</div>
-		<div class="icon-name pos-1">{formInitials[1]}</div>
-		<div class="icon-name pos-2">{formInitials[2]}</div>
-		<div class="icon-name pos-3">{formInitials[3]}</div>
-		<div class="icon-name pos-4">{formInitials[4]}</div>
+	<div class={rowClass}>
+		<div class="relative mt-[0.6em] opacity-[0.56]">{formInitials[0]}</div>
+		<div class="relative mt-[0.6em] opacity-[0.67]">{formInitials[1]}</div>
+		<div class="relative mt-[0.6em] opacity-[0.78]">{formInitials[2]}</div>
+		<div class="relative mt-[0.6em] opacity-[0.89]">{formInitials[3]}</div>
+		<div class="relative mt-[0.6em] opacity-100">{formInitials[4]}</div>
 	</div>
 {/if}
-<div class="current-form">
+<div
+	class="my-[20px] w-full rounded-[var(--border-radius)] bg-[var(--purple)] py-[9px] text-[1.7rem] text-white max-[550px]:text-[1.5rem]"
+>
 	Current form:
 	{#if currentMatchday != undefined}
-		<span class="current-form-value"
-			>{formPercentage(data, team)}</span
-		>
+		<span class="text-[var(--win)]">{formPercentage(data, team)}</span>
 	{:else}
 		None
 	{/if}
 </div>
-
-<style scoped>
-	.current-form {
-		font-size: 1.7rem;
-		margin: 20px 0;
-		width: 100%;
-		padding: 9px 0;
-		background: var(--purple);
-		color: white;
-		border-radius: var(--border-radius);
-	}
-	.current-form-row {
-		font-size: 13px;
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		width: 100%;
-	}
-	.current-form-value {
-		color: var(--win);
-	}
-
-	.icon-name {
-		position: relative;
-		margin-top: 0.6em;
-	}
-
-	.pos-4 {
-		opacity: 100%;
-	}
-	.pos-3 {
-		opacity: 89%;
-	}
-	.pos-2 {
-		opacity: 78%;
-	}
-	.pos-1 {
-		opacity: 67%;
-	}
-	.pos-0 {
-		opacity: 56%;
-	}
-
-	@media only screen and (max-width: 1000px) {
-		.current-form-row {
-			width: min(80%, 440px);
-			margin: auto;
-		}
-	}
-
-	@media only screen and (max-width: 700px) {
-		.current-form-row {
-			width: 95%;
-		}
-	}
-	@media only screen and (max-width: 550px) {
-		.current-form {
-			font-size: 1.5rem !important;
-		}
-	}
-</style>

@@ -28,103 +28,45 @@
 	}
 
 	export let form: string, starTeams: boolean[];
+
+	const tileClass =
+		'grid aspect-[1/0.9] w-full place-items-center rounded-[inherit] text-[#2b2d2f]';
+	const resultClass =
+		'mt-[0.14em] text-[2vw] max-[1000px]:text-[3em] max-[600px]:mt-[0.25em] max-[600px]:text-[7vw]';
 </script>
 
-<div class="icon pos-0">
-	<div id="formTile" style="background: {background(form[0], starTeams[0])}">
-		<div class="result">
+<div class="relative flex-1 rounded-[6px_0_0_6px] opacity-[0.56]">
+	<div class={tileClass} style="background: {background(form[0], starTeams[0])}">
+		<div class={resultClass}>
 			{formatResult(form[0])}
 		</div>
 	</div>
 </div>
-<div class="icon pos-1">
-	<div id="formTile" style="background: {background(form[1], starTeams[1])}">
-		<div class="result">
+<div class="relative flex-1 opacity-[0.67]">
+	<div class={tileClass} style="background: {background(form[1], starTeams[1])}">
+		<div class={resultClass}>
 			{formatResult(form[1])}
 		</div>
 	</div>
 </div>
-<div class="icon pos-2">
-	<div id="formTile" style="background: {background(form[2], starTeams[2])}">
-		<div class="result">
+<div class="relative flex-1 opacity-[0.78]">
+	<div class={tileClass} style="background: {background(form[2], starTeams[2])}">
+		<div class={resultClass}>
 			{formatResult(form[2])}
 		</div>
 	</div>
 </div>
-<div class="icon pos-3">
-	<div id="formTile" style="background: {background(form[3], starTeams[3])}">
-		<div class="result">
+<div class="relative flex-1 opacity-[0.89]">
+	<div class={tileClass} style="background: {background(form[3], starTeams[3])}">
+		<div class={resultClass}>
 			{formatResult(form[3])}
 		</div>
 	</div>
 </div>
-<div class="icon pos-4">
-	<div id="formTile" style="background: {background(form[4], starTeams[4])}">
-		<div class="result">
+<div class="relative flex-1 rounded-[0_6px_6px_0] opacity-100">
+	<div class={tileClass} style="background: {background(form[4], starTeams[4])}">
+		<div class={resultClass}>
 			{formatResult(form[4])}
 		</div>
 	</div>
 </div>
-
-<style>
-	#formTile {
-		width: 100%;
-		aspect-ratio: 1/0.9;
-		color: #2b2d2f;
-		display: grid;
-		place-items: center;
-		border-radius: inherit;
-	}
-	.result {
-		margin-top: 0.14em;
-		font-size: 2vw;
-	}
-
-	.icon {
-		position: relative;
-		flex: 1;
-	}
-
-	.pos-3,
-	.pos-4,
-	.pos-2,
-	.pos-1 {
-		border-left: none;
-	}
-
-	.pos-4 {
-		/* Most recent game */
-		opacity: 100%;
-		border-radius: 0 6px 6px 0;
-	}
-
-	.pos-3 {
-		opacity: 89%;
-	}
-
-	.pos-2 {
-		opacity: 78%;
-	}
-
-	.pos-1 {
-		opacity: 67%;
-	}
-
-	.pos-0 {
-		/* Least recent game */
-		opacity: 56%;
-		border-radius: 6px 0 0 6px;
-	}
-
-	@media only screen and (max-width: 1000px) {
-		.result {
-			font-size: 3em;
-		}
-	}
-	@media only screen and (max-width: 600px) {
-		.result {
-			font-size: 7vw;
-			margin-top: 0.25em;
-		}
-	}
-</style>
