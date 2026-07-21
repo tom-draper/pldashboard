@@ -6,7 +6,6 @@ import pandas as pd
 from updater.data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
 
 from updater.predictions.form import calc_form
-from updater.predictions.market import fetch_odds
 from updater.predictions.scoreline import Scoreline
 from updater.data.raw_data import RawData
 
@@ -30,10 +29,6 @@ class Predictor:
         self.home_advantages = home_advantages
         self.HOME_AWAY_WEIGHTING = 0.2
         self.FIXTURE_WEIGHTING = 0.4
-        self.MARKET_URL = "https://www.betfair.com/exchange/plus/en/football/english-premier-league-betting-10932509"
-
-        # self.odds = fetch_odds(self.MARKET_URL, js_rendered=False)
-        self.odds = {}
 
     @staticmethod
     def _build_long_term_fixtures(
@@ -139,18 +134,6 @@ class Predictor:
         return freq_subset
 
     @staticmethod
-    def _display_scoreline_freq(freq: dict[Scoreline, int | float]):
-        sorted_freq: list[tuple[Scoreline, int | float]] = []
-        for scoreline, count in freq.items():
-            sorted_freq.append((scoreline, count))
-
-        # Sort by frequency count descending
-        sorted_freq.sort(key=lambda x: x[1], reverse=True)
-
-        for scoreline, count in sorted_freq:
-            print(scoreline, count)
-
-    @staticmethod
     def _scoreline_freq_probability(freq: dict[Scoreline, int]):
         total_scorelines = sum(freq.values())
 
@@ -207,36 +190,6 @@ class Predictor:
 
         return merged_freq
 
-    def _avg_goals_scored(freq: dict[Scoreline, int], team1: str, team2: str):
-        team1_played = 0
-        team2_played = 0
-        team1_goals = 0
-        team2_goals = 0
-        for scoreline, count in freq.items():
-            if scoreline.home_team == team1:
-                team1_played += count
-                team1_goals += scoreline.home_goals
-            elif scoreline.home_team == team2:
-                team2_played += count
-                team2_goals += scoreline.home_goals
-
-            if scoreline.away_team == team1:
-                team1_played += count
-                team1_goals += scoreline.away_goals
-            elif scoreline.away_team == team2:
-                team2_played += count
-                team2_goals += scoreline.away_goals
-
-        team1_avg_goals = 0
-        if team1_played > 0:
-            team1_avg_goals = team1_goals / team1_played
-
-        team2_avg_goals = 0
-        if team2_played > 0:
-            team2_avg_goals = team2_goals / team2_played
-
-        return (team1_avg_goals, team2_avg_goals)
-
     @staticmethod
     def _insert_scaled_into_freq(
         freq: dict[Scoreline, int | float],
@@ -257,60 +210,6 @@ class Predictor:
         for scoreline, count in subtract_freq.items():
             if scoreline in freq:
                 freq[scoreline] -= count * scale
-
-    @staticmethod
-    def _insert_scorelines_into_freq(
-        freq: dict[Scoreline, int],
-        scorelines: list[Scoreline],
-        weightings: Optional[list[float]] = None,
-    ):
-        if weightings is None:
-            # Even weightings
-            weightings = [1] * len(scorelines)
-        elif len(weightings) != len(scorelines):
-            return
-
-        for scoreline, weight in zip(scorelines, weightings):
-            if scoreline not in freq:
-                freq[scoreline] = 0
-            freq[scoreline] += 1 * weight
-
-    @staticmethod
-    def _remove_recent_scorelines_home_away(
-        scorelines: list[Scoreline],
-        intended_home_team: Optional[str] = None,
-        intended_away_team: Optional[str] = None,
-    ):
-        for scoreline in scorelines:
-            # If wrong way around, swap scoreline team order
-            if (
-                intended_home_team is not None
-                and scoreline.away_team == intended_home_team
-            ) or (
-                intended_away_team is not None
-                and scoreline.home_team == intended_away_team
-            ):
-                scoreline.reverse()
-        return scorelines
-
-    @staticmethod
-    def _remove_recent_scorelines_teams(scorelines: list[Scoreline]):
-        new_scorelines: list[Scoreline] = []
-        for scoreline in scorelines:
-            scoreline.show_team = False
-            new_scorelines.append(scoreline)
-        return new_scorelines
-
-    @staticmethod
-    def _inserted_weighted_recent_scorelines(
-        freq: dict[Scoreline, float],
-        scorelines: list[Scoreline],
-        weightings: list[float],
-    ):
-        for scoreline, weight in zip(scorelines, weightings):
-            if scoreline not in freq:
-                freq[scoreline] = 0
-            freq[scoreline] += 1 * weight
 
     def get_recent_scorelines(self, team: str, num_matches: Optional[int]):
         team_row = self.fixtures.loc[team]
@@ -419,26 +318,16 @@ class Predictor:
             np.linspace(0.2, 1, len(away_team_recent_scorelines)),
             self.team_ratings,
         )
-        # scale_by_form(scoreline_freq, home_team_form, away_team_form)
         form_scale = (home_team_form, 0.5, away_team_form)
 
-        # Scale all home win probabilities by home odds, draw probabilities by
-        # draw odds and away win probabilities by away odds with the current
-        # odds for this match
-        if (home_team, away_team) in self.odds:
-            fixture_odds = self.odds[(home_team, away_team)]
-            fixture_odds.convert_to_probabilities()
-            # scale_by_odds(scoreline_freq, fixture_odds)
-            odds_scale = (fixture_odds.home, fixture_odds.draw, fixture_odds.away)
-        else:
-            odds_scale = (1, 1, 1)
-
+        # Market-odds scaling is disabled; an identity odds_scale keeps the
+        # form/odds blend below numerically unchanged.
+        odds_scale = (1, 1, 1)
         scale = tuple(f / 2 + o / 2 for f, o in zip(form_scale, odds_scale))
         self.scale_results(scoreline_freq, scale)
 
         # Convert frequency counts into probability values
         scoreline_probabilities = self._scoreline_freq_probability(scoreline_freq)
-        # self._display_scoreline_freq(scoreline_probabilities)
         return scoreline_probabilities
 
     @staticmethod
