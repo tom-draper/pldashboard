@@ -21,13 +21,8 @@
 	export let team: null | Team, teams: Team[], switchTeam: (newTeam: Team) => void;
 </script>
 
-<nav
-	id="navBar"
-	class="fixed h-screen w-[220px] bg-[var(--purple)] max-xl:hidden"
->
-	<div
-		class="grid h-24 select-none place-items-center text-[1.6em] text-white"
-	>
+<nav id="navBar" class="fixed h-screen w-[220px] bg-[var(--purple)] max-xl:hidden">
+	<div class="grid h-24 select-none place-items-center text-[1.6em] text-white">
 		<a href="/home" class="text-white no-underline">
 			<span class="text-[var(--green)]">pl</span>dashboard
 		</a>
@@ -42,10 +37,7 @@
 			{#each teams as _team (_team)}
 				{#if _team === team}
 					<a href="/{getTeamID(_team)}" class="team-link">
-						<div
-							class="this-team-container text-[var(--pink)]"
-							style={teamStyle(_team)}
-						>
+						<div class="this-team-container text-[var(--pink)]" style={teamStyle(_team)}>
 							<div class="px-[1.4em] py-[0.4em] leading-normal">
 								{toAlias(_team)}
 							</div>
@@ -71,17 +63,20 @@
 	</div>
 
 	<div
-		class="absolute bottom-[3.75em] mx-[1.4em] mt-[0.4em] cursor-pointer text-[13px] text-white"
+		class="group absolute bottom-[3.75em] mx-[1.4em] mt-[0.4em] cursor-pointer text-[13px] text-white"
 	>
-		<a class="no-underline" href="https://www.buymeacoffee.com/tomdraper">
+		<a
+			class="text-inherit no-underline group-hover:text-[var(--green)]"
+			href="https://www.buymeacoffee.com/tomdraper"
+		>
 			Buy Me a Coffee
 		</a>
 	</div>
 
 	<div
-		class="absolute bottom-[1em] mx-[1.4em] mb-[3px] mt-[0.4em] cursor-pointer text-[13px] text-white"
+		class="group absolute bottom-[1em] mx-[1.4em] mb-[3px] mt-[0.4em] cursor-pointer text-[13px] text-white"
 	>
-		<a class="no-underline" href="/fantasy">
+		<a class="text-inherit no-underline group-hover:text-[var(--green)]" href="/fantasy">
 			Play fantasy?
 		</a>
 	</div>
@@ -91,21 +86,12 @@
 			class="absolute right-[0.9em] bottom-[0.9em] mb-px cursor-pointer border-none bg-transparent pt-[0.3em] outline-none"
 			on:click={closeNavBar}
 		>
-			<img
-				src={closeNavIcon}
-				alt="Close"
-				class="h-[25px] w-[25px]"
-			/>
+			<img src={closeNavIcon} alt="Close" class="h-[25px] w-[25px]" />
 		</button>
 	</div>
 </nav>
 
 <style scoped>
-	.donate:hover,
-	.fantasy:hover {
-		color: var(--green);
-	}
-
 	@keyframes team-colour-reveal {
 		0%,
 		20% {
