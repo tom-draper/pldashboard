@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Page } from "../fantasy.types";
+	import type { Page } from '../fantasy.types';
 
 	function switchTeamToTop(page: Page) {
 		switchPage(page);
@@ -10,15 +10,19 @@
 	export let pages: Page[], switchPage: (page: Page) => void, toggleMobileNav: () => void;
 </script>
 
-<nav id="mobileNav" style="width: 0%;">
+<nav
+	id="mobileNav"
+	class="fixed z-[2] hidden h-screen overflow-hidden animate-[appear_0.1s_ease-in]"
+	style="width: 0%;"
+>
 	{#if pages != undefined}
-		<div class="team-links">
+		<div class="flex h-full flex-col">
 			{#each pages as page, i}
 				<button
 					on:click={() => {
 						switchTeamToTop(page);
 					}}
-					class="team-link {page.toLowerCase()}"
+					class="team-link flex-1 cursor-pointer border-none p-[0.4em] text-[1em] {page.toLowerCase()}"
 					>{pages[i][0].toUpperCase() + pages[i].slice(1)}</button
 				>
 			{/each}
@@ -27,27 +31,10 @@
 </nav>
 
 <style scoped>
-	#mobileNav {
-		position: fixed;
-		z-index: 2;
-		overflow: hidden;
-		height: 100vh;
-		animation: appear 0.1s ease-in 1;
-		display: none;
-	}
-	.team-links {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-	}
+	/* Position-specific colours are selected at runtime via the page name as a
+	   class, so they stay as CSS. The base .team-link colour applies to pages
+	   without a specific override (all, midfielder). */
 	.team-link {
-		color: inherit;
-		background: inherit;
-		cursor: pointer;
-		border: none;
-		font-size: 1em;
-		padding: 0.4em;
-		flex: 1;
 		color: #1c0d2d;
 		background: #00fe87;
 	}
@@ -65,7 +52,6 @@
 		from {
 			width: 0%;
 		}
-
 		to {
 			width: 100%;
 		}

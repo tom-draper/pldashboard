@@ -63,18 +63,28 @@
 
 <svelte:window bind:innerWidth={pageWidth} />
 
-<div id="team">
+<div id="team" class="flex overflow-x-hidden text-[15px]">
 	<FantasyNav currentPage={data.page} {pages} {switchPage} />
 	<FantasyMobileNav {pages} {switchPage} {toggleMobileNav} />
 	{#if pages.length === 0}
 		<!-- Navigation disabled while teams list are loading -->
-		<button id="mobileNavBtn" style="cursor: default">Menu</button>
+		<button
+			id="mobileNavBtn"
+			class="fixed bottom-0 z-[1] mb-[-1px] w-full border-none bg-[var(--purple)] py-[0.8em] text-[1.1em] text-white min-[1200px]:hidden"
+			style="cursor: default">Menu</button
+		>
 	{:else}
-		<button id="mobileNavBtn" on:click={toggleMobileNav}> Menu </button>
+		<button
+			id="mobileNavBtn"
+			class="fixed bottom-0 z-[1] mb-[-1px] w-full cursor-pointer border-none bg-[var(--purple)] py-[0.8em] text-[1.1em] text-white min-[1200px]:hidden"
+			on:click={toggleMobileNav}
+		>
+			Menu
+		</button>
 	{/if}
 
-	<div id="dashboard">
-		<div class="first-graph">
+	<div id="dashboard" class="ml-[220px] w-[calc(100%-220px)] max-[1200px]:ml-0 max-[1200px]:w-full">
+		<div>
 			<PointsVsPrice data={data.pageData} page={data.page} {mobileView} />
 		</div>
 
@@ -84,45 +94,9 @@
 			</div>
 		{/if}
 
-		<div class="table">
+		<div>
 			<Table data={data.pageData} page={data.page} />
 		</div>
 		<Footer lastUpdated={null} dark={false} />
 	</div>
 </div>
-
-<style scoped>
-	#team {
-		display: flex;
-		overflow-x: hidden;
-		font-size: 15px;
-	}
-	#dashboard {
-		margin-left: 220px;
-		width: calc(100% - 220px);
-	}
-	#mobileNavBtn {
-		position: fixed;
-		color: white;
-		background: var(--purple);
-		padding: 0.8em 0;
-		cursor: pointer;
-		font-size: 1.1em;
-		z-index: 1;
-		width: 100%;
-		bottom: 0;
-		border: none;
-		margin-bottom: -1px; /* For gap at bottom found in safari */
-	}
-	@media only screen and (min-width: 1200px) {
-		#mobileNavBtn {
-			display: none;
-		}
-	}
-	@media only screen and (max-width: 1200px) {
-		#dashboard {
-			margin-left: 0;
-			width: 100%;
-		}
-	}
-</style>
