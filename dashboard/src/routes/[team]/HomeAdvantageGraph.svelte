@@ -61,6 +61,20 @@
 		return deltaColor(delta, rows[0].delta, rows[rows.length - 1].delta);
 	}
 
+	/**
+	 * Colour for the home win rate quoted in the caption, ranked between the
+	 * lowest and highest home win rate in the league. Unlike the headline gap
+	 * this has no natural zero, so it is a straight min → max relative scale
+	 * (the weakest home record reads red, the strongest green).
+	 */
+	function computeHomeRateColor(data: TeamsData, homeRatio: number): string {
+		const rates = splits(data).map((r) => r.homeRatio);
+		const min = Math.min(...rates);
+		const max = Math.max(...rates);
+		const t = max > min ? (homeRatio - min) / (max - min) : 0.5;
+		return scaleColor(t);
+	}
+
 	type Split = {
 		team: Team;
 		homeRatio: number;
@@ -320,6 +334,7 @@
 
 	$: split = homeAwaySplit(data, team, data._id);
 	$: figureColor = computeFigureColor(data, split.delta);
+	$: homeRateColor = computeHomeRateColor(data, split.homeRatio);
 
 	export let data: TeamsData, team: Team, mobileView: boolean;
 </script>
@@ -333,11 +348,15 @@
 		</div>
 		<div class="caption">
 			{#if split.delta >= 0}
-				{toAlias(team)} win <b>{Math.round(split.homeRatio * 100)}%</b> of their
+				{toAlias(team)} win
+				<b style="color: {homeRateColor}">{Math.round(split.homeRatio * 100)}%</b>
+				of their
 				{split.homePlayed} home games, against
 				<b>{Math.round(split.awayRatio * 100)}%</b> of their {split.awayPlayed} away.
 			{:else}
-				{toAlias(team)} win <b>{Math.round(split.homeRatio * 100)}%</b> of their
+				{toAlias(team)} win
+				<b style="color: {homeRateColor}">{Math.round(split.homeRatio * 100)}%</b>
+				of their
 				{split.homePlayed} home games — fewer than the
 				<b>{Math.round(split.awayRatio * 100)}%</b> they win away.
 			{/if}
