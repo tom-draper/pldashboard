@@ -12,32 +12,31 @@
 	// contributes whichever of these seasons it has data for.
 	const SEASONS_BACK = 3;
 
-	// Red → yellow → green anchors, mirroring --lose / --draw / --green. The same
-	// scale colours both the headline figure and the bars, placing each team on
-	// the leaguewide scale: the best home advantage reads green, the worst red.
-	const SCALE_RED = [248, 48, 39]; // #f83027
-	const SCALE_YELLOW = [255, 221, 0]; // #ffdd00
-	const SCALE_GREEN = [0, 254, 135]; // #00fe87
+	// The same gradient the footer logo's mini bar chart uses (chartColors in
+	// Footer.svelte), reversed so the scale runs worst (red) → best (green). The
+	// same scale colours both the headline figure and the bars.
+	const SCALE_STOPS = [
+		[255, 0, 0], // #ff0000
+		[255, 95, 0], // #ff5f00
+		[255, 175, 0], // #ffaf00
+		[255, 215, 0], // #ffd700
+		[223, 255, 0], // #dfff00
+		[125, 255, 66], // #7dff42
+		[0, 254, 135] // #00fe87
+	];
 
 	function lerpChannel(a: number, b: number, t: number): number {
 		return Math.round(a + (b - a) * t);
 	}
 
-	/** Map t in [0, 1] onto red → yellow → green (0 = worst, 1 = best). */
+	/** Map t in [0, 1] across the gradient stops (0 = worst/red, 1 = best/green). */
 	function scaleColor(t: number): string {
 		const clamped = Math.min(1, Math.max(0, t));
-		let from: number[];
-		let to: number[];
-		let local: number;
-		if (clamped < 0.5) {
-			from = SCALE_RED;
-			to = SCALE_YELLOW;
-			local = clamped / 0.5;
-		} else {
-			from = SCALE_YELLOW;
-			to = SCALE_GREEN;
-			local = (clamped - 0.5) / 0.5;
-		}
+		const scaled = clamped * (SCALE_STOPS.length - 1);
+		const i = Math.min(SCALE_STOPS.length - 2, Math.floor(scaled));
+		const local = scaled - i;
+		const from = SCALE_STOPS[i];
+		const to = SCALE_STOPS[i + 1];
 		return `rgb(${lerpChannel(from[0], to[0], local)}, ${lerpChannel(from[1], to[1], local)}, ${lerpChannel(from[2], to[2], local)})`;
 	}
 
