@@ -1,7 +1,10 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import type { PredictionsV2Data } from './predictions-v2.types';
 	import live from '$lib/images/live.svg';
+
+	let timeoutId: ReturnType<typeof setTimeout>;
 
 	function updateCountdowns() {
 		const updatedCountdowns = Array(data.matches.length);
@@ -14,7 +17,7 @@
 			}
 		}
 		countdowns = updatedCountdowns;
-		setTimeout(updateCountdowns, 1000);
+		timeoutId = setTimeout(updateCountdowns, 1000);
 	}
 
 	function getCountdown(kickoff: Date) {
@@ -62,7 +65,10 @@
 
 	const barBase = 'mb-[0.3em] flex h-[12px]';
 
-	updateCountdowns();
+	onMount(() => {
+		updateCountdowns();
+		return () => clearTimeout(timeoutId);
+	});
 </script>
 
 <div class="min-h-screen bg-[rgb(10,0,8)] text-white">
