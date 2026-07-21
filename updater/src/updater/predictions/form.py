@@ -7,7 +7,7 @@ from updater.predictions.scoreline import Scoreline
 def calc_form(
     team: str,
     recent_matches: list[Scoreline],
-    weightings: list[float],
+    weightings: np.ndarray,
     team_ratings: TeamRatings,
 ):
     weightings /= np.sum(weightings)
