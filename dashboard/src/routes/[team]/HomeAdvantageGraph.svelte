@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PlotData, PlotLayout, PlotShape, PlotTrace } from '$lib/types';
 	import { onMount, onDestroy } from 'svelte';
-	import { toAlias } from '$lib/team';
+	import { toAlias, toInitials } from '$lib/team';
 	import type { Team } from '$lib/types';
 	import type { TeamsData } from './dashboard.types';
 
@@ -93,7 +93,7 @@
 			type: 'bar',
 			orientation: 'h',
 			x: rows.map((r) => r.delta),
-			y: rows.map((r) => toAlias(r.team)),
+			y: rows.map((r) => toInitials(r.team)),
 			marker: {
 				color: rows.map((r) => (r.delta >= 0 ? betterAtHome() : worseAtHome())),
 				// Emphasis is carried by opacity rather than a third hue, so it
@@ -165,7 +165,7 @@
 			title: { text: '' },
 			autosize: true,
 			height: Math.max(300, teamCount * 21 + 56),
-			margin: { r: 60, l: 130, t: 10, b: 40, pad: 5 },
+			margin: { r: 60, l: 55, t: 10, b: 40, pad: 5 },
 			hovermode: 'closest',
 			plot_bgcolor: '#fafafa',
 			paper_bgcolor: '#fafafa',
@@ -216,14 +216,14 @@
 		if (!setup) {
 			return;
 		}
-		relayout({ 'margin.l': 90, 'margin.r': 40 });
+		relayout({ 'margin.l': 45, 'margin.r': 40 });
 	}
 
 	function setDefaultLayout() {
 		if (!setup) {
 			return;
 		}
-		relayout({ 'margin.l': 130, 'margin.r': 60 });
+		relayout({ 'margin.l': 55, 'margin.r': 60 });
 	}
 
 	function genPlot() {
