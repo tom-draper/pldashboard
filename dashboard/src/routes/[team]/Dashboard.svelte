@@ -79,22 +79,35 @@
 	<title>{data.title}</title>
 </svelte:head>
 
-<div id="team">
+<div id="team" class="flex overflow-x-hidden text-[15px]">
 	<Nav team={data.team.name} teams={data.teams} {switchTeam} />
 	<MobileNav teams={data.teams} {switchTeam} {toggleMobileNav} />
-	<button id="mobileNavBtn" on:click={toggleMobileNav}> Select Team </button>
 
-	<div id="dashboard">
+	<button
+		id="mobileNavBtn"
+		class="fixed bottom-0 z-[100] mb-[-1px] w-full cursor-pointer border-none bg-[var(--purple)] py-[0.8em] text-[1.1em] text-white xl:hidden"
+		on:click={toggleMobileNav}
+	>
+		Select Team
+	</button>
+
+	<div id="dashboard" class="ml-0 w-full xl:ml-[220px]">
 		{#if data.slug === 'overview'}
-			<div class="header overview-header">
-				<a class="main-link no-decoration" href="/overview">
-					<div class="title">Overview</div>
+			<div class="grid place-items-center bg-[var(--green)] text-[var(--purple)]">
+				<a class="main-link no-decoration grid w-fit place-items-center" href="/overview">
+					<div class="w-fit text-[2.3rem]">Overview</div>
 				</a>
 			</div>
 		{:else}
-			<div class="header" style="background-color: var(--{data.team.id});">
-				<a class="main-link no-decoration" href="/{data.team.id}">
-					<div class="title" style="color: var(--{data.team.id + '-secondary'});">
+			<div
+				class="grid place-items-center"
+				style="background-color: var(--{data.team.id});"
+			>
+				<a class="main-link no-decoration grid w-fit place-items-center" href="/{data.team.id}">
+					<div
+						class="w-fit text-[2.3rem]"
+						style="color: var(--{data.team.id + '-secondary'});"
+					>
 						{toAlias(data.team.name)}
 					</div>
 				</a>
@@ -106,63 +119,20 @@
 		{:else}
 			<TeamsContent {data} {switchTeam} />
 		{/if}
+
 		<Footer lastUpdated={data.data.lastUpdated} dark={false} />
 	</div>
 </div>
 
 <style scoped>
-	.header {
-		display: grid;
-		place-items: center;
-	}
-	.overview-header {
-		background-color: var(--green);
-		color: var(--purple);
-	}
+	/* Dynamic CSS variable names can't be expressed with Tailwind, so these remain inline. */
+
+	/* Remove these if they're already defined globally. */
 	.main-link {
-		width: fit-content;
-		display: grid;
-		place-items: center;
-	}
-	.title {
-		font-size: 2.3rem;
-		width: fit-content;
+		text-decoration: none;
 	}
 
-	#team {
-		display: flex;
-		overflow-x: hidden;
-		font-size: 15px;
-	}
-
-	#dashboard {
-		margin-left: 220px;
-		width: 100%;
-	}
-
-	#mobileNavBtn {
-		position: fixed;
-		color: white;
-		background: var(--purple);
-		padding: 0.8em 0;
-		cursor: pointer;
-		font-size: 1.1em;
-		z-index: 100;
-		width: 100%;
-		bottom: 0;
-		border: none;
-		margin-bottom: -1px; /* For gap at bottom found in safari */
-	}
-
-	@media only screen and (min-width: 1200px) {
-		#mobileNavBtn {
-			display: none;
-		}
-	}
-
-	@media only screen and (max-width: 1200px) {
-		#dashboard {
-			margin-left: 0;
-		}
+	.no-decoration {
+		text-decoration: none;
 	}
 </style>

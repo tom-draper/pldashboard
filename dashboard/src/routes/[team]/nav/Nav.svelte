@@ -13,7 +13,7 @@
 		if (dashboard != null) {
 			dashboard.style.marginLeft = '0';
 		}
-		window.dispatchEvent(new Event('resize')); // Snap plotly graphs to new width
+		window.dispatchEvent(new Event('resize'));
 	}
 
 	const widths: number[] = Array.from({ length: 20 }, () => 35 + Math.floor(Math.random() * 8) * 5);
@@ -21,38 +21,46 @@
 	export let team: null | Team, teams: Team[], switchTeam: (newTeam: Team) => void;
 </script>
 
-<nav id="navBar">
-	<div class="title no-selection">
-		<a href="/home">
-			<span style="color: var(--green)">pl</span>dashboard
+<nav
+	id="navBar"
+	class="fixed h-screen w-[220px] bg-[var(--purple)] max-xl:hidden"
+>
+	<div
+		class="grid h-24 select-none place-items-center text-[1.6em] text-white"
+	>
+		<a href="/home" class="text-white no-underline">
+			<span class="text-[var(--green)]">pl</span>dashboard
 		</a>
 	</div>
-	<div class="team-links">
+
+	<div class="grid text-[1em] text-[var(--pink)]">
 		{#if !teams}
-			{#if widths}
-				{#each widths as width, _}
-					<div class="placeholder" style="width: {width}%"></div>
-				{/each}
-			{/if}
+			{#each widths as width}
+				<div class="placeholder" style="width: {width}%"></div>
+			{/each}
 		{:else}
-			{#each teams as _team, _ (_team)}
+			{#each teams as _team (_team)}
 				{#if _team === team}
 					<a href="/{getTeamID(_team)}" class="team-link">
-						<div class="this-team-container" style={teamStyle(_team)}>
-							<div class="this-team-name">
+						<div
+							class="this-team-container text-[var(--pink)]"
+							style={teamStyle(_team)}
+						>
+							<div class="px-[1.4em] py-[0.4em] leading-normal">
 								{toAlias(_team)}
 							</div>
 						</div>
 					</a>
 				{:else}
 					<button
-						class="team-link"
-						on:click={() => {
-							switchTeam(_team);
-						}}
+						class="team-link cursor-pointer border-none bg-transparent p-0 text-left font-inherit text-inherit outline-none"
+						on:click={() => switchTeam(_team)}
 					>
-						<div class="team-container" style={teamColourVars(_team)}>
-							<div class="team-name">
+						<div
+							class="team-container transition-[background-color,color] duration-250 ease-in-out"
+							style={teamColourVars(_team)}
+						>
+							<div class="px-[1.4em] py-[0.4em] leading-normal">
 								{toAlias(_team)}
 							</div>
 						</div>
@@ -61,100 +69,47 @@
 			{/each}
 		{/if}
 	</div>
-	<div class="donate"><a href="https://www.buymeacoffee.com/tomdraper">Buy Me a Coffee</a></div>
-	<div class="fantasy"><a href="/fantasy">Play fantasy?</a></div>
-	<div class="close">
-		<button class="close-btn" on:click={closeNavBar}>
-			<img src={closeNavIcon} alt="Close" />
+
+	<div
+		class="absolute bottom-[3.75em] mx-[1.4em] mt-[0.4em] cursor-pointer text-[13px] text-white"
+	>
+		<a class="no-underline" href="https://www.buymeacoffee.com/tomdraper">
+			Buy Me a Coffee
+		</a>
+	</div>
+
+	<div
+		class="absolute bottom-[1em] mx-[1.4em] mb-[3px] mt-[0.4em] cursor-pointer text-[13px] text-white"
+	>
+		<a class="no-underline" href="/fantasy">
+			Play fantasy?
+		</a>
+	</div>
+
+	<div>
+		<button
+			class="absolute right-[0.9em] bottom-[0.9em] mb-px cursor-pointer border-none bg-transparent pt-[0.3em] outline-none"
+			on:click={closeNavBar}
+		>
+			<img
+				src={closeNavIcon}
+				alt="Close"
+				class="h-[25px] w-[25px]"
+			/>
 		</button>
 	</div>
 </nav>
 
 <style scoped>
-	.title {
-		color: white;
-		font-size: 1.6em;
-		height: 96px;
-		display: grid;
-		place-items: center;
-	}
-	.title a {
-		color: white;
-	}
-	.no-selection {
-		user-select: none;
-		-webkit-user-select: none;
-		-moz-user-select: none;
-	}
-	.team-links {
-		font-size: 1em;
-		color: var(--pink);
-		display: grid;
-	}
-	button {
-		background: none;
-		color: inherit;
-		border: none;
-		padding: 0;
-		font: inherit;
-		cursor: pointer;
-		outline: inherit;
-		text-align: left;
-	}
-	.team-name,
-	.this-team-name {
-		padding: 0.4em 1.4em;
-		line-height: normal;
-	}
-	.donate {
-		color: rgba(255, 255, 255, 1);
-		position: absolute;
-		bottom: 3.75em;
-		font-size: 13px;
-		margin: 0.4em 1.4em 0;
-		cursor: pointer;
-	}
-	.fantasy {
-		color: rgba(255, 255, 255, 1);
-		position: absolute;
-		bottom: 1em;
-		font-size: 13px;
-		margin: 0.4em 1.4em 3px;
-		cursor: pointer;
-	}
-	.donate a,
-	.fantasy a {
-		color: inherit;
-		text-decoration: none;
-	}
 	.donate:hover,
 	.fantasy:hover {
-		color: rgba(255, 255, 255, 0.7);
 		color: var(--green);
 	}
 
-	.this-team-container {
-		color: var(--pink);
-	}
-
-	.team-container {
-		/* Leaving the link returns to the default quickly. */
-		transition: background-color 250ms ease, color 250ms ease;
-	}
-
-	/*
-	 * Linger on a team for two seconds and its colours slowly bleed in over the
-	 * following eight. Keyframes rather than a transition-delay so the instant
-	 * dark hover still gives immediate feedback: the first 20% of the ten second
-	 * timeline holds that shade, and the remainder eases to the team's colours.
-	 */
 	@keyframes team-colour-reveal {
 		0%,
 		20% {
 			background-color: #140921;
-			/* Stated explicitly: a property that only appears in the final
-			   keyframe interpolates across the whole timeline, which would start
-			   the text shifting immediately instead of after the two seconds. */
 			color: var(--pink);
 		}
 		100% {
@@ -173,33 +128,10 @@
 			animation: none;
 		}
 	}
-	nav {
-		position: fixed;
-		width: 220px;
-		height: 100vh;
-		background: #37003c;
-		background: var(--purple);
-	}
-	img {
-		height: 25px;
-		width: 25px;
-	}
-	.close-btn {
-		position: absolute;
-		right: 0.9em;
-		bottom: 0.9em;
-		background: transparent;
-		border: none;
-		outline: none;
-		padding-top: 0.3em;
-		cursor: pointer;
-		margin-bottom: 1px;
-	}
 
 	.placeholder {
 		height: 19px;
 		margin: 6px 21px;
-		width: 40px;
 		background: #c600d8;
 		border-radius: 4px;
 		opacity: 0.25;
@@ -209,28 +141,21 @@
 
 	.placeholder::before {
 		content: '';
-		display: block;
 		position: absolute;
 		left: -100px;
 		top: 0;
 		height: 100%;
 		width: 150px;
-		background: linear-gradient(to right, transparent 0%, #e8e8e8 50%, transparent 100%);
 		background: linear-gradient(to right, transparent 0%, #eea7f4 50%, transparent 100%);
 		animation: load 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 	}
+
 	@keyframes load {
 		from {
 			left: -100px;
 		}
 		to {
 			left: 100px;
-		}
-	}
-
-	@media only screen and (max-width: 1200px) {
-		#navBar {
-			display: none;
 		}
 	}
 </style>
