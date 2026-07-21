@@ -10,7 +10,9 @@
 
 <svelte:window bind:innerWidth={pageWidth} />
 
-<div class="row multi-element-row small-bottom-margin">
+<div
+	class="relative mx-[1.4em] mt-0 mb-[1.2em] flex h-auto max-[1000px]:mx-0 max-[1000px]:flex-col"
+>
 	<div class="row-left position-no-badge">
 		<div class="circles-background-container">
 			<svg class="circles-background" viewBox="0 0 600 600">
@@ -35,19 +37,15 @@
 			</svg>
 		</div>
 	</div>
-	<div class="row-right fixtures-graph row-graph">
-		<h1 class="lowered">Fixtures</h1>
-		<div class="graph mini-graph mobile-margin">
+	<div class="flex w-full flex-[10] flex-col max-[1000px]:w-auto">
+		<h1 class="mb-[-9px] max-[550px]:mx-[30px] max-[550px]:mt-[20px] max-[550px]:mb-0">Fixtures</h1>
+		<div class="h-[450px] max-[1100px]:h-[400px] max-[700px]:h-[300px] max-[550px]:h-[250px]">
 			<FixturesGraph data={data.data} team={data.team.name} {mobileView} />
 		</div>
 	</div>
 </div>
 
 <style>
-	.lowered {
-		margin-bottom: -9px;
-	}
-
 	.position-no-badge {
 		padding-left: 0;
 		margin: 0;
@@ -67,47 +65,6 @@
 		transform: scale(0.95);
 	}
 
-	.fixtures-graph {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.small-bottom-margin {
-		margin-bottom: 1.2em !important;
-	}
-
-	.mini-graph {
-		height: 450px;
-	}
-
-	@media only screen and (max-width: 1100px) {
-		.mini-graph {
-			height: 400px;
-		}
-	}
-
-	@media only screen and (max-width: 700px) {
-		.mini-graph {
-			height: 300px;
-		}
-	}
-
-	@media only screen and (max-width: 550px) {
-		.mini-graph {
-			height: 250px;
-		}
-	}
-
-	.row {
-		position: relative;
-		display: flex;
-		margin-bottom: 3rem;
-		height: auto;
-	}
-	.row-graph {
-		width: 100%;
-	}
-
 	.row-left {
 		display: flex;
 		flex-direction: column;
@@ -115,12 +72,6 @@
 		margin-right: 1.5em;
 		text-justify: center;
 		flex: 4;
-	}
-	.row-right {
-		flex: 10;
-	}
-	.multi-element-row {
-		margin: 0 1.4em 3rem;
 	}
 
 	@media only screen and (max-width: 1800px) {
@@ -146,86 +97,55 @@
 			transform: scale(0.75);
 		}
 	}
-
 	@media only screen and (max-width: 1200px) {
 		.circles-background {
 			transform: scale(0.7);
 		}
 	}
-
 	@media only screen and (max-width: 1000px) {
-		.row {
-			flex-direction: column;
-			margin-bottom: 40px;
-		}
-		.row-graph {
-			width: auto;
-		}
-
-		.multi-element-row {
-			margin: 0;
-		}
 		.row-left {
 			margin-right: 0;
 			align-self: center;
 			width: 80%;
 		}
-
 		.position-no-badge {
 			display: none;
 		}
-
 		.circles-background {
 			transform: scale(0.48);
 			margin-top: -100px;
 		}
-
 		.circles-background-container {
 			align-self: center;
 		}
 	}
-
 	@media only screen and (max-width: 900px) {
 		.circles-background {
 			transform: scale(0.45);
 			margin-top: -120px;
 		}
 	}
-
+	/* Note: the 700 block intentionally precedes the 800 block; at widths <=700
+	   the later 800 rule wins for .circles-background, matching the original. */
 	@media only screen and (max-width: 700px) {
 		.circles-background {
 			transform: scale(0.55);
 			margin-top: -5em;
 		}
-
 		.position-no-badge {
 			height: 330px;
 		}
 	}
-
 	@media only screen and (max-width: 800px) {
 		.circles-background {
 			transform: scale(0.4);
 			margin-top: -9em;
 		}
-
-		.row-graph {
-			margin: 0;
-		}
 	}
-
 	@media only screen and (max-width: 550px) {
-		.multi-element-row {
-			margin: 0;
-		}
-
 		.circles-background {
 			transform: scale(0.35);
 			margin-top: -9.5em;
-		}
-
-		.lowered {
-			margin: 20px 30px 0;
 		}
 	}
 </style>
