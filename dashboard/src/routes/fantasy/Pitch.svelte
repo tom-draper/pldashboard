@@ -50,142 +50,34 @@
 	});
 </script>
 
-<div id="pitch">
-	<div class="summary">
-		<div class="label">Optimal team</div>
-		<div class="total-points">
+<div
+	class="relative m-[2em] rounded-[6px] p-[1em] pb-[3em] bg-[repeating-linear-gradient(to_bottom,#00fe87,#00fe87_20px,#00e178_20px,#00e178_40px)]"
+>
+	<div
+		class="absolute top-[1em] left-[1em] rounded-[6px] bg-[var(--purple)] px-[0.75em] py-[0.55em] text-left"
+	>
+		<div class="text-[1em] leading-[1.2] text-[var(--green)]">Optimal team</div>
+		<div class="mt-[0.25em] text-[0.9em] leading-[1.2] text-white">
 			{totalPoints.toLocaleString('en-GB')} points, {formatTotalPrice(totalPrice)}
 		</div>
 	</div>
 
-	<div class="formation">
-		{#each goalkeepers as player}
-			<div>
-				<div
-					class="player goalkeeper"
-					style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(
-						player.team
-					)})"
-				>
-					{player.firstName}
-					{player.surname}
+	{#each [goalkeepers, defenders, midfielders, forwards] as line}
+		<div class="flex justify-center p-[1em]">
+			{#each line as player}
+				<div>
+					<div
+						class="mx-[0.5em] rounded-[4px] px-[1em] py-[0.6em] text-center"
+						style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(
+							player.team
+						)})"
+					>
+						{player.firstName}
+						{player.surname}
+					</div>
+					<div class="mt-[0.4em] text-center">{formatPrice(player.price)}</div>
 				</div>
-				<div class="price">{formatPrice(player.price)}</div>
-			</div>
-		{/each}
-	</div>
-
-	<div class="formation">
-		{#each defenders as player}
-			<div>
-				<div
-					class="player goalkeeper"
-					style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(
-						player.team
-					)})"
-				>
-					{player.firstName}
-					{player.surname}
-				</div>
-				<div class="price">{formatPrice(player.price)}</div>
-			</div>
-		{/each}
-	</div>
-
-	<div class="formation">
-		{#each midfielders as player}
-			<div>
-				<div
-					class="player midfielder"
-					style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(
-						player.team
-					)})"
-				>
-					{player.firstName}
-					{player.surname}
-				</div>
-				<div class="price">{formatPrice(player.price)}</div>
-			</div>
-		{/each}
-	</div>
-
-	<div class="formation">
-		{#each forwards as player}
-			<div>
-				<div
-					class="player forward"
-					style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(
-						player.team
-					)})"
-				>
-					{player.firstName}
-					{player.surname}
-				</div>
-				<div class="price">{formatPrice(player.price)}</div>
-			</div>
-		{/each}
-	</div>
+			{/each}
+		</div>
+	{/each}
 </div>
-
-<style scoped>
-	#pitch {
-		margin: 2em;
-		border-radius: 6px;
-		background: repeating-linear-gradient(
-			to bottom,
-			#3f9e4d,
-			/* darker green */ #3f9e4d 20px,
-			#4caf50 20px,
-			/* lighter green */ #4caf50 40px
-		);
-		background: repeating-linear-gradient(
-			to bottom,
-			#00fe87,
-			/* darker green */ #00fe87 20px,
-			#00e178 20px,
-			/* #00ce6e 20px, */ /* lighter green */ #00e178 40px
-		);
-		padding: 1em;
-		padding-bottom: 3em;
-		position: relative;
-	}
-	.formation {
-		display: flex;
-		justify-content: center;
-		padding: 1em;
-		z-index: 12;
-	}
-
-	.price {
-		margin-top: 0.4em;
-		text-align: center;
-	}
-
-	.player {
-		background: #fff;
-		border-radius: 4px;
-		padding: 0.6em 1em;
-		margin: 0 0.5em;
-		text-align: center;
-	}
-	.summary {
-		position: absolute;
-		left: 1em;
-		top: 1em;
-		border-radius: 6px;
-		background: var(--purple);
-		padding: 0.55em 0.75em;
-		text-align: left;
-	}
-	.label {
-		color: var(--green);
-		font-size: 1em;
-		line-height: 1.2;
-	}
-	.total-points {
-		color: white;
-		font-size: 0.9em;
-		line-height: 1.2;
-		margin-top: 0.25em;
-	}
-</style>

@@ -123,7 +123,7 @@
 					render: function (data: any, type: string, row: any, meta: any) {
 						// If render is just displaying value to user, format as abbreviated number
 						if (type === 'display') {
-							return data ? data.toLocaleString() + "m" : 0;
+							return data ? data.toLocaleString() + 'm' : 0;
 						}
 						// Otherwise return raw data so that sort and filter still works
 						return data;
@@ -218,8 +218,11 @@
 		<div class="loading-spinner"></div>
 	</div>
 {/if}
-<div class="table" class:hidden={!setup}>
-	<table id="myTable">
+<div
+	class="overflow-x-auto px-[30px] py-[50px] max-[700px]:p-0 max-[700px]:text-[0.85em]"
+	class:invisible={!setup}
+>
+	<table id="myTable" class="w-full!">
 		<thead>
 			<tr>
 				<th>Name</th>
@@ -243,27 +246,9 @@
 </div>
 
 <style scoped>
-	.table {
-		padding: 50px 30px;
-		overflow-x: auto;
-	}
-
-	.hidden {
-		visibility: hidden;
-	}
-
-	#myTable {
-		width: 100% !important;
-	}
-
+	/* DataTables generates the row elements at runtime, so the striping can't be
+	   a utility class on the markup and stays as a :global rule. */
 	:global(tr.even) {
 		background: rgb(239, 239, 239) !important;
-	}
-
-	@media only screen and (max-width: 700px) {
-		.table {
-			padding: 0;
-			font-size: 0.85em;
-		}
 	}
 </style>
