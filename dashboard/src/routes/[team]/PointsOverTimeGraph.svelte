@@ -171,8 +171,8 @@
 	export let data: TeamsData, team: Team, mobileView: boolean;
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" class="resizable-graph" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

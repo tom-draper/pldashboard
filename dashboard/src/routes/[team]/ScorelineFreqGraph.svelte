@@ -16,7 +16,7 @@
 			const scoreStr = getScoreString(score.homeGoals, score.awayGoals, atHome);
 			if (!(scoreStr in scoreFreq)) {
 				scoreFreq[scoreStr] = [0];
-			} 
+			}
 			scoreFreq[scoreStr][0] += 1;
 		}
 	}
@@ -217,7 +217,7 @@
 		scaleBars(scoreFreq);
 		convertToPercentage(scoreFreq);
 		const bars = separateBars(scoreFreq);
-		
+
 		const plotData = {
 			data: bars,
 			layout: defaultLayout(),
@@ -278,8 +278,8 @@
 	export let data: TeamsData, team: Team, mobileView: boolean;
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" class="resizable-graph" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

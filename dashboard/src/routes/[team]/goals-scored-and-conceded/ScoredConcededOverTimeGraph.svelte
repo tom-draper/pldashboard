@@ -113,7 +113,8 @@
 				// of days between current season end and next season start
 				const currentSeasonEndDate = data.form[team][data._id - i][38].date;
 				// If on the prev season (i == 1), safer to take date from fixtures otherwise fails if current season has not yet started and form is empty
-				const nextSeasonStartDate = i == 1 ? data.fixtures[team][1].date : data.form[team][data._id - i + 1][1].date;
+				const nextSeasonStartDate =
+					i == 1 ? data.fixtures[team][1].date : data.form[team][data._id - i + 1][1].date;
 				dateOffset += numDays(nextSeasonStartDate, currentSeasonEndDate);
 				dateOffset -= 14; // Allow a 2 week gap between seasons for clarity
 			}
@@ -317,8 +318,8 @@
 	export let data: TeamsData, team: Team, mobileView: boolean;
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" class="resizable-graph" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

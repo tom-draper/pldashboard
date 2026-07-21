@@ -34,7 +34,7 @@
 
 	function createScatterData(data: FantasyData): PlotTrace {
 		const processedData = processTeamData(data);
-		
+
 		return {
 			x: processedData.points,
 			y: processedData.price,
@@ -68,17 +68,17 @@
 			teams.push(team);
 			points.push(teamData.totalPoints ?? 0);
 			price.push((teamData.price ?? 0) / 10);
-			
+
 			const playerMinutes = (teamData.minutes ?? 0) / 2;
 			minutes.push(playerMinutes);
 			maxMinutes = Math.max(maxMinutes, playerMinutes);
-			
+
 			colors.push(POSITION_COLORS[teamData.position]);
 		});
 
 		// Calculate sizes and playtimes
-		const sizes = minutes.map(m => m / (maxMinutes * 0.02));
-		const playtimes = minutes.map(m => ((m / maxMinutes) * 100).toFixed(1));
+		const sizes = minutes.map((m) => m / (maxMinutes * 0.02));
+		const playtimes = minutes.map((m) => ((m / maxMinutes) * 100).toFixed(1));
 
 		return { teams, points, price, minutes, colors, sizes, playtimes };
 	}
@@ -133,7 +133,7 @@
 			'margin.l': 60,
 			'margin.t': 15
 		};
-		
+
 		Plotly.update(plotDiv, {}, layoutUpdate, 0);
 	}
 
@@ -149,8 +149,8 @@
 		};
 
 		const originalSizes = plotData.data[0].marker!.size as number[];
-		const mobileSizes = originalSizes.map(size => Math.round(size / 2));
-		
+		const mobileSizes = originalSizes.map((size) => Math.round(size / 2));
+
 		const dataUpdate = {
 			marker: {
 				size: mobileSizes,
@@ -167,13 +167,8 @@
 
 	async function initializePlot() {
 		plotData = buildPlotData(data);
-		
-		await Plotly.newPlot(
-			plotDiv,
-			plotData.data,
-			plotData.layout,
-			plotData.config
-		);
+
+		await Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {
@@ -183,7 +178,7 @@
 		plotData.data[0] = newPlotData.data[0];
 
 		Plotly.redraw(plotDiv);
-		
+
 		// Apply appropriate layout for current view
 		if (mobileView) {
 			applyMobileLayout();
@@ -210,8 +205,8 @@
 	}
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" class="resizable-graph tall-graph" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph tall-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

@@ -23,7 +23,12 @@
 		});
 	}
 
-	function bars(data: TeamsData, team: Team, playedDates: Date[], matchdays: string[]): PlotTrace[] {
+	function bars(
+		data: TeamsData,
+		team: Team,
+		playedDates: Date[],
+		matchdays: string[]
+	): PlotTrace[] {
 		const cleanSheets = getTeamCleanSheets(data, team);
 		// Create inverse of clean sheets for goals scored
 		const notCleanSheets = Array.from(cleanSheets).map((x) => (x == 0 ? 1 : 0));
@@ -200,8 +205,8 @@
 	export let data: TeamsData, team: Team, playedDates: Date[], mobileView: boolean;
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" bind:this={plotDiv}>
+<div>
+	<div bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

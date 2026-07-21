@@ -15,9 +15,7 @@
 		if (typeof document === 'undefined') {
 			return fallback;
 		}
-		const value = getComputedStyle(document.documentElement)
-			.getPropertyValue(name)
-			.trim();
+		const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 		return value || fallback;
 	}
 
@@ -49,9 +47,7 @@
 
 		const awayPlayed = overallPlayed - homePlayed;
 		const awayRatio =
-			awayPlayed > 0
-				? (overallRatio * overallPlayed - homeRatio * homePlayed) / awayPlayed
-				: 0;
+			awayPlayed > 0 ? (overallRatio * overallPlayed - homeRatio * homePlayed) / awayPlayed : 0;
 
 		return {
 			team,
@@ -258,8 +254,8 @@
 		</div>
 	</div>
 
-	<div id="plotly">
-		<div id="plotDiv" bind:this={plotDiv}>
+	<div>
+		<div bind:this={plotDiv}>
 			<!-- Plotly chart will be drawn inside this DIV -->
 		</div>
 	</div>

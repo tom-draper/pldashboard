@@ -17,7 +17,7 @@
 			playedDates.push(new Date(date));
 		}
 
-		const y = matchdays.map(matchday => {
+		const y = matchdays.map((matchday) => {
 			const form = data.form[team][data._id][matchday].formRating5 ?? 0;
 			return form * 100;
 		});
@@ -50,9 +50,7 @@
 
 	function getLines(data: TeamsData, team: Team) {
 		const teams = getTeams(data);
-		const lines = teams
-			.filter((t) => t !== team)
-			.map((t) => getFormLine(data, t, false));
+		const lines = teams.filter((t) => t !== team).map((t) => getFormLine(data, t, false));
 
 		// Add this team last to ensure it overlaps all other lines
 		const line = getFormLine(data, team, true);
@@ -159,10 +157,10 @@
 			plotData.data[i] = newPlotData.data[i];
 		}
 
-        if (plotData.layout && plotData.layout.xaxis && plotData.layout.xaxis.range) {
-            plotData.layout.xaxis.range[0] = playedDates[0];
-            plotData.layout.xaxis.range[1] = playedDates[playedDates.length - 1];
-        }
+		if (plotData.layout && plotData.layout.xaxis && plotData.layout.xaxis.range) {
+			plotData.layout.xaxis.range[0] = playedDates[0];
+			plotData.layout.xaxis.range[1] = playedDates[playedDates.length - 1];
+		}
 
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
@@ -177,8 +175,8 @@
 	export let data: TeamsData, team: Team, playedDates: Date[], mobileView: boolean;
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" class="resizable-graph" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

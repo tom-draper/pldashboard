@@ -32,12 +32,7 @@
 		}
 	}
 
-	function highlightNextGameMarker(
-		sizes: number[],
-		x: Date[],
-		now: number,
-		highlightSize: number
-	) {
+	function highlightNextGameMarker(sizes: number[], x: Date[], now: number, highlightSize: number) {
 		// Get matchday date with smallest time difference to now
 		let nextGameIdx: number | undefined;
 		let minDiff = Number.POSITIVE_INFINITY;
@@ -81,7 +76,6 @@
 			oppositionRating *= 1 - data.homeAdvantages[oppositionTeam].totalHomeAdvantage;
 		}
 		return oppositionRating;
-
 	}
 
 	function getLine(data: TeamsData, team: Team, now: number): PlotTrace {
@@ -157,7 +151,8 @@
 		// Show  the current date line only if currently before 30 days after of the season
 		const currentDateLineLimit = new Date(maxX);
 		currentDateLineLimit.setDate(currentDateLineLimit.getDate() + 30);
-		const currentDate = now <= currentDateLineLimit.getTime() ? currentDateLine(now, maxX.getTime()) : null;
+		const currentDate =
+			now <= currentDateLineLimit.getTime() ? currentDateLine(now, maxX.getTime()) : null;
 
 		const layout: PlotLayout = {
 			title: { text: '' },
@@ -306,8 +301,8 @@
 	export let data: TeamsData, team: Team, mobileView: boolean;
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" class="resizable-graph" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

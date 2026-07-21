@@ -8,7 +8,7 @@
 	function getAvgGoalsPerGame(data: TeamsData): Counter {
 		const avgGoals: Counter = {};
 
-		const teams = getTeams(data)
+		const teams = getTeams(data);
 		for (const team of teams) {
 			for (const matchday in data.form[team][data._id]) {
 				const score = data.form[team][data._id][matchday].score;
@@ -75,7 +75,11 @@
 		};
 	}
 
-	function teamConcededBar(playedDates: Date[], teamConceded: Counter, matchdays: string[]): PlotTrace {
+	function teamConcededBar(
+		playedDates: Date[],
+		teamConceded: Counter,
+		matchdays: string[]
+	): PlotTrace {
 		return {
 			name: 'Conceded',
 			type: 'bar',
@@ -214,8 +218,8 @@
 	export let data: TeamsData, team: Team, playedDates: Date[], mobileView: boolean;
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" class="resizable-graph" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

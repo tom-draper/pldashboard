@@ -261,8 +261,8 @@
 </script>
 
 <div class="spider-chart">
-	<div id="plotly">
-		<div id="plotDiv" class="resizable-spider-chart" bind:this={plotDiv}>
+	<div>
+		<div class="resizable-spider-chart" bind:this={plotDiv}>
 			<!-- Plotly chart will be drawn inside this DIV -->
 		</div>
 	</div>
