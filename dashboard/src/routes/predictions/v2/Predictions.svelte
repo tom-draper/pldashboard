@@ -1,12 +1,12 @@
 <script lang="ts">
-	import Footer from "$lib/components/Footer.svelte";
-	import type { PredictionsV2Data } from "./predictions-v2.types";
-	import live from "$lib/images/live.svg";
+	import Footer from '$lib/components/Footer.svelte';
+	import type { PredictionsV2Data } from './predictions-v2.types';
+	import live from '$lib/images/live.svg';
 
 	function updateCountdowns() {
 		const updatedCountdowns = Array(data.matches.length);
 		for (let i = 0; i < data.matches.length; i++) {
-			const kickoff = data.matches[i].kickoff
+			const kickoff = data.matches[i].kickoff;
 			if (kickoff !== null) {
 				updatedCountdowns[i] = getCountdown(kickoff);
 			} else {
@@ -37,7 +37,7 @@
 		const days = Math.floor(hours / 24);
 
 		const countdown = countdownString(days, hours, minutes, seconds);
-		return countdown
+		return countdown;
 	}
 
 	function countdownString(days: number, hours: number, minutes: number, seconds: number) {
@@ -60,30 +60,43 @@
 	let countdowns = Array(data.matches.length).fill('');
 	$: countdowns;
 
-	updateCountdowns();
+	const barBase = 'mb-[0.3em] flex h-[12px]';
 
+	updateCountdowns();
 </script>
 
-<div class="predictions-container">
-	<div class="header">
-		<div class="title">
-			<div><span class="pl">pl</span>dashboard</div>
-			<div class="ai-title">AI</div>
+<div class="min-h-screen bg-[rgb(10,0,8)] text-white">
+	<div class="px-[15px] py-[12px] text-center">
+		<div
+			class="flex place-content-center place-items-center px-[1em] py-[0.8em] text-[2.5rem] font-semibold max-[550px]:text-[1.8em]"
+		>
+			<div><span class="text-[var(--green)]">pl</span>dashboard</div>
+			<div
+				class="ml-[0.5ch] bg-[linear-gradient(#bc0cf1,#d40404)] bg-clip-text text-[1.05em] text-transparent"
+			>
+				AI
+			</div>
 		</div>
 		<div>Real-time football predictions from our ground-breaking intelligent model.</div>
 	</div>
 
-	<div class="predictions">
+	<div class="mx-auto my-[10vh]">
 		{#if data.matches.length > 0}
 			{#each data.matches as prediction, i}
-				<div class="prediction">
-					<div class="prediction-header">
+				<div
+					class="mx-auto my-[2em] max-w-[28em] rounded-[4px] bg-[rgb(37,1,30)] px-[1.6em] py-[1em]"
+				>
+					<div class="mb-[0.5em] flex justify-between">
 						<div>{prediction._id}</div>
 
-						<img src="{live}" alt="Live" />
-						<div class="countdown">{countdowns[i]}</div>
+						<img
+							src={live}
+							alt="Live"
+							class="mt-[-44px] mr-[-50px] mb-[-50px] inline-block h-[80px] w-[80px]"
+						/>
+						<div class="grow text-right">{countdowns[i]}</div>
 					</div>
-					<div class="prediction-value">
+					<div class="mt-[0.2em] mb-[0.3em] text-[1.6em]">
 						{#if prediction.odds[prediction.odds.length - 1].prediction.value === 1}
 							Home win
 						{:else if prediction.odds[prediction.odds.length - 1].prediction.value === 0}
@@ -92,145 +105,44 @@
 							Away win
 						{/if}
 					</div>
-					<div class="probabilitity-bar-container">
-						<div class="probability-bar">
+					<div>
+						<div class={barBase}>
 							<div
-								class="probability-bar probability-bar-home"
-								style="width: {prediction.odds[prediction.odds.length - 1].prediction.probability[0] * 100}%"
-								title="{(prediction.odds[prediction.odds.length - 1].prediction.probability[0] * 100).toFixed(2)}% home win"
+								class="{barBase} rounded-l-[2px] bg-[var(--green)]"
+								style="width: {prediction.odds[prediction.odds.length - 1].prediction
+									.probability[0] * 100}%"
+								title="{(
+									prediction.odds[prediction.odds.length - 1].prediction.probability[0] * 100
+								).toFixed(2)}% home win"
 							></div>
 							<div
-								class="probability-bar probability-bar-draw"
-								style="width: {prediction.odds[prediction.odds.length - 1].prediction.probability[1] * 100}%"
-								title="{(prediction.odds[prediction.odds.length - 1].prediction.probability[1] * 100).toFixed(2)}% draw"
+								class="{barBase} bg-white"
+								style="width: {prediction.odds[prediction.odds.length - 1].prediction
+									.probability[1] * 100}%"
+								title="{(
+									prediction.odds[prediction.odds.length - 1].prediction.probability[1] * 100
+								).toFixed(2)}% draw"
 							></div>
 							<div
-								class="probability-bar probability-bar-away"
-								style="width: {prediction.odds[prediction.odds.length - 1].prediction.probability[2] * 100}%"
-								title="{(prediction.odds[prediction.odds.length - 1].prediction.probability[2] * 100).toFixed(2)}% away win"
+								class="{barBase} rounded-r-[2px] bg-[var(--pink)]"
+								style="width: {prediction.odds[prediction.odds.length - 1].prediction
+									.probability[2] * 100}%"
+								title="{(
+									prediction.odds[prediction.odds.length - 1].prediction.probability[2] * 100
+								).toFixed(2)}% away win"
 							></div>
 						</div>
 					</div>
 				</div>
 			{/each}
 		{:else}
-			<div class="no-predictions">No live predictions available. Check back closer to the game.</div>
+			<div class="mx-auto w-fit rounded-[4px] bg-[rgb(53,2,43)] px-[2em] py-[5em] text-center">
+				No live predictions available. Check back closer to the game.
+			</div>
 		{/if}
 	</div>
-	<div class="previous-predictions">
-		362 games, 61% accuracy
-	</div>
+	<div class="bg-[rgb(10,0,8)] text-center text-white opacity-40">362 games, 61% accuracy</div>
 </div>
-<div class="footer-container">
+<div class="bg-[rgb(10,0,8)]">
 	<Footer lastUpdated={null} dark={true} />
 </div>
-
-<style scoped>
-	.prediction-header {
-		display: flex;
-		justify-content: space-between;
-		margin-bottom: 0.5em;
-	}
-
-	.predictions-container {
-		min-height: 100vh;
-		background: rgb(10, 0, 8);
-		color: white;
-	}
-	.pl {
-		color: var(--green);
-	}
-
-	.title {
-		place-content: center;
-		display: flex;
-		place-items: center;
-		font-size: 2.5rem;
-		padding: 0.8em 1em;
-	}
-	.ai-title {
-		margin-left: 0.5ch;
-		font-size: 1.05em;
-		background: -webkit-linear-gradient(rgb(188, 12, 241), rgb(212, 4, 4));
-		-webkit-background-clip: text;
-		background-clip: text;
-		-webkit-text-fill-color: transparent;
-	}
-
-	.predictions {
-		margin: 10vh auto;
-	}
-	.prediction {
-		background: rgb(53, 2, 43);
-		background: var(--purple);
-		background: rgb(37, 1, 30);
-		border-radius: 4px;
-		margin: 2em auto;
-		padding: 1em 1.6em;
-		max-width: 28em;
-		/* flex: 1; */
-	}
-	.no-predictions {
-		text-align: center;
-		width: fit-content;
-		margin: auto;
-		padding: 5em 2em;
-		background: rgb(53, 2, 43);
-		border-radius: 4px;
-	}
-
-	.prediction-value {
-		margin: 0.2em 0 0.3em;
-		font-size: 1.6em;
-	}
-
-	.probability-bar {
-		height: 12px;
-		display: flex;
-		margin-bottom: 0.3em;
-	}
-
-	.probability-bar-home {
-		background: var(--green);
-		border-radius: 2px 0 0 2px;
-	}
-	.probability-bar-draw {
-		background: white;
-	}
-	.probability-bar-away {
-		background: var(--pink);
-		border-radius: 0 2px 2px 0;
-	}
-
-	.header {
-		height: auto;
-	}
-
-	img {
-		width: 80px;
-		height: 80px;
-		margin-top: -44px;
-		/* margin-right: -140px; */
-		margin-right: -50px;
-		/* margin-left: -80px; */
-		margin-bottom: -50px;
-		/* margin: 20px; */
-		display: inline-block;
-	}
-
-	.countdown {
-		flex-grow: 1;
-		text-align: right;
-	}
-
-	.previous-predictions,
-	.footer-container {
-		background: rgb(10, 0, 8);
-	}
-
-	.previous-predictions {
-		text-align: center;
-		color: white;
-		opacity: 0.4;
-	}
-</style>
