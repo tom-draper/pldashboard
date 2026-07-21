@@ -7,6 +7,11 @@
 
 	const CONTEXT_OPACITY = 0.45;
 
+	// The split is pooled over the most recent seasons so a single quiet season
+	// doesn't swing the figure; a team promoted partway through simply
+	// contributes whichever of these seasons it has data for.
+	const SEASONS_BACK = 3;
+
 	// Plotly cannot read CSS custom properties, so --green is resolved at run
 	// time the same way the other charts do it. Note it measures 1.32:1 against
 	// the chart surface, below the 3:1 mark contrast guideline: the direct label
@@ -33,21 +38,37 @@
 	};
 
 	/**
-	 * The home/away win-ratio split for a team.
+	 * The home/away win-ratio split for a team, pooled over the most recent
+	 * SEASONS_BACK seasons ending at `latestSeason`.
+	 *
+	 * Ratios are recombined from summed wins and games rather than averaged, so
+	 * seasons with more matches carry proportionally more weight.
 	 *
 	 * The stored `homeAdvantage` field compares home against *overall*, which
 	 * includes the home games, making it exactly half of the home-vs-away gap.
 	 * The away ratio is recovered from the two so the chart can show the full
 	 * gap, which is the figure that means something to a reader.
 	 */
-	function homeAwaySplit(data: TeamsData, team: Team, season: number): Split {
-		const seasonData = data.homeAdvantages[team][season];
-		const { played: homePlayed, winRatio: homeRatio } = seasonData.home;
-		const { played: overallPlayed, winRatio: overallRatio } = seasonData.overall;
+	function homeAwaySplit(data: TeamsData, team: Team, latestSeason: number): Split {
+		let homeWins = 0;
+		let homePlayed = 0;
+		let overallWins = 0;
+		let overallPlayed = 0;
 
+		for (let season = latestSeason; season > latestSeason - SEASONS_BACK; season--) {
+			const seasonData = data.homeAdvantages[team]?.[season];
+			if (seasonData == null) {
+				continue;
+			}
+			homeWins += seasonData.home.winRatio * seasonData.home.played;
+			homePlayed += seasonData.home.played;
+			overallWins += seasonData.overall.winRatio * seasonData.overall.played;
+			overallPlayed += seasonData.overall.played;
+		}
+
+		const homeRatio = homePlayed > 0 ? homeWins / homePlayed : 0;
 		const awayPlayed = overallPlayed - homePlayed;
-		const awayRatio =
-			awayPlayed > 0 ? (overallRatio * overallPlayed - homeRatio * homePlayed) / awayPlayed : 0;
+		const awayRatio = awayPlayed > 0 ? (overallWins - homeWins) / awayPlayed : 0;
 
 		return {
 			team,
