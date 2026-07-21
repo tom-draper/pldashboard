@@ -12,25 +12,9 @@
 	// contributes whichever of these seasons it has data for.
 	const SEASONS_BACK = 3;
 
-	// Plotly cannot read CSS custom properties, so --green is resolved at run
-	// time the same way the other charts do it. Note it measures 1.32:1 against
-	// the chart surface, below the 3:1 mark contrast guideline: the direct label
-	// on the emphasised bar and the hover values are what keep it readable.
-	function cssVar(name: string, fallback: string): string {
-		if (typeof document === 'undefined') {
-			return fallback;
-		}
-		const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-		return value || fallback;
-	}
-
-	const betterAtHome = () => cssVar('--green', '#00fe87');
-	// --lose is the same #f83027 the other charts hardcode, just named.
-	const worseAtHome = () => cssVar('--lose', '#f83027');
-
-	// Red → yellow → green anchors, mirroring --lose / --draw / --green, so the
-	// headline figure's colour places the team on the leaguewide scale: the best
-	// home advantage reads green, the worst red.
+	// Red → yellow → green anchors, mirroring --lose / --draw / --green. The same
+	// scale colours both the headline figure and the bars, placing each team on
+	// the leaguewide scale: the best home advantage reads green, the worst red.
 	const SCALE_RED = [248, 48, 39]; // #f83027
 	const SCALE_YELLOW = [255, 221, 0]; // #ffdd00
 	const SCALE_GREEN = [0, 254, 135]; // #00fe87
@@ -58,22 +42,26 @@
 	}
 
 	/**
-	 * Colour for the headline figure. Yellow is anchored at a level 0% gap, and
-	 * each side is scaled by the league's strongest advantage in that direction,
-	 * so the best home team reads full green and the worst full red while the
-	 * sign of the gap always lands on the correct half of the scale.
+	 * Position of a delta on the [0, 1] colour scale. Yellow (0.5) is anchored at
+	 * a level 0% gap; each side is scaled by the league's strongest advantage in
+	 * that direction, so the sign always lands on the correct half of the scale.
 	 */
+	function scaleT(delta: number, minAdvantage: number, maxAdvantage: number): number {
+		if (delta >= 0) {
+			return maxAdvantage > 0 ? 0.5 + 0.5 * (delta / maxAdvantage) : 0.5;
+		}
+		return minAdvantage < 0 ? 0.5 - 0.5 * (delta / minAdvantage) : 0.5;
+	}
+
+	/** Colour for a delta, ranked against the rest of the league. */
+	function deltaColor(delta: number, minAdvantage: number, maxAdvantage: number): string {
+		return scaleColor(scaleT(delta, minAdvantage, maxAdvantage));
+	}
+
+	/** Colour for the headline figure, ranked against the rest of the league. */
 	function computeFigureColor(data: TeamsData, delta: number): string {
 		const rows = splits(data); // sorted ascending, so ends are min and max
-		const minAdvantage = rows[0].delta;
-		const maxAdvantage = rows[rows.length - 1].delta;
-		let t: number;
-		if (delta >= 0) {
-			t = maxAdvantage > 0 ? 0.5 + 0.5 * (delta / maxAdvantage) : 0.5;
-		} else {
-			t = minAdvantage < 0 ? 0.5 - 0.5 * (delta / minAdvantage) : 0.5;
-		}
-		return scaleColor(t);
+		return deltaColor(delta, rows[0].delta, rows[rows.length - 1].delta);
 	}
 
 	type Split = {
@@ -136,6 +124,8 @@
 
 	function bars(data: TeamsData, team: Team): PlotTrace {
 		const rows = splits(data);
+		const minAdvantage = rows[0].delta;
+		const maxAdvantage = rows[rows.length - 1].delta;
 
 		return {
 			type: 'bar',
@@ -143,9 +133,9 @@
 			x: rows.map((r) => r.delta),
 			y: rows.map((r) => toInitials(r.team)),
 			marker: {
-				color: rows.map((r) => (r.delta >= 0 ? betterAtHome() : worseAtHome())),
-				// Emphasis is carried by opacity rather than a third hue, so it
-				// cannot collide with the diverging encoding.
+				color: rows.map((r) => deltaColor(r.delta, minAdvantage, maxAdvantage)),
+				// Emphasis is carried by opacity rather than hue, so the focused team
+				// reads on top of the red-to-green scale without a fourth colour.
 				opacity: rows.map((r) => (r.team === team ? 1 : CONTEXT_OPACITY))
 			},
 			// Only the team in focus is labelled; a number on every bar is noise.
