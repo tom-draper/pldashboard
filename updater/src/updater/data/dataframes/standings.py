@@ -3,7 +3,7 @@ from pandas import DataFrame
 from typing import Optional, Dict, List, Any
 
 from updater.fmt import clean_full_team_name
-from timebudget import timebudget
+from updater.timing import timed
 
 from updater.data.dataframes.df import DF
 from updater.data.raw_data import RawData
@@ -152,7 +152,7 @@ class Standings(DF):
         
         return combined_standings
 
-    @timebudget
+    @timed
     def build(
         self, raw_data: RawData, season: int, num_seasons: int = 3, display: bool = False
     ):

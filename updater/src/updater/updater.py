@@ -10,7 +10,7 @@ from updater.data.raw_data import RawData
 from updater.data_source import DataSource
 from updater.database import Database
 from updater.env import require_env_int
-from timebudget import timebudget
+from updater.timing import timed
 
 
 class Updater:
@@ -128,7 +128,7 @@ class Updater:
         self.database.update_predictions(predictions, actual_scores)
         self.database.update_actual_scores(actual_scores)
 
-    @timebudget
+    @timed
     def build_all(
         self,
         num_seasons: int = 4,

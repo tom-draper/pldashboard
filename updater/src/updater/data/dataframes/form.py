@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame
 from updater.fmt import clean_full_team_name
-from timebudget import timebudget
+from updater.timing import timed
 
 from updater.data.dataframes.df import DF
 from updater.data.dataframes.team_ratings import TeamRatings
@@ -146,12 +146,12 @@ class Form(DF):
 
         A team with a postponed or unplayed game has no cumulative or form
         values for that matchday, so the previous matchday's are carried
-        forward. Only those teams are touched: teams that did play keep their
-        real values.
+        forward. Those cells are exactly the ones the build left empty, so a
+        forward fill along the matchday axis (done per field) achieves this in
+        one vectorised pass: only the empty cells are filled, and teams that
+        played keep their real values.
         """
         current_season = max(form.columns.unique(level=0))
-        season_columns = form[current_season]
-        matchdays = list(sorted(season_columns.columns.unique(level=0)))
         essential_cols = (
             "cumGD",
             "cumPoints",
@@ -161,23 +161,20 @@ class Form(DF):
             "formRating10",
         )
 
-        # The opposition name is absent exactly when a team has no completed
-        # match that matchday, so it identifies the rows needing a fill.
-        opposition = season_columns.xs("team", level=1, axis=1)
-
-        for i, matchday in enumerate(matchdays):
-            if i == 0:
-                continue  # Nothing earlier to carry forward from
-            prev_matchday = matchdays[i - 1]
-
-            missing = opposition.index[opposition[matchday].isna()]
-            if missing.empty:
-                continue
-
-            for col in essential_cols:
-                form.loc[missing, (current_season, matchday, col)] = form.loc[
-                    missing, (current_season, prev_matchday, col)
-                ].to_numpy()
+        for field in essential_cols:
+            # This field's current-season columns, in matchday order so the fill
+            # carries earlier matchdays forward into later ones.
+            field_cols = sorted(
+                (
+                    col
+                    for col in form.columns
+                    if col[0] == current_season and col[2] == field
+                ),
+                key=lambda col: col[1],
+            )
+            if len(field_cols) > 1:
+                block = form.loc[:, field_cols]
+                form.loc[:, field_cols] = block.ffill(axis=1).to_numpy()
 
     def _clean_dataframe(self, form: DataFrame, matchday_nos: list[int]):
         # Drop columns used for working
@@ -377,7 +374,7 @@ class Form(DF):
             if team not in d:
                 d[team] = {(2023, 1, "team"): np.nan}
 
-    @timebudget
+    @timed
     def build(
         self,
         raw_data: RawData,

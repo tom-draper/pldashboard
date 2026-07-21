@@ -1,7 +1,7 @@
 import pandas as pd
 from pandas import DataFrame
 from typing import Optional, Dict, Any
-from timebudget import timebudget
+from updater.timing import timed
 
 from .df import DF
 from updater.data.raw_data import RawData
@@ -216,7 +216,7 @@ class Fantasy(DF):
         
         return df
 
-    @timebudget
+    @timed
     def build(self, raw_data: RawData, display: bool = False) -> None:
         """
         Build a comprehensive Fantasy Premier League DataFrame with player statistics.

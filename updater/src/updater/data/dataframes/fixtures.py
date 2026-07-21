@@ -5,7 +5,7 @@ from datetime import datetime
 import pandas as pd
 from pandas import DataFrame
 from updater.fmt import clean_full_team_name, convert_team_name_or_initials
-from timebudget import timebudget
+from updater.timing import timed
 
 from .df import DF
 from updater.data.raw_data import RawData
@@ -119,7 +119,7 @@ class Fixtures(DF):
         columns[(matchday_no, "status")][team] = match["status"]
         columns[(matchday_no, "score")][team] = score
 
-    @timebudget
+    @timed
     def build(self, raw_data: RawData, season: int, display: bool = False):
         """ Builds a DataFrame containing the past and future fixtures for the
             current season (matchday 1 to 38) and inserts it into the fixtures

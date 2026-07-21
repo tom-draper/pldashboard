@@ -1,13 +1,23 @@
 from datetime import datetime
-from typing import Optional
+from typing import NamedTuple, Optional
 
 import numpy as np
 import pandas as pd
+from pandas import DataFrame
 from updater.data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
 
 from updater.predictions.form import calc_form
 from updater.predictions.scoreline import Scoreline
 from updater.data.raw_data import RawData
+
+
+class Match(NamedTuple):
+    """One completed match from a single team's perspective."""
+
+    date: datetime
+    opposition: str
+    score: dict[str, int]
+    at_home: bool
 
 
 class Predictor:
@@ -24,6 +34,11 @@ class Predictor:
         self.fixtures = self._build_long_term_fixtures(
             raw_data, fixtures, season, num_seasons
         )
+        # Parse each team's completed matches once. The frequency and recent-form
+        # helpers below are called several times per fixture, and re-slicing the
+        # (wide, multi-season) fixtures frame each time was the bulk of the
+        # prediction cost.
+        self._matches_by_team = self._index_matches(self.fixtures)
         self.form = form
         self.team_ratings = team_ratings
         self.home_advantages = home_advantages
@@ -56,64 +71,59 @@ class Predictor:
 
         return total_fixtures
 
+    @staticmethod
+    def _index_matches(fixtures: DataFrame) -> dict[str, list[Match]]:
+        """Pull every team's completed matches out of the fixtures frame once."""
+        matches_by_team: dict[str, list[Match]] = {}
+        for team in fixtures.index:
+            row = fixtures.loc[team]
+            # Collapse the (season, matchday, field) columns down to field.
+            row.index = row.index.get_level_values(2)
+            oppositions = row.loc["team"]
+            scores = row.loc["score"]
+            at_homes = row.loc["atHome"]
+            dates = row.loc["date"]
+
+            team_matches: list[Match] = []
+            for date, opposition, score, at_home in zip(
+                dates, oppositions, scores, at_homes
+            ):
+                if pd.isna(score):
+                    continue
+                team_matches.append(Match(date, opposition, score, at_home))
+            matches_by_team[team] = team_matches
+        return matches_by_team
+
     def _team_scoreline_freq(self, team: str):
         freq: dict[Scoreline, int] = {}
-
-        team_row = self.fixtures.loc[team]
-        # Remove higher-level multi-index
-        team_row.index = team_row.index.get_level_values(2)
-        scores: list[dict[str, int]] = team_row.loc["score"]
-        at_homes: list[bool] = team_row.loc["atHome"]
-
-        for score, at_home in zip(scores, at_homes):
-            if pd.isna(score):
-                continue
-
-            if at_home:
-                home_team = team
-                away_team = None
+        for match in self._matches_by_team[team]:
+            if match.at_home:
+                home_team, away_team = team, None
             else:
-                home_team = None
-                away_team = team
+                home_team, away_team = None, team
 
             scoreline = Scoreline(
-                score["homeGoals"], score["awayGoals"], home_team, away_team
+                match.score["homeGoals"], match.score["awayGoals"], home_team, away_team
             )
-
-            if scoreline not in freq:
-                freq[scoreline] = 0
-            freq[scoreline] += 1
+            freq[scoreline] = freq.get(scoreline, 0) + 1
 
         return freq
 
     def _fixture_scoreline_freq(self, team1: str, team2: str):
         freq: dict[Scoreline, int] = {}
-
-        team1_row = self.fixtures.loc[team1]
-        # Remove higher-level multi-index
-        team1_row.index = team1_row.index.get_level_values(2)
-        teams: list[str] = team1_row.loc["team"]
-        scores: list[dict[str, int]] = team1_row.loc["score"]
-        at_homes: list[bool] = team1_row.loc["atHome"]
-
-        for team, score, at_home in zip(teams, scores, at_homes):
-            if pd.isna(score) or team != team2:
+        for match in self._matches_by_team[team1]:
+            if match.opposition != team2:
                 continue
 
-            if at_home:
-                home_team = team1
-                away_team = team2
+            if match.at_home:
+                home_team, away_team = team1, team2
             else:
-                home_team = team2
-                away_team = team1
+                home_team, away_team = team2, team1
 
             scoreline = Scoreline(
-                score["homeGoals"], score["awayGoals"], home_team, away_team
+                match.score["homeGoals"], match.score["awayGoals"], home_team, away_team
             )
-
-            if scoreline not in freq:
-                freq[scoreline] = 0
-            freq[scoreline] += 1
+            freq[scoreline] = freq.get(scoreline, 0) + 1
 
         return freq
 
@@ -212,30 +222,17 @@ class Predictor:
                 freq[scoreline] -= count * scale
 
     def get_recent_scorelines(self, team: str, num_matches: Optional[int]):
-        team_row = self.fixtures.loc[team]
-        # Remove higher-level multi-index
-        team_row.index = team_row.index.get_level_values(2)
-        teams: list[str] = team_row.loc["team"]
-        scores: list[dict[str, int]] = team_row.loc["score"]
-        at_homes: list[bool] = team_row.loc["atHome"]
-        dates: list[datetime] = team_row.loc["date"]
-
         dated_scorelines: list[tuple[datetime, Scoreline]] = []
-        for date, opposition, score, at_home in zip(dates, teams, scores, at_homes):
-            if pd.isna(score):
-                continue
-
-            if at_home:
-                home_team = team
-                away_team = opposition
+        for match in self._matches_by_team[team]:
+            if match.at_home:
+                home_team, away_team = team, match.opposition
             else:
-                home_team = opposition
-                away_team = team
+                home_team, away_team = match.opposition, team
 
             scoreline = Scoreline(
-                score["homeGoals"], score["awayGoals"], home_team, away_team
+                match.score["homeGoals"], match.score["awayGoals"], home_team, away_team
             )
-            dated_scorelines.append((date, scoreline))
+            dated_scorelines.append((match.date, scoreline))
 
         dated_scorelines.sort(key=lambda x: x[0])
         scorelines = [scoreline for (_, scoreline) in dated_scorelines]

@@ -5,7 +5,7 @@ from typing import Optional, Dict, List, Set, Tuple, Any
 import pandas as pd
 from pandas import DataFrame
 from updater.fmt import clean_full_team_name
-from timebudget import timebudget
+from updater.timing import timed
 
 from updater.data.dataframes.df import DF
 from updater.data.raw_data import RawData
@@ -203,7 +203,7 @@ class HomeAdvantages(DF):
             teams.add(away_team)
         return sorted(list(teams))  # Sort for consistency
 
-    @timebudget
+    @timed
     def build(
         self,
         raw_data: RawData,
