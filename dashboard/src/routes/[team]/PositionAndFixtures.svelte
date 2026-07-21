@@ -1,5 +1,6 @@
 <script lang="ts">
 	import FixturesGraph from './FixturesGraph.svelte';
+	import Row from './Row.svelte';
 	import type { DashboardData } from './dashboard.types';
 
 	let pageWidth: number;
@@ -10,9 +11,7 @@
 
 <svelte:window bind:innerWidth={pageWidth} />
 
-<div
-	class="relative mx-[1.4em] mt-0 mb-[1.2em] flex h-auto max-[1000px]:mx-0 max-[1000px]:flex-col"
->
+<Row class="mx-[1.4em] mt-0 mb-[1.2em] max-[1000px]:mx-0">
 	<div class="row-left position-no-badge">
 		<div class="circles-background-container">
 			<svg class="circles-background" viewBox="0 0 600 600">
@@ -43,7 +42,7 @@
 			<FixturesGraph data={data.data} team={data.team.name} {mobileView} />
 		</div>
 	</div>
-</div>
+</Row>
 
 <style>
 	.position-no-badge {

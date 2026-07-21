@@ -1,1 +1,1 @@
-export const CURRENT_SEASON = 2026
+export const CURRENT_SEASON = 2025
