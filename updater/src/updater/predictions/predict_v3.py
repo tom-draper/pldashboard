@@ -199,7 +199,7 @@ def _time_weights(dates: np.ndarray, half_life_days: float) -> np.ndarray:
 
 def fit_dixon_coles(
     matches: list[MatchResult],
-    half_life_days: float = 180.0,
+    half_life_days: float = 365.0,
     regularisation: float = 1e-3,
     max_iter: int = 200,
 ) -> Optional[DixonColesModel]:
@@ -221,7 +221,13 @@ def fit_dixon_coles(
     away_idx = np.array([index[m.away_team] for m in matches])
     home_goals = np.array([m.home_goals for m in matches], dtype=float)
     away_goals = np.array([m.away_goals for m in matches], dtype=float)
-    dates = np.array([np.datetime64(m.date) for m in matches])
+    # np.datetime64 has no tz support; drop the offset (all inputs are UTC).
+    dates = np.array(
+        [
+            np.datetime64(m.date.replace(tzinfo=None) if m.date.tzinfo else m.date)
+            for m in matches
+        ]
+    )
     weights = _time_weights(dates, half_life_days)
 
     def unpack(params: np.ndarray):
