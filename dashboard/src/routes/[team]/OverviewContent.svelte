@@ -37,6 +37,20 @@
 		fixturesScaling = result.fixturesScaling;
 	}
 
+	function latestFormRating(team: Standings['team']): string {
+		const seasonForm = data.data.form[team]?.[data.data._id];
+		if (!seasonForm) {
+			return '';
+		}
+		const matchdays = Object.keys(seasonForm);
+		if (matchdays.length === 0) {
+			return '';
+		}
+		const latest = Math.max(...matchdays.map((x) => parseInt(x)));
+		const rating = seasonForm[latest]?.formRating5;
+		return rating != null ? rating.toFixed(2) : '';
+	}
+
 	export let data: DashboardData;
 </script>
 
@@ -105,7 +119,7 @@
 								class="table-row"
 								class:top-row={i === 0}
 								class:bottom-row={i === standings.length - 1}
-								class:grey-row={i%2 == 0}
+								class:grey-row={i % 2 == 0}
 								class:cl={i < 4}
 								class:el={i > 3 && i < 6}
 								class:relegation={i > 16}
@@ -144,29 +158,7 @@
 									{data.data.teamRatings[row.team].total.toFixed(2)}
 								</div>
 								<div class="standings-form">
-									{Object.keys(data.data.form[row.team][data.data._id]).length > 0 &&
-									data.data.form[row.team][data.data._id][
-										Math.max(
-											...Object.keys(data.data.form[row.team][data.data._id]).map((x) =>
-												parseInt(x)
-											)
-										)
-									] != undefined &&
-									data.data.form[row.team][data.data._id][
-										Math.max(
-											...Object.keys(data.data.form[row.team][data.data._id]).map((x) =>
-												parseInt(x)
-											)
-										)
-									].formRating5 != null
-										? data.data.form[row.team][data.data._id][
-												Math.max(
-													...Object.keys(data.data.form[row.team][data.data._id]).map((x) =>
-														parseInt(x)
-													)
-												)
-											].formRating5?.toFixed(2)
-										: ''}
+									{latestFormRating(row.team)}
 								</div>
 							</div>
 						{/each}
