@@ -103,15 +103,18 @@
 			// Only the team in focus is labelled; a number on every bar is noise.
 			text: rows.map((r) => (r.team === team ? formatDelta(r.delta) : '')),
 			textposition: 'outside',
-			// customdata carries the raw counts so a reader can judge the sample.
+			// customdata carries the raw counts so a reader can judge the sample,
+			// plus the full team name so the hover reads in full while the axis
+			// stays on the short codes.
 			customdata: rows.map((r) => [
 				Math.round(r.homeRatio * 100),
 				Math.round(r.awayRatio * 100),
 				r.homePlayed,
-				r.awayPlayed
+				r.awayPlayed,
+				toAlias(r.team)
 			]),
 			hovertemplate:
-				'<b>%{y}</b><br>' +
+				'<b>%{customdata[4]}</b><br>' +
 				'Home: %{customdata[0]}% of %{customdata[2]} won<br>' +
 				'Away: %{customdata[1]}% of %{customdata[3]} won<br>' +
 				'Gap: %{x:+.0%}<extra></extra>',
