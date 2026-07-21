@@ -32,7 +32,6 @@
 	--manchester-city: rgb(108 171 221);
 	--manchester-city-secondary: rgb(28 44 91);
 	--liverpool: rgb(200 16 46);
-	--liverpool-secondary: rgb(0 178 169);
 	--liverpool-secondary: #009685;
 	--leicester-city: rgb(0 83 160);
 	--leicester-city-secondary: rgb(253 190 17);
@@ -68,11 +67,8 @@
 	--nottingham-forest-secondary: rgb(255 255 255);
 	--luton-town: rgb(232, 68, 34);
 	--luton-town-secondary: rgb(27, 27, 56);
-	--ipswich-town: #3a64a3;
-	--ipswich-town: #01258c;
 	--ipswich-town: #214288;
 	--ipswich-town-secondary: #de2c37; 
-	--coventry-city: #6CADDF;
 	--coventry-city: #5892ab;
 	--coventry-city-secondary: #ffffff;
 	--hull-city: #e98600;
@@ -100,7 +96,6 @@
 	--dark-purple: #1c0d2d;
 	--purple: #280936;
 	--light-purple: #37003c;
-	--green: #00fe87;
 	--graph-height: '450px';
 }
 
