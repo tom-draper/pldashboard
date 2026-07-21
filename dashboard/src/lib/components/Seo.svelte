@@ -5,7 +5,9 @@
 	export let description: string;
 	/** Absolute path used for the canonical URL / og:url; defaults to the current path. */
 	export let path: string | null = null;
-	export let image = '/favicon.png';
+	// Default social share image: the dashboard screenshot from the project README.
+	export let image =
+		'https://user-images.githubusercontent.com/41476809/227160125-c2fdc601-9e32-431c-9ecf-fb0046041c4f.png';
 
 	$: origin = $page.url.origin;
 	$: canonical = `${origin}${path ?? $page.url.pathname}`;
@@ -24,7 +26,7 @@
 	<meta property="og:url" content={canonical} />
 	<meta property="og:image" content={imageUrl} />
 
-	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={title} />
 	<meta name="twitter:description" content={description} />
 	<meta name="twitter:image" content={imageUrl} />
