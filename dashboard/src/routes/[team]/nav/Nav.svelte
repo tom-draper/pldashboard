@@ -45,7 +45,7 @@
 					</a>
 				{:else}
 					<button
-						class="team-link cursor-pointer border-none bg-transparent p-0 text-left font-inherit text-inherit outline-none"
+						class="team-link cursor-pointer border-none bg-transparent p-0 text-left text-inherit outline-none [font:inherit]"
 						on:click={() => switchTeam(_team)}
 					>
 						<div
