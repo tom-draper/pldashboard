@@ -1,3 +1,6 @@
+from datetime import datetime
+from typing import Optional
+
 import pandas as pd
 from updater.data.dataframes import (
     Fixtures,
@@ -12,7 +15,7 @@ from updater.data.serialise import form_to_dict, to_nested_dict
 
 class TeamsData:
     def __init__(self):
-        self.last_updated = None
+        self.last_updated: Optional[datetime] = None
         self.fixtures: Fixtures = Fixtures()
         self.standings: Standings = Standings()
         self.team_ratings: TeamRatings = TeamRatings()
@@ -20,28 +23,26 @@ class TeamsData:
         self.form: Form = Form()
         self.upcoming: Upcoming = Upcoming()
 
-    def all_built(self):
+    def _frames(self):
+        """The built DataFrames, in the order they are concatenated.
+
+        Single source of truth so adding a frame does not mean updating
+        `all_built`, `to_dataframe` and `to_dict` in lockstep.
+        """
         return (
-            self.fixtures.df is not None
-            and self.standings.df is not None
-            and self.team_ratings.df is not None
-            and self.home_advantages.df is not None
-            and self.form.df is not None
-            and self.upcoming.df is not None
+            self.fixtures,
+            self.standings,
+            self.team_ratings,
+            self.home_advantages,
+            self.form,
+            self.upcoming,
         )
 
+    def all_built(self):
+        return all(frame.df is not None for frame in self._frames())
+
     def to_dataframe(self):
-        return pd.concat(
-            (
-                self.fixtures.df,
-                self.standings.df,
-                self.team_ratings.df,
-                self.home_advantages.df,
-                self.form.df,
-                self.upcoming.df,
-            ),
-            axis=1,
-        )
+        return pd.concat((frame.df for frame in self._frames()), axis=1)
 
     def to_dict(self):
         """Build the payload the dashboard consumes.

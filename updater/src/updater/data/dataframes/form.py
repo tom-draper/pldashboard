@@ -15,10 +15,6 @@ class Form(DF):
     def __init__(self, d: Optional[DataFrame] = None):
         super().__init__(d, "form")
 
-    def get_prev_matchday(self, current_season: int):
-        current_season = self.get_current_season()
-        return self._get_matchday(current_season, n_back=1)
-
     def get_current_matchday(self, current_season: Optional[int] = None):
         if current_season is None:
             current_season = self.get_current_season()
@@ -59,9 +55,6 @@ class Form(DF):
     ):
         if matchday < 1 or matchday > 38:
             return 0
-
-        if matchday is None:
-            return 50.0
 
         rating = (
             self.df.at[team, (current_season, matchday, f"formRating{n_games}")] * 100

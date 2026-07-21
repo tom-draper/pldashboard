@@ -1,5 +1,4 @@
 import asyncio
-import json
 import logging
 from datetime import datetime
 from typing import Optional
@@ -8,8 +7,9 @@ import aiohttp
 from updater.data import Data
 from updater.data.build_graph import Stage, resolve_order
 from updater.data.raw_data import RawData
+from updater.data_source import DataSource
 from updater.database import Database
-from updater.env import BACKUPS_DIR, require_env, require_env_int
+from updater.env import require_env_int
 from timebudget import timebudget
 
 
@@ -24,7 +24,9 @@ class Updater:
         self.games_threshold = 4
         self.home_games_threshold = 6
 
-        # Store for new requested API data or old data from local storage
+        # Fetches new data or reads the local backups, and writes backups.
+        self.data_source = DataSource(self.current_season)
+        # Populated by build_all before the DataFrames are built.
         self.raw_data = RawData()
 
     @property
@@ -37,175 +39,6 @@ class Updater:
         if self._database is None:
             self._database = Database()
         return self._database
-
-    @property
-    def url(self):
-        return require_env("URL")
-
-    @property
-    def headers(self):
-        return {"X-Auth-Token": require_env("X_AUTH_TOKEN")}
-
-    # ----------------------------- DATA API -----------------------------------
-    @staticmethod
-    async def get(
-        session: aiohttp.ClientSession, url: str, headers: Optional[dict] = None
-    ):
-        """Fetch data from url.
-
-        Args:
-            session (aiohttp.ClientSession): Session shared across all requests.
-            url (str): URL to send GET request.
-            headers (dict, optional): Headers to include in request. Defaults
-                to None.
-
-        Raises:
-            aiohttp.ClientResponseError: Request returned a non-200 status.
-
-        Returns:
-            dict: JSON data from response.
-        """
-        logging.debug(f"🌐 Requesting {url}...")
-        async with session.get(url, headers=headers) as response:
-            if response.status != 200:
-                logging.error(f"❌ Status: {response.status} [{url}]")
-                raise aiohttp.ClientResponseError(
-                    response.request_info,
-                    response.history,
-                    status=response.status,
-                    message=f"Data request to {url} failed",
-                )
-
-            logging.debug(f"✅ Status: {response.status} [{url}]")
-            data: dict = await response.json()
-            logging.debug(f"Received data from {url}")
-            return data
-
-    async def fetch_fixtures_data(self, session: aiohttp.ClientSession, season: int):
-        data: dict = await self.get(
-            session,
-            f"{self.url}v4/competitions/PL/matches/?season={season}",
-            headers=self.headers,
-        )
-        return data["matches"]
-
-    @staticmethod
-    def _load_backup(category: str, filename: str):
-        path = BACKUPS_DIR / category / filename
-        with open(path, "r") as json_file:
-            return json.load(json_file)
-
-    def load_fixtures_data(self, season: int):
-        logging.debug(f"💾 Loading fixtures data for season {season}...")
-        return self._load_backup("fixtures", f"fixtures_{season}.json")
-
-    async def fetch_standings_data(self, session: aiohttp.ClientSession, season: int):
-        data: dict = await self.get(
-            session,
-            f"{self.url}v4/competitions/PL/standings/?season={season}",
-            headers=self.headers,
-        )
-        return data["standings"][0]["table"]
-
-    def load_standings_data(self, season: int):
-        logging.debug(f"💾 Loading standings data for season {season}...")
-        return self._load_backup("standings", f"standings_{season}.json")
-
-    async def fetch_fantasy_general_data(self, session: aiohttp.ClientSession):
-        data: dict = await self.get(
-            session, "https://fantasy.premierleague.com/api/bootstrap-static/"
-        )
-        return data
-
-    def load_fantasy_general_data(self, season: int):
-        logging.debug(f"💾 Loading fantasy data for season {season}...")
-        return self._load_backup("fantasy", f"general_{season}.json")
-
-    async def fetch_fantasy_fixtures_data(self, session: aiohttp.ClientSession):
-        data: dict = await self.get(
-            session, "https://fantasy.premierleague.com/api/fixtures/"
-        )
-        return data
-
-    def load_fantasy_fixtures_data(self, season: int):
-        logging.debug(f"💾 Loading fantasy fixtures data for season {season}...")
-        return self._load_backup("fantasy", f"fixtures_{season}.json")
-
-    async def fetch_current_season(self):
-        """Fetch teams data and fantasy data from football data API and stores
-        the results in `self.raw_data`.
-        """
-        async with aiohttp.ClientSession() as session:
-            data = await asyncio.gather(
-                self.fetch_fixtures_data(session, self.current_season),
-                self.fetch_standings_data(session, self.current_season),
-                self.fetch_fantasy_general_data(session),
-                self.fetch_fantasy_fixtures_data(session),
-            )
-        # Fetch data from API (max this season and last season)
-        self.raw_data.fixtures[self.current_season] = data[0]
-        self.raw_data.standings[self.current_season] = data[1]
-        self.raw_data.fantasy_general = data[2]
-        self.raw_data.fantasy_fixtures = data[3]
-        self.data.teams.last_updated = datetime.now()
-
-    def load_current_season(self):
-        """Load teams data and fantasy data for the current Premier League
-        season from local store.
-        """
-        # Fetch data from API (max this season and last season)
-        self.raw_data.fixtures[self.current_season] = self.load_fixtures_data(
-            self.current_season
-        )
-        self.raw_data.standings[self.current_season] = self.load_standings_data(
-            self.current_season
-        )
-        self.raw_data.fantasy_general = self.load_fantasy_general_data(
-            self.current_season
-        )
-        self.raw_data.fantasy_fixtures = self.load_fantasy_fixtures_data(
-            self.current_season
-        )
-
-    def load_previous_seasons(self, num_seasons: int):
-        for i in range(1, num_seasons):
-            season = self.current_season - i
-            self.raw_data.fixtures[season] = self.load_fixtures_data(season)
-            self.raw_data.standings[season] = self.load_standings_data(season)
-
-    def set_raw_data(self, num_seasons: int, request_new: bool = True):
-        """Sets the raw data object with data from the football data API or
-        local store.
-
-        Args:
-            num_seasons (int): Number of seasons to set.
-            request_new (bool, optional): Request new data from API, otherwise
-                load from local store. Defaults to True.
-        """
-        if request_new:
-            asyncio.run(self.fetch_current_season())
-        else:
-            self.load_current_season()
-
-        self.load_previous_seasons(num_seasons)
-
-    def save_local_backup(self):
-        """Save current season fixtures and standings data in `self.raw_data` to
-        local store.
-        """
-        backups = {
-            BACKUPS_DIR / "fixtures" / f"fixtures_{self.current_season}.json":
-                self.raw_data.fixtures[self.current_season],
-            BACKUPS_DIR / "standings" / f"standings_{self.current_season}.json":
-                self.raw_data.standings[self.current_season],
-            BACKUPS_DIR / "fantasy" / f"general_{self.current_season}.json":
-                self.raw_data.fantasy_general,
-            BACKUPS_DIR / "fantasy" / f"fixtures_{self.current_season}.json":
-                self.raw_data.fantasy_fixtures,
-        }
-        for path, payload in backups.items():
-            with open(path, "w") as f:
-                json.dump(payload, f)
 
     def build_stages(self, num_seasons: int, display_tables: bool = False):
         """Declare each DataFrame build and what it depends on.
@@ -319,7 +152,7 @@ class Updater:
                 database. Defaults to True.
         """
         try:
-            self.set_raw_data(num_seasons, request_new)
+            self.raw_data = self.data_source.build_raw_data(num_seasons, request_new)
         except (aiohttp.ClientError, asyncio.TimeoutError, KeyError, ValueError) as e:
             # A failed fetch must not abort the run: fall back to the last known
             # good backup, and skip the save/upload steps so the backup and
@@ -327,13 +160,18 @@ class Updater:
             logging.error(f"❌ Failed to fetch new data: {e}")
             logging.info("🔁 Retrying with local backup data...")
             request_new = False
-            self.set_raw_data(num_seasons, request_new)
+            self.raw_data = self.data_source.build_raw_data(num_seasons, request_new)
+
+        if request_new:
+            # Data came fresh from the API; stamp when so the dashboard can show
+            # it. Backup builds leave this unset to signal the data is stale.
+            self.data.teams.last_updated = datetime.now()
 
         self.build_dataframes(num_seasons, display_tables)
 
         if request_new:
             logging.info("💾 Saving new team data to local backup...")
-            self.save_local_backup()
+            self.data_source.save_local_backup(self.raw_data)
             if update_db:
                 logging.info("💾 Saving new team data to database...")
                 self.save_team_data_to_db()

@@ -5,8 +5,14 @@ A script to fetch the latest data from the football data API, compute metrics an
 ## Getting Started
 
 ```bash
-uv install
+uv sync
 uv run updater
+```
+
+For a local run that builds from the backups in `backups/`, prints the tables and makes no database writes:
+
+```bash
+uv run updater --dev
 ```
 
 ### Docker
