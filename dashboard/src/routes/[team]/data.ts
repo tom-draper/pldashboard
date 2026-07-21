@@ -1,7 +1,7 @@
 import type { Team } from '$lib/types';
 
 export function getTitle(team: string) {
-	return `${team} Stats, Form & Fixtures | pldashboard`;
+	return `Dashboard - ${team}`;
 }
 
 export function validTeam(team: string, teams: string[]): team is Team {

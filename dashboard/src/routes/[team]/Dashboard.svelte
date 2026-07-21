@@ -78,7 +78,7 @@
 
 {#if data.slug === 'overview'}
 	<Seo
-		title="Premier League Overview — Standings, Fixtures & Ratings | pldashboard"
+		title="Dashboard - Overview"
 		description="Premier League standings, upcoming fixtures and team ratings at a glance, updated through the season."
 		path="/overview"
 	/>

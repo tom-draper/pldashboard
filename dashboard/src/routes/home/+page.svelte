@@ -4,7 +4,7 @@
 </script>
 
 <Seo
-	title="Premier League Dashboard — Team Stats, Form & Predictions"
+	title="Premier League Dashboard"
 	description="Explore interactive Premier League team dashboards: current form, league position, goals, fixtures, standings and AI match predictions for every club."
 />
 

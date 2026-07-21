@@ -19,8 +19,8 @@ export function filterDataByPage(data: FantasyData, page: Page) {
 
 export function getTitle(page: Page) {
 	if (page === 'all') {
-		return 'Fantasy Premier League Stats & Optimal Team | pldashboard';
+		return 'Dashboard - Fantasy';
 	}
 	const position = page[0].toUpperCase() + page.slice(1);
-	return `${position} — Fantasy Premier League Stats | pldashboard`;
+	return `Dashboard - Fantasy - ${position}`;
 }

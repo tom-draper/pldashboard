@@ -8,7 +8,7 @@
 </script>
 
 <Seo
-	title="Premier League Match Predictions | pldashboard"
+	title="Dashboard - Predictions"
 	description="Premier League match result predictions with scorelines and tracked accuracy across the season."
 />
 
