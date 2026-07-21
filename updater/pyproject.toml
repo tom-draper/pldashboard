@@ -19,6 +19,7 @@ dependencies = [
     "pandas>=3.0.3,<4",
     "pymongo>=4.13.2,<5",
     "python-dotenv>=1.1.1,<2",
+    "scipy>=1.13,<2",
     "timebudget>=0.7.1,<1",
 ]
 
