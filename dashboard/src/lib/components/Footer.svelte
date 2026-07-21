@@ -161,7 +161,9 @@
 		color: #00ef87;
 	}
 
-	@media only screen and (max-width: 1200px) {
+	/* Matches the mobile "Select Team" button's xl breakpoint (Tailwind xl = 1280px)
+	   so the fixed button never overlaps the footer logo. */
+	@media only screen and (max-width: 1279.98px) {
 		.teams-footer {
 			padding-bottom: 46px;
 		}
