@@ -28,6 +28,47 @@
 	// --lose is the same #f83027 the other charts hardcode, just named.
 	const worseAtHome = () => cssVar('--lose', '#f83027');
 
+	// Red → yellow → green anchors, mirroring --lose / --draw / --green, so the
+	// headline figure's colour places the team on the leaguewide scale: the best
+	// home advantage reads green, the worst red.
+	const SCALE_RED = [248, 48, 39]; // #f83027
+	const SCALE_YELLOW = [255, 221, 0]; // #ffdd00
+	const SCALE_GREEN = [0, 254, 135]; // #00fe87
+
+	function lerpChannel(a: number, b: number, t: number): number {
+		return Math.round(a + (b - a) * t);
+	}
+
+	/** Map t in [0, 1] onto red → yellow → green (0 = worst, 1 = best). */
+	function scaleColor(t: number): string {
+		const clamped = Math.min(1, Math.max(0, t));
+		let from: number[];
+		let to: number[];
+		let local: number;
+		if (clamped < 0.5) {
+			from = SCALE_RED;
+			to = SCALE_YELLOW;
+			local = clamped / 0.5;
+		} else {
+			from = SCALE_YELLOW;
+			to = SCALE_GREEN;
+			local = (clamped - 0.5) / 0.5;
+		}
+		return `rgb(${lerpChannel(from[0], to[0], local)}, ${lerpChannel(from[1], to[1], local)}, ${lerpChannel(from[2], to[2], local)})`;
+	}
+
+	/**
+	 * Colour for the headline figure, normalised between the weakest and
+	 * strongest home advantage in the league so it reads as a relative ranking.
+	 */
+	function computeFigureColor(data: TeamsData, delta: number): string {
+		const rows = splits(data); // sorted ascending, so ends are min and max
+		const min = rows[0].delta;
+		const max = rows[rows.length - 1].delta;
+		const t = max > min ? (delta - min) / (max - min) : 0.5;
+		return scaleColor(t);
+	}
+
 	type Split = {
 		team: Team;
 		homeRatio: number;
@@ -262,14 +303,16 @@
 	$: setup && mobileView && setMobileLayout();
 
 	$: split = homeAwaySplit(data, team, data._id);
+	$: figureColor = computeFigureColor(data, split.delta);
 
 	export let data: TeamsData, team: Team, mobileView: boolean;
 </script>
 
 <div class="home-advantage">
 	<div class="summary">
-		<!-- A single value is a stat tile, not a one-bar chart. -->
-		<div class="figure" class:negative={split.delta < 0}>
+		<!-- A single value is a stat tile, not a one-bar chart. The colour ranks
+		     this team's gap against the rest of the league (red → green). -->
+		<div class="figure" style="color: {figureColor}">
 			{formatDelta(split.delta)}
 		</div>
 		<div class="caption">
@@ -302,10 +345,6 @@
 		font-size: 2.6em;
 		font-weight: 600;
 		line-height: 1.1;
-		color: var(--green);
-	}
-	.figure.negative {
-		color: var(--lose);
 	}
 	.caption {
 		font-size: 0.9em;
