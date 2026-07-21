@@ -168,18 +168,12 @@
 	async function initializePlot() {
 		plotData = buildPlotData(data);
 		
-		const plot = await Plotly.newPlot(
-			plotDiv, 
-			plotData.data, 
-			plotData.layout, 
+		await Plotly.newPlot(
+			plotDiv,
+			plotData.data,
+			plotData.layout,
 			plotData.config
-		) as unknown as HTMLDivElement;
-
-		// Add CSS classes for responsive behavior
-		const chartContainer = plot.children[0]?.children[0];
-		if (chartContainer) {
-			chartContainer.classList.add('resizable-graph', 'tall-graph');
-		}
+		);
 	}
 
 	function refreshPlot() {
@@ -217,7 +211,7 @@
 </script>
 
 <div id="plotly">
-	<div id="plotDiv" bind:this={plotDiv}>
+	<div id="plotDiv" class="resizable-graph tall-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

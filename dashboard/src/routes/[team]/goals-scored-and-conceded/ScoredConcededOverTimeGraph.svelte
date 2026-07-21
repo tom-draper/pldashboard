@@ -287,10 +287,7 @@
 	function genPlot() {
 		plotData = buildPlotData(data, team);
 		//@ts-expect-error
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
-			// Once plot generated, add resizable attribute to it to shorten height for mobile view
-			plot.children[0].children[0].classList.add('resizable-graph');
-		});
+		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {
@@ -321,7 +318,7 @@
 </script>
 
 <div id="plotly">
-	<div id="plotDiv" bind:this={plotDiv}>
+	<div id="plotDiv" class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

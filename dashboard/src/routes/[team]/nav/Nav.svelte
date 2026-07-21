@@ -38,7 +38,7 @@
 				{#if _team === team}
 					<a href="/{getTeamID(_team)}" class="team-link">
 						<div class="this-team-container text-[var(--pink)]" style={teamStyle(_team)}>
-							<div class="px-[1.4em] py-[0.4em] leading-normal">
+							<div class="px-[1.4em] py-[0.4em] leading-[normal]">
 								{toAlias(_team)}
 							</div>
 						</div>
@@ -52,7 +52,7 @@
 							class="team-container transition-[background-color,color] duration-250 ease-in-out"
 							style={teamColourVars(_team)}
 						>
-							<div class="px-[1.4em] py-[0.4em] leading-normal">
+							<div class="px-[1.4em] py-[0.4em] leading-[normal]">
 								{toAlias(_team)}
 							</div>
 						</div>
