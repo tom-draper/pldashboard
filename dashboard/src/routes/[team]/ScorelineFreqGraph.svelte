@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { getTeams, teamInSeason } from '$lib/team';
 	import type { Form, TeamsData } from './dashboard.types';
 	import { extractGoals } from '$lib/goals';
@@ -264,6 +264,13 @@
 	};
 
 	let plotDiv: HTMLDivElement, plotData: PlotData;
+
+	onDestroy(() => {
+		// Remove Plotly's resize listeners and DOM when the graph is destroyed.
+		if (plotDiv) {
+			Plotly.purge(plotDiv);
+		}
+	});
 	let scoreFreq: ScoreFreq;
 	let setup = false;
 	onMount(() => {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import type { FantasyData, Page, Position, Team } from './fantasy.types';
 	import type { PlotConfig, PlotData, PlotLayout, PlotTrace } from '$lib/types';
 
@@ -24,6 +24,13 @@
 
 	// State
 	let plotDiv: HTMLDivElement;
+
+	onDestroy(() => {
+		// Remove Plotly's resize listeners and DOM when the graph is destroyed.
+		if (plotDiv) {
+			Plotly.purge(plotDiv);
+		}
+	});
 	let plotData: PlotData;
 	let isSetup = false;
 

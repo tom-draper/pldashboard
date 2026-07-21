@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { toAlias } from '$lib/team';
 	import { scoreline } from '$lib/format';
 	import type { TeamsData, Fixture } from './dashboard.types';
@@ -288,6 +288,13 @@
 	}
 
 	let plotDiv: HTMLDivElement, plotData: PlotData;
+
+	onDestroy(() => {
+		// Remove Plotly's resize listeners and DOM when the graph is destroyed.
+		if (plotDiv) {
+			Plotly.purge(plotDiv);
+		}
+	});
 	let setup = false;
 	onMount(() => {
 		genPlot();

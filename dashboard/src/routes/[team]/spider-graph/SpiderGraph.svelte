@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PlotData } from '$lib/types';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { toAlias, toName, getTeamID, teamColor } from '$lib/team';
 	import type { SpiderAttribute, TeamsData } from '../dashboard.types';
 	import getAttack from './attack';
@@ -221,6 +221,14 @@
 	const labels = ['Attack', 'Defence', 'Clean sheets', 'Consistency', 'Win streak', 'Vs big 6'];
 
 	let plotDiv: HTMLDivElement, plotData: Plotly.PlotlyDataLayoutConfig;
+
+	onDestroy(() => {
+		// Remove Plotly's resize listeners and DOM when the graph is destroyed.
+		if (plotDiv) {
+			//@ts-expect-error
+			Plotly.purge(plotDiv);
+		}
+	});
 	const comparisonTeams: Team[] = [];
 	let setup = false;
 	onMount(() => {
