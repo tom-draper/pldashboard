@@ -89,6 +89,7 @@
 	<div class="mx-auto my-[10vh]">
 		{#if data.matches.length > 0}
 			{#each data.matches as prediction, i}
+				{@const latest = prediction.odds[prediction.odds.length - 1].prediction}
 				<div
 					class="mx-auto my-[2em] max-w-[28em] rounded-[4px] bg-[rgb(37,1,30)] px-[1.6em] py-[1em]"
 				>
@@ -103,9 +104,9 @@
 						<div class="grow text-right">{countdowns[i]}</div>
 					</div>
 					<div class="mt-[0.2em] mb-[0.3em] text-[1.6em]">
-						{#if prediction.odds[prediction.odds.length - 1].prediction.value === 1}
+						{#if latest.value === 1}
 							Home win
-						{:else if prediction.odds[prediction.odds.length - 1].prediction.value === 0}
+						{:else if latest.value === 0}
 							Draw
 						{:else}
 							Away win
@@ -115,27 +116,18 @@
 						<div class={barBase}>
 							<div
 								class="{barBase} rounded-l-[2px] bg-[var(--green)]"
-								style="width: {prediction.odds[prediction.odds.length - 1].prediction
-									.probability[0] * 100}%"
-								title="{(
-									prediction.odds[prediction.odds.length - 1].prediction.probability[0] * 100
-								).toFixed(2)}% home win"
+								style="width: {latest.probability[0] * 100}%"
+								title="{(latest.probability[0] * 100).toFixed(2)}% home win"
 							></div>
 							<div
 								class="{barBase} bg-white"
-								style="width: {prediction.odds[prediction.odds.length - 1].prediction
-									.probability[1] * 100}%"
-								title="{(
-									prediction.odds[prediction.odds.length - 1].prediction.probability[1] * 100
-								).toFixed(2)}% draw"
+								style="width: {latest.probability[1] * 100}%"
+								title="{(latest.probability[1] * 100).toFixed(2)}% draw"
 							></div>
 							<div
 								class="{barBase} rounded-r-[2px] bg-[var(--pink)]"
-								style="width: {prediction.odds[prediction.odds.length - 1].prediction
-									.probability[2] * 100}%"
-								title="{(
-									prediction.odds[prediction.odds.length - 1].prediction.probability[2] * 100
-								).toFixed(2)}% away win"
+								style="width: {latest.probability[2] * 100}%"
+								title="{(latest.probability[2] * 100).toFixed(2)}% away win"
 							></div>
 						</div>
 					</div>
