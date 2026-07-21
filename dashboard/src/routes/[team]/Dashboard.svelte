@@ -93,21 +93,15 @@
 
 	<div id="dashboard" class="ml-0 w-full xl:ml-[220px]">
 		{#if data.slug === 'overview'}
-			<div class="grid place-items-center bg-[var(--green)] text-[var(--purple)]">
+			<div class="grid h-24 place-items-center bg-[var(--green)] text-[var(--purple)]">
 				<a class="main-link no-decoration grid w-fit place-items-center" href="/overview">
 					<div class="w-fit text-[2.3rem]">Overview</div>
 				</a>
 			</div>
 		{:else}
-			<div
-				class="grid place-items-center"
-				style="background-color: var(--{data.team.id});"
-			>
+			<div class="grid h-24 place-items-center" style="background-color: var(--{data.team.id});">
 				<a class="main-link no-decoration grid w-fit place-items-center" href="/{data.team.id}">
-					<div
-						class="w-fit text-[2.3rem]"
-						style="color: var(--{data.team.id + '-secondary'});"
-					>
+					<div class="w-fit text-[2.3rem]" style="color: var(--{data.team.id + '-secondary'});">
 						{toAlias(data.team.name)}
 					</div>
 				</a>
