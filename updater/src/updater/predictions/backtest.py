@@ -1,5 +1,11 @@
 """Backtest harness comparing the prediction engines against each other.
 
+Both families compete here on equal terms. The `models.scoreline` engines predict
+a full goal matrix and have their home/draw/away read off it; the `models.outcome`
+engines predict home/draw/away directly and never commit to a scoreline. Since
+RPS only ever looks at the three outcome probabilities, the comparison is exactly
+like for like, and the `family` column says which kind produced each row.
+
 An analysis tool, not part of the production build. It replays a past season one
 matchday at a time, refitting each model only on matches that finished *before*
 that matchday (no leakage) and scoring the predictions with proper metrics:
@@ -17,13 +23,15 @@ that matchday (no leakage) and scoring the predictions with proper metrics:
     * exact-score accuracy - share whose most likely scoreline was exactly right.
               Low for everyone by nature: the true scoreline distribution is flat
               enough that even a perfect model rarely tops ~13%, so this is a
-              weak basis for choosing between models.
+              weak basis for choosing between models. Shown as n/a for the
+              outcome family, which never names a scoreline to be judged on.
 
 Every model is compared against a base-rate baseline (the season's own
 home/draw/away frequencies) so the numbers have a reference point. Run with::
 
     python -m updater.predictions.backtest
-    python -m updater.predictions.backtest --models dixon-coles,pi-ratings
+    python -m updater.predictions.backtest --models dixon-coles,ordered-logit
+    python -m updater.predictions.backtest --family outcome
     python -m updater.predictions.backtest --sweep --models dixon-coles
     python -m updater.predictions.backtest --seasons 2023,2024,2025
 """
@@ -43,7 +51,13 @@ import numpy as np
 from updater.env import BACKUPS_DIR
 from updater.predictions import models as model_registry
 from updater.predictions.distributions import MatchResult
-from updater.predictions.models import FittedModel, Predictor, predict_fixture
+from updater.predictions.models import (
+    FittedModel,
+    Predictor,
+    predict_fixture,
+    predict_outcome,
+    produces_scoreline,
+)
 
 
 @dataclass
@@ -123,11 +137,18 @@ class Metrics:
     """Running totals for one model, finalised by `summary()`."""
 
     label: str
+    # "scoreline", "outcome", or "-" for the baseline. Worth carrying because
+    # the leaderboard is now a comparison *between* families, not just models.
+    family: str = "-"
     n: int = 0
     rps_total: float = 0.0
     log_loss_total: float = 0.0
     correct_outcomes: int = 0
     correct_scores: int = 0
+    # Matches where an exact-score guess was even possible. The direct outcome
+    # models never predict a scoreline, so for them this stays 0 and the exact
+    # column reads n/a rather than a 0.000 that looks like a failed prediction.
+    scored_exact: int = 0
     # (predicted probability, hit) pairs across all three outcomes, for ECE.
     calibration: list[tuple[float, bool]] = field(default_factory=list)
     # Per-match RPS, kept so models can be compared *paired* on identical
@@ -148,8 +169,10 @@ class Metrics:
         self.rps_total += rps
         self.log_loss_total += -_safe_log(probs[actual])
         self.correct_outcomes += 1 if _argmax(probs) == actual else 0
-        if exact_hit:
-            self.correct_scores += 1
+        if exact_hit is not None:
+            self.scored_exact += 1
+            if exact_hit:
+                self.correct_scores += 1
         for i, p in enumerate(probs):
             self.calibration.append((p, i == actual))
 
@@ -167,7 +190,12 @@ class Metrics:
 
     @property
     def exact_score_accuracy(self) -> float:
-        return self.correct_scores / self.n if self.n else float("nan")
+        """NaN when the model never produced a scoreline to be judged on."""
+        return (
+            self.correct_scores / self.scored_exact
+            if self.scored_exact
+            else float("nan")
+        )
 
     @property
     def calibration_error(self) -> float:
@@ -239,16 +267,18 @@ def _table(rows: Sequence[Metrics]) -> str:
     best = ordered[0]
 
     header = (
-        f"{'model':<24}{'n':>6}{'RPS':>10}{'vs best':>18}{'logloss':>10}"
-        f"{'ECE':>8}{'outcome':>9}{'exact':>8}"
+        f"{'model':<24}{'family':<10}{'n':>6}{'RPS':>10}{'vs best':>18}"
+        f"{'logloss':>10}{'ECE':>8}{'outcome':>9}{'exact':>8}"
     )
     lines = [header, "-" * len(header)]
     for m in ordered:
         comparison = str(paired_rps_difference(m, best))
+        exact = m.exact_score_accuracy
+        exact_cell = "n/a" if np.isnan(exact) else f"{exact:.3f}"
         lines.append(
-            f"{m.label:<24}{m.n:>6}{m.rps:>10.4f}{comparison:>18}{m.log_loss:>10.4f}"
-            f"{m.calibration_error:>8.4f}{m.outcome_accuracy:>9.3f}"
-            f"{m.exact_score_accuracy:>8.3f}"
+            f"{m.label:<24}{m.family:<10}{m.n:>6}{m.rps:>10.4f}{comparison:>18}"
+            f"{m.log_loss:>10.4f}{m.calibration_error:>8.4f}"
+            f"{m.outcome_accuracy:>9.3f}{exact_cell:>8}"
         )
     return "\n".join(lines)
 
@@ -293,7 +323,10 @@ def backtest(
     )
 
     baseline = Metrics(label="baseline (base rate)")
-    results = [Metrics(label=label) for label in labels]
+    results = [
+        Metrics(label=label, family=model_registry.family_of(predictor.name))
+        for predictor, label in zip(predictors, labels)
+    ]
 
     # One cache per predictor, keyed by the week whose fixtures it predicts.
     caches: list[dict[datetime, Optional[FittedModel]]] = [{} for _ in predictors]
@@ -343,20 +376,32 @@ def backtest(
             # ones between established teams. The kickoff date is known before
             # the match, so passing it to the models that use it (rest days) is
             # information they would genuinely have, not leakage.
-            pred = predict_fixture(
-                model,
-                match.result.home_team,
-                match.result.away_team,
-                match_date=match.result.date,
-            )
-            metrics.add(
-                (pred.prob_home_win, pred.prob_draw, pred.prob_away_win),
-                actual,
-                exact_hit=(
+            # A scoreline model is asked for its matrix, so exact-score accuracy
+            # can be judged too; an outcome model has no matrix and is asked
+            # only for the three probabilities. Both end up scored on the same
+            # RPS, which is what makes the families comparable.
+            if produces_scoreline(model):
+                pred = predict_fixture(
+                    model,
+                    match.result.home_team,
+                    match.result.away_team,
+                    match_date=match.result.date,
+                )
+                probs = (pred.prob_home_win, pred.prob_draw, pred.prob_away_win)
+                exact_hit = (
                     pred.predicted_home_goals == match.result.home_goals
                     and pred.predicted_away_goals == match.result.away_goals
-                ),
-            )
+                )
+            else:
+                probs = predict_outcome(
+                    model,
+                    match.result.home_team,
+                    match.result.away_team,
+                    match_date=match.result.date,
+                ).probs
+                exact_hit = None
+
+            metrics.add(probs, actual, exact_hit=exact_hit)
             scored_any = True
 
         if scored_any:
@@ -385,8 +430,18 @@ def main() -> None:
     parser.add_argument(
         "--models",
         type=str,
-        default=",".join(model_registry.available()),
+        default=None,
         help="Comma-separated engines to compare (default: all registered).",
+    )
+    parser.add_argument(
+        "--family",
+        type=str,
+        default=None,
+        choices=list(model_registry.FAMILIES),
+        help=(
+            "Restrict to one family: 'scoreline' engines predict a goal matrix, "
+            "'outcome' engines predict home/draw/away directly. Default: both."
+        ),
     )
     parser.add_argument(
         "--seasons",
@@ -418,10 +473,18 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.list_models:
-        print("\n".join(model_registry.available()))
+        for family in model_registry.FAMILIES:
+            print(f"{family}:")
+            for name in model_registry.available(family):
+                print(f"  {name}")
         return
 
-    names = [name.strip() for name in args.models.split(",") if name.strip()]
+    if args.models:
+        names = [name.strip() for name in args.models.split(",") if name.strip()]
+        if args.family:
+            names = [n for n in names if model_registry.family_of(n) == args.family]
+    else:
+        names = model_registry.available(args.family)
     matches = load_matches()
     seasons = (
         [int(s) for s in args.seasons.split(",")]

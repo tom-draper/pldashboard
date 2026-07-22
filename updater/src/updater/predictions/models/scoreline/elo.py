@@ -108,22 +108,29 @@ class EloModel:
         )
 
 
-def fit_elo(
+@dataclass
+class EloPass:
+    """One chronological sweep: the final ratings and what they saw on the way.
+
+    `rating_gaps[i]` is the rating difference *before* match i was played, so it
+    is a genuine out-of-sample record of what that gap went on to produce. It is
+    kept because more than one model is built on this sweep: `fit_elo` below
+    regresses goal difference on the gaps, while `models.outcome.ratings` fits an
+    ordered link straight to the outcomes instead.
+    """
+
+    rating: dict[str, float]
+    matches: list[MatchResult]
+    rating_gaps: np.ndarray
+    goal_differences: np.ndarray
+
+
+def elo_rating_pass(
     matches: Sequence[MatchResult],
     k_factor: float = DEFAULT_K,
     home_advantage: float = DEFAULT_HOME_ADVANTAGE,
-    half_life_days: float = 365.0,
-    rho: float = -0.05,
-) -> Optional[EloModel]:
-    """One chronological pass: update ratings, and record the goals mapping.
-
-    `half_life_days` affects only the league average total goals; Elo's own
-    recency comes from the K-factor. It is accepted so every engine takes the
-    same knob and the backtest can sweep them alike.
-    """
-    if not matches:
-        return None
-
+) -> EloPass:
+    """Run the Elo updates in date order, recording each pre-match rating gap."""
     ordered = sorted(matches, key=lambda m: m.date)
     rating: dict[str, float] = {}
 
@@ -136,8 +143,6 @@ def fit_elo(
         rating.setdefault(away, DEFAULT_RATING)
 
         difference = rating[home] + home_advantage - rating[away]
-        # Record the mapping pair *before* updating, so it is a genuine
-        # out-of-sample observation of what this rating gap produced.
         rating_gaps.append(difference)
         goal_differences.append(float(match.home_goals - match.away_goals))
 
@@ -157,9 +162,37 @@ def fit_elo(
         rating[home] += change
         rating[away] -= change
 
+    return EloPass(
+        rating=rating,
+        matches=ordered,
+        rating_gaps=np.array(rating_gaps),
+        goal_differences=np.array(goal_differences),
+    )
+
+
+def fit_elo(
+    matches: Sequence[MatchResult],
+    k_factor: float = DEFAULT_K,
+    home_advantage: float = DEFAULT_HOME_ADVANTAGE,
+    half_life_days: float = 365.0,
+    rho: float = -0.05,
+) -> Optional[EloModel]:
+    """One chronological pass: update ratings, and record the goals mapping.
+
+    `half_life_days` affects only the league average total goals; Elo's own
+    recency comes from the K-factor. It is accepted so every engine takes the
+    same knob and the backtest can sweep them alike.
+    """
+    if not matches:
+        return None
+
+    sweep = elo_rating_pass(matches, k_factor=k_factor, home_advantage=home_advantage)
+    ordered = sweep.matches
+    rating = sweep.rating
+
     # Least-squares line from rating gap to goal difference.
-    gaps = np.array(rating_gaps)
-    differences = np.array(goal_differences)
+    gaps = sweep.rating_gaps
+    differences = sweep.goal_differences
     if gaps.size < 2 or np.allclose(gaps, gaps[0]):
         slope, intercept = 0.0, float(differences.mean())
     else:

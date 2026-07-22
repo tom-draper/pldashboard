@@ -30,7 +30,10 @@ import numpy as np
 from scipy.optimize import minimize
 
 from updater.predictions.distributions import MatchResult
-from updater.predictions.models.scoreline.ensemble import EnsembleModel
+from updater.predictions.models.scoreline.ensemble import (
+    EnsembleModel,
+    _reject_outcome_members,
+)
 
 DEFAULT_MEMBERS = ("dixon-coles", "pi-ratings", "skellam")
 
@@ -122,6 +125,7 @@ def fit_stacked(
         return None
     if "stacked" in member_names or "ensemble" in member_names:
         raise ValueError("A stacked ensemble cannot contain an ensemble")
+    _reject_outcome_members(member_names, registry)
 
     ordered = sorted(matches, key=lambda m: m.date)
     split = int(len(ordered) * (1.0 - HOLDOUT_FRACTION))

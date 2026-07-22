@@ -1,21 +1,38 @@
-"""A registry of interchangeable prediction engines.
+"""A registry of interchangeable prediction engines, in two families.
 
-Every engine here answers the same two questions: given a list of finished
-matches, produce a fitted model; given a fixture, produce a full scoreline
-distribution. That uniformity is the point. It lets `predictions.backtest` score
-them side by side on identical data and lets the updater swap its production
-engine by name rather than by edit.
+Every engine answers the same first question: given a list of finished matches,
+produce a fitted model. They differ in what they then forecast, and the registry
+holds both kinds in one namespace:
 
-Engines are constructed through `build(name, **params)` and listed by `available()`.
-Imports are deferred into the factories so that pulling in the registry does not
-drag scipy-heavy modules (or predict_v2's DataFrame chain) into every caller.
+    * **scoreline** (`models.scoreline`) - a full home-goals x away-goals
+      matrix. Home/draw/away falls out of summing it. This is what the dashboard
+      stores, so only these are eligible for production.
+    * **outcome** (`models.outcome`) - home/draw/away directly, with no goal
+      model underneath. Benchmarking entrants only; they cannot fill a scoreline
+      heatmap and `build_v3` rejects them.
+
+Both answer `predict_outcome`, which is what the backtest scores, so the two
+families compete on exactly the same footing on exactly the same fixtures.
+
+Engines are constructed through `build(name, **params)` and listed by
+`available()`, optionally filtered to one family. Imports are deferred into the
+factories so that pulling in the registry does not drag scipy-heavy modules (or
+predict_v2's DataFrame chain) into every caller.
 """
 
 from __future__ import annotations
 
 from typing import Callable, Optional, Protocol, Sequence, runtime_checkable
 
-from updater.predictions.distributions import MatchResult, ScorePrediction
+from updater.predictions.distributions import (
+    MatchResult,
+    OutcomePrediction,
+    ScorePrediction,
+    outcome_of,
+)
+
+SCORELINE = "scoreline"
+OUTCOME = "outcome"
 
 
 @runtime_checkable
@@ -25,6 +42,15 @@ class FittedModel(Protocol):
     def predict(
         self, home_team: str, away_team: str, max_goals: int = 10
     ) -> ScorePrediction: ...
+
+
+@runtime_checkable
+class FittedOutcomeModel(Protocol):
+    """Anything that can turn a fixture into home/draw/away probabilities."""
+
+    def predict_outcome(
+        self, home_team: str, away_team: str
+    ) -> OutcomePrediction: ...
 
 
 def predict_fixture(
@@ -46,6 +72,39 @@ def predict_fixture(
             home_team, away_team, max_goals=max_goals, match_date=match_date
         )
     return model.predict(home_team, away_team, max_goals)
+
+
+def produces_scoreline(model) -> bool:
+    """Whether a fitted model can produce a full goal matrix.
+
+    Outcome-family models set `produces_scoreline = False` on the class. Anything
+    that does not say otherwise is a scoreline model, which keeps every existing
+    engine working without having to annotate it.
+    """
+    return getattr(model, "produces_scoreline", True)
+
+
+def predict_outcome(
+    model,
+    home_team: str,
+    away_team: str,
+    match_date=None,
+    max_goals: int = 10,
+) -> OutcomePrediction:
+    """Home/draw/away for a fixture, from either family of engine.
+
+    This is the common currency the backtest scores on. An outcome model answers
+    directly; a scoreline model is asked for its matrix and collapsed. Going
+    through one function means a caller never has to know which family it holds.
+    """
+    direct = getattr(model, "predict_outcome", None)
+    if direct is not None:
+        if getattr(model, "uses_match_date", False):
+            return direct(home_team, away_team, match_date=match_date)
+        return direct(home_team, away_team)
+    return outcome_of(
+        predict_fixture(model, home_team, away_team, match_date, max_goals)
+    )
 
 
 class Predictor(Protocol):
@@ -245,7 +304,58 @@ def _pi_ratings(half_life_days: float = 365.0, **_) -> Predictor:
     return _Engine("pi-ratings", fit_pi_ratings, half_life_days=half_life_days)
 
 
-REGISTRY: dict[str, Callable[..., Predictor]] = {
+def _ordered_logit(half_life_days: float = 365.0, **_) -> Predictor:
+    """Ordered logit on team strengths: the flagship direct-outcome engine."""
+    from updater.predictions.models.outcome.ordered import fit_ordered
+
+    return _Engine(
+        "ordered-logit", fit_ordered, link="logit", half_life_days=half_life_days
+    )
+
+
+def _ordered_probit(half_life_days: float = 365.0, **_) -> Predictor:
+    """The same model under a normal latent noise assumption instead of logistic."""
+    from updater.predictions.models.outcome.ordered import fit_ordered
+
+    return _Engine(
+        "ordered-probit", fit_ordered, link="probit", half_life_days=half_life_days
+    )
+
+
+def _multinomial(half_life_days: float = 365.0, **_) -> Predictor:
+    """Softmax over the three results, dropping the ordinality assumption."""
+    from updater.predictions.models.outcome.multinomial import fit_multinomial
+
+    return _Engine("multinomial", fit_multinomial, half_life_days=half_life_days)
+
+
+def _direct_elo(half_life_days: float = 365.0, **_) -> Predictor:
+    """Elo ratings read through an ordered link rather than converted to goals."""
+    from updater.predictions.models.outcome.ratings import fit_direct_elo
+
+    return _Engine("direct-elo", fit_direct_elo, half_life_days=half_life_days)
+
+
+def _direct_pi_ratings(half_life_days: float = 365.0, **_) -> Predictor:
+    """Pi-ratings read through an ordered link rather than converted to goals."""
+    from updater.predictions.models.outcome.ratings import fit_direct_pi_ratings
+
+    return _Engine(
+        "direct-pi-ratings", fit_direct_pi_ratings, half_life_days=half_life_days
+    )
+
+
+def _outcome_blend(half_life_days: float = 365.0, members=None, **_) -> Predictor:
+    """A goal model and a result model pooled on a chronological holdout."""
+    from updater.predictions.models.outcome.blend import fit_outcome_blend
+
+    params = {"half_life_days": half_life_days}
+    if members is not None:
+        params["member_names"] = tuple(members)
+    return _Engine("outcome-blend", fit_outcome_blend, **params)
+
+
+SCORELINE_REGISTRY: dict[str, Callable[..., Predictor]] = {
     "dixon-coles": _dixon_coles,
     "poisson": _poisson,
     "bivariate-poisson": _bivariate_poisson,
@@ -262,15 +372,44 @@ REGISTRY: dict[str, Callable[..., Predictor]] = {
     "goal-average": _goal_average,
 }
 
+OUTCOME_REGISTRY: dict[str, Callable[..., Predictor]] = {
+    "ordered-logit": _ordered_logit,
+    "ordered-probit": _ordered_probit,
+    "multinomial": _multinomial,
+    "direct-elo": _direct_elo,
+    "direct-pi-ratings": _direct_pi_ratings,
+    "outcome-blend": _outcome_blend,
+}
+
+REGISTRY: dict[str, Callable[..., Predictor]] = {
+    **SCORELINE_REGISTRY,
+    **OUTCOME_REGISTRY,
+}
+
+FAMILIES = (SCORELINE, OUTCOME)
+
 # Naive entrants kept as a floor to clear, not as production candidates.
 NAIVE_MODELS = ("empirical-scoreline", "goal-average")
 
 # The engine the updater ships with, and the one the backtest compares against.
+# It must stay a scoreline model: the dashboard stores a goal matrix.
 DEFAULT_MODEL = "dixon-coles"
 
 
-def available() -> list[str]:
-    return list(REGISTRY)
+def family_of(name: str) -> str:
+    """Which family a registry name belongs to."""
+    return SCORELINE if name in SCORELINE_REGISTRY else OUTCOME
+
+
+def available(family: Optional[str] = None) -> list[str]:
+    """Registry names, optionally restricted to one family."""
+    if family is None:
+        return list(REGISTRY)
+    if family == SCORELINE:
+        return list(SCORELINE_REGISTRY)
+    if family == OUTCOME:
+        return list(OUTCOME_REGISTRY)
+    raise ValueError(f"Unknown family {family!r}. Available: {', '.join(FAMILIES)}")
 
 
 def build(name: str, **params) -> Predictor:

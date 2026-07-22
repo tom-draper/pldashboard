@@ -58,6 +58,25 @@ class EnsembleModel:
         return prediction_from_matrix(home_team, away_team, combined)
 
 
+def _reject_outcome_members(member_names: Sequence[str], registry) -> None:
+    """Members must produce a matrix, since averaging happens in scoreline space.
+
+    An outcome-family member has no matrix to average and would fail deep inside
+    the blend with an unhelpful AttributeError. To mix the families, use
+    `models.outcome.blend`, which pools in outcome space instead.
+    """
+    outcome_members = [
+        name
+        for name in member_names
+        if registry.family_of(name) == registry.OUTCOME
+    ]
+    if outcome_members:
+        raise ValueError(
+            f"Cannot average outcome-only models {outcome_members}: they have no "
+            "scoreline matrix. Use the 'outcome-blend' engine to mix families."
+        )
+
+
 def fit_ensemble(
     matches: Sequence[MatchResult],
     member_names: Sequence[str] = ("dixon-coles", "pi-ratings", "skellam"),
@@ -77,6 +96,7 @@ def fit_ensemble(
 
     if "ensemble" in member_names:
         raise ValueError("An ensemble cannot contain itself")
+    _reject_outcome_members(member_names, registry)
 
     member_weights = list(weights) if weights else [1.0] * len(member_names)
     if len(member_weights) != len(member_names):

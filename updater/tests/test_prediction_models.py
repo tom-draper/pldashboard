@@ -18,11 +18,14 @@ from updater.predictions.distributions import MatchResult
 from updater.predictions.models.scoreline.pi_ratings import fit_pi_ratings
 
 ALL_MODELS = models.available()
+SCORELINE_MODELS = models.available(models.SCORELINE)
+OUTCOME_MODELS = models.available(models.OUTCOME)
 
 # empirical-scoreline is deliberately team-blind: it quotes the league's usual
 # scoreline whoever is playing, so it is exempt from the tests that assert a
 # fixture's teams change the forecast.
 RATED_MODELS = [name for name in ALL_MODELS if name != "empirical-scoreline"]
+RATED_SCORELINE_MODELS = [n for n in SCORELINE_MODELS if n != "empirical-scoreline"]
 
 
 def _match(day: int, home: str, away: str, hg: int, ag: int) -> MatchResult:
@@ -70,6 +73,69 @@ def test_fit_returns_none_for_no_matches(name: str) -> None:
 
 
 @pytest.mark.parametrize("name", ALL_MODELS)
+def test_outcome_prediction_is_a_valid_distribution(name: str, league) -> None:
+    """The one contract both families share, and what the backtest scores."""
+    model = models.build(name).fit(league)
+    assert model is not None
+
+    pred = models.predict_outcome(model, "A", "D")
+    for probability in pred.probs:
+        assert 0.0 <= probability <= 1.0
+    assert sum(pred.probs) == pytest.approx(1.0, abs=1e-9)
+
+
+@pytest.mark.parametrize("name", RATED_MODELS)
+def test_stronger_team_is_favoured_on_outcome(name: str, league) -> None:
+    """Holds for both families, since neither needs a scoreline to say who wins."""
+    model = models.build(name).fit(league)
+    assert model is not None
+
+    strong_at_home = models.predict_outcome(model, "A", "D")
+    weak_at_home = models.predict_outcome(model, "D", "A")
+
+    assert strong_at_home.prob_home_win > strong_at_home.prob_away_win
+    assert weak_at_home.prob_away_win > weak_at_home.prob_home_win
+
+
+@pytest.mark.parametrize("name", ALL_MODELS)
+def test_unknown_team_is_priced_by_every_family(name: str, league) -> None:
+    """Promoted sides have no history; every engine must still price the fixture."""
+    model = models.build(name).fit(league)
+    assert model is not None
+
+    pred = models.predict_outcome(model, "A", "Newly Promoted FC")
+    assert sum(pred.probs) == pytest.approx(1.0, abs=1e-9)
+
+
+@pytest.mark.parametrize("name", OUTCOME_MODELS)
+def test_outcome_models_declare_they_have_no_scoreline(name: str, league) -> None:
+    """The flag the backtest and build_v3 both branch on, so it must be right."""
+    model = models.build(name).fit(league)
+    assert model is not None
+    assert models.produces_scoreline(model) is False
+    assert not hasattr(model, "predict")
+
+
+@pytest.mark.parametrize("name", SCORELINE_MODELS)
+def test_scoreline_models_are_reported_as_such(name: str, league) -> None:
+    model = models.build(name).fit(league)
+    assert model is not None
+    assert models.produces_scoreline(model) is True
+
+
+def test_families_partition_the_registry() -> None:
+    assert set(SCORELINE_MODELS) | set(OUTCOME_MODELS) == set(ALL_MODELS)
+    assert not set(SCORELINE_MODELS) & set(OUTCOME_MODELS)
+    assert all(models.family_of(n) == models.SCORELINE for n in SCORELINE_MODELS)
+    assert all(models.family_of(n) == models.OUTCOME for n in OUTCOME_MODELS)
+
+
+def test_available_rejects_an_unknown_family() -> None:
+    with pytest.raises(ValueError, match="Unknown family"):
+        models.available("nonsense")
+
+
+@pytest.mark.parametrize("name", SCORELINE_MODELS)
 def test_prediction_is_a_valid_distribution(name: str, league) -> None:
     model = models.build(name).fit(league)
     assert model is not None
@@ -85,7 +151,7 @@ def test_prediction_is_a_valid_distribution(name: str, league) -> None:
     assert outcomes == pytest.approx(1.0, abs=1e-9)
 
 
-@pytest.mark.parametrize("name", RATED_MODELS)
+@pytest.mark.parametrize("name", RATED_SCORELINE_MODELS)
 def test_stronger_team_is_favoured(name: str, league) -> None:
     model = models.build(name).fit(league)
     assert model is not None
@@ -98,7 +164,7 @@ def test_stronger_team_is_favoured(name: str, league) -> None:
     assert strong_at_home.expected_home_goals > strong_at_home.expected_away_goals
 
 
-@pytest.mark.parametrize("name", ALL_MODELS)
+@pytest.mark.parametrize("name", SCORELINE_MODELS)
 def test_unknown_team_falls_back_without_error(name: str, league) -> None:
     """Promoted sides have no history; every engine must still price the fixture."""
     model = models.build(name).fit(league)
@@ -109,7 +175,7 @@ def test_unknown_team_falls_back_without_error(name: str, league) -> None:
     assert 0.0 <= pred.prob_home_win <= 1.0
 
 
-@pytest.mark.parametrize("name", ALL_MODELS)
+@pytest.mark.parametrize("name", SCORELINE_MODELS)
 def test_predicted_scoreline_is_the_matrix_mode(name: str, league) -> None:
     model = models.build(name).fit(league)
     assert model is not None

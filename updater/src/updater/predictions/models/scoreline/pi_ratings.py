@@ -92,6 +92,67 @@ class PiRatingsModel:
         )
 
 
+@dataclass
+class PiRatingsPass:
+    """One chronological sweep: final ratings plus each pre-match supremacy.
+
+    `supremacies[i]` is the expected goal difference the ratings implied *before*
+    match i, so it is an honest out-of-sample record. `models.outcome.ratings`
+    fits an ordered link to those, taking the ratings as given and learning only
+    how a supremacy maps to result probabilities.
+    """
+
+    home_rating: dict[str, float]
+    away_rating: dict[str, float]
+    matches: list[MatchResult]
+    supremacies: np.ndarray
+
+
+def pi_rating_pass(
+    matches: Sequence[MatchResult],
+    learning_rate: float = DEFAULT_LEARNING_RATE,
+    carry_over: float = DEFAULT_CARRY_OVER,
+    error_scale: float = DEFAULT_ERROR_SCALE,
+) -> PiRatingsPass:
+    """Run the pi-ratings updates in date order, recording expectations first."""
+    ordered = sorted(matches, key=lambda m: m.date)
+
+    home_rating: dict[str, float] = {}
+    away_rating: dict[str, float] = {}
+    supremacies: list[float] = []
+
+    for match in ordered:
+        home, away = match.home_team, match.away_team
+        home_rating.setdefault(home, 0.0)
+        away_rating.setdefault(home, 0.0)
+        home_rating.setdefault(away, 0.0)
+        away_rating.setdefault(away, 0.0)
+
+        expected = home_rating[home] - away_rating[away]
+        supremacies.append(expected)
+
+        observed = match.home_goals - match.away_goals
+        error = abs(observed - expected)
+        # Log-scaled error: diminishing returns on the size of a surprise.
+        step = error_scale * np.log10(1.0 + error)
+        direction = 1.0 if observed > expected else -1.0
+        delta = learning_rate * step * direction
+
+        # Each team's rating for the ground it played on moves by delta; its
+        # rating for the other ground follows at a discount.
+        home_rating[home] += delta
+        away_rating[home] += delta * carry_over
+        away_rating[away] -= delta
+        home_rating[away] -= delta * carry_over
+
+    return PiRatingsPass(
+        home_rating=home_rating,
+        away_rating=away_rating,
+        matches=ordered,
+        supremacies=np.array(supremacies),
+    )
+
+
 def fit_pi_ratings(
     matches: Sequence[MatchResult],
     learning_rate: float = DEFAULT_LEARNING_RATE,
@@ -109,32 +170,15 @@ def fit_pi_ratings(
     if not matches:
         return None
 
-    ordered = sorted(matches, key=lambda m: m.date)
-
-    home_rating: dict[str, float] = {}
-    away_rating: dict[str, float] = {}
-
-    for match in ordered:
-        home, away = match.home_team, match.away_team
-        home_rating.setdefault(home, 0.0)
-        away_rating.setdefault(home, 0.0)
-        home_rating.setdefault(away, 0.0)
-        away_rating.setdefault(away, 0.0)
-
-        expected = home_rating[home] - away_rating[away]
-        observed = match.home_goals - match.away_goals
-        error = abs(observed - expected)
-        # Log-scaled error: diminishing returns on the size of a surprise.
-        step = error_scale * np.log10(1.0 + error)
-        direction = 1.0 if observed > expected else -1.0
-        delta = learning_rate * step * direction
-
-        # Each team's rating for the ground it played on moves by delta; its
-        # rating for the other ground follows at a discount.
-        home_rating[home] += delta
-        away_rating[home] += delta * carry_over
-        away_rating[away] -= delta
-        home_rating[away] -= delta * carry_over
+    sweep = pi_rating_pass(
+        matches,
+        learning_rate=learning_rate,
+        carry_over=carry_over,
+        error_scale=error_scale,
+    )
+    ordered = sweep.matches
+    home_rating = sweep.home_rating
+    away_rating = sweep.away_rating
 
     weights = time_weights(match_dates(ordered), half_life_days)
     totals = np.array([m.home_goals + m.away_goals for m in ordered], dtype=float)

@@ -134,7 +134,17 @@ def build_v3_predictions(
 
     `model_name` selects from `predictions.models`, so swapping the production
     engine for one the backtest prefers is a name change rather than an edit.
+    It must name a *scoreline* engine: the dashboard stores a goal matrix and a
+    heatmap, which the direct outcome models cannot produce. Those exist to be
+    benchmarked, not shipped.
     """
+    if model_registry.family_of(model_name) != model_registry.SCORELINE:
+        raise ValueError(
+            f"{model_name!r} is an outcome-only model and cannot be used for "
+            "production predictions, which need a full scoreline distribution. "
+            f"Choose one of: {', '.join(model_registry.available(model_registry.SCORELINE))}"
+        )
+
     matches = extract_matches(raw_data, current_season, num_seasons)
     model = model_registry.build(model_name).fit(matches)
     if model is None:

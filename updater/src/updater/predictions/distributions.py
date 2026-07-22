@@ -1,9 +1,15 @@
-"""Shared types and helpers for goal-distribution models.
+"""Shared types and helpers for the prediction engines.
 
-Every prediction engine ultimately produces the same thing: a home-goals x
-away-goals probability matrix. This module holds the pieces they all share, so
-each engine only has to define how its ratings are fit and how a fixture turns
-into that matrix.
+There are two things an engine can forecast, and this module defines both:
+
+    * `ScorePrediction` - a full home-goals x away-goals probability matrix,
+      what the dashboard stores and what every engine in `models.scoreline`
+      produces.
+    * `OutcomePrediction` - home / draw / away probabilities alone, what the
+      engines in `models.outcome` produce directly.
+
+A scoreline prediction implies an outcome prediction (`outcome_of`); the reverse
+is not true, which is exactly why both types exist.
 
 It lives apart from any single engine so that predict_v3 and the alternative
 models in `predictions.models` can both use it without importing each other.
@@ -14,7 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 from math import log
-from typing import NamedTuple, Optional
+from typing import NamedTuple, Optional, Sequence
 
 import numpy as np
 
@@ -73,6 +79,82 @@ class ScorePrediction:
             "predictedHomeGoals": self.predicted_home_goals,
             "predictedAwayGoals": self.predicted_away_goals,
         }
+
+
+# Outcome index convention, shared by every model and the backtest metrics.
+HOME_WIN, DRAW, AWAY_WIN = 0, 1, 2
+OUTCOME_LABELS = ("home", "draw", "away")
+
+
+@dataclass
+class OutcomePrediction:
+    """A fixture's home / draw / away probabilities, and nothing else.
+
+    The scoreline models produce this by summing their matrix, but the models in
+    `predictions.models.outcome` produce it directly and have no matrix to sum.
+    That is the whole point of the type: an engine that forecasts the result
+    without committing to a scoreline is a valid engine, and forcing it to invent
+    goal counts just to fit a common interface would add noise to score it on.
+    """
+
+    home_team: str
+    away_team: str
+    prob_home_win: float
+    prob_draw: float
+    prob_away_win: float
+
+    @property
+    def probs(self) -> tuple[float, float, float]:
+        return (self.prob_home_win, self.prob_draw, self.prob_away_win)
+
+    def to_dict(self) -> dict:
+        return {
+            "homeTeam": self.home_team,
+            "awayTeam": self.away_team,
+            "probHomeWin": self.prob_home_win,
+            "probDraw": self.prob_draw,
+            "probAwayWin": self.prob_away_win,
+        }
+
+
+def outcome_from_probs(
+    home_team: str, away_team: str, probs: Sequence[float] | np.ndarray
+) -> OutcomePrediction:
+    """Build an OutcomePrediction from a [home, draw, away] vector, renormalised.
+
+    Link functions and pooled blends both drift off 1 by rounding, and a
+    probability that is negative by 1e-16 breaks the log in the scoring metrics.
+    Clipping and renormalising here means no caller has to remember to.
+    """
+    values = np.clip(np.asarray(probs, dtype=float), 1e-12, None)
+    values = values / values.sum()
+    return OutcomePrediction(
+        home_team=home_team,
+        away_team=away_team,
+        prob_home_win=float(values[HOME_WIN]),
+        prob_draw=float(values[DRAW]),
+        prob_away_win=float(values[AWAY_WIN]),
+    )
+
+
+def outcome_of(prediction: ScorePrediction) -> OutcomePrediction:
+    """Collapse a scoreline prediction to its induced home/draw/away triple."""
+    return OutcomePrediction(
+        home_team=prediction.home_team,
+        away_team=prediction.away_team,
+        prob_home_win=prediction.prob_home_win,
+        prob_draw=prediction.prob_draw,
+        prob_away_win=prediction.prob_away_win,
+    )
+
+
+def match_outcome(home_goals: int, away_goals: int) -> int:
+    """The outcome index actually observed in a finished match."""
+    if home_goals > away_goals:
+        return HOME_WIN
+    if home_goals == away_goals:
+        return DRAW
+    return AWAY_WIN
 
 
 def poisson_pmf(k: np.ndarray, lam: float | np.ndarray) -> np.ndarray:
