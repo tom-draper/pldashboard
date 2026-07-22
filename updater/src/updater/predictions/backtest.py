@@ -176,12 +176,10 @@ def backtest(
         model = model_cache[week_start]
         if model is None:
             continue
-        if (
-            match.result.home_team not in model.attack
-            or match.result.away_team not in model.attack
-        ):
-            continue  # a newly promoted side with no prior matches in the window
 
+        # Promoted sides with no prior matches fall back to the model's weak
+        # prior (as in production), so every fixture is scored, not just the
+        # ones between established teams.
         pred = model.predict(match.result.home_team, match.result.away_team)
         actual = outcome(match.result.home_goals, match.result.away_goals)
         probs = (pred.prob_home_win, pred.prob_draw, pred.prob_away_win)
