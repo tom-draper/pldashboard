@@ -96,6 +96,16 @@ class TestHomeAdvantage:
         assert home_lambda > away_lambda
 
 
+class TestUnknownTeam:
+    def test_unseen_team_falls_back_to_the_weakest_prior(self):
+        # A dominates B, so B anchors the weak prior. An unseen team C should be
+        # treated no better than that, i.e. the strong side is favoured at home.
+        model = _fit(_round_robin("A", "B"))
+        pred = model.predict("A", "C")
+        assert abs(sum(pred.home_goals_dist) - 1.0) < 1e-9
+        assert pred.prob_home_win > pred.prob_away_win
+
+
 class TestPredictedScoreline:
     def test_predicted_score_is_the_matrix_mode(self):
         model = _fit(_round_robin("A", "B"))

@@ -10,6 +10,7 @@ from updater.data.raw_data import RawData
 from updater.data_source import DataSource
 from updater.database import Database
 from updater.env import require_env_int
+from updater.predictions.build_v3 import build_v3_predictions
 from updater.timing import timed
 
 
@@ -128,6 +129,13 @@ class Updater:
         self.database.update_predictions(predictions, actual_scores)
         self.database.update_actual_scores(actual_scores)
 
+    def save_v3_predictions_to_db(self, num_seasons: int):
+        predictions = build_v3_predictions(
+            self.raw_data, self.current_season, num_seasons
+        )
+        actual_scores = self.data.teams.fixtures.get_actual_scores()
+        self.database.update_v3_predictions(predictions, actual_scores)
+
     @timed
     def build_all(
         self,
@@ -179,3 +187,5 @@ class Updater:
                 self.save_fantasy_data_to_db()
                 logging.info("💾 Saving predictions to database...")
                 self.save_predictions_to_db()
+                logging.info("💾 Saving v3 predictions to database...")
+                self.save_v3_predictions_to_db(num_seasons)

@@ -123,18 +123,30 @@ class DixonColesModel:
         defence: dict[str, float],
         home_advantage: float,
         rho: float,
+        default_attack: float = 0.0,
+        default_defence: float = 0.0,
     ):
         self.teams = teams
         self.attack = attack
         self.defence = defence
         self.home_advantage = home_advantage
         self.rho = rho
+        # Ratings for a team the model has never seen (typically newly promoted),
+        # taken from the weakest sides in the training window.
+        self.default_attack = default_attack
+        self.default_defence = default_defence
+
+    def _rating(self, team: str) -> tuple[float, float]:
+        return (
+            self.attack.get(team, self.default_attack),
+            self.defence.get(team, self.default_defence),
+        )
 
     def expected_goals(self, home_team: str, away_team: str) -> tuple[float, float]:
-        lambda_home = np.exp(
-            self.attack[home_team] - self.defence[away_team] + self.home_advantage
-        )
-        lambda_away = np.exp(self.attack[away_team] - self.defence[home_team])
+        home_attack, home_defence = self._rating(home_team)
+        away_attack, away_defence = self._rating(away_team)
+        lambda_home = np.exp(home_attack - away_defence + self.home_advantage)
+        lambda_away = np.exp(away_attack - home_defence)
         return float(lambda_home), float(lambda_away)
 
     def predict(
@@ -272,10 +284,21 @@ def fit_dixon_coles(
     )
 
     attack_vec, defence_vec, home_advantage, rho = unpack(result.x)
+    attack = {team: float(attack_vec[i]) for team, i in index.items()}
+    defence = {team: float(defence_vec[i]) for team, i in index.items()}
+
+    # Prior for unseen (promoted) teams: the mean rating of the weakest few
+    # sides, ranked by overall strength (attack + defence).
+    weakest = sorted(teams, key=lambda t: attack[t] + defence[t])[: min(3, n)]
+    default_attack = float(np.mean([attack[t] for t in weakest]))
+    default_defence = float(np.mean([defence[t] for t in weakest]))
+
     return DixonColesModel(
         teams=teams,
-        attack={team: float(attack_vec[i]) for team, i in index.items()},
-        defence={team: float(defence_vec[i]) for team, i in index.items()},
+        attack=attack,
+        defence=defence,
         home_advantage=float(home_advantage),
         rho=float(rho),
+        default_attack=default_attack,
+        default_defence=default_defence,
     )

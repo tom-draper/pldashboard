@@ -43,6 +43,17 @@ class Database:
         name = getenv("MONGODB_PREDICTIONS_COLLECTION", "Predictions2024")
         return self.client.PremierLeague[name]
 
+    @property
+    def predictions_v3_collection(self):
+        """The collection holding Dixon-Coles (v3) score predictions.
+
+        A single fixed collection (read and written here and by the dashboard),
+        keyed by "HOME vs AWAY" initials so actual scores backfill the same way
+        the v1 predictions do. Overridable via MONGODB_PREDICTIONS_V3_COLLECTION.
+        """
+        name = getenv("MONGODB_PREDICTIONS_V3_COLLECTION", "PredictionsV3")
+        return self.client.PremierLeague[name]
+
     def get_predictions(self):
         return list(
             self.predictions_collection.aggregate(
@@ -173,11 +184,9 @@ class Database:
         preds = self._build_prediction_objs(predictions, actual_scores)
         self._save_predictions(preds)
 
-    def update_actual_scores(
-        self, actual_scores: dict[str, dict[str, int]]
+    def _backfill_actual_scores(
+        self, collection, actual_scores: dict[str, dict[str, int]]
     ):
-        collection = self.predictions_collection
-
         # Get the id of all prediction objects that have no value for actual score
         pending = collection.find({"actual": None}, {"_id": 1})
 
@@ -192,6 +201,40 @@ class Database:
 
         if updates:
             collection.bulk_write(updates, ordered=False)
+
+    def update_actual_scores(
+        self, actual_scores: dict[str, dict[str, int]]
+    ):
+        self._backfill_actual_scores(self.predictions_collection, actual_scores)
+
+    def update_v3_predictions(
+        self,
+        predictions: list[dict],
+        actual_scores: dict[str, dict[str, int]],
+    ):
+        """Upsert the Dixon-Coles predictions and backfill any known results.
+
+        The prediction documents are already shaped by build_v3; here we only
+        attach any actual score already available and write them, then backfill
+        results for fixtures predicted on earlier runs that have since finished.
+        """
+        if not predictions:
+            return
+
+        collection = self.predictions_v3_collection
+        for prediction in predictions:
+            prediction["actual"] = self._get_actual_score(
+                prediction["_id"], actual_scores
+            )
+
+        collection.bulk_write(
+            [
+                pymongo.ReplaceOne({"_id": p["_id"]}, p, upsert=True)
+                for p in predictions
+            ],
+            ordered=False,
+        )
+        self._backfill_actual_scores(collection, actual_scores)
 
     def update_team_data(self, team_data: dict, season: int):
         # upsert so the first run of a new season creates the document rather
