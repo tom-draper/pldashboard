@@ -72,7 +72,7 @@ class _Engine:
 
 
 def _dixon_coles(half_life_days: float = 365.0, xg_weight: float = 0.0, **_) -> Predictor:
-    from updater.predictions.predict_v3 import fit_dixon_coles
+    from updater.predictions.models.scoreline.dixon_coles import fit_dixon_coles
 
     return _Engine(
         "dixon-coles",
@@ -84,7 +84,7 @@ def _dixon_coles(half_life_days: float = 365.0, xg_weight: float = 0.0, **_) -> 
 
 def _poisson(half_life_days: float = 365.0, **_) -> Predictor:
     """Dixon-Coles with rho pinned at 0: the independent-Poisson ablation."""
-    from updater.predictions.predict_v3 import fit_dixon_coles
+    from updater.predictions.models.scoreline.dixon_coles import fit_dixon_coles
 
     return _Engine(
         "poisson",
@@ -97,8 +97,8 @@ def _poisson(half_life_days: float = 365.0, **_) -> Predictor:
 def _bivariate_poisson(half_life_days: float = 365.0, **_) -> Predictor:
     import numpy as np
 
-    from updater.predictions.models.common import fit_ratings
-    from updater.predictions.models.poisson_family import (
+    from updater.predictions.models.scoreline.common import fit_ratings
+    from updater.predictions.models.scoreline.poisson_family import (
         BivariatePoissonModel,
         _bivariate_log_pmf,
     )
@@ -130,8 +130,8 @@ def _bivariate_poisson(half_life_days: float = 365.0, **_) -> Predictor:
 def _negative_binomial(half_life_days: float = 365.0, **_) -> Predictor:
     import numpy as np
 
-    from updater.predictions.models.common import fit_ratings
-    from updater.predictions.models.poisson_family import (
+    from updater.predictions.models.scoreline.common import fit_ratings
+    from updater.predictions.models.scoreline.poisson_family import (
         NegativeBinomialModel,
         _negative_binomial_log_pmf,
     )
@@ -163,8 +163,8 @@ def _negative_binomial(half_life_days: float = 365.0, **_) -> Predictor:
 
 def _skellam(half_life_days: float = 365.0, **_) -> Predictor:
     """Rates fit to the goal difference alone, via the Skellam likelihood."""
-    from updater.predictions.models.common import fit_ratings
-    from updater.predictions.models.skellam import SkellamModel, skellam_log_pmf
+    from updater.predictions.models.scoreline.common import fit_ratings
+    from updater.predictions.models.scoreline.skellam import SkellamModel, skellam_log_pmf
 
     def log_likelihood(home_goals, away_goals, lambda_home, lambda_away, _extra):
         return skellam_log_pmf(home_goals - away_goals, lambda_home, lambda_away)
@@ -178,19 +178,19 @@ def _skellam(half_life_days: float = 365.0, **_) -> Predictor:
 
 def _hierarchical(half_life_days: float = 365.0, **_) -> Predictor:
     """Dixon-Coles whose shrinkage strength is learned, not assumed."""
-    from updater.predictions.models.hierarchical import fit_hierarchical
+    from updater.predictions.models.scoreline.hierarchical import fit_hierarchical
 
     return _Engine("hierarchical", fit_hierarchical, half_life_days=half_life_days)
 
 
 def _elo(half_life_days: float = 365.0, **_) -> Predictor:
-    from updater.predictions.models.elo import fit_elo
+    from updater.predictions.models.scoreline.elo import fit_elo
 
     return _Engine("elo", fit_elo, half_life_days=half_life_days)
 
 
 def _ensemble(half_life_days: float = 365.0, members=None, **_) -> Predictor:
-    from updater.predictions.models.ensemble import fit_ensemble
+    from updater.predictions.models.scoreline.ensemble import fit_ensemble
 
     params = {"half_life_days": half_life_days}
     if members is not None:
@@ -200,7 +200,7 @@ def _ensemble(half_life_days: float = 365.0, members=None, **_) -> Predictor:
 
 def _extended_dc(half_life_days: float = 365.0, **_) -> Predictor:
     """Dixon-Coles plus rest days and a per-team home advantage."""
-    from updater.predictions.models.extended_dc import fit_extended_dixon_coles
+    from updater.predictions.models.scoreline.extended_dc import fit_extended_dixon_coles
 
     return _Engine(
         "extended-dc", fit_extended_dixon_coles, half_life_days=half_life_days
@@ -209,13 +209,13 @@ def _extended_dc(half_life_days: float = 365.0, **_) -> Predictor:
 
 def _dynamic(half_life_days: float = 365.0, **_) -> Predictor:
     """Ratings that follow a random walk, filtered match by match."""
-    from updater.predictions.models.dynamic import fit_dynamic
+    from updater.predictions.models.scoreline.dynamic import fit_dynamic
 
     return _Engine("dynamic", fit_dynamic, half_life_days=half_life_days)
 
 
 def _stacked(half_life_days: float = 365.0, members=None, **_) -> Predictor:
-    from updater.predictions.models.stacked import fit_stacked
+    from updater.predictions.models.scoreline.stacked import fit_stacked
 
     params = {"half_life_days": half_life_days}
     if members is not None:
@@ -225,7 +225,7 @@ def _stacked(half_life_days: float = 365.0, members=None, **_) -> Predictor:
 
 def _empirical_scoreline(half_life_days: float = 365.0, **_) -> Predictor:
     """Team-blind league scoreline frequencies: the floor for exact accuracy."""
-    from updater.predictions.models.naive import fit_empirical_scoreline
+    from updater.predictions.models.scoreline.naive import fit_empirical_scoreline
 
     return _Engine(
         "empirical-scoreline", fit_empirical_scoreline, half_life_days=half_life_days
@@ -234,13 +234,13 @@ def _empirical_scoreline(half_life_days: float = 365.0, **_) -> Predictor:
 
 def _goal_average(half_life_days: float = 365.0, **_) -> Predictor:
     """Attack / defence strengths as ratios, with no likelihood or optimiser."""
-    from updater.predictions.models.naive import fit_goal_average
+    from updater.predictions.models.scoreline.naive import fit_goal_average
 
     return _Engine("goal-average", fit_goal_average, half_life_days=half_life_days)
 
 
 def _pi_ratings(half_life_days: float = 365.0, **_) -> Predictor:
-    from updater.predictions.models.pi_ratings import fit_pi_ratings
+    from updater.predictions.models.scoreline.pi_ratings import fit_pi_ratings
 
     return _Engine("pi-ratings", fit_pi_ratings, half_life_days=half_life_days)
 

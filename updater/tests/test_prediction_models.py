@@ -15,7 +15,7 @@ import pytest
 
 from updater.predictions import models
 from updater.predictions.distributions import MatchResult
-from updater.predictions.models.pi_ratings import fit_pi_ratings
+from updater.predictions.models.scoreline.pi_ratings import fit_pi_ratings
 
 ALL_MODELS = models.available()
 
@@ -138,7 +138,7 @@ def test_bivariate_shared_component_is_non_negative(league) -> None:
 
 def test_bivariate_matches_poisson_when_shared_component_vanishes() -> None:
     """With lambda_shared -> 0 the joint must collapse to independent Poisson."""
-    from updater.predictions.models.poisson_family import _bivariate_log_pmf
+    from updater.predictions.models.scoreline.poisson_family import _bivariate_log_pmf
 
     goals = np.arange(6, dtype=float)
     hg, ag = np.meshgrid(goals, goals, indexing="ij")
@@ -155,7 +155,7 @@ def test_bivariate_matches_poisson_when_shared_component_vanishes() -> None:
 
 def test_bivariate_shared_component_induces_positive_correlation() -> None:
     """The shared term is what buys correlation; without it there is none."""
-    from updater.predictions.models.poisson_family import _bivariate_log_pmf
+    from updater.predictions.models.scoreline.poisson_family import _bivariate_log_pmf
 
     goals = np.arange(11, dtype=float)
     hg, ag = np.meshgrid(goals, goals, indexing="ij")
@@ -176,7 +176,7 @@ def test_bivariate_shared_component_induces_positive_correlation() -> None:
 
 
 def test_negative_binomial_tends_to_poisson_for_large_size() -> None:
-    from updater.predictions.models.poisson_family import _negative_binomial_log_pmf
+    from updater.predictions.models.scoreline.poisson_family import _negative_binomial_log_pmf
     from scipy.stats import poisson
 
     goals = np.arange(8, dtype=float)
@@ -186,7 +186,7 @@ def test_negative_binomial_tends_to_poisson_for_large_size() -> None:
 
 
 def test_negative_binomial_small_size_fattens_the_tail() -> None:
-    from updater.predictions.models.poisson_family import _negative_binomial_log_pmf
+    from updater.predictions.models.scoreline.poisson_family import _negative_binomial_log_pmf
     from scipy.stats import poisson
 
     goals = np.arange(12, dtype=float)
@@ -305,7 +305,7 @@ def test_goal_average_strengths_are_ratios_to_the_league(league) -> None:
 
 def test_skellam_pmf_matches_a_poisson_difference() -> None:
     """Check the Skellam density against the difference it is meant to describe."""
-    from updater.predictions.models.skellam import skellam_log_pmf
+    from updater.predictions.models.scoreline.skellam import skellam_log_pmf
     from scipy.stats import poisson
 
     lam_h, lam_a = 1.7, 1.2
@@ -325,7 +325,7 @@ def test_skellam_pmf_matches_a_poisson_difference() -> None:
 
 
 def test_skellam_pmf_is_a_normalised_distribution() -> None:
-    from updater.predictions.models.skellam import skellam_log_pmf
+    from updater.predictions.models.scoreline.skellam import skellam_log_pmf
 
     differences = np.arange(-25, 26)
     total = np.exp(
@@ -339,7 +339,7 @@ def test_skellam_pmf_is_a_normalised_distribution() -> None:
 
 def test_skellam_pmf_is_stable_for_large_rates() -> None:
     """The scaled Bessel call exists to stop this overflowing."""
-    from updater.predictions.models.skellam import skellam_log_pmf
+    from updater.predictions.models.scoreline.skellam import skellam_log_pmf
 
     value = skellam_log_pmf(np.array([2]), np.array([80.0]), np.array([75.0]))
     assert np.isfinite(value).all()
@@ -375,7 +375,7 @@ def test_elo_rewards_winning_and_is_zero_sum() -> None:
 
 
 def test_elo_margin_multiplier_damps_blowouts() -> None:
-    from updater.predictions.models.elo import _margin_multiplier
+    from updater.predictions.models.scoreline.elo import _margin_multiplier
 
     assert _margin_multiplier(1) == 1.0
     assert _margin_multiplier(-1) == 1.0  # symmetric in sign
@@ -394,7 +394,7 @@ def test_elo_learns_a_positive_goals_mapping(league) -> None:
 
 def test_ensemble_averages_its_members(league) -> None:
     """The combined matrix must be the mean of the members', cell by cell."""
-    from updater.predictions.models.ensemble import fit_ensemble
+    from updater.predictions.models.scoreline.ensemble import fit_ensemble
 
     names = ["dixon-coles", "pi-ratings"]
     ensemble = fit_ensemble(league, member_names=names)
@@ -410,7 +410,7 @@ def test_ensemble_averages_its_members(league) -> None:
 
 def test_ensemble_prediction_lies_between_its_members(league) -> None:
     """Averaging cannot produce a forecast more extreme than every member."""
-    from updater.predictions.models.ensemble import fit_ensemble
+    from updater.predictions.models.scoreline.ensemble import fit_ensemble
 
     names = ["dixon-coles", "pi-ratings"]
     ensemble = fit_ensemble(league, member_names=names)
@@ -424,14 +424,14 @@ def test_ensemble_prediction_lies_between_its_members(league) -> None:
 
 
 def test_ensemble_rejects_itself_as_a_member(league) -> None:
-    from updater.predictions.models.ensemble import fit_ensemble
+    from updater.predictions.models.scoreline.ensemble import fit_ensemble
 
     with pytest.raises(ValueError, match="cannot contain itself"):
         fit_ensemble(league, member_names=["dixon-coles", "ensemble"])
 
 
 def test_ensemble_rejects_mismatched_weights(league) -> None:
-    from updater.predictions.models.ensemble import fit_ensemble
+    from updater.predictions.models.scoreline.ensemble import fit_ensemble
 
     with pytest.raises(ValueError, match="weights must match"):
         fit_ensemble(league, member_names=["dixon-coles", "elo"], weights=[1.0])
@@ -439,7 +439,7 @@ def test_ensemble_rejects_mismatched_weights(league) -> None:
 
 def test_ensemble_weights_shift_the_result(league) -> None:
     """A heavily weighted member should dominate the average."""
-    from updater.predictions.models.ensemble import fit_ensemble
+    from updater.predictions.models.scoreline.ensemble import fit_ensemble
 
     names = ["dixon-coles", "pi-ratings"]
     lopsided = fit_ensemble(league, member_names=names, weights=[99.0, 1.0])
@@ -504,7 +504,7 @@ def test_extended_dc_home_advantage_is_shrunk_toward_the_league(league) -> None:
 
 
 def test_rest_covariate_is_centred_and_clipped() -> None:
-    from updater.predictions.models.extended_dc import (
+    from updater.predictions.models.scoreline.extended_dc import (
         MAX_REST_DAYS,
         TYPICAL_REST_DAYS,
         _rest_covariate,
@@ -519,7 +519,7 @@ def test_rest_covariate_is_centred_and_clipped() -> None:
 
 def test_dynamic_ratings_track_a_change_in_strength() -> None:
     """The point of a random walk: a team that improves must be seen to improve."""
-    from updater.predictions.models.dynamic import fit_dynamic
+    from updater.predictions.models.scoreline.dynamic import fit_dynamic
 
     # "Riser" loses heavily for a season, then wins heavily for one.
     early = [_match(d * 4, "Riser", "Rival", 0, 3) for d in range(20)]
@@ -533,7 +533,7 @@ def test_dynamic_ratings_track_a_change_in_strength() -> None:
 
 def test_dynamic_uncertainty_shrinks_with_evidence() -> None:
     """A team the filter has watched for a while should be pinned down."""
-    from updater.predictions.models.dynamic import INITIAL_VARIANCE, fit_dynamic
+    from updater.predictions.models.scoreline.dynamic import INITIAL_VARIANCE, fit_dynamic
 
     model = fit_dynamic([_match(d * 4, "A", "B", 2, 1) for d in range(30)])
     assert model is not None
@@ -542,7 +542,7 @@ def test_dynamic_uncertainty_shrinks_with_evidence() -> None:
 
 def test_dynamic_uncertainty_grows_over_a_long_gap() -> None:
     """Time away from the pitch must widen a rating, not leave it frozen."""
-    from updater.predictions.models.dynamic import fit_dynamic
+    from updater.predictions.models.scoreline.dynamic import fit_dynamic
 
     recent = [_match(d * 4, "A", "B", 2, 1) for d in range(20)]
     # Same matches, then a two-year gap before one more for another pair.
@@ -556,7 +556,7 @@ def test_dynamic_uncertainty_grows_over_a_long_gap() -> None:
 
 
 def test_stacked_weights_are_a_valid_mixture(league) -> None:
-    from updater.predictions.models.stacked import fit_stacked
+    from updater.predictions.models.scoreline.stacked import fit_stacked
 
     model = fit_stacked(league, member_names=["dixon-coles", "pi-ratings"])
     assert model is not None
@@ -566,7 +566,7 @@ def test_stacked_weights_are_a_valid_mixture(league) -> None:
 
 def test_stacked_prefers_the_better_member() -> None:
     """Given a clearly better member, the solver must weight it above the other."""
-    from updater.predictions.models.stacked import solve_weights
+    from updater.predictions.models.scoreline.stacked import solve_weights
 
     actual = np.array([0, 1, 2] * 40)
     sharp = np.zeros((len(actual), 3))
@@ -580,7 +580,7 @@ def test_stacked_prefers_the_better_member() -> None:
 
 
 def test_stacked_rejects_nested_ensembles(league) -> None:
-    from updater.predictions.models.stacked import fit_stacked
+    from updater.predictions.models.scoreline.stacked import fit_stacked
 
     with pytest.raises(ValueError, match="cannot contain an ensemble"):
         fit_stacked(league, member_names=["dixon-coles", "ensemble"])
@@ -588,7 +588,7 @@ def test_stacked_rejects_nested_ensembles(league) -> None:
 
 def test_stacked_falls_back_to_equal_weights_on_a_short_holdout() -> None:
     """Too little holdout to learn from means don't pretend to have learned."""
-    from updater.predictions.models.stacked import fit_stacked
+    from updater.predictions.models.scoreline.stacked import fit_stacked
 
     short = _league(repeats=2)
     model = fit_stacked(short, member_names=["dixon-coles", "pi-ratings"])
@@ -599,7 +599,7 @@ def test_stacked_falls_back_to_equal_weights_on_a_short_holdout() -> None:
 def test_rps_helper_matches_the_backtest_implementation() -> None:
     """Two implementations of RPS exist; they must not drift apart."""
     from updater.predictions.backtest import ranked_probability_score
-    from updater.predictions.models.stacked import _rps
+    from updater.predictions.models.scoreline.stacked import _rps
 
     probabilities = np.array([[0.5, 0.3, 0.2], [0.2, 0.2, 0.6], [0.4, 0.35, 0.25]])
     actual = np.array([1, 2, 0])

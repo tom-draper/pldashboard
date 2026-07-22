@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 
 import numpy as np
 
-from updater.predictions.predict_v3 import (
+from updater.predictions.models.scoreline.dixon_coles import (
     DixonColesModel,
     MatchResult,
     fit_dixon_coles,

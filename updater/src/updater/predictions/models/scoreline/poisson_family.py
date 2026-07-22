@@ -27,7 +27,7 @@ from updater.predictions.distributions import (
     goal_grids,
     prediction_from_matrix,
 )
-from updater.predictions.models.common import TeamRatings
+from updater.predictions.models.scoreline.common import TeamRatings
 
 # Rates below this are numerically awkward and physically meaningless (a team
 # scoring 0.01 goals a game); clamp before taking logs.

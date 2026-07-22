@@ -30,7 +30,7 @@ import numpy as np
 from scipy.optimize import minimize
 
 from updater.predictions.distributions import MatchResult
-from updater.predictions.models.ensemble import EnsembleModel
+from updater.predictions.models.scoreline.ensemble import EnsembleModel
 
 DEFAULT_MEMBERS = ("dixon-coles", "pi-ratings", "skellam")
 

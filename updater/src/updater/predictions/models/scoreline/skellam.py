@@ -28,7 +28,7 @@ from updater.predictions.distributions import (
     poisson_pmf,
     prediction_from_matrix,
 )
-from updater.predictions.models.common import TeamRatings
+from updater.predictions.models.scoreline.common import TeamRatings
 
 MIN_RATE = 1e-6
 

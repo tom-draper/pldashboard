@@ -40,8 +40,8 @@ from updater.predictions.distributions import (
     MatchResult,
     dc_low_score_correction,
 )
-from updater.predictions.models.common import fit_ratings
-from updater.predictions.predict_v3 import DixonColesModel
+from updater.predictions.models.scoreline.common import fit_ratings
+from updater.predictions.models.scoreline.dixon_coles import DixonColesModel
 
 # Bounds on the learned prior width. The floor stops a degenerate fit (every
 # team identical) from driving the penalty to infinity and freezing all ratings
