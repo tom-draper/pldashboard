@@ -14,11 +14,8 @@ from typing import Any, Optional
 
 from updater.data.raw_data import RawData
 from updater.fmt import clean_full_team_name, convert_team_name_or_initials
-from updater.predictions.predict_v3 import (
-    MatchResult,
-    ScorePrediction,
-    fit_dixon_coles,
-)
+from updater.predictions import models as model_registry
+from updater.predictions.distributions import MatchResult, ScorePrediction
 
 # Goals beyond this are so unlikely they add noise, not information, to the
 # stored distributions and heatmap.
@@ -128,11 +125,18 @@ def _prediction_document(
 
 
 def build_v3_predictions(
-    raw_data: RawData, current_season: int, num_seasons: int = 4
+    raw_data: RawData,
+    current_season: int,
+    num_seasons: int = 4,
+    model_name: str = model_registry.DEFAULT_MODEL,
 ) -> list[dict[str, Any]]:
-    """Fit the Dixon-Coles model and predict the upcoming matchday's fixtures."""
+    """Fit the chosen engine and predict the upcoming matchday's fixtures.
+
+    `model_name` selects from `predictions.models`, so swapping the production
+    engine for one the backtest prefers is a name change rather than an edit.
+    """
     matches = extract_matches(raw_data, current_season, num_seasons)
-    model = fit_dixon_coles(matches)
+    model = model_registry.build(model_name).fit(matches)
     if model is None:
         return []
 

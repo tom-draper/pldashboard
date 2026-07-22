@@ -1,36 +1,49 @@
-"""Backtest harness for the v3 Dixon-Coles engine.
+"""Backtest harness comparing the prediction engines against each other.
 
 An analysis tool, not part of the production build. It replays a past season one
-matchday at a time, refitting the model only on matches that finished *before*
-each matchday (no leakage) and scoring the predictions with proper metrics:
+matchday at a time, refitting each model only on matches that finished *before*
+that matchday (no leakage) and scoring the predictions with proper metrics:
 
     * RPS   - ranked probability score over the ordered home/draw/away outcome
-              (lower is better; the standard football forecasting metric)
+              (lower is better; the standard football forecasting metric, and the
+              one to select on)
     * log-loss - negative log probability assigned to the actual outcome
+    * ECE   - expected calibration error: do the stated probabilities happen at
+              the stated rate? (lower is better). Read it alongside RPS, never
+              alone: the base-rate baseline scores a perfect 0 here by
+              construction, since quoting the season's own outcome frequencies
+              is flawlessly calibrated and completely uninformative.
     * outcome accuracy - share of matches whose most likely outcome was right
-    * exact-score accuracy - share whose most likely scoreline was exactly right
+    * exact-score accuracy - share whose most likely scoreline was exactly right.
+              Low for everyone by nature: the true scoreline distribution is flat
+              enough that even a perfect model rarely tops ~13%, so this is a
+              weak basis for choosing between models.
 
-Results are compared against a base-rate baseline (the season's own home/draw/away
-frequencies) so the numbers have a reference point. Run with::
+Every model is compared against a base-rate baseline (the season's own
+home/draw/away frequencies) so the numbers have a reference point. Run with::
 
-    python -m updater.predictions.backtest [--half-life DAYS] [--season YEAR]
+    python -m updater.predictions.backtest
+    python -m updater.predictions.backtest --models dixon-coles,pi-ratings
+    python -m updater.predictions.backtest --sweep --models dixon-coles
+    python -m updater.predictions.backtest --seasons 2023,2024,2025
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-from dataclasses import dataclass
+import sys
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Sequence
+
+import numpy as np
 
 from updater.env import BACKUPS_DIR
-from updater.predictions.predict_v3 import (
-    DixonColesModel,
-    MatchResult,
-    fit_dixon_coles,
-)
+from updater.predictions import models as model_registry
+from updater.predictions.distributions import MatchResult
+from updater.predictions.models import FittedModel, Predictor, predict_fixture
 
 
 @dataclass
@@ -107,40 +120,169 @@ def _latest_complete_season(matches: list[SeasonMatch], min_matches: int = 300) 
 
 @dataclass
 class Metrics:
-    n: int
-    rps: float
-    log_loss: float
-    outcome_accuracy: float
-    exact_score_accuracy: float
+    """Running totals for one model, finalised by `summary()`."""
+
+    label: str
+    n: int = 0
+    rps_total: float = 0.0
+    log_loss_total: float = 0.0
+    correct_outcomes: int = 0
+    correct_scores: int = 0
+    # (predicted probability, hit) pairs across all three outcomes, for ECE.
+    calibration: list[tuple[float, bool]] = field(default_factory=list)
+    # Per-match RPS, kept so models can be compared *paired* on identical
+    # fixtures. Two engines can differ by less than either one's own spread and
+    # still be reliably ordered, so the unpaired spread would hide a real edge,
+    # and an unpaired tie would hide a real one.
+    per_match_rps: list[float] = field(default_factory=list)
+
+    def add(
+        self,
+        probs: tuple[float, float, float],
+        actual: int,
+        exact_hit: Optional[bool] = None,
+    ) -> None:
+        self.n += 1
+        rps = ranked_probability_score(probs, actual)
+        self.per_match_rps.append(rps)
+        self.rps_total += rps
+        self.log_loss_total += -_safe_log(probs[actual])
+        self.correct_outcomes += 1 if _argmax(probs) == actual else 0
+        if exact_hit:
+            self.correct_scores += 1
+        for i, p in enumerate(probs):
+            self.calibration.append((p, i == actual))
+
+    @property
+    def rps(self) -> float:
+        return self.rps_total / self.n if self.n else float("nan")
+
+    @property
+    def log_loss(self) -> float:
+        return self.log_loss_total / self.n if self.n else float("nan")
+
+    @property
+    def outcome_accuracy(self) -> float:
+        return self.correct_outcomes / self.n if self.n else float("nan")
+
+    @property
+    def exact_score_accuracy(self) -> float:
+        return self.correct_scores / self.n if self.n else float("nan")
+
+    @property
+    def calibration_error(self) -> float:
+        """Expected calibration error over 10 equal-width probability bins."""
+        if not self.calibration:
+            return float("nan")
+        bins: list[list[tuple[float, bool]]] = [[] for _ in range(10)]
+        for prob, hit in self.calibration:
+            bins[min(int(prob * 10), 9)].append((prob, hit))
+        total = len(self.calibration)
+        error = 0.0
+        for bucket in bins:
+            if not bucket:
+                continue
+            mean_prob = sum(p for p, _ in bucket) / len(bucket)
+            observed = sum(1 for _, hit in bucket if hit) / len(bucket)
+            error += (len(bucket) / total) * abs(mean_prob - observed)
+        return error
+
+
+@dataclass
+class PairedComparison:
+    """A model's RPS gap to the leader, measured on the same fixtures."""
+
+    mean_difference: float
+    standard_error: float
+
+    @property
+    def t_statistic(self) -> float:
+        if self.standard_error == 0:
+            return 0.0
+        return self.mean_difference / self.standard_error
 
     def __str__(self) -> str:
-        return (
-            f"n={self.n}  RPS={self.rps:.4f}  logloss={self.log_loss:.4f}  "
-            f"outcome_acc={self.outcome_accuracy:.3f}  "
-            f"exact_acc={self.exact_score_accuracy:.3f}"
+        if self.standard_error == 0:
+            return "-"
+        # +/- 2 standard errors is the usual 95% interval; anything inside it is
+        # a gap this sample cannot distinguish from zero.
+        marker = "*" if abs(self.t_statistic) > 2 else " "
+        return f"{self.mean_difference:+.4f}+/-{2 * self.standard_error:.4f}{marker}"
+
+
+def paired_rps_difference(model: Metrics, reference: Metrics) -> PairedComparison:
+    """Mean per-match RPS difference (model - reference) and its standard error.
+
+    Both models saw identical fixtures in identical order, so differencing
+    match-by-match cancels the fixture difficulty that dominates the raw spread.
+    """
+    if model is reference or len(model.per_match_rps) != len(reference.per_match_rps):
+        return PairedComparison(0.0, 0.0)
+
+    differences = np.array(model.per_match_rps) - np.array(reference.per_match_rps)
+    if differences.size < 2:
+        return PairedComparison(0.0, 0.0)
+    return PairedComparison(
+        mean_difference=float(differences.mean()),
+        standard_error=float(differences.std(ddof=1) / np.sqrt(differences.size)),
+    )
+
+
+def _table(rows: Sequence[Metrics]) -> str:
+    """Leaderboard sorted by RPS, the metric worth selecting on.
+
+    `vs best` is the paired RPS gap to the leader with a 95% interval; a `*`
+    marks a gap that clears it. Models without a `*` are not distinguishable
+    from the leader on this sample, however their point estimates are ordered.
+    """
+    ordered = sorted(rows, key=lambda r: r.rps)
+    best = ordered[0]
+
+    header = (
+        f"{'model':<24}{'n':>6}{'RPS':>10}{'vs best':>18}{'logloss':>10}"
+        f"{'ECE':>8}{'outcome':>9}{'exact':>8}"
+    )
+    lines = [header, "-" * len(header)]
+    for m in ordered:
+        comparison = str(paired_rps_difference(m, best))
+        lines.append(
+            f"{m.label:<24}{m.n:>6}{m.rps:>10.4f}{comparison:>18}{m.log_loss:>10.4f}"
+            f"{m.calibration_error:>8.4f}{m.outcome_accuracy:>9.3f}"
+            f"{m.exact_score_accuracy:>8.3f}"
         )
+    return "\n".join(lines)
 
 
 def backtest(
     matches: list[SeasonMatch],
-    season: int,
-    half_life_days: float = 180.0,
+    predictors: Sequence[Predictor],
+    seasons: Sequence[int],
+    labels: Optional[Sequence[str]] = None,
     min_train: int = 200,
     train_window_days: float = 1300.0,
-    xg_weight: float = 0.0,
-) -> tuple[Metrics, Metrics]:
-    """Score the model and a base-rate baseline over `season`'s matches.
+    progress: bool = False,
+) -> list[Metrics]:
+    """Score each predictor, plus a base-rate baseline, over `seasons`.
 
     Each matchday is predicted from a rolling window of the prior
     `train_window_days` of results (~3.5 seasons), which bounds the fit cost and
-    keeps stale, long-relegated teams out of the ratings.
+    keeps stale, long-relegated teams out of the ratings. Models are refit once
+    per ISO week on everything that finished before that week started, so a whole
+    round is predicted from data available before it kicked off.
+
+    A full multi-model run refits every engine once per week of every season and
+    takes tens of minutes, so `progress` reports weeks completed on stderr,
+    keeping the table itself clean on stdout.
     """
     window = timedelta(days=train_window_days)
-    test = [m for m in matches if m.season == season]
+    test = [m for m in matches if m.season in set(seasons)]
     if not test:
-        raise ValueError(f"No matches found for season {season}")
+        raise ValueError(f"No matches found for seasons {sorted(seasons)}")
 
-    # Base rate uses the tested season's own outcome frequencies as a reference.
+    labels = list(labels) if labels else [p.name for p in predictors]
+
+    # Base rate uses the tested seasons' own outcome frequencies as a reference.
+    # It is the most generous possible baseline: it has seen the results already.
     base_counts = [0, 0, 0]
     for m in test:
         base_counts[outcome(m.result.home_goals, m.result.away_goals)] += 1
@@ -150,72 +292,80 @@ def backtest(
         base_counts[2] / len(test),
     )
 
-    model_rps = model_ll = model_out = model_exact = 0.0
-    base_rps = base_ll = base_out = 0.0
-    scored = 0
+    baseline = Metrics(label="baseline (base rate)")
+    results = [Metrics(label=label) for label in labels]
 
-    # Refit once per ISO week, trained on everything before that week starts, so
-    # a whole round is predicted from data available before it kicked off.
-    model_cache: dict[datetime, Optional[DixonColesModel]] = {}
+    # One cache per predictor, keyed by the week whose fixtures it predicts.
+    caches: list[dict[datetime, Optional[FittedModel]]] = [{} for _ in predictors]
+
+    # Weeks are only known once the fixtures are walked, so the total for the
+    # progress line is counted up front rather than guessed from the season.
+    total_weeks = len(
+        {
+            (m.result.date - timedelta(days=m.result.date.weekday())).date()
+            for m in test
+        }
+    )
+    weeks_done = 0
+
     for match in test:
         match_date = match.result.date
         week_start = (match_date - timedelta(days=match_date.weekday())).replace(
             hour=0, minute=0, second=0, microsecond=0
         )
         train = [
-            m.result
-            for m in matches
-            if week_start - window < m.result.date < week_start
+            m.result for m in matches if week_start - window < m.result.date < week_start
         ]
         if len(train) < min_train:
             continue
 
-        if week_start not in model_cache:
-            model_cache[week_start] = fit_dixon_coles(
-                train, half_life_days=half_life_days, xg_weight=xg_weight
+        if progress and week_start not in caches[0]:
+            weeks_done += 1
+            print(
+                f"  week {weeks_done}/{total_weeks} ({week_start.date()}), "
+                f"training on {len(train)} matches",
+                file=sys.stderr,
+                flush=True,
             )
-        model = model_cache[week_start]
-        if model is None:
-            continue
 
-        # Promoted sides with no prior matches fall back to the model's weak
-        # prior (as in production), so every fixture is scored, not just the
-        # ones between established teams.
-        pred = model.predict(match.result.home_team, match.result.away_team)
         actual = outcome(match.result.home_goals, match.result.away_goals)
-        probs = (pred.prob_home_win, pred.prob_draw, pred.prob_away_win)
+        scored_any = False
 
-        model_rps += ranked_probability_score(probs, actual)
-        model_ll += -_safe_log(probs[actual])
-        model_out += 1.0 if _argmax(probs) == actual else 0.0
-        model_exact += 1.0 if (
-            pred.predicted_home_goals == match.result.home_goals
-            and pred.predicted_away_goals == match.result.away_goals
-        ) else 0.0
+        for predictor, cache, metrics in zip(predictors, caches, results):
+            if week_start not in cache:
+                cache[week_start] = predictor.fit(train)
+            model = cache[week_start]
+            if model is None:
+                continue
 
-        base_rps += ranked_probability_score(base_probs, actual)
-        base_ll += -_safe_log(base_probs[actual])
-        base_out += 1.0 if _argmax(base_probs) == actual else 0.0
-        scored += 1
+            # Promoted sides with no prior matches fall back to each model's weak
+            # prior (as in production), so every fixture is scored, not just the
+            # ones between established teams. The kickoff date is known before
+            # the match, so passing it to the models that use it (rest days) is
+            # information they would genuinely have, not leakage.
+            pred = predict_fixture(
+                model,
+                match.result.home_team,
+                match.result.away_team,
+                match_date=match.result.date,
+            )
+            metrics.add(
+                (pred.prob_home_win, pred.prob_draw, pred.prob_away_win),
+                actual,
+                exact_hit=(
+                    pred.predicted_home_goals == match.result.home_goals
+                    and pred.predicted_away_goals == match.result.away_goals
+                ),
+            )
+            scored_any = True
 
-    if scored == 0:
+        if scored_any:
+            baseline.add(base_probs, actual)
+
+    if baseline.n == 0:
         raise ValueError("No matches had enough prior data to score")
 
-    model_metrics = Metrics(
-        n=scored,
-        rps=model_rps / scored,
-        log_loss=model_ll / scored,
-        outcome_accuracy=model_out / scored,
-        exact_score_accuracy=model_exact / scored,
-    )
-    base_metrics = Metrics(
-        n=scored,
-        rps=base_rps / scored,
-        log_loss=base_ll / scored,
-        outcome_accuracy=base_out / scored,
-        exact_score_accuracy=0.0,
-    )
-    return model_metrics, base_metrics
+    return [baseline] + results
 
 
 def _argmax(values: tuple[float, ...]) -> int:
@@ -229,8 +379,21 @@ def _safe_log(p: float) -> float:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Backtest the v3 Dixon-Coles engine.")
-    parser.add_argument("--season", type=int, default=None, help="Season year to test.")
+    parser = argparse.ArgumentParser(
+        description="Compare prediction engines on past seasons."
+    )
+    parser.add_argument(
+        "--models",
+        type=str,
+        default=",".join(model_registry.available()),
+        help="Comma-separated engines to compare (default: all registered).",
+    )
+    parser.add_argument(
+        "--seasons",
+        type=str,
+        default=None,
+        help="Comma-separated season years to test (default: latest complete).",
+    )
     parser.add_argument(
         "--half-life",
         type=float,
@@ -240,22 +403,51 @@ def main() -> None:
     parser.add_argument(
         "--sweep",
         action="store_true",
-        help="Sweep several half-lives instead of using --half-life.",
+        help="Sweep several half-lives for each selected model.",
+    )
+    parser.add_argument(
+        "--list-models",
+        action="store_true",
+        help="Print the registered engine names and exit.",
+    )
+    parser.add_argument(
+        "--progress",
+        action="store_true",
+        help="Report weeks completed on stderr (a full run takes tens of minutes).",
     )
     args = parser.parse_args()
 
-    matches = load_matches()
-    season = args.season or _latest_complete_season(matches)
-    print(f"Loaded {len(matches)} finished matches. Testing season {season}.\n")
+    if args.list_models:
+        print("\n".join(model_registry.available()))
+        return
 
-    half_lives = [90, 180, 365, 730] if args.sweep else [args.half_life]
-    baseline_printed = False
-    for half_life in half_lives:
-        model_metrics, base_metrics = backtest(matches, season, half_life_days=half_life)
-        if not baseline_printed:
-            print(f"baseline (season base rate):  {base_metrics}\n")
-            baseline_printed = True
-        print(f"v3 half_life={half_life:>4.0f}d:  {model_metrics}")
+    names = [name.strip() for name in args.models.split(",") if name.strip()]
+    matches = load_matches()
+    seasons = (
+        [int(s) for s in args.seasons.split(",")]
+        if args.seasons
+        else [_latest_complete_season(matches)]
+    )
+
+    half_lives = [90.0, 180.0, 365.0, 730.0] if args.sweep else [args.half_life]
+
+    predictors: list[Predictor] = []
+    labels: list[str] = []
+    for name in names:
+        for half_life in half_lives:
+            predictors.append(model_registry.build(name, half_life_days=half_life))
+            labels.append(f"{name} hl={half_life:.0f}d" if args.sweep else name)
+
+    seasons_label = ", ".join(str(s) for s in seasons)
+    print(
+        f"Loaded {len(matches)} finished matches. "
+        f"Testing season(s) {seasons_label} with {len(predictors)} model(s).\n"
+    )
+
+    rows = backtest(
+        matches, predictors, seasons, labels=labels, progress=args.progress
+    )
+    print(_table(rows))
 
 
 if __name__ == "__main__":

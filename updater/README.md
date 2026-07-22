@@ -34,6 +34,20 @@ docker exec -it <container_id> cat /var/log/pldashboard-updater.log
 uv run pytest
 ```
 
+## Predictions
+
+The prediction engines live in `src/updater/predictions/models/` behind a common
+registry, so they can be scored against each other and swapped in the pipeline by
+name. To compare them on past seasons:
+
+```bash
+uv run python -m updater.predictions.backtest --list-models
+uv run python -m updater.predictions.backtest --seasons 2023,2024,2025
+```
+
+Recorded results and what they mean are in
+[`docs/prediction-benchmarks.md`](docs/prediction-benchmarks.md).
+
 ## Environment Variables
 
 The updater relies on a set of environment variables in `.env` in order to configure the current football season, access data from the football data API, and login to the MongoDB database to upload data.

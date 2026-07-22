@@ -26,98 +26,28 @@ unit-testable and lets xG- or odds-based variants reuse the same core later.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime
-from math import log
-from typing import NamedTuple, Optional
+from typing import Optional
 
 import numpy as np
 from scipy.optimize import minimize
 
+from updater.predictions.distributions import (
+    MatchResult,
+    ScorePrediction,
+    dc_low_score_correction as _dc_low_score_correction,
+    goal_grids,
+    match_dates,
+    poisson_pmf as _poisson_pmf,
+    prediction_from_matrix,
+    time_weights as _time_weights,
+)
 
-class MatchResult(NamedTuple):
-    """One completed match, home-team oriented.
-
-    `home_xg` / `away_xg` are optional expected-goals values (true xG, or a
-    shots-based proxy). When present and `xg_weight > 0`, the fit blends them
-    with the actual goals to denoise each team's rate estimates.
-    """
-
-    date: datetime
-    home_team: str
-    away_team: str
-    home_goals: int
-    away_goals: int
-    home_xg: Optional[float] = None
-    away_xg: Optional[float] = None
-
-
-@dataclass
-class ScorePrediction:
-    """A fixture's full predicted distribution.
-
-    `home_goals_dist[k]` is the probability the home team scores exactly k;
-    `away_goals_dist` likewise for the away team. `scoreline_matrix[h][a]` is the
-    joint probability of the exact scoreline h-a. All three sum to ~1.
-    """
-
-    home_team: str
-    away_team: str
-    expected_home_goals: float
-    expected_away_goals: float
-    home_goals_dist: list[float]
-    away_goals_dist: list[float]
-    scoreline_matrix: list[list[float]]
-    prob_home_win: float
-    prob_draw: float
-    prob_away_win: float
-    predicted_home_goals: int
-    predicted_away_goals: int
-
-    def to_dict(self) -> dict:
-        return {
-            "homeTeam": self.home_team,
-            "awayTeam": self.away_team,
-            "expectedHomeGoals": self.expected_home_goals,
-            "expectedAwayGoals": self.expected_away_goals,
-            "homeGoalsDist": self.home_goals_dist,
-            "awayGoalsDist": self.away_goals_dist,
-            "scorelineMatrix": self.scoreline_matrix,
-            "probHomeWin": self.prob_home_win,
-            "probDraw": self.prob_draw,
-            "probAwayWin": self.prob_away_win,
-            "predictedHomeGoals": self.predicted_home_goals,
-            "predictedAwayGoals": self.predicted_away_goals,
-        }
-
-
-def _poisson_pmf(k: np.ndarray, lam: float | np.ndarray) -> np.ndarray:
-    """Poisson probability mass, vectorised over goal counts 0..k for each lam."""
-    from scipy.stats import poisson
-
-    return poisson.pmf(k, lam)
-
-
-def _dc_low_score_correction(
-    home_goals: np.ndarray,
-    away_goals: np.ndarray,
-    lambda_home: np.ndarray,
-    lambda_away: np.ndarray,
-    rho: float,
-) -> np.ndarray:
-    """Dixon-Coles tau adjustment for the four low-score cells (1 elsewhere)."""
-    tau = np.ones_like(lambda_home, dtype=float)
-
-    zero_zero = (home_goals == 0) & (away_goals == 0)
-    zero_one = (home_goals == 0) & (away_goals == 1)
-    one_zero = (home_goals == 1) & (away_goals == 0)
-    one_one = (home_goals == 1) & (away_goals == 1)
-
-    tau[zero_zero] = 1 - lambda_home[zero_zero] * lambda_away[zero_zero] * rho
-    tau[zero_one] = 1 + lambda_home[zero_one] * rho
-    tau[one_zero] = 1 + lambda_away[one_zero] * rho
-    tau[one_one] = 1 - rho
-    return tau
+__all__ = [
+    "DixonColesModel",
+    "MatchResult",
+    "ScorePrediction",
+    "fit_dixon_coles",
+]
 
 
 class DixonColesModel:
@@ -167,8 +97,7 @@ class DixonColesModel:
 
         # Independent-Poisson joint, then apply the low-score correction cell-wise.
         matrix = np.outer(home_pmf, away_pmf)
-        hg = goals.reshape(-1, 1) * np.ones((1, max_goals + 1))
-        ag = np.ones((max_goals + 1, 1)) * goals.reshape(1, -1)
+        hg, ag = goal_grids(max_goals)
         tau = _dc_low_score_correction(
             hg,
             ag,
@@ -178,42 +107,13 @@ class DixonColesModel:
         )
         matrix = matrix * tau
 
-        # Truncating the tail and the tau tweak leave the mass slightly off 1.
-        total = matrix.sum()
-        if total > 0:
-            matrix = matrix / total
-
-        home_goals_dist = matrix.sum(axis=1)
-        away_goals_dist = matrix.sum(axis=0)
-
-        prob_home_win = float(np.tril(matrix, -1).sum())
-        prob_away_win = float(np.triu(matrix, 1).sum())
-        prob_draw = float(np.trace(matrix))
-
-        best = np.unravel_index(int(np.argmax(matrix)), matrix.shape)
-
-        return ScorePrediction(
-            home_team=home_team,
-            away_team=away_team,
+        return prediction_from_matrix(
+            home_team,
+            away_team,
+            matrix,
             expected_home_goals=lambda_home,
             expected_away_goals=lambda_away,
-            home_goals_dist=home_goals_dist.tolist(),
-            away_goals_dist=away_goals_dist.tolist(),
-            scoreline_matrix=matrix.tolist(),
-            prob_home_win=prob_home_win,
-            prob_draw=prob_draw,
-            prob_away_win=prob_away_win,
-            predicted_home_goals=int(best[0]),
-            predicted_away_goals=int(best[1]),
         )
-
-
-def _time_weights(dates: np.ndarray, half_life_days: float) -> np.ndarray:
-    """Exponential recency weights: newest match ~1, halving every half_life_days."""
-    reference = dates.max()
-    days_ago = (reference - dates) / np.timedelta64(1, "D")
-    decay = log(2) / half_life_days
-    return np.exp(-decay * days_ago)
 
 
 def fit_dixon_coles(
@@ -222,6 +122,7 @@ def fit_dixon_coles(
     regularisation: float = 1e-3,
     max_iter: int = 200,
     xg_weight: float = 0.0,
+    fit_rho: bool = True,
 ) -> Optional[DixonColesModel]:
     """Fit attack/defence/home-advantage/rho by weighted maximum likelihood.
 
@@ -233,6 +134,10 @@ def fit_dixon_coles(
     `xg_weight` in [0, 1] blends expected goals into each match's target when
     available: 0 fits pure goals (the tau low-score correction then applies as
     usual); higher values lean on the less noisy xG signal.
+
+    `fit_rho=False` pins rho at 0, collapsing the model to independent Poisson.
+    That is the ablation the backtest uses to check the low-score correction is
+    earning its place.
     """
     if not matches:
         return None
@@ -250,14 +155,7 @@ def fit_dixon_coles(
     away_idx = np.array([index[m.away_team] for m in matches])
     home_goals = np.array([target(m.home_goals, m.home_xg) for m in matches])
     away_goals = np.array([target(m.away_goals, m.away_xg) for m in matches])
-    # np.datetime64 has no tz support; drop the offset (all inputs are UTC).
-    dates = np.array(
-        [
-            np.datetime64(m.date.replace(tzinfo=None) if m.date.tzinfo else m.date)
-            for m in matches
-        ]
-    )
-    weights = _time_weights(dates, half_life_days)
+    weights = _time_weights(match_dates(matches), half_life_days)
 
     def unpack(params: np.ndarray):
         attack = params[:n]
@@ -287,10 +185,12 @@ def fit_dixon_coles(
         penalty = regularisation * (np.sum(attack**2) + np.sum(defence**2))
         return -log_likelihood + penalty
 
-    initial = np.concatenate([np.zeros(n), np.zeros(n), [0.3], [-0.05]])
+    rho_initial = -0.05 if fit_rho else 0.0
+    initial = np.concatenate([np.zeros(n), np.zeros(n), [0.3], [rho_initial]])
     # rho must stay small enough to keep every tau positive; home advantage and
     # ratings are effectively unbounded but the penalty keeps them tame.
-    bounds = [(None, None)] * (2 * n) + [(-1.0, 2.0), (-0.2, 0.2)]
+    rho_bounds = (-0.2, 0.2) if fit_rho else (0.0, 0.0)
+    bounds = [(None, None)] * (2 * n) + [(-1.0, 2.0), rho_bounds]
 
     result = minimize(
         negative_log_likelihood,
