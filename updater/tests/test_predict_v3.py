@@ -96,6 +96,26 @@ class TestHomeAdvantage:
         assert home_lambda > away_lambda
 
 
+class TestXgBlend:
+    def test_xg_weight_shifts_ratings_toward_expected_goals(self):
+        # A scores few actual goals but racks up high xG; the xG blend should
+        # rate its attack higher than a pure-goals fit does.
+        matches = []
+        for r in range(12):
+            home, away = ("A", "B") if r % 2 == 0 else ("B", "A")
+            # A (whoever is playing) draws 0-0 on the scoreboard but with high xG.
+            hxg, axg = (2.5, 0.5) if home == "A" else (0.5, 2.5)
+            matches.append(_match(r * 7, home, away, 0, 0)._replace(home_xg=hxg, away_xg=axg))
+
+        goals_only = fit_dixon_coles(matches, xg_weight=0.0)
+        with_xg = fit_dixon_coles(matches, xg_weight=0.7)
+        assert goals_only is not None and with_xg is not None
+        assert with_xg.attack["A"] > goals_only.attack["A"]
+
+        pred = with_xg.predict("A", "B")
+        assert abs(sum(pred.home_goals_dist) - 1.0) < 1e-9
+
+
 class TestUnknownTeam:
     def test_unseen_team_falls_back_to_the_weakest_prior(self):
         # A dominates B, so B anchors the weak prior. An unseen team C should be

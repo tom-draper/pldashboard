@@ -36,13 +36,20 @@ from scipy.optimize import minimize
 
 
 class MatchResult(NamedTuple):
-    """One completed match, home-team oriented."""
+    """One completed match, home-team oriented.
+
+    `home_xg` / `away_xg` are optional expected-goals values (true xG, or a
+    shots-based proxy). When present and `xg_weight > 0`, the fit blends them
+    with the actual goals to denoise each team's rate estimates.
+    """
 
     date: datetime
     home_team: str
     away_team: str
     home_goals: int
     away_goals: int
+    home_xg: Optional[float] = None
+    away_xg: Optional[float] = None
 
 
 @dataclass
@@ -214,6 +221,7 @@ def fit_dixon_coles(
     half_life_days: float = 365.0,
     regularisation: float = 1e-3,
     max_iter: int = 200,
+    xg_weight: float = 0.0,
 ) -> Optional[DixonColesModel]:
     """Fit attack/defence/home-advantage/rho by weighted maximum likelihood.
 
@@ -221,6 +229,10 @@ def fit_dixon_coles(
     only up to a joint shift of all attacks and defences, which leaves every
     prediction unchanged; a light L2 penalty pins that direction and steadies
     the optimiser on short samples.
+
+    `xg_weight` in [0, 1] blends expected goals into each match's target when
+    available: 0 fits pure goals (the tau low-score correction then applies as
+    usual); higher values lean on the less noisy xG signal.
     """
     if not matches:
         return None
@@ -229,10 +241,15 @@ def fit_dixon_coles(
     index = {team: i for i, team in enumerate(teams)}
     n = len(teams)
 
+    def target(goals: int, xg: Optional[float]) -> float:
+        if xg_weight > 0 and xg is not None:
+            return (1 - xg_weight) * goals + xg_weight * xg
+        return float(goals)
+
     home_idx = np.array([index[m.home_team] for m in matches])
     away_idx = np.array([index[m.away_team] for m in matches])
-    home_goals = np.array([m.home_goals for m in matches], dtype=float)
-    away_goals = np.array([m.away_goals for m in matches], dtype=float)
+    home_goals = np.array([target(m.home_goals, m.home_xg) for m in matches])
+    away_goals = np.array([target(m.away_goals, m.away_xg) for m in matches])
     # np.datetime64 has no tz support; drop the offset (all inputs are UTC).
     dates = np.array(
         [

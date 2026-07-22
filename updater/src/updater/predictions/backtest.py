@@ -127,6 +127,7 @@ def backtest(
     half_life_days: float = 180.0,
     min_train: int = 200,
     train_window_days: float = 1300.0,
+    xg_weight: float = 0.0,
 ) -> tuple[Metrics, Metrics]:
     """Score the model and a base-rate baseline over `season`'s matches.
 
@@ -171,7 +172,7 @@ def backtest(
 
         if week_start not in model_cache:
             model_cache[week_start] = fit_dixon_coles(
-                train, half_life_days=half_life_days
+                train, half_life_days=half_life_days, xg_weight=xg_weight
             )
         model = model_cache[week_start]
         if model is None:
