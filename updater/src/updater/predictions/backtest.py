@@ -156,6 +156,11 @@ class Metrics:
     # still be reliably ordered, so the unpaired spread would hide a real edge,
     # and an unpaired tie would hide a real one.
     per_match_rps: list[float] = field(default_factory=list)
+    # The forecasts themselves, kept so two models can be compared fixture by
+    # fixture. Averages hide disagreement: two engines can tie on RPS while
+    # picking different winners, their errors cancelling in the mean.
+    per_match_probs: list[tuple[float, float, float]] = field(default_factory=list)
+    per_match_actual: list[int] = field(default_factory=list)
 
     def add(
         self,
@@ -166,6 +171,8 @@ class Metrics:
         self.n += 1
         rps = ranked_probability_score(probs, actual)
         self.per_match_rps.append(rps)
+        self.per_match_probs.append((probs[0], probs[1], probs[2]))
+        self.per_match_actual.append(actual)
         self.rps_total += rps
         self.log_loss_total += -_safe_log(probs[actual])
         self.correct_outcomes += 1 if _argmax(probs) == actual else 0
@@ -281,6 +288,91 @@ def _table(rows: Sequence[Metrics]) -> str:
             f"{m.outcome_accuracy:>9.3f}{exact_cell:>8}"
         )
     return "\n".join(lines)
+
+
+@dataclass
+class Disagreement:
+    """How far apart two models are fixture by fixture, and who wins where.
+
+    A leaderboard cannot answer this. Two engines that tie on mean RPS may be
+    making the same forecast every week, or wildly different ones that happen to
+    be wrong equally often. Only the first case means the second engine is
+    redundant, and telling them apart decides whether keeping both families is
+    worth anything.
+    """
+
+    first: str
+    second: str
+    n: int
+    # Fixtures where the two name a different most likely result.
+    differing_picks: int
+    mean_total_variation: float
+    max_total_variation: float
+    # Mean RPS restricted to the fixtures where the picks differ. If the two
+    # carry different information, one should be clearly better on exactly
+    # these, which is where a blend would earn its keep.
+    first_rps_when_differing: float
+    second_rps_when_differing: float
+
+    @property
+    def differing_share(self) -> float:
+        return self.differing_picks / self.n if self.n else float("nan")
+
+    def __str__(self) -> str:
+        if self.n == 0:
+            return f"{self.first} vs {self.second}: nothing scored in common"
+        return "\n".join(
+            [
+                f"{self.first} vs {self.second} over {self.n} fixtures",
+                f"  different pick     {self.differing_picks} "
+                f"({self.differing_share:.1%} of fixtures)",
+                f"  mean separation    {self.mean_total_variation:.4f} "
+                f"(total variation, max {self.max_total_variation:.4f})",
+                f"  RPS where they differ: {self.first} {self.first_rps_when_differing:.4f}, "
+                f"{self.second} {self.second_rps_when_differing:.4f}",
+            ]
+        )
+
+
+def disagreement(first: Metrics, second: Metrics) -> Disagreement:
+    """Compare two models' stored per-fixture forecasts.
+
+    Both must have been scored in the same `backtest` call, so their stored
+    forecasts line up fixture for fixture. Total variation distance is used for
+    separation: half the L1 gap between the two probability triples, which is 0
+    for identical forecasts and 1 for forecasts with nothing in common.
+    """
+    if len(first.per_match_probs) != len(second.per_match_probs):
+        raise ValueError(
+            "Models were scored on different fixtures and cannot be compared"
+        )
+
+    if not first.per_match_probs:
+        return Disagreement(first.label, second.label, 0, 0, float("nan"), float("nan"), float("nan"), float("nan"))
+
+    a = np.array(first.per_match_probs)
+    b = np.array(second.per_match_probs)
+
+    total_variation = 0.5 * np.abs(a - b).sum(axis=1)
+    differing = a.argmax(axis=1) != b.argmax(axis=1)
+
+    first_rps = np.array(first.per_match_rps)
+    second_rps = np.array(second.per_match_rps)
+
+    return Disagreement(
+        first=first.label,
+        second=second.label,
+        n=len(a),
+        differing_picks=int(differing.sum()),
+        mean_total_variation=float(total_variation.mean()),
+        max_total_variation=float(total_variation.max()),
+        first_rps_when_differing=(
+            float(first_rps[differing].mean()) if differing.any() else float("nan")
+        ),
+        second_rps_when_differing=(
+            float(second_rps[differing].mean()) if differing.any() else float("nan")
+        ),
+    )
 
 
 def backtest(
@@ -466,6 +558,17 @@ def main() -> None:
         help="Print the registered engine names and exit.",
     )
     parser.add_argument(
+        "--compare",
+        type=str,
+        default=None,
+        help=(
+            "Two engine names, comma separated. After the table, report how "
+            "often they pick different results and who is right when they do. "
+            "Answers what the leaderboard cannot: whether two models that tie "
+            "are actually making the same forecast."
+        ),
+    )
+    parser.add_argument(
         "--progress",
         action="store_true",
         help="Report weeks completed on stderr (a full run takes tens of minutes).",
@@ -479,12 +582,24 @@ def main() -> None:
                 print(f"  {name}")
         return
 
+    compare: list[str] = []
+    if args.compare:
+        compare = [name.strip() for name in args.compare.split(",") if name.strip()]
+        if len(compare) != 2:
+            parser.error("--compare takes exactly two model names")
+
     if args.models:
         names = [name.strip() for name in args.models.split(",") if name.strip()]
         if args.family:
             names = [n for n in names if model_registry.family_of(n) == args.family]
     else:
         names = model_registry.available(args.family)
+
+    # The pair has to be scored in this run for its per-fixture forecasts to be
+    # comparable, so pull it in rather than failing after the run.
+    for name in compare:
+        if name not in names:
+            names.append(name)
     matches = load_matches()
     seasons = (
         [int(s) for s in args.seasons.split(",")]
@@ -511,6 +626,15 @@ def main() -> None:
         matches, predictors, seasons, labels=labels, progress=args.progress
     )
     print(_table(rows))
+
+    if compare:
+        by_label = {row.label: row for row in rows}
+        missing = [name for name in compare if name not in by_label]
+        if missing:
+            print(f"\nCannot compare: {', '.join(missing)} produced no scored rows.")
+        else:
+            print()
+            print(disagreement(by_label[compare[0]], by_label[compare[1]]))
 
 
 if __name__ == "__main__":

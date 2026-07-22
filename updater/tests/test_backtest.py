@@ -123,3 +123,64 @@ def test_calibration_error_catches_overconfidence() -> None:
     actuals = [HOME, AWAY] * 30
     metrics = _metrics("m", [(0.9, 0.05, 0.05)] * 60, actuals)
     assert metrics.calibration_error > 0.2
+
+
+def _metrics_from(label: str, forecasts, actuals):
+    from updater.predictions.backtest import Metrics
+
+    metrics = Metrics(label=label)
+    for probs, actual in zip(forecasts, actuals):
+        metrics.add(probs, actual)
+    return metrics
+
+
+def test_identical_models_never_disagree() -> None:
+    from updater.predictions.backtest import disagreement
+
+    forecasts = [(0.5, 0.3, 0.2), (0.2, 0.3, 0.5), (0.4, 0.4, 0.2)]
+    actuals = [0, 2, 1]
+    first = _metrics_from("a", forecasts, actuals)
+    second = _metrics_from("b", forecasts, actuals)
+
+    report = disagreement(first, second)
+    assert report.differing_picks == 0
+    assert report.differing_share == 0.0
+    assert report.mean_total_variation == pytest.approx(0.0)
+
+
+def test_disagreement_counts_differing_picks() -> None:
+    from updater.predictions.backtest import disagreement
+
+    actuals = [0, 0]
+    # Same pick on the first fixture, opposite picks on the second.
+    first = _metrics_from("a", [(0.6, 0.3, 0.1), (0.6, 0.3, 0.1)], actuals)
+    second = _metrics_from("b", [(0.5, 0.3, 0.2), (0.1, 0.3, 0.6)], actuals)
+
+    report = disagreement(first, second)
+    assert report.n == 2
+    assert report.differing_picks == 1
+    assert report.differing_share == pytest.approx(0.5)
+    # Only the second fixture counts towards the split RPS, and the home team
+    # won it, so the model that favoured home must score better there.
+    assert report.first_rps_when_differing < report.second_rps_when_differing
+
+
+def test_total_variation_is_zero_to_one() -> None:
+    from updater.predictions.backtest import disagreement
+
+    first = _metrics_from("a", [(1.0, 0.0, 0.0)], [0])
+    second = _metrics_from("b", [(0.0, 0.0, 1.0)], [0])
+
+    report = disagreement(first, second)
+    assert report.mean_total_variation == pytest.approx(1.0)
+    assert report.max_total_variation == pytest.approx(1.0)
+
+
+def test_disagreement_rejects_mismatched_fixtures() -> None:
+    from updater.predictions.backtest import disagreement
+
+    first = _metrics_from("a", [(0.5, 0.3, 0.2)], [0])
+    second = _metrics_from("b", [(0.5, 0.3, 0.2), (0.5, 0.3, 0.2)], [0, 1])
+
+    with pytest.raises(ValueError, match="different fixtures"):
+        disagreement(first, second)
