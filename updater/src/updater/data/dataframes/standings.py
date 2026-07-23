@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 import pandas as pd
@@ -84,19 +85,23 @@ class Standings(DF):
 
         return df
 
-    def _validate_data_completeness(self, df: DataFrame, season: int) -> None:
-        """
-        Validate that the standings data is complete for the given season.
+    def _log_season_coverage(self, df: DataFrame, season: int) -> None:
+        """Record how many of the current season's teams this season covers.
 
-        Args:
-            df: The standings DataFrame
-            season: The season being validated
+        Fewer than 20 is the normal case for a past season, not a fault: the
+        table is filtered to teams in the current season, and a side promoted
+        since has no row in the season before it came up. It is logged at debug
+        because it is occasionally useful when reconciling team counts, and
+        never actionable on its own.
         """
-        expected_teams = 20  # Standard league size
-        actual_teams = len(df)
-
-        if actual_teams < expected_teams:
-            print(f"Warning: Only {actual_teams} teams found for season {season}, expected {expected_teams}")
+        LEAGUE_SIZE = 20
+        covered = len(df)
+        if covered < LEAGUE_SIZE:
+            logging.debug(
+                f"Season {season} covers {covered} of the {LEAGUE_SIZE} current "
+                f"teams; the other {LEAGUE_SIZE - covered} were not in this "
+                "division that season."
+            )
 
     def _clean_final_dataframe(self, df: DataFrame) -> DataFrame:
         """
@@ -146,10 +151,10 @@ class Standings(DF):
             season_year = season - i
             try:
                 season_df = self._build_season_standings(raw_data, current_teams, season_year)
-                self._validate_data_completeness(season_df, season_year)
+                self._log_season_coverage(season_df, season_year)
                 combined_standings = pd.concat([combined_standings, season_df], axis=1)
             except ValueError as e:
-                print(f"Warning: Skipping season {season_year} - {e}")
+                logging.warning(f"Skipping season {season_year}: {e}")
                 continue
 
         return combined_standings
@@ -210,15 +215,6 @@ class Standings(DF):
         df = self._clean_final_dataframe(df)
 
         if display:
-            print(f"\nStandings for {len(current_teams)} teams across {num_seasons} seasons:")
-            print(f"Seasons: {season} to {season - num_seasons + 1}")
             print(df)
-
-            # Show sorting confirmation
-            if not df.empty:
-                current_season_col = df.columns.get_level_values(0)[0]
-                if (current_season_col, "position") in df.columns:
-                    is_sorted = df[(current_season_col, "position")].is_monotonic_increasing
-                    print(f"\nSorted by current season position: {is_sorted}")
 
         self.df = df
