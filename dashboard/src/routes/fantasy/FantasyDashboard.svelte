@@ -9,7 +9,8 @@
 	import { filterDataByPage, getTitle } from './data';
 	import OptimalTeam from './OptimalTeam.svelte';
 	import Seo from '$components/Seo.svelte';
-	import { onMount } from 'svelte';
+
+	let { data }: { data: FantasyDashboardData } = $props();
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');
@@ -47,12 +48,8 @@
 
 	const pages: Page[] = ['all', 'forward', 'midfielder', 'defender', 'goalkeeper'];
 
-	let pageWidth: number;
-	$: mobileView = pageWidth <= 700;
-
-	onMount(() => {});
-
-	export let data: FantasyDashboardData;
+	let pageWidth = $state<number>();
+	const mobileView = $derived(pageWidth !== undefined && pageWidth <= 700);
 </script>
 
 <Seo
@@ -76,7 +73,7 @@
 		<button
 			id="mobileNavBtn"
 			class="fixed bottom-0 z-[1] mb-[-1px] w-full cursor-pointer border-none bg-[var(--purple)] py-[0.8em] text-[1.1em] text-white min-[1200px]:hidden"
-			on:click={toggleMobileNav}
+			onclick={toggleMobileNav}
 		>
 			Menu
 		</button>

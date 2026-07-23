@@ -3,15 +3,15 @@
 	import type { FantasyPlayer } from './fantasy.types';
 	import { teamToCSS } from '$lib/team';
 
-	export let players: FantasyPlayer[];
+	let { players }: { players: FantasyPlayer[] } = $props();
 
-	let forwards: FantasyPlayer[] = [];
-	let midfielders: FantasyPlayer[] = [];
-	let defenders: FantasyPlayer[] = [];
-	let goalkeepers: FantasyPlayer[] = [];
+	let forwards: FantasyPlayer[] = $state([]);
+	let midfielders: FantasyPlayer[] = $state([]);
+	let defenders: FantasyPlayer[] = $state([]);
+	let goalkeepers: FantasyPlayer[] = $state([]);
 
-	let totalPoints: number = 0;
-	let totalPrice: number = 0;
+	let totalPoints = $state(0);
+	let totalPrice = $state(0);
 
 	function formatPrice(price: number): string {
 		return (

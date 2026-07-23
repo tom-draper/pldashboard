@@ -2,6 +2,12 @@
 	import type { Page } from '../fantasy.types';
 	import closeNavIcon from '$lib/images/arrow-bar-left.svg';
 
+	let {
+		currentPage,
+		pages,
+		switchPage
+	}: { currentPage: string; pages: Page[]; switchPage: (page: Page) => void } = $props();
+
 	function closeNavBar() {
 		const navBar = document.getElementById('navBar');
 		if (navBar !== null) {
@@ -14,8 +20,6 @@
 		}
 		window.dispatchEvent(new Event('resize')); // Snap plotly graphs to new width
 	}
-
-	export let currentPage: string, pages: Page[], switchPage: (page: Page) => void;
 </script>
 
 <nav id="navBar" class="fixed h-screen w-[220px] bg-[var(--purple)] max-[1200px]:hidden">
@@ -38,7 +42,7 @@
 			{:else}
 				<button
 					class="cursor-pointer border-none bg-transparent p-0 text-left text-inherit outline-none [font:inherit]"
-					on:click={() => {
+					onclick={() => {
 						switchPage(_page);
 					}}
 				>
@@ -67,7 +71,7 @@
 	<div>
 		<button
 			class="absolute right-[0.9em] bottom-[0.9em] mb-px cursor-pointer border-none bg-transparent pt-[0.3em] outline-none"
-			on:click={closeNavBar}
+			onclick={closeNavBar}
 		>
 			<img src={closeNavIcon} alt="" class="h-[25px] w-[25px]" />
 		</button>

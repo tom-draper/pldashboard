@@ -27,7 +27,7 @@
 		}
 	}
 
-	export let form: string, starTeams: boolean[];
+	let { form, starTeams }: { form: string; starTeams: boolean[] } = $props();
 
 	const tileClass =
 		'grid aspect-[1/0.9] w-full place-items-center rounded-[inherit] text-[#2b2d2f]';

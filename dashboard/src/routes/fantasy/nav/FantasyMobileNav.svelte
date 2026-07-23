@@ -1,13 +1,17 @@
 <script lang="ts">
 	import type { Page } from '../fantasy.types';
 
+	let {
+		pages,
+		switchPage,
+		toggleMobileNav
+	}: { pages: Page[]; switchPage: (page: Page) => void; toggleMobileNav: () => void } = $props();
+
 	function switchTeamToTop(page: Page) {
 		switchPage(page);
 		window.scrollTo(0, 0);
 		toggleMobileNav();
 	}
-
-	export let pages: Page[], switchPage: (page: Page) => void, toggleMobileNav: () => void;
 </script>
 
 <nav
@@ -19,7 +23,7 @@
 		<div class="flex h-full flex-col">
 			{#each pages as page, i (page)}
 				<button
-					on:click={() => {
+					onclick={() => {
 						switchTeamToTop(page);
 					}}
 					class="team-link flex-1 cursor-pointer border-none p-[0.4em] text-[1em] {page.toLowerCase()}"
