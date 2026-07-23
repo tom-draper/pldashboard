@@ -22,12 +22,46 @@ class TestConstruction:
         assert (s.home_team, s.away_team) == ("Arsenal", "Chelsea")
 
 
-class TestReverse:
+class TestReversed:
     def test_swaps_teams_and_goals_together(self):
         s = Scoreline(2, 1, "Arsenal", "Chelsea")
-        s.reverse()
-        assert (s.home_team, s.away_team) == ("Chelsea", "Arsenal")
-        assert (s.home_goals, s.away_goals) == (1, 2)
+        r = s.reversed()
+        assert (r.home_team, r.away_team) == ("Chelsea", "Arsenal")
+        assert (r.home_goals, r.away_goals) == (1, 2)
+
+    def test_leaves_the_original_untouched(self):
+        """The transform must not mutate: these are used as dict keys.
+
+        __hash__ is derived from the teams and goals, so reversing in place
+        would move a live key out from under its own dict.
+        """
+        s = Scoreline(2, 1, "Arsenal", "Chelsea")
+        holder = {s: 1}
+        before = hash(s)
+
+        s.reversed()
+
+        assert hash(s) == before
+        assert (s.home_team, s.away_team) == ("Arsenal", "Chelsea")
+        assert Scoreline(2, 1, "Arsenal", "Chelsea") in holder
+
+
+class TestWithoutTeams:
+    def test_compares_on_goals_alone(self):
+        s = Scoreline(2, 1, "Arsenal", "Chelsea")
+        agnostic = s.without_teams()
+        assert agnostic == Scoreline(2, 1, "Liverpool", "Everton", show_teams=False)
+        assert hash(agnostic) == hash(Scoreline(2, 1, show_teams=False))
+
+    def test_leaves_the_original_untouched(self):
+        s = Scoreline(2, 1, "Arsenal", "Chelsea")
+        holder = {s: 1}
+        before = hash(s)
+
+        s.without_teams()
+
+        assert hash(s) == before
+        assert Scoreline(2, 1, "Arsenal", "Chelsea") in holder
 
 
 class TestToDict:
