@@ -1,4 +1,4 @@
-import type { Score, Scoreline, Team } from "$lib/types";
+import type { Score, Scoreline, Team } from '$lib/types';
 
 export type DashboardData = {
 	data: TeamsData;
@@ -27,14 +27,14 @@ export type TeamsData = {
 export type Match = {
 	team: Team;
 	date: string;
-	score: Score,
+	score: Score;
 	status: 'FINISHED' | 'IN-PLAY' | 'SCHEDULED';
 	atHome: boolean;
 };
 
 export type Fixtures = {
 	[team in Team]: {
-		[matchday: string]: Fixture
+		[matchday: string]: Fixture;
 	};
 };
 
@@ -49,10 +49,10 @@ export type Fixture = {
 export type Form = {
 	[team in Team]: {
 		[year: string]: {
-			[matchday: string]: FormEntry
-		}
-	}
-}
+			[matchday: string]: FormEntry;
+		};
+	};
+};
 
 /**
  * A single matchday's form entry.
@@ -108,7 +108,7 @@ export type TeamRating = {
 	prevSeason2: number;
 	prevSeason3: number;
 	total: number;
-}
+};
 
 export type HomeAdvantages = {
 	[team in Team]: HomeAdvantage;
@@ -143,7 +143,7 @@ export type PrevMatch = {
 
 export type Upcoming = {
 	[team in Team]: UpcomingMatch;
-}
+};
 
 export type UpcomingMatch = {
 	team: Team;
@@ -159,13 +159,13 @@ export type LogoURLs = {
 
 // The mapped type for teams
 export type TeamAttributes = {
-    [team in Team]: number;
+	[team in Team]: number;
 };
 
 // Combining the mapped type with the avg property
 export type SpiderAttribute = {
 	teams: TeamAttributes;
-    avg: number;
+	avg: number;
 };
 
 export enum Status {

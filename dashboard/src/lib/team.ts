@@ -21,7 +21,7 @@ export function toInitials(team: Team): string {
 	return team.slice(0, 3).toUpperCase();
 }
 
-const alias: {[team in Team]?: string} = {
+const alias: { [team in Team]?: string } = {
 	'Wolverhampton Wanderers': 'Wolves',
 	'Tottenham Hotspur': 'Spurs',
 	'Leeds United': 'Leeds',

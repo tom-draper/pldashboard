@@ -35,4 +35,4 @@ export const load: PageServerLoad = async ({ params }: { params: { team: string 
 		playedDates,
 		data
 	};
-}
+};

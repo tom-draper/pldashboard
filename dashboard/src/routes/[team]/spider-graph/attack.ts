@@ -1,6 +1,6 @@
-import type { SpiderAttribute, TeamAttributes, TeamsData } from "../dashboard.types";
-import { getTeams } from "$lib/team";
-import { type Range, attributeAvg, goalsPerGame } from "./util";
+import type { SpiderAttribute, TeamAttributes, TeamsData } from '../dashboard.types';
+import { getTeams } from '$lib/team';
+import { type Range, attributeAvg, goalsPerGame } from './util';
 
 function scoredPerGame(data: TeamsData) {
 	const attack: Partial<TeamAttributes> = {};
@@ -8,13 +8,13 @@ function scoredPerGame(data: TeamsData) {
 	const range: Range = {
 		max: Number.NEGATIVE_INFINITY,
 		min: Number.POSITIVE_INFINITY
-	}
-	const teams = getTeams(data)
+	};
+	const teams = getTeams(data);
 	for (const team of teams) {
 		const total = {
 			scored: 0,
 			played: 0
-		}
+		};
 		for (const season in data.standings[team]) {
 			const goals = data.standings[team][season].gF;
 			const played = data.standings[team][season].played;
@@ -58,7 +58,6 @@ function scaleAttack(attack: TeamAttributes, range: Range) {
 	}
 	return attack;
 }
-
 
 export default function getAttack(data: TeamsData) {
 	let { attack, range } = scoredPerGame(data);

@@ -56,7 +56,7 @@ export type PlotData = {
 };
 
 export type Counter = {
-    [k: string | number | symbol]: number;
+	[k: string | number | symbol]: number;
 };
 
 export type Score = {

@@ -1,7 +1,13 @@
-import type { Form, FormEntry, SpiderAttribute, TeamAttributes, TeamsData } from "../dashboard.types";
-import { getTeams } from "$lib/team";
-import { attributeAvgScaled, seasonComplete } from "./util";
-import type { Team } from "$lib/types";
+import type {
+	Form,
+	FormEntry,
+	SpiderAttribute,
+	TeamAttributes,
+	TeamsData
+} from '../dashboard.types';
+import { getTeams } from '$lib/team';
+import { attributeAvgScaled, seasonComplete } from './util';
+import type { Team } from '$lib/types';
 
 type MatchResult = 'win' | 'lost' | 'draw';
 
@@ -36,13 +42,17 @@ function matchResult(match: any) {
 }
 
 function matchWon(match: FormEntry) {
-	return (match.atHome && match.score.homeGoals > match.score.awayGoals) ||
-		(!match.atHome && match.score.homeGoals < match.score.awayGoals);
+	return (
+		(match.atHome && match.score.homeGoals > match.score.awayGoals) ||
+		(!match.atHome && match.score.homeGoals < match.score.awayGoals)
+	);
 }
 
 function matchLost(match: FormEntry) {
-	return (match.atHome && match.score.homeGoals < match.score.awayGoals) ||
-		(!match.atHome && match.score.homeGoals > match.score.awayGoals);
+	return (
+		(match.atHome && match.score.homeGoals < match.score.awayGoals) ||
+		(!match.atHome && match.score.homeGoals > match.score.awayGoals)
+	);
 }
 
 export default function getConsistency(data: TeamsData, numSeasons: number): SpiderAttribute {
@@ -69,7 +79,6 @@ export default function getConsistency(data: TeamsData, numSeasons: number): Spi
 	const attribute: SpiderAttribute = {
 		teams: finalisedConsistency,
 		avg: attributeAvgScaled(finalisedConsistency, maxSeasonBackToBack * numSeasons)
-	}
+	};
 	return attribute;
 }
-

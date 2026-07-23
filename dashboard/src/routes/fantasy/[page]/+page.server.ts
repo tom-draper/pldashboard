@@ -27,4 +27,4 @@ export const load: PageServerLoad = async ({ params }: { params: { page: string 
 		title,
 		pageData
 	};
-}
+};

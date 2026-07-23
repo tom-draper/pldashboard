@@ -1,3 +1,3 @@
-import db from '$lib/server/database/mongo'
+import db from '$lib/server/database/mongo';
 
-export const fantasy = db.collection('Fantasy')
+export const fantasy = db.collection('Fantasy');
