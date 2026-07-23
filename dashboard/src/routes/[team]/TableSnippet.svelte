@@ -66,9 +66,32 @@
 
 	export let data: TeamsData, teamID: string, team: Team, switchTeam: (newTeam: Team) => void;
 
-	const rowClass = 'flex rounded-[var(--border-radius)] px-[5%] py-[5px]';
-	const thisTeamRowClass = 'flex rounded-[var(--border-radius)] px-[5%] py-[14px] text-[1.1em]';
+	// One column template for every row, so the header, the highlighted row and
+	// the plain rows cannot drift out of alignment.
+	//
+	// These were previously four percentage widths repeated on each row's cells,
+	// and they summed to 7 + 63 + 15 + 15 = 100% *plus* an 8px margin on the
+	// name. Every row therefore overflowed by 8px, and flex resolved that by
+	// shrinking the cells. A flex item will not shrink below its min-content
+	// width, which differs per row (the header is bold, the highlighted row is
+	// 1.1em, the plain rows are neither), so each row shrank by a different
+	// amount and the columns landed in different places.
+	//
+	// Grid tracks are sized from the template rather than the content, so the
+	// four columns are identical on every row whatever it contains. The name's
+	// 8px indent is padding now, inside its own track rather than added to the
+	// row's total width.
+	const gridCols = 'grid grid-cols-[7%_63%_15%_15%]';
+	const rowClass = `${gridCols} rounded-[var(--border-radius)] px-[5%] py-[5px]`;
+	// 1.21em, not 1.1em: text-[1.1em] used to sit on this row *and* on each of
+	// its cells, and em compounds, so the highlighted row has always rendered at
+	// 1.1 x 1.1. The cells no longer carry their own size, so the product is
+	// stated here to keep the row exactly the size it has always been.
+	const thisTeamRowClass = `${gridCols} rounded-[var(--border-radius)] px-[5%] py-[14px] text-[1.21em]`;
 	const dividerClass = 'm-auto w-[90%] self-center border-b border-b-[grey]';
+	// min-w-0 stops a long name widening its own track and pushing the numbers
+	// out of line, which is the same failure the percentages had.
+	const nameCellClass = 'min-w-0 pl-[8px] text-left';
 
 	// Hovering a row darkens its text instead of filling it with a background.
 	//
@@ -76,9 +99,9 @@
 	// it and shift together: hovering the position number lights the row up as
 	// one thing, which is what it is.
 	//
-	// Weight and size are deliberately untouched. The columns are fixed-width
-	// percentages, so bolding a long name like Wolverhampton Wanderers could
-	// wrap it and change the row's height under the cursor.
+	// Weight and size are deliberately untouched. The columns are fixed tracks,
+	// so bolding a long name like Wolverhampton Wanderers could wrap it inside
+	// its track and change the row's height under the cursor.
 	//
 	// focus-visible mirrors hover so a row reached by keyboard reads the same;
 	// the button clears its own outline via [outline:inherit].
@@ -94,10 +117,10 @@
 	{#if tableSnippet != undefined}
 		<div></div>
 		<div class={rowClass}>
-			<div class="w-[7%] font-bold"></div>
-			<div class="ml-[8px] w-[63%] text-left font-bold text-[#333333]">Team</div>
-			<div class="w-[15%] font-bold">GD</div>
-			<div class="w-[15%] font-bold">Points</div>
+			<div class="font-bold"></div>
+			<div class="{nameCellClass} font-bold text-[#333333]">Team</div>
+			<div class="font-bold">GD</div>
+			<div class="font-bold">Points</div>
 		</div>
 
 		{#each tableSnippet.rows as row, i}
@@ -113,20 +136,16 @@
 			{#if i === tableSnippet.teamTableIdx}
 				<!-- Highlighted row for the team of the current page -->
 				<div class={thisTeamRowClass} style="background-color: var(--{teamID});">
-					<div class="w-[7%] text-[1.1em]" style="color: var(--{teamID}-secondary);">
+					<div style="color: var(--{teamID}-secondary);">
 						{row.position}
 					</div>
-					<a
-						href="/{teamID}"
-						class="ml-[8px] w-[63%] text-left text-[1.1em]"
-						style="color: var(--{teamID}-secondary);"
-					>
+					<a href="/{teamID}" class={nameCellClass} style="color: var(--{teamID}-secondary);">
 						{toAlias(row.name)}
 					</a>
-					<div class="w-[15%] text-[1.1em]" style="color: var(--{teamID}-secondary);">
+					<div style="color: var(--{teamID}-secondary);">
 						{row.gd}
 					</div>
-					<div class="w-[15%] text-[1.1em]" style="color: var(--{teamID}-secondary);">
+					<div style="color: var(--{teamID}-secondary);">
 						{row.points}
 					</div>
 				</div>
@@ -139,16 +158,16 @@
 					}}
 					class={plainRowClass}
 				>
-					<span class="w-[7%]">
+					<span>
 						{row.position}
 					</span>
-					<span class="ml-[8px] w-[63%]">
+					<span class={nameCellClass}>
 						{toAlias(row.name)}
 					</span>
-					<span class="w-[15%]">
+					<span>
 						{row.gd}
 					</span>
-					<span class="w-[15%]">
+					<span>
 						{row.points}
 					</span>
 				</button>
