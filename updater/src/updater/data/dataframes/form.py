@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 from typing import Optional
 
 import numpy as np
@@ -360,8 +361,16 @@ class Form(DF):
                 team_matchday[(season, matchday, "cumGD")] = prev_cum_gd + gd
 
     @staticmethod
-    def _init_missing_teams(d: dict, teams: list[str]):
-        for team in teams:
+    def _init_missing_teams(d: dict, teams: Iterable[str]):
+        """Seed a placeholder row for teams with no finished match yet.
+
+        Iterated in sorted order because `teams` is a set: the insertion order
+        here becomes the DataFrame's row order, and _insert_position_columns
+        breaks ties with a stable sort, so an unordered walk let two teams level
+        on both points and goal difference swap league positions from run to run
+        depending on PYTHONHASHSEED.
+        """
+        for team in sorted(teams):
             if team not in d:
                 d[team] = {(2023, 1, "team"): np.nan}
 
