@@ -3,7 +3,7 @@
 	import Dashboard from './Dashboard.svelte';
 	import Support from '$components/Support.svelte';
 
-	export let data: DashboardData;
+	let { data }: { data: DashboardData } = $props();
 </script>
 
 <Support />

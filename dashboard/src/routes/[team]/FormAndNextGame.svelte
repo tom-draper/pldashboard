@@ -6,7 +6,10 @@
 	import type { DashboardData } from './dashboard.types';
 	import type { Team } from '$lib/types';
 
-	export let data: DashboardData, switchTeam: (newTeam: Team) => void;
+	let {
+		data,
+		switchTeam
+	}: { data: DashboardData; switchTeam: (newTeam: Team) => void } = $props();
 </script>
 
 <Row class="mx-[1.4em] mt-0 mb-[3rem] max-[1000px]:m-0">

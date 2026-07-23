@@ -8,10 +8,15 @@
 	import Scorelines from './Scorelines.svelte';
 	import TeamComparison from './TeamComparison.svelte';
 
-	let pageWidth: number;
-	$: mobileView = pageWidth <= 700;
+	let {
+		data,
+		switchTeam
+	}: { data: DashboardData; switchTeam: (newTeam: Team) => void } = $props();
 
-	export let data: DashboardData, switchTeam: (newTeam: Team) => void;
+	let pageWidth = $state<number>();
+	// Undefined until the window binds (and during SSR), which counts as desktop,
+	// matching the pre-runes `undefined <= 700` behaviour.
+	const mobileView = $derived(pageWidth !== undefined && pageWidth <= 700);
 </script>
 
 <svelte:window bind:innerWidth={pageWidth} />

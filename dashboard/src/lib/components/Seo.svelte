@@ -1,17 +1,23 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
-	export let title: string;
-	export let description: string;
-	/** Absolute path used for the canonical URL / og:url; defaults to the current path. */
-	export let path: string | null = null;
-	// Default social share image: the dashboard screenshot from the project README.
-	export let image =
-		'https://user-images.githubusercontent.com/41476809/227160125-c2fdc601-9e32-431c-9ecf-fb0046041c4f.png';
+	let {
+		title,
+		description,
+		path = null,
+		// Default social share image: the dashboard screenshot from the project README.
+		image = 'https://user-images.githubusercontent.com/41476809/227160125-c2fdc601-9e32-431c-9ecf-fb0046041c4f.png'
+	}: {
+		title: string;
+		description: string;
+		/** Absolute path used for the canonical URL / og:url; defaults to the current path. */
+		path?: string | null;
+		image?: string;
+	} = $props();
 
-	$: origin = $page.url.origin;
-	$: canonical = `${origin}${path ?? $page.url.pathname}`;
-	$: imageUrl = image.startsWith('http') ? image : `${origin}${image}`;
+	const origin = $derived($page.url.origin);
+	const canonical = $derived(`${origin}${path ?? $page.url.pathname}`);
+	const imageUrl = $derived(image.startsWith('http') ? image : `${origin}${image}`);
 </script>
 
 <svelte:head>

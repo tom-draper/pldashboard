@@ -3,7 +3,7 @@
 	import type { FantasyDashboardData } from './fantasy.types';
 	import FantasyDashboard from './FantasyDashboard.svelte';
 
-	export let data: FantasyDashboardData;
+	let { data }: { data: FantasyDashboardData } = $props();
 </script>
 
 <svelte:head>

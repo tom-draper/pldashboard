@@ -4,8 +4,7 @@
 	import Row from './Row.svelte';
 	import type { DashboardData } from './dashboard.types';
 
-	export let data: DashboardData;
-	export let mobileView: boolean;
+	let { data, mobileView }: { data: DashboardData; mobileView: boolean } = $props();
 </script>
 
 <Row>
