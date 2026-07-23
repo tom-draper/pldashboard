@@ -265,12 +265,12 @@ def test_blend_prediction_lies_between_its_members(league) -> None:
 
 
 @pytest.mark.parametrize("name", models.available(models.OUTCOME))
-def test_build_v3_refuses_outcome_models(name: str) -> None:
+def test_model_predictions_refuses_outcome_models(name: str) -> None:
     """The dashboard stores a goal matrix, so these must never reach the pipeline."""
-    from updater.predictions.build_v3 import build_v3_predictions
+    from updater.predictions.model_predictions import build_model_predictions
 
     with pytest.raises(ValueError, match="outcome-only"):
-        build_v3_predictions(raw_data=None, current_season=2025, model_name=name)
+        build_model_predictions(raw_data=None, current_season=2025, model_name=name)
 
 
 def test_default_production_model_is_a_scoreline_model() -> None:

@@ -15,5 +15,5 @@ buys freedom and a matched objective, and costs all the goal-level information
 dominates on principle, so the point is to measure the difference.
 
 They are benchmarking entrants only. The updater builds scoreline models, since
-it needs the matrix, and `build_v3` cannot use anything from this package.
+it needs the matrix, and `model_predictions` cannot use anything from this package.
 """

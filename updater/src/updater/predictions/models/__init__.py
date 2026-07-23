@@ -9,7 +9,7 @@ holds both kinds in one namespace:
       stores, so only these are eligible for production.
     * **outcome** (`models.outcome`) - home/draw/away directly, with no goal
       model underneath. Benchmarking entrants only; they cannot fill a scoreline
-      heatmap and `build_v3` rejects them.
+      heatmap and `model_predictions` rejects them.
 
 Both answer `predict_outcome`, which is what the backtest scores, so the two
 families compete on exactly the same footing on exactly the same fixtures.
@@ -17,7 +17,7 @@ families compete on exactly the same footing on exactly the same fixtures.
 Engines are constructed through `build(name, **params)` and listed by
 `available()`, optionally filtered to one family. Imports are deferred into the
 factories so that pulling in the registry does not drag scipy-heavy modules (or
-predict_v2's DataFrame chain) into every caller.
+form_predictor's DataFrame chain) into every caller.
 """
 
 from __future__ import annotations

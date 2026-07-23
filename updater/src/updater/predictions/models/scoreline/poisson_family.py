@@ -27,7 +27,7 @@ from updater.predictions.distributions import (
     goal_grids,
     prediction_from_matrix,
 )
-from updater.predictions.models.scoreline.common import TeamRatings
+from updater.predictions.models.scoreline.common import FittedRatings
 
 # Rates below this are numerically awkward and physically meaningless (a team
 # scoring 0.01 goals a game); clamp before taking logs.
@@ -92,7 +92,7 @@ def _bivariate_log_pmf(
 class BivariatePoissonModel:
     """Fitted bivariate Poisson: ratings plus a shared goal-rate component."""
 
-    ratings: TeamRatings
+    ratings: FittedRatings
     lambda_shared: float
 
     def expected_goals(self, home_team: str, away_team: str) -> tuple[float, float]:
@@ -147,7 +147,7 @@ def _negative_binomial_log_pmf(
 class NegativeBinomialModel:
     """Fitted independent negative-binomial goals model."""
 
-    ratings: TeamRatings
+    ratings: FittedRatings
     size: float
 
     def expected_goals(self, home_team: str, away_team: str) -> tuple[float, float]:

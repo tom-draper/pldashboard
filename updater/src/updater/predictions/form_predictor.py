@@ -20,7 +20,7 @@ class Match(NamedTuple):
     at_home: bool
 
 
-class Predictor:
+class FormPredictor:
     def __init__(
         self,
         raw_data: RawData,

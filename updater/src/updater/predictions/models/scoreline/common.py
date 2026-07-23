@@ -36,7 +36,7 @@ LogLikelihood = Callable[
 
 
 @dataclass
-class TeamRatings:
+class FittedRatings:
     """Fitted attack / defence ratings plus home advantage and model extras."""
 
     teams: list[str]
@@ -73,7 +73,7 @@ def fit_ratings(
     half_life_days: float = 365.0,
     regularisation: float = 1e-3,
     max_iter: int = 200,
-) -> Optional[TeamRatings]:
+) -> Optional[FittedRatings]:
     """Maximise a weighted likelihood over team ratings plus model extras.
 
     Returns None when there is nothing to fit. Older matches are exponentially
@@ -140,7 +140,7 @@ def fit_ratings(
     # sides, ranked by overall strength (attack + defence).
     weakest = sorted(teams, key=lambda t: attack[t] + defence[t])[: min(3, n)]
 
-    return TeamRatings(
+    return FittedRatings(
         teams=teams,
         attack=attack,
         defence=defence,

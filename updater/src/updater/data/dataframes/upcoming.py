@@ -4,7 +4,7 @@ from typing import Optional
 import pandas as pd
 from pandas import DataFrame
 from updater.fmt import clean_full_team_name, convert_team_name_or_initials
-from updater.predictions.predict_v2 import Predictor as PredictorV2
+from updater.predictions.form_predictor import FormPredictor
 from updater.predictions.scoreline import Scoreline
 
 from updater.data.dataframes.df import DF
@@ -184,7 +184,7 @@ class Upcoming(DF):
         upcoming = pd.concat([upcoming, predictions], axis=1)
         return upcoming
 
-    def _calc_next_game_predictions(self, predictor: PredictorV2, upcoming: DataFrame):
+    def _calc_next_game_predictions(self, predictor: FormPredictor, upcoming: DataFrame):
         next_game_predictions: list[dict[str, int]] = []
         next_game_predictions_cache: dict[tuple[str, str], Scoreline] = {}
         for team, row in upcoming.iterrows():
@@ -279,7 +279,7 @@ class Upcoming(DF):
         upcoming = pd.DataFrame.from_dict(d, orient="index")
         upcoming.index.name = "team"
 
-        predictor = PredictorV2(
+        predictor = FormPredictor(
             raw_data,
             fixtures,
             form,

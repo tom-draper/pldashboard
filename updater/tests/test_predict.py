@@ -13,7 +13,7 @@ import pytest
 from updater.data.dataframes import TeamRatings
 from updater.data_source import DataSource
 from updater.predictions.form import calc_form
-from updater.predictions.predict_v2 import Predictor
+from updater.predictions.form_predictor import FormPredictor
 from updater.predictions.scoreline import Scoreline
 
 
@@ -21,18 +21,18 @@ class TestScorelineFreqProbability:
     def test_counts_become_probabilities_summing_to_one(self):
         a = Scoreline(2, 1)
         b = Scoreline(1, 0)
-        probs = Predictor._scoreline_freq_probability({a: 2, b: 2})
+        probs = FormPredictor._scoreline_freq_probability({a: 2, b: 2})
         assert probs[a] == 0.5
         assert abs(sum(probs.values()) - 1.0) < 1e-9
 
     def test_empty_freq_is_empty(self):
-        assert Predictor._scoreline_freq_probability({}) == {}
+        assert FormPredictor._scoreline_freq_probability({}) == {}
 
 
 class TestMergeScorelineFreq:
     def test_counts_are_summed_across_both(self):
         a, b, c = Scoreline(2, 1), Scoreline(1, 0), Scoreline(0, 0)
-        merged = Predictor._merge_scoreline_freq({a: 1, b: 2}, {a: 3, c: 1})
+        merged = FormPredictor._merge_scoreline_freq({a: 1, b: 2}, {a: 3, c: 1})
         assert merged == {a: 4, b: 2, c: 1}
 
 
@@ -40,7 +40,7 @@ class TestRemoveScorelineFreqTeams:
     def test_same_goals_pool_once_teams_are_dropped(self):
         a = Scoreline(2, 1, "Arsenal", "Chelsea")
         b = Scoreline(2, 1, "Tottenham", "Everton")
-        pooled = Predictor._remove_scoreline_freq_teams({a: 3, b: 2})
+        pooled = FormPredictor._remove_scoreline_freq_teams({a: 3, b: 2})
         assert len(pooled) == 1
         assert next(iter(pooled.values())) == 5
 
@@ -49,7 +49,7 @@ class TestSeparateByHomeAway:
     def test_keeps_only_matches_where_team_is_home(self):
         home = Scoreline(2, 0, "Arsenal", "Chelsea")
         away = Scoreline(1, 3, "Chelsea", "Arsenal")
-        kept = Predictor._separate_scoreline_freq_by_home_away(
+        kept = FormPredictor._separate_scoreline_freq_by_home_away(
             "Arsenal", {home: 1, away: 1}, at_home=True
         )
         assert home in kept and away not in kept
@@ -57,7 +57,7 @@ class TestSeparateByHomeAway:
     def test_keeps_only_matches_where_team_is_away(self):
         home = Scoreline(2, 0, "Arsenal", "Chelsea")
         away = Scoreline(1, 3, "Chelsea", "Arsenal")
-        kept = Predictor._separate_scoreline_freq_by_home_away(
+        kept = FormPredictor._separate_scoreline_freq_by_home_away(
             "Arsenal", {home: 1, away: 1}, at_home=False
         )
         assert away in kept and home not in kept
@@ -67,7 +67,7 @@ class TestRemoveScorelineFreqHomeAway:
     def test_wrong_way_round_fixture_is_reversed(self):
         # Arsenal recorded as the away team, but we want them as home.
         s = Scoreline(1, 2, "Chelsea", "Arsenal")
-        out = Predictor._remove_scoreline_freq_home_away(
+        out = FormPredictor._remove_scoreline_freq_home_away(
             {s: 1}, intended_home_team="Arsenal", intended_away_team="Chelsea"
         )
         key = next(iter(out))
@@ -79,14 +79,14 @@ class TestScaledFreqArithmetic:
     def test_insert_adds_scaled_counts_in_place(self):
         a, b = Scoreline(2, 1), Scoreline(1, 0)
         freq = {a: 1.0}
-        Predictor._insert_scaled_into_freq(freq, {a: 2.0, b: 4.0}, scale=0.5)
+        FormPredictor._insert_scaled_into_freq(freq, {a: 2.0, b: 4.0}, scale=0.5)
         assert freq[a] == 2.0
         assert freq[b] == 2.0
 
     def test_subtract_only_touches_existing_keys(self):
         a, c = Scoreline(2, 1), Scoreline(0, 0)
         freq = {a: 2.0}
-        Predictor._subtract_scaled_from_freq(freq, {a: 2.0, c: 1.0}, scale=0.5)
+        FormPredictor._subtract_scaled_from_freq(freq, {a: 2.0, c: 1.0}, scale=0.5)
         assert freq[a] == 1.0
         assert c not in freq
 
@@ -95,7 +95,7 @@ class TestScaleResults:
     def test_home_draw_away_scaled_independently(self):
         home_win, draw, away_win = Scoreline(2, 0), Scoreline(1, 1), Scoreline(0, 2)
         freq = {home_win: 1.0, draw: 1.0, away_win: 1.0}
-        Predictor.scale_results(freq, (2.0, 3.0, 5.0))
+        FormPredictor.scale_results(freq, (2.0, 3.0, 5.0))
         assert freq[home_win] == 2.0
         assert freq[draw] == 3.0
         assert freq[away_win] == 5.0
@@ -104,10 +104,10 @@ class TestScaleResults:
 class TestMaximumLikelihood:
     def test_returns_the_most_probable_scoreline(self):
         a, b, c = Scoreline(2, 1), Scoreline(1, 1), Scoreline(0, 0)
-        assert Predictor.maximum_likelihood({a: 0.2, b: 0.5, c: 0.3}) is b
+        assert FormPredictor.maximum_likelihood({a: 0.2, b: 0.5, c: 0.3}) is b
 
     def test_empty_returns_none(self):
-        assert Predictor.maximum_likelihood({}) is None
+        assert FormPredictor.maximum_likelihood({}) is None
 
 
 class TestCalcForm:
@@ -167,7 +167,7 @@ class TestPredictorEndToEnd:
         data = pytest.data_objects[0]
         season = pytest.current_season
         raw_data = DataSource(season).build_raw_data(num_seasons=4, request_new=False)
-        return Predictor(
+        return FormPredictor(
             raw_data,
             data.teams.fixtures,
             data.teams.form,

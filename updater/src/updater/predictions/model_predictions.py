@@ -1,10 +1,15 @@
-"""Shape v3 (Dixon-Coles) predictions for storage.
+"""Shape fitted-model predictions for storage.
 
 Turns the raw multi-season fixtures into a fitted model, predicts the upcoming
 matchday, and packages each fixture into the document the dashboard reads:
 expected goals, the home and away goal distributions, the top scorelines, and
 home / draw / away probabilities. Team names are cleaned and reduced to initials
 so the ids line up with the rest of the pipeline (and with actual-score backfill).
+
+The engine comes from the `predictions.models` registry (Dixon-Coles by
+default), as opposed to `form_predictor`, which is the older hand-rolled
+heuristic feeding the `upcoming` DataFrame. The stored collection is still
+named PredictionsV3 for continuity with the data already in it.
 """
 
 from __future__ import annotations
@@ -110,7 +115,7 @@ def _prediction_document(
     }
 
 
-def build_v3_predictions(
+def build_model_predictions(
     raw_data: RawData,
     current_season: int,
     num_seasons: int = 4,
