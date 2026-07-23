@@ -2,6 +2,7 @@ from typing import Optional
 from urllib.parse import quote_plus
 
 import pymongo
+
 from updater.env import optional_env, require_env
 
 

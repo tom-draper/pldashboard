@@ -8,8 +8,8 @@ predictions need all of them), so this does not make the build faster - it
 makes the ordering self-documenting and impossible to get silently wrong.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Callable
 
 
 @dataclass(frozen=True)

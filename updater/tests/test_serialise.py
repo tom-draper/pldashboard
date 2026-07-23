@@ -10,6 +10,7 @@ import math
 import numpy as np
 import pandas as pd
 import pytest
+
 from updater.data.serialise import (
     PAST_SEASON_FORM_FIELDS,
     clean_value,

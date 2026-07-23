@@ -22,8 +22,9 @@ differences between class scores affect a softmax.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import Optional, Sequence
+from typing import Optional
 
 import numpy as np
 

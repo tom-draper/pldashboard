@@ -1,6 +1,6 @@
 import numpy as np
-from updater.data.dataframes import TeamRatings
 
+from updater.data.dataframes import TeamRatings
 from updater.predictions.scoreline import Scoreline
 
 

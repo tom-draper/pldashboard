@@ -20,8 +20,9 @@ nothing extra and adapts to whatever scale the K-factor happens to produce.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Optional, Sequence
+from typing import Optional
 
 import numpy as np
 

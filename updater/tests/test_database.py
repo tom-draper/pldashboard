@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, PropertyMock, patch
 
 import pymongo
 import pytest
+
 from updater.database import Database
 
 

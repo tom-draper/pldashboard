@@ -27,8 +27,9 @@ each side.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from datetime import datetime
-from typing import Optional, Sequence
+from typing import Optional
 
 import numpy as np
 from scipy.optimize import minimize

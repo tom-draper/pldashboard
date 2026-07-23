@@ -1,14 +1,15 @@
-from typing import Optional
 from collections import defaultdict
 from datetime import datetime
+from typing import Optional
 
 import pandas as pd
 from pandas import DataFrame
+
+from updater.data.raw_data import RawData, full_time_goals
 from updater.fmt import clean_full_team_name, convert_team_name_or_initials
 from updater.timing import timed
 
 from .df import DF
-from updater.data.raw_data import RawData, full_time_goals
 
 
 class Fixtures(DF):

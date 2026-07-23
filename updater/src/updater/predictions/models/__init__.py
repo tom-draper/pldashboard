@@ -22,7 +22,8 @@ form_predictor's DataFrame chain) into every caller.
 
 from __future__ import annotations
 
-from typing import Callable, Optional, Protocol, Sequence, runtime_checkable
+from collections.abc import Callable, Sequence
+from typing import Optional, Protocol, runtime_checkable
 
 from updater.predictions.distributions import (
     MatchResult,
@@ -223,7 +224,10 @@ def _negative_binomial(half_life_days: float = 365.0, **_) -> Predictor:
 def _skellam(half_life_days: float = 365.0, **_) -> Predictor:
     """Rates fit to the goal difference alone, via the Skellam likelihood."""
     from updater.predictions.models.scoreline.common import fit_ratings
-    from updater.predictions.models.scoreline.skellam import SkellamModel, skellam_log_pmf
+    from updater.predictions.models.scoreline.skellam import (
+        SkellamModel,
+        skellam_log_pmf,
+    )
 
     def log_likelihood(home_goals, away_goals, lambda_home, lambda_away, _extra):
         return skellam_log_pmf(home_goals - away_goals, lambda_home, lambda_away)
@@ -259,7 +263,9 @@ def _ensemble(half_life_days: float = 365.0, members=None, **_) -> Predictor:
 
 def _extended_dc(half_life_days: float = 365.0, **_) -> Predictor:
     """Dixon-Coles plus rest days and a per-team home advantage."""
-    from updater.predictions.models.scoreline.extended_dc import fit_extended_dixon_coles
+    from updater.predictions.models.scoreline.extended_dc import (
+        fit_extended_dixon_coles,
+    )
 
     return _Engine(
         "extended-dc", fit_extended_dixon_coles, half_life_days=half_life_days

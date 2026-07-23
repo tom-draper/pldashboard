@@ -3,9 +3,6 @@ from typing import Optional
 
 import pandas as pd
 from pandas import DataFrame
-from updater.fmt import clean_full_team_name, convert_team_name_or_initials
-from updater.predictions.form_predictor import FormPredictor
-from updater.predictions.scoreline import Scoreline
 
 from updater.data.dataframes.df import DF
 from updater.data.dataframes.fixtures import Fixtures
@@ -13,6 +10,9 @@ from updater.data.dataframes.form import Form
 from updater.data.dataframes.home_advantages import HomeAdvantages
 from updater.data.dataframes.team_ratings import TeamRatings
 from updater.data.raw_data import RawData, full_time_goals
+from updater.fmt import clean_full_team_name, convert_team_name_or_initials
+from updater.predictions.form_predictor import FormPredictor
+from updater.predictions.scoreline import Scoreline
 
 
 class Upcoming(DF):

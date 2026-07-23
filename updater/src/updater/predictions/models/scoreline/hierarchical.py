@@ -32,7 +32,8 @@ than confounding it with a change to how unseen teams are handled.
 
 from __future__ import annotations
 
-from typing import Optional, Sequence
+from collections.abc import Sequence
+from typing import Optional
 
 import numpy as np
 

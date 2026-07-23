@@ -10,6 +10,7 @@ predictor from the backup data as an end-to-end safety net.
 import numpy as np
 import pandas as pd
 import pytest
+
 from updater.data.dataframes import TeamRatings
 from updater.data_source import DataSource
 from updater.predictions.form import calc_form

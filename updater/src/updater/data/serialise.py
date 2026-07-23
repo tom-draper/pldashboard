@@ -17,6 +17,7 @@ from typing import Any
 
 import pandas as pd
 from pandas import DataFrame
+
 from updater.predictions.scoreline import Scoreline
 
 # Fields kept for seasons before the current one. Everything the dashboard reads

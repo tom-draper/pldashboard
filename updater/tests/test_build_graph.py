@@ -1,4 +1,5 @@
 import pytest
+
 from updater.data.build_graph import Stage, resolve_order
 
 

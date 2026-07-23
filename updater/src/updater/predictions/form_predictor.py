@@ -4,11 +4,11 @@ from typing import NamedTuple, Optional
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from updater.data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
 
+from updater.data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
+from updater.data.raw_data import RawData
 from updater.predictions.form import calc_form
 from updater.predictions.scoreline import Scoreline
-from updater.data.raw_data import RawData
 
 
 class Match(NamedTuple):
