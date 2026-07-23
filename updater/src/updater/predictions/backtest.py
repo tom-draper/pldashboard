@@ -71,7 +71,7 @@ class SeasonMatch:
 def load_matches(backups_dir: Path = BACKUPS_DIR) -> list[SeasonMatch]:
     """Every finished league match across all backup seasons, oldest first.
 
-    Team names are cleaned exactly as `build_v3.extract_matches` cleans them, so
+    Team names are cleaned exactly as `model_predictions.extract_matches` cleans them, so
     the engines are benchmarked over the same team namespace they are fitted on
     in production. Without it a mid-backup rename ("Leeds United FC" ->
     "Leeds United") would silently split one club's history into two teams.

@@ -33,7 +33,7 @@ class Database:
         return self._client
 
     @property
-    def predictions_collection(self):
+    def form_predictions_collection(self):
         """The collection holding score predictions.
 
         Reads and writes previously disagreed (reading Predictions2023 while
@@ -45,12 +45,13 @@ class Database:
         return self.client.PremierLeague[name]
 
     @property
-    def predictions_v3_collection(self):
-        """The collection holding Dixon-Coles (v3) score predictions.
+    def model_predictions_collection(self):
+        """The collection holding the fitted-model (model_predictions) scores.
 
-        A single fixed collection (read and written here and by the dashboard),
-        keyed by "HOME vs AWAY" initials so actual scores backfill the same way
-        the v1 predictions do. Overridable via MONGODB_PREDICTIONS_V3_COLLECTION.
+        Keyed by "HOME vs AWAY" initials so actual scores backfill the same way
+        the form predictions do. The collection name and its env var still say
+        V3, matching the documents already stored under that name; only the
+        Python-side identifiers were renamed.
         """
         name = optional_env("MONGODB_PREDICTIONS_V3_COLLECTION", "PredictionsV3")
         return self.client.PremierLeague[name]
@@ -109,7 +110,7 @@ class Database:
             return
 
         # One round trip instead of one per prediction.
-        self.predictions_collection.bulk_write(
+        self.form_predictions_collection.bulk_write(
             [
                 pymongo.ReplaceOne({"_id": p["_id"]}, p, upsert=True)
                 for p in predictions
@@ -117,7 +118,7 @@ class Database:
             ordered=False,
         )
 
-    def update_predictions(
+    def update_form_predictions(
         self,
         predictions: dict[str, dict[str, float]],
         actual_scores: dict[str, dict[str, int]],
@@ -171,23 +172,23 @@ class Database:
     def update_actual_scores(
         self, actual_scores: dict[str, dict[str, int]]
     ):
-        self._backfill_actual_scores(self.predictions_collection, actual_scores)
+        self._backfill_actual_scores(self.form_predictions_collection, actual_scores)
 
-    def update_v3_predictions(
+    def update_model_predictions(
         self,
         predictions: list[dict],
         actual_scores: dict[str, dict[str, int]],
     ):
         """Upsert the Dixon-Coles predictions and backfill any known results.
 
-        The prediction documents are already shaped by build_v3; here we only
+        The prediction documents are already shaped by model_predictions; here we only
         attach any actual score already available and write them, then backfill
         results for fixtures predicted on earlier runs that have since finished.
         """
         if not predictions:
             return
 
-        collection = self.predictions_v3_collection
+        collection = self.model_predictions_collection
         for prediction in predictions:
             prediction["actual"] = self._get_actual_score(
                 prediction["_id"], actual_scores

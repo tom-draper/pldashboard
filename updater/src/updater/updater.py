@@ -10,7 +10,7 @@ from updater.data.raw_data import RawData
 from updater.data_source import DataSource
 from updater.database import Database
 from updater.env import require_env_int
-from updater.predictions.build_v3 import build_v3_predictions
+from updater.predictions.model_predictions import build_model_predictions
 from updater.timing import timed
 
 
@@ -123,18 +123,18 @@ class Updater:
         fantasy_data = self.data.fantasy.to_dict()
         self.database.update_fantasy_data(fantasy_data)
 
-    def save_predictions_to_db(self):
+    def save_form_predictions_to_db(self):
         predictions = self.data.teams.upcoming.get_predictions()
         actual_scores = self.data.teams.fixtures.get_actual_scores()
-        self.database.update_predictions(predictions, actual_scores)
+        self.database.update_form_predictions(predictions, actual_scores)
         self.database.update_actual_scores(actual_scores)
 
-    def save_v3_predictions_to_db(self, num_seasons: int):
-        predictions = build_v3_predictions(
+    def save_model_predictions_to_db(self, num_seasons: int):
+        predictions = build_model_predictions(
             self.raw_data, self.current_season, num_seasons
         )
         actual_scores = self.data.teams.fixtures.get_actual_scores()
-        self.database.update_v3_predictions(predictions, actual_scores)
+        self.database.update_model_predictions(predictions, actual_scores)
 
     @timed
     def build_all(
@@ -186,6 +186,6 @@ class Updater:
                 logging.info("💾 Saving new fantasy data to database...")
                 self.save_fantasy_data_to_db()
                 logging.info("💾 Saving predictions to database...")
-                self.save_predictions_to_db()
+                self.save_form_predictions_to_db()
                 logging.info("💾 Saving v3 predictions to database...")
-                self.save_v3_predictions_to_db(num_seasons)
+                self.save_model_predictions_to_db(num_seasons)

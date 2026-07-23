@@ -44,7 +44,7 @@ name. They come in two families:
   Home/draw/away is read off that matrix. Only these can be used in production,
   since the dashboard stores the scoreline heatmap.
 * `models/outcome/` predicts home/draw/away directly, with no goal model
-  underneath. These are benchmarking entrants only, and `build_v3` rejects them.
+  underneath. These are benchmarking entrants only, and `model_predictions` rejects them.
 
 Both are scored on the same RPS over the same fixtures, so the two families
 compete like for like. To compare them on past seasons:

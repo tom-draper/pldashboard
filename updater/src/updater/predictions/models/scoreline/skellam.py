@@ -28,7 +28,7 @@ from updater.predictions.distributions import (
     poisson_pmf,
     prediction_from_matrix,
 )
-from updater.predictions.models.scoreline.common import TeamRatings
+from updater.predictions.models.scoreline.common import FittedRatings
 
 MIN_RATE = 1e-6
 
@@ -60,7 +60,7 @@ def skellam_log_pmf(
 class SkellamModel:
     """Ratings fit on goal difference; scorelines from the implied Poissons."""
 
-    ratings: TeamRatings
+    ratings: FittedRatings
 
     def expected_goals(self, home_team: str, away_team: str) -> tuple[float, float]:
         return self.ratings.rates(home_team, away_team)

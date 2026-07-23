@@ -66,11 +66,11 @@ def test_build_prediction_objs_empty(db_instance):
 
 
 def mock_collection(db_instance, collection):
-    # predictions_collection is a property that reaches through to Mongo; swap it
+    # form_predictions_collection is a property that reaches through to Mongo; swap it
     # for a mock so the write logic can be exercised without a live database.
     return patch.object(
         Database,
-        "predictions_collection",
+        "form_predictions_collection",
         new_callable=PropertyMock,
         return_value=collection,
     )

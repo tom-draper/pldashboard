@@ -109,7 +109,7 @@ def test_unknown_team_is_priced_by_every_family(name: str, league) -> None:
 
 @pytest.mark.parametrize("name", OUTCOME_MODELS)
 def test_outcome_models_declare_they_have_no_scoreline(name: str, league) -> None:
-    """The flag the backtest and build_v3 both branch on, so it must be right."""
+    """The flag the backtest and model_predictions both branch on, so it must be right."""
     model = models.build(name).fit(league)
     assert model is not None
     assert models.produces_scoreline(model) is False
