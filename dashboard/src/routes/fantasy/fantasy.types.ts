@@ -1,4 +1,3 @@
-
 export type FantasyDashboardData = {
 	slug: string;
 	title: string;

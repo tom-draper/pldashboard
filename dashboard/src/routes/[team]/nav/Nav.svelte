@@ -30,7 +30,7 @@
 
 	<div class="grid text-[1em] text-[var(--pink)]">
 		{#if !teams}
-			{#each widths as width}
+			{#each widths as width, i (i)}
 				<div class="placeholder" style="width: {width}%"></div>
 			{/each}
 		{:else}

@@ -123,7 +123,7 @@
 			<div class="font-bold">Points</div>
 		</div>
 
-		{#each tableSnippet.rows as row, i}
+		{#each tableSnippet.rows as row, i (row.name)}
 			<!-- Divider -->
 			{#if i === 0}
 				{#if i != tableSnippet.teamTableIdx}

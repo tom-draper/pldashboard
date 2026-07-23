@@ -276,7 +276,7 @@
 </div>
 <div class="spider-opp-team-selector">
 	<div class="spider-opp-team-btns" id="spider-opp-teams">
-		{#each teams as _team, i}
+		{#each teams as _team, i (_team)}
 			{#if _team != team}
 				<button
 					class="spider-opp-team-btn"

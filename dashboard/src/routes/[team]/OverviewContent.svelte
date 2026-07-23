@@ -61,7 +61,7 @@
 				{#if upcoming != undefined}
 					<div class="upcoming-matches">
 						<div class="upcoming-title">Upcoming</div>
-						{#each upcoming as match, i}
+						{#each upcoming as match, i (match.home)}
 							{#if i === 0 || match.time.getDate() != upcoming[i - 1].time.getDate()}
 								<div class="upcoming-match-date">
 									{match.time.toLocaleDateString('en-GB', {
@@ -114,7 +114,7 @@
 							<div class="standings-rating bold">Rating</div>
 							<div class="standings-form bold">Form</div>
 						</div>
-						{#each standings as row, i}
+						{#each standings as row, i (row.team)}
 							<div
 								class="table-row"
 								class:top-row={i === 0}
@@ -195,7 +195,7 @@
 				</div>
 				<div class="fixtures-table">
 					<div class="fixtures-teams-container">
-						{#each fixtures as row, i}
+						{#each fixtures as row, i (row.team)}
 							<div class="fixtures-table-row">
 								<div
 									class="fixtures-team"
@@ -213,15 +213,15 @@
 					<div class="fixtures-matches-container">
 						<div class="fixtures-table-row">
 							<div class="fixtures-matches">
-								{#each Array(38) as _, i}
+								{#each Array(38) as _, i (i)}
 									<div class="match">{i + 1}</div>
 								{/each}
 							</div>
 						</div>
-						{#each fixtures as row, _}
+						{#each fixtures as row (row.team)}
 							<div class="fixtures-table-row">
 								<div class="fixtures-matches">
-									{#each row.matches as match, i}
+									{#each row.matches as match, i (i)}
 										<div
 											class="match"
 											style="background: {match.color}; {match.status == 'FINISHED'

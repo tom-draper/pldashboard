@@ -43,7 +43,7 @@
 		<div class="mx-auto w-1/2 max-[800px]:w-[80%] max-[550px]:w-[90%]">
 			<div class="flex flex-col">
 				{#if data.predictions != null}
-					{#each data.predictions as { _id, predictions }}
+					{#each data.predictions as { _id, predictions } (_id)}
 						<div class="mb-[2px] w-[min(90%,300px)] self-center text-center text-[1.2rem]">
 							{_id}
 						</div>
@@ -51,7 +51,7 @@
 							class="mb-[2px] w-[min(100%,375px)] self-center border-b-[3px] border-b-black"
 						></div>
 						<!-- Each prediction on this day -->
-						{#each predictions as pred}
+						{#each predictions as pred (pred._id)}
 							<button
 								class="relative mx-0 my-[2px] w-[min(90%,300px)] self-center cursor-pointer rounded-[var(--border-radius)] border-none px-0 pt-[6px] pb-[3px] text-[16px] text-inherit [outline:inherit] max-[800px]:w-[min(80%,300px)] max-[550px]:w-[80%] {pred.color}"
 								on:click={() => toggleDetailsDisplay(pred._id)}

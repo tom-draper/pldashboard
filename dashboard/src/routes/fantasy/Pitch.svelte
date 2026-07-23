@@ -62,9 +62,9 @@
 		</div>
 	</div>
 
-	{#each [goalkeepers, defenders, midfielders, forwards] as line}
+	{#each [goalkeepers, defenders, midfielders, forwards] as line, lineIndex (lineIndex)}
 		<div class="flex justify-center p-[1em]">
-			{#each line as player}
+			{#each line as player, playerIndex (playerIndex)}
 				<div>
 					<div
 						class="mx-[0.5em] rounded-[4px] px-[1em] py-[0.6em] text-center"

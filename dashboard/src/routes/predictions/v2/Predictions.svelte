@@ -88,7 +88,7 @@
 
 	<div class="mx-auto my-[10vh]">
 		{#if data.matches.length > 0}
-			{#each data.matches as prediction, i}
+			{#each data.matches as prediction, i (prediction._id)}
 				{@const latest = prediction.odds[prediction.odds.length - 1].prediction}
 				<div
 					class="mx-auto my-[2em] max-w-[28em] rounded-[4px] bg-[rgb(37,1,30)] px-[1.6em] py-[1em]"

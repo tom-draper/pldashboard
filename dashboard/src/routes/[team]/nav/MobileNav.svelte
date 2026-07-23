@@ -21,7 +21,7 @@
 	class="fixed z-[2] hidden h-screen overflow-hidden animate-[appear_0.1s_ease-in]"
 >
 	<div class="flex h-full flex-col">
-		{#each teams as team}
+		{#each teams as team (team)}
 			{#if team != null}
 				<button
 					on:click={() => switchTeamToTop(team)}
