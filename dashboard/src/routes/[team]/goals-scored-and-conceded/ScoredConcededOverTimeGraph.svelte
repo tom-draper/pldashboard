@@ -255,7 +255,7 @@
 			'margin.l': 20,
 			'margin.t': 5
 		};
-		//@ts-expect-error
+		// @ts-expect-error Plotly is a CDN global, so its argument types are not available here
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -294,8 +294,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-expect-error
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
+		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {
