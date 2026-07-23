@@ -241,97 +241,91 @@ class FormPredictor:
             scorelines = scorelines[-num_matches:]
         return scorelines
 
-    def scoreline_probabilities(self, home_team: str, away_team: str):
-        # All multi-season scorelines available for each team
-        home_scoreline_freq = self._team_scoreline_freq(home_team)
-        away_scoreline_freq = self._team_scoreline_freq(away_team)
+    # Number of most recent matches per team that feed the form scaling.
+    FORM_MATCHES = 20
+    # Recency weights ramp from this up to 1 across those matches.
+    OLDEST_FORM_WEIGHT = 0.2
 
-        home_scoreline_freq_home = self._separate_scoreline_freq_by_home_away(
-            home_team, home_scoreline_freq, True
-        )
-        away_scoreline_freq_away = self._separate_scoreline_freq_by_home_away(
-            away_team, away_scoreline_freq, False
-        )
+    def _pooled_scoreline_freq(self, home_team: str, away_team: str):
+        """Every relevant past scoreline, pooled and weighted, team-agnostic.
 
-        # Get our small set of previous results between these two teams
-        fixture_scoreline_freq = self._fixture_scoreline_freq(home_team, away_team)
+        Built from three overlapping sources, all oriented so the upcoming home
+        team is the home side:
 
-        # Force all scoreline orders into upcoming home team as the home team
-        fixture_scoreline_freq = self._remove_scoreline_freq_home_away(
-            fixture_scoreline_freq, home_team, away_team
-        )
-        home_scoreline_freq = self._remove_scoreline_freq_home_away(
-            home_scoreline_freq, home_team, away_team
-        )
-        away_scoreline_freq = self._remove_scoreline_freq_home_away(
-            away_scoreline_freq, home_team, away_team
-        )
+          * both teams' full histories, as the base
+          * each team's results at the venue it is about to play at, added again
+            at HOME_AWAY_WEIGHTING so venue counts for something
+          * the head-to-head record, at FIXTURE_WEIGHTING
 
-        # Base - Combine all previous results from both teams
-        # Note: This creates duplicate results for the fixtures between these
-        # two specific teams since they are found in both sets of results
-        scoreline_freq = self._merge_scoreline_freq(
-            home_scoreline_freq, away_scoreline_freq
-        )
-        # Make team agnostic before folding in more scorelines
-        scoreline_freq = self._remove_scoreline_freq_teams(scoreline_freq)
+        The head-to-head appears in both teams' histories, so the base holds two
+        copies of it. One is subtracted before it is added back at its own
+        weight, which is what makes FIXTURE_WEIGHTING mean what it says rather
+        than being an increment on an uncontrolled duplicate.
+        """
+        home_freq = self._team_scoreline_freq(home_team)
+        away_freq = self._team_scoreline_freq(away_team)
 
-        # Subtract one set of this fixture scorelines to remove the duplication
-        self._subtract_scaled_from_freq(
-            scoreline_freq, self._remove_scoreline_freq_teams(fixture_scoreline_freq)
+        # Taken before the orientation pass below, which rewrites the keys.
+        home_at_home = self._separate_scoreline_freq_by_home_away(
+            home_team, home_freq, True
+        )
+        away_when_away = self._separate_scoreline_freq_by_home_away(
+            away_team, away_freq, False
         )
 
-        # Re-insert home scorelines for home team (scaled down)
+        head_to_head = self._fixture_scoreline_freq(home_team, away_team)
+
+        # Force every scoreline to read with the upcoming home team first.
+        head_to_head = self._remove_scoreline_freq_home_away(
+            head_to_head, home_team, away_team
+        )
+        home_freq = self._remove_scoreline_freq_home_away(
+            home_freq, home_team, away_team
+        )
+        away_freq = self._remove_scoreline_freq_home_away(
+            away_freq, home_team, away_team
+        )
+
+        pooled = self._remove_scoreline_freq_teams(
+            self._merge_scoreline_freq(home_freq, away_freq)
+        )
+
+        agnostic = self._remove_scoreline_freq_teams
+        self._subtract_scaled_from_freq(pooled, agnostic(head_to_head))
         self._insert_scaled_into_freq(
-            scoreline_freq,
-            self._remove_scoreline_freq_teams(home_scoreline_freq_home),
-            self.HOME_AWAY_WEIGHTING,
+            pooled, agnostic(home_at_home), self.HOME_AWAY_WEIGHTING
         )
-        # Re-insert away scorelines for away team (scaled down)
         self._insert_scaled_into_freq(
-            scoreline_freq,
-            self._remove_scoreline_freq_teams(away_scoreline_freq_away),
-            self.HOME_AWAY_WEIGHTING,
+            pooled, agnostic(away_when_away), self.HOME_AWAY_WEIGHTING
         )
-        # After the subtracting earlier, we can now fully control any additional
-        # weighting for fixture scorelines
         self._insert_scaled_into_freq(
-            scoreline_freq,
-            self._remove_scoreline_freq_teams(fixture_scoreline_freq),
-            self.FIXTURE_WEIGHTING,
+            pooled, agnostic(head_to_head), self.FIXTURE_WEIGHTING
         )
+        return pooled
 
-        # Insert recent scorelines for each team weighted by recency
-        home_team_recent_scorelines = self.get_recent_scorelines(home_team, 20)
-        away_team_recent_scorelines = self.get_recent_scorelines(away_team, 20)
-        home_team_form = calc_form(
-            home_team,
-            home_team_recent_scorelines,
-            # Sized from the home team's own matches. This read
-            # len(away_team_recent_scorelines), so whenever the two sides had
-            # different match counts calc_form's zip truncated against the
-            # wrong length: an away team with no history left the weight array
-            # empty and pinned the home team's form to the neutral 0.5.
-            np.linspace(0.2, 1, len(home_team_recent_scorelines)),
-            self.team_ratings,
-        )
-        away_team_form = calc_form(
-            away_team,
-            away_team_recent_scorelines,
-            np.linspace(0.2, 1, len(away_team_recent_scorelines)),
-            self.team_ratings,
-        )
-        form_scale = (home_team_form, 0.5, away_team_form)
+    def _team_form(self, team: str) -> float:
+        """Recent-form rating, weighting the newest matches most."""
+        recent = self.get_recent_scorelines(team, self.FORM_MATCHES)
+        # Sized from this team's own matches. calc_form zips matches against
+        # weights, so a vector sized from the *other* team silently truncates:
+        # an opponent with no history left this empty and pinned form to 0.5.
+        weightings = np.linspace(self.OLDEST_FORM_WEIGHT, 1, len(recent))
+        return calc_form(team, recent, weightings, self.team_ratings)
+
+    def _result_scale(self, home_team: str, away_team: str):
+        """Per-result multipliers (home, draw, away) from each side's form."""
+        form_scale = (self._team_form(home_team), 0.5, self._team_form(away_team))
 
         # Market-odds scaling is disabled; an identity odds_scale keeps the
-        # form/odds blend below numerically unchanged.
+        # form/odds blend numerically unchanged.
         odds_scale = (1, 1, 1)
-        scale = tuple(f / 2 + o / 2 for f, o in zip(form_scale, odds_scale))
-        self.scale_results(scoreline_freq, scale)
+        return tuple(f / 2 + o / 2 for f, o in zip(form_scale, odds_scale))
 
-        # Convert frequency counts into probability values
-        scoreline_probabilities = self._scoreline_freq_probability(scoreline_freq)
-        return scoreline_probabilities
+    def scoreline_probabilities(self, home_team: str, away_team: str):
+        """Probability of each scoreline in the upcoming fixture."""
+        scoreline_freq = self._pooled_scoreline_freq(home_team, away_team)
+        self.scale_results(scoreline_freq, self._result_scale(home_team, away_team))
+        return self._scoreline_freq_probability(scoreline_freq)
 
     @staticmethod
     def scale_results(
