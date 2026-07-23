@@ -9,8 +9,8 @@ Two of them, named for what they are rather than the order they were written:
       `predictions.models` and shapes the upcoming matchday into the documents
       stored for the dashboard.
 
-Import the concrete module you need directly rather than re-exporting here:
-form_predictor pulls in the data frames, which pull in upcoming.py, which
-imports form_predictor again, so an eager re-export at package load creates a
-cycle.
+Import the concrete module you need directly rather than re-exporting here.
+form_predictor pulls in the DataFrame package, which reaches upcoming.py, which
+needs FormPredictor back; upcoming.py defers that import so the cycle no longer
+bites, but an eager re-export at package load would reintroduce it.
 """

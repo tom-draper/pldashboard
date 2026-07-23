@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import pandas as pd
 from pandas import DataFrame
@@ -11,8 +13,14 @@ from updater.data.dataframes.home_advantages import HomeAdvantages
 from updater.data.dataframes.team_ratings import TeamRatings
 from updater.data.raw_data import RawData, full_time_goals, match_teams
 from updater.fmt import convert_team_name_or_initials
-from updater.predictions.form_predictor import FormPredictor
 from updater.predictions.scoreline import Scoreline
+
+if TYPE_CHECKING:
+    # Imported for typing only. At runtime form_predictor imports the DataFrame
+    # package, which imports this module, so a module-level import here would
+    # close a cycle and make `import updater.predictions.form_predictor` fail
+    # unless something happened to import the DataFrames first.
+    from updater.predictions.form_predictor import FormPredictor
 
 
 class Upcoming(DF):
@@ -277,6 +285,9 @@ class Upcoming(DF):
 
         upcoming = pd.DataFrame.from_dict(d, orient="index")
         upcoming.index.name = "team"
+
+        # Deferred to break the import cycle described at the top of the file.
+        from updater.predictions.form_predictor import FormPredictor
 
         predictor = FormPredictor(
             raw_data,
