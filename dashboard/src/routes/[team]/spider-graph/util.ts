@@ -1,5 +1,5 @@
-import type { Team } from "$lib/types";
-import type { TeamAttributes, TeamsData } from "../dashboard.types";
+import type { Team } from '$lib/types';
+import type { TeamAttributes, TeamsData } from '../dashboard.types';
 
 export type Range = {
 	min: number;

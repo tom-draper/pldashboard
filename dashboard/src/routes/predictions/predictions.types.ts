@@ -1,4 +1,4 @@
-import type { Scoreline } from "$lib/types";
+import type { Scoreline } from '$lib/types';
 
 export type PredictionsData = {
 	accuracy: Accuracy;

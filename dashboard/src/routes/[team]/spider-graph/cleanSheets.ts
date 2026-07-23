@@ -1,7 +1,13 @@
-import type { Form, FormEntry, SpiderAttribute, TeamAttributes, TeamsData } from "../dashboard.types";
-import { getTeams } from "$lib/team";
-import { attributeAvgScaled, seasonComplete } from "./util";
-import type { Team } from "$lib/types";
+import type {
+	Form,
+	FormEntry,
+	SpiderAttribute,
+	TeamAttributes,
+	TeamsData
+} from '../dashboard.types';
+import { getTeams } from '$lib/team';
+import { attributeAvgScaled, seasonComplete } from './util';
+import type { Team } from '$lib/types';
 
 function formCleanSheets(form: Form, team: Team, season: number) {
 	let nCleanSheets = 0;
@@ -18,8 +24,9 @@ function formCleanSheets(form: Form, team: Team, season: number) {
 }
 
 function cleanSheet(match: FormEntry) {
-	return (match.atHome && match.score.awayGoals === 0) ||
-		(!match.atHome && match.score.homeGoals === 0);
+	return (
+		(match.atHome && match.score.awayGoals === 0) || (!match.atHome && match.score.homeGoals === 0)
+	);
 }
 
 export default function getCleanSheets(data: TeamsData, numSeasons: number) {

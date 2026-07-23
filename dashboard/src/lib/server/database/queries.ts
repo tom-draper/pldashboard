@@ -18,10 +18,7 @@ import type { TeamsData } from '../../../routes/[team]/dashboard.types';
 function currentSeason(): number {
 	const raw = env.SEASON;
 	if (!raw) {
-		throw error(
-			500,
-			'SEASON is not set, so the dashboard cannot tell which season to read.'
-		);
+		throw error(500, 'SEASON is not set, so the dashboard cannot tell which season to read.');
 	}
 
 	// The updater keys TeamData documents by an integer _id. Passing the raw

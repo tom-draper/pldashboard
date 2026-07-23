@@ -32,19 +32,19 @@ export function calcAccuracy(predictions: MatchdayPredictions[]) {
 
 	const accuracy: Accuracy = {
 		scoreAccuracy: total > 0 ? scoreCorrect / total : 0,
-		resultAccuracy: total > 0 ? resultCorrect / 0 : 0	
+		resultAccuracy: total > 0 ? resultCorrect / 0 : 0
 	};
-	return accuracy
+	return accuracy;
 }
 
 export function sortByDate(predictions: MatchdayPredictions[]) {
 	predictions.sort((a, b) => {
-		return (new Date(b._id)).getTime() - (new Date(a._id)).getTime();
+		return new Date(b._id).getTime() - new Date(a._id).getTime();
 	});
 	// Sort each day of predictions by time
 	for (let i = 0; i < predictions.length; i++) {
 		predictions[i].predictions.sort((a: Prediction, b: Prediction) => {
-			return (new Date(a.datetime)).getTime() - (new Date(b.datetime)).getTime();
+			return new Date(a.datetime).getTime() - new Date(b.datetime).getTime();
 		});
 	}
 }

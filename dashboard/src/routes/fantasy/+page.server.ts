@@ -10,4 +10,4 @@ export const load: PageServerLoad = async () => {
 		title: 'Fantasy',
 		pageData: data
 	};
-}
+};

@@ -17,4 +17,4 @@ export const load: PageServerLoad = async () => {
 		playedDates: null,
 		data
 	};
-}
+};

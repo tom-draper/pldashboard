@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* -------------------------------- Global ------------------------------------- */
 
@@ -68,7 +68,7 @@
 	--luton-town: rgb(232, 68, 34);
 	--luton-town-secondary: rgb(27, 27, 56);
 	--ipswich-town: #214288;
-	--ipswich-town-secondary: #de2c37; 
+	--ipswich-town-secondary: #de2c37;
 	--coventry-city: #5892ab;
 	--coventry-city-secondary: #ffffff;
 	--hull-city: #e98600;

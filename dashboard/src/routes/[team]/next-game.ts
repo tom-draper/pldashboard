@@ -20,9 +20,9 @@ export function oppositionFormPercentage(data: TeamsData, team: Team) {
 		return 'N/A';
 	}
 	return (
-		((data.form[opposition][data._id][getCurrentMatchday(data, opposition)].formRating5 ?? 0) *
-			100).toFixed(1) +
-		'%'
+		(
+			(data.form[opposition][data._id][getCurrentMatchday(data, opposition)].formRating5 ?? 0) * 100
+		).toFixed(1) + '%'
 	);
 }
 
