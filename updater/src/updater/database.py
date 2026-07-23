@@ -1,14 +1,15 @@
-from os import getenv
 from typing import Optional
 from urllib.parse import quote_plus
 
 import pymongo
-from updater.env import require_env, require_env_int
+from updater.env import optional_env, require_env
 
 
 class Database:
     def __init__(self):
-        self.current_season = require_env_int("SEASON")
+        # The season is not read here: Updater owns it and passes it to
+        # update_team_data, so there is one source for it rather than two that
+        # can disagree.
 
         # Credentials must be percent-encoded: an unescaped '@', ':' or '/' in a
         # password otherwise corrupts the connection string.
@@ -40,7 +41,7 @@ class Database:
         overridable via MONGODB_PREDICTIONS_COLLECTION; the default preserves
         the existing write target.
         """
-        name = getenv("MONGODB_PREDICTIONS_COLLECTION", "Predictions2024")
+        name = optional_env("MONGODB_PREDICTIONS_COLLECTION", "Predictions2024")
         return self.client.PremierLeague[name]
 
     @property
@@ -51,7 +52,7 @@ class Database:
         keyed by "HOME vs AWAY" initials so actual scores backfill the same way
         the v1 predictions do. Overridable via MONGODB_PREDICTIONS_V3_COLLECTION.
         """
-        name = getenv("MONGODB_PREDICTIONS_V3_COLLECTION", "PredictionsV3")
+        name = optional_env("MONGODB_PREDICTIONS_V3_COLLECTION", "PredictionsV3")
         return self.client.PremierLeague[name]
 
     @staticmethod

@@ -43,6 +43,18 @@ def require_env(name: str):
     return value
 
 
+def optional_env(name: str, default: str):
+    """Return an optional environment variable, or `default` if unset or empty.
+
+    Goes through `load_env` like `require_env` does. Reaching for `os.getenv`
+    directly only works if some `require_env` call happened to run first and
+    populate the environment as a side effect, which makes the .env file's
+    effect depend on statement order.
+    """
+    load_env()
+    return getenv(name) or default
+
+
 def require_env_int(name: str):
     """Return a required environment variable parsed as an int."""
     value = require_env(name)
