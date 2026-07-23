@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
+	import type { PlotData, PlotTrace, PlotLayout } from '$lib/types';
 	import { onMount, onDestroy } from 'svelte';
 	import { getTeams, teamInSeason } from '$lib/team';
 	import type { Form, TeamsData } from './dashboard.types';

@@ -51,7 +51,6 @@
 	$: mobileView = pageWidth <= 700;
 
 	onMount(() => {
-		console.log(data);
 	});
 
 	export let data: FantasyDashboardData;

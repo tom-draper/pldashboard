@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { PlotData } from '$lib/types';
 	import { onMount, onDestroy } from 'svelte';
 	import { toAlias, toName, getTeamID, teamColor } from '$lib/team';
 	import type { SpiderAttribute, TeamsData } from '../dashboard.types';

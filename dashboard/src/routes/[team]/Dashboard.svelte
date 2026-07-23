@@ -64,13 +64,8 @@
 		}
 	}
 
-	let routerReady = false;
-
 	onMount(() => {
-		console.log(data.data);
 		setThemeColor(getCSSVar(`--${data.team.id}`));
-		// Mark router as ready after mount
-		routerReady = true;
 	});
 
 	export let data: DashboardData;
