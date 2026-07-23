@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Optional
 
 import pandas as pd
@@ -161,7 +162,7 @@ class Fantasy(DF):
                 player_record = self._build_player_record(player, team_mappings, position_mappings)
                 player_records[web_name] = player_record
             except ValueError as e:
-                print(f"Warning: Skipping player due to error - {e}")
+                logging.warning(f"Skipping player: {e}")
                 continue
 
         return player_records
@@ -244,27 +245,16 @@ class Fantasy(DF):
         Raises:
             ValueError: If required data is missing or malformed
         """
-        try:
-            self.log_building()
+        self.log_building()
 
-            fantasy_data = raw_data.fantasy_general
+        player_records = self._process_all_players(raw_data.fantasy_general)
+        if not player_records:
+            raise ValueError("No valid player records found")
 
-            # Process all players
-            player_records = self._process_all_players(fantasy_data)
+        df = pd.DataFrame.from_dict(player_records, orient="index")
+        df = self._clean_final_dataframe(df)
 
-            if not player_records:
-                raise ValueError("No valid player records found")
+        if display:
+            print(df)
 
-            # Build DataFrame
-            df = pd.DataFrame.from_dict(player_records, orient="index")
-
-            # Apply final cleaning
-            df = self._clean_final_dataframe(df)
-
-            if display:
-                print(df)
-
-            self.df = df
-
-        except Exception as e:
-            raise ValueError(f"Failed to build fantasy DataFrame: {e}") from e
+        self.df = df
