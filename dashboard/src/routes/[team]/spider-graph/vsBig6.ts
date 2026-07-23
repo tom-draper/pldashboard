@@ -1,6 +1,6 @@
 import type { Form, SpiderAttribute, TeamAttributes, TeamsData } from '../dashboard.types';
 import { getTeams } from '$lib/team';
-import { attributeAvgScaled, removeItem, seasonComplete } from './util';
+import { attributeAvgScaled, seasonComplete } from './util';
 import { Team } from '$lib/types';
 
 // Enum members rather than bare strings: Team is an enum, so the strings were
@@ -20,7 +20,10 @@ function formWinsVsBig6(form: Form, team: Team, season: number, big6: Team[]) {
 	let numPlayed = 0;
 	for (const matchday in form[team][season]) {
 		const match = form[team][season][matchday];
-		if (match.score == null || (match.team !== null && big6.includes(match.team))) {
+		// Only played matches, and only against a big 6 opponent. This read
+		// `big6.includes(match.team)` without the negation, which skipped the
+		// big 6 matches and scored the team against everyone else instead.
+		if (match.score == null || match.team === null || !big6.includes(match.team)) {
 			continue;
 		}
 		if (
@@ -50,6 +53,12 @@ export default function getVsBig6(data: TeamsData, numSeasons: number) {
 	let maxAvgSeasonPointsVsBig6 = Number.NEGATIVE_INFINITY;
 	const teams = getTeams(data);
 	for (const team of teams) {
+		// filter, not removeItem: removeItem splices in place, and big6 is a
+		// module-level array, so every big 6 team removed itself from it
+		// permanently. One pass over the teams emptied it, and later teams (and
+		// every later render) were measured against nothing at all.
+		const big6Opponents = big6.filter((opponent) => opponent !== team);
+
 		let totalPointsVsBig6 = 0;
 		let totalPlayedVsBig6 = 0;
 		for (let i = 0; i < numSeasons; i++) {
@@ -57,12 +66,12 @@ export default function getVsBig6(data: TeamsData, numSeasons: number) {
 				data.form,
 				team,
 				data._id - i,
-				removeItem(big6, team)
+				big6Opponents
 			);
 			if (seasonPlayedVsBig6 === 0) {
 				continue;
 			}
-			const avgSeasonPointsVsBig6 = seasonPlayedVsBig6 / seasonPlayedVsBig6;
+			const avgSeasonPointsVsBig6 = seasonPointsVsBig6 / seasonPlayedVsBig6;
 			// If season completed, check if season consistency is highest yet
 			if (
 				seasonComplete(data, team, data._id - i) &&
@@ -81,7 +90,11 @@ export default function getVsBig6(data: TeamsData, numSeasons: number) {
 
 	const attribute: SpiderAttribute = {
 		teams: finalisedVsBig6,
-		avg: attributeAvgScaled(finalisedVsBig6, maxAvgSeasonPointsVsBig6 * numSeasons)
+		// No `* numSeasons` here, unlike cleanSheets/consistency/winStreak. Those
+		// store a total across seasons, so their ceiling is the best season times
+		// the number of seasons. This stores points *per game*, so its ceiling is
+		// simply the best points per game any team managed in a season.
+		avg: attributeAvgScaled(finalisedVsBig6, maxAvgSeasonPointsVsBig6)
 	};
 	return attribute;
 }
