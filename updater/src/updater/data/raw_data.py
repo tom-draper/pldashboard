@@ -1,5 +1,32 @@
 from dataclasses import dataclass, field
-from typing import Any
+from datetime import datetime, timezone
+from typing import Any, Optional
+
+# football-data renamed the full-time score keys partway through the period
+# these backups cover: score.fullTime.homeTeam/awayTeam became home/away. Both
+# spellings are still on disk, so every reader has to accept either. Keeping
+# that in one place stops the fallback being re-derived (it had been written
+# three different ways, and one reader omitted it entirely).
+_FULL_TIME_KEYS = (("home", "homeTeam"), ("away", "awayTeam"))
+
+
+def full_time_goals(match: dict[str, Any]) -> tuple[Optional[int], Optional[int]]:
+    """The (home, away) full-time goals, or (None, None) if not yet played."""
+    full_time = match["score"]["fullTime"]
+    goals = []
+    for current_key, legacy_key in _FULL_TIME_KEYS:
+        value = full_time.get(current_key)
+        if value is None:
+            value = full_time.get(legacy_key)
+        goals.append(None if value is None else int(value))
+    return goals[0], goals[1]
+
+
+def parse_utc_date(utc_date: str) -> datetime:
+    """A match's kickoff time as a timezone-aware UTC datetime."""
+    return datetime.fromisoformat(utc_date.replace("Z", "+00:00")).astimezone(
+        timezone.utc
+    )
 
 
 @dataclass

@@ -42,15 +42,17 @@ import argparse
 import json
 import sys
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Sequence
 
 import numpy as np
 
+from updater.data.raw_data import full_time_goals, parse_utc_date
 from updater.env import BACKUPS_DIR
+from updater.fmt import clean_full_team_name
 from updater.predictions import models as model_registry
-from updater.predictions.distributions import MatchResult
+from updater.predictions.distributions import MatchResult, match_outcome
 from updater.predictions.models import (
     FittedModel,
     Predictor,
@@ -66,34 +68,30 @@ class SeasonMatch:
     result: MatchResult
 
 
-def _parse_date(utc_date: str) -> datetime:
-    return datetime.fromisoformat(utc_date.replace("Z", "+00:00")).astimezone(
-        timezone.utc
-    )
-
-
 def load_matches(backups_dir: Path = BACKUPS_DIR) -> list[SeasonMatch]:
-    """Every finished league match across all backup seasons, oldest first."""
+    """Every finished league match across all backup seasons, oldest first.
+
+    Team names are cleaned exactly as `build_v3.extract_matches` cleans them, so
+    the engines are benchmarked over the same team namespace they are fitted on
+    in production. Without it a mid-backup rename ("Leeds United FC" ->
+    "Leeds United") would silently split one club's history into two teams.
+    """
     matches: list[SeasonMatch] = []
     for path in sorted((backups_dir / "fixtures").glob("fixtures_*.json")):
         season = int(path.stem.split("_")[1])
         for match in json.loads(path.read_text()):
             if match.get("status") != "FINISHED":
                 continue
-            # football-data renamed the score keys (homeTeam/awayTeam -> home/away)
-            # partway through these backups, so accept either.
-            full_time = match["score"]["fullTime"]
-            home_goals = full_time.get("homeTeam", full_time.get("home"))
-            away_goals = full_time.get("awayTeam", full_time.get("away"))
+            home_goals, away_goals = full_time_goals(match)
             if home_goals is None or away_goals is None:
                 continue
             matches.append(
                 SeasonMatch(
                     season=season,
                     result=MatchResult(
-                        date=_parse_date(match["utcDate"]),
-                        home_team=match["homeTeam"]["name"],
-                        away_team=match["awayTeam"]["name"],
+                        date=parse_utc_date(match["utcDate"]),
+                        home_team=clean_full_team_name(match["homeTeam"]["name"]),
+                        away_team=clean_full_team_name(match["awayTeam"]["name"]),
                         home_goals=int(home_goals),
                         away_goals=int(away_goals),
                     ),
@@ -101,15 +99,6 @@ def load_matches(backups_dir: Path = BACKUPS_DIR) -> list[SeasonMatch]:
             )
     matches.sort(key=lambda m: m.result.date)
     return matches
-
-
-def outcome(home_goals: int, away_goals: int) -> int:
-    """0 = home win, 1 = draw, 2 = away win."""
-    if home_goals > away_goals:
-        return 0
-    if home_goals == away_goals:
-        return 1
-    return 2
 
 
 def ranked_probability_score(probs: tuple[float, float, float], actual: int) -> float:
@@ -407,7 +396,7 @@ def backtest(
     # It is the most generous possible baseline: it has seen the results already.
     base_counts = [0, 0, 0]
     for m in test:
-        base_counts[outcome(m.result.home_goals, m.result.away_goals)] += 1
+        base_counts[match_outcome(m.result.home_goals, m.result.away_goals)] += 1
     base_probs: tuple[float, float, float] = (
         base_counts[0] / len(test),
         base_counts[1] / len(test),
@@ -453,7 +442,7 @@ def backtest(
                 flush=True,
             )
 
-        actual = outcome(match.result.home_goals, match.result.away_goals)
+        actual = match_outcome(match.result.home_goals, match.result.away_goals)
         scored_any = False
 
         for predictor, cache, metrics in zip(predictors, caches, results):
