@@ -167,7 +167,7 @@
 				showline: false,
 				zeroline: false,
 				fixedrange: true,
-				// @ts-expect-error
+				// @ts-expect-error Plotly's axis types do not allow ticktext alongside these options
 				ticktext: yLabels,
 				tickvals: yLabels
 			},
@@ -246,7 +246,7 @@
 		};
 		plotData.data[0].marker!.size = sizes;
 
-		//@ts-expect-error
+		// @ts-expect-error Plotly is a CDN global, so its argument types are not available here
 		Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
 	}
 
@@ -270,8 +270,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-expect-error
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
+		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {

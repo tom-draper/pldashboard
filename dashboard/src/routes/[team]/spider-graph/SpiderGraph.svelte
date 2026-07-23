@@ -10,10 +10,12 @@
 	import getWinStreak from './winStreak';
 	import getDefence from './defence';
 	import type { Team } from '$lib/types';
-	import type Plotly from 'plotly.js';
+	// Aliased: an `import type Plotly` would shadow the ambient Plotly the
+	// CDN script defines, and every value call below would stop resolving.
+	import type PlotlyTypes from 'plotly.js';
 
 	function addTeamComparison(team: Team) {
-		const teamData: Plotly.Data = {
+		const teamData: PlotlyTypes.Data = {
 			name: team,
 			type: 'scatterpolar',
 			r: [
@@ -31,7 +33,6 @@
 		};
 		plotData.data.push(teamData);
 
-		//@ts-expect-error
 		Plotly.redraw(plotDiv); // Redraw with teamName added
 	}
 
@@ -54,7 +55,6 @@
 			addAvg();
 		}
 
-		//@ts-expect-error
 		Plotly.redraw(plotDiv); // Redraw with teamName removed
 	}
 
@@ -75,7 +75,6 @@
 			removeItem(comparisonTeams, _team); // Remove from comparison teams
 		}
 
-		//@ts-expect-error
 		Plotly.redraw(plotDiv); // Redraw with teamName removed
 	}
 
@@ -86,7 +85,7 @@
 		}
 
 		for (let i = 0; i < btns.children.length; i++) {
-			//@ts-expect-error
+			// @ts-expect-error children is an HTMLCollection of Element, narrowed by construction
 			const btn: HTMLButtonElement = btns.children[i];
 			if (btn.style.background === '') {
 				continue;
@@ -120,7 +119,7 @@
 		}
 	}
 
-	function scatterPlot(name: string, r: number[], color: string): Plotly.Data {
+	function scatterPlot(name: string, r: number[], color: string): PlotlyTypes.Data {
 		return {
 			name: name,
 			type: 'scatterpolar',
@@ -174,7 +173,7 @@
 	}
 
 	function defaultLayout() {
-		const layout: Plotly.Layout = {
+		const layout: PlotlyTypes.Layout = {
 			height: 550,
 			polar: {
 				radialaxis: {
@@ -182,7 +181,7 @@
 					range: [0, 100]
 				}
 			},
-			// @ts-expect-error
+			// @ts-expect-error Plotly's config type omits this documented option
 			hover: 'closest',
 			margin: { t: 25, b: 25, l: 75, r: 75 },
 			showlegend: false,
@@ -198,7 +197,7 @@
 
 		const spiderPlots = initSpiderPlots(team);
 
-		const plotData: Plotly.PlotlyDataLayoutConfig = {
+		const plotData: PlotlyTypes.PlotlyDataLayoutConfig = {
 			data: spiderPlots,
 			layout: defaultLayout(),
 			config: {
@@ -219,12 +218,11 @@
 	let vsBig6: SpiderAttribute;
 	const labels = ['Attack', 'Defence', 'Clean sheets', 'Consistency', 'Win streak', 'Vs big 6'];
 
-	let plotDiv: HTMLDivElement, plotData: Plotly.PlotlyDataLayoutConfig;
+	let plotDiv: HTMLDivElement, plotData: PlotlyTypes.PlotlyDataLayoutConfig;
 
 	onDestroy(() => {
 		// Remove Plotly's resize listeners and DOM when the graph is destroyed.
 		if (plotDiv) {
-			//@ts-expect-error
 			Plotly.purge(plotDiv);
 		}
 	});
@@ -237,8 +235,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-expect-error
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
+		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function emptyArray(arr: any[]) {
@@ -284,7 +281,7 @@
 					class:bottom-spider-opp-team-btn={i === teams.length - 1 ||
 						(teams[teams.length - 1] === team && i === teams.length - 2)}
 					on:click={(e) => {
-						//@ts-expect-error
+						// @ts-expect-error e.target is EventTarget; the handler is only bound to the buttons
 						spiderBtnClick(e.target);
 					}}>{toAlias(_team)}</button
 				>

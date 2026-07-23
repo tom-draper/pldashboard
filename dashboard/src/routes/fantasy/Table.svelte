@@ -84,7 +84,7 @@
 	function buildTable(data: FantasyData) {
 		const tableRows = getTableRows(data);
 
-		// @ts-expect-error
+		// @ts-expect-error DataTable ships no types for this options object
 		table = new DataTable('#myTable', {
 			responsive: true,
 			data: tableRows,
