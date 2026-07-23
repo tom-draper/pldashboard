@@ -52,12 +52,15 @@ class Predictor:
         current_season: int,
         num_seasons: int,
     ):
-        # [last season, 2 seasons ago, 3 seasons ago]
+        # [last season, 2 seasons ago, ...] for however many seasons were asked
+        # for. Sized from num_seasons rather than fixed at three, which raised
+        # IndexError for num_seasons > 4.
         total_fixtures = {current_season: current_season_fixtures.df}
-        prev_fixtures = [Fixtures(), Fixtures(), Fixtures()]
         for i in range(num_seasons - 1):
-            prev_fixtures[i].build(raw_data, current_season - i - 1)
-            total_fixtures[current_season - i - 1] = prev_fixtures[i].df
+            previous_season = current_season - i - 1
+            frame = Fixtures()
+            frame.build(raw_data, previous_season)
+            total_fixtures[previous_season] = frame.df
 
         total_fixtures = pd.concat(total_fixtures, axis=1)
 
