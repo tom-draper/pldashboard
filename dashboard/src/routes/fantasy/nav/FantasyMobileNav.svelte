@@ -17,7 +17,7 @@
 >
 	{#if pages != undefined}
 		<div class="flex h-full flex-col">
-			{#each pages as page, i}
+			{#each pages as page, i (page)}
 				<button
 					on:click={() => {
 						switchTeamToTop(page);

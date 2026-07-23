@@ -50,8 +50,7 @@
 	let pageWidth: number;
 	$: mobileView = pageWidth <= 700;
 
-	onMount(() => {
-	});
+	onMount(() => {});
 
 	export let data: FantasyDashboardData;
 </script>

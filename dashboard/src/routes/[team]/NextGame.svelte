@@ -71,7 +71,7 @@
 				{/if}
 
 				<!-- Display table of previous results against the next team this team is playing -->
-				{#each data.upcoming[team].prevMatches as prevMatch}
+				{#each data.upcoming[team].prevMatches as prevMatch (prevMatch.date)}
 					<div>
 						<div class="mx-auto mt-[3px] mb-[1px] w-[90px] rounded-t-[4px] pt-[3px] text-[13px]">
 							{new Date(prevMatch.date).toLocaleDateString('en-GB', {

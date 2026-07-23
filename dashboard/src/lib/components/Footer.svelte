@@ -67,7 +67,7 @@
 			on:blur={stopRandomising}
 		>
 			<svg width="24" height="12" viewBox={`0 0 ${chartWidth} ${chartHeight}`} aria-hidden="true">
-				{#each displayedBars as height, index}
+				{#each displayedBars as height, index (index)}
 					<rect
 						x={index * barWidth}
 						y={chartHeight - height}
