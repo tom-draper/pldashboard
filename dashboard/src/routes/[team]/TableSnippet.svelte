@@ -69,6 +69,23 @@
 	const rowClass = 'flex rounded-[var(--border-radius)] px-[5%] py-[5px]';
 	const thisTeamRowClass = 'flex rounded-[var(--border-radius)] px-[5%] py-[14px] text-[1.1em]';
 	const dividerClass = 'm-auto w-[90%] self-center border-b border-b-[grey]';
+
+	// Hovering a row darkens its text instead of filling it with a background.
+	//
+	// The colour sits on the button rather than the cells so all four inherit
+	// it and shift together: hovering the position number lights the row up as
+	// one thing, which is what it is.
+	//
+	// Weight and size are deliberately untouched. The columns are fixed-width
+	// percentages, so bolding a long name like Wolverhampton Wanderers could
+	// wrap it and change the row's height under the cursor.
+	//
+	// focus-visible mirrors hover so a row reached by keyboard reads the same;
+	// the button clears its own outline via [outline:inherit].
+	const plainRowClass =
+		`${rowClass} w-full cursor-pointer border-none bg-transparent text-left ` +
+		'text-[#333333] [font:inherit] [outline:inherit] ' +
+		'hover:text-[var(--dark-purple)] focus-visible:text-[var(--dark-purple)]';
 </script>
 
 <div
@@ -120,12 +137,12 @@
 					on:click={() => {
 						switchTeam(row.name);
 					}}
-					class="{rowClass} w-full cursor-pointer border-none bg-transparent text-left text-inherit transition-colors [font:inherit] [outline:inherit] hover:bg-[#ececec] motion-reduce:transition-none"
+					class={plainRowClass}
 				>
 					<span class="w-[7%]">
 						{row.position}
 					</span>
-					<span class="ml-[8px] w-[63%] text-[#333333]">
+					<span class="ml-[8px] w-[63%]">
 						{toAlias(row.name)}
 					</span>
 					<span class="w-[15%]">
