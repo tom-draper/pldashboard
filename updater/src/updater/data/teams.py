@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Optional
 
-import pandas as pd
 from updater.data.dataframes import (
     Fixtures,
     Form,
@@ -24,10 +23,10 @@ class TeamsData:
         self.upcoming: Upcoming = Upcoming()
 
     def _frames(self):
-        """The built DataFrames, in the order they are concatenated.
+        """The built DataFrames.
 
         Single source of truth so adding a frame does not mean updating
-        `all_built`, `to_dataframe` and `to_dict` in lockstep.
+        `all_built` and `to_dict` in lockstep.
         """
         return (
             self.fixtures,
@@ -40,9 +39,6 @@ class TeamsData:
 
     def all_built(self):
         return all(frame.df is not None for frame in self._frames())
-
-    def to_dataframe(self):
-        return pd.concat((frame.df for frame in self._frames()), axis=1)
 
     def to_dict(self):
         """Build the payload the dashboard consumes.
