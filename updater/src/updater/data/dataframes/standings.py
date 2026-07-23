@@ -33,16 +33,7 @@ class Standings(DF):
 
     @staticmethod
     def extract_team_names(raw_data: RawData, season: int) -> list[str]:
-        """
-        Extract and clean team names from standings data for a given season.
-
-        Args:
-            raw_data: The complete JSON data structure
-            season: The season year to extract teams from
-
-        Returns:
-            List of cleaned team names
-        """
+        """The cleaned names of the teams in a season's table, in table order."""
         try:
             standings_data = raw_data.standings[season]
             teams = [clean_full_team_name(row["team"]["name"]) for row in standings_data]
@@ -53,16 +44,11 @@ class Standings(DF):
             ) from e
 
     def _build_season_standings(self, raw_data: RawData, current_teams: list[str], season: int) -> DataFrame:
-        """
-        Build standings DataFrame for a single season.
+        """One season's table, filtered to the teams playing this season.
 
-        Args:
-            raw_data: The complete JSON data structure
-            current_teams: List of current season team names to filter by
-            season: The season year to process
-
-        Returns:
-            DataFrame with standings data for the specified season
+        Filtering here is what makes the seasons concatenable: a past table
+        holds relegated sides the dashboard has no column for, and is missing
+        those promoted since.
         """
         try:
             standings_data = raw_data.standings[season]
@@ -104,14 +90,11 @@ class Standings(DF):
             )
 
     def _clean_final_dataframe(self, df: DataFrame) -> DataFrame:
-        """
-        Apply final cleaning and formatting to the combined standings DataFrame.
+        """Fill gaps, name the axes and order the rows by current position.
 
-        Args:
-            df: The raw combined standings DataFrame
-
-        Returns:
-            Cleaned and formatted DataFrame
+        Missing values become 0 rather than NaN so the whole frame can be int:
+        an absent row means the team was not in this division that season, and
+        zeroed counts are how the dashboard renders that.
         """
         # Fill missing values and convert to integers
         df = df.fillna(0).astype(int)
@@ -132,17 +115,11 @@ class Standings(DF):
                                 current_teams: list[str],
                                 season: int,
                                 num_seasons: int) -> DataFrame:
-        """
-        Combine standings data from multiple seasons into a single DataFrame.
+        """Concatenate the last `num_seasons` tables, newest first.
 
-        Args:
-            raw_data: The complete JSON data structure
-            current_teams: List of current season team names
-            season: The current season year
-            num_seasons: Number of seasons to include
-
-        Returns:
-            Combined standings DataFrame
+        A season that cannot be built is logged and skipped rather than
+        failing the run: the backups do not always reach as far back as
+        num_seasons asks for.
         """
         combined_standings = pd.DataFrame()
 

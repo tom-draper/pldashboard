@@ -69,30 +69,14 @@ class Fantasy(DF):
         super().__init__(d, "fantasy")
 
     def _extract_team_mappings(self, fantasy_data: dict[str, Any]) -> dict[int, str]:
-        """
-        Extract team code to name mappings from fantasy data.
-
-        Args:
-            fantasy_data: Fantasy data for a specific season
-
-        Returns:
-            Dictionary mapping team codes to team names
-        """
+        """Team code -> team name, for resolving each player's club."""
         try:
             return {team["code"]: team["name"] for team in fantasy_data["teams"]}
         except KeyError as e:
             raise ValueError("Team data not found in fantasy data") from e
 
     def _extract_position_mappings(self, fantasy_data: dict[str, Any]) -> dict[int, str]:
-        """
-        Extract position ID to position name mappings from fantasy data.
-
-        Args:
-            fantasy_data: Fantasy data for a specific season
-
-        Returns:
-            Dictionary mapping position IDs to position names
-        """
+        """Position id -> position name, for resolving each player's role."""
         try:
             return {
                 position_type["id"]: position_type["singular_name"]
@@ -104,17 +88,7 @@ class Fantasy(DF):
     def _build_player_record(self, player: dict[str, Any],
                            team_mappings: dict[int, str],
                            position_mappings: dict[int, str]) -> dict[str, Any]:
-        """
-        Build a single player record with all relevant statistics.
-
-        Args:
-            player: Raw player data from API
-            team_mappings: Team code to name mappings
-            position_mappings: Position ID to name mappings
-
-        Returns:
-            Formatted player record dictionary
-        """
+        """One player's row: renamed API fields plus club and position."""
         try:
             team_name = team_mappings.get(player["team_code"], "Unknown")
             position_name = position_mappings.get(player["element_type"], "Unknown")
@@ -137,14 +111,11 @@ class Fantasy(DF):
             raise ValueError(f"Missing required player field: {e}") from e
 
     def _process_all_players(self, fantasy_data: dict[str, Any]) -> dict[str, dict[str, Any]]:
-        """
-        Process all players and build their records.
+        """Every player's row, keyed by web_name.
 
-        Args:
-            fantasy_data: Fantasy data for a specific season
-
-        Returns:
-            Dictionary of player records keyed by web_name
+        A player whose record cannot be built is logged and skipped rather
+        than failing the build, since one malformed entry should not cost the
+        dashboard the other several hundred.
         """
         team_mappings = self._extract_team_mappings(fantasy_data)
         position_mappings = self._extract_position_mappings(fantasy_data)
@@ -168,16 +139,10 @@ class Fantasy(DF):
         return player_records
 
     def calculate_stat_points(self, identifier: str, value: int, position: str) -> int:
-        """
-        Calculate fantasy points for a specific statistic.
+        """Points a statistic is worth, per SCORING_SYSTEM.
 
-        Args:
-            identifier: The type of statistic (e.g., 'goals_scored')
-            value: The statistical value
-            position: Player's position
-
-        Returns:
-            Points awarded for the statistic
+        Several stats are worth different amounts by position (a defender's
+        goal outscores a forward's), which is why position is needed here.
         """
         if identifier in ["goals_scored", "clean_sheets"]:
             # Position-dependent scoring
@@ -197,15 +162,7 @@ class Fantasy(DF):
             return 0
 
     def _clean_final_dataframe(self, df: DataFrame) -> DataFrame:
-        """
-        Apply final cleaning and formatting to the fantasy DataFrame.
-
-        Args:
-            df: Raw fantasy DataFrame
-
-        Returns:
-            Cleaned DataFrame
-        """
+        """Order by total points and give the index and columns their names."""
         # Fill missing values and infer appropriate data types. Silent
         # downcasting is already off and copies are lazy under pandas 3.
         df = df.fillna(0).infer_objects()
