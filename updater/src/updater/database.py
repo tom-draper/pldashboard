@@ -54,39 +54,6 @@ class Database:
         name = getenv("MONGODB_PREDICTIONS_V3_COLLECTION", "PredictionsV3")
         return self.client.PremierLeague[name]
 
-    def get_predictions(self):
-        return list(
-            self.predictions_collection.aggregate(
-                [
-                    {
-                        "$group": {
-                            "_id": {
-                                "$dateToString": {
-                                    "format": "%Y-%m-%d",
-                                    "date": "$datetime",
-                                }
-                            },
-                            "predictions": {"$push": "$$ROOT"},
-                        }
-                    }
-                ]
-            )
-        )
-
-    def get_teams_data(self):
-        team_data = self.client.PremierLeague.TeamData.find_one(
-            {"_id": self.current_season}
-        )
-        if team_data is None:
-            raise ValueError(f"No team data found for season {self.current_season}")
-        return dict(team_data)
-
-    def get_fantasy_data(self):
-        fantasy_data = self.client.PremierLeague.Fantasy.find_one({"_id": "fantasy"})
-        if fantasy_data is None:
-            raise ValueError("No fantasy data found")
-        return dict(fantasy_data)
-
     @staticmethod
     def _get_actual_score(
         prediction_id: str, actual_scores: dict[str, dict[str, int]]
