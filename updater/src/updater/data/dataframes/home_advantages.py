@@ -1,5 +1,4 @@
 import logging
-from collections import defaultdict
 from typing import Any, Optional
 
 import pandas as pd
@@ -8,6 +7,9 @@ from pandas import DataFrame
 from updater.data.dataframes.df import DF
 from updater.data.raw_data import RawData, full_time_goals, match_teams
 from updater.timing import timed
+
+# team -> (season, venue, result) -> count
+Stats = dict[str, dict[tuple[int, str, str], int]]
 
 
 class HomeAdvantages(DF):
@@ -19,27 +21,31 @@ class HomeAdvantages(DF):
         super().__init__(d, "home_advantages")
 
     def _initialize_team_season_stats(
-        self, stats: defaultdict, team: str, season: int
+        self, stats: Stats, team: str, season: int
     ) -> None:
-        """Initialize statistics structure for a team in a given season."""
-        if team not in stats:
-            stats[team] = {}
+        """Zero a team's six counters for a season, the first time it is seen.
 
-        season_key = (season, "home", "wins")
-        if season_key not in stats[team]:
-            stats[team].update(
-                {
-                    (season, "home", "wins"): 0,
-                    (season, "home", "draws"): 0,
-                    (season, "home", "loses"): 0,
-                    (season, "away", "wins"): 0,
-                    (season, "away", "draws"): 0,
-                    (season, "away", "loses"): 0,
-                }
-            )
+        Counters are created as matches are read rather than pre-populated for
+        every team and season. A team that did not play in a season simply has
+        no key for it and picks up 0 from the fillna in `build`.
+        """
+        season_stats = stats.setdefault(team, {})
+        if (season, "home", "wins") in season_stats:
+            return
+
+        season_stats.update(
+            {
+                (season, "home", "wins"): 0,
+                (season, "home", "draws"): 0,
+                (season, "home", "loses"): 0,
+                (season, "away", "wins"): 0,
+                (season, "away", "draws"): 0,
+                (season, "away", "loses"): 0,
+            }
+        )
 
     def _process_match_result(
-        self, stats: defaultdict, match: dict[str, Any], season: int
+        self, stats: Stats, match: dict[str, Any], season: int
     ) -> None:
         """Process a single match and update team statistics."""
         home_team, away_team = match_teams(match)
@@ -65,13 +71,6 @@ class HomeAdvantages(DF):
             # Draw
             stats[home_team][(season, "home", "draws")] += 1
             stats[away_team][(season, "away", "draws")] += 1
-
-    def _process_season_matches(
-        self, stats: defaultdict, matches: list[dict[str, Any]], season: int
-    ) -> None:
-        """Process all matches for a given season."""
-        for match in matches:
-            self._process_match_result(stats, match, season)
 
     def _calculate_season_metrics(self, df: DataFrame, season: int) -> None:
         """Calculate derived metrics for a specific season."""
@@ -142,25 +141,6 @@ class HomeAdvantages(DF):
 
         return df
 
-    def _create_season_template(
-        self, season: int, num_seasons: int
-    ) -> dict[tuple[int, str, str], int]:
-        """Create a template dictionary for initializing team statistics."""
-        template = {}
-        for i in range(num_seasons):
-            season_year = season - i
-            template.update(
-                {
-                    (season_year, "home", "wins"): 0,
-                    (season_year, "home", "draws"): 0,
-                    (season_year, "home", "loses"): 0,
-                    (season_year, "away", "wins"): 0,
-                    (season_year, "away", "draws"): 0,
-                    (season_year, "away", "loses"): 0,
-                }
-            )
-        return template
-
     def _clean_dataframe(
         self, df: DataFrame, current_season_teams: list[str]
     ) -> DataFrame:
@@ -186,10 +166,10 @@ class HomeAdvantages(DF):
         """Extract unique team names from season fixture data."""
         teams: set[str] = set()
         for match in season_fixtures:
-            home_team, away_team = match_teams(match)
-            teams.add(home_team)
-            teams.add(away_team)
-        return sorted(list(teams))  # Sort for consistency
+            teams.update(match_teams(match))
+        # Sorted: this becomes a row selection, so an unordered walk would let
+        # the DataFrame's row order vary between runs.
+        return sorted(teams)
 
     @timed
     def build(
@@ -234,14 +214,11 @@ class HomeAdvantages(DF):
         """
         self.log_building(season)
 
-        # Initialize statistics storage with template for each team
-        stats = defaultdict(lambda: self._create_season_template(season, num_seasons))
-
-        # Process matches for each season
+        stats: Stats = {}
         for i in range(num_seasons):
             season_year = season - i
-            season_data = raw_data.fixtures[season_year]
-            self._process_season_matches(stats, season_data, season_year)
+            for match in raw_data.fixtures[season_year]:
+                self._process_match_result(stats, match, season_year)
 
         # Convert to DataFrame and fill missing values
         df = pd.DataFrame.from_dict(stats, orient="index")
