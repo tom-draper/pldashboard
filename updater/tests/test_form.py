@@ -101,3 +101,35 @@ def test_form_df_matchday_range(data: Data):
     matchdays = get_matchdays(data)
     for matchday in matchdays:
         assert pytest.valid_matchday(matchday)
+
+
+def test_init_missing_teams_is_order_independent():
+    """Placeholder rows must be seeded in a deterministic order.
+
+    `teams` is a set, and this insertion order becomes the DataFrame's row
+    order. _insert_position_columns breaks ties with a stable sort, so an
+    unordered walk let two teams level on both points and goal difference swap
+    league positions between runs depending on PYTHONHASHSEED.
+    """
+    from updater.data.dataframes.form import Form
+
+    teams = ["Hull City", "Coventry City", "Arsenal"]
+
+    first: dict = {}
+    Form._init_missing_teams(first, set(teams))
+    for permutation in (reversed(teams), sorted(teams), teams):
+        other: dict = {}
+        Form._init_missing_teams(other, set(permutation))
+        assert list(other) == list(first)
+
+    assert list(first) == sorted(teams)
+
+
+def test_init_missing_teams_keeps_existing_rows():
+    from updater.data.dataframes.form import Form
+
+    existing = {"Arsenal": {"already": "built"}}
+    Form._init_missing_teams(existing, {"Arsenal", "Hull City"})
+
+    assert existing["Arsenal"] == {"already": "built"}
+    assert "Hull City" in existing
