@@ -106,18 +106,22 @@ class Database:
 
         return prediction_objs
 
-    def _save_predictions(self, predictions: list):
-        if not predictions:
+    @staticmethod
+    def _bulk_upsert(collection, documents: list[dict]):
+        """Replace-or-insert each document by its _id in a single round trip."""
+        if not documents:
             return
 
-        # One round trip instead of one per prediction.
-        self.form_predictions_collection.bulk_write(
+        collection.bulk_write(
             [
-                pymongo.ReplaceOne({"_id": p["_id"]}, p, upsert=True)
-                for p in predictions
+                pymongo.ReplaceOne({"_id": d["_id"]}, d, upsert=True)
+                for d in documents
             ],
             ordered=False,
         )
+
+    def _save_predictions(self, predictions: list):
+        self._bulk_upsert(self.form_predictions_collection, predictions)
 
     def update_form_predictions(
         self,
@@ -195,13 +199,7 @@ class Database:
                 prediction["_id"], actual_scores
             )
 
-        collection.bulk_write(
-            [
-                pymongo.ReplaceOne({"_id": p["_id"]}, p, upsert=True)
-                for p in predictions
-            ],
-            ordered=False,
-        )
+        self._bulk_upsert(collection, predictions)
         self._backfill_actual_scores(collection, actual_scores)
 
     def update_team_data(self, team_data: dict, season: int):

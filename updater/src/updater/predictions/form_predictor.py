@@ -97,17 +97,23 @@ class FormPredictor:
             matches_by_team[team] = team_matches
         return matches_by_team
 
+    @staticmethod
+    def _scoreline_from_match(
+        match: Match, team: str, opposition: Optional[str]
+    ) -> Scoreline:
+        """Build a Scoreline from a match, oriented from `team`'s perspective."""
+        if match.at_home:
+            home_team, away_team = team, opposition
+        else:
+            home_team, away_team = opposition, team
+        return Scoreline(
+            match.score["homeGoals"], match.score["awayGoals"], home_team, away_team
+        )
+
     def _team_scoreline_freq(self, team: str):
         freq: dict[Scoreline, int] = {}
         for match in self._matches_by_team[team]:
-            if match.at_home:
-                home_team, away_team = team, None
-            else:
-                home_team, away_team = None, team
-
-            scoreline = Scoreline(
-                match.score["homeGoals"], match.score["awayGoals"], home_team, away_team
-            )
+            scoreline = self._scoreline_from_match(match, team, None)
             freq[scoreline] = freq.get(scoreline, 0) + 1
 
         return freq
@@ -118,14 +124,7 @@ class FormPredictor:
             if match.opposition != team2:
                 continue
 
-            if match.at_home:
-                home_team, away_team = team1, team2
-            else:
-                home_team, away_team = team2, team1
-
-            scoreline = Scoreline(
-                match.score["homeGoals"], match.score["awayGoals"], home_team, away_team
-            )
+            scoreline = self._scoreline_from_match(match, team1, team2)
             freq[scoreline] = freq.get(scoreline, 0) + 1
 
         return freq
@@ -225,14 +224,7 @@ class FormPredictor:
     def get_recent_scorelines(self, team: str, num_matches: Optional[int]):
         dated_scorelines: list[tuple[datetime, Scoreline]] = []
         for match in self._matches_by_team[team]:
-            if match.at_home:
-                home_team, away_team = team, match.opposition
-            else:
-                home_team, away_team = match.opposition, team
-
-            scoreline = Scoreline(
-                match.score["homeGoals"], match.score["awayGoals"], home_team, away_team
-            )
+            scoreline = self._scoreline_from_match(match, team, match.opposition)
             dated_scorelines.append((match.date, scoreline))
 
         dated_scorelines.sort(key=lambda x: x[0])
