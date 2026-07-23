@@ -148,6 +148,35 @@ class TestCalcForm:
         )
         assert form == 0.5
 
+    def test_empty_weightings_discard_every_match(self):
+        """calc_form zips matches against weights, so a short weight vector
+        silently drops matches rather than failing.
+
+        scoreline_probabilities used to size the home team's weights from the
+        *away* team's match count. An opponent with no history therefore left
+        this array empty and pinned the home team's form to the 0.5 baseline,
+        throwing away its actual form.
+        """
+        ratings = self._ratings(Arsenal=0.4, Chelsea=0.1)
+        matches = [Scoreline(1, 0, "Arsenal", "Chelsea")]
+
+        assert calc_form("Arsenal", matches, np.linspace(0.2, 1, 0), ratings) == 0.5
+        assert calc_form("Arsenal", matches, np.linspace(0.2, 1, 1), ratings) != 0.5
+
+    def test_form_uses_the_teams_own_match_count(self):
+        """The home team's form must not depend on how many matches the
+        opponent has played."""
+        ratings = self._ratings(Arsenal=0.4, Chelsea=0.1, Fulham=0.1)
+        matches = [
+            Scoreline(1, 0, "Arsenal", "Chelsea"),
+            Scoreline(2, 0, "Arsenal", "Fulham"),
+        ]
+        own = calc_form("Arsenal", matches, np.linspace(0.2, 1, len(matches)), ratings)
+
+        # Same fixtures, weights sized as if the opponent had played fewer.
+        truncated = calc_form("Arsenal", matches, np.linspace(0.2, 1, 1), ratings)
+        assert own != truncated
+
     def test_matches_not_involving_the_team_are_skipped(self):
         ratings = self._ratings(Chelsea=0.4, Everton=0.1)
         form = calc_form(

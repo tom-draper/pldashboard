@@ -307,7 +307,12 @@ class FormPredictor:
         home_team_form = calc_form(
             home_team,
             home_team_recent_scorelines,
-            np.linspace(0.2, 1, len(away_team_recent_scorelines)),
+            # Sized from the home team's own matches. This read
+            # len(away_team_recent_scorelines), so whenever the two sides had
+            # different match counts calc_form's zip truncated against the
+            # wrong length: an away team with no history left the weight array
+            # empty and pinned the home team's form to the neutral 0.5.
+            np.linspace(0.2, 1, len(home_team_recent_scorelines)),
             self.team_ratings,
         )
         away_team_form = calc_form(
