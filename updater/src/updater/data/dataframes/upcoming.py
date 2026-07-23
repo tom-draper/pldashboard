@@ -12,7 +12,7 @@ from updater.data.dataframes.fixtures import Fixtures
 from updater.data.dataframes.form import Form
 from updater.data.dataframes.home_advantages import HomeAdvantages
 from updater.data.dataframes.team_ratings import TeamRatings
-from updater.data.raw_data import RawData
+from updater.data.raw_data import RawData, full_time_goals
 
 
 class Upcoming(DF):
@@ -144,16 +144,7 @@ class Upcoming(DF):
             if home_team not in teams or away_team not in teams:
                 continue
 
-            home_goals = (
-                match["score"]["fullTime"]["home"]
-                if "home" in match["score"]["fullTime"]
-                else match["score"]["fullTime"]["homeTeam"]
-            )
-            away_goals = (
-                match["score"]["fullTime"]["away"]
-                if "away" in match["score"]["fullTime"]
-                else match["score"]["fullTime"]["awayTeam"]
-            )
+            home_goals, away_goals = full_time_goals(match)
 
             date = match["utcDate"]
 

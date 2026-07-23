@@ -8,7 +8,7 @@ from updater.timing import timed
 
 from updater.data.dataframes.df import DF
 from updater.data.dataframes.team_ratings import TeamRatings
-from updater.data.raw_data import RawData
+from updater.data.raw_data import RawData, full_time_goals
 
 
 class Form(DF):
@@ -313,16 +313,7 @@ class Form(DF):
         d[team][(season, matchday, "date")] = match["utcDate"]
         d[team][(season, matchday, "atHome")] = home_team
 
-        home_goals = (
-            match["score"]["fullTime"]["home"]
-            if "home" in match["score"]["fullTime"]
-            else match["score"]["fullTime"]["homeTeam"]
-        )
-        away_goals = (
-            match["score"]["fullTime"]["away"]
-            if "away" in match["score"]["fullTime"]
-            else match["score"]["fullTime"]["awayTeam"]
-        )
+        home_goals, away_goals = full_time_goals(match)
 
         score = {
             "homeGoals": home_goals,

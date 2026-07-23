@@ -9,10 +9,10 @@ so the ids line up with the rest of the pipeline (and with actual-score backfill
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import Any, Optional
+from datetime import datetime
+from typing import Any
 
-from updater.data.raw_data import RawData
+from updater.data.raw_data import RawData, full_time_goals, parse_utc_date
 from updater.fmt import clean_full_team_name, convert_team_name_or_initials
 from updater.predictions import models as model_registry
 from updater.predictions.distributions import MatchResult, ScorePrediction
@@ -21,20 +21,6 @@ from updater.predictions.distributions import MatchResult, ScorePrediction
 # stored distributions and heatmap.
 DISPLAY_GOALS = 7
 TOP_SCORELINES = 6
-
-
-def _parse_date(utc_date: str) -> datetime:
-    return datetime.fromisoformat(utc_date.replace("Z", "+00:00")).astimezone(
-        timezone.utc
-    )
-
-
-def _full_time_goals(match: dict) -> tuple[Optional[int], Optional[int]]:
-    # football-data renamed the score keys (homeTeam/awayTeam -> home/away).
-    full_time = match["score"]["fullTime"]
-    home = full_time.get("homeTeam", full_time.get("home"))
-    away = full_time.get("awayTeam", full_time.get("away"))
-    return home, away
 
 
 def extract_matches(
@@ -46,12 +32,12 @@ def extract_matches(
         for match in raw_data.fixtures.get(season, []):
             if match.get("status") != "FINISHED":
                 continue
-            home_goals, away_goals = _full_time_goals(match)
+            home_goals, away_goals = full_time_goals(match)
             if home_goals is None or away_goals is None:
                 continue
             matches.append(
                 MatchResult(
-                    date=_parse_date(match["utcDate"]),
+                    date=parse_utc_date(match["utcDate"]),
                     home_team=clean_full_team_name(match["homeTeam"]["name"]),
                     away_team=clean_full_team_name(match["awayTeam"]["name"]),
                     home_goals=int(home_goals),
@@ -76,7 +62,7 @@ def next_matchday_fixtures(
     next_matchday = min(match["matchday"] for match in unplayed)
     fixtures = [
         (
-            _parse_date(match["utcDate"]),
+            parse_utc_date(match["utcDate"]),
             clean_full_team_name(match["homeTeam"]["name"]),
             clean_full_team_name(match["awayTeam"]["name"]),
         )

@@ -10,18 +10,13 @@ import pytest
 
 from updater.predictions.backtest import (
     Metrics,
-    outcome,
     paired_rps_difference,
     ranked_probability_score,
 )
 
+# Outcome classification itself lives in distributions.match_outcome and is
+# covered by test_outcome_models.test_match_outcome_encodes_the_three_results.
 HOME, DRAW, AWAY = 0, 1, 2
-
-
-def test_outcome_classification() -> None:
-    assert outcome(2, 1) == HOME
-    assert outcome(1, 1) == DRAW
-    assert outcome(0, 3) == AWAY
 
 
 def test_rps_is_zero_for_a_confident_correct_forecast() -> None:

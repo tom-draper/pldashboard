@@ -8,7 +8,7 @@ from updater.fmt import clean_full_team_name
 from updater.timing import timed
 
 from updater.data.dataframes.df import DF
-from updater.data.raw_data import RawData
+from updater.data.raw_data import RawData, full_time_goals
 
 
 class HomeAdvantages(DF):
@@ -53,16 +53,7 @@ class HomeAdvantages(DF):
         if match["score"]["winner"] is None:
             return
 
-        home_goals = (
-            match["score"]["fullTime"]["home"]
-            if "home" in match["score"]["fullTime"]
-            else match["score"]["fullTime"]["homeTeam"]
-        )
-        away_goals = (
-            match["score"]["fullTime"]["away"]
-            if "away" in match["score"]["fullTime"]
-            else match["score"]["fullTime"]["awayTeam"]
-        )
+        home_goals, away_goals = full_time_goals(match)
 
         if home_goals > away_goals:
             # Home team wins

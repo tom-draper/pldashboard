@@ -8,7 +8,7 @@ from updater.fmt import clean_full_team_name, convert_team_name_or_initials
 from updater.timing import timed
 
 from .df import DF
-from updater.data.raw_data import RawData
+from updater.data.raw_data import RawData, full_time_goals
 
 
 class Fixtures(DF):
@@ -100,10 +100,7 @@ class Fixtures(DF):
             team = clean_full_team_name(match["awayTeam"]["name"])
             opposition = clean_full_team_name(match["homeTeam"]["name"])
 
-        # Data API v4 renamed 'homeTeam' to 'home'
-        full_time = match["score"]["fullTime"]
-        home_goals = full_time["home"] if "home" in full_time else full_time["homeTeam"]
-        away_goals = full_time["away"] if "away" in full_time else full_time["awayTeam"]
+        home_goals, away_goals = full_time_goals(match)
         if home_goals is not None:
             score = {
                 "homeGoals": home_goals,
