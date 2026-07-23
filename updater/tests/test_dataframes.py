@@ -2,6 +2,7 @@ from datetime import datetime
 from types import NoneType
 
 import pytest
+
 from updater.data import Data
 
 

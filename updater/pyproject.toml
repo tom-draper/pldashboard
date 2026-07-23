@@ -26,7 +26,26 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=8.3.0",
+    "ruff>=0.14.0",
 ]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+# Deliberately narrow: these codify conventions the code already follows, so
+# the config is a guard against drift rather than a new style imposed on it.
+# Notably absent:
+#   E501  68 existing long lines, almost all docstrings and MongoDB URIs.
+#         Reflowing them is churn with no correctness gain.
+#   UP045 the codebase consistently spells optionals Optional[X], not X | None.
+#         That is a valid choice and flipping 71 annotations is not a cleanup.
+#   B905  zip(..., strict=) would be a behaviour change, not a style fix.
+select = ["E", "W", "F", "I", "UP006", "UP035", "B904"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["updater"]
 
 [project.scripts]
 updater = "updater.main:main"

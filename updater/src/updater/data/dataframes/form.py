@@ -3,12 +3,12 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from updater.fmt import clean_full_team_name
-from updater.timing import timed
 
 from updater.data.dataframes.df import DF
 from updater.data.dataframes.team_ratings import TeamRatings
 from updater.data.raw_data import RawData, full_time_goals
+from updater.fmt import clean_full_team_name
+from updater.timing import timed
 
 
 class Form(DF):

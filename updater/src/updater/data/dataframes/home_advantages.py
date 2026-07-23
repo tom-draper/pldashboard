@@ -1,14 +1,14 @@
 import logging
 from collections import defaultdict
-from typing import Optional, Dict, List, Set, Tuple, Any
+from typing import Any, Optional
 
 import pandas as pd
 from pandas import DataFrame
-from updater.fmt import clean_full_team_name
-from updater.timing import timed
 
 from updater.data.dataframes.df import DF
 from updater.data.raw_data import RawData, full_time_goals
+from updater.fmt import clean_full_team_name
+from updater.timing import timed
 
 
 class HomeAdvantages(DF):
@@ -40,7 +40,7 @@ class HomeAdvantages(DF):
             )
 
     def _process_match_result(
-        self, stats: defaultdict, match: Dict[str, Any], season: int
+        self, stats: defaultdict, match: dict[str, Any], season: int
     ) -> None:
         """Process a single match and update team statistics."""
         home_team = clean_full_team_name(match["homeTeam"]["name"])
@@ -69,7 +69,7 @@ class HomeAdvantages(DF):
             stats[away_team][(season, "away", "draws")] += 1
 
     def _process_season_matches(
-        self, stats: defaultdict, matches: List[Dict[str, Any]], season: int
+        self, stats: defaultdict, matches: list[dict[str, Any]], season: int
     ) -> None:
         """Process all matches for a given season."""
         for match in matches:
@@ -146,7 +146,7 @@ class HomeAdvantages(DF):
 
     def _create_season_template(
         self, season: int, num_seasons: int
-    ) -> Dict[Tuple[int, str, str], int]:
+    ) -> dict[tuple[int, str, str], int]:
         """Create a template dictionary for initializing team statistics."""
         template = {}
         for i in range(num_seasons):
@@ -164,7 +164,7 @@ class HomeAdvantages(DF):
         return template
 
     def _clean_dataframe(
-        self, df: DataFrame, current_season_teams: List[str]
+        self, df: DataFrame, current_season_teams: list[str]
     ) -> DataFrame:
         """Clean the dataframe by removing unnecessary columns and formatting."""
         # Remove raw win/loss/draw counts (keep only derived metrics)
@@ -184,9 +184,9 @@ class HomeAdvantages(DF):
         return df
 
     @staticmethod
-    def get_season_teams(season_fixtures: List[Dict[str, Any]]) -> List[str]:
+    def get_season_teams(season_fixtures: list[dict[str, Any]]) -> list[str]:
         """Extract unique team names from season fixture data."""
-        teams: Set[str] = set()
+        teams: set[str] = set()
         for match in season_fixtures:
             home_team = clean_full_team_name(match["homeTeam"]["name"])
             away_team = clean_full_team_name(match["awayTeam"]["name"])

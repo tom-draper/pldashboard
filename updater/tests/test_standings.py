@@ -1,6 +1,8 @@
 import pandas as pd
 import pytest
+
 from updater.data import Data
+
 # from src.data.dataframes.standings import Standings
 
 
@@ -120,7 +122,7 @@ def test_standings_df_lost_range(data: Data):
     for season in seasons:
         lost = data.teams.standings.df[season, 'lost']
         assert pytest.in_range(lost, 0, 38)  # checks if within range 0 to 38 inclusive
-        
+
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_standings_df_gf_non_negative(data: Data):

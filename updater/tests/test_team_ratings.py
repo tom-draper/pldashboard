@@ -1,4 +1,5 @@
 import pytest
+
 from updater.data import Data
 
 

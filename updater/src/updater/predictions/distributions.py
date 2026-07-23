@@ -17,10 +17,11 @@ models in `predictions.models` can both use it without importing each other.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime
 from math import log
-from typing import NamedTuple, Optional, Sequence
+from typing import NamedTuple, Optional
 
 import numpy as np
 

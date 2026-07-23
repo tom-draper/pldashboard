@@ -4,6 +4,7 @@ from typing import Protocol, TypeVar
 
 import pandas as pd
 import pytest
+
 from updater.data import Data
 from updater.env import require_env_int
 from updater.updater import Updater

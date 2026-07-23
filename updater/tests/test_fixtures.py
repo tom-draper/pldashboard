@@ -1,7 +1,9 @@
+from datetime import datetime
+
 import pandas as pd
 import pytest
+
 from updater.data import Data
-from datetime import datetime
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
@@ -135,7 +137,7 @@ def valid_score(score: str):
     away_goals = int(a)
     if away_goals < 0:
         return False
-    
+
     return True
 
 

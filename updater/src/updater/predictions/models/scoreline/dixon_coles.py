@@ -34,11 +34,17 @@ from scipy.optimize import minimize
 from updater.predictions.distributions import (
     MatchResult,
     ScorePrediction,
-    dc_low_score_correction as _dc_low_score_correction,
     goal_grids,
     match_dates,
-    poisson_pmf as _poisson_pmf,
     prediction_from_matrix,
+)
+from updater.predictions.distributions import (
+    dc_low_score_correction as _dc_low_score_correction,
+)
+from updater.predictions.distributions import (
+    poisson_pmf as _poisson_pmf,
+)
+from updater.predictions.distributions import (
     time_weights as _time_weights,
 )
 

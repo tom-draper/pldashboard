@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import Optional
 
 import aiohttp
+
 from updater.data import Data
 from updater.data.build_graph import Stage, resolve_order
 from updater.data.raw_data import RawData

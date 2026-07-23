@@ -242,8 +242,11 @@ def test_bivariate_shared_component_induces_positive_correlation() -> None:
 
 
 def test_negative_binomial_tends_to_poisson_for_large_size() -> None:
-    from updater.predictions.models.scoreline.poisson_family import _negative_binomial_log_pmf
     from scipy.stats import poisson
+
+    from updater.predictions.models.scoreline.poisson_family import (
+        _negative_binomial_log_pmf,
+    )
 
     goals = np.arange(8, dtype=float)
     mean = np.full_like(goals, 1.5)
@@ -252,8 +255,11 @@ def test_negative_binomial_tends_to_poisson_for_large_size() -> None:
 
 
 def test_negative_binomial_small_size_fattens_the_tail() -> None:
-    from updater.predictions.models.scoreline.poisson_family import _negative_binomial_log_pmf
     from scipy.stats import poisson
+
+    from updater.predictions.models.scoreline.poisson_family import (
+        _negative_binomial_log_pmf,
+    )
 
     goals = np.arange(12, dtype=float)
     mean = np.full_like(goals, 1.5)
@@ -371,8 +377,9 @@ def test_goal_average_strengths_are_ratios_to_the_league(league) -> None:
 
 def test_skellam_pmf_matches_a_poisson_difference() -> None:
     """Check the Skellam density against the difference it is meant to describe."""
-    from updater.predictions.models.scoreline.skellam import skellam_log_pmf
     from scipy.stats import poisson
+
+    from updater.predictions.models.scoreline.skellam import skellam_log_pmf
 
     lam_h, lam_a = 1.7, 1.2
     goals = np.arange(30)
@@ -599,7 +606,10 @@ def test_dynamic_ratings_track_a_change_in_strength() -> None:
 
 def test_dynamic_uncertainty_shrinks_with_evidence() -> None:
     """A team the filter has watched for a while should be pinned down."""
-    from updater.predictions.models.scoreline.dynamic import INITIAL_VARIANCE, fit_dynamic
+    from updater.predictions.models.scoreline.dynamic import (
+        INITIAL_VARIANCE,
+        fit_dynamic,
+    )
 
     model = fit_dynamic([_match(d * 4, "A", "B", 2, 1) for d in range(30)])
     assert model is not None
