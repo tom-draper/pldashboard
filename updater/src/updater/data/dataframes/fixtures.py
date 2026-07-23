@@ -5,8 +5,8 @@ from typing import Optional
 import pandas as pd
 from pandas import DataFrame
 
-from updater.data.raw_data import RawData, full_time_goals
-from updater.fmt import clean_full_team_name, convert_team_name_or_initials
+from updater.data.raw_data import RawData, full_time_goals, match_team_and_opposition
+from updater.fmt import convert_team_name_or_initials
 from updater.timing import timed
 
 from .df import DF
@@ -93,12 +93,7 @@ class Fixtures(DF):
         # ~25x faster and this runs once per team per match.
         date = datetime.fromisoformat(match["utcDate"][:-1])
 
-        if home_team:
-            team = clean_full_team_name(match["homeTeam"]["name"])
-            opposition = clean_full_team_name(match["awayTeam"]["name"])
-        else:
-            team = clean_full_team_name(match["awayTeam"]["name"])
-            opposition = clean_full_team_name(match["homeTeam"]["name"])
+        team, opposition = match_team_and_opposition(match, home_team)
 
         home_goals, away_goals = full_time_goals(match)
         if home_goals is not None:

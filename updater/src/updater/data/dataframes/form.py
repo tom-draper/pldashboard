@@ -7,8 +7,12 @@ from pandas import DataFrame
 
 from updater.data.dataframes.df import DF
 from updater.data.dataframes.team_ratings import TeamRatings
-from updater.data.raw_data import RawData, full_time_goals
-from updater.fmt import clean_full_team_name
+from updater.data.raw_data import (
+    RawData,
+    full_time_goals,
+    match_team_and_opposition,
+    match_teams,
+)
 from updater.timing import timed
 
 
@@ -298,12 +302,7 @@ class Form(DF):
         season: int,
         home_team: bool,
     ):
-        if home_team:
-            team = clean_full_team_name(match["homeTeam"]["name"])
-            opposition = clean_full_team_name(match["awayTeam"]["name"])
-        else:
-            team = clean_full_team_name(match["awayTeam"]["name"])
-            opposition = clean_full_team_name(match["homeTeam"]["name"])
+        team, opposition = match_team_and_opposition(match, home_team)
 
         if team not in d:
             d[team] = {}
@@ -436,8 +435,7 @@ class Form(DF):
             for match in raw_data.fixtures[season - i]:
                 if i == 0:
                     # Build list of teams in current season
-                    teams.add(clean_full_team_name(match["homeTeam"]["name"]))
-                    teams.add(clean_full_team_name(match["awayTeam"]["name"]))
+                    teams.update(match_teams(match))
                 if match["status"] == "FINISHED":
                     self._insert_team_matchday(d, match, team_ratings, season - i, True)
                     self._insert_team_matchday(

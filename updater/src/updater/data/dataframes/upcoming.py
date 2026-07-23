@@ -9,8 +9,8 @@ from updater.data.dataframes.fixtures import Fixtures
 from updater.data.dataframes.form import Form
 from updater.data.dataframes.home_advantages import HomeAdvantages
 from updater.data.dataframes.team_ratings import TeamRatings
-from updater.data.raw_data import RawData, full_time_goals
-from updater.fmt import clean_full_team_name, convert_team_name_or_initials
+from updater.data.raw_data import RawData, full_time_goals, match_teams
+from updater.fmt import convert_team_name_or_initials
 from updater.predictions.form_predictor import FormPredictor
 from updater.predictions.scoreline import Scoreline
 
@@ -138,8 +138,7 @@ class Upcoming(DF):
             if match["status"] != "FINISHED":
                 continue
 
-            home_team = clean_full_team_name(match["homeTeam"]["name"])
-            away_team = clean_full_team_name(match["awayTeam"]["name"])
+            home_team, away_team = match_teams(match)
 
             if home_team not in teams or away_team not in teams:
                 continue
