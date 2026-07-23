@@ -58,11 +58,9 @@ class Database:
     @staticmethod
     def _get_actual_score(
         prediction_id: str, actual_scores: dict[str, dict[str, int]]
-    ):
-        actual_score: Optional[str] = None
-        if prediction_id in actual_scores:
-            actual_score = actual_scores[prediction_id]
-        return actual_score
+    ) -> Optional[dict[str, int]]:
+        """The recorded score for a fixture id, or None if it has not finished."""
+        return actual_scores.get(prediction_id)
 
     def _build_prediction_objs(
         self,

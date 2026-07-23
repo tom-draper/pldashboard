@@ -53,12 +53,11 @@ class Fixtures(DF):
         # this season.
         actual_scores: dict[str, dict[str, int]] = {}
 
-        for matchday_no in range(1, 39):
+        # Driven by the columns actually present rather than a fixed 1..38: a
+        # postponed fixture with no matchday, or any season that is not 38
+        # matchdays, otherwise raises KeyError here.
+        for matchday_no in self.df.columns.unique(level=0):
             matchday = self.df[matchday_no]
-
-            # If whole column is SCHEDULED, skip
-            if all(matchday["status"] == "SCHEDULED") or all(matchday["status"] == "TIMED"):
-                continue
 
             for team, row in matchday.iterrows():
                 if row["status"] != "FINISHED":

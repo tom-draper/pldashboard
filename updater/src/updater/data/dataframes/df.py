@@ -15,10 +15,13 @@ class DF:
         return str(self.df)
 
     def _check_dependencies(self, *args):
+        # __init__ stores an empty frame as None, so the None case is the
+        # normal way a dependency turns up unbuilt and must raise the same
+        # ValueError rather than an AttributeError from `.empty`.
         for arg in args:
-            if arg.df.empty:
+            if arg.df is None or arg.df.empty:
                 raise ValueError(
-                    f"Cannot {self.name} DataFrame: {arg.name} DataFrame empty."
+                    f"Cannot build {self.name} DataFrame: {arg.name} DataFrame empty."
                 )
 
     def log_building(self, season: Optional[int] = None):
