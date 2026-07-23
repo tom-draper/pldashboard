@@ -56,12 +56,7 @@
 					<div class="next-game-item">
 						Score prediction
 						<br />
-						<a
-							class="text-[var(--purple)] no-underline hover:text-[rgb(120_120_120)]"
-							href="/predictions"
-						>
-							<b>{predictedScoreline(data, team)}</b>
-						</a>
+						<b class="text-[var(--purple)]">{predictedScoreline(data, team)}</b>
 						<br />
 					</div>
 				</div>
