@@ -6,8 +6,7 @@ import pandas as pd
 from pandas import DataFrame
 
 from updater.data.dataframes.df import DF
-from updater.data.raw_data import RawData, full_time_goals
-from updater.fmt import clean_full_team_name
+from updater.data.raw_data import RawData, full_time_goals, match_teams
 from updater.timing import timed
 
 
@@ -43,8 +42,7 @@ class HomeAdvantages(DF):
         self, stats: defaultdict, match: dict[str, Any], season: int
     ) -> None:
         """Process a single match and update team statistics."""
-        home_team = clean_full_team_name(match["homeTeam"]["name"])
-        away_team = clean_full_team_name(match["awayTeam"]["name"])
+        home_team, away_team = match_teams(match)
 
         self._initialize_team_season_stats(stats, home_team, season)
         self._initialize_team_season_stats(stats, away_team, season)
@@ -188,8 +186,7 @@ class HomeAdvantages(DF):
         """Extract unique team names from season fixture data."""
         teams: set[str] = set()
         for match in season_fixtures:
-            home_team = clean_full_team_name(match["homeTeam"]["name"])
-            away_team = clean_full_team_name(match["awayTeam"]["name"])
+            home_team, away_team = match_teams(match)
             teams.add(home_team)
             teams.add(away_team)
         return sorted(list(teams))  # Sort for consistency

@@ -49,9 +49,8 @@ from typing import Optional
 
 import numpy as np
 
-from updater.data.raw_data import full_time_goals, parse_utc_date
+from updater.data.raw_data import full_time_goals, match_teams, parse_utc_date
 from updater.env import BACKUPS_DIR
-from updater.fmt import clean_full_team_name
 from updater.predictions import models as model_registry
 from updater.predictions.distributions import MatchResult, match_outcome
 from updater.predictions.models import (
@@ -86,13 +85,14 @@ def load_matches(backups_dir: Path = BACKUPS_DIR) -> list[SeasonMatch]:
             home_goals, away_goals = full_time_goals(match)
             if home_goals is None or away_goals is None:
                 continue
+            home_team, away_team = match_teams(match)
             matches.append(
                 SeasonMatch(
                     season=season,
                     result=MatchResult(
                         date=parse_utc_date(match["utcDate"]),
-                        home_team=clean_full_team_name(match["homeTeam"]["name"]),
-                        away_team=clean_full_team_name(match["awayTeam"]["name"]),
+                        home_team=home_team,
+                        away_team=away_team,
                         home_goals=int(home_goals),
                         away_goals=int(away_goals),
                     ),

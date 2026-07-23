@@ -2,6 +2,8 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Optional
 
+from updater.fmt import clean_full_team_name
+
 # football-data renamed the full-time score keys partway through the period
 # these backups cover: score.fullTime.homeTeam/awayTeam became home/away. Both
 # spellings are still on disk, so every reader has to accept either. Keeping
@@ -27,6 +29,27 @@ def parse_utc_date(utc_date: str) -> datetime:
     return datetime.fromisoformat(utc_date.replace("Z", "+00:00")).astimezone(
         timezone.utc
     )
+
+
+def match_teams(match: dict[str, Any]) -> tuple[str, str]:
+    """The (home, away) team names, cleaned.
+
+    Every consumer wants the cleaned name rather than the API's, and cleaning
+    exactly one side of a fixture is always a bug, so the pair is returned
+    together.
+    """
+    return (
+        clean_full_team_name(match["homeTeam"]["name"]),
+        clean_full_team_name(match["awayTeam"]["name"]),
+    )
+
+
+def match_team_and_opposition(
+    match: dict[str, Any], at_home: bool
+) -> tuple[str, str]:
+    """One side's (team, opposition), cleaned, from that side's perspective."""
+    home_team, away_team = match_teams(match)
+    return (home_team, away_team) if at_home else (away_team, home_team)
 
 
 @dataclass

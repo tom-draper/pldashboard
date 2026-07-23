@@ -17,8 +17,13 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from updater.data.raw_data import RawData, full_time_goals, parse_utc_date
-from updater.fmt import clean_full_team_name, convert_team_name_or_initials
+from updater.data.raw_data import (
+    RawData,
+    full_time_goals,
+    match_teams,
+    parse_utc_date,
+)
+from updater.fmt import convert_team_name_or_initials
 from updater.predictions import models as model_registry
 from updater.predictions.distributions import MatchResult, ScorePrediction
 
@@ -40,11 +45,12 @@ def extract_matches(
             home_goals, away_goals = full_time_goals(match)
             if home_goals is None or away_goals is None:
                 continue
+            home_team, away_team = match_teams(match)
             matches.append(
                 MatchResult(
                     date=parse_utc_date(match["utcDate"]),
-                    home_team=clean_full_team_name(match["homeTeam"]["name"]),
-                    away_team=clean_full_team_name(match["awayTeam"]["name"]),
+                    home_team=home_team,
+                    away_team=away_team,
                     home_goals=int(home_goals),
                     away_goals=int(away_goals),
                 )
@@ -68,8 +74,7 @@ def next_matchday_fixtures(
     fixtures = [
         (
             parse_utc_date(match["utcDate"]),
-            clean_full_team_name(match["homeTeam"]["name"]),
-            clean_full_team_name(match["awayTeam"]["name"]),
+            *match_teams(match),
         )
         for match in unplayed
         if match["matchday"] == next_matchday
