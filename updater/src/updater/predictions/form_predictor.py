@@ -159,12 +159,16 @@ class FormPredictor:
 
     @staticmethod
     def _remove_scoreline_freq_teams(freq: dict[Scoreline, int]):
+        """Pool counts by goals alone, ignoring who played.
+
+        Builds new keys rather than clearing show_team on the existing ones:
+        the callers pass in dicts that share Scoreline instances, so mutating
+        a key here would reach into dicts this function was never given.
+        """
         new_freq: dict[Scoreline, int] = {}
         for scoreline, count in freq.items():
-            scoreline.show_team = False
-            if scoreline not in new_freq:
-                new_freq[scoreline] = 0
-            new_freq[scoreline] += count
+            key = scoreline.without_teams()
+            new_freq[key] = new_freq.get(key, 0) + count
 
         return new_freq
 
@@ -184,11 +188,9 @@ class FormPredictor:
                 intended_away_team is not None
                 and scoreline.home_team == intended_away_team
             ):
-                scoreline.reverse()
+                scoreline = scoreline.reversed()
 
-            if scoreline not in new_freq:
-                new_freq[scoreline] = 0
-            new_freq[scoreline] += count
+            new_freq[scoreline] = new_freq.get(scoreline, 0) + count
 
         return new_freq
 
@@ -197,9 +199,7 @@ class FormPredictor:
         merged_freq: dict[Scoreline, int] = {}
         for freq in (freq1, freq2):
             for scoreline, count in freq.items():
-                if scoreline not in merged_freq:
-                    merged_freq[scoreline] = 0
-                merged_freq[scoreline] += count
+                merged_freq[scoreline] = merged_freq.get(scoreline, 0) + count
 
         return merged_freq
 
@@ -210,9 +210,7 @@ class FormPredictor:
         scale: float = 1.0,
     ):
         for scoreline, count in insert_freq.items():
-            if scoreline not in freq:
-                freq[scoreline] = 0
-            freq[scoreline] += count * scale
+            freq[scoreline] = freq.get(scoreline, 0) + count * scale
 
     @staticmethod
     def _subtract_scaled_from_freq(
