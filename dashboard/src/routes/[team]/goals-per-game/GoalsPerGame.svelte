@@ -59,7 +59,7 @@
 		'#ff0000'
 	]);
 
-	function reversed(arr: any[]) {
+	function reversed<T>(arr: T[]) {
 		return arr.slice().reverse();
 	}
 
