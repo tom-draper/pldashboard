@@ -60,19 +60,20 @@ class Fixtures(DF):
         for matchday_no in self.df.columns.unique(level=0):
             matchday = self.df[matchday_no]
 
-            for team, row in matchday.iterrows():
-                if row["status"] != "FINISHED":
+            for row in matchday.itertuples():
+                team = row.Index
+                if row.status != "FINISHED":
                     continue
-                if row["atHome"]:
+                if row.atHome:
                     home_name = team
-                    away_name = row["team"]
+                    away_name = row.team
                 else:
-                    home_name = row["team"]
+                    home_name = row.team
                     away_name = team
                 home_initials = convert_team_name_or_initials(home_name)
                 away_initials = convert_team_name_or_initials(away_name)
 
-                actual_scores[f"{home_initials} vs {away_initials}"] = row["score"]
+                actual_scores[f"{home_initials} vs {away_initials}"] = row.score
 
         return actual_scores
 

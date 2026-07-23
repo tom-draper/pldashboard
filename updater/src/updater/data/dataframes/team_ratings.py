@@ -57,12 +57,6 @@ class TeamRatings(DF):
                 w[n - start_n] * team_ratings[f"prevSeason{n}"]
             )
 
-    @staticmethod
-    def init_rating_columns(team_ratings: DataFrame, num_seasons: int):
-        # Create column for each included season
-        for n in range(0, num_seasons):
-            team_ratings[f"prevSeason{n}"] = np.nan
-
     def insert_rating_values(
         self,
         team_ratings: DataFrame,
@@ -70,32 +64,30 @@ class TeamRatings(DF):
         current_season: int,
         num_seasons: int,
     ):
-        for team, row in standings.df.iterrows():
-            for n in range(num_seasons):
-                rating = self._calc_rating(
-                    row[current_season - n]["points"], row[current_season - n]["gD"]
-                )
-                team_ratings.at[team, f"prevSeason{n}"] = rating
+        # Rating is points + goal difference. Computed a whole season's column
+        # at a time from the standings frame, aligned on the shared team index,
+        # rather than cell by cell.
+        for n in range(num_seasons):
+            season = current_season - n
+            team_ratings[f"prevSeason{n}"] = self._calc_rating(
+                standings.df[(season, "points")], standings.df[(season, "gD")]
+            )
 
     @staticmethod
     def replace_nan(team_ratings: DataFrame):
-        # Replace any NaN with the lowest rating in the same column
-        for col in team_ratings.columns:
-            team_ratings[col] = team_ratings[col].replace(
-                np.nan, team_ratings[col].min()
-            )
+        # Fill any NaN with the lowest rating in the same column. The per-column
+        # minimum is applied in one pass; a column that is entirely NaN has no
+        # minimum and is left untouched, as before.
+        team_ratings[team_ratings.columns] = team_ratings.fillna(team_ratings.min())
 
     @staticmethod
     def normalise_ratings(team_ratings: DataFrame, num_seasons: int):
-        # Create normalised versions of the three ratings columns
-        for n in range(0, num_seasons):
-            col_heading = f"prevSeason{n}"
-            team_ratings[col_heading] = (
-                team_ratings[col_heading] - team_ratings[col_heading].min()
-            ) / (
-                team_ratings[col_heading].max()
-                - team_ratings[col_heading].min()
-            )
+        # Min-max normalise every season's rating column at once; the per-column
+        # min and max broadcast across the block.
+        cols = [f"prevSeason{n}" for n in range(num_seasons)]
+        block = team_ratings[cols]
+        col_min = block.min()
+        team_ratings[cols] = (block - col_min) / (block.max() - col_min)
 
     @staticmethod
     def include_current_season(
@@ -160,7 +152,6 @@ class TeamRatings(DF):
         # Add current season team names to the object team DataFrame
         team_ratings = pd.DataFrame(index=standings.df.index)
 
-        self.init_rating_columns(team_ratings, num_seasons)
         self.insert_rating_values(team_ratings, standings, season, num_seasons)
         self.replace_nan(team_ratings)
         self.normalise_ratings(team_ratings, num_seasons)

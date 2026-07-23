@@ -121,7 +121,9 @@ class Standings(DF):
         failing the run: the backups do not always reach as far back as
         num_seasons asks for.
         """
-        combined_standings = pd.DataFrame()
+        # Collect the season tables and concatenate once at the end, rather
+        # than growing an accumulator frame inside the loop.
+        season_frames = []
 
         # Process seasons from current to oldest
         for i in range(num_seasons):
@@ -129,12 +131,15 @@ class Standings(DF):
             try:
                 season_df = self._build_season_standings(raw_data, current_teams, season_year)
                 self._log_season_coverage(season_df, season_year)
-                combined_standings = pd.concat([combined_standings, season_df], axis=1)
+                season_frames.append(season_df)
             except ValueError as e:
                 logging.warning(f"Skipping season {season_year}: {e}")
                 continue
 
-        return combined_standings
+        if not season_frames:
+            return pd.DataFrame()
+
+        return pd.concat(season_frames, axis=1)
 
     @timed
     def build(

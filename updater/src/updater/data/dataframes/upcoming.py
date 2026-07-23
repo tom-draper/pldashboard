@@ -49,21 +49,22 @@ class Upcoming(DF):
         if "prediction" in self.df and self.df["prediction"].isnull().all():
             return predictions
 
-        for team, row in self.df.iterrows():
-            if row["atHome"]:
+        for row in self.df.itertuples():
+            team = row.Index
+            if row.atHome:
                 home_initials = convert_team_name_or_initials(team)
-                away_initials = convert_team_name_or_initials(row["team"])
+                away_initials = convert_team_name_or_initials(row.team)
             else:
-                home_initials = convert_team_name_or_initials(row["team"])
+                home_initials = convert_team_name_or_initials(row.team)
                 away_initials = convert_team_name_or_initials(team)
 
             predictions[team] = {
-                "date": row["date"].to_pydatetime(),
+                "date": row.date.to_pydatetime(),
                 "homeInitials": home_initials,
                 "awayInitials": away_initials,
                 "prediction": {
-                    "homeGoals": row["prediction"].home_goals,
-                    "awayGoals": row["prediction"].away_goals,
+                    "homeGoals": row.prediction.home_goals,
+                    "awayGoals": row.prediction.away_goals,
                 },
             }
 
@@ -194,9 +195,10 @@ class Upcoming(DF):
     def _calc_next_game_predictions(self, predictor: FormPredictor, upcoming: DataFrame):
         next_game_predictions: list[dict[str, int]] = []
         next_game_predictions_cache: dict[tuple[str, str], Scoreline] = {}
-        for team, row in upcoming.iterrows():
-            opponent = row["team"]
-            at_home = row["atHome"]
+        for row in upcoming.itertuples():
+            team = row.Index
+            opponent = row.team
+            at_home = row.atHome
 
             if opponent is None or at_home is None:
                 next_game_predictions.append(None)
