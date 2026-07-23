@@ -5,10 +5,10 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pldashboard-updater"
 version = "0.1.0"
-# Upper bound matches the Dockerfile's python3.13 base image. Without it uv
+# Upper bound matches the Dockerfile's python3.14 base image. Without it uv
 # resolves against the newest interpreter on the host, where wheels for the
 # pinned dependencies may not exist yet.
-requires-python = ">=3.13,<3.14"
+requires-python = ">=3.14,<3.15"
 # Only direct imports are listed; transitive packages are pinned by uv.lock.
 # Ranges are capped at the next major so `uv lock --upgrade` picks up security
 # and bug fixes without silently crossing a breaking release. Exact versions
