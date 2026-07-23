@@ -136,8 +136,10 @@
 	}
 
 	function xRange(x: Date[]): [Date, Date] {
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- a local value used to compute the plot range, never reactive state
 		const minX = new Date(x[0]);
 		minX.setDate(minX.getDate() - 7);
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- a local value used to compute the plot range, never reactive state
 		const maxX = new Date(x[x.length - 1]);
 		maxX.setDate(maxX.getDate() + 7);
 		return [minX, maxX];
@@ -149,6 +151,7 @@
 		const [minX, maxX] = xRange(x);
 
 		// Show  the current date line only if currently before 30 days after of the season
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- a local value used to compute the plot range, never reactive state
 		const currentDateLineLimit = new Date(maxX);
 		currentDateLineLimit.setDate(currentDateLineLimit.getDate() + 30);
 		const currentDate =

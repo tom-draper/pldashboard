@@ -238,7 +238,7 @@
 		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
-	function emptyArray(arr: any[]) {
+	function emptyArray<T>(arr: T[]) {
 		for (let i = 0; i < arr.length; i++) {
 			arr.pop();
 		}

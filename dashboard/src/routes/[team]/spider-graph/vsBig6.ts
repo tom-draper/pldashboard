@@ -1,15 +1,18 @@
 import type { Form, SpiderAttribute, TeamAttributes, TeamsData } from '../dashboard.types';
 import { getTeams } from '$lib/team';
 import { attributeAvgScaled, removeItem, seasonComplete } from './util';
-import type { Team } from '$lib/types';
+import { Team } from '$lib/types';
 
-const big6 = [
-	'Manchester United',
-	'Liverpool',
-	'Manchester City',
-	'Arsenal',
-	'Chelsea',
-	'Tottenham Hotspur'
+// Enum members rather than bare strings: Team is an enum, so the strings were
+// inferred as string[] and only type-checked here once removeItem stopped
+// returning any.
+const big6: Team[] = [
+	Team.ManchesterUnited,
+	Team.Liverpool,
+	Team.ManchesterCity,
+	Team.Arsenal,
+	Team.Chelsea,
+	Team.TottenhamHotspur
 ];
 
 function formWinsVsBig6(form: Form, team: Team, season: number, big6: Team[]) {

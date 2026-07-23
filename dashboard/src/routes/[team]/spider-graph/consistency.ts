@@ -29,7 +29,7 @@ function formConsistency(form: Form, team: Team, season: number) {
 	return backToBack;
 }
 
-function matchResult(match: any) {
+function matchResult(match: FormEntry) {
 	let result: MatchResult;
 	if (matchWon(match)) {
 		result = 'win';

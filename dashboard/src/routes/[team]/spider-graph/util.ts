@@ -35,7 +35,7 @@ export function seasonComplete(data: TeamsData, team: Team, season: number) {
 	return data.standings[team][season].played === 38;
 }
 
-export function removeItem(arr: any[], value: any) {
+export function removeItem<T>(arr: T[], value: T) {
 	const index = arr.indexOf(value);
 	if (index > -1) {
 		arr.splice(index, 1);

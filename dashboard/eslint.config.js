@@ -42,7 +42,23 @@ export default ts.config(
 			// of them is never reassigned, and taking that advice does not compile:
 			// spider-graph/attack.ts reassigns `attack` on the line after
 			// destructuring it alongside `range`, which it does not.
-			'prefer-const': ['error', { destructuring: 'all' }]
+			'prefer-const': ['error', { destructuring: 'all' }],
+
+			// This rule exists so that links keep working when an app is served
+			// from a sub-path. svelte.config.js sets no kit.paths.base, so the
+			// dashboard is served from the root and resolve() would wrap every
+			// href and goto in ceremony that resolves to the argument it was
+			// given. Turn this back on if a base path is ever configured.
+			'svelte/no-navigation-without-resolve': 'off'
+		}
+	},
+	{
+		// DataTables is loaded from a CDN at runtime and no types package is
+		// installed for it, so its option object, its render callbacks and the
+		// table handle have nothing to be typed against.
+		files: ['**/fantasy/Table.svelte'],
+		rules: {
+			'@typescript-eslint/no-explicit-any': 'off'
 		}
 	},
 	{
