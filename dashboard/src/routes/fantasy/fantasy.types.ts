@@ -1,4 +1,3 @@
-import type { TeamsData } from '../[team]/dashboard.types';
 
 export type FantasyDashboardData = {
 	slug: string;
