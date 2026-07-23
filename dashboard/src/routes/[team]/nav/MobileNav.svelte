@@ -2,6 +2,16 @@
 	import { toAlias, getTeamID } from '$lib/team';
 	import type { Team } from '$lib/types';
 
+	let {
+		teams,
+		switchTeam,
+		toggleMobileNav
+	}: {
+		teams: Team[];
+		switchTeam: (newTeam: Team) => void;
+		toggleMobileNav: () => void;
+	} = $props();
+
 	function switchTeamToTop(team: Team) {
 		switchTeam(team);
 		window.scrollTo(0, 0);
@@ -12,8 +22,6 @@
 		const teamID = getTeamID(team);
 		return `color: var(--${teamID}-secondary);background-color: var(--${teamID});`;
 	}
-
-	export let teams: Team[], switchTeam: (newTeam: Team) => void, toggleMobileNav: () => void;
 </script>
 
 <nav
@@ -24,7 +32,7 @@
 		{#each teams as team (team)}
 			{#if team != null}
 				<button
-					on:click={() => switchTeamToTop(team)}
+					onclick={() => switchTeamToTop(team)}
 					style={teamStyling(team)}
 					class="flex-1 cursor-pointer border-none bg-inherit p-[0.4em] text-[1em] text-inherit"
 				>

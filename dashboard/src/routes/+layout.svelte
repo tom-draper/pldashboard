@@ -2,21 +2,24 @@
 	import './styles.css';
 	import { page } from '$app/stores';
 	import { setThemeColor } from '$lib/theme';
+	import type { Snippet } from 'svelte';
 
-	$: {
-		if (typeof document !== 'undefined') {
-			const path = $page.url.pathname;
-			if (path === '/home') {
-				setThemeColor('#000');
-			} else if (path === '/fantasy' || path === '/predictions' || path === '/overview') {
-				setThemeColor('#fff');
-			}
+	let { children }: { children?: Snippet } = $props();
+
+	// $effect only runs in the browser, so the theme colour is set whenever the
+	// route changes on the client.
+	$effect(() => {
+		const path = $page.url.pathname;
+		if (path === '/home') {
+			setThemeColor('#000');
+		} else if (path === '/fantasy' || path === '/predictions' || path === '/overview') {
+			setThemeColor('#fff');
 		}
-	}
+	});
 </script>
 
 <div class="app">
 	<main>
-		<slot />
+		{@render children?.()}
 	</main>
 </div>

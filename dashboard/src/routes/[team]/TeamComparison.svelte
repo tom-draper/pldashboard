@@ -3,7 +3,7 @@
 	import Row from './Row.svelte';
 	import type { DashboardData } from './dashboard.types';
 
-	export let data: DashboardData;
+	let { data }: { data: DashboardData } = $props();
 </script>
 
 <Row>
