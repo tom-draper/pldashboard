@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, untrack } from 'svelte';
 	import { toAlias, toName, getTeamID, teamColor } from '$lib/team';
 	import type { SpiderAttribute, TeamsData } from '../dashboard.types';
 	import getAttack from './attack';
@@ -259,9 +259,13 @@
 		resetTeamComparisonBtns();
 	}
 
-	$: team && refreshPlot();
+	let { data, team, teams }: { data: TeamsData; team: Team; teams: Team[] } = $props();
 
-	export let data: TeamsData, team: Team, teams: Team[];
+	// untrack keeps the effect's dependency set to just `team`, as the pre-runes
+	// `$:` statement was.
+	$effect(() => {
+		if (team) untrack(refreshPlot);
+	});
 </script>
 
 <div class="spider-chart">
@@ -280,7 +284,7 @@
 					class:top-spider-opp-team-btn={i === 0 || (teams[0] === team && i === 1)}
 					class:bottom-spider-opp-team-btn={i === teams.length - 1 ||
 						(teams[teams.length - 1] === team && i === teams.length - 2)}
-					on:click={(e) => {
+					onclick={(e) => {
 						// @ts-expect-error e.target is EventTarget; the handler is only bound to the buttons
 						spiderBtnClick(e.target);
 					}}>{toAlias(_team)}</button

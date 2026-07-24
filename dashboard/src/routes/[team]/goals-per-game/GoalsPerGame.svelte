@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import GoalsScoredFreq from './GoalsScoredFreqGraph.svelte';
 	import GoalsConcededFreq from './GoalsConcededFreqGraph.svelte';
 	import type { TeamsData } from '../dashboard.types';
@@ -257,11 +257,15 @@
 		maxY = maxValue(goalFreq, teamScoredFreq, teamConcededFreq);
 	}
 
+	// Only read inside the getter functions passed to the child graphs, never
+	// directly in this component's template, so they don't need to be reactive:
+	// the parent effect (refreshTeamData) runs before the children's effects on
+	// a team switch, so the children read the refreshed values.
 	let goalFreq: Counter;
 	let teamScoredFreq: Counter;
 	let teamConcededFreq: Counter;
 	let maxY: number;
-	let setup = false;
+	let setup = $state(false);
 	onMount(() => {
 		goalFreq = avgGoalFrequencies(data);
 		teamScoredFreq = teamScoredFrequencies(data, team);
@@ -272,9 +276,13 @@
 		setup = true;
 	});
 
-	$: team && refreshTeamData();
+	let { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
 
-	export let data: TeamsData, team: Team, mobileView: boolean;
+	// untrack keeps the effect's dependency set to just `team`, as the pre-runes
+	// `$:` statement was.
+	$effect(() => {
+		if (team) untrack(refreshTeamData);
+	});
 </script>
 
 <div class="mx-[8%] flex max-[1000px]:mx-0">

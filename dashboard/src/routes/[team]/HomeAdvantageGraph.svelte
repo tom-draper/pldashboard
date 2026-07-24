@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PlotData, PlotLayout, PlotShape, PlotTrace } from '$lib/types';
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, untrack } from 'svelte';
 	import { toAlias, toInitials } from '$lib/team';
 	import type { Team } from '$lib/types';
 	import type { TeamsData } from './dashboard.types';
@@ -321,23 +321,31 @@
 			Plotly.purge(plotDiv);
 		}
 	});
-	let setup = false;
+	let setup = $state(false);
 
 	onMount(() => {
 		genPlot();
 		setup = true;
 	});
 
-	$: team && refreshPlot();
-	$: !mobileView && setDefaultLayout();
-	$: setup && mobileView && setMobileLayout();
+	let { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
 
-	$: split = homeAwaySplit(data, team, data._id);
-	$: figureColor = computeFigureColor(data, split.delta);
-	$: homeRateColor = rankColor(data, split.homeRatio, (s) => s.homeRatio);
-	$: awayRateColor = rankColor(data, split.awayRatio, (s) => s.awayRatio);
+	const split = $derived(homeAwaySplit(data, team, data._id));
+	const figureColor = $derived(computeFigureColor(data, split.delta));
+	const homeRateColor = $derived(rankColor(data, split.homeRatio, (s) => s.homeRatio));
+	const awayRateColor = $derived(rankColor(data, split.awayRatio, (s) => s.awayRatio));
 
-	export let data: TeamsData, team: Team, mobileView: boolean;
+	// untrack keeps each effect's dependency set to just the guard variable, as
+	// the pre-runes `$:` statements were.
+	$effect(() => {
+		if (team) untrack(refreshPlot);
+	});
+	$effect(() => {
+		if (!mobileView) untrack(setDefaultLayout);
+	});
+	$effect(() => {
+		if (setup && mobileView) untrack(setMobileLayout);
+	});
 </script>
 
 <div class="home-advantage">

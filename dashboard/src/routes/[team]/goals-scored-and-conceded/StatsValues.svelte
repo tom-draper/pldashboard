@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	const statClass =
 		'flex-1 max-[800px]:mx-0 max-[800px]:mt-[0.5em] max-[800px]:mb-[0.9em] max-[550px]:mt-[0.25em] max-[550px]:mb-[0.45em]';
 	const valueClass =
@@ -9,7 +9,7 @@
 </script>
 
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { ordinal } from '$lib/format';
 	import { isCleanSheet, notScored, goalsScored, goalsConceded } from '$lib/goals';
 	import type { TeamsData } from '../dashboard.types';
@@ -135,7 +135,7 @@
 	}
 
 	function refreshStatsValues() {
-		if (!setup) {
+		if (!setup || stats === undefined) {
 			return;
 		}
 
@@ -158,23 +158,27 @@
 		cleanSheetRatio: string;
 	};
 
-	let stats: Stats;
-	let rank: StatsRank = {
+	let stats = $state<Stats>();
+	let rank = $state<StatsRank>({
 		xG: '',
 		xC: '',
 		cleanSheetRatio: ''
-	};
-	let setup = false;
+	});
+	let setup = $state(false);
 	onMount(() => {
-		stats = buildStats(data);
-		stats;
-		setStatsValues(stats, team);
+		const built = buildStats(data);
+		stats = built;
+		setStatsValues(built, team);
 		setup = true;
 	});
 
-	$: team && refreshStatsValues();
+	let { data, team }: { data: TeamsData; team: Team } = $props();
 
-	export let data: TeamsData, team: Team;
+	// untrack keeps the effect's dependency set to just `team`, as the pre-runes
+	// `$:` statement was.
+	$effect(() => {
+		if (team) untrack(refreshStatsValues);
+	});
 </script>
 
 {#if stats != undefined}

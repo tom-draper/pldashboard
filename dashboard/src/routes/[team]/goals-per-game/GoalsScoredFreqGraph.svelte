@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PlotData, PlotTrace, PlotLayout } from '$lib/types';
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, untrack } from 'svelte';
 
 	function defaultLayout(): PlotLayout {
 		const xLabels = getXLabels();
@@ -100,22 +100,39 @@
 			Plotly.purge(plotDiv);
 		}
 	});
-	let setup = false;
+	let setup = $state(false);
 	onMount(() => {
 		genPlot();
 		setup = true;
 	});
 
-	$: team && refreshPlot();
-	$: !mobileView && setDefaultLayout();
-	$: setup && mobileView && setMobileLayout();
-
-	export let team: string,
-		getScoredBars: () => PlotTrace[],
-		getScoredTeamBars: () => PlotTrace,
-		getXLabels: () => string[],
-		getYAxisLayout: () => PlotLayout['yaxis'],
+	let {
+		team,
+		getScoredBars,
+		getScoredTeamBars,
+		getXLabels,
+		getYAxisLayout,
+		mobileView
+	}: {
+		team: string;
+		getScoredBars: () => PlotTrace[];
+		getScoredTeamBars: () => PlotTrace;
+		getXLabels: () => string[];
+		getYAxisLayout: () => PlotLayout['yaxis'];
 		mobileView: boolean;
+	} = $props();
+
+	// untrack keeps each effect's dependency set to just the guard variable, as
+	// the pre-runes `$:` statements were.
+	$effect(() => {
+		if (team) untrack(refreshPlot);
+	});
+	$effect(() => {
+		if (!mobileView) untrack(setDefaultLayout);
+	});
+	$effect(() => {
+		if (setup && mobileView) untrack(setMobileLayout);
+	});
 </script>
 
 <div>
