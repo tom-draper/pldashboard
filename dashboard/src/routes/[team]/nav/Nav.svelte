@@ -18,7 +18,11 @@
 
 	const widths: number[] = Array.from({ length: 20 }, () => 35 + Math.floor(Math.random() * 8) * 5);
 
-	export let team: null | Team, teams: Team[], switchTeam: (newTeam: Team) => void;
+	let {
+		team,
+		teams,
+		switchTeam
+	}: { team: null | Team; teams: Team[]; switchTeam: (newTeam: Team) => void } = $props();
 </script>
 
 <nav id="navBar" class="fixed h-screen w-[220px] bg-[var(--purple)] max-xl:hidden">
@@ -46,7 +50,7 @@
 				{:else}
 					<button
 						class="team-link cursor-pointer border-none bg-transparent p-0 text-left text-inherit outline-none [font:inherit]"
-						on:click={() => switchTeam(_team)}
+						onclick={() => switchTeam(_team)}
 					>
 						<div
 							class="team-container transition-[background-color,color] duration-250 ease-in-out"
@@ -84,7 +88,7 @@
 	<div>
 		<button
 			class="absolute right-[0.9em] bottom-[0.9em] mb-px cursor-pointer border-none bg-transparent pt-[0.3em] outline-none"
-			on:click={closeNavBar}
+			onclick={closeNavBar}
 		>
 			<img src={closeNavIcon} alt="Close" class="h-[25px] w-[25px]" />
 		</button>

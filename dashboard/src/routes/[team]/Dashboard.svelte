@@ -14,6 +14,8 @@
 	import type { Team } from '$lib/types';
 	import { setThemeColor } from '$lib/theme';
 
+	let { data }: { data: DashboardData } = $props();
+
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');
 		const mobileNavBtn = document.getElementById('mobileNavBtn');
@@ -67,8 +69,6 @@
 	onMount(() => {
 		setThemeColor(getCSSVar(`--${data.team.id}`));
 	});
-
-	export let data: DashboardData;
 </script>
 
 {#if data.slug === 'overview'}
@@ -93,7 +93,7 @@
 	<button
 		id="mobileNavBtn"
 		class="fixed bottom-0 z-[100] mb-[-1px] w-full cursor-pointer border-none bg-[var(--purple)] py-[0.8em] text-[1.1em] text-white xl:hidden"
-		on:click={toggleMobileNav}
+		onclick={toggleMobileNav}
 	>
 		Select Team
 	</button>

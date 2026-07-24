@@ -4,6 +4,12 @@
 	import type { TeamsData } from '../dashboard.types';
 	import type { Team } from '$lib/types';
 
+	let {
+		data,
+		currentMatchday,
+		team
+	}: { data: TeamsData; currentMatchday: string; team: Team } = $props();
+
 	function getSortedMatchdays(data: TeamsData, team: Team): string[] {
 		if (!(data._id in data.form[team])) {
 			return [];
@@ -88,16 +94,6 @@
 		return latestN;
 	}
 
-	function setFormValues() {
-		const sortedMatchdays = getSortedMatchdays(data, team);
-
-		const matchdays = latestNPlayedMatchdays(data, team, sortedMatchdays, 5);
-
-		formIcons = getFormIcons(data, team);
-		formStarTeams = getFormStarTeams(data, team, matchdays);
-		formInitials = getFormInitials(data, team, matchdays);
-	}
-
 	function formPercentage(data: TeamsData, team: Team) {
 		if (!(data._id in data.form[team])) {
 			return 'N/A';
@@ -105,10 +101,14 @@
 		return ((data.form[team][data._id][currentMatchday].formRating5 ?? 0) * 100).toFixed(1) + '%';
 	}
 
-	let formIcons: string, formStarTeams: boolean[], formInitials: string[];
-	$: team && setFormValues();
-
-	export let data: TeamsData, currentMatchday: string, team: Team;
+	// $derived (not $effect) so these compute during SSR and the first render,
+	// as the pre-runes `$:` did.
+	const formMatchdays = $derived(
+		latestNPlayedMatchdays(data, team, getSortedMatchdays(data, team), 5)
+	);
+	const formIcons = $derived(getFormIcons(data, team));
+	const formStarTeams = $derived(getFormStarTeams(data, team, formMatchdays));
+	const formInitials = $derived(getFormInitials(data, team, formMatchdays));
 
 	const rowClass =
 		'grid w-full grid-cols-5 text-[13px] max-[1000px]:m-auto max-[1000px]:w-[min(80%,440px)] max-[700px]:w-[95%]';
