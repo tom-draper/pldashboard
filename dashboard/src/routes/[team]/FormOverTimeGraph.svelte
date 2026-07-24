@@ -1,8 +1,15 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, untrack } from 'svelte';
 	import { getTeamID, getTeams } from '$lib/team';
 	import type { TeamsData } from './dashboard.types';
 	import type { Team } from '$lib/types';
+
+	let {
+		data,
+		team,
+		playedDates,
+		mobileView
+	}: { data: TeamsData; team: Team; playedDates: Date[]; mobileView: boolean } = $props();
 
 	function getFormLine(data: TeamsData, team: Team, isMainTeam: boolean) {
 		const playedDates: Date[] = [];
@@ -141,7 +148,7 @@
 			Plotly.purge(plotDiv);
 		}
 	});
-	let setup = false;
+	let setup = $state(false);
 	onMount(() => {
 		genPlot();
 		setup = true;
@@ -173,11 +180,17 @@
 		}
 	}
 
-	$: team && refreshPlot();
-	$: !mobileView && setDefaultLayout();
-	$: setup && mobileView && setMobileLayout();
-
-	export let data: TeamsData, team: Team, playedDates: Date[], mobileView: boolean;
+	// untrack keeps each effect's dependency set to just the guard variable, as
+	// the pre-runes `$:` statements were.
+	$effect(() => {
+		if (team) untrack(refreshPlot);
+	});
+	$effect(() => {
+		if (!mobileView) untrack(setDefaultLayout);
+	});
+	$effect(() => {
+		if (setup && mobileView) untrack(setMobileLayout);
+	});
 </script>
 
 <div>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, untrack } from 'svelte';
 	import type { TeamsData } from '../dashboard.types';
 	import type { Team } from '$lib/types';
 
@@ -286,7 +286,7 @@
 			Plotly.purge(plotDiv);
 		}
 	});
-	let setup = false;
+	let setup = $state(false);
 	onMount(() => {
 		genPlot();
 		setup = true;
@@ -317,11 +317,19 @@
 		}
 	}
 
-	$: team && refreshPlot();
-	$: !mobileView && setDefaultLayout();
-	$: setup && mobileView && setMobileLayout();
+	let { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
 
-	export let data: TeamsData, team: Team, mobileView: boolean;
+	// untrack keeps each effect's dependency set to just the guard variable, as
+	// the pre-runes `$:` statements were.
+	$effect(() => {
+		if (team) untrack(refreshPlot);
+	});
+	$effect(() => {
+		if (!mobileView) untrack(setDefaultLayout);
+	});
+	$effect(() => {
+		if (setup && mobileView) untrack(setMobileLayout);
+	});
 </script>
 
 <div>
