@@ -5,7 +5,7 @@
 	import Row from './Row.svelte';
 	import type { DashboardData } from './dashboard.types';
 
-	let { data, mobileView }: { data: DashboardData; mobileView: boolean } = $props();
+	const { data, mobileView }: { data: DashboardData; mobileView: boolean } = $props();
 </script>
 
 <Row class="mb-0">

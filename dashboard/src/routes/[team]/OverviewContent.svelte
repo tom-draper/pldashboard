@@ -53,7 +53,7 @@
 		return rating != null ? rating.toFixed(2) : '';
 	}
 
-	let { data }: { data: DashboardData } = $props();
+	const { data }: { data: DashboardData } = $props();
 </script>
 
 <div id="page-content">

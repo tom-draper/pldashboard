@@ -155,7 +155,7 @@
 		};
 	}
 
-	let optimalTeam: OptimalTeam;
+	let optimalTeam = $state<OptimalTeam>();
 
 	onMount(() => {
 		const players: FantasyPlayer[] = [];
@@ -167,7 +167,7 @@
 		optimalTeam = findOptimalFantasyTeam(players);
 	});
 
-	export let data: FantasyData;
+	const { data }: { data: FantasyData } = $props();
 </script>
 
 {#if optimalTeam}

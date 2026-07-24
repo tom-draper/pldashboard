@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import githubIcon from '$lib/images/github.png';
-	export let lastUpdated: string | null, dark: boolean;
+	const { lastUpdated, dark }: { lastUpdated: string | null; dark: boolean } = $props();
 
 	const chartColors = ['#00fe87', '#7dff42', '#dfff00', '#ffd700', '#ffaf00', '#ff5f00', '#ff0000'];
 	const barCount = 8;
@@ -9,8 +9,8 @@
 	const chartHeight = 12;
 	const minBarHeight = 3;
 	const barWidth = chartWidth / barCount;
-	let originalBars: number[] = Array(barCount).fill(6);
-	let displayedBars: number[] = originalBars;
+	let originalBars = $state<number[]>(Array(barCount).fill(6));
+	let displayedBars = $state<number[]>(Array(barCount).fill(6));
 
 	function randomBars() {
 		return Array.from(
@@ -61,10 +61,10 @@
 			type="button"
 			class="company-logo"
 			aria-label="pldashboard company logo"
-			on:mouseenter={startRandomising}
-			on:mouseleave={stopRandomising}
-			on:focus={startRandomising}
-			on:blur={stopRandomising}
+			onmouseenter={startRandomising}
+			onmouseleave={stopRandomising}
+			onfocus={startRandomising}
+			onblur={stopRandomising}
 		>
 			<svg width="24" height="12" viewBox={`0 0 ${chartWidth} ${chartHeight}`} aria-hidden="true">
 				{#each displayedBars as height, index (index)}

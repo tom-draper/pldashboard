@@ -5,7 +5,7 @@
 	import type { TeamsData } from './dashboard.types';
 	import type { Team } from '$lib/types';
 
-	let { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
+	const { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
 
 	function getLineConfig(team: Team, isMainTeam: boolean): PlotTrace['line'] {
 		let lineConfig: { color: string; width?: number };

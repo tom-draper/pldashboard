@@ -8,10 +8,8 @@
 	import Scorelines from './Scorelines.svelte';
 	import TeamComparison from './TeamComparison.svelte';
 
-	let {
-		data,
-		switchTeam
-	}: { data: DashboardData; switchTeam: (newTeam: Team) => void } = $props();
+	const { data, switchTeam }: { data: DashboardData; switchTeam: (newTeam: Team) => void } =
+		$props();
 
 	let pageWidth = $state<number>();
 	// Undefined until the window binds (and during SSR), which counts as desktop,

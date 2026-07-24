@@ -5,7 +5,7 @@
 	import type { Team } from '$lib/types';
 	import { resultColor, oppositionFormPercentage, predictedScoreline } from './next-game';
 
-	let {
+	const {
 		data,
 		team,
 		switchTeam

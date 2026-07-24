@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
-	let {
+	const {
 		title,
 		description,
 		path = null,

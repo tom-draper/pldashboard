@@ -18,7 +18,7 @@
 
 	const widths: number[] = Array.from({ length: 20 }, () => 35 + Math.floor(Math.random() * 8) * 5);
 
-	let {
+	const {
 		team,
 		teams,
 		switchTeam

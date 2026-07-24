@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, untrack } from 'svelte';
 	import type { FantasyData, Page, Position, Team } from './fantasy.types';
 	import type { PlotConfig, PlotData, PlotLayout, PlotTrace } from '$lib/types';
 
 	// Props
-	export let data: FantasyData;
-	export let page: Page;
-	export let mobileView: boolean;
+	const { data, page, mobileView }: { data: FantasyData; page: Page; mobileView: boolean } =
+		$props();
 
 	// Constants
 	const POSITION_COLORS: Record<Position, string> = {
@@ -32,7 +31,7 @@
 		}
 	});
 	let plotData: PlotData;
-	let isSetup = false;
+	let isSetup = $state(false);
 
 	// Utility functions
 	function isTeam(value: string): value is Team {
@@ -198,18 +197,20 @@
 		isSetup = true;
 	});
 
-	// Reactive statements
-	$: if (isSetup && page) {
-		refreshPlot();
-	}
+	// untrack keeps each effect's dependency set to the guard variables, as the
+	// pre-runes `$:` statements were.
+	$effect(() => {
+		if (isSetup && page) untrack(refreshPlot);
+	});
 
-	$: if (isSetup) {
+	$effect(() => {
+		if (!isSetup) return;
 		if (mobileView) {
-			applyMobileLayout();
+			untrack(applyMobileLayout);
 		} else {
-			applyDesktopLayout();
+			untrack(applyDesktopLayout);
 		}
-	}
+	});
 </script>
 
 <div>

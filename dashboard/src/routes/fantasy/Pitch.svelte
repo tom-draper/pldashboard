@@ -3,7 +3,7 @@
 	import type { FantasyPlayer } from './fantasy.types';
 	import { teamToCSS } from '$lib/team';
 
-	let { players }: { players: FantasyPlayer[] } = $props();
+	const { players }: { players: FantasyPlayer[] } = $props();
 
 	let forwards: FantasyPlayer[] = $state([]);
 	let midfielders: FantasyPlayer[] = $state([]);

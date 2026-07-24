@@ -3,7 +3,7 @@
 	import Row from './Row.svelte';
 	import type { DashboardData } from './dashboard.types';
 
-	let { data }: { data: DashboardData } = $props();
+	const { data }: { data: DashboardData } = $props();
 
 	let pageWidth = $state<number>();
 	// Undefined until the window binds (and during SSR), which counts as desktop,

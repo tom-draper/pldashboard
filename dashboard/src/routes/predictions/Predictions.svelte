@@ -13,7 +13,7 @@
 		return date.toTimeString().slice(0, 5);
 	}
 
-	export let data: PredictionsData;
+	const { data }: { data: PredictionsData } = $props();
 
 	const itemClass = 'flex text-left mx-[8%] max-[550px]:mx-[6%]';
 	const valueClass =
@@ -54,7 +54,7 @@
 						{#each predictions as pred (pred._id)}
 							<button
 								class="relative mx-0 my-[2px] w-[min(90%,300px)] self-center cursor-pointer rounded-[var(--border-radius)] border-none px-0 pt-[6px] pb-[3px] text-[16px] text-inherit [outline:inherit] max-[800px]:w-[min(80%,300px)] max-[550px]:w-[80%] {pred.color}"
-								on:click={() => toggleDetailsDisplay(pred._id)}
+								onclick={() => toggleDetailsDisplay(pred._id)}
 							>
 								<div class={itemClass}>
 									<div class="flex-[5]">Predicted:</div>

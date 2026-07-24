@@ -106,7 +106,7 @@
 		setup = true;
 	});
 
-	let {
+	const {
 		team,
 		getScoredBars,
 		getScoredTeamBars,

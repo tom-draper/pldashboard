@@ -4,7 +4,7 @@
 	import type { TeamsData } from './dashboard.types';
 	import type { Team } from '$lib/types';
 
-	let {
+	const {
 		data,
 		team,
 		playedDates,

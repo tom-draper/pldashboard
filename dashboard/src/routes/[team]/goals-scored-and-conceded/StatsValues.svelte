@@ -172,7 +172,7 @@
 		setup = true;
 	});
 
-	let { data, team }: { data: TeamsData; team: Team } = $props();
+	const { data, team }: { data: TeamsData; team: Team } = $props();
 
 	// untrack keeps the effect's dependency set to just `team`, as the pre-runes
 	// `$:` statement was.

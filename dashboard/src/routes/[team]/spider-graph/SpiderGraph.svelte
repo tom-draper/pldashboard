@@ -259,7 +259,7 @@
 		resetTeamComparisonBtns();
 	}
 
-	let { data, team, teams }: { data: TeamsData; team: Team; teams: Team[] } = $props();
+	const { data, team, teams }: { data: TeamsData; team: Team; teams: Team[] } = $props();
 
 	// untrack keeps the effect's dependency set to just `team`, as the pre-runes
 	// `$:` statement was.

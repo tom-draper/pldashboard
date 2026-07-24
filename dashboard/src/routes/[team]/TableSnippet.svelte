@@ -62,12 +62,13 @@
 		}[];
 	};
 
-	let {
+	const {
 		data,
 		teamID,
 		team,
 		switchTeam
-	}: { data: TeamsData; teamID: string; team: Team; switchTeam: (newTeam: Team) => void } = $props();
+	}: { data: TeamsData; teamID: string; team: Team; switchTeam: (newTeam: Team) => void } =
+		$props();
 
 	const tableSnippet = $derived(buildTableSnippet());
 

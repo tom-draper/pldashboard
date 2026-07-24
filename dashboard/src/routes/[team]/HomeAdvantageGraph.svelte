@@ -328,7 +328,7 @@
 		setup = true;
 	});
 
-	let { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
+	const { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
 
 	const split = $derived(homeAwaySplit(data, team, data._id));
 	const figureColor = $derived(computeFigureColor(data, split.delta));

@@ -204,7 +204,7 @@
 		}
 	}
 
-	let {
+	const {
 		data,
 		team,
 		playedDates,

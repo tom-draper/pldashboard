@@ -4,7 +4,7 @@
 	import { setThemeColor } from '$lib/theme';
 	import type { Snippet } from 'svelte';
 
-	let { children }: { children?: Snippet } = $props();
+	const { children }: { children?: Snippet } = $props();
 
 	// $effect only runs in the browser, so the theme colour is set whenever the
 	// route changes on the client.

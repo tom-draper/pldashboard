@@ -6,7 +6,7 @@
 	import { browser } from '$app/environment';
 	import Support from '$components/Support.svelte';
 
-	let { data }: { data: DashboardData } = $props();
+	const { data }: { data: DashboardData } = $props();
 
 	onMount(() => {
 		// Replace url with team at top of the table

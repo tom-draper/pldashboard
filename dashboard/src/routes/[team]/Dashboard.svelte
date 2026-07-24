@@ -14,7 +14,7 @@
 	import type { Team } from '$lib/types';
 	import { setThemeColor } from '$lib/theme';
 
-	let { data }: { data: DashboardData } = $props();
+	const { data }: { data: DashboardData } = $props();
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');

@@ -10,7 +10,7 @@
 	import OptimalTeam from './OptimalTeam.svelte';
 	import Seo from '$components/Seo.svelte';
 
-	let { data }: { data: FantasyDashboardData } = $props();
+	const { data }: { data: FantasyDashboardData } = $props();
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');

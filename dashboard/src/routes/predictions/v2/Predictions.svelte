@@ -58,10 +58,11 @@
 		return countdown;
 	}
 
-	export let data: PredictionsV2Data;
+	const { data }: { data: PredictionsV2Data } = $props();
 
-	let countdowns = Array(data.matches.length).fill('');
-	$: countdowns;
+	// Sized and populated in onMount via updateCountdowns; starts empty so the
+	// initializer doesn't capture the `data` prop outside a reactive context.
+	let countdowns = $state<string[]>([]);
 
 	const barBase = 'mb-[0.3em] flex h-[12px]';
 

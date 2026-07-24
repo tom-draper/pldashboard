@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Page } from '../fantasy.types';
 
-	let {
+	const {
 		pages,
 		switchPage,
 		toggleMobileNav

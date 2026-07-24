@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import type { FantasyData, Page, Team } from './fantasy.types';
 	import { teamToCSS } from '$lib/team';
 
@@ -184,7 +184,7 @@
 	let table: any;
 	let playerToTeam: { [player: string]: Team };
 	let teamCSSTag: { [team in Team]?: string };
-	let setup = false;
+	let setup = $state(false);
 
 	onMount(async () => {
 		try {
@@ -201,9 +201,13 @@
 		setup = true;
 	});
 
-	$: page && refreshTable(data);
+	const { data, page }: { data: FantasyData; page: Page } = $props();
 
-	export let data: FantasyData, page: Page;
+	// untrack keeps the effect's dependency set to page/data, as the pre-runes
+	// `$:` statement was.
+	$effect(() => {
+		if (page && data) untrack(() => refreshTable(data));
+	});
 </script>
 
 {#if !setup}

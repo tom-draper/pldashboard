@@ -2,7 +2,7 @@
 	import { toAlias, getTeamID } from '$lib/team';
 	import type { Team } from '$lib/types';
 
-	let {
+	const {
 		teams,
 		switchTeam,
 		toggleMobileNav

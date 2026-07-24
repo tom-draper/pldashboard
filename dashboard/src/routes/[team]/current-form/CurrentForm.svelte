@@ -4,11 +4,8 @@
 	import type { TeamsData } from '../dashboard.types';
 	import type { Team } from '$lib/types';
 
-	let {
-		data,
-		currentMatchday,
-		team
-	}: { data: TeamsData; currentMatchday: string; team: Team } = $props();
+	const { data, currentMatchday, team }: { data: TeamsData; currentMatchday: string; team: Team } =
+		$props();
 
 	function getSortedMatchdays(data: TeamsData, team: Team): string[] {
 		if (!(data._id in data.form[team])) {

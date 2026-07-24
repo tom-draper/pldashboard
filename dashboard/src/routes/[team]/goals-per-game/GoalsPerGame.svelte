@@ -276,7 +276,7 @@
 		setup = true;
 	});
 
-	let { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
+	const { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
 
 	// untrack keeps the effect's dependency set to just `team`, as the pre-runes
 	// `$:` statement was.

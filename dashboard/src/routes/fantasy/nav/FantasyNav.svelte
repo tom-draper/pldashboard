@@ -2,7 +2,7 @@
 	import type { Page } from '../fantasy.types';
 	import closeNavIcon from '$lib/images/arrow-bar-left.svg';
 
-	let {
+	const {
 		currentPage,
 		pages,
 		switchPage

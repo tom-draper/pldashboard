@@ -4,7 +4,7 @@
 	import Seo from '$components/Seo.svelte';
 	import type { PredictionsData } from './predictions.types';
 
-	let { data }: { data: PredictionsData } = $props();
+	const { data }: { data: PredictionsData } = $props();
 </script>
 
 <Seo
