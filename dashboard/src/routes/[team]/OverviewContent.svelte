@@ -14,24 +14,26 @@
 		type Fixtures
 	} from './overview';
 
-	let upcoming: UpcomingMatch[];
-	let standings: Standings[];
-	let fixtures: Fixtures[];
-	$: fixtures;
-	let fixturesScaling = 'rating';
+	let upcoming = $state<UpcomingMatch[]>();
+	let standings = $state<Standings[]>();
+	let fixtures = $state<Fixtures[]>();
+	let fixturesScaling = $state('rating');
 	onMount(() => {
 		upcoming = upcomingMatches(data.data);
-		standings = standingsTable(data.data);
-		fixtures = fixturesTable(data.data, standings);
+		const table = standingsTable(data.data);
+		standings = table;
+		fixtures = fixturesTable(data.data, table);
 	});
 
 	function handleApplyRatingFixturesScaling() {
+		if (fixtures === undefined) return;
 		const result = applyRatingFixturesScaling(fixtures, data.data, fixturesScaling);
 		fixtures = result.fixtures;
 		fixturesScaling = result.fixturesScaling;
 	}
 
 	function handleApplyRatingFormScaling() {
+		if (fixtures === undefined) return;
 		const result = applyRatingFormScaling(fixtures, data.data, fixturesScaling);
 		fixtures = result.fixtures;
 		fixturesScaling = result.fixturesScaling;
@@ -51,7 +53,7 @@
 		return rating != null ? rating.toFixed(2) : '';
 	}
 
-	export let data: DashboardData;
+	let { data }: { data: DashboardData } = $props();
 </script>
 
 <div id="page-content">
@@ -177,7 +179,7 @@
 							id="rating-scale-btn"
 							class="scale-btn"
 							class:scaling-selected={fixturesScaling === 'rating'}
-							on:click={handleApplyRatingFixturesScaling}
+							onclick={handleApplyRatingFixturesScaling}
 						>
 							Rating
 						</button>
@@ -187,7 +189,7 @@
 							id="form-scale-btn"
 							class="scale-btn"
 							class:scaling-selected={fixturesScaling === 'form'}
-							on:click={handleApplyRatingFormScaling}
+							onclick={handleApplyRatingFormScaling}
 						>
 							Form
 						</button>

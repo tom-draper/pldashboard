@@ -3,10 +3,12 @@
 	import Row from './Row.svelte';
 	import type { DashboardData } from './dashboard.types';
 
-	let pageWidth: number;
-	$: mobileView = pageWidth <= 700;
+	let { data }: { data: DashboardData } = $props();
 
-	export let data: DashboardData;
+	let pageWidth = $state<number>();
+	// Undefined until the window binds (and during SSR), which counts as desktop,
+	// matching the pre-runes `undefined <= 700` behaviour.
+	const mobileView = $derived(pageWidth !== undefined && pageWidth <= 700);
 </script>
 
 <svelte:window bind:innerWidth={pageWidth} />

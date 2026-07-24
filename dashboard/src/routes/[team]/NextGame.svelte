@@ -5,7 +5,11 @@
 	import type { Team } from '$lib/types';
 	import { resultColor, oppositionFormPercentage, predictedScoreline } from './next-game';
 
-	export let data: TeamsData, team: Team, switchTeam: (newTeam: Team) => void;
+	let {
+		data,
+		team,
+		switchTeam
+	}: { data: TeamsData; team: Team; switchTeam: (newTeam: Team) => void } = $props();
 
 	const teamBadgeBase = 'float-left w-[calc(50%_-_18px)] pt-[5px] pb-[3px] text-center text-[15px]';
 </script>
@@ -26,7 +30,7 @@
 			<h1 class="m-0! flex text-white max-[800px]:flex-col max-[800px]:text-left">
 				Next Game:&nbsp
 				<button
-					on:click={() => {
+					onclick={() => {
 						switchTeam(data.upcoming[team].team);
 					}}
 					class="next-game-team-btn">{toAlias(data.upcoming[team].team)}&nbsp</button

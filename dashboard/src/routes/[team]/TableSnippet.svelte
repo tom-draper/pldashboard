@@ -22,7 +22,7 @@
 		return [low, high];
 	}
 
-	function buildTableSnippet() {
+	function buildTableSnippet(): TableSnippet | undefined {
 		const sortedTeams = getTeams(data).sort(function (teamA, teamB) {
 			return data.standings[teamA][data._id].position - data.standings[teamB][data._id].position;
 		});
@@ -44,11 +44,12 @@
 		}
 
 		if (teamTableIdx !== null) {
-			tableSnippet = {
+			return {
 				teamTableIdx: teamTableIdx,
 				rows: rows
 			};
 		}
+		return undefined;
 	}
 
 	type TableSnippet = {
@@ -61,10 +62,14 @@
 		}[];
 	};
 
-	let tableSnippet: TableSnippet;
-	$: team && buildTableSnippet();
+	let {
+		data,
+		teamID,
+		team,
+		switchTeam
+	}: { data: TeamsData; teamID: string; team: Team; switchTeam: (newTeam: Team) => void } = $props();
 
-	export let data: TeamsData, teamID: string, team: Team, switchTeam: (newTeam: Team) => void;
+	const tableSnippet = $derived(buildTableSnippet());
 
 	// One column template for every row, so the header, the highlighted row and
 	// the plain rows cannot drift out of alignment.
@@ -153,7 +158,7 @@
 				<!-- Plain row: the whole row is the switch-team control so it reads as clickable. -->
 				<button
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						switchTeam(row.name);
 					}}
 					class={plainRowClass}
