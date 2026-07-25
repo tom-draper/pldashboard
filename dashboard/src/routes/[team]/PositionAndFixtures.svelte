@@ -2,16 +2,12 @@
 	import FixturesGraph from './FixturesGraph.svelte';
 	import Row from './Row.svelte';
 	import type { DashboardData } from './dashboard.types';
+	import { mobileView } from '$lib/mobileView.svelte';
 
 	const { data }: { data: DashboardData } = $props();
 
-	let pageWidth = $state<number>();
-	// Undefined until the window binds (and during SSR), which counts as desktop,
-	// matching the pre-runes `undefined <= 700` behaviour.
-	const mobileView = $derived(pageWidth !== undefined && pageWidth <= 700);
+	const mobile = mobileView();
 </script>
-
-<svelte:window bind:innerWidth={pageWidth} />
 
 <Row class="mx-[1.4em] mt-0 mb-[1.2em] max-[1000px]:mx-0">
 	<div class="row-left position-no-badge">
@@ -41,7 +37,7 @@
 	<div class="flex w-full flex-[10] flex-col max-[1000px]:w-auto">
 		<h1 class="mb-[-9px] max-[550px]:mx-[30px] max-[550px]:mt-[20px] max-[550px]:mb-0">Fixtures</h1>
 		<div class="h-[450px] max-[1100px]:h-[400px] max-[700px]:h-[300px] max-[550px]:h-[250px]">
-			<FixturesGraph data={data.data} team={data.team.name} {mobileView} />
+			<FixturesGraph data={data.data} team={data.team.name} mobileView={mobile.current} />
 		</div>
 	</div>
 </Row>

@@ -9,6 +9,7 @@
 	import { filterDataByPage, getTitle } from './data';
 	import OptimalTeam from './OptimalTeam.svelte';
 	import Seo from '$components/Seo.svelte';
+	import { mobileView } from '$lib/mobileView.svelte';
 
 	const { data }: { data: FantasyDashboardData } = $props();
 
@@ -48,16 +49,13 @@
 
 	const pages: Page[] = ['all', 'forward', 'midfielder', 'defender', 'goalkeeper'];
 
-	let pageWidth = $state<number>();
-	const mobileView = $derived(pageWidth !== undefined && pageWidth <= 700);
+	const mobile = mobileView();
 </script>
 
 <Seo
 	title={data.title}
 	description="Fantasy Premier League stats: the optimal team, points vs price, and player form and value to guide your FPL picks."
 />
-
-<svelte:window bind:innerWidth={pageWidth} />
 
 <div id="team" class="flex overflow-x-hidden text-[15px]">
 	<FantasyNav currentPage={data.page} {pages} {switchPage} />
@@ -81,7 +79,7 @@
 
 	<div id="dashboard" class="ml-[220px] w-[calc(100%-220px)] max-[1200px]:ml-0 max-[1200px]:w-full">
 		<div>
-			<PointsVsPrice data={data.pageData} page={data.page} {mobileView} />
+			<PointsVsPrice data={data.pageData} page={data.page} mobileView={mobile.current} />
 		</div>
 
 		{#if data.page === 'all'}

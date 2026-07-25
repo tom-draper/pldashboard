@@ -1,17 +1,22 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { FantasyPlayer } from './fantasy.types';
 	import { teamToCSS } from '$lib/team';
 
 	const { players }: { players: FantasyPlayer[] } = $props();
 
-	let forwards: FantasyPlayer[] = $state([]);
-	let midfielders: FantasyPlayer[] = $state([]);
-	let defenders: FantasyPlayer[] = $state([]);
-	let goalkeepers: FantasyPlayer[] = $state([]);
+	const forwards = $derived((players ?? []).filter((player) => player.position === 'Forward'));
+	const midfielders = $derived(
+		(players ?? []).filter((player) => player.position === 'Midfielder')
+	);
+	const defenders = $derived((players ?? []).filter((player) => player.position === 'Defender'));
+	const goalkeepers = $derived(
+		(players ?? []).filter((player) => player.position === 'Goalkeeper')
+	);
 
-	let totalPoints = $state(0);
-	let totalPrice = $state(0);
+	const totalPoints = $derived(
+		(players ?? []).reduce((sum, player) => sum + player.totalPoints, 0)
+	);
+	const totalPrice = $derived((players ?? []).reduce((sum, player) => sum + player.price, 0));
 
 	function formatPrice(price: number): string {
 		return (
@@ -33,21 +38,6 @@
 			}) + 'm'
 		);
 	}
-
-	onMount(() => {
-		if (!players) {
-			return;
-		}
-
-		// Initialize players by position
-		forwards = players.filter((player) => player.position === 'Forward');
-		midfielders = players.filter((player) => player.position === 'Midfielder');
-		defenders = players.filter((player) => player.position === 'Defender');
-		goalkeepers = players.filter((player) => player.position === 'Goalkeeper');
-
-		totalPoints = players.reduce((sum, player) => sum + player.totalPoints, 0);
-		totalPrice = players.reduce((sum, player) => sum + player.price, 0);
-	});
 </script>
 
 <div
