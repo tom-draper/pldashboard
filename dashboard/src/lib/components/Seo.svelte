@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	const {
 		title,
@@ -15,8 +15,8 @@
 		image?: string;
 	} = $props();
 
-	const origin = $derived($page.url.origin);
-	const canonical = $derived(`${origin}${path ?? $page.url.pathname}`);
+	const origin = $derived(page.url.origin);
+	const canonical = $derived(`${origin}${path ?? page.url.pathname}`);
 	const imageUrl = $derived(image.startsWith('http') ? image : `${origin}${image}`);
 </script>
 
