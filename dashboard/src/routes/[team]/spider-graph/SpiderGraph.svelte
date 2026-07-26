@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, onDestroy, untrack } from 'svelte';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
 	import { toAlias, toName, getTeamID, teamColor } from '$lib/team';
 	import type { SpiderAttribute, TeamsData } from '../dashboard.types';
 	import getAttack from './attack';
@@ -220,18 +220,7 @@
 
 	let plotDiv: HTMLDivElement, plotData: PlotlyTypes.PlotlyDataLayoutConfig;
 
-	onDestroy(() => {
-		// Remove Plotly's resize listeners and DOM when the graph is destroyed.
-		if (plotDiv) {
-			Plotly.purge(plotDiv);
-		}
-	});
 	const comparisonTeams: Team[] = [];
-	let setup = false;
-	onMount(() => {
-		genPlot();
-		setup = true;
-	});
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
@@ -245,9 +234,6 @@
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
 		const spiderPlots = initSpiderPlots(team);
 		// Remove all but two plots
 		emptyArray(plotData.data);
@@ -261,10 +247,11 @@
 
 	const { data, team, teams }: { data: TeamsData; team: Team; teams: Team[] } = $props();
 
-	// untrack keeps the effect's dependency set to just `team`, as the pre-runes
-	// `$:` statement was.
-	$effect(() => {
-		if (team) untrack(refreshPlot);
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: genPlot,
+		refresh: refreshPlot,
+		trigger: () => team
 	});
 </script>
 

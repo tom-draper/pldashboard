@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PlotData, PlotLayout, PlotShape, PlotTrace } from '$lib/types';
-	import { onMount, onDestroy, untrack } from 'svelte';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
 	import { toAlias, toInitials } from '$lib/team';
 	import type { Team } from '$lib/types';
 	import type { TeamsData } from './dashboard.types';
@@ -285,16 +285,10 @@
 	}
 
 	function setMobileLayout() {
-		if (!setup) {
-			return;
-		}
 		relayout({ 'margin.l': 45, 'margin.r': 40 });
 	}
 
 	function setDefaultLayout() {
-		if (!setup) {
-			return;
-		}
 		relayout({ 'margin.l': 55, 'margin.r': 60 });
 	}
 
@@ -304,9 +298,6 @@
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
 		plotData.data[0] = bars(data, team);
 		// Move the bold/dark highlight onto the newly selected team's label.
 		relayout({ 'yaxis.ticktext': yAxisTicks(splits(data), team).ticktext });
@@ -315,19 +306,6 @@
 
 	let plotDiv: HTMLDivElement, plotData: PlotData;
 
-	onDestroy(() => {
-		// Remove Plotly's resize listeners and DOM when the graph is destroyed.
-		if (plotDiv) {
-			Plotly.purge(plotDiv);
-		}
-	});
-	let setup = $state(false);
-
-	onMount(() => {
-		genPlot();
-		setup = true;
-	});
-
 	const { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
 
 	const split = $derived(homeAwaySplit(data, team, data._id));
@@ -335,16 +313,14 @@
 	const homeRateColor = $derived(rankColor(data, split.homeRatio, (s) => s.homeRatio));
 	const awayRateColor = $derived(rankColor(data, split.awayRatio, (s) => s.awayRatio));
 
-	// untrack keeps each effect's dependency set to just the guard variable, as
-	// the pre-runes `$:` statements were.
-	$effect(() => {
-		if (team) untrack(refreshPlot);
-	});
-	$effect(() => {
-		if (!mobileView) untrack(setDefaultLayout);
-	});
-	$effect(() => {
-		if (setup && mobileView) untrack(setMobileLayout);
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: genPlot,
+		refresh: refreshPlot,
+		applyDefaultLayout: setDefaultLayout,
+		applyMobileLayout: setMobileLayout,
+		isMobile: () => mobileView,
+		trigger: () => team
 	});
 </script>
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PlotData, PlotTrace, PlotLayout } from '$lib/types';
-	import { onMount, onDestroy, untrack } from 'svelte';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
 	import { getMatchdays, getTeamID, getTeams } from '$lib/team';
 	import type { TeamsData } from './dashboard.types';
 	import type { Team } from '$lib/types';
@@ -96,10 +96,6 @@
 	}
 
 	function setDefaultLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Points' },
 			'yaxis.visible': true,
@@ -110,17 +106,13 @@
 	}
 
 	function setMobileLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
 			'margin.l': 20,
 			'margin.t': 5
 		};
-		// @ts-expect-error Plotly is a CDN global, so its argument types are not available here
+		// @ts-expect-error Plotly's Layout type does not allow these dotted-path update keys
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -140,28 +132,12 @@
 	let plotDiv: HTMLDivElement;
 	let plotData: PlotData;
 
-	onDestroy(() => {
-		// Remove Plotly's resize listeners and DOM when the graph is destroyed.
-		if (plotDiv) {
-			Plotly.purge(plotDiv);
-		}
-	});
-	let setup = $state(false);
-	onMount(() => {
-		genPlot();
-		setup = true;
-	});
-
 	function genPlot() {
 		plotData = buildPlotData(data, team);
 		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
-
 		const newPlotData = buildPlotData(data, team);
 		for (let i = 0; i < 20; i++) {
 			plotData.data[i] = newPlotData.data[i];
@@ -173,17 +149,14 @@
 		}
 	}
 
-	// untrack keeps each effect's dependency set to just the guard variable, as
-	// the pre-runes `$:` statements were (they didn't track reads inside the
-	// called functions).
-	$effect(() => {
-		if (team) untrack(refreshPlot);
-	});
-	$effect(() => {
-		if (!mobileView) untrack(setDefaultLayout);
-	});
-	$effect(() => {
-		if (setup && mobileView) untrack(setMobileLayout);
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: genPlot,
+		refresh: refreshPlot,
+		applyDefaultLayout: setDefaultLayout,
+		applyMobileLayout: setMobileLayout,
+		isMobile: () => mobileView,
+		trigger: () => team
 	});
 </script>
 

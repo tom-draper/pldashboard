@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
-	import { onMount, onDestroy, untrack } from 'svelte';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
 	import { getMatchdays, getPlayedMatchdays } from '$lib/team';
 	import type { TeamsData } from '../dashboard.types';
 	import type { Team } from '$lib/types';
@@ -106,26 +106,18 @@
 	}
 
 	function setDefaultLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'margin.l': 60
 		};
-		// @ts-expect-error Plotly is a CDN global, so its argument types are not available here
+		// @ts-expect-error Plotly's Layout type does not allow these dotted-path update keys
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
 	function setMobileLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'margin.l': 20
 		};
-		// @ts-expect-error Plotly is a CDN global, so its argument types are not available here
+		// @ts-expect-error Plotly's Layout type does not allow these dotted-path update keys
 		Plotly.update(plotDiv, {}, layoutUpdate);
 	}
 
@@ -164,28 +156,12 @@
 
 	let plotDiv: HTMLDivElement, plotData: PlotData;
 
-	onDestroy(() => {
-		// Remove Plotly's resize listeners and DOM when the graph is destroyed.
-		if (plotDiv) {
-			Plotly.purge(plotDiv);
-		}
-	});
-	let setup = $state(false);
-	onMount(() => {
-		genPlot();
-		setup = true;
-	});
-
 	function genPlot() {
 		plotData = buildPlotData(data, team);
 		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
-
 		const matchdays = getPlayedMatchdays(data, team);
 		const [cleanSheetsBar, concededBar] = bars(data, team, playedDates, matchdays);
 		const line = hiddenLine(cleanSheetsBar.x as Date[]);
@@ -211,16 +187,14 @@
 		mobileView
 	}: { data: TeamsData; team: Team; playedDates: Date[]; mobileView: boolean } = $props();
 
-	// untrack keeps each effect's dependency set to just the guard variable, as
-	// the pre-runes `$:` statements were.
-	$effect(() => {
-		if (team) untrack(refreshPlot);
-	});
-	$effect(() => {
-		if (!mobileView) untrack(setDefaultLayout);
-	});
-	$effect(() => {
-		if (setup && mobileView) untrack(setMobileLayout);
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: genPlot,
+		refresh: refreshPlot,
+		applyDefaultLayout: setDefaultLayout,
+		applyMobileLayout: setMobileLayout,
+		isMobile: () => mobileView,
+		trigger: () => team
 	});
 </script>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, onDestroy, untrack } from 'svelte';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
 	import type { FantasyData, Page, Position, Team } from './fantasy.types';
 	import type { PlotConfig, PlotData, PlotLayout, PlotTrace } from '$lib/types';
 
@@ -23,15 +23,7 @@
 
 	// State
 	let plotDiv: HTMLDivElement;
-
-	onDestroy(() => {
-		// Remove Plotly's resize listeners and DOM when the graph is destroyed.
-		if (plotDiv) {
-			Plotly.purge(plotDiv);
-		}
-	});
 	let plotData: PlotData;
-	let isSetup = $state(false);
 
 	// Utility functions
 	function isTeam(value: string): value is Team {
@@ -130,8 +122,6 @@
 	}
 
 	function applyDesktopLayout() {
-		if (!isSetup) return;
-
 		const layoutUpdate: Record<string, unknown> = {
 			'yaxis.title': { text: 'Price' },
 			'yaxis.visible': true,
@@ -144,8 +134,6 @@
 	}
 
 	function applyMobileLayout() {
-		if (!isSetup) return;
-
 		const layoutUpdate: Record<string, unknown> = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
@@ -178,8 +166,6 @@
 	}
 
 	function refreshPlot() {
-		if (!isSetup) return;
-
 		const newPlotData = buildPlotData(data);
 		plotData.data[0] = newPlotData.data[0];
 
@@ -191,25 +177,14 @@
 		}
 	}
 
-	// Lifecycle
-	onMount(async () => {
-		await initializePlot();
-		isSetup = true;
-	});
-
-	// untrack keeps each effect's dependency set to the guard variables, as the
-	// pre-runes `$:` statements were.
-	$effect(() => {
-		if (isSetup && page) untrack(refreshPlot);
-	});
-
-	$effect(() => {
-		if (!isSetup) return;
-		if (mobileView) {
-			untrack(applyMobileLayout);
-		} else {
-			untrack(applyDesktopLayout);
-		}
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: initializePlot,
+		refresh: refreshPlot,
+		applyDefaultLayout: applyDesktopLayout,
+		applyMobileLayout: applyMobileLayout,
+		isMobile: () => mobileView,
+		trigger: () => page
 	});
 </script>
 
