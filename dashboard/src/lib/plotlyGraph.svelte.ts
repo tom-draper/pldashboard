@@ -1,5 +1,5 @@
 import { onDestroy, onMount, untrack } from 'svelte';
-import Plotly from '$lib/plotly';
+import Plotly, { loadPlotly } from '$lib/plotly';
 
 /**
  * The per-graph hooks the {@link createPlotlyGraph} lifecycle drives. Each graph
@@ -41,21 +41,21 @@ export function createPlotlyGraph(controller: PlotlyGraphController): void {
 		if (controller.getNode() === undefined) {
 			return;
 		}
-		// draw may be async (e.g. awaiting Plotly.newPlot); only mark ready once
+		// Plotly is browser-only and loaded lazily; await it before drawing. draw
+		// may itself be async (e.g. awaiting Plotly.newPlot). Only mark ready once
 		// it has actually drawn, so refresh/layout effects don't run too early.
-		const drawn = controller.draw();
-		if (drawn instanceof Promise) {
-			drawn.then(() => {
-				ready = true;
-			});
-		} else {
+		void (async () => {
+			await loadPlotly();
+			await controller.draw();
 			ready = true;
-		}
+		})();
 	});
 
 	onDestroy(() => {
 		const node = controller.getNode();
-		if (node) {
+		// Plotly.purge is only present once loadPlotly() has resolved; a component
+		// torn down before the chart drew has nothing to purge.
+		if (node && Plotly.purge) {
 			Plotly.purge(node);
 		}
 	});
