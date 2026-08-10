@@ -2,6 +2,7 @@
 	import GoalsScoredAndConcededGraph from './goals-scored-and-conceded/ScoredConcededPerGameGraph.svelte';
 	import CleanSheetsGraph from './goals-scored-and-conceded/CleanSheetsGraph.svelte';
 	import ScoredConcededOverTimeGraph from './goals-scored-and-conceded/ScoredConcededOverTimeGraph.svelte';
+	import StatsValues from './goals-scored-and-conceded/StatsValues.svelte';
 	import Row from './Row.svelte';
 	import type { DashboardData } from './dashboard.types';
 
@@ -33,6 +34,9 @@
 				playedDates={data.playedDates}
 				{mobileView}
 			/>
+		</div>
+		<div class="mt-[5em]">
+			<StatsValues data={data.data} team={data.team.name} />
 		</div>
 	</div>
 </Row>
