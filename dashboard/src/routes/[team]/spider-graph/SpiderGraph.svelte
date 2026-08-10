@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
 	import { toAlias, toName, getTeamID, teamColor } from '$lib/team';
 	import type { SpiderAttribute, TeamsData } from '../dashboard.types';
 	import getAttack from './attack';

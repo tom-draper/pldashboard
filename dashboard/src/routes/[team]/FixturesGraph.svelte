@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
 	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
 	import { toAlias } from '$lib/team';
 	import { scoreline } from '$lib/format';
 	import type { TeamsData, Fixture } from './dashboard.types';

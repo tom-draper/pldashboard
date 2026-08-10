@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PlotData, PlotTrace, PlotLayout } from '$lib/types';
 	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
 
 	function defaultLayout(): PlotLayout {
 		const xLabels = getXLabels();

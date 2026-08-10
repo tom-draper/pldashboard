@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
 	import type { FantasyData, Page, Position, Team } from './fantasy.types';
 	import type { PlotConfig, PlotData, PlotLayout, PlotTrace } from '$lib/types';
 

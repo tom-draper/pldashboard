@@ -1,4 +1,5 @@
 import { onDestroy, onMount, untrack } from 'svelte';
+import Plotly from '$lib/plotly';
 
 /**
  * The per-graph hooks the {@link createPlotlyGraph} lifecycle drives. Each graph
