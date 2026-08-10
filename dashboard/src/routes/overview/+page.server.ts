@@ -12,7 +12,7 @@ export const load: PageServerLoad = async () => {
 			id: null
 		},
 		teams,
-		title: 'Dashboard | Overview',
+			title: 'Dashboard - Overview',
 		currentMatchday: null,
 		playedDates: null,
 		data

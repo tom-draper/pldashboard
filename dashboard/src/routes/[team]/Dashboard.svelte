@@ -24,7 +24,7 @@
 			...data,
 			slug,
 			team: { name: team, id: slug },
-			title: `Dashboard | ${team}`,
+			title: `Dashboard - ${team}`,
 			currentMatchday: getCurrentMatchday(data.data, team),
 			playedDates: playedMatchdayDates(data.data, team)
 		};
