@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
 	import { getTeamID, getTeams } from '$lib/team';
 	import type { TeamsData } from './dashboard.types';
-	import type { Team } from '$lib/types';
+	import type { Team, PlotLayout, PlotData, PlotTrace } from '$lib/types';
 
 	const {
 		data,
@@ -28,13 +29,13 @@
 			return form * 100;
 		});
 
-		const line = {
+		const line: PlotTrace = {
 			x: matchdays,
 			y: y,
 			name: team,
 			mode: 'lines',
 			line: getLineValue(isMainTeam),
-			text: playedDates,
+			text: playedDates as unknown as string[],
 			hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
 			showlegend: false
 		};
@@ -66,7 +67,7 @@
 
 	function defaultLayout() {
 		const yLabels = Array.from(Array(11), (_, i) => i * 10);
-		const layout: Plotly.Layout = {
+		const layout: PlotLayout = {
 			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
@@ -120,7 +121,7 @@
 	}
 
 	function buildPlotData(data: TeamsData, team: Team) {
-		const plotData: Plotly.PlotlyDataLayoutConfig = {
+		const plotData: PlotData = {
 			data: getLines(data, team),
 			layout: defaultLayout(),
 			config: {
@@ -132,7 +133,7 @@
 		return plotData;
 	}
 
-	let plotDiv: HTMLDivElement, plotData: Plotly.PlotlyDataLayoutConfig;
+	let plotDiv: HTMLDivElement, plotData: PlotData;
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
