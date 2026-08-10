@@ -1,16 +1,42 @@
-// Slim custom Plotly bundle. Instead of loading the full ~1.3 MB dist from the
-// CDN, we start from plotly.js/lib/core (no trace types) and register only the
-// trace modules the dashboard actually draws: scatter, bar and scatterpolar.
-// This keeps the bundle to a fraction of the full build.
+// Slim, browser-only Plotly loader.
 //
-// The submodule entries resolve to loosely-typed JS, so the assembled default
-// export is cast back to the full `plotly.js` module type — every method we call
-// (newPlot, purge, redraw, relayout, update) lives on core.
-import Plotly from 'plotly.js/lib/core';
-import scatter from 'plotly.js/lib/scatter';
-import bar from 'plotly.js/lib/bar';
-import scatterpolar from 'plotly.js/lib/scatterpolar';
+// Plotly (via @plotly/d3) touches browser globals like `self` at module-eval
+// time, so it must never be imported during SSR. Instead of a static import we
+// expose a stable `Plotly` object that starts empty — safe on the server — and
+// is populated in the browser by loadPlotly() the first time a chart mounts.
+//
+// We also keep the bundle slim: rather than the full ~1.3 MB dist, we start from
+// plotly.js/lib/core and register only the trace types the dashboard draws
+// (scatter, bar, scatterpolar). The dynamic import makes Plotly its own async
+// chunk, kept out of the initial page payload entirely.
 
-Plotly.register([scatter, bar, scatterpolar]);
+// The shared instance every component imports. Because loadPlotly() copies the
+// real methods onto *this* object, and the graph lifecycle always awaits
+// loadPlotly() before any Plotly.* call, the methods are present by call time.
+const Plotly = {} as typeof import('plotly.js');
 
-export default Plotly as typeof import('plotly.js');
+let loading: Promise<typeof import('plotly.js')> | undefined;
+
+/**
+ * Browser-only. Dynamically imports the slim Plotly bundle, registers the trace
+ * modules once, and copies the module's methods onto the shared {@link Plotly}
+ * object. Idempotent — repeated calls return the same in-flight/settled promise.
+ */
+export function loadPlotly(): Promise<typeof import('plotly.js')> {
+	if (!loading) {
+		loading = (async () => {
+			const [core, scatter, bar, scatterpolar] = await Promise.all([
+				import('plotly.js/lib/core'),
+				import('plotly.js/lib/scatter'),
+				import('plotly.js/lib/bar'),
+				import('plotly.js/lib/scatterpolar')
+			]);
+			core.default.register([scatter.default, bar.default, scatterpolar.default]);
+			Object.assign(Plotly, core.default);
+			return Plotly;
+		})();
+	}
+	return loading;
+}
+
+export default Plotly;
