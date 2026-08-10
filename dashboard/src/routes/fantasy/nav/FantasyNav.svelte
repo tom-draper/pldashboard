@@ -24,9 +24,11 @@
 
 <nav id="navBar" class="fixed h-screen w-[220px] bg-[var(--purple)] max-[1200px]:hidden">
 	<div class="grid h-24 select-none place-items-center text-[1.6em] text-white">
-		<a href="/home" class="text-white">
+		<a href="/home" class="font-semibold text-white">
 			<span class="text-[var(--green)]">pl</span>dashboard
-			<div class="absolute top-[59px] right-[40px] text-[0.67em] text-white">Fantasy</div>
+			<div class="absolute top-[59px] right-[40px] font-normal text-white text-[0.67em]">
+				Fantasy
+			</div>
 		</a>
 	</div>
 	<div class="grid text-[1em] text-[var(--pink)]">

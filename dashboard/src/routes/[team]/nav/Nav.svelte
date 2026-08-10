@@ -27,7 +27,7 @@
 
 <nav id="navBar" class="fixed h-screen w-[220px] bg-[var(--purple)] max-xl:hidden">
 	<div class="grid h-24 select-none place-items-center text-[1.6em] text-white">
-		<a href="/home" class="text-white no-underline">
+		<a href="/home" class="font-semibold text-white no-underline">
 			<span class="text-[var(--green)]">pl</span>dashboard
 		</a>
 	</div>
