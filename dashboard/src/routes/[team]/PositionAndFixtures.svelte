@@ -35,7 +35,7 @@
 		</div>
 	</div>
 	<div class="flex w-full flex-[10] flex-col max-[1000px]:w-auto">
-		<h1 class="mb-[-9px] max-[550px]:mx-[30px] max-[550px]:mt-[20px] max-[550px]:mb-0">Fixtures</h1>
+		<h1 class="!mb-[-20px] max-[550px]:mx-[30px] max-[550px]:mt-[20px] max-[550px]:!mb-0">Fixtures</h1>
 		<div class="h-[450px] max-[1100px]:h-[400px] max-[700px]:h-[300px] max-[550px]:h-[250px]">
 			<FixturesGraph data={data.data} team={data.team.name} mobileView={mobile.current} />
 		</div>

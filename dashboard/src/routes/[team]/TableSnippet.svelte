@@ -99,7 +99,7 @@
 	// out of line, which is the same failure the percentages had.
 	const nameCellClass = 'min-w-0 pl-[8px] text-left';
 
-	// Hovering a row darkens its text instead of filling it with a background.
+	// Hovering a row lightens its text instead of filling it with a background.
 	//
 	// The colour sits on the button rather than the cells so all four inherit
 	// it and shift together: hovering the position number lights the row up as
@@ -112,9 +112,9 @@
 	// focus-visible mirrors hover so a row reached by keyboard reads the same;
 	// the button clears its own outline via [outline:inherit].
 	const plainRowClass =
-		`${rowClass} w-full cursor-pointer border-none bg-transparent text-left ` +
+		`${rowClass} w-full cursor-pointer border-none bg-transparent text-center ` +
 		'text-[#333333] [font:inherit] [outline:inherit] ' +
-		'hover:text-[var(--dark-purple)] focus-visible:text-[var(--dark-purple)]';
+		'hover:text-[#666666] focus-visible:text-[#666666]';
 </script>
 
 <div

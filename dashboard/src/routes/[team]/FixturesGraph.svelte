@@ -163,8 +163,8 @@
 			autosize: true,
 			margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
 			hovermode: 'closest',
-			plot_bgcolor: '#fafafa',
-			paper_bgcolor: '#fafafa',
+			plot_bgcolor: 'transparent',
+			paper_bgcolor: 'transparent',
 			yaxis: {
 				title: { text: 'Team rating' },
 				gridcolor: '#d6d6d6',
