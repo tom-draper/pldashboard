@@ -46,7 +46,7 @@
 	.position-no-badge {
 		padding-left: 0;
 		margin: 0;
-		height: 500px;
+		height: 450px;
 	}
 
 	.circles-background-container {
@@ -77,11 +77,13 @@
 		}
 	}
 	@media only screen and (max-width: 1600px) {
-		.row-left {
-			flex: 5;
-		}
 		.circles-background {
 			transform: scale(0.85);
+		}
+	}
+	@media only screen and (max-width: 1100px) {
+		.position-no-badge {
+			height: 400px;
 		}
 	}
 	@media only screen and (max-width: 1500px) {
@@ -130,7 +132,7 @@
 			margin-top: -5em;
 		}
 		.position-no-badge {
-			height: 330px;
+			height: 300px;
 		}
 	}
 	@media only screen and (max-width: 800px) {
