@@ -144,11 +144,12 @@
 			orientation: 'h',
 			x: rows.map((r) => r.delta),
 			y: rows.map((r) => toInitials(r.team)),
-			// Every bar is full opacity so the hues read true to the scale; the
-			// focused team is picked out by its bold, darkened y-axis label instead.
+			// Match the opacity used by the coloured scoreline bars so the gradient
+			// does not overpower the rest of the dashboard.
 			marker: {
 				color: rows.map((r) => deltaColor(r.delta, minAdvantage, maxAdvantage))
 			},
+			opacity: 0.8,
 			// Only the team in focus is labelled; a number on every bar is noise.
 			text: rows.map((r) => (r.team === team ? formatDelta(r.delta) : '')),
 			textposition: 'outside',
@@ -200,8 +201,8 @@
 
 	/**
 	 * Category tick labels for the y-axis. The focused team's code is bolded and
-	 * darkened so it stands out now that every bar is full opacity. The order (and
-	 * so tickvals) is stable across team switches; only the styling moves.
+	 * darkened so it stands out. The order (and so tickvals) is stable across
+	 * team switches; only the styling moves.
 	 */
 	function yAxisTicks(rows: Split[], team: Team): { tickvals: string[]; ticktext: string[] } {
 		return {

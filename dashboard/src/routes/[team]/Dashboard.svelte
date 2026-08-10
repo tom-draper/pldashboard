@@ -7,7 +7,7 @@
 	import { getCurrentMatchday, getTeamID, playedMatchdayDates, toAlias } from '$lib/team';
 	import type { DashboardData } from './dashboard.types';
 	import { replaceState } from '$app/navigation';
-	import { slugAlias, toTitleCase } from '$lib/format';
+	import { slugAlias } from '$lib/format';
 	import TeamsContent from './TeamsContent.svelte';
 	import OverviewContent from './OverviewContent.svelte';
 	import Seo from '$components/Seo.svelte';
@@ -15,6 +15,20 @@
 	import { setThemeColor } from '$lib/theme';
 
 	const { data }: { data: DashboardData } = $props();
+	let selectedTeam = $state<Team>();
+
+	const viewData = $derived.by((): DashboardData => {
+		const team = selectedTeam ?? data.team.name;
+		const slug = slugAlias(getTeamID(team));
+		return {
+			...data,
+			slug,
+			team: { name: team, id: slug },
+			title: `Dashboard | ${team}`,
+			currentMatchday: getCurrentMatchday(data.data, team),
+			playedDates: playedMatchdayDates(data.data, team)
+		};
+	});
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');
@@ -38,31 +52,16 @@
 		return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 	}
 
-	async function switchTeam(newTeam: Team) {
+	function switchTeam(newTeam: Team) {
 		if (!browser) {
 			return;
 		}
 
 		const newSlug = slugAlias(getTeamID(newTeam));
-		if (data.slug !== newSlug) {
-			data.slug = newSlug;
-			data.team.id = data.slug;
-			data.team.name = toTitleCase(data.slug.replace(/-/g, ' ')) as Team;
-			data.title = `Dashboard | ${data.team.name}`;
-			// Overwrite values from new team's perspective using same data
-			data.currentMatchday = getCurrentMatchday(data.data, data.team.name);
-			data.playedDates = playedMatchdayDates(data.data, data.team.name);
-
-			try {
-				replaceState(data.slug, {}); // Change current url without reloading
-			} catch (error) {
-				console.warn('SvelteKit navigation failed, using native browser API:', error);
-				// Fallback to native browser navigation
-				window.history.replaceState({}, '', `/${data.slug}`);
-			}
-
-			// Set theme after navigation
-			setThemeColor(getCSSVar(`--${data.team.id}`));
+		if (viewData.slug !== newSlug) {
+			selectedTeam = newTeam;
+			replaceState(`/${newSlug}`, {});
+			setThemeColor(getCSSVar(`--${newSlug}`));
 		}
 	}
 
@@ -71,7 +70,7 @@
 	});
 </script>
 
-{#if data.slug === 'overview'}
+{#if viewData.slug === 'overview'}
 	<Seo
 		title="Dashboard - Overview"
 		description="Premier League standings, upcoming fixtures and team ratings at a glance, updated through the season."
@@ -79,16 +78,16 @@
 	/>
 {:else}
 	<Seo
-		title={data.title}
-		description="{data.team
+		title={viewData.title}
+		description="{viewData.team
 			.name} Premier League statistics: current form, league position, goals scored and conceded, upcoming fixtures and match predictions."
-		path="/{data.team.id}"
+		path="/{viewData.team.id}"
 	/>
 {/if}
 
 <div id="team" class="flex overflow-x-hidden text-[15px]">
-	<Nav team={data.team.name} teams={data.teams} {switchTeam} />
-	<MobileNav teams={data.teams} {switchTeam} {toggleMobileNav} />
+	<Nav team={viewData.team.name} teams={viewData.teams} {switchTeam} />
+	<MobileNav teams={viewData.teams} {switchTeam} {toggleMobileNav} />
 
 	<button
 		id="mobileNavBtn"
@@ -99,29 +98,29 @@
 	</button>
 
 	<div id="dashboard" class="ml-0 w-full xl:ml-[220px]">
-		{#if data.slug === 'overview'}
+		{#if viewData.slug === 'overview'}
 			<div class="grid h-24 place-items-center bg-[var(--green)] text-[var(--purple)]">
 				<a class="main-link no-decoration grid w-fit place-items-center" href="/overview">
 					<div class="w-fit text-[2.3rem]">Overview</div>
 				</a>
 			</div>
 		{:else}
-			<div class="grid h-24 place-items-center" style="background-color: var(--{data.team.id});">
-				<a class="main-link no-decoration grid w-fit place-items-center" href="/{data.team.id}">
-					<div class="w-fit text-[2.3rem]" style="color: var(--{data.team.id + '-secondary'});">
-						{toAlias(data.team.name)}
+			<div class="grid h-24 place-items-center" style="background-color: var(--{viewData.team.id});">
+				<a class="main-link no-decoration grid w-fit place-items-center" href="/{viewData.team.id}">
+					<div class="w-fit text-[2.3rem]" style="color: var(--{viewData.team.id + '-secondary'});">
+						{toAlias(viewData.team.name)}
 					</div>
 				</a>
 			</div>
 		{/if}
 
-		{#if data.slug === 'overview'}
-			<OverviewContent {data} />
+		{#if viewData.slug === 'overview'}
+			<OverviewContent data={viewData} />
 		{:else}
-			<TeamsContent {data} {switchTeam} />
+			<TeamsContent data={viewData} {switchTeam} />
 		{/if}
 
-		<Footer lastUpdated={data.data.lastUpdated} dark={false} />
+		<Footer lastUpdated={viewData.data.lastUpdated} dark={false} />
 	</div>
 </div>
 
