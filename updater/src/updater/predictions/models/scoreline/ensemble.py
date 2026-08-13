@@ -31,6 +31,24 @@ from updater.predictions.distributions import (
 )
 
 
+def fit_members(
+    matches: Sequence[MatchResult], member_names: Sequence[str], half_life_days: float
+) -> list[tuple[str, object]]:
+    """Fit named registry members while preserving their names and order."""
+    from updater.predictions.models.registry import build
+
+    return [
+        (name, model)
+        for name in member_names
+        if (model := build(name, half_life_days=half_life_days).fit(matches)) is not None
+    ]
+
+
+def equal_weights(count: int) -> list[float]:
+    """A readable, normalised equal-weight mixture."""
+    return [1.0 / count] * count
+
+
 @dataclass
 class EnsembleModel:
     """Several fitted models, averaged with optional per-member weights."""
@@ -90,7 +108,7 @@ def fit_ensemble(
     rating system, and a difference-only fit. Averaging near-identical models
     would be pointless, so the value comes from the spread.
     """
-    from updater.predictions import models as registry
+    from updater.predictions.models import registry
 
     if not matches:
         return None
@@ -103,13 +121,13 @@ def fit_ensemble(
     if len(member_weights) != len(member_names):
         raise ValueError("weights must match member_names in length")
 
-    fitted = []
-    kept_weights = []
-    for name, weight in zip(member_names, member_weights):
-        model = registry.build(name, half_life_days=half_life_days).fit(matches)
-        if model is not None:
-            fitted.append(model)
-            kept_weights.append(weight)
+    fitted_with_names = fit_members(matches, member_names, half_life_days)
+    fitted = [model for _, model in fitted_with_names]
+    kept_weights = [
+        weight
+        for name, weight in zip(member_names, member_weights)
+        if any(name == fitted_name for fitted_name, _ in fitted_with_names)
+    ]
 
     if not fitted:
         return None

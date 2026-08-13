@@ -23,97 +23,51 @@ form_predictor's DataFrame chain) into every caller.
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
-from typing import Optional, Protocol, runtime_checkable
+from typing import Optional
 
-from updater.predictions.distributions import (
-    MatchResult,
-    OutcomePrediction,
-    ScorePrediction,
-    outcome_of,
+from updater.predictions.distributions import MatchResult
+from updater.predictions.models.contracts import (
+    FittedModel as FittedModel,
 )
-
-SCORELINE = "scoreline"
-OUTCOME = "outcome"
-
-
-@runtime_checkable
-class FittedModel(Protocol):
-    """Anything that can turn a fixture into a scoreline distribution."""
-
-    def predict(
-        self, home_team: str, away_team: str, max_goals: int = 10
-    ) -> ScorePrediction: ...
-
-
-@runtime_checkable
-class FittedOutcomeModel(Protocol):
-    """Anything that can turn a fixture into home/draw/away probabilities."""
-
-    def predict_outcome(
-        self, home_team: str, away_team: str
-    ) -> OutcomePrediction: ...
-
-
-def predict_fixture(
-    model: FittedModel,
-    home_team: str,
-    away_team: str,
-    match_date=None,
-    max_goals: int = 10,
-) -> ScorePrediction:
-    """Predict a fixture, passing the kickoff date only to models that want it.
-
-    Most engines depend on nothing but the two team names. A few (rest and
-    fixture congestion) need to know *when* the match is played. Rather than
-    widen every engine's signature for the sake of two, a model opts in by
-    setting `uses_match_date = True` and accepting a `match_date` keyword.
-    """
-    if getattr(model, "uses_match_date", False):
-        return model.predict(
-            home_team, away_team, max_goals=max_goals, match_date=match_date
-        )
-    return model.predict(home_team, away_team, max_goals)
-
-
-def produces_scoreline(model) -> bool:
-    """Whether a fitted model can produce a full goal matrix.
-
-    Outcome-family models set `produces_scoreline = False` on the class. Anything
-    that does not say otherwise is a scoreline model, which keeps every existing
-    engine working without having to annotate it.
-    """
-    return getattr(model, "produces_scoreline", True)
-
-
-def predict_outcome(
-    model,
-    home_team: str,
-    away_team: str,
-    match_date=None,
-    max_goals: int = 10,
-) -> OutcomePrediction:
-    """Home/draw/away for a fixture, from either family of engine.
-
-    This is the common currency the backtest scores on. An outcome model answers
-    directly; a scoreline model is asked for its matrix and collapsed. Going
-    through one function means a caller never has to know which family it holds.
-    """
-    direct = getattr(model, "predict_outcome", None)
-    if direct is not None:
-        if getattr(model, "uses_match_date", False):
-            return direct(home_team, away_team, match_date=match_date)
-        return direct(home_team, away_team)
-    return outcome_of(
-        predict_fixture(model, home_team, away_team, match_date, max_goals)
-    )
-
-
-class Predictor(Protocol):
-    """An engine with its hyper-parameters already bound."""
-
-    name: str
-
-    def fit(self, matches: Sequence[MatchResult]) -> Optional[FittedModel]: ...
+from updater.predictions.models.contracts import (
+    FittedOutcomeModel as FittedOutcomeModel,
+)
+from updater.predictions.models.contracts import (
+    Predictor as Predictor,
+)
+from updater.predictions.models.contracts import (
+    predict_fixture as predict_fixture,
+)
+from updater.predictions.models.contracts import (
+    predict_outcome as predict_outcome,
+)
+from updater.predictions.models.contracts import (
+    produces_scoreline as produces_scoreline,
+)
+from updater.predictions.models.registry import (
+    DEFAULT_MODEL as DEFAULT_MODEL,
+)
+from updater.predictions.models.registry import (
+    FAMILIES as FAMILIES,
+)
+from updater.predictions.models.registry import (
+    NAIVE_MODELS as NAIVE_MODELS,
+)
+from updater.predictions.models.registry import (
+    OUTCOME as OUTCOME,
+)
+from updater.predictions.models.registry import (
+    SCORELINE as SCORELINE,
+)
+from updater.predictions.models.registry import (
+    available as available,
+)
+from updater.predictions.models.registry import (
+    build as build,
+)
+from updater.predictions.models.registry import (
+    family_of as family_of,
+)
 
 
 class _Engine:
@@ -359,71 +313,3 @@ def _outcome_blend(half_life_days: float = 365.0, members=None, **_) -> Predicto
     if members is not None:
         params["member_names"] = tuple(members)
     return _Engine("outcome-blend", fit_outcome_blend, **params)
-
-
-SCORELINE_REGISTRY: dict[str, Callable[..., Predictor]] = {
-    "dixon-coles": _dixon_coles,
-    "poisson": _poisson,
-    "bivariate-poisson": _bivariate_poisson,
-    "negative-binomial": _negative_binomial,
-    "skellam": _skellam,
-    "hierarchical": _hierarchical,
-    "extended-dc": _extended_dc,
-    "dynamic": _dynamic,
-    "pi-ratings": _pi_ratings,
-    "elo": _elo,
-    "ensemble": _ensemble,
-    "stacked": _stacked,
-    "empirical-scoreline": _empirical_scoreline,
-    "goal-average": _goal_average,
-}
-
-OUTCOME_REGISTRY: dict[str, Callable[..., Predictor]] = {
-    "ordered-logit": _ordered_logit,
-    "ordered-probit": _ordered_probit,
-    "multinomial": _multinomial,
-    "direct-elo": _direct_elo,
-    "direct-pi-ratings": _direct_pi_ratings,
-    "outcome-blend": _outcome_blend,
-}
-
-REGISTRY: dict[str, Callable[..., Predictor]] = {
-    **SCORELINE_REGISTRY,
-    **OUTCOME_REGISTRY,
-}
-
-FAMILIES = (SCORELINE, OUTCOME)
-
-# Naive entrants kept as a floor to clear, not as production candidates.
-NAIVE_MODELS = ("empirical-scoreline", "goal-average")
-
-# The engine the updater ships with, and the one the backtest compares against.
-# It must stay a scoreline model: the dashboard stores a goal matrix.
-DEFAULT_MODEL = "dixon-coles"
-
-
-def family_of(name: str) -> str:
-    """Which family a registry name belongs to."""
-    return SCORELINE if name in SCORELINE_REGISTRY else OUTCOME
-
-
-def available(family: Optional[str] = None) -> list[str]:
-    """Registry names, optionally restricted to one family."""
-    if family is None:
-        return list(REGISTRY)
-    if family == SCORELINE:
-        return list(SCORELINE_REGISTRY)
-    if family == OUTCOME:
-        return list(OUTCOME_REGISTRY)
-    raise ValueError(f"Unknown family {family!r}. Available: {', '.join(FAMILIES)}")
-
-
-def build(name: str, **params) -> Predictor:
-    """Construct an engine by registry name with its hyper-parameters bound."""
-    try:
-        factory = REGISTRY[name]
-    except KeyError:
-        raise ValueError(
-            f"Unknown model {name!r}. Available: {', '.join(available())}"
-        ) from None
-    return factory(**params)

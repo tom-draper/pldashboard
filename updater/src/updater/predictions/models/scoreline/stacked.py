@@ -34,6 +34,8 @@ from updater.predictions.distributions import MatchResult
 from updater.predictions.models.scoreline.ensemble import (
     EnsembleModel,
     _reject_outcome_members,
+    equal_weights,
+    fit_members,
 )
 
 DEFAULT_MEMBERS = ("dixon-coles", "pi-ratings", "skellam")
@@ -66,7 +68,7 @@ def _rps(probabilities: np.ndarray, actual: np.ndarray) -> float:
 
 
 def _member_outcome_probabilities(model, matches: Sequence[MatchResult]) -> np.ndarray:
-    from updater.predictions.models import predict_fixture
+    from updater.predictions.models.contracts import predict_fixture
 
     rows = []
     for match in matches:
@@ -120,7 +122,7 @@ def fit_stacked(
     half_life_days: float = 365.0,
 ) -> Optional[StackedModel]:
     """Learn blend weights on a chronological holdout, then refit on everything."""
-    from updater.predictions import models as registry
+    from updater.predictions.models import registry
 
     if not matches:
         return None
@@ -132,16 +134,10 @@ def fit_stacked(
     split = int(len(ordered) * (1.0 - HOLDOUT_FRACTION))
     train, holdout = ordered[:split], ordered[split:]
 
-    def fit_all(subset: Sequence[MatchResult]) -> list:
-        fitted = []
-        for name in member_names:
-            model = registry.build(name, half_life_days=half_life_days).fit(subset)
-            fitted.append(model)
-        return fitted
-
-    final_members = [m for m in fit_all(ordered) if m is not None]
-    if not final_members:
+    final = fit_members(ordered, member_names, half_life_days)
+    if not final:
         return None
+    final_members = [model for _, model in final]
 
     # Not enough holdout to learn anything trustworthy: fall back to equal
     # weights rather than fitting three parameters to a handful of matches.
@@ -150,16 +146,11 @@ def fit_stacked(
             members=final_members,
             # Normalised, so the stored weights are always a readable mixture
             # rather than raw counts that only mean something after division.
-            weights=[1.0 / len(final_members)] * len(final_members),
+            weights=equal_weights(len(final_members)),
             holdout_size=len(holdout),
         )
 
-    holdout_models = fit_all(train)
-    usable = [
-        (name, model)
-        for name, model in zip(member_names, holdout_models)
-        if model is not None
-    ]
+    usable = fit_members(train, member_names, half_life_days)
     if len(usable) != len(final_members):
         # A member that fits on the full window but not the shorter one cannot be
         # weighted honestly, so fall back rather than guess.
@@ -167,7 +158,7 @@ def fit_stacked(
             members=final_members,
             # Normalised, so the stored weights are always a readable mixture
             # rather than raw counts that only mean something after division.
-            weights=[1.0 / len(final_members)] * len(final_members),
+            weights=equal_weights(len(final_members)),
             holdout_size=len(holdout),
         )
 

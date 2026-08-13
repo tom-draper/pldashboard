@@ -29,6 +29,7 @@ from updater.predictions.distributions import (
     match_outcome,
     outcome_from_probs,
 )
+from updater.predictions.models.scoreline.ensemble import equal_weights, fit_members
 from updater.predictions.models.scoreline.stacked import (
     HOLDOUT_FRACTION,
     MIN_HOLDOUT_MATCHES,
@@ -50,7 +51,7 @@ class OutcomeBlendModel:
     produces_scoreline: bool = field(default=False, init=False)
 
     def predict_outcome(self, home_team: str, away_team: str) -> OutcomePrediction:
-        from updater.predictions.models import predict_outcome
+        from updater.predictions.models.contracts import predict_outcome
 
         blended = np.zeros(3)
         for weight, member in zip(self.weights, self.members):
@@ -60,7 +61,7 @@ class OutcomeBlendModel:
 
 
 def _member_probabilities(model, matches: Sequence[MatchResult]) -> np.ndarray:
-    from updater.predictions.models import predict_outcome
+    from updater.predictions.models.contracts import predict_outcome
 
     return np.array(
         [
@@ -78,7 +79,6 @@ def fit_outcome_blend(
     half_life_days: float = 365.0,
 ) -> Optional[OutcomeBlendModel]:
     """Learn mixing weights on a chronological holdout, then refit on everything."""
-    from updater.predictions import models as registry
 
     if not matches:
         return None
@@ -89,24 +89,14 @@ def fit_outcome_blend(
     split = int(len(ordered) * (1.0 - HOLDOUT_FRACTION))
     train, holdout = ordered[:split], ordered[split:]
 
-    def fit_all(subset: Sequence[MatchResult]) -> list:
-        return [
-            registry.build(name, half_life_days=half_life_days).fit(subset)
-            for name in member_names
-        ]
-
-    final = [
-        (name, model)
-        for name, model in zip(member_names, fit_all(ordered))
-        if model is not None
-    ]
+    final = fit_members(ordered, member_names, half_life_days)
     if not final:
         return None
 
     def equal_weighted() -> OutcomeBlendModel:
         return OutcomeBlendModel(
             members=[model for _, model in final],
-            weights=[1.0 / len(final)] * len(final),
+            weights=equal_weights(len(final)),
             member_names=[name for name, _ in final],
             holdout_size=len(holdout),
         )
@@ -116,11 +106,7 @@ def fit_outcome_blend(
     if len(holdout) < MIN_HOLDOUT_MATCHES or not train:
         return equal_weighted()
 
-    holdout_models = [
-        (name, model)
-        for name, model in zip(member_names, fit_all(train))
-        if model is not None
-    ]
+    holdout_models = fit_members(train, member_names, half_life_days)
     # A member that fits the full window but not the shorter one cannot be
     # weighted honestly, so fall back rather than guess.
     if len(holdout_models) != len(final):
