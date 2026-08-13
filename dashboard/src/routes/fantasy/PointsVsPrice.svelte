@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
 	import Plotly from '$lib/plotly';
+	import { updatePlotlyFigure } from '$lib/plotlyLayout';
 	import type { FantasyData, Page, Position, Team } from './fantasy.types';
 	import type { PlotConfig, PlotData, PlotLayout, PlotTrace } from '$lib/types';
 
@@ -131,7 +132,7 @@
 			'margin.t': 15
 		};
 
-		Plotly.update(plotDiv, {}, layoutUpdate, 0);
+		updatePlotlyFigure(plotDiv, {}, layoutUpdate, 0);
 	}
 
 	function applyMobileLayout() {
@@ -157,7 +158,7 @@
 		// Update stored data
 		plotData.data[0].marker!.size = mobileSizes;
 
-		Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+		updatePlotlyFigure(plotDiv, dataUpdate, layoutUpdate, 0);
 	}
 
 	async function initializePlot() {

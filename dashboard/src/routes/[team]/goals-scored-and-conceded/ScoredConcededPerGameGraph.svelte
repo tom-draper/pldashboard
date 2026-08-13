@@ -2,6 +2,7 @@
 	import type { PlotData, PlotTrace, PlotLayout } from '$lib/types';
 	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
 	import Plotly from '$lib/plotly';
+	import { updatePlotlyLayout } from '$lib/plotlyLayout';
 	import type { TeamsData } from '../dashboard.types';
 	import { getTeams } from '$lib/team';
 	import type { Counter, Team } from '$lib/types';
@@ -134,7 +135,7 @@
 			'yaxis.visible': true,
 			'margin.l': 60
 		};
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function setMobileLayout() {
@@ -143,8 +144,7 @@
 			'yaxis.visible': false,
 			'margin.l': 20
 		};
-		// @ts-expect-error Plotly's Layout type does not allow these dotted-path update keys
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function buildPlotData(data: TeamsData, team: Team): PlotData {

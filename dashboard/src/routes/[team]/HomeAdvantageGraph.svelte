@@ -2,6 +2,7 @@
 	import type { PlotData, PlotLayout, PlotShape, PlotTrace } from '$lib/types';
 	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
 	import Plotly from '$lib/plotly';
+	import { relayoutPlotly } from '$lib/plotlyLayout';
 	import { toAlias, toInitials } from '$lib/team';
 	import type { Team } from '$lib/types';
 	import type { TeamsData } from './dashboard.types';
@@ -280,18 +281,12 @@
 		};
 	}
 
-	// Plotly.relayout takes dotted attribute paths, which Partial<Layout> cannot
-	// express.
-	function relayout(update: Record<string, unknown>) {
-		Plotly.relayout(plotDiv, update as Parameters<typeof Plotly.relayout>[1]);
-	}
-
 	function setMobileLayout() {
-		relayout({ 'margin.l': 45, 'margin.r': 40 });
+		relayoutPlotly(plotDiv, { 'margin.l': 45, 'margin.r': 40 });
 	}
 
 	function setDefaultLayout() {
-		relayout({ 'margin.l': 55, 'margin.r': 60 });
+		relayoutPlotly(plotDiv, { 'margin.l': 55, 'margin.r': 60 });
 	}
 
 	function genPlot() {
@@ -302,7 +297,7 @@
 	function refreshPlot() {
 		plotData.data[0] = bars(data, team);
 		// Move the bold/dark highlight onto the newly selected team's label.
-		relayout({ 'yaxis.ticktext': yAxisTicks(splits(data), team).ticktext });
+		relayoutPlotly(plotDiv, { 'yaxis.ticktext': yAxisTicks(splits(data), team).ticktext });
 		Plotly.redraw(plotDiv);
 	}
 

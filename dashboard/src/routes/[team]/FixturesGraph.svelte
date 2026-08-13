@@ -2,6 +2,7 @@
 	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
 	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
 	import Plotly from '$lib/plotly';
+	import { updatePlotlyFigure } from '$lib/plotlyLayout';
 	import { toAlias } from '$lib/team';
 	import { scoreline } from '$lib/format';
 	import type { TeamsData, Fixture } from './dashboard.types';
@@ -214,7 +215,7 @@
 		};
 		plotData.data[0].marker!.size = sizes;
 
-		Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+		updatePlotlyFigure(plotDiv, dataUpdate, layoutUpdate, 0);
 	}
 
 	function setMobileLayout() {
@@ -242,8 +243,7 @@
 		};
 		plotData.data[0].marker!.size = sizes;
 
-		// @ts-expect-error Plotly's Layout type does not allow these dotted-path update keys
-		Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+		updatePlotlyFigure(plotDiv, dataUpdate, layoutUpdate, 0);
 	}
 
 	function buildPlotData(data: TeamsData, team: Team) {

@@ -2,6 +2,7 @@
 	import type { PlotData, PlotTrace, PlotLayout } from '$lib/types';
 	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
 	import Plotly from '$lib/plotly';
+	import { relayoutPlotly, updatePlotlyLayout } from '$lib/plotlyLayout';
 
 	function defaultLayout(): PlotLayout {
 		const xLabels = getXLabels();
@@ -39,7 +40,7 @@
 			'yaxis.visible': true,
 			'margin.l': 60
 		};
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function setMobileLayout() {
@@ -48,8 +49,7 @@
 			'yaxis.visible': false,
 			'margin.l': 20
 		};
-		// @ts-expect-error Plotly's Layout type does not allow these dotted-path update keys
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function buildPlotData(): PlotData {
@@ -72,7 +72,7 @@
 
 	function refreshPlot() {
 		plotData.data[1] = getScoredTeamBars(); // Update team bars
-		Plotly.relayout(plotDiv, {
+		relayoutPlotly(plotDiv, {
 			yaxis: getYAxisLayout()
 		});
 		Plotly.redraw(plotDiv);
