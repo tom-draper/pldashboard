@@ -25,7 +25,12 @@ from scipy.optimize import minimize
 
 from updater.predictions.distributions import (
     MatchResult,
+    ScorePrediction,
+    dc_low_score_correction,
+    goal_grids,
     match_dates,
+    poisson_pmf,
+    prediction_from_matrix,
     time_weights,
 )
 
@@ -64,6 +69,36 @@ class FittedRatings:
             float(np.exp(home_attack - away_defence + self.home_advantage)),
             float(np.exp(away_attack - home_defence)),
         )
+
+
+def poisson_score_prediction(
+    home_team: str,
+    away_team: str,
+    lambda_home: float,
+    lambda_away: float,
+    rho: float,
+    max_goals: int,
+) -> ScorePrediction:
+    """Build the common Dixon-Coles-adjusted Poisson scoreline prediction."""
+    goals = np.arange(max_goals + 1)
+    matrix = np.outer(
+        poisson_pmf(goals, lambda_home), poisson_pmf(goals, lambda_away)
+    )
+    home_goals, away_goals = goal_grids(max_goals)
+    matrix *= dc_low_score_correction(
+        home_goals,
+        away_goals,
+        np.full_like(matrix, lambda_home),
+        np.full_like(matrix, lambda_away),
+        rho,
+    )
+    return prediction_from_matrix(
+        home_team,
+        away_team,
+        matrix,
+        expected_home_goals=lambda_home,
+        expected_away_goals=lambda_away,
+    )
 
 
 def fit_ratings(

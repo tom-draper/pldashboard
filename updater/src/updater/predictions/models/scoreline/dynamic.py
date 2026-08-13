@@ -42,11 +42,8 @@ import numpy as np
 from updater.predictions.distributions import (
     MatchResult,
     ScorePrediction,
-    dc_low_score_correction,
-    goal_grids,
-    poisson_pmf,
-    prediction_from_matrix,
 )
+from updater.predictions.models.scoreline.common import poisson_score_prediction
 
 # Starting uncertainty for a team's rating. Deliberately wide: an unseen team
 # should move a long way on its first few matches.
@@ -94,24 +91,8 @@ class DynamicRatingsModel:
         self, home_team: str, away_team: str, max_goals: int = 10
     ) -> ScorePrediction:
         lambda_home, lambda_away = self.expected_goals(home_team, away_team)
-        goals = np.arange(max_goals + 1)
-        matrix = np.outer(
-            poisson_pmf(goals, lambda_home), poisson_pmf(goals, lambda_away)
-        )
-        hg, ag = goal_grids(max_goals)
-        matrix = matrix * dc_low_score_correction(
-            hg,
-            ag,
-            np.full_like(matrix, lambda_home),
-            np.full_like(matrix, lambda_away),
-            self.rho,
-        )
-        return prediction_from_matrix(
-            home_team,
-            away_team,
-            matrix,
-            expected_home_goals=lambda_home,
-            expected_away_goals=lambda_away,
+        return poisson_score_prediction(
+            home_team, away_team, lambda_home, lambda_away, self.rho, max_goals
         )
 
 
