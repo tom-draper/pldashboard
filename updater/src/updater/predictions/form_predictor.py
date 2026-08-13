@@ -5,7 +5,10 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame
 
-from updater.data.dataframes import Fixtures, Form, HomeAdvantages, TeamRatings
+from updater.data.dataframes.fixtures import Fixtures
+from updater.data.dataframes.form import Form
+from updater.data.dataframes.home_advantages import HomeAdvantages
+from updater.data.dataframes.team_ratings import TeamRatings
 from updater.data.raw_data import RawData
 from updater.predictions.form import calc_form
 from updater.predictions.scoreline import Scoreline
