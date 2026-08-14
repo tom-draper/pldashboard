@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, untrack } from 'svelte';
+	import { onDestroy, onMount, untrack } from 'svelte';
 	import type { FantasyData, Page, Team } from './fantasy.types';
 	import { teamToCSS } from '$lib/team';
 
@@ -51,13 +51,17 @@
 		return num.toString();
 	}
 
-	function getTableRows(data: FantasyData): TableRow[] {
+	function showsSaves(page: Page): boolean {
+		return page === 'goalkeeper';
+	}
+
+	function getTableRows(data: FantasyData, page: Page): TableRow[] {
 		const tableRows: TableRow[] = [];
 		for (const name in data) {
 			if (name === '_id') {
 				continue;
 			}
-			const player = [
+			const player: TableRow = [
 				`${data[name].firstName} ${data[name].surname}`,
 				`£${data[name].price / 10}`,
 				data[name].totalPoints,
@@ -69,20 +73,21 @@
 				data[name].form,
 				data[name].goals,
 				data[name].assists,
-				data[name].cleanSheets,
-				data[name].saves,
-				data[name].bonusPoints,
-				data[name].transferIn,
-				data[name].transferOut
+				data[name].cleanSheets
 			];
+			if (showsSaves(page)) {
+				player.push(data[name].saves);
+			}
+			player.push(data[name].bonusPoints, data[name].transferIn, data[name].transferOut);
 			tableRows.push(player);
 		}
 
 		return tableRows;
 	}
 
-	function buildTable(data: FantasyData) {
-		const tableRows = getTableRows(data);
+	function buildTable(data: FantasyData, page: Page) {
+		const tableRows = getTableRows(data, page);
+		const transferColumns = showsSaves(page) ? [12, 13] : [11, 12];
 
 		// @ts-expect-error DataTable ships no types for this options object
 		table = new DataTable('#myTable', {
@@ -134,7 +139,7 @@
 					}
 				},
 				{
-					targets: [12, 13],
+					targets: transferColumns,
 					render: function (data: any, type: string) {
 						// If render is just displaying value to user, format as abbreviated number
 						if (type === 'display') {
@@ -148,15 +153,22 @@
 		});
 
 		table.order([2, 'desc']).draw();
+		tablePage = page;
 	}
 
-	function refreshTable(data: FantasyData) {
+	function refreshTable(data: FantasyData, page: Page) {
 		if (!setup) {
 			return;
 		}
 
 		buildTeamColorCSSTags();
-		const tableRows = getTableRows(data);
+		if (tablePage !== page) {
+			table.destroy();
+			buildTable(data, page);
+			return;
+		}
+
+		const tableRows = getTableRows(data, page);
 
 		table.clear();
 		table.rows.add(tableRows);
@@ -182,6 +194,7 @@
 	}
 
 	let table: any;
+	let tablePage: Page;
 	let playerToTeam: { [player: string]: Team };
 	let teamCSSTag: { [team in Team]?: string };
 	let setup = $state(false);
@@ -197,8 +210,12 @@
 		}
 
 		buildTeamColorCSSTags();
-		buildTable(data);
+		buildTable(data, page);
 		setup = true;
+	});
+
+	onDestroy(() => {
+		if (table) table.destroy();
 	});
 
 	const { data, page }: { data: FantasyData; page: Page } = $props();
@@ -206,7 +223,7 @@
 	// untrack keeps the effect's dependency set to page/data, as the pre-runes
 	// `$:` statement was.
 	$effect(() => {
-		if (page && data) untrack(() => refreshTable(data));
+		if (page && data) untrack(() => refreshTable(data, page));
 	});
 </script>
 
@@ -232,7 +249,9 @@
 				<th>Goals</th>
 				<th>Assists</th>
 				<th>Clean Sheets</th>
-				<th>Saves</th>
+				{#if showsSaves(page)}
+					<th>Saves</th>
+				{/if}
 				<th>Bonus</th>
 				<th>Transfers In</th>
 				<th>Transfers Out</th>
