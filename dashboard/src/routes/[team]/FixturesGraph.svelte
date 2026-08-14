@@ -285,6 +285,7 @@
 	createPlotlyGraph({
 		getNode: () => plotDiv,
 		draw: genPlot,
+		initialDrawPriority: 'high',
 		refresh: refreshPlot,
 		applyDefaultLayout: setDefaultLayout,
 		applyMobileLayout: setMobileLayout,

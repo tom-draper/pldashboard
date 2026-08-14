@@ -11,6 +11,8 @@ export interface PlotlyGraphController {
 	getNode: () => HTMLElement | undefined;
 	/** Draw the initial plot: build the figure and call `Plotly.newPlot`. May be async. */
 	draw: () => void | Promise<void>;
+	/** Render this chart before normal charts during the initial page load. */
+	initialDrawPriority?: 'high' | 'normal';
 	/** Re-render after {@link trigger} changes: rebuild data and `Plotly.redraw`. */
 	refresh: () => void;
 	/** Apply the desktop layout; run when the viewport is not mobile. */
@@ -21,6 +23,49 @@ export interface PlotlyGraphController {
 	isMobile?: () => boolean;
 	/** Reactive getter whose change triggers a {@link refresh} (e.g. the selected team). */
 	trigger: () => unknown;
+}
+
+interface QueuedInitialDraw {
+	draw: () => Promise<void>;
+	priority: 'high' | 'normal';
+	cancelled: boolean;
+}
+
+const initialDrawQueue: QueuedInitialDraw[] = [];
+let processingInitialDraws = false;
+
+function queueInitialDraw(draw: () => Promise<void>, priority: 'high' | 'normal') {
+	const queuedDraw: QueuedInitialDraw = { draw, priority, cancelled: false };
+	initialDrawQueue.push(queuedDraw);
+
+	if (!processingInitialDraws) {
+		processingInitialDraws = true;
+		queueMicrotask(() => void processInitialDraws());
+	}
+
+	return () => {
+		queuedDraw.cancelled = true;
+	};
+}
+
+async function processInitialDraws() {
+	try {
+		while (initialDrawQueue.length > 0) {
+			initialDrawQueue.sort(
+				(a, b) => Number(b.priority === 'high') - Number(a.priority === 'high')
+			);
+			const queuedDraw = initialDrawQueue.shift()!;
+			if (!queuedDraw.cancelled) {
+				await queuedDraw.draw();
+			}
+		}
+	} finally {
+		processingInitialDraws = false;
+		if (initialDrawQueue.length > 0) {
+			processingInitialDraws = true;
+			queueMicrotask(() => void processInitialDraws());
+		}
+	}
 }
 
 /**
@@ -36,6 +81,7 @@ export interface PlotlyGraphController {
  */
 export function createPlotlyGraph(controller: PlotlyGraphController): void {
 	let ready = $state(false);
+	let cancelInitialDraw: (() => void) | undefined;
 
 	onMount(() => {
 		if (controller.getNode() === undefined) {
@@ -44,14 +90,15 @@ export function createPlotlyGraph(controller: PlotlyGraphController): void {
 		// Plotly is browser-only and loaded lazily; await it before drawing. draw
 		// may itself be async (e.g. awaiting Plotly.newPlot). Only mark ready once
 		// it has actually drawn, so refresh/layout effects don't run too early.
-		void (async () => {
+		cancelInitialDraw = queueInitialDraw(async () => {
 			await loadPlotly();
 			await controller.draw();
 			ready = true;
-		})();
+		}, controller.initialDrawPriority ?? 'normal');
 	});
 
 	onDestroy(() => {
+		cancelInitialDraw?.();
 		const node = controller.getNode();
 		// Plotly.purge is only present once loadPlotly() has resolved; a component
 		// torn down before the chart drew has nothing to purge.
