@@ -4,6 +4,8 @@ import pandas as pd
 import pytest
 
 from updater.data import Data
+from updater.data.dataframes.fixtures import Fixtures
+from updater.data.raw_data import RawData
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
@@ -145,6 +147,24 @@ def is_int(s: str):
     if s[0] in ('-', '+'):
         return s[1:].isdigit()
     return s.isdigit()
+
+
+def test_build_keeps_postponed_fixture_without_a_matchday():
+    """A postponed fixture can be awaiting a newly assigned matchday."""
+    match = {
+        "matchday": None,
+        "utcDate": "2026-08-15T12:00:00Z",
+        "homeTeam": {"name": "Arsenal FC"},
+        "awayTeam": {"name": "Chelsea FC"},
+        "status": "POSTPONED",
+        "score": {"fullTime": {"home": None, "away": None}},
+    }
+
+    fixtures = Fixtures()
+    fixtures.build(RawData(fixtures={2026: [match]}), 2026)
+
+    assert set(fixtures.df.index) == {"Arsenal", "Chelsea"}
+    assert fixtures.df.loc["Arsenal", (None, "status")] == "POSTPONED"
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)

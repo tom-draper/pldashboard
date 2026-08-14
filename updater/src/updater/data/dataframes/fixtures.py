@@ -147,9 +147,16 @@ class Fixtures(DF):
         data = raw_data.fixtures[season]
 
         # Column store keyed by (matchday, field) -> {team: value}. Sorting the
-        # matches by matchday keeps the resulting column order matchday-ordered.
+        # matches by matchday keeps the resulting column order matchday-ordered;
+        # fixtures awaiting a rearranged matchday are kept after numbered rounds.
         columns: dict[tuple[int, str], dict[str, object]] = defaultdict(dict)
-        for match in sorted(data, key=lambda x: x["matchday"]):
+        for match in sorted(
+            data,
+            key=lambda x: (
+                x["matchday"] is None,
+                x["matchday"] if x["matchday"] is not None else 0,
+            ),
+        ):
             self._insert_team_row(columns, match, True)
             self._insert_team_row(columns, match, False)
 
