@@ -24,7 +24,7 @@ DEFAULT_MODEL = "dixon-coles"
 
 
 def _registries():
-    factories = import_module("updater.predictions.models")
+    factories = import_module("updater.predictions.models.factories")
     scoreline = {
         "dixon-coles": factories._dixon_coles,
         "poisson": factories._poisson,
