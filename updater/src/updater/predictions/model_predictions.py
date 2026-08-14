@@ -62,10 +62,11 @@ def next_matchday_fixtures(
     raw_data: RawData, current_season: int
 ) -> list[tuple[datetime, str, str]]:
     """The (date, home, away) of the earliest not-yet-played matchday."""
+    scheduled = {"SCHEDULED", "TIMED"}
     unplayed = [
         match
         for match in raw_data.fixtures.get(current_season, [])
-        if match.get("status") != "FINISHED" and match.get("matchday") is not None
+        if match.get("status") in scheduled and match.get("matchday") is not None
     ]
     if not unplayed:
         return []
