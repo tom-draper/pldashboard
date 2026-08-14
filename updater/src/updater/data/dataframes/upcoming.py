@@ -50,6 +50,11 @@ class Upcoming(DF):
             return predictions
 
         for row in self.df.itertuples():
+            # A team can have no remaining scheduled fixture while other teams
+            # still do. Such rows deliberately carry no opponent or prediction.
+            if row.team is None or row.prediction is None:
+                continue
+
             team = row.Index
             if row.atHome:
                 home_initials = convert_team_name_or_initials(team)
