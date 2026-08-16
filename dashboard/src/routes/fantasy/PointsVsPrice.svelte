@@ -83,16 +83,7 @@
 		return { teams, points, price, minutes, colors, sizes, playtimes };
 	}
 
-	function getMinimumPlayerPrice(data: FantasyData): number {
-		const prices = Object.entries(data)
-			.filter(([team]) => isTeam(team))
-			.map(([, teamData]) => (teamData.price ?? 0) / 10)
-			.filter((price) => price > 0);
-
-		return prices.length > 0 ? Math.min(...prices) : 0;
-	}
-
-	function createDefaultLayout(data: FantasyData): PlotLayout {
+	function createDefaultLayout(): PlotLayout {
 		return {
 			title: { text: '' },
 			autosize: true,
@@ -109,7 +100,7 @@
 				zeroline: false,
 				fixedrange: true,
 				visible: true,
-				range: [getMinimumPlayerPrice(data), null]
+				autorange: true
 			},
 			xaxis: {
 				title: { text: 'Points' },
@@ -127,7 +118,7 @@
 	function buildPlotData(data: FantasyData): PlotData {
 		return {
 			data: [createScatterData(data)],
-			layout: createDefaultLayout(data),
+			layout: createDefaultLayout(),
 			config: CHART_CONFIG
 		};
 	}
@@ -174,13 +165,15 @@
 		plotData = buildPlotData(data);
 
 		await Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
+		await Plotly.relayout(plotDiv, { 'yaxis.autorange': true });
 	}
 
-	function refreshPlot() {
+	async function refreshPlot() {
 		const newPlotData = buildPlotData(data);
 		plotData.data[0] = newPlotData.data[0];
 
-		Plotly.redraw(plotDiv);
+		await Plotly.redraw(plotDiv);
+		await Plotly.relayout(plotDiv, { 'yaxis.autorange': true });
 
 		// Apply appropriate layout for current view
 		if (mobileView) {
