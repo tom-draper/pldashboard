@@ -12,9 +12,10 @@
 	import { mobileView } from '$lib/mobileView.svelte';
 
 	const { data }: { data: FantasyDashboardData } = $props();
-	let page = $state(data.page);
-	let title = $state(data.title);
-	let pageData = $state(data.pageData);
+	let selectedPage = $state<Page | undefined>();
+	const page = $derived(selectedPage ?? data.page);
+	const title = $derived(getTitle(page));
+	const pageData = $derived(filterDataByPage(data.data, page));
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');
@@ -32,9 +33,7 @@
 	}
 
 	function switchPage(newPage: Page) {
-		page = newPage;
-		title = getTitle(newPage);
-		pageData = filterDataByPage(data.data, newPage);
+		selectedPage = newPage;
 
 		const nextPage = getNextPage(newPage);
 		replaceState(nextPage, {}); // Change current url without reloading
