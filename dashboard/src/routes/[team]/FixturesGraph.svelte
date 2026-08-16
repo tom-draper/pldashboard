@@ -264,9 +264,12 @@
 		return plotData;
 	}
 
-	function genPlot() {
+	let graphReady = $state(false);
+
+	async function genPlot() {
 		plotData = buildPlotData(data, team);
-		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
+		await Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
+		graphReady = true;
 	}
 
 	function refreshPlot() {
@@ -294,8 +297,46 @@
 	});
 </script>
 
-<div>
-	<div class="resizable-graph" bind:this={plotDiv}>
+
+<div class="relative" aria-busy={!graphReady}>
+	{#if !graphReady}
+		<div class="absolute inset-0 p-4" aria-label="Loading fixtures graph">
+			<svg
+				class="h-full w-full animate-pulse"
+				viewBox="0 0 800 450"
+				role="img"
+				aria-hidden="true"
+			>
+				<g stroke="#e5e7eb" stroke-width="2">
+					<line x1="70" y1="55" x2="770" y2="55" />
+					<line x1="70" y1="135" x2="770" y2="135" />
+					<line x1="70" y1="215" x2="770" y2="215" />
+					<line x1="70" y1="295" x2="770" y2="295" />
+					<line x1="70" y1="375" x2="770" y2="375" />
+				</g>
+				<polyline
+					points="70,280 135,235 200,260 265,175 330,205 395,125 460,165 525,105 590,145 655,85 720,120 770,75"
+					fill="none"
+					stroke="#cbd5e1"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="8"
+				/>
+				<g fill="#cbd5e1">
+					<circle cx="70" cy="280" r="8" />
+					<circle cx="265" cy="175" r="8" />
+					<circle cx="460" cy="165" r="8" />
+					<circle cx="655" cy="85" r="8" />
+					<circle cx="770" cy="75" r="8" />
+				</g>
+			</svg>
+		</div>
+	{/if}
+	<div
+		class="resizable-graph transition-opacity duration-300"
+		class:opacity-0={!graphReady}
+		bind:this={plotDiv}
+	>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>
