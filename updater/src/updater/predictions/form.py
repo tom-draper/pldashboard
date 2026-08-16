@@ -1,13 +1,13 @@
 import numpy as np
-from updater.data.dataframes import TeamRatings
 
+from updater.data.dataframes.team_ratings import TeamRatings
 from updater.predictions.scoreline import Scoreline
 
 
 def calc_form(
     team: str,
     recent_matches: list[Scoreline],
-    weightings: list[float],
+    weightings: np.ndarray,
     team_ratings: TeamRatings,
 ):
     weightings /= np.sum(weightings)

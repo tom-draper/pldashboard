@@ -22,7 +22,7 @@
 		return [low, high];
 	}
 
-	function buildTableSnippet() {
+	function buildTableSnippet(): TableSnippet | undefined {
 		const sortedTeams = getTeams(data).sort(function (teamA, teamB) {
 			return data.standings[teamA][data._id].position - data.standings[teamB][data._id].position;
 		});
@@ -44,11 +44,12 @@
 		}
 
 		if (teamTableIdx !== null) {
-			tableSnippet = {
+			return {
 				teamTableIdx: teamTableIdx,
 				rows: rows
 			};
 		}
+		return undefined;
 	}
 
 	type TableSnippet = {
@@ -61,150 +62,125 @@
 		}[];
 	};
 
-	let tableSnippet: TableSnippet;
-	$: team && buildTableSnippet();
+	const {
+		data,
+		teamID,
+		team,
+		switchTeam
+	}: { data: TeamsData; teamID: string; team: Team; switchTeam: (newTeam: Team) => void } =
+		$props();
 
-	export let data: TeamsData, teamID: string, team: Team, switchTeam: (newTeam: Team) => void;
+	const tableSnippet = $derived(buildTableSnippet());
+
+	// One column template for every row, so the header, the highlighted row and
+	// the plain rows cannot drift out of alignment.
+	//
+	// These were previously four percentage widths repeated on each row's cells,
+	// and they summed to 7 + 63 + 15 + 15 = 100% *plus* an 8px margin on the
+	// name. Every row therefore overflowed by 8px, and flex resolved that by
+	// shrinking the cells. A flex item will not shrink below its min-content
+	// width, which differs per row (the header is bold, the highlighted row is
+	// 1.1em, the plain rows are neither), so each row shrank by a different
+	// amount and the columns landed in different places.
+	//
+	// Grid tracks are sized from the template rather than the content, so the
+	// four columns are identical on every row whatever it contains. The name's
+	// 8px indent is padding now, inside its own track rather than added to the
+	// row's total width.
+	const gridCols = 'grid grid-cols-[7%_63%_15%_15%]';
+	const rowClass = `${gridCols} rounded-[var(--border-radius)] px-[5%] py-[5px]`;
+	// 1.21em, not 1.1em: text-[1.1em] used to sit on this row *and* on each of
+	// its cells, and em compounds, so the highlighted row has always rendered at
+	// 1.1 x 1.1. The cells no longer carry their own size, so the product is
+	// stated here to keep the row exactly the size it has always been.
+	const thisTeamRowClass = `${gridCols} rounded-[var(--border-radius)] px-[5%] py-[14px] text-[1.21em]`;
+	const dividerClass = 'm-auto w-[90%] self-center border-b border-b-[grey]';
+	// min-w-0 stops a long name widening its own track and pushing the numbers
+	// out of line, which is the same failure the percentages had.
+	const nameCellClass = 'min-w-0 pl-[8px] text-left';
+
+	// Hovering a row lightens its text instead of filling it with a background.
+	//
+	// The colour sits on the button rather than the cells so all four inherit
+	// it and shift together: hovering the position number lights the row up as
+	// one thing, which is what it is.
+	//
+	// Weight and size are deliberately untouched. The columns are fixed tracks,
+	// so bolding a long name like Wolverhampton Wanderers could wrap it inside
+	// its track and change the row's height under the cursor.
+	//
+	// focus-visible mirrors hover so a row reached by keyboard reads the same;
+	// the button clears its own outline via [outline:inherit].
+	const plainRowClass =
+		`${rowClass} w-full cursor-pointer border-none bg-transparent text-center ` +
+		'text-[#333333] [font:inherit] [outline:inherit] ' +
+		'hover:text-[#666666] focus-visible:text-[#666666]';
 </script>
 
-<div class="table-snippet">
+<div
+	class="relative mt-[20px] flex h-auto w-full flex-col max-[1100px]:mt-0 max-[550px]:text-[14px]"
+>
 	{#if tableSnippet != undefined}
-		<div class="divider"></div>
-		<div class="table-row">
-			<div class="table-element table-position column-title"></div>
-			<div class="table-element table-team-name column-title">Team</div>
-			<div class="table-element table-gd column-title">GD</div>
-			<div class="table-element table-points column-title">Points</div>
+		<div></div>
+		<div class={rowClass}>
+			<div class="font-bold"></div>
+			<div class="{nameCellClass} font-bold text-[#333333]">Team</div>
+			<div class="font-bold">GD</div>
+			<div class="font-bold">Points</div>
 		</div>
 
-		{#each tableSnippet.rows as row, i}
+		{#each tableSnippet.rows as row, i (row.name)}
 			<!-- Divider -->
 			{#if i === 0}
 				{#if i != tableSnippet.teamTableIdx}
-					<div id="divider"></div>
+					<div class={dividerClass}></div>
 				{/if}
 			{:else if i - 1 != tableSnippet.teamTableIdx && i != tableSnippet.teamTableIdx}
-				<div id="divider"></div>
+				<div class={dividerClass}></div>
 			{/if}
 			<!-- Row of table -->
 			{#if i === tableSnippet.teamTableIdx}
 				<!-- Highlighted row for the team of the current page -->
-				<div class="table-row this-team" style="background-color: var(--{teamID});">
-					<div
-						class="table-element table-position this-team"
-						style="color: var(--{teamID}-secondary);"
-					>
+				<div class={thisTeamRowClass} style="background-color: var(--{teamID});">
+					<div style="color: var(--{teamID}-secondary);">
 						{row.position}
 					</div>
-					<a
-						href="/{teamID}"
-						class="table-element table-team-name this-team"
-						style="color: var(--{teamID}-secondary);"
-					>
+					<a href="/{teamID}" class={nameCellClass} style="color: var(--{teamID}-secondary);">
 						{toAlias(row.name)}
 					</a>
-					<div class="table-element table-gd this-team" style="color: var(--{teamID}-secondary);">
+					<div style="color: var(--{teamID}-secondary);">
 						{row.gd}
 					</div>
-					<div
-						class="table-element table-points this-team"
-						style="color: var(--{teamID}-secondary);"
-					>
+					<div style="color: var(--{teamID}-secondary);">
 						{row.points}
 					</div>
 				</div>
 			{:else}
-				<!-- Plain row -->
-				<div class="table-row">
-					<div class="table-element table-position">
+				<!-- Plain row: the whole row is the switch-team control so it reads as clickable. -->
+				<button
+					type="button"
+					onclick={() => {
+						switchTeam(row.name);
+					}}
+					class={plainRowClass}
+				>
+					<span>
 						{row.position}
-					</div>
-					<button
-						on:click={() => {
-							switchTeam(row.name);
-						}}
-						class="table-element table-team-name"
-					>
+					</span>
+					<span class={nameCellClass}>
 						{toAlias(row.name)}
-					</button>
-					<div class="table-element table-gd">
+					</span>
+					<span>
 						{row.gd}
-					</div>
-					<div class="table-element table-points">
+					</span>
+					<span>
 						{row.points}
-					</div>
-				</div>
+					</span>
+				</button>
 			{/if}
 		{/each}
 		{#if tableSnippet.teamTableIdx != 6}
-			<div id="divider"></div>
+			<div class={dividerClass}></div>
 		{/if}
 	{/if}
 </div>
-
-<style scoped>
-	.table-snippet {
-		position: relative;
-		margin-top: 20px;
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		height: auto;
-	}
-	.table-row {
-		display: flex;
-		padding: 5px 5%;
-		border-radius: var(--border-radius);
-	}
-	.table-row.this-team {
-		padding: 14px 5%;
-		font-size: 20px;
-	}
-	.this-team {
-		font-size: 1.1em !important;
-	}
-	#divider {
-		align-self: center;
-		border-bottom: 1px solid grey;
-		width: 90%;
-		margin: auto;
-	}
-	.column-title {
-		font-weight: 700;
-	}
-	.table-position {
-		width: 7%;
-	}
-	button {
-		background: none;
-		color: inherit;
-		border: none;
-		padding: 0;
-		font: inherit;
-		cursor: pointer;
-		outline: inherit;
-	}
-	.table-team-name {
-		width: 63%;
-		text-align: left;
-		margin-left: 8px;
-		color: #333333;
-	}
-	.table-gd {
-		width: 15%;
-	}
-	.table-points {
-		width: 15%;
-	}
-
-	@media only screen and (max-width: 1100px) {
-		.table-snippet {
-			margin-top: 0;
-		}
-	}
-	@media only screen and (max-width: 550px) {
-		.table-snippet {
-			font-size: 14px;
-		}
-	}
-</style>

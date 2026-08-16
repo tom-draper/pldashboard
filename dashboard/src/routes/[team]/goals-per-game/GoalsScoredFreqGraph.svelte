@@ -1,10 +1,13 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import type { PlotData, PlotTrace, PlotLayout } from '$lib/types';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
+	import { relayoutPlotly, updatePlotlyLayout } from '$lib/plotlyLayout';
 
-	function defaultLayout() {
+	function defaultLayout(): PlotLayout {
 		const xLabels = getXLabels();
 		return {
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
 			hovermode: 'closest',
@@ -32,31 +35,21 @@
 	}
 
 	function setDefaultLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Scored' },
 			'yaxis.visible': true,
 			'margin.l': 60
 		};
-		//@ts-ignore
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function setMobileLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
 			'margin.l': 20
 		};
-		//@ts-ignore
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function buildPlotData(): PlotData {
@@ -74,24 +67,14 @@
 
 	function genPlot() {
 		plotData = buildPlotData();
-		//@ts-ignore
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
-			// Once plot generated, add resizable attribute to it to shorten height for mobile view
-			plot.children[0].children[0].classList.add('resizable-graph');
-		});
+		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
-
 		plotData.data[1] = getScoredTeamBars(); // Update team bars
-		//@ts-ignore
-		Plotly.relayout(plotDiv, {
+		relayoutPlotly(plotDiv, {
 			yaxis: getYAxisLayout()
 		});
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();
@@ -99,26 +82,36 @@
 	}
 
 	let plotDiv: HTMLDivElement, plotData: PlotData;
-	let setup = false;
-	onMount(() => {
-		genPlot();
-		setup = true;
-	});
 
-	$: team && refreshPlot();
-	$: !mobileView && setDefaultLayout();
-	$: setup && mobileView && setMobileLayout();
-
-	export let team: string,
-		getScoredBars: () => any,
-		getScoredTeamBars: () => any,
-		getXLabels: () => any,
-		getYAxisLayout: () => any,
+	const {
+		team,
+		getScoredBars,
+		getScoredTeamBars,
+		getXLabels,
+		getYAxisLayout,
+		mobileView
+	}: {
+		team: string;
+		getScoredBars: () => PlotTrace[];
+		getScoredTeamBars: () => PlotTrace;
+		getXLabels: () => string[];
+		getYAxisLayout: () => PlotLayout['yaxis'];
 		mobileView: boolean;
+	} = $props();
+
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: genPlot,
+		refresh: refreshPlot,
+		applyDefaultLayout: setDefaultLayout,
+		applyMobileLayout: setMobileLayout,
+		isMobile: () => mobileView,
+		trigger: () => team
+	});
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

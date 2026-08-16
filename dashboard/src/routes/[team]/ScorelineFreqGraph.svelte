@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import type { PlotData, PlotTrace, PlotLayout } from '$lib/types';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
+	import { updatePlotlyLayout } from '$lib/plotlyLayout';
 	import { getTeams, teamInSeason } from '$lib/team';
 	import type { Form, TeamsData } from './dashboard.types';
 	import { extractGoals } from '$lib/goals';
@@ -15,7 +18,7 @@
 			const scoreStr = getScoreString(score.homeGoals, score.awayGoals, atHome);
 			if (!(scoreStr in scoreFreq)) {
 				scoreFreq[scoreStr] = [0];
-			} 
+			}
 			scoreFreq[scoreStr][0] += 1;
 		}
 	}
@@ -76,14 +79,14 @@
 			if (h > a) {
 				return '#00fe87';
 			} else if (h < a) {
-				return '#f83027';
+				return '#ff0000';
 			} else {
-				return '#ffdd00';
+				return '#ffd700';
 			}
 		});
 	}
 
-	function separateBars(scoreFreq: ScoreFreq) {
+	function separateBars(scoreFreq: ScoreFreq): PlotTrace[] {
 		const sorted = Object.entries(scoreFreq).sort((a, b) => b[1][0] - a[1][0]);
 		const x = [];
 		const avgY = [];
@@ -146,9 +149,9 @@
 		}
 	}
 
-	function defaultLayout() {
+	function defaultLayout(): PlotLayout {
 		return {
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 65, t: 15, b: 60, pad: 5 },
 			hovermode: 'closest',
@@ -181,33 +184,23 @@
 	}
 
 	function setDefaultLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Probability' },
 			'yaxis.visible': true,
 			'xaxis.tickfont.size': 12,
 			'margin.l': 65
 		};
-		//@ts-ignore
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function setMobileLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
 			'xaxis.tickfont.size': 5,
 			'margin.l': 20
 		};
-		//@ts-ignore
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function buildPlotData(data: TeamsData, team: Team): PlotData {
@@ -217,7 +210,7 @@
 		scaleBars(scoreFreq);
 		convertToPercentage(scoreFreq);
 		const bars = separateBars(scoreFreq);
-		
+
 		const plotData = {
 			data: bars,
 			layout: defaultLayout(),
@@ -232,11 +225,7 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
-			// Once plot generated, add resizable attribute to it to shorten height for mobile view
-			plot.children[0].children[0].classList.add('resizable-graph');
-		});
+		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function resetTeamBars(scoreFreq: ScoreFreq) {
@@ -246,17 +235,12 @@
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
-
 		resetTeamBars(scoreFreq);
 		insertTeamScoreBars(data, team, scoreFreq);
 		scaleBars(scoreFreq);
 		convertToPercentage(scoreFreq);
 		const bars = separateBars(scoreFreq);
 		plotData.data[1] = bars[1]; // Update team bars
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();
@@ -268,22 +252,24 @@
 	};
 
 	let plotDiv: HTMLDivElement, plotData: PlotData;
+
 	let scoreFreq: ScoreFreq;
-	let setup = false;
-	onMount(() => {
-		genPlot();
-		setup = true;
+
+	const { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
+
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: genPlot,
+		refresh: refreshPlot,
+		applyDefaultLayout: setDefaultLayout,
+		applyMobileLayout: setMobileLayout,
+		isMobile: () => mobileView,
+		trigger: () => team
 	});
-
-	$: team && refreshPlot();
-	$: !mobileView && setDefaultLayout();
-	$: setup && mobileView && setMobileLayout();
-
-	export let data: TeamsData, team: Team, mobileView: boolean;
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

@@ -1,7 +1,11 @@
+from datetime import datetime
+
 import pandas as pd
 import pytest
-from src.updater.data import Data
-from datetime import datetime
+
+from updater.data import Data
+from updater.data.dataframes.fixtures import Fixtures
+from updater.data.raw_data import RawData
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
@@ -96,7 +100,13 @@ def test_fixtures_df_score_datatype(data: Data):
     for matchday in matchdays:
         scores = data.teams.fixtures.df[matchday, 'score']
         for score in scores:
-            assert isinstance(score, str) or score is None
+            # Scores are stored as {'homeGoals': int, 'awayGoals': int}, or
+            # None for matches that have not been played.
+            assert score is None or (
+                isinstance(score, dict)
+                and isinstance(score['homeGoals'], int)
+                and isinstance(score['awayGoals'], int)
+            )
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
@@ -129,7 +139,7 @@ def valid_score(score: str):
     away_goals = int(a)
     if away_goals < 0:
         return False
-    
+
     return True
 
 
@@ -139,9 +149,67 @@ def is_int(s: str):
     return s.isdigit()
 
 
+def test_build_keeps_postponed_fixture_without_a_matchday():
+    """A postponed fixture can be awaiting a newly assigned matchday."""
+    match = {
+        "matchday": None,
+        "utcDate": "2026-08-15T12:00:00Z",
+        "homeTeam": {"name": "Arsenal FC"},
+        "awayTeam": {"name": "Chelsea FC"},
+        "status": "POSTPONED",
+        "score": {"fullTime": {"home": None, "away": None}},
+    }
+
+    fixtures = Fixtures()
+    fixtures.build(RawData(fixtures={2026: [match]}), 2026)
+
+    assert set(fixtures.df.index) == {"Arsenal", "Chelsea"}
+    assert fixtures.df.loc["Arsenal", (None, "status")] == "POSTPONED"
+
+
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_form_df_matchday_range(data: Data):
     # Matchdays in expected range
     matchdays = get_matchdays(data)
     for matchday in matchdays:
         assert pytest.valid_matchday(matchday)
+
+
+def count_finished_matches(data: Data):
+    # Each finished match appears as two team-rows (home and away).
+    df = data.teams.fixtures.df
+    finished_rows = sum(
+        (df[matchday, "status"] == "FINISHED").sum()
+        for matchday in get_matchdays(data)
+    )
+    return finished_rows // 2
+
+
+@pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
+def test_get_actual_scores_key_format(data: Data):
+    # Every key is a "HOME vs AWAY" pair of valid team initials.
+    actual_scores = data.teams.fixtures.get_actual_scores()
+    for match_id in actual_scores:
+        home, middle, away, *rest = match_id.split(" ")
+        assert middle == "vs"
+        assert not rest
+        assert home.isalnum() and away.isalnum()
+        assert home != away
+
+
+@pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
+def test_get_actual_scores_value_format(data: Data):
+    # Every value is a fully-populated integer scoreline.
+    actual_scores = data.teams.fixtures.get_actual_scores()
+    for score in actual_scores.values():
+        assert isinstance(score, dict)
+        assert isinstance(score["homeGoals"], int)
+        assert isinstance(score["awayGoals"], int)
+
+
+@pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
+def test_get_actual_scores_counts_finished_matches(data: Data):
+    # One entry per finished match: the two team-rows of a match collapse to a
+    # single "HOME vs AWAY" key, so unplayed fixtures never appear.
+    actual_scores = data.teams.fixtures.get_actual_scores()
+    assert len(actual_scores) == count_finished_matches(data)

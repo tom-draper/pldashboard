@@ -7,11 +7,28 @@
 	import { getCurrentMatchday, getTeamID, playedMatchdayDates, toAlias } from '$lib/team';
 	import type { DashboardData } from './dashboard.types';
 	import { replaceState } from '$app/navigation';
-	import { slugAlias, toTitleCase } from '$lib/format';
+	import { slugAlias } from '$lib/format';
 	import TeamsContent from './TeamsContent.svelte';
 	import OverviewContent from './OverviewContent.svelte';
+	import Seo from '$components/Seo.svelte';
 	import type { Team } from '$lib/types';
 	import { setThemeColor } from '$lib/theme';
+
+	const { data }: { data: DashboardData } = $props();
+	let selectedTeam = $state<Team>();
+
+	const viewData = $derived.by((): DashboardData => {
+		const team = selectedTeam ?? data.team.name;
+		const slug = slugAlias(getTeamID(team));
+		return {
+			...data,
+			slug,
+			team: { name: team, id: slug },
+			title: `Dashboard - ${team}`,
+			currentMatchday: getCurrentMatchday(data.data, team),
+			playedDates: playedMatchdayDates(data.data, team)
+		};
+	});
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');
@@ -35,134 +52,87 @@
 		return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 	}
 
-	async function switchTeam(newTeam: Team) {
+	function switchTeam(newTeam: Team) {
 		if (!browser) {
 			return;
 		}
 
 		const newSlug = slugAlias(getTeamID(newTeam));
-		if (data.slug !== newSlug) {
-			data.slug = newSlug;
-			data.team.id = data.slug;
-			data.team.name = toTitleCase(data.slug.replace(/-/g, ' ')) as Team;
-			data.title = `Dashboard | ${data.team.name}`;
-			// Overwrite values from new team's perspective using same data
-			data.currentMatchday = getCurrentMatchday(data.data, data.team.name);
-			data.playedDates = playedMatchdayDates(data.data, data.team.name);
-
-			try {
-				replaceState(data.slug, {}); // Change current url without reloading
-			} catch (error) {
-				console.warn('SvelteKit navigation failed, using native browser API:', error);
-				// Fallback to native browser navigation
-				window.history.replaceState({}, '', `/${data.slug}`);
-			}
-
-			// Set theme after navigation
-			setThemeColor(getCSSVar(`--${data.team.id}`));
+		if (viewData.slug !== newSlug) {
+			selectedTeam = newTeam;
+			replaceState(`/${newSlug}`, {});
+			setThemeColor(getCSSVar(`--${newSlug}`));
 		}
 	}
 
-	let routerReady = false;
-
 	onMount(() => {
-		console.log(data.data);
 		setThemeColor(getCSSVar(`--${data.team.id}`));
-		// Mark router as ready after mount
-		routerReady = true;
 	});
-
-	export let data: DashboardData;
 </script>
 
-<svelte:head>
-	<title>{data.title}</title>
-</svelte:head>
+{#if viewData.slug === 'overview'}
+	<Seo
+		title="Dashboard - Overview"
+		description="Premier League standings, upcoming fixtures and team ratings at a glance, updated through the season."
+		path="/overview"
+	/>
+{:else}
+	<Seo
+		title={viewData.title}
+		description="{viewData.team
+			.name} Premier League statistics: current form, league position, goals scored and conceded, upcoming fixtures and match predictions."
+		path="/{viewData.team.id}"
+	/>
+{/if}
 
-<div id="team">
-	<Nav team={data.team.name} teams={data.teams} {switchTeam} />
-	<MobileNav teams={data.teams} {switchTeam} {toggleMobileNav} />
-	<button id="mobileNavBtn" on:click={toggleMobileNav}> Select Team </button>
+<div id="team" class="flex overflow-x-hidden text-[15px]">
+	<Nav team={viewData.team.name} teams={viewData.teams} {switchTeam} />
+	<MobileNav teams={viewData.teams} {switchTeam} {toggleMobileNav} />
 
-	<div id="dashboard">
-		{#if data.slug === 'overview'}
-			<div class="header overview-header">
-				<a class="main-link no-decoration" href="/overview">
-					<div class="title">Overview</div>
+	<button
+		id="mobileNavBtn"
+		class="fixed bottom-0 z-[100] mb-[-1px] w-full cursor-pointer border-none bg-[var(--purple)] py-[0.8em] text-[1.1em] text-white xl:hidden"
+		onclick={toggleMobileNav}
+	>
+		Select Team
+	</button>
+
+	<div id="dashboard" class="ml-0 w-full xl:ml-[220px]">
+		{#if viewData.slug === 'overview'}
+			<div class="grid h-24 place-items-center bg-[var(--green)] text-[var(--purple)]">
+				<a class="main-link no-decoration grid w-fit place-items-center" href="/overview">
+					<div class="w-fit text-[2.3rem]">Overview</div>
 				</a>
 			</div>
 		{:else}
-			<div class="header" style="background-color: var(--{data.team.id});">
-				<a class="main-link no-decoration" href="/{data.team.id}">
-					<div class="title" style="color: var(--{data.team.id + '-secondary'});">
-						{toAlias(data.team.name)}
+			<div class="grid h-24 place-items-center" style="background-color: var(--{viewData.team.id});">
+				<a class="main-link no-decoration grid w-fit place-items-center" href="/{viewData.team.id}">
+					<div class="w-fit text-[2.3rem]" style="color: var(--{viewData.team.id + '-secondary'});">
+						{toAlias(viewData.team.name)}
 					</div>
 				</a>
 			</div>
 		{/if}
 
-		{#if data.slug === 'overview'}
-			<OverviewContent {data} />
+		{#if viewData.slug === 'overview'}
+			<OverviewContent data={viewData} />
 		{:else}
-			<TeamsContent {data} {switchTeam} />
+			<TeamsContent data={viewData} {switchTeam} />
 		{/if}
-		<Footer lastUpdated={data.data.lastUpdated} dark={false} />
+
+		<Footer lastUpdated={viewData.data.lastUpdated} dark={false} />
 	</div>
 </div>
 
 <style scoped>
-	.header {
-		display: grid;
-		place-items: center;
-	}
-	.overview-header {
-		background-color: var(--green);
-		color: var(--purple);
-	}
+	/* Dynamic CSS variable names can't be expressed with Tailwind, so these remain inline. */
+
+	/* Remove these if they're already defined globally. */
 	.main-link {
-		width: fit-content;
-		display: grid;
-		place-items: center;
-	}
-	.title {
-		font-size: 2.3rem;
-		width: fit-content;
+		text-decoration: none;
 	}
 
-	#team {
-		display: flex;
-		overflow-x: hidden;
-		font-size: 15px;
-	}
-
-	#dashboard {
-		margin-left: 220px;
-		width: 100%;
-	}
-
-	#mobileNavBtn {
-		position: fixed;
-		color: white;
-		background: var(--purple);
-		padding: 0.8em 0;
-		cursor: pointer;
-		font-size: 1.1em;
-		z-index: 100;
-		width: 100%;
-		bottom: 0;
-		border: none;
-		margin-bottom: -1px; /* For gap at bottom found in safari */
-	}
-
-	@media only screen and (min-width: 1200px) {
-		#mobileNavBtn {
-			display: none;
-		}
-	}
-
-	@media only screen and (max-width: 1200px) {
-		#dashboard {
-			margin-left: 0;
-		}
+	.no-decoration {
+		text-decoration: none;
 	}
 </style>

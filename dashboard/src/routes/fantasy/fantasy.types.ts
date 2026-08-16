@@ -1,12 +1,10 @@
-import type { TeamsData } from "../[team]/dashboard.types";
-
 export type FantasyDashboardData = {
 	slug: string;
 	title: string;
 	page: Page;
 	data: FantasyData;
 	pageData: FantasyData;
-}
+};
 
 export type FantasyData = {
 	[player: string]: PlayerData;
@@ -72,7 +70,6 @@ export enum Team {
 }
 
 export type Page = 'all' | 'forward' | 'midfielder' | 'defender' | 'goalkeeper';
-
 
 export interface FantasyPlayer {
 	firstName: string;

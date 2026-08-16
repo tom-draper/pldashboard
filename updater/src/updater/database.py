@@ -1,75 +1,73 @@
-from os import getenv
-from os.path import dirname, join
 from typing import Optional
+from urllib.parse import quote_plus
 
 import pymongo
-from dotenv import load_dotenv
+
+from updater.env import optional_env, require_env
 
 
 class Database:
     def __init__(self):
-        __file__ = "database.py"
-        dotenv_path = join(dirname(__file__), ".env")
-        load_dotenv(dotenv_path)
+        # The season is not read here: Updater owns it and passes it to
+        # update_team_data, so there is one source for it rather than two that
+        # can disagree.
 
-        self.current_season = int(getenv("SEASON"))
+        # Credentials must be percent-encoded: an unescaped '@', ':' or '/' in a
+        # password otherwise corrupts the connection string.
+        username = quote_plus(require_env("MONGODB_USERNAME"))
+        password = quote_plus(require_env("MONGODB_PASSWORD"))
+        database = require_env("MONGODB_DATABASE")
+        self.connection_string = f"mongodb+srv://{username}:{password}@main.pvnry.mongodb.net/{database}?retryWrites=true&w=majority&authSource=admin"
 
-        USERNAME = getenv("MONGODB_USERNAME")
-        PASSWORD = getenv("MONGODB_PASSWORD")
-        MONGODB_DATABASE = getenv("MONGODB_DATABASE")
-        self.connection_string = f"mongodb+srv://{USERNAME}:{PASSWORD}@main.pvnry.mongodb.net/{MONGODB_DATABASE}?retryWrites=true&w=majority&authSource=admin"
+        self._client: Optional[pymongo.MongoClient] = None
 
-    async def get_predictions(self):
-        predictions = None
-        with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Predictions2023
-            predictions = list(
-                collection.aggregate(
-                    [
-                        {
-                            "$group": {
-                                "_id": {
-                                    "$dateToString": {
-                                        "format": "%Y-%m-%d",
-                                        "date": "$datetime",
-                                    }
-                                },
-                                "predictions": {"$push": "$$ROOT"},
-                            }
-                        }
-                    ]
-                )
-            )
+    @property
+    def client(self):
+        """Lazily create and reuse a single MongoClient.
 
-        return predictions
+        MongoClient maintains its own connection pool and is designed to be
+        long-lived: creating one per operation forces a fresh TLS handshake and
+        topology discovery every time.
+        """
+        if self._client is None:
+            self._client = pymongo.MongoClient(self.connection_string)
+        return self._client
 
-    async def get_teams_data(self):
-        team_data: Optional[dict] = None
-        with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.TeamData
-            team_data = dict(collection.find_one({"_id": self.current_season}))
-        return team_data
+    @property
+    def form_predictions_collection(self):
+        """The collection holding score predictions.
 
-    async def get_fantasy_data(self):
-        fantasy_data: Optional[dict] = None
-        with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Fantasy
-            fantasy_data = dict(collection.find_one({"_id": "fantasy"}))
-        return fantasy_data
+        Reads and writes previously disagreed (reading Predictions2023 while
+        writing Predictions2024), so both now go through here. The name is
+        overridable via MONGODB_PREDICTIONS_COLLECTION; the default preserves
+        the existing write target.
+        """
+        name = optional_env("MONGODB_PREDICTIONS_COLLECTION", "Predictions2024")
+        return self.client.PremierLeague[name]
+
+    @property
+    def model_predictions_collection(self):
+        """The collection holding the fitted-model (model_predictions) scores.
+
+        Keyed by "HOME vs AWAY" initials so actual scores backfill the same way
+        the form predictions do. The collection name and its env var still say
+        V3, matching the documents already stored under that name; only the
+        Python-side identifiers were renamed.
+        """
+        name = optional_env("MONGODB_PREDICTIONS_V3_COLLECTION", "PredictionsV3")
+        return self.client.PremierLeague[name]
 
     @staticmethod
     def _get_actual_score(
-        prediction_id: str, actual_scores: dict[tuple[str, str], dict[str, int]]
-    ):
-        actual_score: Optional[str] = None
-        if prediction_id in actual_scores:
-            actual_score = actual_scores[prediction_id]
-        return actual_score
+        prediction_id: str, actual_scores: dict[str, dict[str, int]]
+    ) -> Optional[dict[str, int]]:
+        """The recorded score for a fixture id, or None if it has not finished."""
+        return actual_scores.get(prediction_id)
 
     def _build_prediction_objs(
         self,
         predictions: dict[str, dict[str, float]],
-        actual_scores: dict[tuple[str, str], dict[str, int]],
+        actual_scores: dict[str, dict[str, int]],
     ):
         """Combine predictions and actual_scores and add an _id field to create
         a dictionary matching the MongoDB schema.
@@ -108,19 +106,27 @@ class Database:
 
         return prediction_objs
 
+    @staticmethod
+    def _bulk_upsert(collection, documents: list[dict]):
+        """Replace-or-insert each document by its _id in a single round trip."""
+        if not documents:
+            return
+
+        collection.bulk_write(
+            [
+                pymongo.ReplaceOne({"_id": d["_id"]}, d, upsert=True)
+                for d in documents
+            ],
+            ordered=False,
+        )
+
     def _save_predictions(self, predictions: list):
-        with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Predictions2024
+        self._bulk_upsert(self.form_predictions_collection, predictions)
 
-            for prediction in predictions:
-                collection.replace_one(
-                    {"_id": prediction["_id"]}, prediction, upsert=True
-                )
-
-    def update_predictions(
+    def update_form_predictions(
         self,
         predictions: dict[str, dict[str, float]],
-        actual_scores: dict[tuple[str, str], dict[str, int]],
+        actual_scores: dict[str, dict[str, int]],
     ):
         """
         Update the MongoDB database with predictions in the preds dict, including
@@ -150,29 +156,60 @@ class Database:
         preds = self._build_prediction_objs(predictions, actual_scores)
         self._save_predictions(preds)
 
-    def update_actual_scores(
-        self, actual_scores: dict[tuple[str, str], dict[str, int]]
+    def _backfill_actual_scores(
+        self, collection, actual_scores: dict[str, dict[str, int]]
     ):
-        with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Predictions2024
+        # Get the id of all prediction objects that have no value for actual score
+        pending = collection.find({"actual": None}, {"_id": 1})
 
-            # Get the id of all prediction objects that have no value for actual score
-            no_actual_scores = collection.find({"actual": None}, {"_id": 1})
+        updates = []
+        for d in pending:
+            # Check if dict contains this missing actual score
+            actual = self._get_actual_score(d["_id"], actual_scores)
+            if actual is not None:
+                updates.append(
+                    pymongo.UpdateOne({"_id": d["_id"]}, {"$set": {"actual": actual}})
+                )
 
-            for d in no_actual_scores:
-                # Check if dict contains this missing actual score
-                actual = self._get_actual_score(d["_id"], actual_scores)
-                if actual is not None:
-                    collection.update_one(
-                        {"_id": d["_id"]}, {"$set": {"actual": actual}}
-                    )
+        if updates:
+            collection.bulk_write(updates, ordered=False)
+
+    def update_actual_scores(
+        self, actual_scores: dict[str, dict[str, int]]
+    ):
+        self._backfill_actual_scores(self.form_predictions_collection, actual_scores)
+
+    def update_model_predictions(
+        self,
+        predictions: list[dict],
+        actual_scores: dict[str, dict[str, int]],
+    ):
+        """Upsert the Dixon-Coles predictions and backfill any known results.
+
+        The prediction documents are already shaped by model_predictions; here we only
+        attach any actual score already available and write them, then backfill
+        results for fixtures predicted on earlier runs that have since finished.
+        """
+        if not predictions:
+            return
+
+        collection = self.model_predictions_collection
+        for prediction in predictions:
+            prediction["actual"] = self._get_actual_score(
+                prediction["_id"], actual_scores
+            )
+
+        self._bulk_upsert(collection, predictions)
+        self._backfill_actual_scores(collection, actual_scores)
 
     def update_team_data(self, team_data: dict, season: int):
-        with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.TeamData
-            collection.replace_one({"_id": season}, team_data)
+        # upsert so the first run of a new season creates the document rather
+        # than silently matching nothing.
+        self.client.PremierLeague.TeamData.replace_one(
+            {"_id": season}, team_data, upsert=True
+        )
 
     def update_fantasy_data(self, fantasy_data: dict):
-        with pymongo.MongoClient(self.connection_string) as client:
-            collection = client.PremierLeague.Fantasy
-            collection.replace_one({"_id": "fantasy"}, fantasy_data)
+        self.client.PremierLeague.Fantasy.replace_one(
+            {"_id": "fantasy"}, fantasy_data, upsert=True
+        )

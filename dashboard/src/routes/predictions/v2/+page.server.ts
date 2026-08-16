@@ -3,12 +3,12 @@ import type { PageServerLoad } from './$types';
 
 async function fetchPredictions() {
 	const data = await predictions.find({ score: null }).toArray();
-	return data
+	return data;
 }
 
 export const load: PageServerLoad = async () => {
 	const data = await fetchPredictions();
 	return {
-		matches: data,
+		matches: data
 	};
-}
+};

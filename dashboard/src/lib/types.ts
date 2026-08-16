@@ -1,3 +1,5 @@
+import type * as PlotlyJS from 'plotly.js';
+
 export enum Team {
 	Arsenal = 'Arsenal',
 	AstonVilla = 'Aston Villa',
@@ -27,8 +29,34 @@ export enum Team {
 	WolverhamptonWanderers = 'Wolverhampton Wanderers'
 }
 
+/**
+ * A complete Plotly plot definition as used across the chart components.
+ *
+ * Note this shadows Plotly's own global `PlotData` (a single trace). Always
+ * import this explicitly so the intended type wins.
+ */
+/**
+ * A single Plotly trace.
+ *
+ * Plotly's own `Data` is a union across every trace type, so members such as
+ * `marker` and `y` are not accessible on it. These charts only build
+ * scatter/bar traces, so the single-trace shape is both accurate and usable.
+ * Annotating trace helpers with this also stops literals like `type: 'bar'`
+ * widening to `string`.
+ */
+export type PlotTrace = Partial<PlotlyJS.PlotData>;
+export type PlotLayout = Partial<PlotlyJS.Layout>;
+export type PlotShape = Partial<PlotlyJS.Shape>;
+export type PlotConfig = Partial<PlotlyJS.Config>;
+
+export type PlotData = {
+	data: PlotTrace[];
+	layout: PlotLayout;
+	config: PlotConfig;
+};
+
 export type Counter = {
-    [k: string | number | symbol]: number;
+	[k: string | number | symbol]: number;
 };
 
 export type Score = {

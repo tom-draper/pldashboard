@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
 	import { toAlias, toName, getTeamID, teamColor } from '$lib/team';
 	import type { SpiderAttribute, TeamsData } from '../dashboard.types';
 	import getAttack from './attack';
@@ -10,10 +11,12 @@
 	import getWinStreak from './winStreak';
 	import getDefence from './defence';
 	import type { Team } from '$lib/types';
-	import type Plotly from 'plotly.js';
+	// Aliased: an `import type Plotly` would shadow the ambient Plotly the
+	// CDN script defines, and every value call below would stop resolving.
+	import type PlotlyTypes from 'plotly.js';
 
 	function addTeamComparison(team: Team) {
-		const teamData: Plotly.Data = {
+		const teamData: PlotlyTypes.Data = {
 			name: team,
 			type: 'scatterpolar',
 			r: [
@@ -31,7 +34,6 @@
 		};
 		plotData.data.push(teamData);
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv); // Redraw with teamName added
 	}
 
@@ -54,7 +56,6 @@
 			addAvg();
 		}
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv); // Redraw with teamName removed
 	}
 
@@ -75,7 +76,6 @@
 			removeItem(comparisonTeams, _team); // Remove from comparison teams
 		}
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv); // Redraw with teamName removed
 	}
 
@@ -86,7 +86,7 @@
 		}
 
 		for (let i = 0; i < btns.children.length; i++) {
-			//@ts-ignore
+			// @ts-expect-error children is an HTMLCollection of Element, narrowed by construction
 			const btn: HTMLButtonElement = btns.children[i];
 			if (btn.style.background === '') {
 				continue;
@@ -120,7 +120,7 @@
 		}
 	}
 
-	function scatterPlot(name: string, r: number[], color: string): Plotly.Data {
+	function scatterPlot(name: string, r: number[], color: string): PlotlyTypes.Data {
 		return {
 			name: name,
 			type: 'scatterpolar',
@@ -174,7 +174,7 @@
 	}
 
 	function defaultLayout() {
-		const layout: Plotly.Layout = {
+		const layout: PlotlyTypes.Layout = {
 			height: 550,
 			polar: {
 				radialaxis: {
@@ -182,7 +182,7 @@
 					range: [0, 100]
 				}
 			},
-			// @ts-ignore
+			// @ts-expect-error Plotly's config type omits this documented option
 			hover: 'closest',
 			margin: { t: 25, b: 25, l: 75, r: 75 },
 			showlegend: false,
@@ -198,7 +198,7 @@
 
 		const spiderPlots = initSpiderPlots(team);
 
-		const plotData: Plotly.PlotlyDataLayoutConfig = {
+		const plotData: PlotlyTypes.PlotlyDataLayoutConfig = {
 			data: spiderPlots,
 			layout: defaultLayout(),
 			config: {
@@ -219,33 +219,22 @@
 	let vsBig6: SpiderAttribute;
 	const labels = ['Attack', 'Defence', 'Clean sheets', 'Consistency', 'Win streak', 'Vs big 6'];
 
-	let plotDiv: HTMLDivElement, plotData: Plotly.PlotlyDataLayoutConfig;
+	let plotDiv: HTMLDivElement, plotData: PlotlyTypes.PlotlyDataLayoutConfig;
+
 	const comparisonTeams: Team[] = [];
-	let setup = false;
-	onMount(() => {
-		genPlot();
-		setup = true;
-	});
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
-			// Once plot generated, add resizable attribute to it to shorten height for mobile view
-			plot.children[0].children[0].classList.add('resizable-spider-chart');
-		});
+		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
-	function emptyArray(arr: any[]) {
+	function emptyArray<T>(arr: T[]) {
 		for (let i = 0; i < arr.length; i++) {
 			arr.pop();
 		}
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
 		const spiderPlots = initSpiderPlots(team);
 		// Remove all but two plots
 		emptyArray(plotData.data);
@@ -257,29 +246,34 @@
 		resetTeamComparisonBtns();
 	}
 
-	$: team && refreshPlot();
+	const { data, team, teams }: { data: TeamsData; team: Team; teams: Team[] } = $props();
 
-	export let data: TeamsData, team: Team, teams: Team[];
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: genPlot,
+		refresh: refreshPlot,
+		trigger: () => team
+	});
 </script>
 
 <div class="spider-chart">
-	<div id="plotly">
-		<div id="plotDiv" bind:this={plotDiv}>
+	<div>
+		<div class="resizable-spider-chart" bind:this={plotDiv}>
 			<!-- Plotly chart will be drawn inside this DIV -->
 		</div>
 	</div>
 </div>
 <div class="spider-opp-team-selector">
 	<div class="spider-opp-team-btns" id="spider-opp-teams">
-		{#each teams as _team, i}
+		{#each teams as _team, i (_team)}
 			{#if _team != team}
 				<button
 					class="spider-opp-team-btn"
 					class:top-spider-opp-team-btn={i === 0 || (teams[0] === team && i === 1)}
 					class:bottom-spider-opp-team-btn={i === teams.length - 1 ||
 						(teams[teams.length - 1] === team && i === teams.length - 2)}
-					on:click={(e) => {
-						//@ts-ignore
+					onclick={(e) => {
+						// @ts-expect-error e.target is EventTarget; the handler is only bound to the buttons
 						spiderBtnClick(e.target);
 					}}>{toAlias(_team)}</button
 				>
@@ -308,7 +302,7 @@
 		cursor: pointer;
 		color: #333333;
 		border: none;
-		font-size: 13px;
+		font-size: 14px;
 		padding: 4px 10px;
 		background: var(--purple);
 		color: var(--pink);

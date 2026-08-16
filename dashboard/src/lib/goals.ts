@@ -1,4 +1,4 @@
-import type { Score } from "./types";
+import type { Score } from './types';
 
 export function identicalScore(prediction: Score, actual: Score): boolean {
 	return (

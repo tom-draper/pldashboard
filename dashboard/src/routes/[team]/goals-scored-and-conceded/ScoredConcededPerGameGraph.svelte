@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import type { PlotData, PlotTrace, PlotLayout } from '$lib/types';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
+	import { updatePlotlyLayout } from '$lib/plotlyLayout';
 	import type { TeamsData } from '../dashboard.types';
 	import { getTeams } from '$lib/team';
 	import type { Counter, Team } from '$lib/types';
@@ -7,7 +10,7 @@
 	function getAvgGoalsPerGame(data: TeamsData): Counter {
 		const avgGoals: Counter = {};
 
-		const teams = getTeams(data)
+		const teams = getTeams(data);
 		for (const team of teams) {
 			for (const matchday in data.form[team][data._id]) {
 				const score = data.form[team][data._id][matchday].score;
@@ -50,10 +53,10 @@
 		return [scored, conceded];
 	}
 
-	function avgLine(playedDates: Date[], avgGoals: Counter, matchdays: string[]) {
+	function avgLine(playedDates: Date[], avgGoals: Counter, matchdays: string[]): PlotTrace {
 		return {
 			name: 'Avg',
-			type: 'line',
+			type: 'scatter',
 			x: playedDates,
 			y: Object.values(avgGoals),
 			text: matchdays,
@@ -62,7 +65,7 @@
 		};
 	}
 
-	function teamScoredBar(playedDates: Date[], teamScored: Counter, matchdays: string[]) {
+	function teamScoredBar(playedDates: Date[], teamScored: Counter, matchdays: string[]): PlotTrace {
 		return {
 			name: 'Scored',
 			type: 'bar',
@@ -74,7 +77,11 @@
 		};
 	}
 
-	function teamConcededBar(playedDates: Date[], teamConceded: Counter, matchdays: string[]) {
+	function teamConcededBar(
+		playedDates: Date[],
+		teamConceded: Counter,
+		matchdays: string[]
+	): PlotTrace {
 		return {
 			name: 'Conceded',
 			type: 'bar',
@@ -86,9 +93,9 @@
 		};
 	}
 
-	function defaultLayout() {
+	function defaultLayout(): PlotLayout {
 		return {
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 15, b: 15, pad: 5 },
 			barmode: 'stack',
@@ -123,31 +130,21 @@
 	}
 
 	function setDefaultLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Goals' },
 			'yaxis.visible': true,
 			'margin.l': 60
 		};
-		//@ts-ignore
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function setMobileLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
 			'margin.l': 20
 		};
-		//@ts-ignore
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function buildPlotData(data: TeamsData, team: Team): PlotData {
@@ -172,26 +169,13 @@
 	}
 
 	let plotDiv: HTMLDivElement, plotData: PlotData;
-	let setup = false;
-	onMount(() => {
-		genPlot();
-		setup = true;
-	});
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
-			// Once plot generated, add resizable attribute to it to shorten height for mobile view
-			plot.children[0].children[0].classList.add('resizable-graph');
-		});
+		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
-
 		const [teamScored, teamConceded] = getTeamGoalsPerGame(data, team);
 		const avgGoals = getAvgGoalsPerGame(data);
 		const matchdays = Object.keys(avgGoals);
@@ -204,22 +188,32 @@
 		plotData.data[1] = concededBar;
 		plotData.data[2] = line;
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();
 		}
 	}
 
-	$: team && refreshPlot();
-	$: !mobileView && setDefaultLayout();
-	$: setup && mobileView && setMobileLayout();
+	const {
+		data,
+		team,
+		playedDates,
+		mobileView
+	}: { data: TeamsData; team: Team; playedDates: Date[]; mobileView: boolean } = $props();
 
-	export let data: TeamsData, team: Team, playedDates: Date[], mobileView: boolean;
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: genPlot,
+		refresh: refreshPlot,
+		applyDefaultLayout: setDefaultLayout,
+		applyMobileLayout: setMobileLayout,
+		isMobile: () => mobileView,
+		trigger: () => team
+	});
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

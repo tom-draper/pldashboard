@@ -1,8 +1,17 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
+	import { updatePlotlyLayout } from '$lib/plotlyLayout';
 	import { getTeamID, getTeams } from '$lib/team';
 	import type { TeamsData } from './dashboard.types';
-	import type { Team } from '$lib/types';
+	import type { Team, PlotLayout, PlotData, PlotTrace } from '$lib/types';
+
+	const {
+		data,
+		team,
+		playedDates,
+		mobileView
+	}: { data: TeamsData; team: Team; playedDates: Date[]; mobileView: boolean } = $props();
 
 	function getFormLine(data: TeamsData, team: Team, isMainTeam: boolean) {
 		const playedDates: Date[] = [];
@@ -16,18 +25,18 @@
 			playedDates.push(new Date(date));
 		}
 
-		const y = matchdays.map(matchday => {
+		const y = matchdays.map((matchday) => {
 			const form = data.form[team][data._id][matchday].formRating5 ?? 0;
 			return form * 100;
 		});
 
-		const line = {
+		const line: PlotTrace = {
 			x: matchdays,
 			y: y,
 			name: team,
 			mode: 'lines',
 			line: getLineValue(isMainTeam),
-			text: playedDates,
+			text: playedDates as unknown as string[],
 			hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Form: <b>%{y:.1f}%</b><extra></extra>`,
 			showlegend: false
 		};
@@ -49,9 +58,7 @@
 
 	function getLines(data: TeamsData, team: Team) {
 		const teams = getTeams(data);
-		const lines = teams
-			.filter((t) => t !== team)
-			.map((t) => getFormLine(data, t, false));
+		const lines = teams.filter((t) => t !== team).map((t) => getFormLine(data, t, false));
 
 		// Add this team last to ensure it overlaps all other lines
 		const line = getFormLine(data, team, true);
@@ -61,9 +68,8 @@
 
 	function defaultLayout() {
 		const yLabels = Array.from(Array(11), (_, i) => i * 10);
-		const layout: Plotly.Layout = {
-			// @ts-ignore
-			title: false,
+		const layout: PlotLayout = {
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
 			hovermode: 'closest',
@@ -76,7 +82,7 @@
 				showline: false,
 				zeroline: false,
 				fixedrange: true,
-				// @ts-ignore
+				// @ts-expect-error Plotly's axis types do not allow ticktext alongside these options
 				ticktext: yLabels,
 				tickvals: yLabels,
 				range: [-1, 101]
@@ -95,37 +101,27 @@
 	}
 
 	function setDefaultLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Form rating' },
 			'yaxis.visible': true,
 			'margin.l': 60,
 			'margin.t': 15
 		};
-		//@ts-ignore
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function setMobileLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
 			'margin.l': 20,
 			'margin.t': 5
 		};
-		//@ts-ignore
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function buildPlotData(data: TeamsData, team: Team) {
-		const plotData: Plotly.PlotlyDataLayoutConfig = {
+		const plotData: PlotData = {
 			data: getLines(data, team),
 			layout: defaultLayout(),
 			config: {
@@ -137,53 +133,43 @@
 		return plotData;
 	}
 
-	let plotDiv: HTMLDivElement, plotData: Plotly.PlotlyDataLayoutConfig;
-	let setup = false;
-	onMount(() => {
-		genPlot();
-		setup = true;
-	});
+	let plotDiv: HTMLDivElement, plotData: PlotData;
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
-			// Once plot generated, add resizable attribute to it to shorten height for mobile view
-			plot.children[0].children[0].classList.add('resizable-graph');
-		});
+		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
-
 		const newPlotData = buildPlotData(data, team);
 		for (let i = 0; i < 20; i++) {
 			plotData.data[i] = newPlotData.data[i];
 		}
 
-        if (plotData.layout && plotData.layout.xaxis && plotData.layout.xaxis.range) {
-            plotData.layout.xaxis.range[0] = playedDates[0];
-            plotData.layout.xaxis.range[1] = playedDates[playedDates.length - 1];
-        }
+		if (plotData.layout && plotData.layout.xaxis && plotData.layout.xaxis.range) {
+			plotData.layout.xaxis.range[0] = playedDates[0];
+			plotData.layout.xaxis.range[1] = playedDates[playedDates.length - 1];
+		}
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();
 		}
 	}
 
-	$: team && refreshPlot();
-	$: !mobileView && setDefaultLayout();
-	$: setup && mobileView && setMobileLayout();
-
-	export let data: TeamsData, team: Team, playedDates: Date[], mobileView: boolean;
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: genPlot,
+		refresh: refreshPlot,
+		applyDefaultLayout: setDefaultLayout,
+		applyMobileLayout: setMobileLayout,
+		isMobile: () => mobileView,
+		trigger: () => team
+	});
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

@@ -9,7 +9,10 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"moduleResolution": "bundler"
+		"moduleResolution": "bundler",
+		// Plotly is loaded from a CDN <script> in app.html, so the `Plotly` UMD
+		// global (both its values and its types) must be reachable from modules.
+		"allowUmdGlobalAccess": true
 	}
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//

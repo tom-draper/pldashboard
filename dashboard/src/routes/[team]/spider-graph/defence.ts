@@ -1,6 +1,6 @@
-import type { TeamAttributes, SpiderAttribute, TeamsData } from "../dashboard.types";
-import { getTeams } from "$lib/team";
-import { type Range, attributeAvg, goalsPerGame } from "./util";
+import type { TeamAttributes, SpiderAttribute, TeamsData } from '../dashboard.types';
+import { getTeams } from '$lib/team';
+import { type Range, attributeAvg, goalsPerGame } from './util';
 
 function concededPerSeason(data: TeamsData) {
 	const defence: Partial<TeamAttributes> = {};
@@ -14,7 +14,7 @@ function concededPerSeason(data: TeamsData) {
 		const total = {
 			conceded: 0,
 			played: 0
-		}
+		};
 		for (const season in data.standings[team]) {
 			const conceded = data.standings[team][season].gA;
 			const played = data.standings[team][season].played;
@@ -70,4 +70,3 @@ export default function getDefence(data: TeamsData) {
 
 	return attribute;
 }
-

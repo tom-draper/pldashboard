@@ -7,29 +7,19 @@
 	import FormAndNextGame from './FormAndNextGame.svelte';
 	import Scorelines from './Scorelines.svelte';
 	import TeamComparison from './TeamComparison.svelte';
+	import { mobileView } from '$lib/mobileView.svelte';
 
-	let pageWidth: number;
-	$: mobileView = pageWidth <= 700;
+	const { data, switchTeam }: { data: DashboardData; switchTeam: (newTeam: Team) => void } =
+		$props();
 
-	export let data: DashboardData, switchTeam: (newTeam: Team) => void;
+	const mobile = mobileView();
 </script>
 
-<svelte:window bind:innerWidth={pageWidth} />
-
-<div class="page-content">
+<div class="relative flex flex-col text-center max-[550px]:overflow-x-hidden">
 	<PositionAndFixtures {data} />
 	<FormAndNextGame {data} {switchTeam} />
-	<TeamGraphs {data} {mobileView} />
-	<GoalsGraphs {data} {mobileView} />
-	<Scorelines {data} {mobileView} />
+	<TeamGraphs {data} mobileView={mobile.current} />
+	<GoalsGraphs {data} mobileView={mobile.current} />
+	<Scorelines {data} mobileView={mobile.current} />
 	<TeamComparison {data} />
 </div>
-
-<style scoped>
-	.page-content {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		text-align: center;
-	}
-</style>

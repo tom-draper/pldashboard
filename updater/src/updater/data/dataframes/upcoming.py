@@ -1,21 +1,30 @@
+from __future__ import annotations
+
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import pandas as pd
 from pandas import DataFrame
-from updater.fmt import clean_full_team_name, convert_team_name_or_initials
-from updater.predictions.predict_v2 import Predictor as PredictorV2
-from updater.predictions.scoreline import Scoreline
 
 from updater.data.dataframes.df import DF
 from updater.data.dataframes.fixtures import Fixtures
 from updater.data.dataframes.form import Form
 from updater.data.dataframes.home_advantages import HomeAdvantages
 from updater.data.dataframes.team_ratings import TeamRatings
+from updater.data.raw_data import RawData, full_time_goals, match_teams
+from updater.fmt import convert_team_name_or_initials
+from updater.predictions.scoreline import Scoreline
+
+if TYPE_CHECKING:
+    # Imported for typing only. At runtime form_predictor imports the DataFrame
+    # package, which imports this module, so a module-level import here would
+    # close a cycle and make `import updater.predictions.form_predictor` fail
+    # unless something happened to import the DataFrames first.
+    from updater.predictions.form_predictor import FormPredictor
 
 
 class Upcoming(DF):
-    def __init__(self, d: DataFrame = DataFrame()):
+    def __init__(self, d: Optional[DataFrame] = None):
         super().__init__(d, "upcoming")
 
     def get_predictions(self):
@@ -40,113 +49,81 @@ class Upcoming(DF):
         if "prediction" in self.df and self.df["prediction"].isnull().all():
             return predictions
 
-        for team, row in self.df.iterrows():
-            if row["atHome"]:
+        for row in self.df.itertuples():
+            # A team can have no remaining scheduled fixture while other teams
+            # still do. Such rows deliberately carry no opponent or prediction.
+            if row.team is None or row.prediction is None:
+                continue
+
+            team = row.Index
+            if row.atHome:
                 home_initials = convert_team_name_or_initials(team)
-                away_initials = convert_team_name_or_initials(row["team"])
+                away_initials = convert_team_name_or_initials(row.team)
             else:
-                home_initials = convert_team_name_or_initials(row["team"])
+                home_initials = convert_team_name_or_initials(row.team)
                 away_initials = convert_team_name_or_initials(team)
 
-            # home_goals, away_goals = extract_int_score(row["prediction"])
-
             predictions[team] = {
-                "date": row["date"].to_pydatetime(),
+                "date": row.date.to_pydatetime(),
                 "homeInitials": home_initials,
                 "awayInitials": away_initials,
                 "prediction": {
-                    "homeGoals": row["prediction"].home_goals,
-                    "awayGoals": row["prediction"].away_goals,
+                    "homeGoals": row.prediction.home_goals,
+                    "awayGoals": row.prediction.away_goals,
                 },
             }
 
         return predictions
 
-    def _next_matchday(self, team: str, fixtures: Fixtures):
-        """Scan through list of fixtures to find the next game that is scheduled."""
-        # Arbitrary initial future date that will always be greater than any possible matchday date
-        future = datetime.now() + timedelta(days=365)
-        matchday = {"date": future, "matchday": None}
-        now = datetime.now()
-        for matchday_no in fixtures.df.columns.unique(level=0):
-            if not isinstance(matchday_no, int):
-                continue
-            date = fixtures.df.at[team, (matchday_no, "date")]
-            scheduled = fixtures.df.at[team, (matchday_no, "status")] == "SCHEDULED" or fixtures.df.at[team, (matchday_no, "status")] == "TIMED"
-            if scheduled and now < date < matchday["date"]:
-                matchday["date"] = date
-                matchday["matchday"] = matchday_no
-        return matchday["matchday"]
+    @staticmethod
+    def _next_matchday_by_team(fixtures: Fixtures):
+        """Find each team's next scheduled matchday.
 
-    def _get_next_game(self, team: str, fixtures: Fixtures):
+        Returns:
+            dict[str, Optional[int]]: team -> next matchday number, or None.
+
+        Pulling the date and status fields out of the wide fixtures frame once
+        avoids a per-team-per-matchday MultiIndex lookup (20 x 38 x 3 of them).
+        """
+        dates = fixtures.df.xs("date", level=1, axis=1)
+        statuses = fixtures.df.xs("status", level=1, axis=1)
+
+        matchday_nos = [c for c in dates.columns if isinstance(c, int)]
+        now = datetime.now()
+        # Arbitrary initial future date that will always be greater than any
+        # possible matchday date
+        future = now + timedelta(days=365)
+
+        next_matchday: dict[str, Optional[int]] = {}
+        for team in fixtures.df.index:
+            team_dates = dates.loc[team]
+            team_statuses = statuses.loc[team]
+
+            best_date = future
+            best_matchday = None
+            for matchday_no in matchday_nos:
+                status = team_statuses[matchday_no]
+                if status != "SCHEDULED" and status != "TIMED":
+                    continue
+                date = team_dates[matchday_no]
+                if now < date < best_date:
+                    best_date = date
+                    best_matchday = matchday_no
+            next_matchday[team] = best_matchday
+
+        return next_matchday
+
+    def _get_next_game(self, team: str, fixtures: Fixtures, next_matchday: Optional[int]):
         date: Optional[str] = None
         opposition: Optional[str] = None
         at_home: Optional[str] = None
 
-        next_matchday = self._next_matchday(team, fixtures)
         if next_matchday is not None:
             date = fixtures.df.at[team, (next_matchday, "date")]
             opposition = fixtures.df.at[team, (next_matchday, "team")]
             at_home = fixtures.df.at[team, (next_matchday, "atHome")]
 
         return date, opposition, at_home
-
-    @staticmethod
-    def _game_result_tuple(match: dict):
-        home_score = match["score"]["fullTime"]["homeTeam"]
-        away_score = match["score"]["fullTime"]["awayTeam"]
-        if home_score == away_score:
-            return ("drew", "drew")
-        elif home_score > away_score:
-            return ("won", "lost")
-        return ("lost", "won")
-
-    def _append_prev_match(
-        self,
-        next_games: dict,
-        scoreline: Scoreline,
-        date: str,
-        result: tuple[str, str],
-    ):
-        # From the perspective from the home team
-        # If this match's home team has their next game against this match's away team
-        if next_games[scoreline.home_team]["team"] == scoreline.away_team:
-            prev_match = {
-                "date": date,
-                "homeTeam": scoreline.home_team,
-                "awayTeam": scoreline.away_team,
-                "homeGoals": scoreline.home_goals,
-                "awayGoals": scoreline.away_goals,
-                "result": result[0],
-            }
-            next_games[scoreline.home_team]["prevMatches"].append(prev_match)
-
-        if next_games[scoreline.away_team]["team"] == scoreline.home_team:
-            prev_match = {
-                "date": date,
-                "homeTeam": scoreline.home_team,
-                "awayTeam": scoreline.away_team,
-                "homeGoals": scoreline.home_goals,
-                "awayGoals": scoreline.away_goals,
-                "result": result[1],
-            }
-            next_games[scoreline.away_team]["prevMatches"].append(prev_match)
-
-    @staticmethod
-    def _ord(n: int):
-        return str(n) + (
-            "th"
-            if 4 <= n % 100 <= 20
-            else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
-        )
-
-    def _readable_date(self, date):
-        if isinstance(date, str):
-            dt = datetime.strptime(date[:10], "%Y-%m-%d")
-        else:
-            dt = pd.to_datetime(date)
-        day = self._ord(dt.day)
-        return day + dt.date().strftime(" %B %Y")
 
     @staticmethod
     def _sort_prev_matches_by_date(next_games: dict):
@@ -156,16 +133,6 @@ class Upcoming(DF):
             )
 
     @staticmethod
-    def _team_result(home_goals: int, away_goals: int, at_home: bool):
-        if home_goals == away_goals:
-            return "drew"
-        elif (home_goals > away_goals and at_home) or (
-            away_goals > home_goals and not at_home
-        ):
-            return "won"
-        return "lost"
-
-    @staticmethod
     def _init_prev_matches(team_names: list[str]):
         prev_matches: dict[str, list[dict[str, datetime | Scoreline]]] = {}
         for team in team_names:
@@ -173,34 +140,24 @@ class Upcoming(DF):
         return prev_matches
 
     def _get_season_prev_matches(
-        self, next_games: dict, json_data: dict, season: int, teams: list[str]
+        self, next_games: dict, raw_data: RawData, season: int, teams: list[str]
     ):
         if teams is None:
             raise ValueError("Cannot build upcoming DataFrame: Teams names list empty.")
 
-        season_fixtures = json_data["fixtures"][season]
+        season_fixtures = raw_data.fixtures[season]
 
         prev_matches: dict[str, datetime | Scoreline] = self._init_prev_matches(teams)
         for match in season_fixtures:
             if match["status"] != "FINISHED":
                 continue
 
-            home_team = clean_full_team_name(match["homeTeam"]["name"])
-            away_team = clean_full_team_name(match["awayTeam"]["name"])
+            home_team, away_team = match_teams(match)
 
             if home_team not in teams or away_team not in teams:
                 continue
 
-            home_goals = (
-                match["score"]["fullTime"]["home"]
-                if "home" in match["score"]["fullTime"]
-                else match["score"]["fullTime"]["homeTeam"]
-            )
-            away_goals = (
-                match["score"]["fullTime"]["away"]
-                if "away" in match["score"]["fullTime"]
-                else match["score"]["fullTime"]["awayTeam"]
-            )
+            home_goals, away_goals = full_time_goals(match)
 
             date = match["utcDate"]
 
@@ -240,12 +197,13 @@ class Upcoming(DF):
         upcoming = pd.concat([upcoming, predictions], axis=1)
         return upcoming
 
-    def _calc_next_game_predictions(self, predictor: PredictorV2, upcoming: DataFrame):
+    def _calc_next_game_predictions(self, predictor: FormPredictor, upcoming: DataFrame):
         next_game_predictions: list[dict[str, int]] = []
         next_game_predictions_cache: dict[tuple[str, str], Scoreline] = {}
-        for team, row in upcoming.iterrows():
-            opponent = row["team"]
-            at_home = row["atHome"]
+        for row in upcoming.itertuples():
+            team = row.Index
+            opponent = row.team
+            at_home = row.atHome
 
             if opponent is None or at_home is None:
                 next_game_predictions.append(None)
@@ -264,8 +222,11 @@ class Upcoming(DF):
     def _init_teams(self, fixtures: Fixtures):
         d: dict[str, dict[str, Optional[str] | list]] = {}
         teams = fixtures.df.index.to_list()
+        next_matchdays = self._next_matchday_by_team(fixtures)
         for team in teams:
-            date, opposition, at_home = self._get_next_game(team, fixtures)
+            date, opposition, at_home = self._get_next_game(
+                team, fixtures, next_matchdays[team]
+            )
             d[team] = {
                 "date": date,
                 "team": opposition,
@@ -276,7 +237,7 @@ class Upcoming(DF):
 
     def build(
         self,
-        json_data: dict,
+        raw_data: RawData,
         fixtures: Fixtures,
         form: Form,
         team_ratings: TeamRatings,
@@ -322,7 +283,7 @@ class Upcoming(DF):
         teams = fixtures.df.index.to_list()
         for i in range(num_seasons):
             prev_matches = self._get_season_prev_matches(
-                d, json_data, season - i, teams
+                d, raw_data, season - i, teams
             )
             for team, matches in prev_matches.items():
                 d[team]["prevMatches"].extend(matches)
@@ -332,8 +293,11 @@ class Upcoming(DF):
         upcoming = pd.DataFrame.from_dict(d, orient="index")
         upcoming.index.name = "team"
 
-        predictor = PredictorV2(
-            json_data,
+        # Deferred to break the import cycle described at the top of the file.
+        from updater.predictions.form_predictor import FormPredictor
+
+        predictor = FormPredictor(
+            raw_data,
             fixtures,
             form,
             team_ratings,

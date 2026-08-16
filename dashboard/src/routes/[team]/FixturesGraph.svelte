@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
+	import { updatePlotlyFigure } from '$lib/plotlyLayout';
 	import { toAlias } from '$lib/team';
 	import { scoreline } from '$lib/format';
 	import type { TeamsData, Fixture } from './dashboard.types';
@@ -31,12 +34,7 @@
 		}
 	}
 
-	function highlightNextGameMarker(
-		sizes: number[],
-		x: Date[],
-		now: number,
-		highlightSize: number
-	) {
+	function highlightNextGameMarker(sizes: number[], x: Date[], now: number, highlightSize: number) {
 		// Get matchday date with smallest time difference to now
 		let nextGameIdx: number | undefined;
 		let minDiff = Number.POSITIVE_INFINITY;
@@ -80,10 +78,9 @@
 			oppositionRating *= 1 - data.homeAdvantages[oppositionTeam].totalHomeAdvantage;
 		}
 		return oppositionRating;
-
 	}
 
-	function getLine(data: TeamsData, team: Team, now: number) {
+	function getLine(data: TeamsData, team: Team, now: number): PlotTrace {
 		const [x, y, description] = linePoints(data, team);
 
 		sortByMatchDate(x, y, description);
@@ -93,7 +90,7 @@
 		let sizes = Array(x.length).fill(13);
 		sizes = highlightNextGameMarker(sizes, x, now, 26);
 
-		const line: Plotly.Data = {
+		const line: PlotTrace = {
 			x: x,
 			y: y,
 			type: 'scatter',
@@ -120,12 +117,12 @@
 		return line;
 	}
 
-	function currentDateLine(now: number, maxX: number) {
+	function currentDateLine(now: number, maxX: number): PlotShape {
 		if (now > maxX) {
 			return {};
 		}
 
-		const nowLine: Partial<Plotly.Shape> = {
+		const nowLine: PlotShape = {
 			type: 'line',
 			x0: now,
 			y0: -4,
@@ -141,38 +138,41 @@
 	}
 
 	function xRange(x: Date[]): [Date, Date] {
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- a local value used to compute the plot range, never reactive state
 		const minX = new Date(x[0]);
 		minX.setDate(minX.getDate() - 7);
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- a local value used to compute the plot range, never reactive state
 		const maxX = new Date(x[x.length - 1]);
 		maxX.setDate(maxX.getDate() + 7);
 		return [minX, maxX];
 	}
 
-	function defaultLayout(x: Date[], now: number) {
+	function defaultLayout(x: Date[], now: number): PlotLayout {
 		const yLabels = Array.from(Array(11), (_, i) => i * 10);
 
 		const [minX, maxX] = xRange(x);
 
 		// Show  the current date line only if currently before 30 days after of the season
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- a local value used to compute the plot range, never reactive state
 		const currentDateLineLimit = new Date(maxX);
 		currentDateLineLimit.setDate(currentDateLineLimit.getDate() + 30);
-		const currentDate = now <= currentDateLineLimit.getTime() ? currentDateLine(now, maxX.getTime()) : null;
+		const currentDate =
+			now <= currentDateLineLimit.getTime() ? currentDateLine(now, maxX.getTime()) : null;
 
-		const layout: Plotly.Layout = {
-			// @ts-ignore
-			title: false,
+		const layout: PlotLayout = {
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 5, b: 40, pad: 5 },
 			hovermode: 'closest',
-			plot_bgcolor: '#fafafa',
-			paper_bgcolor: '#fafafa',
+			plot_bgcolor: 'transparent',
+			paper_bgcolor: 'transparent',
 			yaxis: {
 				title: { text: 'Team rating' },
 				gridcolor: '#d6d6d6',
 				showline: false,
 				zeroline: false,
 				fixedrange: true,
-				// @ts-ignore
+				// @ts-expect-error Plotly's axis types do not allow ticktext alongside these options
 				ticktext: yLabels,
 				tickvals: yLabels
 			},
@@ -183,24 +183,20 @@
 				range: [minX, maxX],
 				fixedrange: true
 			},
-			shapes: [currentDate],
+			shapes: currentDate ? [currentDate] : [],
 			dragmode: false
 		};
 		return layout;
 	}
 
 	function setDefaultLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Team rating' },
 			'margin.l': 60,
 			'yaxis.color': 'black'
 		};
 
-		const sizes = plotData.data[0].marker.size;
+		const sizes = plotData.data[0].marker!.size as number[];
 		for (let i = 0; i < sizes.length; i++) {
 			sizes[i] = Math.round(sizes[i] * 1.7);
 		}
@@ -217,24 +213,21 @@
 				line: { width: 1 }
 			}
 		};
-		plotData.data[0].marker.size = sizes;
+		plotData.data[0].marker!.size = sizes;
 
-		//@ts-ignore
-		Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+		updatePlotlyFigure(plotDiv, dataUpdate, layoutUpdate, 0);
 	}
 
 	function setMobileLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'margin.l': 20,
 			'yaxis.color': '#fafafa'
 		};
 
-		const sizes = plotData.data[0].marker.size.map((size: number) => Math.round(size / 1.7));
+		const sizes = (plotData.data[0].marker!.size as number[]).map((size: number) =>
+			Math.round(size / 1.7)
+		);
 		const dataUpdate = {
 			marker: {
 				size: sizes,
@@ -248,10 +241,9 @@
 				line: { width: 1 }
 			}
 		};
-		plotData.data[0].marker.size = sizes;
+		plotData.data[0].marker!.size = sizes;
 
-		//@ts-ignore
-		Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+		updatePlotlyFigure(plotDiv, dataUpdate, layoutUpdate, 0);
 	}
 
 	function buildPlotData(data: TeamsData, team: Team) {
@@ -260,9 +252,9 @@
 		const now = Date.now();
 		const line = getLine(data, team, now);
 
-		const plotData: Plotly.PlotlyDataLayoutConfig = {
+		const plotData: PlotData = {
 			data: [line],
-			layout: defaultLayout(line.x, now),
+			layout: defaultLayout(line.x as Date[], now),
 			config: {
 				responsive: true,
 				showSendToCloud: false,
@@ -274,43 +266,36 @@
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
-			// Once plot generated, add resizable attribute to it to shorten height for mobile view
-			plot.children[0].children[0].classList.add('resizable-graph');
-		});
+		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
-
 		const l = getLine(data, team, Date.now());
 		plotData.data[0] = l; // Overwrite plot data
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();
 		}
 	}
 
-	let plotDiv: HTMLDivElement, plotData: Plotly.PlotlyDataLayoutConfig;
-	let setup = false;
-	onMount(() => {
-		genPlot();
-		setup = true;
+	let plotDiv: HTMLDivElement, plotData: PlotData;
+
+	const { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
+
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: genPlot,
+		initialDrawPriority: 'high',
+		refresh: refreshPlot,
+		applyDefaultLayout: setDefaultLayout,
+		applyMobileLayout: setMobileLayout,
+		isMobile: () => mobileView,
+		trigger: () => team
 	});
-
-	$: team && refreshPlot();
-	$: !mobileView && setDefaultLayout();
-	$: setup && mobileView && setMobileLayout();
-
-	export let data: TeamsData, team: Team, mobileView: boolean;
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

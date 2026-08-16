@@ -4,26 +4,30 @@ import { calcAccuracy, sortByDate } from './data';
 import type { PredictionsData } from './predictions.types';
 
 async function fetchPredictions() {
-	const predictions = Object(await predictionsCollection.aggregate([
-		{
-			"$group": {
-				"_id": {
-					"$dateToString": {
-						"format": "%Y-%m-%d",
-						"date": "$datetime",
+	const predictions = Object(
+		await predictionsCollection
+			.aggregate([
+				{
+					$group: {
+						_id: {
+							$dateToString: {
+								format: '%Y-%m-%d',
+								date: '$datetime'
+							}
+						},
+						predictions: { $push: '$$ROOT' }
 					}
-				},
-				"predictions": { "$push": "$$ROOT" },
-			}
-		}
-	]).toArray());
+				}
+			])
+			.toArray()
+	);
 
 	sortByDate(predictions);
 	const accuracy = calcAccuracy(predictions);
 	const data = {
 		accuracy,
 		predictions
-	}
+	};
 	return data as PredictionsData;
 }
 
@@ -37,4 +41,4 @@ export const load: PageServerLoad = async () => {
 	}
 
 	return data;
-}
+};

@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import GoalsScoredFreq from './GoalsScoredFreqGraph.svelte';
 	import GoalsConcededFreq from './GoalsConcededFreqGraph.svelte';
 	import type { TeamsData } from '../dashboard.types';
 	import { getTeams } from '$lib/team';
-	import type { Counter, Team } from '$lib/types';
+	import type { Counter, Team, PlotTrace, PlotLayout } from '$lib/types';
 
-	function avgBars() {
+	function avgBars(): PlotTrace {
 		return {
 			x: Object.keys(goalFreq),
 			y: Object.values(goalFreq),
@@ -19,7 +19,7 @@
 		};
 	}
 
-	function teamBars(data: Counter, type: string, color: string | string[]) {
+	function teamBars(data: Counter, type: string, color: string | string[]): PlotTrace {
 		const opener = type === 'Scored' ? 'Score' : 'Concede';
 		return {
 			x: Object.keys(data),
@@ -34,12 +34,12 @@
 		};
 	}
 
-	function bars(data: Counter, name: string, color: string | string[]) {
+	function bars(data: Counter, name: string, color: string | string[]): PlotTrace[] {
 		return [avgBars(), teamBars(data, name, color)];
 	}
 
 	// Basic color scale shared between the two bar chars
-	const colorScale = ['#00fe87', '#aef23e', '#ffdd00', '#ff9000', '#f83027'];
+	const colorScale = ['#00fe87', '#9eff33', '#ffd700', '#ff8a00', '#ff0000'];
 
 	// Concatenate unique extreme colors, for extreme values that only a few teams achieve
 	// Concatenate bright greens
@@ -52,31 +52,31 @@
 	]);
 	// Concatenate bright reds
 	const concededColorScale = colorScale.concat([
-		'#f83027',
-		'#f83027',
-		'#f83027',
-		'#f83027',
-		'#f83027'
+		'#ff0000',
+		'#ff0000',
+		'#ff0000',
+		'#ff0000',
+		'#ff0000'
 	]);
 
-	function reversed(arr: any[]) {
+	function reversed<T>(arr: T[]) {
 		return arr.slice().reverse();
 	}
 
-	function getScoredBars() {
+	function getScoredBars(): PlotTrace[] {
 		// return bars(teamScoredFreq, "Goals scored", "#77DD77");
 		return bars(teamScoredFreq, 'Scored', scoredColorScale);
 	}
 
-	function getConcededBars() {
+	function getConcededBars(): PlotTrace[] {
 		return bars(teamConcededFreq, 'Conceded', concededColorScale);
 	}
 
-	function getScoredTeamBars() {
+	function getScoredTeamBars(): PlotTrace {
 		return teamBars(teamScoredFreq, 'Scored', scoredColorScale);
 	}
 
-	function getConcededTeamBars() {
+	function getConcededTeamBars(): PlotTrace {
 		return teamBars(teamConcededFreq, 'Conceded', concededColorScale);
 	}
 
@@ -84,7 +84,7 @@
 		return Object.keys(goalFreq);
 	}
 
-	function getYAxisLayout() {
+	function getYAxisLayout(): PlotLayout['yaxis'] {
 		return {
 			title: { text: 'Probability' },
 			gridcolor: 'gray',
@@ -141,7 +141,7 @@
 
 	function avgGoalFrequencies(data: TeamsData) {
 		const goalFreq: Counter = {};
-		const teams = getTeams(data)
+		const teams = getTeams(data);
 		for (const team of teams) {
 			countScored(data, goalFreq, data._id, team);
 			countScored(data, goalFreq, data._id - 1, team);
@@ -257,11 +257,15 @@
 		maxY = maxValue(goalFreq, teamScoredFreq, teamConcededFreq);
 	}
 
+	// Only read inside the getter functions passed to the child graphs, never
+	// directly in this component's template, so they don't need to be reactive:
+	// the parent effect (refreshTeamData) runs before the children's effects on
+	// a team switch, so the children read the refreshed values.
 	let goalFreq: Counter;
 	let teamScoredFreq: Counter;
 	let teamConcededFreq: Counter;
 	let maxY: number;
-	let setup = false;
+	let setup = $state(false);
 	onMount(() => {
 		goalFreq = avgGoalFrequencies(data);
 		teamScoredFreq = teamScoredFrequencies(data, team);
@@ -272,14 +276,18 @@
 		setup = true;
 	});
 
-	$: team && refreshTeamData();
+	const { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
 
-	export let data: TeamsData, team: Team, mobileView: boolean;
+	// untrack keeps the effect's dependency set to just `team`, as the pre-runes
+	// `$:` statement was.
+	$effect(() => {
+		if (team) untrack(refreshTeamData);
+	});
 </script>
 
-<div class="two-graphs">
+<div class="mx-[8%] flex max-[1000px]:mx-0">
 	{#if setup}
-		<div class="graph freq-graph mini-graph">
+		<div class="w-1/2">
 			<GoalsScoredFreq
 				{team}
 				{getScoredBars}
@@ -289,7 +297,7 @@
 				{mobileView}
 			/>
 		</div>
-		<div class="graph freq-graph mini-graph">
+		<div class="w-1/2">
 			<GoalsConcededFreq
 				{team}
 				{getConcededBars}
@@ -301,20 +309,3 @@
 		</div>
 	{/if}
 </div>
-
-<style scoped>
-	.two-graphs {
-		display: flex;
-		margin: 0 8%;
-	}
-	.freq-graph {
-		width: 50%;
-	}
-
-	@media only screen and (max-width: 1000px) {
-		.two-graphs {
-			display: flex;
-			margin: 0;
-		}
-	}
-</style>

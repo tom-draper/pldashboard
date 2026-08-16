@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
+	import { updatePlotlyFigure } from '$lib/plotlyLayout';
 	import type { FantasyData, Page, Position, Team } from './fantasy.types';
-	import type { Config, Layout, PlotData } from 'plotly.js';
+	import type { PlotConfig, PlotData, PlotLayout, PlotTrace } from '$lib/types';
 
 	// Props
-	export let data: FantasyData;
-	export let page: Page;
-	export let mobileView: boolean;
+	const { data, page, mobileView }: { data: FantasyData; page: Page; mobileView: boolean } =
+		$props();
 
 	// Constants
 	const POSITION_COLORS: Record<Position, string> = {
@@ -16,7 +17,7 @@
 		Goalkeeper: '#280936'
 	} as const;
 
-	const CHART_CONFIG: Config = {
+	const CHART_CONFIG: PlotConfig = {
 		responsive: true,
 		showSendToCloud: false,
 		displayModeBar: false
@@ -24,17 +25,16 @@
 
 	// State
 	let plotDiv: HTMLDivElement;
-	let plotData: { data: PlotData[]; layout: Layout; config: Config };
-	let isSetup = false;
+	let plotData: PlotData;
 
 	// Utility functions
 	function isTeam(value: string): value is Team {
 		return value !== '_id';
 	}
 
-	function createScatterData(data: FantasyData): PlotData {
+	function createScatterData(data: FantasyData): PlotTrace {
 		const processedData = processTeamData(data);
-		
+
 		return {
 			x: processedData.points,
 			y: processedData.price,
@@ -68,24 +68,24 @@
 			teams.push(team);
 			points.push(teamData.totalPoints ?? 0);
 			price.push((teamData.price ?? 0) / 10);
-			
+
 			const playerMinutes = (teamData.minutes ?? 0) / 2;
 			minutes.push(playerMinutes);
 			maxMinutes = Math.max(maxMinutes, playerMinutes);
-			
+
 			colors.push(POSITION_COLORS[teamData.position]);
 		});
 
 		// Calculate sizes and playtimes
-		const sizes = minutes.map(m => m / (maxMinutes * 0.02));
-		const playtimes = minutes.map(m => ((m / maxMinutes) * 100).toFixed(1));
+		const sizes = minutes.map((m) => m / (maxMinutes * 0.02));
+		const playtimes = minutes.map((m) => ((m / maxMinutes) * 100).toFixed(1));
 
 		return { teams, points, price, minutes, colors, sizes, playtimes };
 	}
 
-	function createDefaultLayout(): Layout {
+	function createDefaultLayout(): PlotLayout {
 		return {
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 0, b: 40, pad: 5 },
 			hovermode: 'closest',
@@ -115,7 +115,7 @@
 		};
 	}
 
-	function buildPlotData(data: FantasyData) {
+	function buildPlotData(data: FantasyData): PlotData {
 		return {
 			data: [createScatterData(data)],
 			layout: createDefaultLayout(),
@@ -124,23 +124,19 @@
 	}
 
 	function applyDesktopLayout() {
-		if (!isSetup) return;
-
-		const layoutUpdate: Partial<Layout> = {
+		const layoutUpdate: Record<string, unknown> = {
 			'yaxis.title': { text: 'Price' },
 			'yaxis.visible': true,
 			'yaxis.tickvals': Array.from({ length: 20 }, (_, i) => i + 1),
 			'margin.l': 60,
 			'margin.t': 15
 		};
-		
-		Plotly.update(plotDiv, {}, layoutUpdate, 0);
+
+		updatePlotlyFigure(plotDiv, {}, layoutUpdate, 0);
 	}
 
 	function applyMobileLayout() {
-		if (!isSetup) return;
-
-		const layoutUpdate: Partial<Layout> = {
+		const layoutUpdate: Record<string, unknown> = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
 			'yaxis.tickvals': Array.from({ length: 10 }, (_, i) => i + 2),
@@ -148,76 +144,54 @@
 			'margin.t': 5
 		};
 
-		const originalSizes = plotData.data[0].marker.size as number[];
-		const mobileSizes = originalSizes.map(size => Math.round(size / 2));
-		
+		const originalSizes = plotData.data[0].marker!.size as number[];
+		const mobileSizes = originalSizes.map((size) => Math.round(size / 2));
+
 		const dataUpdate = {
 			marker: {
 				size: mobileSizes,
-				color: plotData.data[0].marker.color,
+				color: plotData.data[0].marker!.color,
 				opacity: 0.75
 			}
 		};
 
 		// Update stored data
-		plotData.data[0].marker.size = mobileSizes;
+		plotData.data[0].marker!.size = mobileSizes;
 
-		Plotly.update(plotDiv, dataUpdate, layoutUpdate, 0);
+		updatePlotlyFigure(plotDiv, dataUpdate, layoutUpdate, 0);
 	}
 
 	async function initializePlot() {
 		plotData = buildPlotData(data);
-		
-		const plot = await Plotly.newPlot(
-			plotDiv, 
-			plotData.data, 
-			plotData.layout, 
-			plotData.config
-		) as HTMLDivElement;
 
-		// Add CSS classes for responsive behavior
-		const chartContainer = plot.children[0]?.children[0];
-		if (chartContainer) {
-			chartContainer.classList.add('resizable-graph', 'tall-graph');
-		}
+		await Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {
-		if (!isSetup) return;
-
 		const newPlotData = buildPlotData(data);
 		plotData.data[0] = newPlotData.data[0];
 
 		Plotly.redraw(plotDiv);
-		
+
 		// Apply appropriate layout for current view
 		if (mobileView) {
 			applyMobileLayout();
 		}
 	}
 
-	// Lifecycle
-	onMount(async () => {
-		await initializePlot();
-		isSetup = true;
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: initializePlot,
+		refresh: refreshPlot,
+		applyDefaultLayout: applyDesktopLayout,
+		applyMobileLayout: applyMobileLayout,
+		isMobile: () => mobileView,
+		trigger: () => page
 	});
-
-	// Reactive statements
-	$: if (isSetup && page) {
-		refreshPlot();
-	}
-
-	$: if (isSetup) {
-		if (mobileView) {
-			applyMobileLayout();
-		} else {
-			applyDesktopLayout();
-		}
-	}
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph tall-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

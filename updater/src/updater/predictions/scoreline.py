@@ -20,9 +20,32 @@ class Scoreline:
         self.away_goals = away_goals
         self.show_team = show_teams
 
-    def reverse(self):
-        self.home_team, self.away_team = self.away_team, self.home_team
-        self.home_goals, self.away_goals = self.away_goals, self.home_goals
+    # Both transforms below return a new Scoreline rather than mutating in
+    # place. __hash__ is derived from the teams, the goals and show_team, so
+    # mutating any of them silently corrupts every dict the instance is a key
+    # of: the entry stays in its old bucket and an equal-by-value lookup no
+    # longer finds it. These objects are used as dict keys throughout
+    # form_predictor, and the frequency dicts there share instances.
+
+    def reversed(self):
+        """A new Scoreline with the two sides swapped."""
+        return Scoreline(
+            self.away_goals,
+            self.home_goals,
+            self.away_team,
+            self.home_team,
+            self.show_team,
+        )
+
+    def without_teams(self):
+        """A new Scoreline that hashes and compares on the goals alone."""
+        return Scoreline(
+            self.home_goals,
+            self.away_goals,
+            self.home_team,
+            self.away_team,
+            show_teams=False,
+        )
 
     def to_dict(self):
         return {

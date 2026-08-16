@@ -3,11 +3,11 @@
 	import type { FantasyDashboardData } from './fantasy.types';
 	import FantasyDashboard from './FantasyDashboard.svelte';
 
-	export let data: FantasyDashboardData;
+	const { data }: { data: FantasyDashboardData } = $props();
 </script>
 
 <svelte:head>
-  <meta name="theme-color" content="#000" />
+	<meta name="theme-color" content="#000" />
 </svelte:head>
 
 <Support />

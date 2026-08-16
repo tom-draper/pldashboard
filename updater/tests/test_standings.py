@@ -1,6 +1,8 @@
 import pandas as pd
 import pytest
-from src.updater.data import Data
+
+from updater.data import Data
+
 # from src.data.dataframes.standings import Standings
 
 
@@ -43,7 +45,7 @@ def test_standings_df_sorted_by_current_season_points(data: Data):
     seasons = get_seasons(data)
     current_season = max(seasons)
     points = data.teams.standings.df[current_season, 'points'].tolist()
-    assert pytest.is_sorted(points)
+    assert pytest.is_sorted_descending(points)
 
 
 def get_seasons(data: Data):
@@ -66,19 +68,23 @@ def test_standings_df_multiindex(data: Data):
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_standings_df_position_unique(data: Data):
-    # No duplicates in position column
+    # No duplicates in position column. Teams that did not play in a given
+    # season are filled with 0, so those rows are excluded.
     seasons = get_seasons(data)
     for season in seasons:
         positions = data.teams.standings.df[season, 'position']
+        positions = positions[positions != 0]
         assert len(positions) == len(positions.unique())
 
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_standings_df_position_range(data: Data):
-    # Position column in 1 to 20 range
+    # Position column in 1 to 20 range, ignoring the 0 fill value used for
+    # teams absent from that season.
     seasons = get_seasons(data)
     for season in seasons:
         positions = data.teams.standings.df[season, 'position']
+        positions = positions[positions != 0]
         assert pytest.in_range(positions, 1, 20)  # checks if within range 1 to 20 inclusive
 
 
@@ -116,7 +122,7 @@ def test_standings_df_lost_range(data: Data):
     for season in seasons:
         lost = data.teams.standings.df[season, 'lost']
         assert pytest.in_range(lost, 0, 38)  # checks if within range 0 to 38 inclusive
-        
+
 
 @pytest.mark.parametrize("data", pytest.data_objects, ids=pytest.data_ids)
 def test_standings_df_gf_non_negative(data: Data):

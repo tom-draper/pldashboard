@@ -1,10 +1,10 @@
-from updater.data.dataframes import Fantasy
+from updater.data.dataframes.fantasy import Fantasy
 
 
 class FantasyData:
     def __init__(self):
         self.data = Fantasy()
-    
+
     def is_empty(self):
         return self.data.df is None or self.data.df.empty
 

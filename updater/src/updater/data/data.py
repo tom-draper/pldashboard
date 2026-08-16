@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+
 from updater.data.fantasy import FantasyData
 from updater.data.teams import TeamsData
 

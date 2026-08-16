@@ -6,8 +6,8 @@ from pandas import DataFrame
 
 
 class DF:
-    def __init__(self, d: DataFrame = DataFrame(), name: Optional[str] = None):
-        self.df: Optional[DataFrame] = DataFrame(d) if not d.empty else None
+    def __init__(self, d: Optional[DataFrame] = None, name: Optional[str] = None):
+        self.df: Optional[DataFrame] = DataFrame(d) if d is not None and not d.empty else None
         self.name = name
         self.last_updated: Optional[datetime] = None
 
@@ -15,10 +15,13 @@ class DF:
         return str(self.df)
 
     def _check_dependencies(self, *args):
+        # __init__ stores an empty frame as None, so the None case is the
+        # normal way a dependency turns up unbuilt and must raise the same
+        # ValueError rather than an AttributeError from `.empty`.
         for arg in args:
-            if arg.df.empty:
+            if arg.df is None or arg.df.empty:
                 raise ValueError(
-                    f"Cannot {self.name} DataFrame: {arg.name} DataFrame empty."
+                    f"Cannot build {self.name} DataFrame: {arg.name} DataFrame empty."
                 )
 
     def log_building(self, season: Optional[int] = None):

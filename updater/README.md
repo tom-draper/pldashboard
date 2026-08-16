@@ -5,8 +5,14 @@ A script to fetch the latest data from the football data API, compute metrics an
 ## Getting Started
 
 ```bash
-uv install
+uv sync
 uv run updater
+```
+
+For a local run that builds from the backups in `backups/`, prints the tables and makes no database writes:
+
+```bash
+uv run updater --dev
 ```
 
 ### Docker
@@ -28,9 +34,33 @@ docker exec -it <container_id> cat /var/log/pldashboard-updater.log
 uv run pytest
 ```
 
+## Predictions
+
+The prediction engines live in `src/updater/predictions/models/` behind a common
+registry, so they can be scored against each other and swapped in the pipeline by
+name. They come in two families:
+
+* `models/scoreline/` predicts a full home-goals x away-goals distribution.
+  Home/draw/away is read off that matrix. Only these can be used in production,
+  since the dashboard stores the scoreline heatmap.
+* `models/outcome/` predicts home/draw/away directly, with no goal model
+  underneath. These are benchmarking entrants only, and `model_predictions` rejects them.
+
+Both are scored on the same RPS over the same fixtures, so the two families
+compete like for like. To compare them on past seasons:
+
+```bash
+uv run python -m updater.predictions.backtest --list-models
+uv run python -m updater.predictions.backtest --seasons 2023,2024,2025
+uv run python -m updater.predictions.backtest --family outcome
+```
+
+Recorded results and what they mean are in
+[`docs/prediction-benchmarks.md`](docs/prediction-benchmarks.md).
+
 ## Environment Variables
 
-The backend relies on a set of environment variables in `updater/.env` in order to configure the current football season, access data from the football data API, and login to the MongoDB database to upload data.
+The updater relies on a set of environment variables in `.env` in order to configure the current football season, access data from the football data API, and login to the MongoDB database to upload data.
 
 ```text
 SEASON=<year>

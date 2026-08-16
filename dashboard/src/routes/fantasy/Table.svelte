@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount, untrack } from 'svelte';
 	import type { FantasyData, Page, Team } from './fantasy.types';
 	import { teamToCSS } from '$lib/team';
-	import type { TeamsData } from '../[team]/dashboard.types';
 
 	type TableRow = (string | number)[];
 
@@ -52,13 +51,17 @@
 		return num.toString();
 	}
 
-	function getTableRows(data: FantasyData): TableRow[] {
+	function showsSaves(page: Page): boolean {
+		return page === 'goalkeeper';
+	}
+
+	function getTableRows(data: FantasyData, page: Page): TableRow[] {
 		const tableRows: TableRow[] = [];
 		for (const name in data) {
 			if (name === '_id') {
 				continue;
 			}
-			const player = [
+			const player: TableRow = [
 				`${data[name].firstName} ${data[name].surname}`,
 				`£${data[name].price / 10}`,
 				data[name].totalPoints,
@@ -70,22 +73,23 @@
 				data[name].form,
 				data[name].goals,
 				data[name].assists,
-				data[name].cleanSheets,
-				data[name].saves,
-				data[name].bonusPoints,
-				data[name].transferIn,
-				data[name].transferOut
+				data[name].cleanSheets
 			];
+			if (showsSaves(page)) {
+				player.push(data[name].saves);
+			}
+			player.push(data[name].bonusPoints, data[name].transferIn, data[name].transferOut);
 			tableRows.push(player);
 		}
 
 		return tableRows;
 	}
 
-	function buildTable(data: FantasyData) {
-		const tableRows = getTableRows(data);
+	function buildTable(data: FantasyData, page: Page) {
+		const tableRows = getTableRows(data, page);
+		const transferColumns = showsSaves(page) ? [12, 13] : [11, 12];
 
-		// @ts-ignore
+		// @ts-expect-error DataTable ships no types for this options object
 		table = new DataTable('#myTable', {
 			responsive: true,
 			data: tableRows,
@@ -93,13 +97,7 @@
 			columnDefs: [
 				{
 					targets: 0,
-					createdCell: function (
-						td: HTMLTableCellElement,
-						cellData: Team,
-						rowData: any,
-						row: number,
-						col: number
-					) {
+					createdCell: function (td: HTMLTableCellElement, cellData: Team) {
 						const team = playerToTeam[cellData];
 						const teamID = teamCSSTag[team];
 						td.style.background = `var(--${teamID})`;
@@ -109,7 +107,7 @@
 				},
 				{
 					targets: 3,
-					render: function (data: any, type: string, row: any, meta: any) {
+					render: function (data: any, type: string) {
 						// If render is just displaying value to user, format as abbreviated number
 						if (type === 'display') {
 							return data ? data.toLocaleString() : 0;
@@ -120,10 +118,10 @@
 				},
 				{
 					targets: 1,
-					render: function (data: any, type: string, row: any, meta: any) {
+					render: function (data: any, type: string) {
 						// If render is just displaying value to user, format as abbreviated number
 						if (type === 'display') {
-							return data ? data.toLocaleString() + "m" : 0;
+							return data ? data.toLocaleString() + 'm' : 0;
 						}
 						// Otherwise return raw data so that sort and filter still works
 						return data;
@@ -131,7 +129,7 @@
 				},
 				{
 					targets: [4, 5, 6],
-					render: function (data: any, type: string, row: any, meta: any) {
+					render: function (data: any, type: string) {
 						// If render is just displaying value to user, format as abbreviated number
 						if (type === 'display') {
 							return data ? parseFloat(data).toFixed(1) : 0;
@@ -141,8 +139,8 @@
 					}
 				},
 				{
-					targets: [12, 13],
-					render: function (data: any, type: string, row: any, meta: any) {
+					targets: transferColumns,
+					render: function (data: any, type: string) {
 						// If render is just displaying value to user, format as abbreviated number
 						if (type === 'display') {
 							return data ? abbrNum(data, 1) : 0;
@@ -155,15 +153,22 @@
 		});
 
 		table.order([2, 'desc']).draw();
+		tablePage = page;
 	}
 
-	function refreshTable(data: FantasyData) {
+	function refreshTable(data: FantasyData, page: Page) {
 		if (!setup) {
 			return;
 		}
 
 		buildTeamColorCSSTags();
-		const tableRows = getTableRows(data);
+		if (tablePage !== page) {
+			table.destroy();
+			buildTable(data, page);
+			return;
+		}
+
+		const tableRows = getTableRows(data, page);
 
 		table.clear();
 		table.rows.add(tableRows);
@@ -189,9 +194,10 @@
 	}
 
 	let table: any;
+	let tablePage: Page;
 	let playerToTeam: { [player: string]: Team };
 	let teamCSSTag: { [team in Team]?: string };
-	let setup = false;
+	let setup = $state(false);
 
 	onMount(async () => {
 		try {
@@ -204,13 +210,21 @@
 		}
 
 		buildTeamColorCSSTags();
-		buildTable(data);
+		buildTable(data, page);
 		setup = true;
 	});
 
-	$: page && refreshTable(data);
+	onDestroy(() => {
+		if (table) table.destroy();
+	});
 
-	export let data: FantasyData, page: Page;
+	const { data, page }: { data: FantasyData; page: Page } = $props();
+
+	// untrack keeps the effect's dependency set to page/data, as the pre-runes
+	// `$:` statement was.
+	$effect(() => {
+		if (page && data) untrack(() => refreshTable(data, page));
+	});
 </script>
 
 {#if !setup}
@@ -218,8 +232,11 @@
 		<div class="loading-spinner"></div>
 	</div>
 {/if}
-<div class="table" class:hidden={!setup}>
-	<table id="myTable">
+<div
+	class="overflow-x-auto px-[30px] py-[50px] max-[700px]:p-0 max-[700px]:text-[0.85em]"
+	class:invisible={!setup}
+>
+	<table id="myTable" class="w-full!">
 		<thead>
 			<tr>
 				<th>Name</th>
@@ -232,7 +249,9 @@
 				<th>Goals</th>
 				<th>Assists</th>
 				<th>Clean Sheets</th>
-				<th>Saves</th>
+				{#if showsSaves(page)}
+					<th>Saves</th>
+				{/if}
 				<th>Bonus</th>
 				<th>Transfers In</th>
 				<th>Transfers Out</th>
@@ -243,27 +262,9 @@
 </div>
 
 <style scoped>
-	.table {
-		padding: 50px 30px;
-		overflow-x: auto;
-	}
-
-	.hidden {
-		visibility: hidden;
-	}
-
-	#myTable {
-		width: 100% !important;
-	}
-
+	/* DataTables generates the row elements at runtime, so the striping can't be
+	   a utility class on the markup and stays as a :global rule. */
 	:global(tr.even) {
 		background: rgb(239, 239, 239) !important;
-	}
-
-	@media only screen and (max-width: 700px) {
-		.table {
-			padding: 0;
-			font-size: 0.85em;
-		}
 	}
 </style>

@@ -1,10 +1,15 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
+	import { updatePlotlyLayout } from '$lib/plotlyLayout';
 	import { getMatchdays, getTeamID, getTeams } from '$lib/team';
 	import type { TeamsData } from './dashboard.types';
 	import type { Team } from '$lib/types';
 
-	function getLineConfig(team: Team, isMainTeam: boolean) {
+	const { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
+
+	function getLineConfig(team: Team, isMainTeam: boolean): PlotTrace['line'] {
 		let lineConfig;
 		if (isMainTeam) {
 			// Get team primary color from css variable
@@ -25,27 +30,27 @@
 		return matchdays.map((matchday) => data.form[team][data._id][matchday].date);
 	}
 
-	function getLine(data: TeamsData, team: Team, isMainTeam: boolean) {
+	function getLine(data: TeamsData, team: Team, isMainTeam: boolean): PlotTrace {
 		const matchdays = getMatchdays(data, team);
 		const dates = getMatchdayDates(data, team, matchdays);
 		const y = getPositions(data, team, matchdays);
 
 		const lineConfig = getLineConfig(team, isMainTeam);
 
-		const line = {
+		const line: PlotTrace = {
 			x: matchdays,
 			y: y,
 			name: team,
 			mode: 'lines',
 			line: lineConfig,
-			text: dates,
+			text: dates as unknown as string[],
 			hovertemplate: `<b>${team}</b><br>Matchday %{x}<br>%{text|%d %b %Y}<br>Position: <b>%{y}</b><extra></extra>`,
 			showlegend: false
 		};
 		return line;
 	}
 
-	function lines(data: TeamsData, team: Team) {
+	function lines(data: TeamsData, team: Team): PlotTrace[] {
 		const lines = getTeams(data)
 			.filter((_team) => _team !== team)
 			.map((_team) => getLine(data, _team, false));
@@ -56,55 +61,35 @@
 		return lines;
 	}
 
-	function positionRangeShapes() {
+	function positionRangeShapes(): PlotShape[] {
 		const matchdays = getMatchdays(data, team);
+
+		// A background band spanning the given league positions. y is inverted
+		// (1 at the top), so a slot n sits between n-0.5 and n+0.5.
+		const band = (topSlot: number, bottomSlot: number, fillcolor: string): PlotShape => ({
+			type: 'rect',
+			x0: matchdays[0],
+			x1: matchdays[matchdays.length - 1],
+			y0: topSlot - 0.5,
+			y1: bottomSlot + 0.5,
+			line: { width: 0 },
+			fillcolor,
+			opacity: 0.2,
+			layer: 'below'
+		});
+
 		return [
-			{
-				type: 'rect',
-				x0: matchdays[0],
-				y0: 4.5,
-				x1: matchdays[matchdays.length - 1],
-				y1: 0.5,
-				line: {
-					width: 0
-				},
-				fillcolor: '#00fe87',
-				opacity: 0.2,
-				layer: 'below'
-			},
-			{
-				type: 'rect',
-				x0: matchdays[0],
-				y0: 6.5,
-				x1: matchdays[matchdays.length - 1],
-				y1: 4.5,
-				line: {
-					width: 0
-				},
-				fillcolor: '#02efff',
-				opacity: 0.2,
-				layer: 'below'
-			},
-			{
-				type: 'rect',
-				x0: matchdays[0],
-				y0: 20.5,
-				x1: matchdays[matchdays.length - 1],
-				y1: 17.5,
-				line: {
-					width: 0
-				},
-				fillcolor: '#f83027',
-				opacity: 0.2,
-				layer: 'below'
-			}
+			band(1, 5, '#00fe87'), // Champions League: 1–5 (green, --win)
+			band(6, 7, '#02efff'), // Europa League: 6–7 (cyan)
+			band(8, 8, '#c600d8'), // Conference League: 8 (pink, --pink)
+			band(18, 20, '#f83027') // Relegation: 18–20 (red, --lose)
 		];
 	}
 
-	function defaultLayout() {
+	function defaultLayout(): PlotLayout {
 		const yLabels = Array.from(Array(20), (_, i) => i + 1);
 		return {
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
 			hovermode: 'closest',
@@ -118,7 +103,7 @@
 				zeroline: false,
 				autorange: 'reversed',
 				fixedrange: true,
-				ticktext: yLabels,
+				ticktext: yLabels.map(String),
 				tickvals: yLabels,
 				visible: true
 			},
@@ -135,10 +120,6 @@
 	}
 
 	function setDefaultLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Position' },
 			'yaxis.visible': true,
@@ -146,15 +127,10 @@
 			'margin.l': 60,
 			'margin.t': 15
 		};
-		//@ts-ignore
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function setMobileLayout() {
-		if (!setup) {
-			return;
-		}
-
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
@@ -162,12 +138,11 @@
 			'margin.l': 20,
 			'margin.t': 5
 		};
-		//@ts-ignore
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function buildPlotData(data: TeamsData, team: Team): PlotData {
-		const plotData = {
+		const plotData: PlotData = {
 			data: lines(data, team),
 			layout: defaultLayout(),
 			config: {
@@ -180,25 +155,13 @@
 	}
 
 	let plotDiv: HTMLDivElement, plotData: PlotData;
-	let setup = false;
-	onMount(() => {
-		genPlot();
-		setup = true;
-	});
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
-			// Once plot generated, add resizable attribute to it to shorten height for mobile view
-			plot.children[0].children[0].classList.add('resizable-graph');
-		});
+		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
 		const newPlotData = buildPlotData(data, team);
 		for (let i = 0; i < 20; i++) {
 			plotData.data[i] = newPlotData.data[i];
@@ -206,22 +169,25 @@
 
 		plotData.layout.shapes = positionRangeShapes();
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv);
 		if (mobileView) {
 			setMobileLayout();
 		}
 	}
 
-	$: team && refreshPlot();
-	$: !mobileView && setDefaultLayout();
-	$: setup && mobileView && setMobileLayout();
-
-	export let data: TeamsData, team: Team, mobileView: boolean;
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: genPlot,
+		refresh: refreshPlot,
+		applyDefaultLayout: setDefaultLayout,
+		applyMobileLayout: setMobileLayout,
+		isMobile: () => mobileView,
+		trigger: () => team
+	});
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

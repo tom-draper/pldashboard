@@ -1,13 +1,15 @@
 import logging
-from collections import defaultdict
-from typing import Dict, List, Set, Tuple, Any
+from typing import Any, Optional
 
 import pandas as pd
 from pandas import DataFrame
-from updater.fmt import clean_full_team_name
-from timebudget import timebudget
 
 from updater.data.dataframes.df import DF
+from updater.data.raw_data import RawData, full_time_goals, match_teams
+from updater.timing import timed
+
+# team -> (season, venue, result) -> count
+Stats = dict[str, dict[tuple[int, str, str], int]]
 
 
 class HomeAdvantages(DF):
@@ -15,35 +17,38 @@ class HomeAdvantages(DF):
 
     PANDEMIC_YEAR = 2020  # Exclude due to anomalous conditions (no fans)
 
-    def __init__(self, d: DataFrame = DataFrame()):
+    def __init__(self, d: Optional[DataFrame] = None):
         super().__init__(d, "home_advantages")
 
     def _initialize_team_season_stats(
-        self, stats: defaultdict, team: str, season: int
+        self, stats: Stats, team: str, season: int
     ) -> None:
-        """Initialize statistics structure for a team in a given season."""
-        if team not in stats:
-            stats[team] = {}
+        """Zero a team's six counters for a season, the first time it is seen.
 
-        season_key = (season, "home", "wins")
-        if season_key not in stats[team]:
-            stats[team].update(
-                {
-                    (season, "home", "wins"): 0,
-                    (season, "home", "draws"): 0,
-                    (season, "home", "loses"): 0,
-                    (season, "away", "wins"): 0,
-                    (season, "away", "draws"): 0,
-                    (season, "away", "loses"): 0,
-                }
-            )
+        Counters are created as matches are read rather than pre-populated for
+        every team and season. A team that did not play in a season simply has
+        no key for it and picks up 0 from the fillna in `build`.
+        """
+        season_stats = stats.setdefault(team, {})
+        if (season, "home", "wins") in season_stats:
+            return
+
+        season_stats.update(
+            {
+                (season, "home", "wins"): 0,
+                (season, "home", "draws"): 0,
+                (season, "home", "loses"): 0,
+                (season, "away", "wins"): 0,
+                (season, "away", "draws"): 0,
+                (season, "away", "loses"): 0,
+            }
+        )
 
     def _process_match_result(
-        self, stats: defaultdict, match: Dict[str, Any], season: int
+        self, stats: Stats, match: dict[str, Any], season: int
     ) -> None:
         """Process a single match and update team statistics."""
-        home_team = clean_full_team_name(match["homeTeam"]["name"])
-        away_team = clean_full_team_name(match["awayTeam"]["name"])
+        home_team, away_team = match_teams(match)
 
         self._initialize_team_season_stats(stats, home_team, season)
         self._initialize_team_season_stats(stats, away_team, season)
@@ -52,16 +57,7 @@ class HomeAdvantages(DF):
         if match["score"]["winner"] is None:
             return
 
-        home_goals = (
-            match["score"]["fullTime"]["home"]
-            if "home" in match["score"]["fullTime"]
-            else match["score"]["fullTime"]["homeTeam"]
-        )
-        away_goals = (
-            match["score"]["fullTime"]["away"]
-            if "away" in match["score"]["fullTime"]
-            else match["score"]["fullTime"]["awayTeam"]
-        )
+        home_goals, away_goals = full_time_goals(match)
 
         if home_goals > away_goals:
             # Home team wins
@@ -75,13 +71,6 @@ class HomeAdvantages(DF):
             # Draw
             stats[home_team][(season, "home", "draws")] += 1
             stats[away_team][(season, "away", "draws")] += 1
-
-    def _process_season_matches(
-        self, stats: defaultdict, matches: List[Dict[str, Any]], season: int
-    ) -> None:
-        """Process all matches for a given season."""
-        for match in matches:
-            self._process_match_result(stats, match, season)
 
     def _calculate_season_metrics(self, df: DataFrame, season: int) -> None:
         """Calculate derived metrics for a specific season."""
@@ -152,27 +141,8 @@ class HomeAdvantages(DF):
 
         return df
 
-    def _create_season_template(
-        self, season: int, num_seasons: int
-    ) -> Dict[Tuple[int, str, str], int]:
-        """Create a template dictionary for initializing team statistics."""
-        template = {}
-        for i in range(num_seasons):
-            season_year = season - i
-            template.update(
-                {
-                    (season_year, "home", "wins"): 0,
-                    (season_year, "home", "draws"): 0,
-                    (season_year, "home", "loses"): 0,
-                    (season_year, "away", "wins"): 0,
-                    (season_year, "away", "draws"): 0,
-                    (season_year, "away", "loses"): 0,
-                }
-            )
-        return template
-
     def _clean_dataframe(
-        self, df: DataFrame, current_season_teams: List[str]
+        self, df: DataFrame, current_season_teams: list[str]
     ) -> DataFrame:
         """Clean the dataframe by removing unnecessary columns and formatting."""
         # Remove raw win/loss/draw counts (keep only derived metrics)
@@ -192,20 +162,19 @@ class HomeAdvantages(DF):
         return df
 
     @staticmethod
-    def get_season_teams(season_fixtures: List[Dict[str, Any]]) -> List[str]:
+    def get_season_teams(season_fixtures: list[dict[str, Any]]) -> list[str]:
         """Extract unique team names from season fixture data."""
-        teams: Set[str] = set()
+        teams: set[str] = set()
         for match in season_fixtures:
-            home_team = clean_full_team_name(match["homeTeam"]["name"])
-            away_team = clean_full_team_name(match["awayTeam"]["name"])
-            teams.add(home_team)
-            teams.add(away_team)
-        return sorted(list(teams))  # Sort for consistency
+            teams.update(match_teams(match))
+        # Sorted: this becomes a row selection, so an unordered walk would let
+        # the DataFrame's row order vary between runs.
+        return sorted(teams)
 
-    @timebudget
+    @timed
     def build(
         self,
-        json_data: dict,
+        raw_data: RawData,
         season: int,
         threshold: float,
         num_seasons: int = 3,
@@ -234,7 +203,7 @@ class HomeAdvantages(DF):
                in the table: the average home wins ratio / wins ratio.
 
         Args:
-            json_data dict: the json data storage used to build the DataFrame
+            raw_data dict: the json data storage used to build the DataFrame
             season int: the year of the current season
             threshold float: the minimum number of home games played to incorporate
                 a season's home advantage calculation for all teams into the
@@ -245,14 +214,11 @@ class HomeAdvantages(DF):
         """
         self.log_building(season)
 
-        # Initialize statistics storage with template for each team
-        stats = defaultdict(lambda: self._create_season_template(season, num_seasons))
-
-        # Process matches for each season
+        stats: Stats = {}
         for i in range(num_seasons):
             season_year = season - i
-            season_data = json_data["fixtures"][season_year]
-            self._process_season_matches(stats, season_data, season_year)
+            for match in raw_data.fixtures[season_year]:
+                self._process_match_result(stats, match, season_year)
 
         # Convert to DataFrame and fill missing values
         df = pd.DataFrame.from_dict(stats, orient="index")
@@ -267,7 +233,7 @@ class HomeAdvantages(DF):
         df = self._calculate_total_home_advantage(df, season, threshold)
 
         # Clean and format the final DataFrame
-        current_season_teams = self.get_season_teams(json_data["fixtures"][season])
+        current_season_teams = self.get_season_teams(raw_data.fixtures[season])
         df = self._clean_dataframe(df, current_season_teams)
 
         if display:

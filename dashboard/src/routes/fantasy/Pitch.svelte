@@ -1,143 +1,73 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { FantasyPlayer } from './fantasy.types';
 	import { teamToCSS } from '$lib/team';
 
-	export let players: FantasyPlayer[];
+	const { players }: { players: FantasyPlayer[] } = $props();
 
-	let forwards: FantasyPlayer[] = [];
-	let midfielders: FantasyPlayer[] = [];
-	let defenders: FantasyPlayer[] = [];
-	let goalkeepers: FantasyPlayer[] = [];
+	const forwards = $derived((players ?? []).filter((player) => player.position === 'Forward'));
+	const midfielders = $derived(
+		(players ?? []).filter((player) => player.position === 'Midfielder')
+	);
+	const defenders = $derived((players ?? []).filter((player) => player.position === 'Defender'));
+	const goalkeepers = $derived(
+		(players ?? []).filter((player) => player.position === 'Goalkeeper')
+	);
 
-    let totalPoints: number = 0;
+	const totalPoints = $derived(
+		(players ?? []).reduce((sum, player) => sum + player.totalPoints, 0)
+	);
+	const totalPrice = $derived((players ?? []).reduce((sum, player) => sum + player.price, 0));
 
-    function formatPrice(price: number): string {
-        return (price/10).toLocaleString('en-GB', {
-            style: 'currency',
-            currency: 'GBP',
-            minimumFractionDigits: 1
-        }) + 'm';
-    }
+	function formatPrice(price: number): string {
+		return (
+			(price / 10).toLocaleString('en-GB', {
+				style: 'currency',
+				currency: 'GBP',
+				minimumFractionDigits: 1
+			}) + 'm'
+		);
+	}
 
-	onMount(() => {
-        if (!players) {
-            return;
-        }
-
-		// Initialize players by position
-		forwards = players.filter((player) => player.position === 'Forward');
-		midfielders = players.filter((player) => player.position === 'Midfielder');
-		defenders = players.filter((player) => player.position === 'Defender');
-		goalkeepers = players.filter((player) => player.position === 'Goalkeeper');
-
-        totalPoints = players.reduce((sum, player) => sum + player.totalPoints, 0);
-	});
+	function formatTotalPrice(price: number): string {
+		return (
+			(price / 10).toLocaleString('en-GB', {
+				style: 'currency',
+				currency: 'GBP',
+				minimumFractionDigits: 0,
+				maximumFractionDigits: 1
+			}) + 'm'
+		);
+	}
 </script>
 
-<div id="pitch">
-	<div class="formation">
-        {#each goalkeepers as player}
-        <div>
-            <div class="player goalkeeper" style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(player.team)})">{player.firstName} {player.surname}</div>
-            <div class="price">{formatPrice(player.price)}</div>
-        </div>
-        {/each}
-    </div>
+<div
+	class="relative m-[2em] rounded-[6px] p-[1em] pb-[3em] bg-[repeating-linear-gradient(to_bottom,#00fe87,#00fe87_20px,#00e178_20px,#00e178_40px)]"
+>
+	<div
+		class="absolute top-[1em] left-[1em] rounded-[6px] bg-[var(--purple)] px-[0.75em] py-[0.55em] text-left"
+	>
+		<div class="text-[1em] leading-[1.2] text-[var(--green)]">Optimal team</div>
+		<div class="mt-[0.25em] text-[0.9em] leading-[1.2] text-white">
+			{totalPoints.toLocaleString('en-GB')} points, {formatTotalPrice(totalPrice)}
+		</div>
+	</div>
 
-	<div class="formation">
-        {#each defenders as player}
-        <div>
-            <div class="player goalkeeper" style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(player.team)})">{player.firstName} {player.surname}</div>
-            <div class="price">{formatPrice(player.price)}</div>
-        </div>
-        {/each}
-    </div>
-
-	<div class="formation">
-        {#each midfielders as player}
-            <div>
-                <div class="player midfielder" style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(player.team)})">{player.firstName} {player.surname}</div>
-                <div class="price">{formatPrice(player.price)}</div>
-            </div>
-        {/each}
-    </div>
-
-	<div class="formation">
-        {#each forwards as player}
-        <div>
-            <div class="player forward" style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(player.team)})">{player.firstName} {player.surname}</div>
-            <div class="price">{formatPrice(player.price)}</div>
-        </div>
-        {/each}
-    </div>
-
-    <div class="total-points">
-        Total points: {totalPoints.toLocaleString('en-GB')}
-    </div>
-    <div class="label">
-        Optimal team
-    </div>
+	{#each [goalkeepers, defenders, midfielders, forwards] as line, lineIndex (lineIndex)}
+		<div class="flex justify-center p-[1em]">
+			{#each line as player, playerIndex (playerIndex)}
+				<div>
+					<div
+						class="mx-[0.5em] rounded-[4px] px-[1em] py-[0.6em] text-center"
+						style="color: var(--{teamToCSS(player.team)}-secondary); background: var(--{teamToCSS(
+							player.team
+						)})"
+					>
+						{player.firstName}
+						{player.surname}
+					</div>
+					<div class="mt-[0.4em] text-center">{formatPrice(player.price)}</div>
+				</div>
+			{/each}
+		</div>
+	{/each}
 </div>
-
-<style scoped>
-	#pitch {
-        margin: 2em;
-        border-radius: 6px;
-		background: repeating-linear-gradient(
-			to bottom,
-			#3f9e4d,
-			/* darker green */ #3f9e4d 20px,
-			#4caf50 20px,
-			/* lighter green */ #4caf50 40px
-		);
-		background: repeating-linear-gradient(
-			to bottom,
-			#00fe87,
-			/* darker green */ #00fe87 20px,
-			#00e178 20px,
-			/* #00ce6e 20px, */
-			/* lighter green */ #00e178 40px
-		);
-        padding: 1em;
-        padding-bottom: 3em;
-        position: relative;
-	}
-    .formation {
-        display: flex;
-        justify-content: center;
-        padding: 1em;
-        z-index: 12;
-    }
-
-    .price {
-        margin-top: 0.4em;
-        text-align: center;
-    }
-
-    .player {
-        background: #fff;
-        border-radius: 4px;
-        padding: 0.6em 1em;
-        margin: 0 0.5em;
-        text-align: center;
-    }
-    .total-points {
-        position: absolute;
-        text-align: center;
-        font-size: 1em;
-        margin-top: 1em;
-        right: 1em;
-        top: 0;
-        color: #333;
-    }
-    .label {
-        position: absolute;
-        text-align: center;
-        font-size: 1em;
-        margin-top: 1em;
-        left: 1em;
-        top: 0;
-        color: #333;
-    }
-</style>

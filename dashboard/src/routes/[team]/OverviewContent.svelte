@@ -14,30 +14,46 @@
 		type Fixtures
 	} from './overview';
 
-	let upcoming: UpcomingMatch[];
-	let standings: Standings[];
-	let fixtures: Fixtures[];
-	$: fixtures;
-	let fixturesScaling = 'rating';
+	let upcoming = $state<UpcomingMatch[]>();
+	let standings = $state<Standings[]>();
+	let fixtures = $state<Fixtures[]>();
+	let fixturesScaling = $state('rating');
 	onMount(() => {
 		upcoming = upcomingMatches(data.data);
-		standings = standingsTable(data.data);
-		fixtures = fixturesTable(data.data, standings);
+		const table = standingsTable(data.data);
+		standings = table;
+		fixtures = fixturesTable(data.data, table);
 	});
 
 	function handleApplyRatingFixturesScaling() {
+		if (fixtures === undefined) return;
 		const result = applyRatingFixturesScaling(fixtures, data.data, fixturesScaling);
 		fixtures = result.fixtures;
 		fixturesScaling = result.fixturesScaling;
 	}
 
 	function handleApplyRatingFormScaling() {
+		if (fixtures === undefined) return;
 		const result = applyRatingFormScaling(fixtures, data.data, fixturesScaling);
 		fixtures = result.fixtures;
 		fixturesScaling = result.fixturesScaling;
 	}
 
-	export let data: DashboardData;
+	function latestFormRating(team: Standings['team']): string {
+		const seasonForm = data.data.form[team]?.[data.data._id];
+		if (!seasonForm) {
+			return '';
+		}
+		const matchdays = Object.keys(seasonForm);
+		if (matchdays.length === 0) {
+			return '';
+		}
+		const latest = Math.max(...matchdays.map((x) => parseInt(x)));
+		const rating = seasonForm[latest]?.formRating5;
+		return rating != null ? rating.toFixed(2) : '';
+	}
+
+	const { data }: { data: DashboardData } = $props();
 </script>
 
 <div id="page-content">
@@ -47,7 +63,7 @@
 				{#if upcoming != undefined}
 					<div class="upcoming-matches">
 						<div class="upcoming-title">Upcoming</div>
-						{#each upcoming as match, i}
+						{#each upcoming as match, i (match.home)}
 							{#if i === 0 || match.time.getDate() != upcoming[i - 1].time.getDate()}
 								<div class="upcoming-match-date">
 									{match.time.toLocaleDateString('en-GB', {
@@ -100,12 +116,12 @@
 							<div class="standings-rating bold">Rating</div>
 							<div class="standings-form bold">Form</div>
 						</div>
-						{#each standings as row, i}
+						{#each standings as row, i (row.team)}
 							<div
 								class="table-row"
 								class:top-row={i === 0}
 								class:bottom-row={i === standings.length - 1}
-								class:grey-row={i%2 == 0}
+								class:grey-row={i % 2 == 0}
 								class:cl={i < 4}
 								class:el={i > 3 && i < 6}
 								class:relegation={i > 16}
@@ -144,29 +160,7 @@
 									{data.data.teamRatings[row.team].total.toFixed(2)}
 								</div>
 								<div class="standings-form">
-									{Object.keys(data.data.form[row.team][data.data._id]).length > 0 &&
-									data.data.form[row.team][data.data._id][
-										Math.max(
-											...Object.keys(data.data.form[row.team][data.data._id]).map((x) =>
-												parseInt(x)
-											)
-										)
-									] != undefined &&
-									data.data.form[row.team][data.data._id][
-										Math.max(
-											...Object.keys(data.data.form[row.team][data.data._id]).map((x) =>
-												parseInt(x)
-											)
-										)
-									].formRating5 != null
-										? data.data.form[row.team][data.data._id][
-												Math.max(
-													...Object.keys(data.data.form[row.team][data.data._id]).map((x) =>
-														parseInt(x)
-													)
-												)
-											].formRating5?.toFixed(2)
-										: ''}
+									{latestFormRating(row.team)}
 								</div>
 							</div>
 						{/each}
@@ -185,7 +179,7 @@
 							id="rating-scale-btn"
 							class="scale-btn"
 							class:scaling-selected={fixturesScaling === 'rating'}
-							on:click={() => {applyRatingFixturesScaling(data.data)}}
+							onclick={handleApplyRatingFixturesScaling}
 						>
 							Rating
 						</button>
@@ -195,7 +189,7 @@
 							id="form-scale-btn"
 							class="scale-btn"
 							class:scaling-selected={fixturesScaling === 'form'}
-							on:click={() => {applyRatingFormScaling(data.data)}}
+							onclick={handleApplyRatingFormScaling}
 						>
 							Form
 						</button>
@@ -203,7 +197,7 @@
 				</div>
 				<div class="fixtures-table">
 					<div class="fixtures-teams-container">
-						{#each fixtures as row, i}
+						{#each fixtures as row, i (row.team)}
 							<div class="fixtures-table-row">
 								<div
 									class="fixtures-team"
@@ -221,15 +215,15 @@
 					<div class="fixtures-matches-container">
 						<div class="fixtures-table-row">
 							<div class="fixtures-matches">
-								{#each Array(38) as _, i}
+								{#each Array(38) as _, i (i)}
 									<div class="match">{i + 1}</div>
 								{/each}
 							</div>
 						</div>
-						{#each fixtures as row, _}
+						{#each fixtures as row (row.team)}
 							<div class="fixtures-table-row">
 								<div class="fixtures-matches">
-									{#each row.matches as match, i}
+									{#each row.matches as match, i (i)}
 										<div
 											class="match"
 											style="background: {match.color}; {match.status == 'FINISHED'

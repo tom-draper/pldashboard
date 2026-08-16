@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
+	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
+	import Plotly from '$lib/plotly';
+	import { updatePlotlyLayout } from '$lib/plotlyLayout';
 	import type { TeamsData } from '../dashboard.types';
 	import type { Team } from '$lib/types';
 
-	function seasonFinishLines(seasonBoundaries: number[], maxX: number, maxY: number) {
+	function seasonFinishLines(seasonBoundaries: number[], maxX: number, maxY: number): PlotShape[] {
 		return seasonBoundaries
 			.filter((boundary) => boundary < maxX)
 			.map((boundary) => ({
@@ -20,7 +23,7 @@
 			}));
 	}
 
-	function goalsScoredLine(x: number[], y: number[], dates: Date[]) {
+	function goalsScoredLine(x: number[], y: number[], dates: (Date | null)[]): PlotTrace {
 		return {
 			x: x,
 			y: y,
@@ -28,14 +31,14 @@
 			fill: 'tozeroy',
 			mode: 'lines',
 			name: 'Scored',
-			text: dates,
+			text: dates as unknown as string[],
 			line: {
 				color: '#00fe87'
 			},
 			hovertemplate: '%{text|%d %b %Y}<br>Avg scored: <b>%{y:.1f}</b><extra></extra>'
 		};
 	}
-	function goalsConcededLine(x: number[], y: number[], dates: Date[]) {
+	function goalsConcededLine(x: number[], y: number[], dates: (Date | null)[]): PlotTrace {
 		return {
 			x: x,
 			y: y,
@@ -43,7 +46,7 @@
 			fill: 'tozeroy',
 			mode: 'lines',
 			name: 'Conceded',
-			text: dates,
+			text: dates as unknown as string[],
 			line: {
 				color: '#f83027'
 			},
@@ -112,7 +115,8 @@
 				// of days between current season end and next season start
 				const currentSeasonEndDate = data.form[team][data._id - i][38].date;
 				// If on the prev season (i == 1), safer to take date from fixtures otherwise fails if current season has not yet started and form is empty
-				const nextSeasonStartDate = i == 1 ? data.fixtures[team][1].date : data.form[team][data._id - i + 1][1].date;
+				const nextSeasonStartDate =
+					i == 1 ? data.fixtures[team][1].date : data.form[team][data._id - i + 1][1].date;
 				dateOffset += numDays(nextSeasonStartDate, currentSeasonEndDate);
 				dateOffset -= 14; // Allow a 2 week gap between seasons for clarity
 			}
@@ -120,7 +124,10 @@
 		return goals;
 	}
 
-	function lineData(data: TeamsData, team: Team) {
+	function lineData(
+		data: TeamsData,
+		team: Team
+	): [(Date | null)[], number[], number[], string[], number[], number[], number[]] {
 		const numSeasons = 3;
 		const goals = goalsOverTime(data, team, numSeasons).sort(function (a, b) {
 			return a.days < b.days ? -1 : a.days === b.days ? 0 : 1;
@@ -179,13 +186,22 @@
 		return [dates, days, seasonBoundaries, ticktext, tickvals, scored, conceded];
 	}
 
-	function lines(days: number[], scored: number[], conceded: number[], dates: Date[]) {
+	function lines(
+		days: number[],
+		scored: number[],
+		conceded: number[],
+		dates: (Date | null)[]
+	): PlotTrace[] {
 		return [goalsScoredLine(days, scored, dates), goalsConcededLine(days, conceded, dates)];
 	}
 
-	function defaultLayout(ticktext: string[], tickvals: number[], seasonLines) {
+	function defaultLayout(
+		ticktext: string[],
+		tickvals: number[],
+		seasonLines: PlotShape[]
+	): PlotLayout {
 		return {
-			title: false,
+			title: { text: '' },
 			autosize: true,
 			margin: { r: 20, l: 60, t: 15, b: 40, pad: 5 },
 			hovermode: 'closest',
@@ -219,34 +235,26 @@
 	}
 
 	function setDefaultLayout() {
-		if (!setup) {
-			return;
-		}
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Goals (5-game avg)' },
 			'yaxis.visible': true,
 			'margin.l': 60,
 			'margin.t': 15
 		};
-		//@ts-ignore
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function setMobileLayout() {
-		if (!setup) {
-			return;
-		}
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
 			'margin.l': 20,
 			'margin.t': 5
 		};
-		//@ts-ignore
-		Plotly.update(plotDiv, {}, layoutUpdate);
+		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
-	function buildPlotData(data: TeamsData, team: Team) {
+	function buildPlotData(data: TeamsData, team: Team): PlotData {
 		const [dates, days, seasonBoundaries, ticktext, tickvals, scored, conceded] = lineData(
 			data,
 			team
@@ -266,25 +274,13 @@
 	}
 
 	let plotDiv: HTMLDivElement, plotData: PlotData;
-	let setup = false;
-	onMount(() => {
-		genPlot();
-		setup = true;
-	});
 
 	function genPlot() {
 		plotData = buildPlotData(data, team);
-		//@ts-ignore
-		new Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config).then((plot) => {
-			// Once plot generated, add resizable attribute to it to shorten height for mobile view
-			plot.children[0].children[0].classList.add('resizable-graph');
-		});
+		Plotly.newPlot(plotDiv, plotData.data, plotData.layout, plotData.config);
 	}
 
 	function refreshPlot() {
-		if (!setup) {
-			return;
-		}
 		const newPlotData = buildPlotData(data, team);
 
 		// Copy new values into exisitng plotData to be accessed during redraw
@@ -292,25 +288,30 @@
 		plotData.data[1] = newPlotData.data[1]; // Copy goals conceded line
 
 		plotData.layout.shapes = newPlotData.layout.shapes;
-		plotData.layout.xaxis.ticktext = newPlotData.layout.xaxis.ticktext;
-		plotData.layout.xaxis.tickvals = newPlotData.layout.xaxis.tickvals;
+		plotData.layout.xaxis!.ticktext = newPlotData.layout.xaxis!.ticktext;
+		plotData.layout.xaxis!.tickvals = newPlotData.layout.xaxis!.tickvals;
 
-		//@ts-ignore
 		Plotly.redraw(plotDiv); // Update plot data
 		if (mobileView) {
 			setMobileLayout();
 		}
 	}
 
-	$: team && refreshPlot();
-	$: !mobileView && setDefaultLayout();
-	$: setup && mobileView && setMobileLayout();
+	const { data, team, mobileView }: { data: TeamsData; team: Team; mobileView: boolean } = $props();
 
-	export let data: TeamsData, team: Team, mobileView: boolean;
+	createPlotlyGraph({
+		getNode: () => plotDiv,
+		draw: genPlot,
+		refresh: refreshPlot,
+		applyDefaultLayout: setDefaultLayout,
+		applyMobileLayout: setMobileLayout,
+		isMobile: () => mobileView,
+		trigger: () => team
+	});
 </script>
 
-<div id="plotly">
-	<div id="plotDiv" bind:this={plotDiv}>
+<div>
+	<div class="resizable-graph" bind:this={plotDiv}>
 		<!-- Plotly chart will be drawn inside this DIV -->
 	</div>
 </div>

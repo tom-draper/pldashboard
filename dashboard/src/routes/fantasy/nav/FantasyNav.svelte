@@ -2,6 +2,12 @@
 	import type { Page } from '../fantasy.types';
 	import closeNavIcon from '$lib/images/arrow-bar-left.svg';
 
+	const {
+		currentPage,
+		pages,
+		switchPage
+	}: { currentPage: string; pages: Page[]; switchPage: (page: Page) => void } = $props();
+
 	function closeNavBar() {
 		const navBar = document.getElementById('navBar');
 		if (navBar !== null) {
@@ -14,36 +20,36 @@
 		}
 		window.dispatchEvent(new Event('resize')); // Snap plotly graphs to new width
 	}
-
-	export let currentPage: string, pages: Page[], switchPage: (page: Page) => void;
 </script>
 
-<nav id="navBar">
-	<div class="title no-selection">
-		<a href="/home">
-			<span style="color: var(--green)">pl</span>dashboard
-			<div class="fantasy-logo">Fantasy</div>
+<nav id="navBar" class="fixed h-screen w-[220px] bg-[var(--purple)] max-[1200px]:hidden">
+	<div class="grid h-24 select-none place-items-center text-[1.6em] text-white">
+		<a href="/home" class="font-semibold text-white">
+			<span class="text-[var(--green)]">pl</span>dashboard
+			<div class="absolute top-[59px] right-[40px] font-normal text-white text-[0.67em]">
+				Fantasy
+			</div>
 		</a>
 	</div>
-	<div class="team-links">
+	<div class="grid text-[1em] text-[var(--pink)]">
 		{#each pages as _page, _ (_page)}
 			{#if _page === currentPage}
-				<a href="/fantasy{_page === 'all' ? '' : '/' + _page}" class="team-link">
-					<div class="this-team-container">
-						<div class="this-team-name">
+				<a href="/fantasy{_page === 'all' ? '' : '/' + _page}">
+					<div class="bg-[var(--green)] text-[var(--purple)]">
+						<div class="px-[1.4em] py-[0.4em]">
 							{_page[0].toUpperCase() + _page.slice(1)}
 						</div>
 					</div>
 				</a>
 			{:else}
 				<button
-					class="team-link"
-					on:click={() => {
+					class="cursor-pointer border-none bg-transparent p-0 text-left text-inherit outline-none [font:inherit]"
+					onclick={() => {
 						switchPage(_page);
 					}}
 				>
-					<div class="team-container">
-						<div class="team-name">
+					<div class="hover:bg-[#140921]">
+						<div class="px-[1.4em] py-[0.4em]">
 							{_page[0].toUpperCase() + _page.slice(1)}
 						</div>
 					</div>
@@ -51,99 +57,25 @@
 			{/if}
 		{/each}
 	</div>
-	<div class="close">
-		<button class="close-btn" on:click={closeNavBar}>
-			<img src={closeNavIcon} alt="" />
+	<div
+		class="group absolute bottom-[3.75em] mx-[1.4em] mt-[0.4em] cursor-pointer text-[13px] text-white"
+	>
+		<a
+			class="text-inherit no-underline group-hover:text-[var(--green)]"
+			href="https://www.buymeacoffee.com/tomdraper">Buy Me a Coffee</a
+		>
+	</div>
+	<div
+		class="group absolute bottom-[1em] mx-[1.4em] mb-[3px] mt-[0.4em] cursor-pointer text-[13px] text-white"
+	>
+		<a class="text-inherit no-underline group-hover:text-[var(--green)]" href="/">Dashboard</a>
+	</div>
+	<div>
+		<button
+			class="absolute right-[0.9em] bottom-[0.9em] mb-px cursor-pointer border-none bg-transparent pt-[0.3em] outline-none"
+			onclick={closeNavBar}
+		>
+			<img src={closeNavIcon} alt="" class="h-[25px] w-[25px]" />
 		</button>
 	</div>
 </nav>
-
-<style scoped>
-	.title {
-		color: white;
-		font-size: 1.6em;
-		height: 96px;
-		display: grid;
-		place-items: center;
-	}
-	.title a {
-		color: white;
-	}
-	.fantasy-logo {
-		color: white;
-		position: absolute;
-		font-size: 0.67em;
-		top: 59px;
-		right: 40px;
-	}
-	.no-selection {
-		user-select: none;
-		-webkit-user-select: none;
-		-moz-user-select: none;
-	}
-	.team-links {
-		font-size: 1em;
-		color: var(--pink);
-		display: grid;
-	}
-	button {
-		background: none;
-		color: inherit;
-		border: none;
-		padding: 0;
-		font: inherit;
-		cursor: pointer;
-		outline: inherit;
-		text-align: left;
-	}
-	.team-name,
-	.this-team-name {
-		padding: 0.4em 1.4em;
-	}
-
-	.this-team-container {
-		color: var(--purple);
-		background: var(--green);
-	}
-
-	:hover.team-container {
-		background: #2c002f;
-		background: #140921;
-	}
-	nav {
-		position: fixed;
-		width: 220px;
-		height: 100vh;
-		background: #37003c;
-		background: var(--purple);
-	}
-	img {
-		height: 25px;
-		width: 25px;
-	}
-	.close-btn {
-		position: absolute;
-		right: 0.9em;
-		bottom: 0.6em;
-		background: transparent;
-		border: none;
-		outline: none;
-		padding-top: 0.3em;
-		cursor: pointer;
-	}
-
-	@keyframes load {
-		from {
-			left: -100px;
-		}
-		to {
-			left: 100px;
-		}
-	}
-
-	@media only screen and (max-width: 1200px) {
-		#navBar {
-			display: none;
-		}
-	}
-</style>
