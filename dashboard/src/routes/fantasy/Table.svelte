@@ -75,9 +75,7 @@
 				data[name].assists,
 				data[name].cleanSheets
 			];
-			if (showsSaves(page)) {
-				player.push(data[name].saves);
-			}
+			player.push(showsSaves(page) ? data[name].saves : '');
 			player.push(data[name].bonusPoints, data[name].transferIn, data[name].transferOut);
 			tableRows.push(player);
 		}
@@ -87,7 +85,7 @@
 
 	function buildTable(data: FantasyData, page: Page) {
 		const tableRows = getTableRows(data, page);
-		const transferColumns = showsSaves(page) ? [12, 13] : [11, 12];
+		const transferColumns = [12, 13];
 
 		// @ts-expect-error DataTable ships no types for this options object
 		table = new DataTable('#myTable', {
@@ -95,6 +93,10 @@
 			data: tableRows,
 			paging: false,
 			columnDefs: [
+				{
+					targets: 10,
+					visible: showsSaves(page)
+				},
 				{
 					targets: 0,
 					createdCell: function (td: HTMLTableCellElement, cellData: Team) {
@@ -249,9 +251,7 @@
 				<th>Goals</th>
 				<th>Assists</th>
 				<th>Clean Sheets</th>
-				{#if showsSaves(page)}
-					<th>Saves</th>
-				{/if}
+				<th>Saves</th>
 				<th>Bonus</th>
 				<th>Transfers In</th>
 				<th>Transfers Out</th>
