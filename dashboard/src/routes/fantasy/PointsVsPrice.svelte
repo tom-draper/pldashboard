@@ -83,7 +83,16 @@
 		return { teams, points, price, minutes, colors, sizes, playtimes };
 	}
 
-	function createDefaultLayout(): PlotLayout {
+	function getMinimumPlayerPrice(data: FantasyData): number {
+		const prices = Object.entries(data)
+			.filter(([team]) => isTeam(team))
+			.map(([, teamData]) => (teamData.price ?? 0) / 10)
+			.filter((price) => price > 0);
+
+		return prices.length > 0 ? Math.min(...prices) : 0;
+	}
+
+	function createDefaultLayout(data: FantasyData): PlotLayout {
 		return {
 			title: { text: '' },
 			autosize: true,
@@ -100,7 +109,7 @@
 				zeroline: false,
 				fixedrange: true,
 				visible: true,
-				range: [0, null]
+				range: [getMinimumPlayerPrice(data), null]
 			},
 			xaxis: {
 				title: { text: 'Points' },
@@ -118,7 +127,7 @@
 	function buildPlotData(data: FantasyData): PlotData {
 		return {
 			data: [createScatterData(data)],
-			layout: createDefaultLayout(),
+			layout: createDefaultLayout(data),
 			config: CHART_CONFIG
 		};
 	}
