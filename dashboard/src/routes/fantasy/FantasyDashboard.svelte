@@ -12,6 +12,9 @@
 	import { mobileView } from '$lib/mobileView.svelte';
 
 	const { data }: { data: FantasyDashboardData } = $props();
+	let page = $state(data.page);
+	let title = $state(data.title);
+	let pageData = $state(data.pageData);
 
 	function toggleMobileNav() {
 		const mobileNav = document.getElementById('mobileNav');
@@ -29,10 +32,9 @@
 	}
 
 	function switchPage(newPage: Page) {
-		data.page = newPage;
-		data.title = getTitle(newPage);
-
-		data.pageData = filterDataByPage(data.data, newPage);
+		page = newPage;
+		title = getTitle(newPage);
+		pageData = filterDataByPage(data.data, newPage);
 
 		const nextPage = getNextPage(newPage);
 		replaceState(nextPage, {}); // Change current url without reloading
@@ -41,10 +43,8 @@
 	function getNextPage(page: Page) {
 		if (page === 'all') {
 			return '/fantasy';
-		} else if (!window.location.href.endsWith('/')) {
-			return '/fantasy/' + data.page;
 		}
-		return data.page;
+		return '/fantasy/' + page;
 	}
 
 	const pages: Page[] = ['all', 'forward', 'midfielder', 'defender', 'goalkeeper'];
@@ -53,12 +53,12 @@
 </script>
 
 <Seo
-	title={data.title}
+	title={title}
 	description="Fantasy Premier League stats: the optimal team, points vs price, and player form and value to guide your FPL picks."
 />
 
 <div id="team" class="flex overflow-x-hidden text-[15px]">
-	<FantasyNav currentPage={data.page} {pages} {switchPage} />
+	<FantasyNav currentPage={page} {pages} {switchPage} />
 	<FantasyMobileNav {pages} {switchPage} {toggleMobileNav} />
 	{#if pages.length === 0}
 		<!-- Navigation disabled while teams list are loading -->
@@ -79,17 +79,17 @@
 
 	<div id="dashboard" class="ml-[220px] w-[calc(100%-220px)] max-[1200px]:ml-0 max-[1200px]:w-full">
 		<div>
-			<PointsVsPrice data={data.pageData} page={data.page} mobileView={mobile.current} />
+			<PointsVsPrice data={pageData} {page} mobileView={mobile.current} />
 		</div>
 
-		{#if data.page === 'all'}
+		{#if page === 'all'}
 			<div>
-				<OptimalTeam data={data.pageData} />
+				<OptimalTeam data={pageData} />
 			</div>
 		{/if}
 
 		<div>
-			<Table data={data.pageData} page={data.page} />
+			<Table data={pageData} {page} />
 		</div>
 		<Footer lastUpdated={null} dark={false} />
 	</div>
