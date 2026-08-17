@@ -18,22 +18,25 @@
 	const origin = $derived(page.url.origin);
 	const canonical = $derived(`${origin}${path ?? page.url.pathname}`);
 	const imageUrl = $derived(image.startsWith('http') ? image : `${origin}${image}`);
+	const pageTitle = $derived(
+		title === 'Premier League Dashboard' ? title : `Premier League Dashboard - ${title}`
+	);
 </script>
 
 <svelte:head>
-	<title>{title}</title>
+	<title>{pageTitle}</title>
 	<meta name="description" content={description} />
 	<link rel="canonical" href={canonical} />
 
 	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="pldashboard" />
-	<meta property="og:title" content={title} />
+	<meta property="og:title" content={pageTitle} />
 	<meta property="og:description" content={description} />
 	<meta property="og:url" content={canonical} />
 	<meta property="og:image" content={imageUrl} />
 
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content={title} />
+	<meta name="twitter:title" content={pageTitle} />
 	<meta name="twitter:description" content={description} />
 	<meta name="twitter:image" content={imageUrl} />
 </svelte:head>

@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-	<title>{title}</title>
+	<title>Premier League Dashboard - {title}</title>
 </svelte:head>
 
 <div class="flex min-h-screen items-start justify-center px-4 pt-24">
