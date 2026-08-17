@@ -41,6 +41,7 @@
 				x: playedDates,
 				y: cleanSheets,
 				text: matchdays,
+				textposition: 'none',
 				marker: { color: '#00fe87' },
 				hovertemplate: '<b>Clean sheet<extra></extra>',
 				showlegend: false
@@ -51,6 +52,7 @@
 				x: playedDates,
 				y: notCleanSheets,
 				text: matchdays,
+				textposition: 'none',
 				marker: { color: '#f83027' },
 				hovertemplate: '<b>Goals conceded<extra></extra>',
 				showlegend: false
