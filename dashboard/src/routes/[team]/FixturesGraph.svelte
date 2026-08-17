@@ -315,7 +315,7 @@
 				preserveAspectRatio="none"
 			>
 				<style>
-					circle {
+					.fixtures-skeleton-point {
 						transform-box: fill-box;
 						transform-origin: center;
 						transform: scaleX(0.78);
@@ -351,24 +351,24 @@
 					stroke-width="1"
 				/>
 				<g fill="#bdbdbd">
-					<circle cx="60" cy="55" r="4" />
-					<circle cx="102" cy="174" r="4" />
-					<circle cx="144" cy="390" r="4" />
-					<circle cx="186" cy="138" r="4" />
-					<circle cx="228" cy="246" r="4" />
-					<circle cx="270" cy="195" r="4" />
-					<circle cx="312" cy="310" r="4" />
-					<circle cx="354" cy="94" r="4" />
-					<circle cx="396" cy="260" r="4" />
-					<circle cx="438" cy="115" r="4" />
-					<circle cx="480" cy="225" r="4" />
-					<circle cx="522" cy="291" r="4" />
-					<circle cx="564" cy="171" r="4" />
-					<circle cx="606" cy="242" r="4" />
-					<circle cx="648" cy="131" r="4" />
-					<circle cx="690" cy="279" r="4" />
-					<circle cx="732" cy="204" r="4" />
-					<circle cx="780" cy="153" r="4" />
+					<circle class="fixtures-skeleton-point" cx="60" cy="55" r="4" />
+					<circle class="fixtures-skeleton-point" cx="102" cy="174" r="4" />
+					<circle class="fixtures-skeleton-point" cx="144" cy="390" r="4" />
+					<circle class="fixtures-skeleton-point" cx="186" cy="138" r="4" />
+					<circle class="fixtures-skeleton-point" cx="228" cy="246" r="4" />
+					<circle class="fixtures-skeleton-point" cx="270" cy="195" r="4" />
+					<circle class="fixtures-skeleton-point" cx="312" cy="310" r="4" />
+					<circle class="fixtures-skeleton-point" cx="354" cy="94" r="4" />
+					<circle class="fixtures-skeleton-point" cx="396" cy="260" r="4" />
+					<circle class="fixtures-skeleton-point" cx="438" cy="115" r="4" />
+					<circle class="fixtures-skeleton-point" cx="480" cy="225" r="4" />
+					<circle class="fixtures-skeleton-point" cx="522" cy="291" r="4" />
+					<circle class="fixtures-skeleton-point" cx="564" cy="171" r="4" />
+					<circle class="fixtures-skeleton-point" cx="606" cy="242" r="4" />
+					<circle class="fixtures-skeleton-point" cx="648" cy="131" r="4" />
+					<circle class="fixtures-skeleton-point" cx="690" cy="279" r="4" />
+					<circle class="fixtures-skeleton-point" cx="732" cy="204" r="4" />
+					<circle class="fixtures-skeleton-point" cx="780" cy="153" r="4" />
 				</g>
 			</svg>
 		</div>
