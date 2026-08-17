@@ -171,7 +171,7 @@
 </script>
 
 {#if optimalTeam}
-	<div class="mb-[-40px]">
+	<div class="mb-[-40px] max-[700px]:my-[0.75em]">
 		<Pitch players={optimalTeam.players} />
 	</div>
 {/if}
