@@ -4,7 +4,7 @@
 	// Shared dashboard row wrapper. The base handles the flex/stacking behaviour;
 	// `class` overrides the margins (defaults to the standard spacing).
 	const {
-		class: cls = 'mb-[3rem] max-[1000px]:mb-[40px]',
+		class: cls = 'mb-[3rem] max-[1000px]:mb-[1.5rem]',
 		children
 	}: { class?: string; children?: Snippet } = $props();
 </script>
