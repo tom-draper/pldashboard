@@ -4,7 +4,7 @@
 	import Plotly from '$lib/plotly';
 	import { relayoutPlotly, updatePlotlyLayout } from '$lib/plotlyLayout';
 
-	function defaultLayout(): PlotLayout {
+	function defaultLayout(mobileView: boolean): PlotLayout {
 		const xLabels = getXLabels();
 		return {
 			title: { text: '' },
@@ -16,14 +16,14 @@
 			plot_bgcolor: '#fafafa',
 			paper_bgcolor: '#fafafa',
 			yaxis: getYAxisLayout(),
-			xaxis: {
-				title: { text: 'Conceded' },
+				xaxis: {
+					title: { text: 'Conceded' },
 				linecolor: 'black',
 				showgrid: false,
 				showline: false,
 				fixedrange: true,
-				ticktext: xLabels,
-				tickvals: xLabels
+				tickmode: mobileView ? 'auto' : 'array',
+				...(mobileView ? { nticks: 8 } : { ticktext: xLabels, tickvals: xLabels })
 			},
 			legend: {
 				x: 1,
@@ -38,7 +38,11 @@
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Conceded' },
 			'yaxis.visible': true,
-			'margin.l': 60
+			'margin.l': 60,
+			'xaxis.tickmode': 'array',
+			'xaxis.nticks': null,
+			'xaxis.ticktext': getXLabels(),
+			'xaxis.tickvals': getXLabels()
 		};
 		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
@@ -47,7 +51,11 @@
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
-			'margin.l': 20
+			'margin.l': 20,
+			'xaxis.tickmode': 'auto',
+			'xaxis.nticks': 8,
+			'xaxis.ticktext': null,
+			'xaxis.tickvals': null
 		};
 		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
@@ -55,7 +63,7 @@
 	function buildPlotData(): PlotData {
 		const plotData = {
 			data: getConcededBars(),
-			layout: defaultLayout(),
+			layout: defaultLayout(mobileView),
 			config: {
 				responsive: true,
 				showSendToCloud: false,
