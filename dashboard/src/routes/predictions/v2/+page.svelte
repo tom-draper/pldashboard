@@ -7,7 +7,7 @@
 </script>
 
 <Seo
-	title="Dashboard - Live Predictions"
+	title="Live Predictions"
 	description="Real-time Premier League match predictions from an intelligent model, with live win probabilities and kick-off countdowns."
 />
 

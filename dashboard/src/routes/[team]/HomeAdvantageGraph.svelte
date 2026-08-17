@@ -371,6 +371,9 @@
 		margin: 0 auto;
 	}
 	@media only screen and (max-width: 550px) {
+		.home-advantage {
+			padding: 0 15px;
+		}
 		.figure {
 			font-size: 2em;
 		}

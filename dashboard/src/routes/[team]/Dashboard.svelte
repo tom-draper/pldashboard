@@ -24,7 +24,7 @@
 			...data,
 			slug,
 			team: { name: team, id: slug },
-			title: `Dashboard - ${team}`,
+			title: team,
 			currentMatchday: getCurrentMatchday(data.data, team),
 			playedDates: playedMatchdayDates(data.data, team)
 		};
@@ -72,7 +72,7 @@
 
 {#if viewData.slug === 'overview'}
 	<Seo
-		title="Dashboard - Overview"
+		title="Overview"
 		description="Premier League standings, upcoming fixtures and team ratings at a glance, updated through the season."
 		path="/overview"
 	/>
@@ -105,7 +105,10 @@
 				</a>
 			</div>
 		{:else}
-			<div class="grid h-24 place-items-center" style="background-color: var(--{viewData.team.id});">
+			<div
+				class="grid h-24 place-items-center"
+				style="background-color: var(--{viewData.team.id});"
+			>
 				<a class="main-link no-decoration grid w-fit place-items-center" href="/{viewData.team.id}">
 					<div class="w-fit text-[2.3rem]" style="color: var(--{viewData.team.id + '-secondary'});">
 						{toAlias(viewData.team.name)}

@@ -19,7 +19,7 @@
 		<div
 			class="grid flex-1 place-items-center bg-[var(--purple)] max-[1000px]:px-[10px] max-[1000px]:py-[50px]"
 		>
-			<h1 class="m-0! flex text-white max-[800px]:flex-col max-[800px]:text-left">
+			<h1 class="m-0! flex w-full justify-center text-center text-white max-[800px]:flex-col">
 				{data._id}/{data._id + 1} SEASON COMPLETE
 			</h1>
 		</div>
