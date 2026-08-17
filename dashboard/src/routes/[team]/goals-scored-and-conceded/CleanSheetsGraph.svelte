@@ -73,7 +73,7 @@
 		};
 	}
 
-	function defaultLayout(matchdays: string[]): PlotLayout {
+	function defaultLayout(matchdays: string[], mobileView: boolean): PlotLayout {
 		return {
 			title: { text: '' },
 			autosize: true,
@@ -97,9 +97,8 @@
 				showgrid: false,
 				showline: false,
 				fixedrange: true,
-				tickmode: 'array',
-				tickvals: playedDates,
-				ticktext: matchdays
+				tickmode: mobileView ? 'auto' : 'array',
+				...(mobileView ? { nticks: 8 } : { tickvals: playedDates, ticktext: matchdays })
 			},
 			shapes: [baseLine()],
 			dragmode: false,
@@ -109,14 +108,22 @@
 
 	function setDefaultLayout() {
 		const layoutUpdate = {
-			'margin.l': 60
+			'margin.l': 60,
+			'xaxis.tickmode': 'array',
+			'xaxis.nticks': null,
+			'xaxis.tickvals': playedDates,
+			'xaxis.ticktext': getPlayedMatchdays(data, team)
 		};
 		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function setMobileLayout() {
 		const layoutUpdate = {
-			'margin.l': 20
+			'margin.l': 20,
+			'xaxis.tickmode': 'auto',
+			'xaxis.nticks': 8,
+			'xaxis.tickvals': null,
+			'xaxis.ticktext': null
 		};
 		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
@@ -144,7 +151,7 @@
 		const line = hiddenLine(cleanSheetsBar.x as Date[]);
 		const plotData = {
 			data: [cleanSheetsBar, concededBar, line],
-			layout: defaultLayout(matchdays),
+			layout: defaultLayout(matchdays, mobileView),
 			config: {
 				responsive: true,
 				showSendToCloud: false,
@@ -169,8 +176,9 @@
 		plotData.data[0] = cleanSheetsBar;
 		plotData.data[1] = concededBar;
 		plotData.data[2] = line;
-		for (let i = 0; i < matchdays.length; i++) {
-			plotData.layout.xaxis!.ticktext![i] = matchdays[i];
+		if (!mobileView) {
+			plotData.layout.xaxis!.ticktext = matchdays;
+			plotData.layout.xaxis!.tickvals = playedDates;
 		}
 		plotData.layout.shapes![0] = baseLine();
 
