@@ -126,7 +126,8 @@
 
 	function lineData(
 		data: TeamsData,
-		team: Team
+		team: Team,
+		mobileView: boolean
 	): [(Date | null)[], number[], number[], string[], number[], number[], number[]] {
 		const numSeasons = 3;
 		const goals = goalsOverTime(data, team, numSeasons).sort(function (a, b) {
@@ -142,18 +143,22 @@
 		const scored: number[] = [];
 		const conceded: number[] = [];
 		for (let i = 0; i < goals.length; i++) {
+			const season = data._id - numSeasons + 1 + Math.floor(i / 38);
 			dates.push(goals[i].date);
 			days.push(goals[i].days);
 			if (i % 38 === 37) {
 				// Season boundary line a week after season finish
 				seasonBoundaries.push(goals[i].days + 7);
-				ticktext.push(((i % 38) + 1).toString());
-				tickvals.push(goals[i].days);
+				if (!mobileView || season !== data._id - 1) {
+					ticktext.push(((i % 38) + 1).toString());
+					tickvals.push(goals[i].days);
+				}
 			} else if (i % 38 === 0) {
-				ticktext.push(((i % 38) + 1).toString());
-				tickvals.push(goals[i].days);
+				if (!mobileView || season !== data._id - 1) {
+					ticktext.push(((i % 38) + 1).toString());
+					tickvals.push(goals[i].days);
+				}
 			} else if (i % 38 === 19 || i === goals.length - 1) {
-				const season = data._id - numSeasons + 1 + Math.floor(i / 38);
 				// If in current season and matchday is 19, wait for until reach final
 				// matchday in current season instead to place season ticktext label
 				if (season != data._id || goals[i].matchday != '19') {
@@ -235,21 +240,27 @@
 	}
 
 	function setDefaultLayout() {
+		const [, , , ticktext, tickvals] = lineData(data, team, false);
 		const layoutUpdate = {
 			'yaxis.title': { text: 'Goals (5-game avg)' },
 			'yaxis.visible': true,
 			'margin.l': 60,
-			'margin.t': 15
+			'margin.t': 15,
+			'xaxis.ticktext': ticktext,
+			'xaxis.tickvals': tickvals
 		};
 		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
 
 	function setMobileLayout() {
+		const [, , , ticktext, tickvals] = lineData(data, team, true);
 		const layoutUpdate = {
 			'yaxis.title': null,
 			'yaxis.visible': false,
 			'margin.l': 20,
-			'margin.t': 5
+			'margin.t': 5,
+			'xaxis.ticktext': ticktext,
+			'xaxis.tickvals': tickvals
 		};
 		updatePlotlyLayout(plotDiv, layoutUpdate);
 	}
@@ -257,7 +268,8 @@
 	function buildPlotData(data: TeamsData, team: Team): PlotData {
 		const [dates, days, seasonBoundaries, ticktext, tickvals, scored, conceded] = lineData(
 			data,
-			team
+			team,
+			mobileView
 		);
 		const maxY = Math.max(Math.max(...scored), Math.max(...conceded));
 		const seasonLines = seasonFinishLines(seasonBoundaries, days[days.length - 1], maxY);
