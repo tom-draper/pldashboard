@@ -370,7 +370,6 @@
 					<circle cx="732" cy="204" r="4" />
 					<circle cx="780" cy="153" r="4" />
 				</g>
-				<line x1="60" y1="410" x2="780" y2="410" stroke="#d4d4d4" stroke-width="1" />
 			</svg>
 		</div>
 	{/if}
