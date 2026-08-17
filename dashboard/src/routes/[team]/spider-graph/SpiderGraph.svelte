@@ -315,6 +315,12 @@
 		background: var(--dark-purple);
 	}
 
+	@media only screen and (max-width: 1000px) {
+		.spider-opp-team-btn {
+			font-size: 13px;
+		}
+	}
+
 	.top-spider-opp-team-btn {
 		border-radius: 4px 4px 0 0;
 	}
