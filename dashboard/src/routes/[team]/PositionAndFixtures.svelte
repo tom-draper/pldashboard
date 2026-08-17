@@ -12,7 +12,13 @@
 <Row class="mx-[1.4em] mt-0 mb-[1.2em] max-[1000px]:mx-0">
 	<div class="row-left position-no-badge">
 		<div class="circles-background-container">
-			<svg class="circles-background" viewBox="0 0 600 600">
+			<svg
+				class="circles-background"
+				viewBox="0 0 600 600"
+				width="500"
+				height="500"
+				preserveAspectRatio="xMidYMid meet"
+			>
 				<!-- Background decorative circles -->
 				<circle cx="300" cy="320" r="210" fill="var(--{data.team.id})" />
 				<circle cx="300" cy="320" r="180" fill="var(--{data.team.id}-secondary)" />
@@ -35,7 +41,9 @@
 		</div>
 	</div>
 	<div class="flex w-full flex-[10] flex-col max-[1000px]:w-auto">
-		<h1 class="!mb-[-20px] max-[550px]:mx-[30px] max-[550px]:mt-[20px] max-[550px]:!mb-0">Fixtures</h1>
+		<h1 class="!mb-[-20px] max-[550px]:mx-[30px] max-[550px]:mt-[20px] max-[550px]:!mb-0">
+			Fixtures
+		</h1>
 		<div class="h-[450px] max-[1100px]:h-[400px] max-[700px]:h-[300px] max-[550px]:h-[250px]">
 			<FixturesGraph data={data.data} team={data.team.name} mobileView={mobile.current} />
 		</div>
