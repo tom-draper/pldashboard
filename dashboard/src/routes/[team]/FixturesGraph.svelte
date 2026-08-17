@@ -1,12 +1,19 @@
 <script lang="ts">
 	import type { PlotData, PlotTrace, PlotLayout, PlotShape } from '$lib/types';
 	import { createPlotlyGraph } from '$lib/plotlyGraph.svelte';
-	import Plotly from '$lib/plotly';
+	import Plotly, { loadPlotly } from '$lib/plotly';
 	import { updatePlotlyFigure } from '$lib/plotlyLayout';
 	import { toAlias } from '$lib/team';
 	import { scoreline } from '$lib/format';
+	import { browser } from '$app/environment';
 	import type { TeamsData, Fixture } from './dashboard.types';
 	import type { Team } from '$lib/types';
+
+	// Start fetching the browser-only Plotly bundle as soon as this above-the-fold
+	// component is initialised. The graph lifecycle still waits for it before drawing.
+	if (browser) {
+		void loadPlotly();
+	}
 
 	function matchDescription(team: Team, match: Fixture): string {
 		const homeTeam = match.atHome ? toAlias(team) : toAlias(match.team);
@@ -297,38 +304,73 @@
 	});
 </script>
 
-
 <div class="relative" aria-busy={!graphReady}>
 	{#if !graphReady}
-		<div class="absolute inset-0 p-4" aria-label="Loading fixtures graph">
+		<div class="absolute inset-0" aria-label="Loading fixtures graph">
 			<svg
 				class="h-full w-full animate-pulse"
-				viewBox="0 0 800 450"
+				viewBox="20 0 780 450"
 				role="img"
 				aria-hidden="true"
+				preserveAspectRatio="none"
 			>
-				<g stroke="#e5e7eb" stroke-width="2">
-					<line x1="70" y1="55" x2="770" y2="55" />
-					<line x1="70" y1="135" x2="770" y2="135" />
-					<line x1="70" y1="215" x2="770" y2="215" />
-					<line x1="70" y1="295" x2="770" y2="295" />
-					<line x1="70" y1="375" x2="770" y2="375" />
+				<style>
+					circle {
+						transform-box: fill-box;
+						transform-origin: center;
+						transform: scaleX(0.78);
+					}
+				</style>
+				<g stroke="#e5e5e5" stroke-width="1">
+					<line x1="60" y1="15" x2="780" y2="15" />
+					<line x1="60" y1="59" x2="780" y2="59" />
+					<line x1="60" y1="103" x2="780" y2="103" />
+					<line x1="60" y1="147" x2="780" y2="147" />
+					<line x1="60" y1="191" x2="780" y2="191" />
+					<line x1="60" y1="234" x2="780" y2="234" />
+					<line x1="60" y1="278" x2="780" y2="278" />
+					<line x1="60" y1="322" x2="780" y2="322" />
+					<line x1="60" y1="366" x2="780" y2="366" />
+					<line x1="60" y1="410" x2="780" y2="410" />
 				</g>
+				<line
+					x1="455"
+					y1="15"
+					x2="455"
+					y2="410"
+					stroke="#d4d4d4"
+					stroke-dasharray="3 3"
+					stroke-width="1"
+				/>
 				<polyline
-					points="70,280 135,235 200,260 265,175 330,205 395,125 460,165 525,105 590,145 655,85 720,120 770,75"
+					points="60,55 102,174 144,390 186,138 228,246 270,195 312,310 354,94 396,260 438,115 480,225 522,291 564,171 606,242 648,131 690,279 732,204 780,153"
 					fill="none"
-					stroke="#cbd5e1"
+					stroke="#a3a3a3"
 					stroke-linecap="round"
 					stroke-linejoin="round"
-					stroke-width="8"
+					stroke-width="1"
 				/>
-				<g fill="#cbd5e1">
-					<circle cx="70" cy="280" r="8" />
-					<circle cx="265" cy="175" r="8" />
-					<circle cx="460" cy="165" r="8" />
-					<circle cx="655" cy="85" r="8" />
-					<circle cx="770" cy="75" r="8" />
+				<g fill="#bdbdbd">
+					<circle cx="60" cy="55" r="4" />
+					<circle cx="102" cy="174" r="4" />
+					<circle cx="144" cy="390" r="4" />
+					<circle cx="186" cy="138" r="4" />
+					<circle cx="228" cy="246" r="4" />
+					<circle cx="270" cy="195" r="4" />
+					<circle cx="312" cy="310" r="4" />
+					<circle cx="354" cy="94" r="4" />
+					<circle cx="396" cy="260" r="4" />
+					<circle cx="438" cy="115" r="4" />
+					<circle cx="480" cy="225" r="4" />
+					<circle cx="522" cy="291" r="4" />
+					<circle cx="564" cy="171" r="4" />
+					<circle cx="606" cy="242" r="4" />
+					<circle cx="648" cy="131" r="4" />
+					<circle cx="690" cy="279" r="4" />
+					<circle cx="732" cy="204" r="4" />
+					<circle cx="780" cy="153" r="4" />
 				</g>
+				<line x1="60" y1="410" x2="780" y2="410" stroke="#d4d4d4" stroke-width="1" />
 			</svg>
 		</div>
 	{/if}
