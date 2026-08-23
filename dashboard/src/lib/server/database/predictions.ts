@@ -1,3 +1,5 @@
-import db from '$lib/server/database/mongo';
+import { getMainDb } from '$lib/server/database/mongo';
 
-export const predictions = db.collection('Predictions');
+export function predictions() {
+	return getMainDb().collection('Predictions');
+}

@@ -1,8 +1,9 @@
 import { predictions } from '$lib/server/database/predictions-v2';
+import { withMongoRetry } from '$lib/server/database/mongo';
 import type { PageServerLoad } from './$types';
 
 async function fetchPredictions() {
-	const data = await predictions.find({ score: null }).toArray();
+	const data = await withMongoRetry(() => predictions().find({ score: null }).toArray());
 	return data;
 }
 

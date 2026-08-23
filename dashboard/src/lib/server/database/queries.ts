@@ -2,6 +2,7 @@ import { error } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { teams } from '$lib/server/database/teams';
 import { fantasy } from '$lib/server/database/fantasy';
+import { withMongoRetry } from '$lib/server/database/mongo';
 import type { TeamsData } from '../../../routes/[team]/dashboard.types';
 
 /**
@@ -39,7 +40,7 @@ function currentSeason(): number {
  */
 export async function fetchTeams(): Promise<TeamsData> {
 	const season = currentSeason();
-	const data = await teams.findOne({ _id: season as unknown as never });
+	const data = await withMongoRetry(() => teams().findOne({ _id: season as unknown as never }));
 	if (!data) {
 		throw error(500, `No team data found for season ${season}`);
 	}
@@ -48,7 +49,9 @@ export async function fetchTeams(): Promise<TeamsData> {
 
 /** Fetch the fantasy data document. */
 export async function fetchFantasy() {
-	const data = await fantasy.findOne({ _id: 'fantasy' as unknown as never });
+	const data = await withMongoRetry(() =>
+		fantasy().findOne({ _id: 'fantasy' as unknown as never })
+	);
 	if (!data) {
 		throw error(500, 'No fantasy data found');
 	}
