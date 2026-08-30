@@ -3,7 +3,12 @@
 	import { ordinal, teamStyle } from '$lib/format';
 	import type { TeamsData } from './dashboard.types';
 	import type { Team } from '$lib/types';
-	import { resultColor, oppositionFormPercentage, predictedScoreline } from './next-game';
+	import {
+		resultColor,
+		oppositionFormPercentage,
+		predictedScoreline,
+		modelPrediction
+	} from './next-game';
 
 	const {
 		data,
@@ -12,6 +17,7 @@
 	}: { data: TeamsData; team: Team; switchTeam: (newTeam: Team) => void } = $props();
 
 	const teamBadgeBase = 'float-left w-[calc(50%_-_18px)] pt-[5px] pb-[3px] text-center text-[15px]';
+	const prediction = $derived(modelPrediction(data, team));
 </script>
 
 {#if data.upcoming[team].team === null}
@@ -62,6 +68,13 @@
 						<br />
 						<b class="text-[var(--purple)]">{predictedScoreline(data, team)}</b>
 						<br />
+						{#if prediction}
+							<span class="text-[0.65em] text-[rgb(90,90,90)]">
+								Home {(prediction.probHomeWin * 100).toFixed(1)}% · Draw {(
+									prediction.probDraw * 100
+								).toFixed(1)}% · Away {(prediction.probAwayWin * 100).toFixed(1)}%
+							</span>
+						{/if}
 					</div>
 				</div>
 			</div>

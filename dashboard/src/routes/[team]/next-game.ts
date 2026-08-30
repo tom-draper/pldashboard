@@ -1,6 +1,6 @@
 import { getCurrentMatchday } from '$lib/team';
 import { scorelineShort } from '$lib/format';
-import type { PrevMatch, TeamsData } from './dashboard.types';
+import type { ModelPrediction, PrevMatch, TeamsData } from './dashboard.types';
 import type { Team } from '$lib/types';
 
 export function resultColor(prevMatch: PrevMatch, home: boolean): Team {
@@ -27,9 +27,21 @@ export function oppositionFormPercentage(data: TeamsData, team: Team) {
 }
 
 export function predictedScoreline(data: TeamsData, team: Team) {
-	const homeGoals = data.upcoming[team].prediction.homeGoals;
-	const awayGoals = data.upcoming[team].prediction.awayGoals;
+	const model = modelPrediction(data, team);
+	const homeGoals = model?.prediction.homeGoals ?? data.upcoming[team].prediction.homeGoals;
+	const awayGoals = model?.prediction.awayGoals ?? data.upcoming[team].prediction.awayGoals;
 	const homeTeam = data.upcoming[team].prediction.homeTeam;
 	const awayTeam = data.upcoming[team].prediction.awayTeam;
 	return scorelineShort(homeTeam, awayTeam, homeGoals, awayGoals);
+}
+
+export function modelPrediction(data: TeamsData, team: Team): ModelPrediction | undefined {
+	const upcoming = data.upcoming[team];
+	if (upcoming.team === null) return undefined;
+
+	const home = upcoming.atHome ? team : upcoming.team;
+	const away = upcoming.atHome ? upcoming.team : team;
+	return data.modelPredictions?.find(
+		(prediction) => prediction.home === home && prediction.away === away
+	);
 }

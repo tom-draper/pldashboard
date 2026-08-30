@@ -32,7 +32,7 @@ export function calcAccuracy(predictions: MatchdayPredictions[]) {
 
 	const accuracy: Accuracy = {
 		scoreAccuracy: total > 0 ? scoreCorrect / total : 0,
-		resultAccuracy: total > 0 ? resultCorrect / 0 : 0
+		resultAccuracy: total > 0 ? resultCorrect / total : 0
 	};
 	return accuracy;
 }
