@@ -18,6 +18,11 @@
 
 	const teamBadgeBase = 'float-left w-[calc(50%_-_18px)] pt-[5px] pb-[3px] text-center text-[15px]';
 	const prediction = $derived(modelPrediction(data, team));
+
+	function probabilitySegmentStyle(teamName: string, probability: number): string {
+		const teamId = teamName.toLowerCase().replaceAll(' ', '-');
+		return `width: ${probability * 100}%; background-color: var(--${teamId});`;
+	}
 </script>
 
 {#if data.upcoming[team].team === null}
@@ -67,13 +72,30 @@
 						Score prediction
 						<br />
 						<b class="text-[var(--purple)]">{predictedScoreline(data, team)}</b>
-						<br />
 						{#if prediction}
-							<span class="text-[0.65em] text-[rgb(90,90,90)]">
-								Home {(prediction.probHomeWin * 100).toFixed(1)}% · Draw {(
-									prediction.probDraw * 100
-								).toFixed(1)}% · Away {(prediction.probAwayWin * 100).toFixed(1)}%
-							</span>
+							<div class="prediction-probability-bar">
+								<button
+									type="button"
+									class="prediction-probability-segment"
+									style={probabilitySegmentStyle(prediction.home, prediction.probHomeWin)}
+									data-tooltip={`${prediction.home} win: ${(prediction.probHomeWin * 100).toFixed(1)}%`}
+									aria-label={`${prediction.home} win: ${(prediction.probHomeWin * 100).toFixed(1)}%`}
+								></button>
+								<button
+									type="button"
+									class="prediction-probability-segment draw"
+									style="width: {prediction.probDraw * 100}%;"
+									data-tooltip={`Draw: ${(prediction.probDraw * 100).toFixed(1)}%`}
+									aria-label={`Draw: ${(prediction.probDraw * 100).toFixed(1)}%`}
+								></button>
+								<button
+									type="button"
+									class="prediction-probability-segment"
+									style={probabilitySegmentStyle(prediction.away, prediction.probAwayWin)}
+									data-tooltip={`${prediction.away} win: ${(prediction.probAwayWin * 100).toFixed(1)}%`}
+									aria-label={`${prediction.away} win: ${(prediction.probAwayWin * 100).toFixed(1)}%`}
+								></button>
+							</div>
 						{/if}
 					</div>
 				</div>
@@ -184,6 +206,54 @@
 	}
 	.next-game-item {
 		border-radius: 9px;
+	}
+	.prediction-probability-bar {
+		display: flex;
+		width: min(100%, 140px);
+		height: 9px;
+		margin: 6px auto 0;
+		position: relative;
+		border-radius: 3px;
+		background: rgb(0 0 0 / 10%);
+	}
+	.prediction-probability-segment {
+		position: relative;
+		height: 100%;
+		padding: 0;
+		border: 0;
+		cursor: help;
+	}
+	.prediction-probability-segment:first-child {
+		border-radius: 3px 0 0 3px;
+	}
+	.prediction-probability-segment:last-child {
+		border-radius: 0 3px 3px 0;
+	}
+	.prediction-probability-segment::after {
+		position: absolute;
+		bottom: calc(100% + 8px);
+		left: 50%;
+		z-index: 1;
+		padding: 5px 7px;
+		border-radius: 4px;
+		background: var(--purple);
+		color: white;
+		content: attr(data-tooltip);
+		font-size: 12px;
+		line-height: 1;
+		white-space: nowrap;
+		pointer-events: none;
+		opacity: 0;
+		transform: translate(-50%, 2px);
+		transition: opacity 120ms ease, transform 120ms ease;
+	}
+	.prediction-probability-segment:hover::after,
+	.prediction-probability-segment:focus-visible::after {
+		opacity: 1;
+		transform: translate(-50%, 0);
+	}
+	.prediction-probability-segment.draw {
+		background-color: var(--draw);
 	}
 	.next-game-team-btn {
 		color: inherit;
