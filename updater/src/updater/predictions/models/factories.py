@@ -21,7 +21,7 @@ from collections.abc import Callable, Sequence
 from typing import Optional
 
 from updater.predictions.distributions import MatchResult
-from updater.predictions.models.contracts import FittedModel
+from updater.predictions.models.contracts import FittedModel, Predictor
 
 
 class _Engine:

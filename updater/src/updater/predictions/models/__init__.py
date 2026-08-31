@@ -7,22 +7,22 @@ the scipy-heavy model modules.
 """
 
 from updater.predictions.models.contracts import (
-    FittedModel as FittedModel,
-    FittedOutcomeModel as FittedOutcomeModel,
-    Predictor as Predictor,
-    predict_fixture as predict_fixture,
-    predict_outcome as predict_outcome,
-    produces_scoreline as produces_scoreline,
+    FittedModel,
+    FittedOutcomeModel,
+    Predictor,
+    predict_fixture,
+    predict_outcome,
+    produces_scoreline,
 )
 from updater.predictions.models.registry import (
-    DEFAULT_MODEL as DEFAULT_MODEL,
-    FAMILIES as FAMILIES,
-    NAIVE_MODELS as NAIVE_MODELS,
-    OUTCOME as OUTCOME,
-    SCORELINE as SCORELINE,
-    available as available,
-    build as build,
-    family_of as family_of,
+    DEFAULT_MODEL,
+    FAMILIES,
+    NAIVE_MODELS,
+    OUTCOME,
+    SCORELINE,
+    available,
+    build,
+    family_of,
 )
 
 __all__ = [
