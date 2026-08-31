@@ -58,30 +58,33 @@ def extract_matches(
     return matches
 
 
-def next_matchday_fixtures(
+def next_upcoming_fixtures(
     raw_data: RawData, current_season: int
 ) -> list[tuple[datetime, str, str]]:
-    """The (date, home, away) of the earliest not-yet-played matchday."""
-    scheduled = {"SCHEDULED", "TIMED"}
-    unplayed = [
-        match
-        for match in raw_data.fixtures.get(current_season, [])
-        if match.get("status") in scheduled and match.get("matchday") is not None
-    ]
-    if not unplayed:
-        return []
+    """One next (date, home, away) fixture for every team, de-duplicated.
 
-    next_matchday = min(match["matchday"] for match in unplayed)
-    fixtures = [
-        (
-            parse_utc_date(match["utcDate"]),
-            *match_teams(match),
-        )
-        for match in unplayed
-        if match["matchday"] == next_matchday
-    ]
-    fixtures.sort(key=lambda f: f[0])
-    return fixtures
+    The dashboard shows each team's next fixture, which can span matchdays when
+    a postponed match remains in the current round. Predicting only the first
+    unplayed matchday would therefore leave every other team's dashboard with
+    no fitted-model prediction.
+    """
+    scheduled = {"SCHEDULED", "TIMED"}
+    next_by_team: dict[str, tuple[datetime, str, str]] = {}
+
+    for match in raw_data.fixtures.get(current_season, []):
+        if match.get("status") not in scheduled:
+            continue
+
+        date = parse_utc_date(match["utcDate"])
+        home, away = match_teams(match)
+        fixture = (date, home, away)
+        for team in (home, away):
+            current = next_by_team.get(team)
+            if current is None or date < current[0]:
+                next_by_team[team] = fixture
+
+    fixtures = {fixture for fixture in next_by_team.values()}
+    return sorted(fixtures, key=lambda fixture: (fixture[0], fixture[1], fixture[2]))
 
 
 def _prediction_document(
@@ -148,7 +151,7 @@ def build_model_predictions(
         return []
 
     documents: list[dict[str, Any]] = []
-    for date, home, away in next_matchday_fixtures(raw_data, current_season):
+    for date, home, away in next_upcoming_fixtures(raw_data, current_season):
         # Unknown (promoted) teams fall back to the model's weakest-side prior.
         pred = model.predict(home, away)
         documents.append(_prediction_document(date, home, away, pred))
