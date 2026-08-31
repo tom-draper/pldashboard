@@ -68,6 +68,11 @@
 										<div class="flex-1 text-center">{pred.away}</div>
 									</div>
 								</div>
+								<div class="mt-[2px] text-center text-[0.75em] text-[rgb(80,80,80)]">
+									Home {(pred.probHomeWin * 100).toFixed(1)}% · Draw {(pred.probDraw * 100).toFixed(
+										1
+									)}% · Away {(pred.probAwayWin * 100).toFixed(1)}%
+								</div>
 								{#if pred.actual != null}
 									<div class={itemClass}>
 										<div class="flex-[5]">Actual:</div>

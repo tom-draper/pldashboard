@@ -1,4 +1,4 @@
-import type { Scoreline } from '$lib/types';
+import type { Score } from '$lib/types';
 
 export type PredictionsData = {
 	accuracy: Accuracy;
@@ -9,9 +9,12 @@ export type Prediction = {
 	_id: string; // HOME_INITIALS vs AWAY_INITIALS
 	home: string;
 	away: string;
-	prediction: Scoreline;
-	actual: null | Scoreline;
+	prediction: Score;
+	actual: null | Score;
 	datetime: string;
+	probHomeWin: number;
+	probDraw: number;
+	probAwayWin: number;
 	color?: string;
 };
 

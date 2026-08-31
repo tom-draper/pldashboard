@@ -2,6 +2,7 @@ import { error } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { teams } from '$lib/server/database/teams';
 import { fantasy } from '$lib/server/database/fantasy';
+import { predictions } from '$lib/server/database/predictions-v3';
 import { withMongoRetry } from '$lib/server/database/mongo';
 import type { TeamsData } from '../../../routes/[team]/dashboard.types';
 
@@ -40,11 +41,14 @@ function currentSeason(): number {
  */
 export async function fetchTeams(): Promise<TeamsData> {
 	const season = currentSeason();
-	const data = await withMongoRetry(() => teams().findOne({ _id: season as unknown as never }));
+	const [data, modelPredictions] = await Promise.all([
+		withMongoRetry(() => teams().findOne({ _id: season as unknown as never })),
+		withMongoRetry(() => predictions().find({}).toArray())
+	]);
 	if (!data) {
 		throw error(500, `No team data found for season ${season}`);
 	}
-	return data as unknown as TeamsData;
+	return { ...data, modelPredictions } as unknown as TeamsData;
 }
 
 /** Fetch the fantasy data document. */

@@ -1,4 +1,4 @@
-import { predictions } from '$lib/server/database/predictions';
+import { predictions } from '$lib/server/database/predictions-v3';
 import { withMongoRetry } from '$lib/server/database/mongo';
 import type { PageServerLoad } from './$types';
 import { calcAccuracy, sortByDate } from './data';

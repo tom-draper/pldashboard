@@ -22,6 +22,19 @@ export type TeamsData = {
 	homeAdvantages: HomeAdvantages;
 	form: Form;
 	upcoming: Upcoming;
+	modelPredictions: ModelPrediction[];
+};
+
+export type ModelPrediction = {
+	_id: string;
+	datetime: string;
+	home: string;
+	away: string;
+	prediction: Score;
+	actual: Score | null;
+	probHomeWin: number;
+	probDraw: number;
+	probAwayWin: number;
 };
 
 export type Match = {
