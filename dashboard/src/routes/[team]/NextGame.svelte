@@ -253,7 +253,7 @@
 		transform: translate(-50%, 0);
 	}
 	.prediction-probability-segment.draw {
-		background-color: var(--draw);
+		background-color: rgb(181 181 181 / 30%);
 	}
 	.next-game-team-btn {
 		color: inherit;
