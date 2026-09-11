@@ -93,6 +93,8 @@
 				showgrid: false,
 				showline: false,
 				fixedrange: true,
+				tick0: 1,
+				dtick: 1,
 				range: [playedDates[0], playedDates[playedDates.length - 1]]
 			},
 			dragmode: false

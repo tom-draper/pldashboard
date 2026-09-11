@@ -90,7 +90,9 @@
 				linecolor: 'black',
 				showgrid: false,
 				showline: false,
-				fixedrange: true
+				fixedrange: true,
+				tick0: 1,
+				dtick: 1
 			},
 			dragmode: false
 		};
