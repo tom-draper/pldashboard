@@ -13,7 +13,7 @@
 	import type { Team } from '$lib/types';
 	// Aliased: an `import type Plotly` would shadow the ambient Plotly the
 	// CDN script defines, and every value call below would stop resolving.
-	import type PlotlyTypes from 'plotly.js';
+	import type * as PlotlyTypes from 'plotly.js';
 
 	function addTeamComparison(team: Team) {
 		const teamData: PlotlyTypes.Data = {
@@ -182,8 +182,7 @@
 					range: [0, 100]
 				}
 			},
-			// @ts-expect-error Plotly's config type omits this documented option
-			hover: 'closest',
+			hovermode: 'closest',
 			margin: { t: 25, b: 25, l: 75, r: 75 },
 			showlegend: false,
 			plot_bgcolor: '#fafafa',

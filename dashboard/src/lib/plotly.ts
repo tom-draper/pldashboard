@@ -13,16 +13,16 @@
 // The shared instance every component imports. Because loadPlotly() copies the
 // real methods onto *this* object, and the graph lifecycle always awaits
 // loadPlotly() before any Plotly.* call, the methods are present by call time.
-const Plotly = {} as typeof import('plotly.js');
+const Plotly = {} as any;
 
-let loading: Promise<typeof import('plotly.js')> | undefined;
+let loading: Promise<any> | undefined;
 
 /**
  * Browser-only. Dynamically imports the slim Plotly bundle, registers the trace
  * modules once, and copies the module's methods onto the shared {@link Plotly}
  * object. Idempotent — repeated calls return the same in-flight/settled promise.
  */
-export function loadPlotly(): Promise<typeof import('plotly.js')> {
+export function loadPlotly(): Promise<any> {
 	if (!loading) {
 		loading = (async () => {
 			const [core, scatter, bar, scatterpolar] = await Promise.all([

@@ -44,7 +44,7 @@ export enum Team {
  * Annotating trace helpers with this also stops literals like `type: 'bar'`
  * widening to `string`.
  */
-export type PlotTrace = Partial<PlotlyJS.PlotData>;
+export type PlotTrace = PlotlyJS.Data & Record<string, any>;
 export type PlotLayout = Partial<PlotlyJS.Layout>;
 export type PlotShape = Partial<PlotlyJS.Shape>;
 export type PlotConfig = Partial<PlotlyJS.Config>;
