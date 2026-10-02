@@ -82,7 +82,6 @@
 				showline: false,
 				zeroline: false,
 				fixedrange: true,
-				// @ts-expect-error Plotly's axis types do not allow ticktext alongside these options
 				ticktext: yLabels,
 				tickvals: yLabels,
 				range: [-1, 101]
