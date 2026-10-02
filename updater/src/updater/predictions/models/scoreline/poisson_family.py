@@ -17,17 +17,23 @@ low-score cells:
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
+from typing import Optional
 
 import numpy as np
 from scipy.special import gammaln, logsumexp
 
 from updater.predictions.distributions import (
+    MatchResult,
     ScorePrediction,
     goal_grids,
     prediction_from_matrix,
 )
-from updater.predictions.models.scoreline.common import FittedRatings
+from updater.predictions.models.scoreline.common import (
+    FittedRatings,
+    fit_ratings,
+)
 
 # Rates below this are numerically awkward and physically meaningless (a team
 # scoring 0.01 goals a game); clamp before taking logs.
@@ -171,3 +177,54 @@ class NegativeBinomialModel:
             expected_home_goals=lambda_home,
             expected_away_goals=lambda_away,
         )
+
+
+def fit_bivariate_poisson(
+    matches: Sequence[MatchResult], half_life_days: float = 365.0
+) -> Optional[BivariatePoissonModel]:
+    """Fit team ratings and the bivariate model's shared goal component."""
+
+    def log_likelihood(home_goals, away_goals, lambda_home, lambda_away, extra):
+        return _bivariate_log_pmf(
+            home_goals, away_goals, lambda_home, lambda_away, float(np.exp(extra[0]))
+        )
+
+    # extra[0] is log(lambda_shared), bounded well below the typical goal
+    # rate: the shared component is a correlation term, not a third team.
+    ratings = fit_ratings(
+        matches,
+        log_likelihood,
+        extra_initial=[np.log(0.05)],
+        extra_bounds=[(np.log(1e-4), np.log(0.6))],
+        half_life_days=half_life_days,
+    )
+    if ratings is None:
+        return None
+    return BivariatePoissonModel(
+        ratings=ratings, lambda_shared=float(np.exp(ratings.extra[0]))
+    )
+
+
+def fit_negative_binomial(
+    matches: Sequence[MatchResult], half_life_days: float = 365.0
+) -> Optional[NegativeBinomialModel]:
+    """Fit team ratings and the negative-binomial dispersion parameter."""
+
+    def log_likelihood(home_goals, away_goals, lambda_home, lambda_away, extra):
+        size = float(np.exp(extra[0]))
+        return _negative_binomial_log_pmf(
+            home_goals, lambda_home, size
+        ) + _negative_binomial_log_pmf(away_goals, lambda_away, size)
+
+    # extra[0] is log(size). Large size means little overdispersion, so the
+    # upper bound is where the model is Poisson to within rounding.
+    ratings = fit_ratings(
+        matches,
+        log_likelihood,
+        extra_initial=[np.log(8.0)],
+        extra_bounds=[(np.log(0.5), np.log(500.0))],
+        half_life_days=half_life_days,
+    )
+    if ratings is None:
+        return None
+    return NegativeBinomialModel(ratings=ratings, size=float(np.exp(ratings.extra[0])))
