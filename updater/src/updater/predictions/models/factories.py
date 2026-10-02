@@ -63,70 +63,23 @@ def _poisson(half_life_days: float = 365.0, **_) -> Predictor:
 
 
 def _bivariate_poisson(half_life_days: float = 365.0, **_) -> Predictor:
-    import numpy as np
-
-    from updater.predictions.models.scoreline.common import fit_ratings
     from updater.predictions.models.scoreline.poisson_family import (
-        BivariatePoissonModel,
-        _bivariate_log_pmf,
+        fit_bivariate_poisson,
     )
 
-    def log_likelihood(home_goals, away_goals, lambda_home, lambda_away, extra):
-        return _bivariate_log_pmf(
-            home_goals, away_goals, lambda_home, lambda_away, float(np.exp(extra[0]))
-        )
-
-    def fit(matches, **kwargs):
-        # extra[0] is log(lambda_shared), bounded well below the typical goal
-        # rate: the shared component is a correlation term, not a third team.
-        ratings = fit_ratings(
-            matches,
-            log_likelihood,
-            extra_initial=[np.log(0.05)],
-            extra_bounds=[(np.log(1e-4), np.log(0.6))],
-            **kwargs,
-        )
-        if ratings is None:
-            return None
-        return BivariatePoissonModel(
-            ratings=ratings, lambda_shared=float(np.exp(ratings.extra[0]))
-        )
-
-    return _Engine("bivariate-poisson", fit, half_life_days=half_life_days)
+    return _Engine(
+        "bivariate-poisson", fit_bivariate_poisson, half_life_days=half_life_days
+    )
 
 
 def _negative_binomial(half_life_days: float = 365.0, **_) -> Predictor:
-    import numpy as np
-
-    from updater.predictions.models.scoreline.common import fit_ratings
     from updater.predictions.models.scoreline.poisson_family import (
-        NegativeBinomialModel,
-        _negative_binomial_log_pmf,
+        fit_negative_binomial,
     )
 
-    def log_likelihood(home_goals, away_goals, lambda_home, lambda_away, extra):
-        size = float(np.exp(extra[0]))
-        return _negative_binomial_log_pmf(
-            home_goals, lambda_home, size
-        ) + _negative_binomial_log_pmf(away_goals, lambda_away, size)
-
-    def fit(matches, **kwargs):
-        # extra[0] is log(size). Large size means little overdispersion, so the
-        # upper bound is where the model is Poisson to within rounding.
-        ratings = fit_ratings(
-            matches,
-            log_likelihood,
-            extra_initial=[np.log(8.0)],
-            extra_bounds=[(np.log(0.5), np.log(500.0))],
-            **kwargs,
-        )
-        if ratings is None:
-            return None
-        return NegativeBinomialModel(
-            ratings=ratings, size=float(np.exp(ratings.extra[0]))
-        )
-
-    return _Engine("negative-binomial", fit, half_life_days=half_life_days)
+    return _Engine(
+        "negative-binomial", fit_negative_binomial, half_life_days=half_life_days
+    )
 
 
 def _skellam(half_life_days: float = 365.0, **_) -> Predictor:
