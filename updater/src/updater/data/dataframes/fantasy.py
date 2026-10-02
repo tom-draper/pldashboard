@@ -70,20 +70,40 @@ class Fantasy(DF):
 
     def _extract_team_mappings(self, fantasy_data: dict[str, Any]) -> dict[int, str]:
         """Team code -> team name, for resolving each player's club."""
-        try:
-            return {team["code"]: team["name"] for team in fantasy_data["teams"]}
-        except KeyError as e:
-            raise ValueError("Team data not found in fantasy data") from e
+        return self._extract_mapping(
+            fantasy_data,
+            source_key="teams",
+            key_field="code",
+            value_field="name",
+            missing_message="Team data not found in fantasy data",
+        )
 
     def _extract_position_mappings(self, fantasy_data: dict[str, Any]) -> dict[int, str]:
         """Position id -> position name, for resolving each player's role."""
+        return self._extract_mapping(
+            fantasy_data,
+            source_key="element_types",
+            key_field="id",
+            value_field="singular_name",
+            missing_message="Position data not found in fantasy data",
+        )
+
+    @staticmethod
+    def _extract_mapping(
+        fantasy_data: dict[str, Any],
+        source_key: str,
+        key_field: str,
+        value_field: str,
+        missing_message: str,
+    ) -> dict[int, str]:
+        """Build a lookup from an API list, preserving a useful missing-data error."""
         try:
             return {
-                position_type["id"]: position_type["singular_name"]
-                for position_type in fantasy_data["element_types"]
+                item[key_field]: item[value_field]
+                for item in fantasy_data[source_key]
             }
         except KeyError as e:
-            raise ValueError("Position data not found in fantasy data") from e
+            raise ValueError(missing_message) from e
 
     def _build_player_record(self, player: dict[str, Any],
                            team_mappings: dict[int, str],
