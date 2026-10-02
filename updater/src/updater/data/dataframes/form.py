@@ -29,20 +29,18 @@ class Form(DF):
         return max(self.df.columns.unique(level=0))
 
     def get_current_form_rating(self, team: str):
-        current_season = self.get_current_season()
-        current_matchday = self.get_current_matchday(current_season)
-        matchday = self._get_last_played_matchday(
-            current_matchday, current_season, team
-        )
-        return self._get_form_rating(team, matchday, current_season, 5)
+        return self._get_team_form_rating(team, n_games=5)
 
     def get_long_term_form_rating(self, team: str):
+        return self._get_team_form_rating(team, n_games=10)
+
+    def _get_team_form_rating(self, team: str, n_games: int):
         current_season = self.get_current_season()
         current_matchday = self.get_current_matchday(current_season)
         matchday = self._get_last_played_matchday(
             current_matchday, current_season, team
         )
-        return self._get_form_rating(team, matchday, current_season, 10)
+        return self._get_form_rating(team, matchday, current_season, n_games)
 
     def _get_last_played_matchday(
         self, current_matchday: int, current_season: int, team: str
